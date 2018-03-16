@@ -639,8 +639,6 @@
         "sectionName": "Integrations",
         "sharing": "Data Sharing",
         "sharingHelper": "Anonymous data is shared with the development team.",
-        "sharingIsOn": "You are sharing anonymous data.",
-        "sharingIsOff": "You are not sharing anonymous data.",
         "changeBtn": "Change Sharing Settings"
       },
       "statusSaving": "Saving advanced settings…",
@@ -1733,6 +1731,7 @@
     "shareBtn": "Share",
     "declineBtn": "Decline",
     "sharingIsOn": "Data is Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
     "sharingIsOff": "Data is Not Shared"
   },
   "orderUtil": {

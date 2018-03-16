@@ -1,18 +1,23 @@
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
+import $ from "jquery";
+import { shell } from "electron";
+import Backbone from "backbone";
+import TorExternalLinkWarning from "../views/modals/TorExternalLinkWarning";
 
 export function addMetrics() {
-  console.log('add metrics')
   function loadMetrics() {
-    if (window.Countly) {
-      window.Countly.q.push(['opt_in']);
-      return;
-    }
+    // Reverse the countly opt out
+    window.localStorage.setItem('cly_ignore', 'false');
+    app.localSettings.save({ shareMetricsRestartNeeded: !!window.Countly });
+
+    //  If Countly has already been added, it won't run again until the app is restarted.
+    if (window.Countly) return;
+
     window.Countly = {};
     window.Countly.q = [];
     window.Countly.app_key = '979774c41bab3a6e5232a3630e6e151e439c412e';
     window.Countly.url = 'https://countly.openbazaar.org';
-    window.Countly.q.push(['opt_in']);
     window.Countly.q.push(['track_sessions']);
     window.Countly.q.push(['track_pageview']);
     window.Countly.q.push(['track_clicks']);
@@ -25,22 +30,23 @@ export function addMetrics() {
     scriptEl.async = true;
     scriptEl.src = 'https://countly.openbazaar.org/sdk/web/countly.min.js';
     scriptEl.onload = () => window.Countly.init();
+    };
     (document.getElementsByTagName('head')[0]).appendChild(scriptEl);
   }
-  window.addEventListener('load', loadMetrics, false);
-  if (document.readyState === 'complete') loadMetrics();
+  if (document.readyState === 'complete') {
+    loadMetrics();
+  } else {
+    window.addEventListener('load', loadMetrics, false);
+  }
 }
 
 export function changeMetrics(bool) {
-  if (app.localSettings.get('shareMetrics') !== bool) {
-    app.localSettings.set('shareMetrics', bool).save();
-    if (bool && window.Countly) {
-      window.Countly.q.push(['opt_in']);
-    } else {
-      addMetrics();
-    }
-    if (!bool && window.Countly) window.Countly.q.push(['opt_out']);
+  if (bool) addMetrics();
+  if (!bool && window.Countly) {
+    app.localSettings.save({ shareMetricsRestartNeeded: false });
+    window.Countly.q.push(['opt_out']);
   }
+  return app.localSettings.save({ shareMetrics: bool });
 }
 
 export function showMetricsModal() {

@@ -578,7 +578,7 @@ function start() {
           // set the profile data for the feedback mechanism
           setFeedbackOptions();
 
-          if (app.localSettings.get('shareMetrics') !== undefined) addMetrics();
+          if (app.localSettings.get('shareMetrics')) addMetrics();
 
           if (externalRoute) {
             // handle opening the app from an an external ob link

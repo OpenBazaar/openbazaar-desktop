@@ -271,16 +271,7 @@
               </label>
               <div class="clrT2 txSm"><%= ob.polyT('settings.advancedTab.integrations.sharingHelper') %></div>
             </div>
-            <div class="col9 flexVCent gutterH">
-              <div class="flexExpand txLft">
-                <% if (ob.shareMetrics) { %>
-                <span class="clrTEmph1"><%= ob.polyT('settings.advancedTab.integrations.sharingIsOn') %></span>
-                <% } else { %>
-                <span class="clrTErr"><%= ob.polyT('settings.advancedTab.integrations.sharingIsOff') %></span>
-                <% } %>
-              </div>
-              <a class="btn clrP clrBr clrSh2 js-changeSharing flexNoShrink"><%= ob.polyT('settings.advancedTab.integrations.changeBtn') %></a>
-            </div>
+            <div class="col9 js-metricsStatusWrapper"></div>
           </div>
         </form>
       </div>
