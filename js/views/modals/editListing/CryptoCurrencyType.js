@@ -1,5 +1,8 @@
 // import $ from 'jquery';
+import app from '../../../app';
 import '../../../lib/select2';
+import cryptoListingCurs, { cryptoListingType } from '../../../models/listing/Metadata';
+import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -10,7 +13,10 @@ export default class extends BaseView {
     }
 
     super(options);
-    // this.options = options;
+  }
+
+  className() {
+    return 'cryptoCurrencyType';
   }
 
   events() {
@@ -19,47 +25,50 @@ export default class extends BaseView {
     };
   }
 
-  // tagName() {
-  //   return 'section';
-  // }
-
-
-  // getFormData(fields = this.$formFields) {
-  //   const formData = super.getFormData(fields);
-  //   this.model.set
-  //   const indexedRegions = getIndexedRegions();
-
-  //   // Strip out any region elements from shipping destinations
-  //   // drop down. The individual countries will remain.
-  //   formData.regions = formData.regions
-  //     .filter(region => !indexedRegions[region]);
-
-  //   return formData;
-  // }
-
-  // // Sets the model based on the current data in the UI.
-  // setModelData() {
-  //   // set the data for our nested Services views
-  //   this.serviceViews.forEach((serviceVw) => serviceVw.setModelData());
-  //   this.model.set(this.getFormData());
-  // }
-
-  // get $formFields() {
-  //   return this.getCachedEl('select[name], input[name], textarea[name]');
-  // }
-
   render() {
     super.render();
+
+    const coinTypes = getCurrenciesSortedByName()
+      .map(coin => ({
+        code: coin,
+        name: app.polyglot.t(`cryptoCurrencies.${coin}`),
+      }));
+
+    const coinType = this.model.get('metadata')
+      .get('coinType');
+
+    // TODO todo TDO - test this scenariusz
+    // TODO todo TDO - test this scenariusz
+    // TODO todo TDO - test this scenariusz
+    // TODO todo TDO - test this scenariusz
+    // TODO todo TDO - test this scenariusz
+    if (coinType && coinType.length && !cryptoListingCurs.includes(coinType)) {
+      // If the listing has a coin type that's not in our crypto currency list,
+      // we'll just plop it at the end of the list. It may that our crypto cur list
+      // needs to be updated. If not and it's not a legitamate currency, the price
+      // will show a warning indicating there is no exchange rate that the listing
+      // would not be purchasable.
+      coinTypes.push({
+        code: coinType,
+        name: '',
+      });
+    }
+
     loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
       this.$el.html(t({
+        contractTypes: [{
+          code: cryptoListingType,
+          name: app.polyglot.t(`formats.${cryptoListingType}`),
+        }],
+        coinTypes,
         errors: this.model.validationError || {},
         ...this.model.toJSON(),
       }));
 
-      // this.$(`#shipOptionType_${this.model.cid}`).select2({
-      //   // disables the search box
-      //   minimumResultsForSearch: Infinity,
-      // });
+      this.$('#editListingCryptoContractType, #editListingCoinType').select2({
+        // disables the search box
+        minimumResultsForSearch: Infinity,
+      });
     });
 
     return this;

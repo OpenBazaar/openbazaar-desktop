@@ -929,7 +929,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
-    "SERVICE": "Service"
+    "SERVICE": "Service",
+    "CRYPTO": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "New",
@@ -1076,6 +1077,8 @@
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
     "helperType": "Choose from 3 types",
+    "helperCryptoType": "Sell a cryptocurrency and receive payment in %{curCode}",
+    "helperCoinType": "Choose the coin you’d like to sell",
     "helperShipping": "Ship wherever you'd like!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "A unique identifier for your listing",
@@ -1088,15 +1091,20 @@
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperCryptoQuantity": "Buyer(s) can purchase a fraction or full amount",
+    "helperCryptoCurrentMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
     "type": "Type",
     "visibility": "Visibility",
+    "coinType": "Coin Type",
     "price": "Price",
     "condition": "Condition",
     "sku": "SKU",
     "description": "Description",
+    "cryptoQuantity": "Quantity",
+    "cryptoCurrentMarketValue": "Current Market Value",
     "uploading": "Uploading…",
     "categoryPlaceholder": "Enter a category…",
     "tagsPlaceholder": "Enter #tags…",
@@ -2344,7 +2352,9 @@
   "cryptoCurrencies": {
     "BTC": "Bitcoin",
     "BCH": "Bitcoin Cash",
-    "ZEC": "Zcash"
+    "ZEC": "Zcash",
+    "BAT": "Basic Attention Token",
+    "ZRX": "0x"
   },
   "languages": {
     "af": "Afrikaans",

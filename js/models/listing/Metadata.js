@@ -2,6 +2,8 @@ import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { getCurrencyByCode } from '../../data/currencies';
 
+export const cryptoListingType = 'CRYPTO';
+
 export default class extends BaseModel {
   defaults() {
     return {
@@ -17,6 +19,7 @@ export default class extends BaseModel {
       'PHYSICAL_GOOD',
       'DIGITAL_GOOD',
       'SERVICE',
+      cryptoListingType,
     ];
   }
 

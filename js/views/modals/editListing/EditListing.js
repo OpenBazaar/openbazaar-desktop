@@ -20,6 +20,7 @@ import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
 import Coupon from '../../../models/listing/Coupon';
+import { cryptoListingType } from '../../../models/listing/Metadata';
 import VariantOption from '../../../models/listing/VariantOption';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -29,6 +30,7 @@ import VariantInventory from './VariantInventory';
 import InventoryManagement from './InventoryManagement';
 import SkuField from './SkuField';
 import UnsupportedCurrency from './UnsupportedCurrency';
+import CryptoCurrencyType from './CryptoCurrencyType';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -1039,6 +1041,18 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
+    const contractTypes = [];
+    this.model.get('metadata')
+      .contractTypes
+      .forEach(ct => {
+        if (ct !== cryptoListingType) {
+          contractTypes.push({
+            code: ct,
+            name: app.polyglot.t(`formats.${ct}`),
+          });
+        }
+      });
+
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
         createMode: this.createMode,
@@ -1046,10 +1060,7 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         listingCurrency: this.currency,
         currencies: this.currencies,
-        contractTypes: this.model.get('metadata')
-          .contractTypes
-          .map((contractType) => ({ code: contractType,
-            name: app.polyglot.t(`formats.${contractType}`) })),
+        contractTypes,
         conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
@@ -1282,6 +1293,13 @@ export default class extends BaseModal {
         },
         onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
       });
+
+      if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
+      this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
+        model: this.model,
+      });
+      this.getCachedEl('.js-cryptoTypeWrap')
+        .html(this.cryptoCurrencyType.render().el);
 
       setTimeout(() => {
         if (!this.rendered) {

@@ -42,17 +42,14 @@ h5, .h5, .tx5, .btn.tx5 {
 }
 
 h6, .h6, .tx6, .btn.tx6 {
-  font-size: $tx6;
   @include textSize($tx6);
 }
 
 .txBg {
-  font-size: $txBg;
   @include textSize($txBg);
 }
 
 .txTn {
-  font-size: $tx7;
   @include textSize($tx7);
 }
 

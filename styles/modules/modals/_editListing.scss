@@ -4,6 +4,11 @@
       line-height: 1.5;
       margin-bottom: 5px;
     }
+
+    .helper {
+      padding: $padSm;
+      padding-left: 0;
+    }
   }
 
   .modalContent {
@@ -45,6 +50,14 @@
     }
 
     .tabContent {
+      .cryptoCurrencyType {
+        .cryptoQuantityCoinType {
+          position: absolute;
+          right: 15px;
+          top: 12px;
+        }
+      }
+
       .photoUploadSection {
         h2 {
           display: inline-block;

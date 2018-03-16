@@ -1,0 +1,41 @@
+<div class="flexRow gutterH">
+  <div class="col6 simpleFlexCol">
+    <label for="editListingCryptoContractType" class="required"><%= ob.polyT('editListing.type') %></label>
+    <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
+    <select id="editListingCryptoContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
+      <% ob.contractTypes.forEach((contractType) => { %>
+      <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
+      <% }); %>
+    </select>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperCryptoType', { curCode: ob.currencyMod.getServerCurrency().code }) %></div>
+  </div>
+  <div class="col6 simpleFlexCol">
+    <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.coinType') %></label>
+    <% if (ob.errors['meta.coinType']) print(ob.formErrorTmpl({ errors: ob.errors['meta.coinType'] })) %>
+    <select id="editListingCoinType" name="meta.coinType" class="clrBr clrP clrSh2 marginTopAuto">
+      <% ob.coinTypes.forEach(coin => { %>
+      <option value="<%= coin.code %>" <% if (coin === ob.metadata.coinType) print('selected') %>><%= coin.name %></option>
+      <% }) %>
+    </select>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperCoinType') %></div>    
+  </div>
+</div>
+<div class="flexRow gutterH">
+  <div class="col6 simpleFlexCol">
+    <label for="editListingCryptoQuantity" class="required"><%= ob.polyT('editListing.cryptoQuantity') %></label>
+    <% if (ob.errors['item.quantity']) print(ob.formErrorTmpl({ errors: ob.errors['item.quantity'] })) %>
+    <div class="posR">
+      <input type="text" class="clrBr clrP clrSh2" name="item.quantity" id="editListingCryptoQuantity" value="<%= ob.item.quantity %>" placeholder="0">
+      <% const selectedCoinType = ob.metadata.coinType || ob.coinTypes[0].code %>
+      <div class="cryptoQuantityCoinType clrT2 tx5 js-quantityCoinType"><%= selectedCoinType %></div>
+    </div>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperCryptoQuantity') %></div>
+  </div>
+  <div class="col6 simpleFlexCol">
+    <label for="editListingCryptoMarketValue"><%= ob.polyT('editListing.cryptoCurrentMarketValue') %></label>
+    <div class="js-currentMarketValueLineWrap clrT2 tx5">
+      <span class="clrTEm tx4 txB">$39,567</span> ($393.40 per ZEC)
+    </div>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperCryptoCurrentMarketValue') %></div>
+  </div>
+</div>
