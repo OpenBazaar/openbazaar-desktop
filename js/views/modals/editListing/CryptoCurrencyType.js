@@ -16,7 +16,7 @@ export default class extends BaseView {
   }
 
   className() {
-    return 'cryptoCurrencyType';
+    return 'cryptoCurrencyType padSmKids padStackAll';
   }
 
   events() {

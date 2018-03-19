@@ -328,6 +328,11 @@
 }
 //elements should have standard spacing between them vertically. There shouldn't be more than a few row classes.
 
+.padStackAll > * {
+  //like padStack, but even the last child will collapse
+  padding-bottom: 0;
+}
+
 #ov1 .pad0 {
   padding: 0;
 }

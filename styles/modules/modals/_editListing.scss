@@ -9,6 +9,21 @@
       padding: $padSm;
       padding-left: 0;
     }
+
+    // & > *,
+    // & .standardTypeWrap > *{
+    //   padding: $padSm;
+
+    //   &:not(:last-child) {
+    //     padding-bottom: 0;
+    //   }
+    // }
+
+    // .standardTypeWrap {
+    //   padding: 0;
+
+
+    // }
   }
 
   .modalContent {
