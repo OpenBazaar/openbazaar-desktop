@@ -9,21 +9,6 @@
       padding: $padSm;
       padding-left: 0;
     }
-
-    // & > *,
-    // & .standardTypeWrap > *{
-    //   padding: $padSm;
-
-    //   &:not(:last-child) {
-    //     padding-bottom: 0;
-    //   }
-    // }
-
-    // .standardTypeWrap {
-    //   padding: 0;
-
-
-    // }
   }
 
   .modalContent {
@@ -65,11 +50,14 @@
     }
 
     .tabContent {
-      .cryptoCurrencyType {
-        .cryptoQuantityCoinType {
-          position: absolute;
-          right: 15px;
-          top: 12px;
+      .cryptoTypeWrap {
+        display: none;
+        .cryptoCurrencyType {
+          .cryptoQuantityCoinType {
+            position: absolute;
+            right: 15px;
+            top: 12px;
+          }
         }
       }
 
@@ -325,6 +313,28 @@
         .quantityCol {
           display: none;
         }
+      }
+    }
+  }
+
+  &.cryptoListing {
+    .tab-shipping,
+    .tab-variants,
+    .tab-coupons {
+      display: none;
+    }
+
+    .modalContent {
+      .standardTypeWrap,
+      .shippingSection,
+      .variantsSection,
+      .inventoryManagementSection,
+      .couponsSection {
+        display: none;
+      }
+
+      .cryptoTypeWrap {
+        display: block;
       }
     }
   }

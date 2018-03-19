@@ -1,8 +1,7 @@
+import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { getCurrencyByCode } from '../../data/currencies';
-
-export const cryptoListingType = 'CRYPTO';
 
 export default class extends BaseModel {
   defaults() {
@@ -19,8 +18,18 @@ export default class extends BaseModel {
       'PHYSICAL_GOOD',
       'DIGITAL_GOOD',
       'SERVICE',
-      cryptoListingType,
+      'CRYPTO',
     ];
+  }
+
+  get contractTypesVerbose() {
+    return this.contractTypes
+      .map((contractType) => (
+        {
+          code: contractType,
+          name: app.polyglot.t(`formats.${contractType}`),
+        }
+      ));
   }
 
   // todo: validate the listing type is one of the available types

@@ -14,17 +14,44 @@
     <div class="boxList tx4 clrTx1Br">
       <%
         [
-          ob.polyT('editListing.sectionNames.general'),
-          ob.polyT('editListing.sectionNames.photos'),
-          ob.polyT('editListing.sectionNames.shipping'),
-          ob.polyT('editListing.sectionNames.tags'),
-          ob.polyT('editListing.sectionNames.category'),
-          ob.polyT('editListing.sectionNames.variants'),
-          ob.polyT('editListing.sectionNames.returnPolicy'),
-          ob.polyT('editListing.sectionNames.termsAndConditions'),
-          ob.polyT('editListing.sectionNames.coupons'),
-        ].forEach((tabName, index) => {
-          print(`<a class="js-scrollLink tab row ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tabName}</a>`)
+          {
+            key: 'general',
+            name: ob.polyT('editListing.sectionNames.general'),
+          },
+          {
+            key: 'photos',
+            name: ob.polyT('editListing.sectionNames.photos'),
+          },
+          {
+            key: 'shipping',
+            name: ob.polyT('editListing.sectionNames.shipping'),
+          },
+          {
+            key: 'tags',
+            name: ob.polyT('editListing.sectionNames.tags'),
+          },
+          {
+            key: 'category',
+            name: ob.polyT('editListing.sectionNames.category'),
+          },
+          {
+            key: 'variants',
+            name: ob.polyT('editListing.sectionNames.variants'),
+          },
+          {
+            key: 'returnPolicy',
+            name: ob.polyT('editListing.sectionNames.returnPolicy'),
+          },
+          {
+            key: 'termsAndConditions',
+            name: ob.polyT('editListing.sectionNames.termsAndConditions'),
+          },
+          {
+            key: 'coupons',
+            name: ob.polyT('editListing.sectionNames.coupons'),
+          }
+        ].forEach((tab, index) => {
+          print(`<a class="js-scrollLink tab row tab-${tab.key} ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tab.name}</a>`)
         });
       %>
     </div>
@@ -51,7 +78,7 @@
                 <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
-            <div class="js-standardTypeWrap pad0 padSmKids padStackAll">
+            <div class="standardTypeWrap pad0 padSmKids padStackAll">
               <div class="flexRow gutterH">
                 <div class="col6 simpleFlexCol">
                   <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
@@ -103,7 +130,7 @@
                 </div>
               </div>
             </div>
-            <div class="js-cryptoTypeWrap pad0"></div>
+            <div class="js-cryptoTypeWrap cryptoTypeWrap pad0"></div>
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
@@ -175,7 +202,7 @@
               })) %>
             <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.shippingOptions.length + 1 }) %></h2>
             <hr class="clrBr rowMd" />
-            <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
+            <a class="btn clrBr clrP clrSh2 rowSm js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
             <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperShipping') %></div>
           </div>
         </div>
@@ -218,7 +245,7 @@
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>
         <hr class="clrBr rowMd" />
         <% if (ob.errors['refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['refundPolicy'] })) %>
-        <a class="btn clrP clrBr clrSh2 js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
+        <a class="btn clrP clrBr clrSh2 js-addReturnPolicy rowSm <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
         <textarea rows="8" name="refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.refundPolicy %></textarea>
         <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperReturnPolicy') %></div>
       </section>
@@ -227,7 +254,7 @@
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h2>
         <hr class="clrBr rowMd" />
         <% if (ob.errors['termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['termsAndConditions'] })) %>
-        <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
+        <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions rowSm <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
         <textarea rows="8" name="termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.termsAndConditions %></textarea>
         <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTerms') %></div>
       </section>

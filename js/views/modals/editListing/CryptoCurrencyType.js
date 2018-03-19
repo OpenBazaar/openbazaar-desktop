@@ -56,10 +56,7 @@ export default class extends BaseView {
 
     loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
       this.$el.html(t({
-        contractTypes: [{
-          code: cryptoListingType,
-          name: app.polyglot.t(`formats.${cryptoListingType}`),
-        }],
+        contractTypes: this.model.get('metadata').contractTypesVerbose,
         coinTypes,
         errors: this.model.validationError || {},
         ...this.model.toJSON(),

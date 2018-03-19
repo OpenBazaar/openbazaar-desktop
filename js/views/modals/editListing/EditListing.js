@@ -20,7 +20,6 @@ import ShippingOptionMd from '../../../models/listing/ShippingOption';
 import Service from '../../../models/listing/Service';
 import Image from '../../../models/listing/Image';
 import Coupon from '../../../models/listing/Coupon';
-import { cryptoListingType } from '../../../models/listing/Metadata';
 import VariantOption from '../../../models/listing/VariantOption';
 import BaseModal from '../BaseModal';
 import ShippingOption from './ShippingOption';
@@ -171,6 +170,7 @@ export default class extends BaseModal {
       'click .js-return': 'onClickReturn',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
+      'change #editListingCryptoContractType': 'onChangeCryptoContractType',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
@@ -250,6 +250,13 @@ export default class extends BaseModal {
   }
 
   onChangeContractType(e) {
+    this.$el.toggleClass('cryptoListing', e.target.value === 'CRYPTO');
+
+    if (e.target.value === 'CRYPTO') {
+      this.getCachedEl('#editListingCryptoContractType')
+        .value('CRYPTO');
+    }
+
     if (e.target.value !== 'PHYSICAL_GOOD') {
       this.$conditionWrap
         .add(this.$sectionShipping)
@@ -259,6 +266,12 @@ export default class extends BaseModal {
         .add(this.$sectionShipping)
         .removeClass('disabled');
     }
+  }
+
+  onChangeCryptoContractType(e) {
+    this.getCachedEl('#editCryptoContractType')
+      .value(e.target.value);
+    this.$el.removeClass('cryptoListing');
   }
 
   getOrientation(file, callback) {
@@ -1026,7 +1039,6 @@ export default class extends BaseModal {
   remove() {
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
-
     super.remove();
   }
 
@@ -1041,18 +1053,6 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    const contractTypes = [];
-    this.model.get('metadata')
-      .contractTypes
-      .forEach(ct => {
-        if (ct !== cryptoListingType) {
-          contractTypes.push({
-            code: ct,
-            name: app.polyglot.t(`formats.${ct}`),
-          });
-        }
-      });
-
     loadTemplate('modals/editListing/editListing.html', t => {
       this.$el.html(t({
         createMode: this.createMode,
@@ -1060,7 +1060,7 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         listingCurrency: this.currency,
         currencies: this.currencies,
-        contractTypes,
+        contractTypes: this.model.get('metadata').contractTypesVerbose,
         conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
@@ -1084,6 +1084,8 @@ export default class extends BaseModal {
         ...this.model.toJSON(),
       }));
 
+      this.$el.toggleClass('cryptoListing',
+        this.model.get('metadata').get('contractType') === 'CRYPTO');
       super.render();
 
       this._$scrollLinks = null;
