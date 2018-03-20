@@ -264,7 +264,7 @@
     "email": "Correo electrónico",
     "noLocation": "No hay ubicación",
     "tabTitles": {
-      "home": "Casa",
+      "home": "Inicio",
       "store": "Tienda",
       "following": "Siguiendo a",
       "followers": "Seguidores",
@@ -321,7 +321,7 @@
       }
     },
     "mainNav": {
-      "home": "Casa",
+      "home": "Inicio",
       "store": "Tienda",
       "following": "Siguiendo",
       "followers": "Seguidores"
