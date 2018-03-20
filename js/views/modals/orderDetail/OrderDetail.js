@@ -58,9 +58,23 @@ export default class extends BaseModal {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', () => {
+    this.listenTo(this.model, 'change:state', (md) => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
+      }
+      if (window.Countly) {
+        // record anonymous metrics on order events. The order id can't be used to identify orders
+        // as it is not connected to the user's id. It's used here to provide metrics on how many
+        // orders are successfully completed, disputed, etc.
+        window.Countly.q.push(['add_event',
+          {
+            key: 'order',
+            segmentation: {
+              id: md.get('id'),
+              state: md.get('state'),
+              moderated: !!this.moderatorId, // collect only a boolean
+            },
+          }]);
       }
     });
 

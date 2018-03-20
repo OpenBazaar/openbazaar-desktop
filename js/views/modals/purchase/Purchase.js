@@ -309,6 +309,8 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
+    const segmentation = { action: '' };
+
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
         this.setState({ phase: 'pay' });
@@ -316,6 +318,7 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
+        segmentation.action = 'OwnListing';
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -335,6 +338,7 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
+            segmentation.action = data.orderId;
           })
           .fail((jqXHR) => {
             this.setState({ phase: 'pay' });
@@ -346,13 +350,27 @@ export default class extends BaseModal {
       }
     } else {
       this.setState({ phase: 'pay' });
+      const purchaseErrs = [];
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
+        purchaseErrs.push(domKey);
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
+      segmentation.action = `Error: ${purchaseErrs.join()}`;
+    }
+
+    if (window.Countly) {
+      // record anonymous metrics on order events. The order id can't be used to identify orders
+      // as it is not connected to the user's id. It's used here to provide metrics on how many
+      // orders are successfully completed, disputed, etc.
+      window.Countly.q.push(['add_event',
+        {
+          key: 'purchase',
+          segmentation,
+        }]);
     }
   }
 

@@ -1726,7 +1726,7 @@
       "errors": "Errors that occur in the app.",
       "system": "Basic system data: Operating System, language, and screen resolution.",
       "node": "Publicly available data: your currency, cryptocurrency, language, vendor status and whether you are a moderator.",
-      "orders": "When orders are made or move from one state to another, it will be recorded with no identifiable information about the content of that order."
+      "orders": "When an order is made or moved from one state to another, it will be recorded with no identifiable information about the content of that order."
     },
     "shareBtn": "Share",
     "declineBtn": "Decline",
