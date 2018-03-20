@@ -238,7 +238,33 @@ let exchangeRates = {};
  */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
-    .done((data) => (exchangeRates = data));
+    .done((data) => {
+      const changed = new Set();
+
+      Object.keys(exchangeRates)
+        .forEach(cur => {
+          if (exchangeRates[cur] !== data[cur]) {
+            changed.add(cur);
+          }
+        });
+
+      Object.keys(data)
+        .forEach(cur => {
+          if (data[cur] !== exchangeRates[cur]) {
+            changed.add(cur);
+          }
+        });
+
+      const changedArray = Array.from(changed);
+      if (changed.size) {
+        events.trigger('exchange-rate-change', { changed: changedArray });
+        changedArray.forEach(cur => {
+          events.trigger(`exchange-rate-change-${cur}`, { previous: exchangeRates[cur] });
+        });
+      }
+
+      exchangeRates = data;
+    });
 
   events.trigger('fetching-exchange-rates', { xhr });
 

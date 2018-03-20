@@ -383,14 +383,14 @@
     box-sizing: border-box;
     padding: $pad;
     top: 100%;
-    margin-top: 10px;
+    margin-top: 13px;
   }
 
   &:after {
     content: '';
     width: 20px;
     height: 20px;
-    bottom: -33px;
+    bottom: -36px;
     transform: translate(-50%, -50%) rotate(-135deg);
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
