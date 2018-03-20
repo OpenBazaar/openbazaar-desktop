@@ -1,7 +1,6 @@
-// import $ from 'jquery';
 import app from '../../../app';
 import '../../../lib/select2';
-import cryptoListingCurs, { cryptoListingType } from '../../../models/listing/Metadata';
+import cryptoListingCurs from '../../../models/listing/Metadata';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -44,9 +43,9 @@ export default class extends BaseView {
     // TODO todo TDO - test this scenariusz
     if (coinType && coinType.length && !cryptoListingCurs.includes(coinType)) {
       // If the listing has a coin type that's not in our crypto currency list,
-      // we'll just plop it at the end of the list. It may that our crypto cur list
+      // we'll just plop it at the end of the list. It may be that our crypto cur list
       // needs to be updated. If not and it's not a legitamate currency, the price
-      // will show a warning indicating there is no exchange rate that the listing
+      // will show a warning indicating there is no exchange rate and the listing
       // would not be purchasable.
       coinTypes.push({
         code: coinType,

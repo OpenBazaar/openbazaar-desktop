@@ -51,7 +51,6 @@
 
     .tabContent {
       .cryptoTypeWrap {
-        display: none;
         .cryptoCurrencyType {
           .cryptoQuantityCoinType {
             position: absolute;
@@ -317,8 +316,25 @@
     }
   }
 
-  &.cryptoListing {
+  .tab-shipping,
+  .shippingSection,
+  .conditionWrap {
+    display: none;
+  }
+
+  .cryptoTypeWrap {
+    display: none;
+  }  
+
+  &.TYPE_PHYSICAL_GOOD {
     .tab-shipping,
+    .conditionWrap,
+    .shippingSection {
+      display: block;
+    }
+  }
+
+  &.TYPE_CRYPTO {
     .tab-variants,
     .tab-coupons {
       display: none;
@@ -326,7 +342,6 @@
 
     .modalContent {
       .standardTypeWrap,
-      .shippingSection,
       .variantsSection,
       .inventoryManagementSection,
       .couponsSection {

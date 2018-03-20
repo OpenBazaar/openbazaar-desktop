@@ -118,7 +118,7 @@
                   <div class="clrT2 txSm helper"><%= 
                   ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
                 </div>
-                <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
+                <div class="col6 simpleFlexCol conditionWrap">
                   <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
                   <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
                   <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto">
@@ -191,7 +191,7 @@
         <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
       </section>
 
-      <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
+      <section class="js-scrollToSection js-sectionShipping shippingSection">
         <div class="gutterVMd">
           <div class="js-shippingOptionsWrap shippingOptionsWrap gutterVMd"></div>
           <div class="contentBox padMd clrP clrBr clrSh3 tx3 shipOptPlaceholder">

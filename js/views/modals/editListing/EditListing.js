@@ -249,29 +249,45 @@ export default class extends BaseModal {
     this.variantInventory.render();
   }
 
-  onChangeContractType(e) {
-    this.$el.toggleClass('cryptoListing', e.target.value === 'CRYPTO');
+  // Todo TODO Todo: move me yonder!
+  // Todo TODO Todo: move me yonder!
+  // Todo TODO Todo: move me yonder!
+  // Todo TODO Todo: move me yonder!
+  // Todo TODO Todo: move me yonder!
+  setContractTypeClass(contractType) {
+    const removeClasses = this.model.get('metadata')
+      .contractTypes
+      .reduce(
+        (classes, type) => (`${classes} TYPE_${type}`), ''
+      );
 
-    if (e.target.value === 'CRYPTO') {
-      this.getCachedEl('#editListingCryptoContractType')
-        .value('CRYPTO');
-    }
 
-    if (e.target.value !== 'PHYSICAL_GOOD') {
-      this.$conditionWrap
-        .add(this.$sectionShipping)
-        .addClass('disabled');
-    } else {
-      this.$conditionWrap
-        .add(this.$sectionShipping)
-        .removeClass('disabled');
+    this.$el.removeClass(removeClasses)
+      .addClass(`TYPE_${contractType}`);
+  }
+
+  onChangeContractType(e, data = {}) {
+    this.setContractTypeClass(e.target.value);
+
+    if (!data.fromCryptoTypeChange) {
+      if (e.target.value === 'CRYPTO') {
+        this.getCachedEl('#editListingCryptoContractType')
+          .val('CRYPTO');
+        this.getCachedEl('#editListingCryptoContractType')
+          .trigger('change')
+          .focus();
+      }
     }
   }
 
   onChangeCryptoContractType(e) {
-    this.getCachedEl('#editCryptoContractType')
-      .value(e.target.value);
-    this.$el.removeClass('cryptoListing');
+    if (e.target.value === 'CRYPTO') return;
+
+    this.getCachedEl('#editContractType')
+      .val(e.target.value);
+    this.getCachedEl('#editContractType')
+      .trigger('change', { fromCryptoTypeChange: true })
+      .focus();
   }
 
   getOrientation(file, callback) {
@@ -927,11 +943,6 @@ export default class extends BaseModal {
       (this._$priceInput = this.$('#editListingPrice'));
   }
 
-  get $conditionWrap() {
-    return this._$conditionWrap ||
-      (this._$conditionWrap = this.$('.js-conditionWrap'));
-  }
-
   get $saveButton() {
     return this._$buttonSave ||
       (this._$buttonSave = this.$('.js-save'));
@@ -1084,15 +1095,16 @@ export default class extends BaseModal {
         ...this.model.toJSON(),
       }));
 
-      this.$el.toggleClass('cryptoListing',
-        this.model.get('metadata').get('contractType') === 'CRYPTO');
+      setTimeout(() =>
+        this.setContractTypeClass(
+          this.model.get('metadata').get('contractType')
+        ));
       super.render();
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
       this._$currencySelect = null;
       this._$priceInput = null;
-      this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
