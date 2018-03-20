@@ -20,6 +20,7 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
+import { recordEvent} from '../../../utils/metrics';
 
 
 export default class extends BaseModal {
@@ -338,7 +339,7 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            segmentation.action = data.orderId;
+            recordEvent('purchaseDone', { id: data.orderId });
           })
           .fail((jqXHR) => {
             this.setState({ phase: 'pay' });
@@ -346,7 +347,9 @@ export default class extends BaseModal {
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
+            recordEvent('purchaseFail', { error: errMsg });
           });
+        segmentation.action = 'Success';
       }
     } else {
       this.setState({ phase: 'pay' });
@@ -361,17 +364,7 @@ export default class extends BaseModal {
       });
       segmentation.action = `Error: ${purchaseErrs.join()}`;
     }
-
-    if (window.Countly) {
-      // record anonymous metrics on order events. The order id can't be used to identify orders
-      // as it is not connected to the user's id. It's used here to provide metrics on how many
-      // orders are successfully completed, disputed, etc.
-      window.Countly.q.push(['add_event',
-        {
-          key: 'purchase',
-          segmentation,
-        }]);
-    }
+    recordEvent('purchase', segmentation);
   }
 
   insertErrors(container, errors = []) {

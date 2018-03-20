@@ -52,3 +52,13 @@ export function showMetricsModal() {
 
   return metricsModal;
 }
+
+export function recordEvent(key, segmentation) {
+  if (window.Countly) {
+    window.Countly.q.push(['add_event',
+      {
+        key,
+        segmentation,
+      }]);
+  }
+}
