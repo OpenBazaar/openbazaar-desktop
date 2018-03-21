@@ -800,8 +800,10 @@ export default class extends BaseModal {
    * and collections which are managed by nested views.
    */
   setModelData() {
-    const formData = this.getFormData(this.$formFields);
+    let formData = this.getFormData(this.$formFields);
+    console.log(JSON.parse(JSON.stringify(formData)));
     const item = this.model.get('item');
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTO';
 
     // set model / collection data for various child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
@@ -809,27 +811,49 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    if (item.get('options').length) {
-      // If we have options, we shouldn't be providing a top-level quantity or
-      // productID.
-      item.unset('quantity');
-      item.unset('productID');
+    if (!isCrypto) {
+      if (item.get('options').length) {
+        // If we have options, we shouldn't be providing a top-level quantity or
+        // productID.
+        item.unset('quantity');
+        item.unset('productID');
 
-      // If we have options and are not tracking inventory, we'll set the infiniteInventory
-      // flag for any skus.
-      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-        item.get('skus')
-          .forEach(sku => {
-            sku.set({
-              infiniteInventory: true,
-              quantity: -1,
+        // If we have options and are not tracking inventory, we'll set the infiniteInventory
+        // flag for any skus.
+        if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+          item.get('skus')
+            .forEach(sku => {
+              sku.set({
+                infiniteInventory: true,
+                quantity: -1,
+              });
             });
-          });
+        }
+      } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+        // If we're not tracking inventory and don't have any variants, we should provide
+        // a top-level quantity as -1, so it's considered infinite.
+        formData.item.quantity = -1;
       }
-    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-      // If we're not tracking inventory and don't have any variants, we should provide a top-level
-      // quantity as -1, so it's considered infinite.
-      formData.item.quantity = -1;
+
+      formData.metadata = {
+        ...formData.metadata,
+        format: 'FIXED_PRICE',
+      };
+    } else {
+      formData = {
+        ...formData,
+        coupons: [],
+        item: {
+          ...formData.item,
+          options: [],
+          skus: [],
+        },
+        metadata: {
+          ...formData.metadata,
+          format: 'MARKET_PRICE',
+        },
+        shippingOptions: [],
+      };
     }
 
     this.model.set({
@@ -855,6 +879,8 @@ export default class extends BaseModal {
         }
       });
     }
+
+    // console.log(this.model.toJSON());
   }
 
   open() {
@@ -921,16 +947,29 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTO';
+    const cryptoExcludes = isCrypto ? ', .js-inventoryManagementSection' : '';
     const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
-      '.js-variantInventorySection';
+      `.js-variantInventorySection${cryptoExcludes}`;
 
-    return this.$(
-        `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) ` +
-          'textarea[name]:not([class*="trumbowyg"])'
-      );
+    let $fields = this.$(
+      `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) ` +
+        'textarea[name]:not([class*="trumbowyg"])'
+    );
+
+    // Filter out hidden fields that are not applicable based on whether this is
+    // a crypto currency listing.
+    $fields = $fields.filter((index, el) => {
+      const $excludeContainer = isCrypto ?
+        this.getCachedEl('.js-standardTypeWrap') :
+        this.getCachedEl('.js-cryptoTypeWrap');
+      return !$.contains($excludeContainer, el);
+    });
+
+    return $fields;
   }
 
   get $currencySelect() {
@@ -1056,6 +1095,7 @@ export default class extends BaseModal {
   render(restoreScrollPos = true) {
     let prevScrollPos = 0;
     const item = this.model.get('item');
+    const metadata = this.model.get('metadata');
 
     if (restoreScrollPos) {
       prevScrollPos = this.el.scrollTop;
@@ -1071,7 +1111,7 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         listingCurrency: this.currency,
         currencies: this.currencies,
-        contractTypes: this.model.get('metadata').contractTypesVerbose,
+        contractTypes: metadata.contractTypesVerbose,
         conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
@@ -1095,10 +1135,7 @@ export default class extends BaseModal {
         ...this.model.toJSON(),
       }));
 
-      setTimeout(() =>
-        this.setContractTypeClass(
-          this.model.get('metadata').get('contractType')
-        ));
+      this.setContractTypeClass(metadata.get('contractType'));
       super.render();
 
       this._$scrollLinks = null;
@@ -1244,6 +1281,7 @@ export default class extends BaseModal {
       this.inventoryManagement = this.createChild(InventoryManagement, {
         initialState: {
           trackBy: this.trackInventoryBy,
+          // quantity: metadata.get('contractType') === 'CRYPTO' ? '' : item.get('quantity'),
           quantity: item.get('quantity'),
           errors: inventoryManagementErrors,
         },
@@ -1332,6 +1370,7 @@ export default class extends BaseModal {
         setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
       });
 
+      // This block should be after any dom manipulation in render.
       if (this.createMode) {
         if (!this.attrsAtCreate) {
           this.setModelData();

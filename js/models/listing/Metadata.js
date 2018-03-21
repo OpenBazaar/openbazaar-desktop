@@ -32,7 +32,14 @@ export default class extends BaseModel {
       ));
   }
 
-  // todo: validate the listing type is one of the available types
+  get formats() {
+    return [
+      'AUCTION',
+      'FIXED_PRICE',
+      'MARKET_PRICE',
+    ];
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -40,8 +47,12 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (this.contractTypes.indexOf(attrs.contractType) === -1) {
-      addError('contractType', 'The contract type is not one of the available types.');
+    if (!this.contractTypes.includes(attrs.contractType)) {
+      addError('contractType', `The contract type must be one of ${this.contractTypes}.`);
+    }
+
+    if (!this.formats.includes(attrs.format)) {
+      addError('format', `The format must be one of ${this.formats}.`);
     }
 
     const firstDayOf2038 = new Date(2038, 0, 1, 0, 0, 0, 0);

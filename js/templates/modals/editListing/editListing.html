@@ -78,7 +78,7 @@
                 <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
-            <div class="standardTypeWrap pad0 padSmKids padStackAll">
+            <div class="standardTypeWrap js-standardTypeWrap pad0 padSmKids padStackAll">
               <div class="flexRow gutterH">
                 <div class="col6 simpleFlexCol">
                   <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
@@ -130,7 +130,7 @@
                 </div>
               </div>
             </div>
-            <div class="js-cryptoTypeWrap cryptoTypeWrap pad0"></div>
+            <div class="cryptoTypeWrap js-cryptoTypeWrap pad0"></div>
             <div class="flexRow gutterH">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
@@ -178,7 +178,7 @@
         </div>
         <% if (ob.errors['item.images']) print(ob.formErrorTmpl({ errors: ob.errors['item.images'] })) %>
         <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
-        <ul class="unstyled uploadItems clrBr js-photoUploadItems">
+        <ul class="unstyled uploadItems clrBr rowSm js-photoUploadItems">
           <li class="addElement tile js-addPhotoWrap">
             <span class="imagesIcon ion-images clrT4"></span>
             <button class="btn clrP clrBr clrT tx6 js-addPhoto"><%= ob.polyT('editListing.btnAddPhoto') %></button>

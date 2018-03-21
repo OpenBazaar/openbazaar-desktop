@@ -5,7 +5,6 @@ import {
   convertAndFormatCurrency,
   events as currencyEvents,
 } from '../../../utils/currency';
-import cryptoListingCurs from '../../../models/listing/Metadata';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -77,7 +76,7 @@ export default class extends BaseView {
     // TODO todo TDO - test this scenariusz
     // TODO todo TDO - test this scenariusz
     // TODO todo TDO - test this scenariusz
-    if (coinType && coinType.length && !cryptoListingCurs.includes(coinType)) {
+    if (coinType && coinType.length && !coinTypes.find(coin => (coin.code === coinType))) {
       // If the listing has a coin type that's not in our crypto currency list,
       // we'll just plop it at the end of the list. It may be that our crypto cur list
       // needs to be updated. If not and it's not a legitamate currency, the price
@@ -85,7 +84,7 @@ export default class extends BaseView {
       // would not be purchasable.
       coinTypes.push({
         code: coinType,
-        name: '',
+        name: coinType,
       });
     }
 
@@ -121,7 +120,11 @@ export default class extends BaseView {
     const { displayCur, coinType } = opts;
     const quantity = Number(opts.quantity);
 
-    if (isNaN(quantity)) return '';
+    if (isNaN(quantity)) {
+      // If we can't calculate a market value, we'll return an invisible
+      // spacer.
+      return '<span class="clrTEm tx4 txB invisible">${cryptoFormattedPrice}</span>';
+    }
 
     const cryptoExchangeRate = getExchangeRate(coinType);
     const displayCurExchangeRate = getExchangeRate(displayCur);
@@ -168,28 +171,32 @@ export default class extends BaseView {
         ...this.model.toJSON(),
       }));
 
-      this.$('#editListingCryptoContractType, #editListingCoinType').select2({
-        minimumResultsForSearch: 5,
-        matcher: (params, data) => {
-          if (!params.term || params.term.trim() === '') {
-            return data;
-          }
+      this.$('#editListingCryptoContractType').select2({
+        minimumResultsForSearch: Infinity,
+      });
 
-          const term = params.term
-            .toUpperCase()
-            .trim();
+      this.$('#editListingCoinType').select2({
+        // minimumResultsForSearch: 5,
+        // matcher: (params, data) => {
+        //   if (!params.term || params.term.trim() === '') {
+        //     return data;
+        //   }
 
-          if (
-            data.text
-              .toUpperCase()
-              .includes(term) ||
-            data.id.includes(term)
-          ) {
-            return data;
-          }
+        //   const term = params.term
+        //     .toUpperCase()
+        //     .trim();
 
-          return null;
-        },
+        //   if (
+        //     data.text
+        //       .toUpperCase()
+        //       .includes(term) ||
+        //     data.id.includes(term)
+        //   ) {
+        //     return data;
+        //   }
+
+        //   return null;
+        // },
       });
     });
 

@@ -1,7 +1,7 @@
 <% if (!ob.inventory.length) { %>
 <div class="rowMd"><%= ob.polyT(`editListing.variantInventory.placeholderNeedMoreData`) %></div>
 <% } else { %>
-<div class="inventoryTableWrap">
+<div class="inventoryTableWrap rowSm">
   <table>
     <tr>
       <% ob.columns.forEach(column => { %>

@@ -9,6 +9,14 @@
       padding: $padSm;
       padding-left: 0;
     }
+
+    .select2 {
+      // Select2 will not properly size dropdowns that are hidden at render time and some of ours are.
+      // If you do need to set a specific width, we may have some !important wars. Alternatively, we
+      // could scrap this and add a style="width: 100%" to the individually select element... but this
+      // might be ok for now.
+      width: 100% !important;
+    }
   }
 
   .modalContent {
