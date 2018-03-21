@@ -38,7 +38,7 @@ export default class extends Collection {
    * Return a list of verified moderators that match the ids passed in
    * @param IDs {array} - a list of IDs
    */
-  matched(IDs) {
+  matched(IDs = []) {
     return this.filter(mod => IDs.includes(mod.get('peerID')));
   }
 
