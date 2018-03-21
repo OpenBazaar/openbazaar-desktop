@@ -20,7 +20,7 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
-import { recordEvent} from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 
 
 export default class extends BaseModal {

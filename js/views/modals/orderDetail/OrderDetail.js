@@ -9,7 +9,7 @@ import {
 } from '../../../utils/order';
 import { getCachedProfiles } from '../../../models/profile/Profile';
 import loadTemplate from '../../../utils/loadTemplate';
-import { recordEvent} from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
 import OrderDispute from '../../../models/order/OrderDispute';
