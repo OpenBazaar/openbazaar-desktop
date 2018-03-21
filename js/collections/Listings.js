@@ -50,7 +50,6 @@ export default class extends Collection {
       const updatedListing = listing;
       const priceObj = updatedListing.price;
 
-
       updatedListing.price.amount =
         integerToDecimal(priceObj.amount, priceObj.currencyCode);
 
