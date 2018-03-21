@@ -310,7 +310,7 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
-    const segmentation = { action: '' };
+    const segmentation = {};
 
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
@@ -319,7 +319,8 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        segmentation.action = 'OwnListing';
+        segmentation.error = 'OwnListing';
+        recordEvent('purchase', segmentation);
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -339,7 +340,7 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            recordEvent('purchaseDone', { id: data.orderId });
+            segmentation.id = data.orderId;
           })
           .fail((jqXHR) => {
             this.setState({ phase: 'pay' });
@@ -347,9 +348,11 @@ export default class extends BaseModal {
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
-            recordEvent('purchaseFail', { error: errMsg });
+            segmentation.error = errMsg;
+          })
+          .always(() => {
+            recordEvent('purchase', segmentation);
           });
-        segmentation.action = 'Success';
       }
     } else {
       this.setState({ phase: 'pay' });
@@ -362,9 +365,9 @@ export default class extends BaseModal {
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      segmentation.action = `Error: ${purchaseErrs.join()}`;
+      segmentation.error = `Error: ${purchaseErrs.join()}`;
+      recordEvent('purchase', segmentation);
     }
-    recordEvent('purchase', segmentation);
   }
 
   insertErrors(container, errors = []) {
