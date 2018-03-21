@@ -16,7 +16,7 @@ import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
-import { recordEvent } from './utils/metrics';
+import { startEvent, endEvent } from './utils/metrics';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -408,8 +408,9 @@ export default class ObRouter extends Router {
     let profileFetch;
     let listing;
     let listingFetch;
-    const userPageFetchTime = Date.now();
     let userPageFetchError = '';
+
+    startEvent('UserPageLoad');
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -496,8 +497,7 @@ export default class ObRouter extends Router {
     })
       .always(() => {
         this.off(null, onWillRoute);
-        recordEvent('UserPageLoad', {
-          timeInSeconds: (Date.now() - userPageFetchTime) / 1000,
+        endEvent('UserPageLoad', {
           pageState,
           listing: !!listingFetch,
           error: userPageFetchError,

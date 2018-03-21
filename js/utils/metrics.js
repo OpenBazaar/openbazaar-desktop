@@ -14,7 +14,7 @@ export function addMetrics() {
     window.Countly.q = [];
     window.Countly.app_key = '979774c41bab3a6e5232a3630e6e151e439c412e';
     window.Countly.url = 'https://countly.openbazaar.org';
-    window.Countly.interval = 4000;
+    window.Countly.interval = 30000;
     window.Countly.q.push(['track_sessions']);
     window.Countly.q.push(['track_pageview']);
     window.Countly.q.push(['track_clicks']);
@@ -57,6 +57,20 @@ export function showMetricsModal() {
 export function recordEvent(key, segmentation) {
   if (window.Countly) {
     window.Countly.q.push(['add_event',
+      {
+        key,
+        segmentation,
+      }]);
+  }
+}
+
+export function startEvent(key) {
+  if (window.Countly) window.Countly.q.push(['start_event', key]);
+}
+
+export function endEvent(key, segmentation) {
+  if (window.Countly) {
+    window.Countly.q.push(['end_event',
       {
         key,
         segmentation,

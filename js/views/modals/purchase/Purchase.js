@@ -20,7 +20,7 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
-import { recordEvent } from '../../../utils/metrics';
+import { startEvent, endEvent } from '../../../utils/metrics';
 
 
 export default class extends BaseModal {
@@ -311,6 +311,7 @@ export default class extends BaseModal {
     this.setState({ phase: 'processing' });
 
     const segmentation = {};
+    startEvent('purchase');
 
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
@@ -320,7 +321,7 @@ export default class extends BaseModal {
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
         segmentation.error = 'OwnListing';
-        recordEvent('purchase', segmentation);
+        endEvent('purchase', segmentation);
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -351,7 +352,7 @@ export default class extends BaseModal {
             segmentation.error = errMsg;
           })
           .always(() => {
-            recordEvent('purchase', segmentation);
+            endEvent('purchase', segmentation);
           });
       }
     } else {
@@ -366,7 +367,7 @@ export default class extends BaseModal {
         this.insertErrors(container, this.order.validationError[errKey]);
       });
       segmentation.error = `Error: ${purchaseErrs.join()}`;
-      recordEvent('purchase', segmentation);
+      endEvent('purchase', segmentation);
     }
   }
 
