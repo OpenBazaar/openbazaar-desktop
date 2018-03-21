@@ -169,8 +169,27 @@ export default class extends BaseView {
       }));
 
       this.$('#editListingCryptoContractType, #editListingCoinType').select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
+        minimumResultsForSearch: 5,
+        matcher: (params, data) => {
+          if (!params.term || params.term.trim() === '') {
+            return data;
+          }
+
+          const term = params.term
+            .toUpperCase()
+            .trim();
+
+          if (
+            data.text
+              .toUpperCase()
+              .includes(term) ||
+            data.id.includes(term)
+          ) {
+            return data;
+          }
+
+          return null;
+        },
       });
     });
 

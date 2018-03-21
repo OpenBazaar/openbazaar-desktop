@@ -1,10 +1,4 @@
-// import _ from 'underscore';
 import app from '../app';
-// import bitcoreLib from 'bitcore-lib';
-// import bech32 from 'bech32';
-
-// If a currency does not support fee bumping or you want to disable it, do not provide a
-// feeBumpTransactionSize setting.
 
 const currencies = [
   'BTC',
@@ -40,8 +34,8 @@ export function getCurrenciesSortedByName() {
   }
 
   currenciesSortedByName = currencies.sort((a, b) => {
-    const aName = app.polyglot.t(`cryptoCurrencies.${a.code}`) || a.code;
-    const bName = app.polyglot.t(`cryptoCurrencies.${b.code}`) || b.code;
+    const aName = app.polyglot.t(`cryptoCurrencies.${a}`) || a.code;
+    const bName = app.polyglot.t(`cryptoCurrencies.${b}`) || b.code;
     if (aName < bName) return -1;
     if (aName > bName) return 1;
     return 0;
