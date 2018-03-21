@@ -16,6 +16,7 @@ import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
+import { recordEvent } from './utils/metrics';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -407,6 +408,8 @@ export default class ObRouter extends Router {
     let profileFetch;
     let listing;
     let listingFetch;
+    const userPageFetchTime = Date.now();
+    let userPageFetchError = '';
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -485,11 +488,21 @@ export default class ObRouter extends Router {
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
         this.userNotFound(guid);
+        userPageFetchError = 'User Not Found';
       } else if (listingFetch.state() === 'rejected') {
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
+        userPageFetchError = 'Listing Not Found';
       }
     })
-      .always(() => (this.off(null, onWillRoute)));
+      .always(() => {
+        this.off(null, onWillRoute);
+        recordEvent('UserPageLoad', {
+          timeInSeconds: (Date.now() - userPageFetchTime) / 1000,
+          pageState,
+          listing: !!listingFetch,
+          error: userPageFetchError,
+        });
+      });
   }
 
   transactions(tab) {

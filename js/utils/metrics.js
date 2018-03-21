@@ -14,6 +14,7 @@ export function addMetrics() {
     window.Countly.q = [];
     window.Countly.app_key = '979774c41bab3a6e5232a3630e6e151e439c412e';
     window.Countly.url = 'https://countly.openbazaar.org';
+    window.Countly.interval = 4000;
     window.Countly.q.push(['track_sessions']);
     window.Countly.q.push(['track_pageview']);
     window.Countly.q.push(['track_clicks']);
