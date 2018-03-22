@@ -2,6 +2,7 @@ import _ from 'underscore';
 import { Collection } from 'backbone';
 import app from '../app';
 import Mod from '../models/VerifiedMod';
+import { getCurrentConnection } from '../utils/serverConnect';
 
 export default class extends Collection {
   constructor(...args) {
