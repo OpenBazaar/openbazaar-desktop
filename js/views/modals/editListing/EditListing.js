@@ -850,7 +850,6 @@ export default class extends BaseModal {
       formData.metadata = {
         ...formData.metadata,
         format: 'FIXED_PRICE',
-        coinType: 99,
       };
     } else {
       formData = {

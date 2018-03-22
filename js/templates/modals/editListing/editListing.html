@@ -83,7 +83,7 @@
                 <div class="col6 simpleFlexCol">
                   <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
                   <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
-                  <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
+                  <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
                     <% ob.contractTypes.forEach((contractType) => { %>
                     <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                     <% }); %>
@@ -121,7 +121,7 @@
                 <div class="col6 simpleFlexCol conditionWrap">
                   <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
                   <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
-                  <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto">
+                  <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
                     <% ob.conditionTypes.forEach((conditionType) => { %>
                     <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
                     <% }); %>
