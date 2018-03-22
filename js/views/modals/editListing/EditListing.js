@@ -776,8 +776,23 @@ export default class extends BaseModal {
 
     // render so errrors are shown / cleared
     this.render(!!save);
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+
+    console.log(this.model.validationError);
+
+    if (!save) {
+      const $firstErr = this.$('.errorList:first');
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        // There's a model error that's not represented in the UI - likely
+        // developer error.
+        const msg = Object.keys(this.model.validationError)
+          .reduce((str, errKey) =>
+            `${str}${errKey}: ${this.model.validationError[errKey]}<br>`, '');
+        openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
+          msg);
+      }
+    }
   }
 
   onChangeManagementType(e) {
@@ -801,7 +816,6 @@ export default class extends BaseModal {
    */
   setModelData() {
     let formData = this.getFormData(this.$formFields);
-    console.log(JSON.parse(JSON.stringify(formData)));
     const item = this.model.get('item');
     const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTO';
 
