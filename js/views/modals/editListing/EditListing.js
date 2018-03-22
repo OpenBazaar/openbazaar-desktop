@@ -777,8 +777,6 @@ export default class extends BaseModal {
     // render so errrors are shown / cleared
     this.render(!!save);
 
-    console.log(this.model.validationError);
-
     if (!save) {
       const $firstErr = this.$('.errorList:first');
       if ($firstErr.length) {
@@ -852,6 +850,7 @@ export default class extends BaseModal {
       formData.metadata = {
         ...formData.metadata,
         format: 'FIXED_PRICE',
+        coinType: 99,
       };
     } else {
       formData = {
@@ -893,8 +892,6 @@ export default class extends BaseModal {
         }
       });
     }
-
-    // console.log(this.model.toJSON());
   }
 
   open() {
@@ -980,7 +977,7 @@ export default class extends BaseModal {
       const $excludeContainer = isCrypto ?
         this.getCachedEl('.js-standardTypeWrap') :
         this.getCachedEl('.js-cryptoTypeWrap');
-      return !$.contains($excludeContainer, el);
+      return !$.contains($excludeContainer[0], el);
     });
 
     return $fields;

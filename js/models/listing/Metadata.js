@@ -55,10 +55,6 @@ export default class extends BaseModel {
       addError('format', `The format must be one of ${this.formats}.`);
     }
 
-    if (typeof attrs.coinType !== 'string') {
-      addError('coinType', 'The coin type must be provided as a string.');
-    }
-
     const firstDayOf2038 = new Date(2038, 0, 1, 0, 0, 0, 0);
 
     // please provide data as ISO string (or possibly unix timestamp)

@@ -106,9 +106,17 @@ export default class extends BaseModel {
       }
     }
 
-    if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
-      !attrs.shippingOptions.length) {
-      addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
+    const metadata = this.get('metadata').toJSON();
+    const contractType = metadata.contractType;
+
+    if (contractType === 'PHYSICAL_GOOD') {
+      if (!attrs.shippingOptions.length) {
+        addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
+      }
+    } else if (contractType === 'CRYPTO') {
+      if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
+        addError('metadata.coinType', 'The coin type must be provided as a string.');
+      }
     }
 
     if (attrs.coupons.length > this.max.couponCount) {
