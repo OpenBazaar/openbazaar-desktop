@@ -1111,7 +1111,7 @@
     "viewListingLink": "View Listing",
     "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
@@ -1320,7 +1320,7 @@
     "quantity": "Quantity",
     "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
-    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust, you will not be able to dispute the order if something goes wrong.",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
