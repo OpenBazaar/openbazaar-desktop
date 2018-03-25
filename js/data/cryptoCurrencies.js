@@ -99,6 +99,30 @@ const currencies = [
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
   },
+  {
+    code: 'XZC',
+    testnetCode: 'TXZC',
+    baseUnit: 100000000,
+    minDisplayDecimals: 0,
+    maxDisplayDecimals: 8,
+    averageModeratedTransactionSize: 184,
+    feeBumpTransactionSize: 154,
+    qrCodeText: address => `xzc:${address}`,
+    icon: 'imgs/cryptoIcons/xzcIcon128.png',
+    url: 'https://zcoin.io',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://testexplorer.zcoin.io/address/${address}` :
+        `https://explorer.zcoin.io/address/${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://testexplorer.zcoin.io/tx/${txid}` :
+        `https://explorer.zcoin.io/tx/${txid}`
+    ),
+    canShapeShiftIntoWallet: false,
+    canShapeShiftIntoPurchase: false,
+  },
 ];
 
 export default currencies;

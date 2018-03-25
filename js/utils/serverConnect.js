@@ -35,6 +35,7 @@ const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
 const serverCurStartArgMap = {
   BCH: '--bitcoincash',
   ZEC: '--zcash',
+  XZC: '--xzc',
 };
 
 const defaultLocalServerStartArgs = () => {
