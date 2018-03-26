@@ -9,6 +9,7 @@ import {
   getServerCurrency,
   getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
+import cryptoListingCurs from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
 const events = {
@@ -144,8 +145,11 @@ export function formatPrice(price, currency) {
 }
 
 /**
- * Will format an amount in the given currency into the format appropriate for the given locale. An
- * empty string will be returned if an unrecognized currency code is provided.
+ * Will format an amount in the given currency into the format appropriate for the given locale.
+ * In many cases, instead of using this method directly, you may want to use renderFormattedCurrency()
+ * from this module or its corresponding template helper, formattedCurrency, since those will more
+ * robustly handle (via tooltips and icons) unrecognized currency codes and/or conversion problems
+ * due to unavailable exchange rate data.
  */
 export function formatCurrency(amount, currency, options) {
   const opts = {
@@ -155,12 +159,8 @@ export function formatCurrency(amount, currency, options) {
     ...options,
   };
 
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number');
-  }
-
-  if (isNaN(amount)) {
-    throw new Error('Please provide an amount that is not NaN');
+  if (typeof amount !== 'number' || isNaN(amount)) {
+    return '';
   }
 
   if (typeof opts.locale !== 'string') {
@@ -174,13 +174,13 @@ export function formatCurrency(amount, currency, options) {
   const cur = currency.toUpperCase();
   const curData = getCurrencyByCode(cur);
 
-  if (!curData) {
-    // return an empty string when we have an unrecognized currency code
-    return '';
-  }
-
   let formattedCurrency;
   const cryptoCur = getCryptoCurByCode(cur);
+  
+  // If we don't recognize the currency, we'll assume it's a crypto
+  // listing cur.
+  const isCryptoListingCur = cryptoListingCurs.includes(cur) ||
+    (!cryptoCur && !curData);
 
   if (cryptoCur) {
     let curSymbol = curData.symbol || cur;
@@ -207,8 +207,8 @@ export function formatCurrency(amount, currency, options) {
     }
 
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: curData.minDisplayDecimals,
-      maximumFractionDigits: curData.maxDisplayDecimals,
+      minimumFractionDigits: options.minDisplayDecimals || curData.minDisplayDecimals,
+      maximumFractionDigits: options.maxDisplayDecimals || curData.maxDisplayDecimals,
     }).format(amt);
 
     const translationSubKey = curSymbol === curData.symbol ?
@@ -217,12 +217,23 @@ export function formatCurrency(amount, currency, options) {
       amount: formattedAmount,
       [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
     });
+  } else if (isCryptoListingCur) {
+    const formattedAmount = new Intl.NumberFormat(opts.locale, {
+      minimumFractionDigits: options.minDisplayDecimals || 0,
+      maximumFractionDigits: options.maxDisplayDecimals || 8,
+    }).format(amount);
+
+    formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
+      amount: formattedAmount,
+      code: cur.length > 8 ?
+        `${cur.slice(0, 8)}…` : cur,
+    });
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2,
+      minimumFractionDigits: options.minDisplayDecimals || 2,
+      maximumFractionDigits: options.maxDisplayDecimals || 2,
     }).format(amount);
   }
 
@@ -337,13 +348,16 @@ export function convertCurrency(amount, fromCur, toCur) {
 
 /**
  * Convenience function to both convert and format a currency amount using convertCurrency()
- * and formatCurrency().
+ * and formatCurrency(). In many cases, instead of using this method directly, you may want
+ * to use renderFormattedCurrency() from this module or its corresponding template helper,
+ * formattedCurrency, since those will more robustly handle (via tooltips and icons)
+ * unrecognized currency codes and/or conversion problems due to unavailable exchange rate data.
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
-    skipConvertIfNoExchangeRateData: true,
+    skipConvertOnError: true,
     ...options,
   };
 
@@ -353,7 +367,7 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   try {
     convertedAmt = convertCurrency(amount, fromCur, toCur);
   } catch (e) {
-    if (e instanceof NoExchangeRateDataError && opts.skipConvertIfNoExchangeRateData) {
+    if (opts.skipConvertOnError) {
       // We'll use an unconverted amount
       convertedAmt = amount;
       outputFormat = fromCur;
@@ -363,7 +377,7 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   }
 
   return formatCurrency(convertedAmt, outputFormat,
-    _.omit(opts, 'skipConvertIfNoExchangeRateData'));
+    _.omit(opts, 'skipConvertOnError'));
 }
 
 /**
@@ -407,7 +421,7 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
     throw new Error('Please provide a "from currency" as a string.');
   }
 
-  if (fromCur && typeof toCur !== 'string') {
+  if (toCur && typeof toCur !== 'string') {
     throw new Error('If providing a "to currency", it must be provided as a string.');
   }
 

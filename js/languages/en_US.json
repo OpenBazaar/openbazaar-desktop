@@ -341,7 +341,6 @@
     "averageRating": "overall rating",
     "totalReviews": "review |||| reviews",
     "noTitle": "Listing title not found"
-
   },
   "userShort": {
     "userLoading": "Loading…",
@@ -939,6 +938,11 @@
     "USED_POOR": "Used - Poor",
     "REFURBISHED": "Refurbished"
   },
+  "inventoryDisplay": {
+    "retryLink": "Retry",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
+  },
   "listingDetail": {
     "edit": "Edit",
     "delete": "Delete",
@@ -949,6 +953,7 @@
     "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Condition: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Tags",
     "paymentsAccepted": "Payments Accepted",
     "noTags": "No tags entered",

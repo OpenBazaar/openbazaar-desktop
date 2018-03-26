@@ -311,7 +311,8 @@
     content: '';
     position: absolute;
     background-color: transparent;
-    width: $confirmBoxWidth + $pad + $pad;
+    left: 0;
+    right: 0;
     height: 25px;
   }
 }
@@ -326,7 +327,7 @@
     -webkit-clip-path: polygon(0 100%, 100% 0, 100% 100%);
   }
 
-  &::after{
+  &::after {
     top: -25px;
   }
 }
@@ -351,16 +352,56 @@
   @extend .arrowBoxTop;
   left: 50%;
   transform: translateX(-50%);
+
+  &::after {
+    left: 50%;
+    transform: translateX(-50%);    
+  }
 }
 
 .arrowBoxRightTop {
-  // this will have an arror on the right side of box
+  // this will have an arror on the top right side of box
   @extend .arrowBoxTop;
   right: -20px;
 
   &::before {
     left: auto;
     right: 5px;
+  }
+}
+
+.arrowBoxTipWrap {
+  position: relative;
+  cursor: pointer;
+
+  .arrowBoxCenteredTop,
+  .arrowBoxRightTop {
+    display: none;
+    border-width: 1px;
+    border-style: solid;
+    padding: $pad;
+    position: absolute;
+    text-align: left;
+    min-width: 250px;
+  }
+
+  &:hover {
+    .arrowBox {
+      display: block;
+    }
+  }
+
+  .arrowBoxCenteredTop,
+  .arrowBoxRightTop {
+    margin-top: 15px;
+  }
+
+  .unconstrainedWidth {
+    // use if your tip is likely to be short in text
+    .arrowBoxCenteredTop,
+    .arrowBoxRightTop {
+      min-width: 0;
+    }    
   }
 }
 

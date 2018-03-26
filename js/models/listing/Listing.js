@@ -67,6 +67,12 @@ export default class extends BaseModel {
     return app.profile.id === this.guid;
   }
 
+  get isCrypto() {
+    return true;
+    return this.get('metadata')
+      .get('contractType') === 'CRYPTO';
+  }
+
   /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
@@ -299,6 +305,8 @@ export default class extends BaseModel {
     this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;
 
+    // parsedResponse.metadata.pricingCurrency = 'HOWDY_BOY';
+
     if (parsedResponse) {
       // set the hash
       parsedResponse.hash = response.hash;
@@ -396,10 +404,6 @@ export default class extends BaseModel {
         // END - convert price fields
       }
     }
-
-    // todo: acceptedCurrency (which is a field we don't use now, but might
-    // if we implement cryptocurrency) is comming in with a lower-cased
-    // currency code. Capitalize it.
 
     return parsedResponse;
   }

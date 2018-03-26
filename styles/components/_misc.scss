@@ -125,6 +125,16 @@
   }
 }
 
-.hideIfEmpty:empty {
-  display: none;
+.quantityDisplay {
+  position: relative;
+
+  .spinner, .content {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  .spinner {
+    top: -2px;
+  }
 }

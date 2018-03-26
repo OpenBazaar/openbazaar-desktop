@@ -12,12 +12,14 @@ import {
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
+import { getInventory } from '../../../utils/inventory';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
+import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -120,10 +122,18 @@ export default class extends BaseModal {
       },
     });
 
+    if (this.model.isCrypto) {
+      this.inventoryFetch = getInventory(this.vendor.peerID, this.model.get('slug'));
+    }
+
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
+  }
+
+  createCryptoInventory() {
+
   }
 
   className() {
@@ -518,6 +528,7 @@ export default class extends BaseModal {
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
+    if (this.inventoryFetch) this.inventoryFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
   }
@@ -540,8 +551,10 @@ export default class extends BaseModal {
     }
 
     loadTemplate('modals/listingDetail/listing.html', t => {
+      const flatModel = this.model.toJSON();
+
       this.$el.html(t({
-        ...this.model.toJSON(),
+        ...flatModel,
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing,
         displayCurrency: app.settings.get('localCurrency'),
@@ -557,6 +570,7 @@ export default class extends BaseModal {
         hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
+        isCrypto: this.model.isCrypto,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -600,6 +614,19 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.adjustPriceBySku();
+
+      if (this.model.isCrypto) {
+        this.cryptoInventory = this.createChild(QuantityDisplay, {
+          peerId: this.vendor.peerID,
+          slug: this.model.get('slug'),
+          initialState: {
+            coinType: 'ZEC',
+            displayCur: app.settings.get('localCurrency'),
+          },
+        });
+        this.getCachedEl('.js-cryptoInventory')
+          .html(this.cryptoInventory.render().el);
+      }
 
       if (nsfwWarning) {
         setTimeout(() => {

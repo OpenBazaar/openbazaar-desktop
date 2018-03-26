@@ -13,24 +13,9 @@
   const iconBaseClass = ob.iconBaseClass || 'ion-alert-circled clrTAlert';
   const iconClass = ob.iconClass || '';
   const iconFullClass = `${iconBaseClass} ${iconClass}`;
-
   const showTooltipOnUnrecognizedCur = ob.showTooltipOnUnrecognizedCur || true;
-
   const fromCurValidity = ob.currencyMod.getCurrencyValidity(fromCur);
-  const toCurValidity = ob.currencyMod.getCurrencyValidity(toCur);
-
-  let tip;
-
-  if (fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    tip = ob.polyT('formattedCurrency.unrecognizedCurrencyTip');
-  }
+  const formattedPrice = ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur, { forceCryptoListingCur: true });
 %>
 
-<%
-  if (fromCurValidity !== 'UNRECOGNIZED_CURRENCY') {
-    print(ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur));
-  }
-%>
-<% if (fromCurValidity === 'UNRECOGNIZED_CURRENCY' && showTooltipOnUnrecognizedCur) { %>
-&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= tip %>"><span class="<%= iconFullClass %>"></span></span>
-<% } %>
+<%= formattedPrice %><% if (!formattedPrice) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip') %>"><span class="<%= iconFullClass %>"></span></span>

@@ -369,6 +369,10 @@ svg {
     white-space: nowrap;
   }
 
+  .hideIfEmpty:empty {
+    display: none;
+  }
+
   // external brand colors. They should not be overwritten by theme colors.
   .twitterColor {
     color: #00aced;

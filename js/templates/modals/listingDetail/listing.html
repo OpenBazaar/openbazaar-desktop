@@ -45,9 +45,9 @@
       <h2 class="txUnb flexNoShrink js-price">
         <%=
           ob.currencyMod.formattedCurrency(
-            ob.item.price,
-            ob.metadata.pricingCurrency,
-            ob.displayCurrency
+            12.8712361287,
+            'zippo',
+            'MOOLIE'
           )
         %>
       </h2>
@@ -124,8 +124,16 @@
           <div>
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
-          <% if (ob.item.condition) { %>
-            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %></div>
+          <% if (ob.isCrypto) { %>
+            <div>
+              <%= ob.polyT('listingDetail.inventory', {
+                inventory: '<span class="js-cryptoInventory"></span>'
+              }) %>
+            </div>
+          <% } else if (ob.metadata.type === 'PHYSICAL_GOOD') { %>
+            <div>
+              <%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %>
+            </div>
           <% } %>
         </div>
         <hr class="rowLg">
