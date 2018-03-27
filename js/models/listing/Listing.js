@@ -4,6 +4,7 @@ import app from '../../app';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -70,7 +71,7 @@ export default class extends BaseModel {
   get isCrypto() {
     return true;
     return this.get('metadata')
-      .get('contractType') === 'CRYPTO';
+      .get('contractType') === 'CRYPTOCURRENCY';
   }
 
   /**
@@ -94,6 +95,15 @@ export default class extends BaseModel {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+    const metadata = {
+      ...this.get('metadata').toJSON(),
+      ...attrs.metadata,
+    };
+    const contractType = metadata.contractType;
+    const item = {
+      ...this.get('item').toJSON(),
+      ...attrs.item,
+    };
 
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
@@ -112,16 +122,29 @@ export default class extends BaseModel {
       }
     }
 
-    const metadata = this.get('metadata').toJSON();
-    const contractType = metadata.contractType;
-
     if (contractType === 'PHYSICAL_GOOD') {
       if (!attrs.shippingOptions.length) {
         addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
       }
-    } else if (contractType === 'CRYPTO') {
+    } else if (contractType === 'CRYPTOCURRENCY') {
       if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
         addError('metadata.coinType', 'The coin type must be provided as a string.');
+      }
+
+      if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
+        addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
+          'cryptocurrency listings.');
+      }
+
+      if (item && typeof item.price !== 'undefined') {
+        addError('metadata.pricingCurrency', 'The price should not be set on cryptocurrency ' +
+          'listings.');
+      }
+    }
+
+    if (contractType !== 'CRYPTOCURRENCY') {
+      if (this.get('item').conditionTypes.indexOf(attrs.condition) === -1) {
+        addError('condition', app.polyglot.t('listingModelErrors.badConditionType'));
       }
     }
 
@@ -131,6 +154,13 @@ export default class extends BaseModel {
     }
 
     errObj = this.mergeInNestedErrors(errObj);
+
+    if (contractType === 'CRYPTOCURRENCY') {
+      // Remove the validation of certain fields that should not be set for
+      // cryptocurrency listings.
+      delete errObj['metadata.pricingCurrency'];
+      delete errObj['item.price'];
+    }
 
     // Coupon price discount cannot exceed the item price.
     attrs.coupons.forEach(coupon => {
@@ -201,6 +231,14 @@ export default class extends BaseModel {
               options.attrs.metadata.pricingCurrency);
           }
         });
+
+        const baseUnit = method === 'create' ?
+          defaultQuantityBaseUnit :
+          options.attrs.metadata.coinDivisibility;
+
+        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+          options.attrs.item.quantity = options.attrs.item.quantity * baseUnit;
+        }
         // END - convert price fields
 
         // If providing a quanitity and / or productID on the Item and not
@@ -305,6 +343,10 @@ export default class extends BaseModel {
     this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;
 
+    // TODO
+    // TODO
+    // TODO
+    // TODO
     // parsedResponse.metadata.pricingCurrency = 'HOWDY_BOY';
 
     if (parsedResponse) {
@@ -401,6 +443,19 @@ export default class extends BaseModel {
             sku.surcharge = integerToDecimal(surcharge, cur);
           }
         });
+
+        if (parsedResponse.metadata &&
+          parsedResponse.metadata.contractType === 'CRYPTOCURRENCY') {
+          try {
+            const quantity = parsedResponse.item.skus[0].quantity;
+            const baseUnit = parsedResponse.metadata.coinDivisibility;
+            parsedResponse.item.skus[0].quantity = quantity / baseUnit;
+          } catch (e) {
+            // This shouldn't happen and should have been flagged by server validation
+            console.error('Unable to convert cryptolisting quantity from base units.');
+            console.error(e);
+          }
+        }
         // END - convert price fields
       }
     }

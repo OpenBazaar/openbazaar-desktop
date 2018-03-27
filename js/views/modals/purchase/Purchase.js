@@ -5,6 +5,9 @@ import '../../../utils/lib/velocity';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
+import {
+  isFetching,
+} from '../../../utils/inventory';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -20,7 +23,6 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
-
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -136,6 +138,9 @@ export default class extends BaseModal {
       listing: this.listing,
       vendor: this.vendor,
     });
+
+    console.log('moo');
+    window.moo = this;
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());

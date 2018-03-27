@@ -146,10 +146,11 @@ export function formatPrice(price, currency) {
 
 /**
  * Will format an amount in the given currency into the format appropriate for the given locale.
- * In many cases, instead of using this method directly, you may want to use renderFormattedCurrency()
- * from this module or its corresponding template helper, formattedCurrency, since those will more
- * robustly handle (via tooltips and icons) unrecognized currency codes and/or conversion problems
- * due to unavailable exchange rate data.
+ * In many cases, instead of using this method directly, you may want to use
+ * renderFormattedCurrency() from this module or its corresponding template helper,
+ * formattedCurrency, since those will more robustly handle (via tooltips and icons)
+ * unrecognized currency codes and/or conversion problems due to unavailable exchange
+ * rate data.
  */
 export function formatCurrency(amount, currency, options) {
   const opts = {
@@ -176,7 +177,7 @@ export function formatCurrency(amount, currency, options) {
 
   let formattedCurrency;
   const cryptoCur = getCryptoCurByCode(cur);
-  
+
   // If we don't recognize the currency, we'll assume it's a crypto
   // listing cur.
   const isCryptoListingCur = cryptoListingCurs.includes(cur) ||
@@ -207,8 +208,8 @@ export function formatCurrency(amount, currency, options) {
     }
 
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: options.minDisplayDecimals || curData.minDisplayDecimals,
-      maximumFractionDigits: options.maxDisplayDecimals || curData.maxDisplayDecimals,
+      minimumFractionDigits: opts.minDisplayDecimals || curData.minDisplayDecimals,
+      maximumFractionDigits: opts.maxDisplayDecimals || curData.maxDisplayDecimals,
     }).format(amt);
 
     const translationSubKey = curSymbol === curData.symbol ?
@@ -219,8 +220,8 @@ export function formatCurrency(amount, currency, options) {
     });
   } else if (isCryptoListingCur) {
     const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: options.minDisplayDecimals || 0,
-      maximumFractionDigits: options.maxDisplayDecimals || 8,
+      minimumFractionDigits: opts.minDisplayDecimals || 0,
+      maximumFractionDigits: opts.maxDisplayDecimals || 8,
     }).format(amount);
 
     formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
@@ -232,8 +233,8 @@ export function formatCurrency(amount, currency, options) {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
-      minimumFractionDigits: options.minDisplayDecimals || 2,
-      maximumFractionDigits: options.maxDisplayDecimals || 2,
+      minimumFractionDigits: opts.minDisplayDecimals || 2,
+      maximumFractionDigits: opts.maxDisplayDecimals || 2,
     }).format(amount);
   }
 

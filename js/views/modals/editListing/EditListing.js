@@ -270,9 +270,9 @@ export default class extends BaseModal {
     this.setContractTypeClass(e.target.value);
 
     if (!data.fromCryptoTypeChange) {
-      if (e.target.value === 'CRYPTO') {
+      if (e.target.value === 'CRYPTOCURRENCY') {
         this.getCachedEl('#editListingCryptoContractType')
-          .val('CRYPTO');
+          .val('CRYPTOCURRENCY');
         this.getCachedEl('#editListingCryptoContractType')
           .trigger('change')
           .focus();
@@ -281,7 +281,7 @@ export default class extends BaseModal {
   }
 
   onChangeCryptoContractType(e) {
-    if (e.target.value === 'CRYPTO') return;
+    if (e.target.value === 'CRYPTOCURRENCY') return;
 
     this.getCachedEl('#editContractType')
       .val(e.target.value);
@@ -779,14 +779,14 @@ export default class extends BaseModal {
 
     if (!save) {
       const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length) {
+      if ($firstErr.length && $firstErr.is(':visible')) {
         $firstErr[0].scrollIntoViewIfNeeded();
       } else {
         // There's a model error that's not represented in the UI - likely
         // developer error.
         const msg = Object.keys(this.model.validationError)
           .reduce((str, errKey) =>
-            `${str}${errKey}: ${this.model.validationError[errKey]}<br>`, '');
+            `${str}${errKey}: ${this.model.validationError[errKey].join(', ')}<br>`, '');
         openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
           msg);
       }
@@ -815,7 +815,8 @@ export default class extends BaseModal {
   setModelData() {
     let formData = this.getFormData(this.$formFields);
     const item = this.model.get('item');
-    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTO';
+    const metadata = this.model.get('metadata');
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY';
 
     // set model / collection data for various child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
@@ -852,6 +853,11 @@ export default class extends BaseModal {
         format: 'FIXED_PRICE',
       };
     } else {
+      item.unset('condition');
+      item.unset('price');
+      metadata.unset('pricingCurrency');
+      delete formData.metadata.pricingCurrency;
+
       formData = {
         ...formData,
         coupons: [],
@@ -880,7 +886,7 @@ export default class extends BaseModal {
     });
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
-    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+    if (metadata.get('contractType') !== 'PHYSICAL_GOOD') {
       this.model.get('shippingOptions').reset();
     } else {
       // If any shipping options have a type of 'LOCAL_PICKUP', we'll
@@ -906,7 +912,7 @@ export default class extends BaseModal {
         return this;
       }
 
-      if (getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
+      if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,
         }).render().open();
@@ -957,7 +963,7 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
-    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTO';
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY';
     const cryptoExcludes = isCrypto ? ', .js-inventoryManagementSection' : '';
     const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
       `.js-variantInventorySection${cryptoExcludes}`;
@@ -1291,7 +1297,7 @@ export default class extends BaseModal {
       this.inventoryManagement = this.createChild(InventoryManagement, {
         initialState: {
           trackBy: this.trackInventoryBy,
-          // quantity: metadata.get('contractType') === 'CRYPTO' ? '' : item.get('quantity'),
+          // quantity: metadata.get('contractType') === 'CRYPTOCURRENCY' ? '' : item.get('quantity'),
           quantity: item.get('quantity'),
           errors: inventoryManagementErrors,
         },

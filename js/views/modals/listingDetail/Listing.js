@@ -12,7 +12,10 @@ import {
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
-import { getInventory } from '../../../utils/inventory';
+import {
+  getInventory,
+  events as inventoryEvents,
+} from '../../../utils/inventory';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -124,16 +127,14 @@ export default class extends BaseModal {
 
     if (this.model.isCrypto) {
       this.inventoryFetch = getInventory(this.vendor.peerID, this.model.get('slug'));
+      this.listenTo(inventoryEvents, 'inventory-change',
+        e => (this._inventory = e.inventory));
     }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
-  }
-
-  createCryptoInventory() {
-
   }
 
   className() {
@@ -454,6 +455,7 @@ export default class extends BaseModal {
       removeOnClose: true,
       showCloseButton: false,
       phase: 'pay',
+      inventory: this._inventory,
     })
       .render()
       .open();

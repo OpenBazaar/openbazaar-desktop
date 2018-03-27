@@ -1,7 +1,7 @@
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoContractType" class="required"><%= ob.polyT('editListing.type') %></label>
-    <% if (ob.metadata.contractType === 'CRYPTO' && ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
+    <% if (ob.metadata.contractType === 'CRYPTOCURRENCY' && ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
     <select id="editListingCryptoContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
       <% ob.contractTypes.forEach((contractType) => { %>
       <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>

@@ -43,3 +43,5 @@ export function getCurrenciesSortedByName() {
 
   return currenciesSortedByName;
 }
+
+export const defaultQuantityBaseUnit = 100000000;

@@ -99,10 +99,6 @@ export default class extends BaseModel {
       addError('title', app.polyglot.t('itemModelErrors.titleTooLong'));
     }
 
-    if (this.conditionTypes.indexOf(attrs.condition) === -1) {
-      addError('condition', app.polyglot.t('itemModelErrors.badConditionType'));
-    }
-
     if (is.not.string(attrs.description)) {
       addError('description', 'The description must be of type string.');
     } else if (attrs.description.length > max.descriptionLength) {

@@ -48,6 +48,12 @@ export default class extends Collection {
 
     response.forEach(listing => {
       const updatedListing = listing;
+
+      updatedListing.price = {
+        amount: 123,
+        currencyCode: 'USD',
+      };
+
       const priceObj = updatedListing.price;
 
       updatedListing.price.amount =

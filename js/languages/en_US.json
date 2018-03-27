@@ -929,7 +929,7 @@
     "PHYSICAL_GOOD": "Physical Good",
     "DIGITAL_GOOD": "Digital Good",
     "SERVICE": "Service",
-    "CRYPTO": "Cryptocurrency"
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "New",
@@ -1796,12 +1796,12 @@
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
+    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
+    "badConditionType": "The condition is not one of the available types."    
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
     "titleTooLong": "The title exceeds the maximum allowable length.",
-    "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
