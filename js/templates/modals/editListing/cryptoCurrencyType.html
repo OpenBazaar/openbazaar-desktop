@@ -23,9 +23,9 @@
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoQuantity" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.quantity') %></label>
-    <% if (ob.errors['item.quantity']) print(ob.formErrorTmpl({ errors: ob.errors['item.quantity'] })) %>
+    <% if (ob.errors['item.cryptoQuantity']) print(ob.formErrorTmpl({ errors: ob.errors['item.cryptoQuantity'] })) %>
     <div class="posR">
-      <input type="text" class="clrBr clrP clrSh2" name="item.quantity" id="editListingCryptoQuantity" value="<%= ob.item.quantity %>" placeholder="0" data-var-type="number">
+      <input type="text" class="clrBr clrP clrSh2" name="item.cryptoQuantity" id="editListingCryptoQuantity" value="<%= ob.item.cryptoQuantity %>" placeholder="0" data-var-type="number">
       <% const selectedCoinType = ob.metadata.coinType || ob.coinTypes[0].code %>
       <div class="cryptoQuantityCoinType clrT2 tx5 js-quantityCoinType"><%= selectedCoinType %></div>
     </div>

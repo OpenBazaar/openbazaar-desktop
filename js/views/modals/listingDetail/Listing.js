@@ -567,7 +567,7 @@ export default class extends BaseModal {
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
         currencyValidity: getCurrencyValidity(
-          this.model.get('metadata').get('pricingCurrency')
+          this.model.get('metadata').get('pricingCurrency') || 'USD'
         ),
         hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,

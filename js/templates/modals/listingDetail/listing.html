@@ -1,3 +1,8 @@
+<%
+  pricingCurrency = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
+    ob.metadata.pricingCurrency : ob.metadata.coinType;
+%>
+
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls withEndBtn flex">
@@ -46,8 +51,8 @@
         <%=
           ob.currencyMod.formattedCurrency(
             12.8712361287,
-            'zippo',
-            'MOOLIE'
+            pricingCurrency,
+            ob.displayCurrency
           )
         %>
       </h2>
@@ -95,7 +100,8 @@
                     acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
                     serverCur: serverCurCode,
                   });
-              } else if (ob.currencyValidity !== 'VALID') {
+              } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+                ob.getCurrencyValidity(pricingCurrency) !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
                   ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
@@ -112,7 +118,7 @@
             <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
-              <% if(ob.shipsFreeToMe) { %>
+              <% if (ob.shipsFreeToMe) { %>
               <div class="txCtr">
                 <a class="clrE1 clrTOnEmph phraseBox txNoUnd js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
               </div>

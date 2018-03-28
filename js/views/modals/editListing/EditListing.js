@@ -778,8 +778,8 @@ export default class extends BaseModal {
     this.render(!!save);
 
     if (!save) {
-      const $firstErr = this.$('.errorList:first');
-      if ($firstErr.length && $firstErr.is(':visible')) {
+      const $firstErr = this.$('.errorList:visible').eq(0);
+      if ($firstErr.length) {
         $firstErr[0].scrollIntoViewIfNeeded();
       } else {
         // There's a model error that's not represented in the UI - likely

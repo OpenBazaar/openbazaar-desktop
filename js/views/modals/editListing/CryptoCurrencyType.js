@@ -112,7 +112,7 @@ export default class extends BaseView {
         this.defaultCoinType,
       quantity: options.getDataFromUi ?
         this.getCachedEl('#editListingCryptoQuantity').val() :
-        this.model.get('item').get('quantity'),
+        this.model.get('item').get('cryptoQuantity'),
       displayCur: app.settings.get('localCurrency'),
       ...options,
     };
@@ -176,27 +176,27 @@ export default class extends BaseView {
       });
 
       this.$('#editListingCoinType').select2({
-        // minimumResultsForSearch: 5,
-        // matcher: (params, data) => {
-        //   if (!params.term || params.term.trim() === '') {
-        //     return data;
-        //   }
+        minimumResultsForSearch: 5,
+        matcher: (params, data) => {
+          if (!params.term || params.term.trim() === '') {
+            return data;
+          }
 
-        //   const term = params.term
-        //     .toUpperCase()
-        //     .trim();
+          const term = params.term
+            .toUpperCase()
+            .trim();
 
-        //   if (
-        //     data.text
-        //       .toUpperCase()
-        //       .includes(term) ||
-        //     data.id.includes(term)
-        //   ) {
-        //     return data;
-        //   }
+          if (
+            data.text
+              .toUpperCase()
+              .includes(term) ||
+            data.id.includes(term)
+          ) {
+            return data;
+          }
 
-        //   return null;
-        // },
+          return null;
+        },
       });
     });
 

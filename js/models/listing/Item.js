@@ -99,6 +99,10 @@ export default class extends BaseModel {
       addError('title', app.polyglot.t('itemModelErrors.titleTooLong'));
     }
 
+    if (this.conditionTypes.indexOf(attrs.condition) === -1) {
+      addError('condition', app.polyglot.t('itemModelErrors.badConditionType'));
+    }
+
     if (is.not.string(attrs.description)) {
       addError('description', 'The description must be of type string.');
     } else if (attrs.description.length > max.descriptionLength) {
@@ -143,24 +147,34 @@ export default class extends BaseModel {
         app.polyglot.t('itemModelErrors.tooManyCats', { maxCats: max.cats }));
     }
 
-    // quantity and productId are not allowed on the Item in the listing API. Instead they are
+    // Quantity and productId are not allowed on the Item in the listing API. Instead they are
     // accomplished via a "dummy" Sku object. Since that seems a bit klunky, out model will
-    // allow them and the Listing model will do the translation in parse / sync.
+    // allow them and the Listing model will do the translation in parse / sync. If this is a
+    // crypto listing then item.cryptoQuantity will be created in liu of item.quantity.
     if (attrs.productId && attrs.productId.length > this.max.productIdLength) {
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
+    // If providing a top-level quantity or cryptoQuantity (for cryptolistings), we'll validate
+    // them. Quantity should only be provided for non-crypto listings where  you are tracking
+    // inventory and have no options (i.e. are not tracking inventory on the variant level).
+    // cryptoQuantity is required for crypto listings.
     if (typeof attrs.quantity !== 'undefined') {
-      // If providing a top-level quantity, we'll validate it. It should only be provided
-      // if you are tracking inventory and have no options (i.e. are not tracking inventory
-      // on the variant level).
       if (typeof attrs.quantity === 'string' && !attrs.quantity) {
         addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
       } else if (typeof attrs.quantity !== 'number') {
         addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
       }
     }
-    // END - quantity and productId
+
+    if (typeof attrs.cryptoQuantity !== 'undefined') {
+      if (typeof attrs.cryptoQuantity === 'string' && !attrs.cryptoQuantity) {
+        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideQuantity'));
+      } else if (typeof attrs.cryptoQuantity !== 'number') {
+        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
+      }
+    }
+    // END - quantity, cryptoQuantity and productId
 
     let maxCombos = 1;
 
