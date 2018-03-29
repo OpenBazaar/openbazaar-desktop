@@ -69,7 +69,6 @@ export default class extends BaseModel {
   }
 
   get isCrypto() {
-    return true;
     return this.get('metadata')
       .get('contractType') === 'CRYPTOCURRENCY';
   }

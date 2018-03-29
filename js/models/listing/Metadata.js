@@ -2,6 +2,7 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { getCurrencyByCode } from '../../data/currencies';
+import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 
 export default class extends BaseModel {
   defaults() {
@@ -10,6 +11,7 @@ export default class extends BaseModel {
       format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
+      coinDivisibility: defaultQuantityBaseUnit,
     };
   }
 

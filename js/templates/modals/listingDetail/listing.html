@@ -1,6 +1,12 @@
 <%
-  pricingCurrency = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
-    ob.metadata.pricingCurrency : ob.metadata.coinType;
+  const isCrypto = ob.metadata.contractType === 'CRYPTOCURRENCY';
+  let pricingCurrency = ob.metadata.pricingCurrency;
+  let price = ob.item.price;
+
+  if (isCrypto) {
+    pricingCurrency = ob.metadata.coinType;
+    price = 1;
+  }
 %>
 
 <div class="popInMessageHolder js-popInMessages"></div>
@@ -50,7 +56,7 @@
       <h2 class="txUnb flexNoShrink js-price">
         <%=
           ob.currencyMod.formattedCurrency(
-            12.8712361287,
+            price,
             pricingCurrency,
             ob.displayCurrency
           )
@@ -101,10 +107,13 @@
                     serverCur: serverCurCode,
                   });
               } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
-                ob.getCurrencyValidity(pricingCurrency) !== 'VALID') {
+                ob.currencyMod.getCurrencyValidity(pricingCurrency) !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
                   ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+              } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
+                !ob.currencyMod.getExchangeRate(pricingCurrency)) {
+                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
               } else {
                 buyNowClass = '';
                 unpurchaseable = false;

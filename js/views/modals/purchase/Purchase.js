@@ -6,8 +6,10 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import {
-  isFetching,
+  getInventory,
+  events as inventoryEvents,
 } from '../../../utils/inventory';
+import { getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -23,6 +25,7 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
+import QuantityDisplay from '../../components/QuantityDisplay';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -139,8 +142,17 @@ export default class extends BaseModal {
       vendor: this.vendor,
     });
 
-    console.log('moo');
-    window.moo = this;
+    // If the parent has the inventory, pass it in, otherwise we'll fetch it.
+    this._inventory = this.options.inventory;
+    if (this.listing.isCrypto &&
+      typeof this._inventory !== 'number') {
+      this.inventoryFetch = getInventory(
+        this.listing.get('vendorID').peerID,
+        this.listing.get('slug')
+      );
+      this.listenTo(inventoryEvents, 'inventory-change',
+        e => (this._inventory = e.inventory));
+    }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -308,7 +320,6 @@ export default class extends BaseModal {
     this.order.set({ moderator });
     this.order.set({}, { validate: true });
 
-
     // cancel any existing order
     if (this.orderSubmit) this.orderSubmit.abort();
 
@@ -376,15 +387,14 @@ export default class extends BaseModal {
   }
 
   get prices() {
-    // create an array of price objects that matches the items in the order
-    const prices = [];
-    this.order.get('items').forEach(item => {
-      const priceObj = {};
+    // return an array of price objects that matches the items in the order
+    return this.order.get('items').map(item => {
       const shipping = item.get('shipping');
       const sName = shipping.get('name');
       const sService = shipping.get('service');
       const sOpt = this.listing.get('shippingOptions').findWhere({ name: sName });
       const sOptService = sOpt ? sOpt.get('services').findWhere({ name: sService }) : '';
+
       // determine which skus match the chosen options
       const variantCombo = [];
       item.get('options').forEach((option, i) => {
@@ -396,15 +406,30 @@ export default class extends BaseModal {
       });
       const sku = this.listing.get('item').get('skus').find(v =>
         _.isEqual(v.get('variantCombo'), variantCombo));
+      // let quantity = item.get('quantity');
+      // let quantityBaseUnit = 1;
+      let price = this.listing.get('item').get('price');
 
-      priceObj.price = this.listing.get('item').get('price');
-      priceObj.sPrice = sOptService ? sOptService.get('price') : 0;
-      priceObj.aPrice = sOptService ? sOptService.get('additionalItemPrice') : 0;
-      priceObj.vPrice = sku ? sku.get('surcharge') : 0;
-      priceObj.quantity = item.get('quantity');
-      prices.push(priceObj);
+      if (this.listing.isCrypto) {
+        price = getExchangeRate(
+          this.listing.get('metadata').get('coinType')
+        );
+        console.log(`the price is ${price}`);
+        // quantity = this.listing.get('item')
+        //   .get('cryptoQuantity');
+        // quantityBaseUnit = this.listing.get('metadata')
+        //   .get('coinDivisibility');
+      }
+
+      return {
+        price,
+        sPrice: sOptService ? sOptService.get('price') : 0,
+        aPrice: sOptService ? sOptService.get('additionalItemPrice') : 0,
+        vPrice: sku ? sku.get('surcharge') : 0,
+        quantity: item.get('quantity'),
+        // quantityBaseUnit,
+      };
     });
-    return prices;
   }
 
   get total() {
@@ -437,6 +462,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
+    if (this.inventoryFetch) this.inventoryFetch.abort();
     super.remove();
   }
 
@@ -491,6 +517,20 @@ export default class extends BaseModal {
       if (this.feeChange) this.feeChange.remove();
       this.feeChange = this.createChild(FeeChange);
       this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
+
+      if (this.listing.isCrypto) {
+        if (this.cryptoInventory) this.cryptoInventory.remove();
+        this.cryptoInventory = this.createChild(QuantityDisplay, {
+          peerId: this.listing.get('vendorID').peerID,
+          slug: this.listing.get('slug'),
+          initialState: {
+            amount: this._inventory,
+            contentClass: 'clrT2',
+          },
+        });
+        this.getCachedEl('.js-cryptoInventory')
+          .html(this.cryptoInventory.render().el);
+      }
     });
 
     return this;

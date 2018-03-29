@@ -432,10 +432,19 @@ export default class extends BaseModal {
   }
 
   startPurchase() {
-    if (this.totalPrice <= 0) {
-      openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
-        app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
-      return;
+    if (!this.model.isCrypto) {
+      if (this.totalPrice <= 0) {
+        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+          app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
+        return;
+      }
+    } else {
+      if (typeof this._inventory === 'number' &&
+        this._inventory <= 0) {
+        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+          app.polyglot.t('listingDetail.errors.outOfStock'));
+        return;
+      }
     }
 
     const selectedVariants = [];
@@ -618,12 +627,13 @@ export default class extends BaseModal {
       this.adjustPriceBySku();
 
       if (this.model.isCrypto) {
+        if (this.cryptoInventory) this.cryptoInventory.remove();
         this.cryptoInventory = this.createChild(QuantityDisplay, {
           peerId: this.vendor.peerID,
           slug: this.model.get('slug'),
           initialState: {
-            coinType: 'ZEC',
-            displayCur: app.settings.get('localCurrency'),
+            coinType: this.model.get('metadata')
+              .get('coinType'),
           },
         });
         this.getCachedEl('.js-cryptoInventory')

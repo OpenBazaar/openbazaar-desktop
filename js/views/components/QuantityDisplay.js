@@ -1,3 +1,4 @@
+import app from '../../app';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import {
@@ -25,8 +26,9 @@ export default class extends baseVw {
         coinType: '',
         contentClass: 'txB',
         spinnerClass: 'spinnerSm',
-        spacerText: '98.5432 ZEC',
-        displayCur: 'PLN', // TODO TODO TODO TODO change to USD
+        // spacerText: '100',
+        tipClass: 'clrT tx5 txCtr',
+        localCur: app.settings.get('localCurrency'),
         // amount: undefined, // will be set on a 'inventory-change' or
                               // can be provided as a number
         ...options.initialState,

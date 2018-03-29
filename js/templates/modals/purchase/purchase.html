@@ -1,6 +1,11 @@
 <%
-// when multiple listings are supported, the prices array will have one price object for each
-const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+  const isCrypto = ob.listing.metadata.contractType !== 'CRYPTOCURRENCY';
+  // when multiple listings are supported, the prices array will have one price object for each
+  const totalPrice = !isCrypto ?
+    ob.prices[0].price + ob.prices[0].vPrice : 1;
+  const pricingCurrency = !isCrypto ?
+    ob.listing.metadata.pricingCurrency :
+    ob.listing.metadata.coinType;
 %>
 
 <div class="popInMessageHolder js-popInMessages"></div>
@@ -40,24 +45,37 @@ const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
           </div>
           <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
           <div class="flexNoShrink">
-            <div class="flexVCent gutterHSm">
-              <label class="flexNoShrink" for="purchaseQuantity">
-                <%= ob.polyT('purchase.quantity') %>
-              </label>
-              <input
-                  class="clrBr clrP"
-                  type="text"
-                  id="purchaseQuantity"
-                  size="3"
-                  name="quantity"
-                  value=<%= ob.items[0].quantity %>
-                  data-var-type="number">
+            <div class="flexVCent gutterH">
+              <div class="flexCol">
+                <label class="flexHRight" for="purchaseQuantity">
+                  <%= ob.polyT('purchase.quantity') %>
+                </label>
+                <div class="clrT2 tx6 flexHRight">
+                  <% if (isCrypto) { %>
+                    <div>
+                      <%= ob.polyT('purchase.inventory', {
+                        inventory: '<span class="js-cryptoInventory"></span>'
+                      }) %>
+                    </div>
+                  <% } %>
+                </div>
+              </div>
+              <div class="flexNoShrink">
+                <input
+                    class="clrBr clrP"
+                    type="text"
+                    id="purchaseQuantity"
+                    size="<%= isCrypto ? 8 : 3 %>"
+                    name="quantity"
+                    value=<%= ob.items[0].quantity %>
+                    data-var-type="number">
+              </div>
             </div>
           </div>
           <% } %>
           <div class="pad flexNoShrink">
             <b>
-              <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, ob.listing.metadata.pricingCurrency, ob.displayCurrency) %>
+               <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
             </b>
           </div>
         </div>

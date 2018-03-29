@@ -6,6 +6,7 @@ import {
   convertCurrency,
   formatPrice,
   getCurrencyValidity,
+  getExchangeRate,
   renderFormattedCurrency,
   renderPairedCurrency,
 } from './currency';
@@ -75,6 +76,7 @@ const currencyExport = {
   getCurrencyValidity,
   getServerCurrency,
   getCryptoCurByCode,
+  getExchangeRate,
   formattedCurrency: renderFormattedCurrency,
   pairedCurrency: renderPairedCurrency,
   cryptoIcon: renderCryptoIcon,
