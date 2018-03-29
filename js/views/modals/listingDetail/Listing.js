@@ -98,6 +98,8 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
+    this.listenTo(app.verifiedMods, 'change', () => this.showDataChangedMessage());
+
     this.rating = this.createChild(Rating);
 
     // get the ratings data, if any

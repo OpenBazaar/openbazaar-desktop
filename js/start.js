@@ -316,7 +316,6 @@ let ownFollowingFetch;
 let exchangeRatesFetch;
 let walletBalanceFetch;
 let searchProvidersFetch;
-let verifiedModsFetch;
 
 function fetchStartupData() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch.state() === 'rejected' ?
@@ -327,15 +326,12 @@ function fetchStartupData() {
     app.walletBalance.fetch() : walletBalanceFetch;
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch.state() === 'rejected' ?
     app.searchProviders.fetch() : searchProvidersFetch;
-  verifiedModsFetch = !verifiedModsFetch || verifiedModsFetch.state() === 'rejected' ?
-    app.verifiedMods.fetch() : verifiedModsFetch;
 
   const fetches = [
     ownFollowingFetch,
     exchangeRatesFetch,
     walletBalanceFetch,
     searchProvidersFetch,
-    verifiedModsFetch,
   ];
 
   $.whenAll(fetches.slice())
@@ -371,14 +367,9 @@ function fetchStartupData() {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
         } else if (walletBalanceFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
-        } else if (searchProvidersFetch.state() === 'rejected') {
+        } else {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
           btnText = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.btnClose');
-          btnFrag = 'continue';
-        } else {
-          title = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.title');
-          msg = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.msg', { reason: msg });
-          btnText = app.polyglot.t('startUp.dialogs.unableToGetVerifiedMods.btnClose');
           btnFrag = 'continue';
         }
 
@@ -613,6 +604,7 @@ function start() {
               .on('mouseenter', () => getBody().addClass('chatHover'))
               .on('mouseleave', () => getBody().removeClass('chatHover'));
 
+          fetchVerifiedMods();
           setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
           // have our walletBalance model update from the walletUpdate socket event
