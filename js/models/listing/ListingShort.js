@@ -1,5 +1,6 @@
 import app from '../../app';
 import { events as listingEvents, shipsFreeToMe } from './';
+import { integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -27,11 +28,37 @@ export default class extends BaseModel {
     return this.get('shipsTo').indexOf(country) !== -1;
   }
 
+  get isCrypto() {
+    return this.get('contractType') === 'CRYPTOCURRENCY';
+  }
+
   parse(response) {
     const parsedResponse = { ...response };
 
+    // temporary until server adds this in
+    // temporary until server adds this in
+    // temporary until server adds this in
+    // temporary until server adds this in
+    // temporary until server adds this in
+    // temporary until server adds this in
+    parsedResponse.coinType = 'ZEC';
+
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];
+
+    if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
+      parsedResponse.price = {
+        ...parsedResponse.price,
+        amount: 1,
+        currencyCode: parsedResponse.coinType,
+      };
+    } else {
+      const priceObj = parsedResponse.price;
+      parsedResponse.price = {
+        ...priceObj,
+        amount: integerToDecimal(priceObj.amount, priceObj.currencyCode),
+      };
+    }
 
     return parsedResponse;
   }

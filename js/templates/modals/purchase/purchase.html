@@ -1,11 +1,8 @@
 <%
-  const isCrypto = ob.listing.metadata.contractType !== 'CRYPTOCURRENCY';
+  const isCrypto = ob.listing.metadata.contractType === 'CRYPTOCURRENCY';
   // when multiple listings are supported, the prices array will have one price object for each
-  const totalPrice = !isCrypto ?
-    ob.prices[0].price + ob.prices[0].vPrice : 1;
-  const pricingCurrency = !isCrypto ?
-    ob.listing.metadata.pricingCurrency :
-    ob.listing.metadata.coinType;
+  const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+  const pricingCurrency = ob.listingPrice.currencyCode;
 %>
 
 <div class="popInMessageHolder js-popInMessages"></div>
@@ -68,7 +65,8 @@
                     size="<%= isCrypto ? 8 : 3 %>"
                     name="quantity"
                     value=<%= ob.items[0].quantity %>
-                    data-var-type="number">
+                    data-var-type="number"
+                    placeholder="<%= isCrypto ? '0.0000' : '0' %>">
               </div>
             </div>
           </div>

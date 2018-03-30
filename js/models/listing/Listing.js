@@ -73,6 +73,23 @@ export default class extends BaseModel {
       .get('contractType') === 'CRYPTOCURRENCY';
   }
 
+  get price() {
+    if (this.isCrypto) {
+      return {
+        amount: 1,
+        currencyCode: this.get('metadata')
+          .get('coinType'),
+      };
+    }
+
+    return {
+      amount: this.get('item')
+        .get('price'),
+      currencyCode: this.get('metadata')
+        .get('pricingCurrency'),
+    };
+  }
+
   /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
@@ -252,6 +269,9 @@ export default class extends BaseModel {
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
           options.attrs.item.cryptoQuantity = options.attrs.item.cryptoQuantity * baseUnit;
+
+          // Don't send over the price on crypto listings.
+          delete options.attrs.price;
         }
         // END - convert price fields
 
@@ -366,6 +386,9 @@ export default class extends BaseModel {
     // parsedResponse.metadata.pricingCurrency = 'HOWDY_BOY';
 
     if (parsedResponse) {
+      const isCrypto = parsedResponse.metadata &&
+        parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';
+
       // set the hash
       parsedResponse.hash = response.hash;
 
@@ -439,7 +462,7 @@ export default class extends BaseModel {
         typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
         const dummySku = parsedResponse.item.skus[0];
 
-        if (parsedResponse.metadata.contractType === 'CRYPTOCURRENCY') {
+        if (isCrypto) {
           parsedResponse.item.cryptoQuantity = dummySku.quantity /
             parsedResponse.metadata.coinDivisibility;
         } else {

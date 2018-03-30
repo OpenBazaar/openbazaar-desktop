@@ -7,6 +7,8 @@ export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
     this.shippable = options.shippable || false;
+    this.isCrypto = options.isCrypto || false;
+    this.inventory = options.inventory || (() => 99999999999999);
   }
 
   defaults() {
@@ -40,16 +42,27 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.quantity === 'undefined') {
-      addError('quantity', app.polyglot.t('orderModelErrors.mustHaveQuantity'));
-    } else if (!Number.isInteger(attrs.quantity)) {
-      addError('quantity', app.polyglot.t('orderModelErrors.quantityMustBeNumber'));
-    } else if (attrs.quantity < 1) {
-      addError('quantity', app.polyglot.t('orderModelErrors.noItems'));
+    if (!this.isCrypto) {
+      if (!Number.isInteger(attrs.quantity)) {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
+      } else if (attrs.quantity < 1) {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
+      }
+    } else {
+      const inventory = this.inventory();
+
+      if (typeof attrs.quantity !== 'number') {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
+      } else if (attrs.quantity < 0) {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
+      } else if (typeof inventory === 'number' &&
+        attrs.quantity > inventory) {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory'));
+      }
     }
 
     if (this.shippable && (!attrs.shipping.get('name'))) {
-      addError('shipping', app.polyglot.t('orderModelErrors.missingShippingOption'));
+      addError('shipping', app.polyglot.t('purchaseItemModelErrors.missingShippingOption'));
     }
 
     if (Object.keys(errObj).length) return errObj;

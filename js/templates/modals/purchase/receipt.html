@@ -1,39 +1,41 @@
 <hr class="clrBr">
 <b><%= ob.polyT('purchase.receipt.summary') %></b>
 <%
-  const listingCurrency = !ob.isCrypto ?
-    ob.listing.metadata.pricingCurrency :
-    ob.listing.metadata.coinType;
-  
-  // The expecation is the purchase flow will be prevented if the listingCurrency is
-  // not valid. The scenario we are accounting for below is if item is priced in the
-  // server's currency and exchange rate data is not available for the viewing currency.
-  // In that case we could still show the purchase flow in the server's currency (e.g. BTC).
+  // TODO test this below
+  // TODO test this below
+  // TODO test this below
+  // TODO test this below
   const viewingCurrency = ob.currencyMod.getCurrencyValidity(ob.displayCurrency) === 'VALID' ?
-    ob.displayCurrency : listingCurrency;
+    ob.displayCurrency : ob.listingCurrency;
 
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
     let basePrice;
 
     if (!ob.isCrypto) {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
+      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
     } else {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
+      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
     }
     
-    const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
-    const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, listingCurrency, viewingCurrency);
-    const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
-    let quantity = Number.isInteger(priceObj.quantity) ? priceObj.quantity : 1;
-    quantity = ob.isCrypto ? priceObj.cryptoQuantity : quantity;
+    const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency);
+    const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency);
+    const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency);
+    let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ? priceObj.quantity : 1;
+    
+    if (ob.isCrypto) {
+      quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
+        priceObj.quantity :
+        quantity;
+    }
+
     let itemTotal = basePrice + surcharge;
     const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
       } else if (coupon.priceDiscount) {
-        itemTotal -= ob.currencyMod.convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency);
+        itemTotal -= ob.currencyMod.convertCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency);
       }
     });
     const subTotal = itemTotal * quantity;
@@ -56,7 +58,7 @@
         <% if (coupon.percentDiscount) {
              print(`-${coupon.percentDiscount}%`);
         } else if (coupon.priceDiscount) {
-          print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), listingCurrency, viewingCurrency)}`);
+          print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
         } %>
       </b>
     </div>
@@ -95,7 +97,7 @@
     </div>
   <% } %>
   <hr class="clrBr">
-  <% if (quantity > 1) { %>
+  <% if (quantity) { %>
     <div class="flexRow">
       <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.subtotal', { quantity }) %>

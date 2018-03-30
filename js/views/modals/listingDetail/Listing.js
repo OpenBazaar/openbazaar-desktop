@@ -568,6 +568,7 @@ export default class extends BaseModal {
         ...flatModel,
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing,
+        price: this.model.price,
         displayCurrency: app.settings.get('localCurrency'),
         // the ships from data doesn't exist yet
         // shipsFromCountry: this.model.get('shipsFrom');

@@ -1882,13 +1882,17 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "The quantity must be 1 or more",
-    "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
-    "missingShippingOption": "Please choose a valid shipping option.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
     "removeModerator": "An unmoderated purchase cannot have a moderator."
+  },
+  "purchaseItemModelErrors": {
+    "mustHaveQuantity": "The quantity must be 1 or more",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Please choose a valid shipping option.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",

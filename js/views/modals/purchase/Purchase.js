@@ -9,7 +9,6 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
-import { getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -70,6 +69,7 @@ export default class extends BaseModal {
         shippable,
         moderated: this.moderatorIDs.length && app.verifiedMods.matched(this.moderatorIDs).length,
       });
+
     /* to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
     */
@@ -77,11 +77,15 @@ export default class extends BaseModal {
       {
         listingHash: this.listing.get('hash'),
         quantity: 1,
+        variants: options.variants || [],
       },
       {
-        shippable,
-      });
-    if (options.variants) item.get('options').add(options.variants);
+        isCrypto: this.listing.isCrypto,
+        inventory: () =>
+          (typeof this._inventory === 'number' ?
+            this._inventory : 99999999999999999),
+      }
+    );
     // add the item to the order.
     this.order.get('items').add(item);
 
@@ -103,7 +107,7 @@ export default class extends BaseModal {
 
     this.coupons = this.createChild(Coupons, {
       coupons: this.listing.get('coupons'),
-      listingPrice: this.listing.get('item').get('price'),
+      listingPrice: this.listing.price.amount,
     });
     this.listenTo(this.coupons, 'changeCoupons',
       (hashes, codes) => this.changeCoupons(hashes, codes));
@@ -406,28 +410,13 @@ export default class extends BaseModal {
       });
       const sku = this.listing.get('item').get('skus').find(v =>
         _.isEqual(v.get('variantCombo'), variantCombo));
-      // let quantity = item.get('quantity');
-      // let quantityBaseUnit = 1;
-      let price = this.listing.get('item').get('price');
-
-      if (this.listing.isCrypto) {
-        price = getExchangeRate(
-          this.listing.get('metadata').get('coinType')
-        );
-        console.log(`the price is ${price}`);
-        // quantity = this.listing.get('item')
-        //   .get('cryptoQuantity');
-        // quantityBaseUnit = this.listing.get('metadata')
-        //   .get('coinDivisibility');
-      }
 
       return {
-        price,
+        price: this.listing.price.amount,
         sPrice: sOptService ? sOptService.get('price') : 0,
         aPrice: sOptService ? sOptService.get('additionalItemPrice') : 0,
         vPrice: sku ? sku.get('surcharge') : 0,
         quantity: item.get('quantity'),
-        // quantityBaseUnit,
       };
     });
   }
@@ -475,6 +464,7 @@ export default class extends BaseModal {
         ...this.order.toJSON(),
         ...state,
         listing: this.listing.toJSON(),
+        listingPrice: this.listing.price,
         vendor: this.vendor,
         variants: this.variants,
         items: this.order.get('items').toJSON(),
@@ -519,15 +509,23 @@ export default class extends BaseModal {
       this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
 
       if (this.listing.isCrypto) {
-        if (this.cryptoInventory) this.cryptoInventory.remove();
+        let cryptoInventoryState = {};
+
+        if (this.cryptoInventory) {
+          cryptoInventoryState = this.cryptoInventory.getState();
+          this.cryptoInventory.remove();
+        }
+
         this.cryptoInventory = this.createChild(QuantityDisplay, {
           peerId: this.listing.get('vendorID').peerID,
           slug: this.listing.get('slug'),
           initialState: {
             amount: this._inventory,
             contentClass: 'clrT2',
+            ...cryptoInventoryState,
           },
         });
+
         this.getCachedEl('.js-cryptoInventory')
           .html(this.cryptoInventory.render().el);
       }
