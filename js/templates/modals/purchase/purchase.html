@@ -1,4 +1,6 @@
 <%
+  console.log(`the phase is ${ob.phase}`);
+
   const isCrypto = ob.listing.metadata.contractType === 'CRYPTOCURRENCY';
   // when multiple listings are supported, the prices array will have one price object for each
   const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
@@ -79,7 +81,19 @@
         </div>
       </section>
       <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
-        <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
+        <% if (isCrypto) { %>
+          <section class="contentBox padMd clrP clrBr clrSh3">
+            <%
+              const coinType = ob.listing.metadata.coinType;
+              const coinTranslationKey = `cryptoCurrencies.${coinType}`;
+              let fullName = ob.polyT(coinTranslationKey);
+            %>
+            <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.cryptoAddressHeading', {
+              coinType: fullName === coinTranslationKey ?
+                coinType: fullName, // If it's not translated, we'll use the code.
+            }) %></h2>
+          </section>
+        <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
           <section class="contentBox padMd clrP clrBr clrSh3 js-shipping">
             <div class="js-shipping-errors js-items-shipping-errors"></div>
             <div class="js-shippingWrapper"></div>

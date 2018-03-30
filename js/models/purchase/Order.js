@@ -55,7 +55,7 @@ export default class extends BaseModel {
     };
 
     if (!attrs.items.length) {
-      addError('items.quantity', app.polyglot.t('orderModelErrors.noItems'));
+      addError('items', 'At least one item is required.');
     }
 
     if (this.shippable && !attrs.shipTo && !attrs.countryCode) {

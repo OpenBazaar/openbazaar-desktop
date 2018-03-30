@@ -76,7 +76,7 @@ export default class extends BaseModal {
     const item = new Item(
       {
         listingHash: this.listing.get('hash'),
-        quantity: 1,
+        quantity: !this.listing.isCrypto ? 1 : undefined,
         variants: options.variants || [],
       },
       {

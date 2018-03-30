@@ -1325,6 +1325,7 @@
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
     "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
     "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
