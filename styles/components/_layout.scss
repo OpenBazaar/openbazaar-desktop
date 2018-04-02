@@ -392,6 +392,14 @@
   margin-left: $pad;
 }
 
+.margLTxt {
+  margin-left: 0.333em; // equivalent to a space character
+}
+
+.margRTxt {
+  margin-right: 0.333em; // equivalent to a space character
+}
+
 #ov1 .marginTopAuto {
   margin-top: auto;
 
