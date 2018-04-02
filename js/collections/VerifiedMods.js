@@ -2,6 +2,7 @@ import _ from 'underscore';
 import { Collection } from 'backbone';
 import app from '../app';
 import Mod from '../models/VerifiedMod';
+import { getCurrentConnection } from '../utils/serverConnect';
 
 export default class extends Collection {
   constructor(...args) {
@@ -18,7 +19,8 @@ export default class extends Collection {
   }
 
   url() {
-    return app.localSettings.get('verifiedModsProvider');
+    const usingTor = getCurrentConnection().server.get('useTor');
+    return app.localSettings.get(`verifiedModsProvider${usingTor ? 'Tor' : ''}`);
   }
 
   get data() {
