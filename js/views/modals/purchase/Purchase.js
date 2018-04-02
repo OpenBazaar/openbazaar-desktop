@@ -142,6 +142,16 @@ export default class extends BaseModal {
     this.listenTo(this.order.get('items').at(0), 'someChange ', () => this.refreshPrices());
     this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
       this.refreshPrices());
+
+    this.hasVerifiedMods = app.verifiedMods.matched(this.moderatorIDs).length > 0;
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const nowHasVerifiedMods = app.verifiedMods.matched(moderatorIDs).length > 0;
+      if (nowHasVerifiedMods !== this.hasVerifiedMods) {
+        this.hasVerifiedMods = nowHasVerifiedMods;
+        this.showDataChangedMessage({ modsChanged: true });
+      }
+    });
   }
 
   className() {
@@ -165,7 +175,7 @@ export default class extends BaseModal {
     };
   }
 
-  showDataChangedMessage() {
+  showDataChangedMessage(opts) {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
@@ -174,7 +184,14 @@ export default class extends BaseModal {
           buildRefreshAlertMessage(app.polyglot.t('purchase.purchaseDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
+        if (opts.modsChanged) {
+          this.moderators.render();
+          this.dataChangePopIn.remove();
+        } else {
+          this.render();
+        }
+      });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();

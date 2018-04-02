@@ -100,11 +100,11 @@ export default class extends BaseModal {
 
     this.hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
 
-    this.listenTo(app.verifiedMods, 'change', () => {
+    this.listenTo(app.verifiedMods, 'update', () => {
       const nowHasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
       if (nowHasVerifiedMods !== this.hasVerifiedMods) {
-        this.showDataChangedMessage();
         this.hasVerifiedMods = nowHasVerifiedMods;
+        this.showDataChangedMessage();
       }
     });
 
@@ -563,7 +563,7 @@ export default class extends BaseModal {
         currencyValidity: getCurrencyValidity(
           this.model.get('metadata').get('pricingCurrency')
         ),
-        hasVerifiedMods,
+        hasVerifiedMods: this.hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
       }));
