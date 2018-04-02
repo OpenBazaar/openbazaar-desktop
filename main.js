@@ -1,7 +1,7 @@
 import {
   app, BrowserWindow, ipcMain,
   Menu, Tray, session, crashReporter,
-  autoUpdater, shell, dialog,
+  autoUpdater, shell, dialog, screen,
 } from 'electron';
 import homedir from 'homedir';
 import { argv } from 'yargs';
@@ -464,8 +464,8 @@ function createWindow() {
 
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 1200,
-    height: 760,
+    width: screen.getPrimaryDisplay().size.width * .9 ,
+    height: screen.getPrimaryDisplay().size.height * .9,
     minWidth: 1170,
     minHeight: 700,
     center: true,
