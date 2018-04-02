@@ -35,6 +35,13 @@ export default class extends BaseModel {
     };
   }
 
+  get constraints() {
+    return {
+      minPaymentAddressLength: 1,
+      maxPaymentAddressLength: 256,
+    };
+  }
+
   validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
     const addError = (fieldName, error) => {
@@ -48,16 +55,31 @@ export default class extends BaseModel {
       } else if (attrs.quantity < 1) {
         addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
       }
+
+      if (typeof attrs.paymentAddress !== 'undefined') {
+        addError('paymentAddress', 'The payment address should only be provide on ' +
+          'crypto listings');
+      }
     } else {
       const inventory = this.inventory();
 
       if (typeof attrs.quantity !== 'number') {
         addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
-      } else if (attrs.quantity < 0) {
+      } else if (attrs.quantity <= 0) {
         addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
       } else if (typeof inventory === 'number' &&
         attrs.quantity > inventory) {
         addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory'));
+      }
+
+      if (typeof attrs.paymentAddress !== 'string' || !attrs.paymentAddress) {
+        addError('paymentAddress', app.polyglot.t('purchaseItemModelErrors.providePaymentAddress'));
+      } else if (attrs.paymentAddress.length < this.constraints.minPaymentAddressLength ||
+        attrs.paymentAddress.length > this.constraints.maxPaymentAddressLength) {
+        addError('paymentAddress', app.polyglot.t('purchaseItemModelErrors.paymentAddressLength', {
+          min: this.constraints.minPaymentAddressLength,
+          max: this.constraints.maxPaymentAddressLength,
+        }));
       }
     }
 

@@ -1,6 +1,4 @@
 <%
-  console.log(`the phase is ${ob.phase}`);
-
   const isCrypto = ob.listing.metadata.contractType === 'CRYPTOCURRENCY';
   // when multiple listings are supported, the prices array will have one price object for each
   const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
@@ -82,16 +80,28 @@
       </section>
       <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
         <% if (isCrypto) { %>
-          <section class="contentBox padMd clrP clrBr clrSh3">
+          <section class="contentBox padMd clrP clrBr clrSh3 gutterVSm">
             <%
               const coinType = ob.listing.metadata.coinType;
               const coinTranslationKey = `cryptoCurrencies.${coinType}`;
-              let fullName = ob.polyT(coinTranslationKey);
+              const coinName = ob.polyT(coinTranslationKey) === coinTranslationKey ?
+                coinType : ob.polyT(coinTranslationKey);
+              const heading = ob.polyT('purchase.cryptoAddressHeading', {
+                coinType: coinName,
+              });
+              const placeholder = ob.polyT('purchase.cryptoAddressPlaceholder', {
+                coinType: coinName,
+              });
+              const warning = `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>`;
+              const helper = ob.polyT('purchase.cryptoAddressHelper', {
+                coinType: coinName,
+                warning,
+              });
             %>
-            <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.cryptoAddressHeading', {
-              coinType: fullName === coinTranslationKey ?
-                coinType: fullName, // If it's not translated, we'll use the code.
-            }) %></h2>
+            <div><label class="h4 flexExpand required" for="purchaseCryptoAddress"><%= heading %></div>
+            <div class="js-items-paymentAddress-errors"></div>
+            <input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
+            <div class="txSm clrT2"><%= helper %></div>
           </section>
         <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
           <section class="contentBox padMd clrP clrBr clrSh3 js-shipping">

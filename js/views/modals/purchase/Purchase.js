@@ -77,7 +77,7 @@ export default class extends BaseModal {
       {
         listingHash: this.listing.get('hash'),
         quantity: !this.listing.isCrypto ? 1 : undefined,
-        variants: options.variants || [],
+        options: options.variants || [],
       },
       {
         isCrypto: this.listing.isCrypto,
@@ -176,6 +176,7 @@ export default class extends BaseModal {
       'click .js-retryFee': 'clickRetryFee',
       'click .js-directPayment': 'clickDirectPurchase',
       'change #purchaseQuantity': 'changeQuantityInput',
+      'change #purchaseCryptoAddress': 'changeCryptoAddress',
       'click .js-newAddress': 'clickNewAddress',
       'click .js-applyCoupon': 'applyCoupon',
       'keyup #couponCode': 'onKeyUpCouponCode',
@@ -255,6 +256,12 @@ export default class extends BaseModal {
     this.order.get('items').at(0).set(this.getFormData($(e.target)));
   }
 
+  changeCryptoAddress(e) {
+    this.order.get('items')
+      .at(0)
+      .set('paymentAddress', e.target.value);
+  }
+
   clickNewAddress() {
     launchSettingsModal({ initialTab: 'Addresses' });
   }
@@ -330,16 +337,28 @@ export default class extends BaseModal {
     this.setState({ phase: 'processing' });
 
     if (!this.order.validationError) {
-      if (this.listing.isOwnListing) {
+      if (this.listing.isOwnListing && false) {
         this.setState({ phase: 'pay' });
         // don't allow a seller to buy their own items
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
       } else {
+        const coinDivisibility = this.listing.get('metadata')
+          .get('coinDivisibility');
+
         $.post({
           url: app.getServerUrl('ob/purchase'),
-          data: JSON.stringify(this.order.toJSON()),
+          data: JSON.stringify({
+            ...this.order.toJSON(),
+            items: this.order.get('items')
+              .map(item => ({
+                ...item.toJSON(),
+                quantity: this.listing.isCrypto ?
+                  item.get('quantity') * coinDivisibility :
+                  item.get('quantity'),
+              })),
+          }),
           dataType: 'json',
           contentType: 'application/json',
         })
@@ -465,9 +484,11 @@ export default class extends BaseModal {
         ...state,
         listing: this.listing.toJSON(),
         listingPrice: this.listing.price,
+        itemConstraints: this.order.get('items')
+          .at(0)
+          .constraints,
         vendor: this.vendor,
         variants: this.variants,
-        items: this.order.get('items').toJSON(),
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,

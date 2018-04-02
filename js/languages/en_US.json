@@ -1326,6 +1326,9 @@
     "quantity": "Quantity",
     "inventory": "Max: %{inventory}",
     "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
     "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
     "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
@@ -1893,7 +1896,9 @@
     "quantityMustBeNumeric": "The quantity must be numeric.",
     "quantityMustBePositive": "The quantity must be greater than zero.",
     "missingShippingOption": "Please choose a valid shipping option.",
-    "insufficientInventory": "The quantity exceeds the remaining inventory."
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
