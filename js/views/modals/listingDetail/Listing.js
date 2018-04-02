@@ -98,7 +98,15 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
-    this.listenTo(app.verifiedMods, 'change', () => this.showDataChangedMessage());
+    this.hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+
+    this.listenTo(app.verifiedMods, 'change', () => {
+      const nowHasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+      if (nowHasVerifiedMods !== this.hasVerifiedMods) {
+        this.showDataChangedMessage();
+        this.hasVerifiedMods = nowHasVerifiedMods;
+      }
+    });
 
     this.rating = this.createChild(Rating);
 
@@ -527,7 +535,6 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
-    const hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
     const defaultBadge = app.verifiedMods.defaultBadge(this.model.get('moderators'));
     let nsfwWarning;
 
