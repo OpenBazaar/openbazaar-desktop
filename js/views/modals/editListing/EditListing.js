@@ -1297,7 +1297,6 @@ export default class extends BaseModal {
       this.inventoryManagement = this.createChild(InventoryManagement, {
         initialState: {
           trackBy: this.trackInventoryBy,
-          // quantity: metadata.get('contractType') === 'CRYPTOCURRENCY' ? '' : item.get('quantity'),
           quantity: item.get('quantity'),
           errors: inventoryManagementErrors,
         },
