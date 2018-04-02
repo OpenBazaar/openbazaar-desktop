@@ -19,7 +19,8 @@ export default class extends Collection {
   }
 
   url() {
-    return app.localSettings.get(`verifiedModsProvider${getCurrentConnection().server.get('useTor') ? 'Tor' : ''}`);
+    const usingTor = getCurrentConnection().server.get('useTor');
+    return app.localSettings.get(`verifiedModsProvider${usingTor ? 'Tor' : ''}`);
   }
 
   get data() {
