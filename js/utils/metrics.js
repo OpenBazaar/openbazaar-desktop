@@ -80,7 +80,6 @@ export function changeMetrics(bool) {
 export function showMetricsModal() {
   const metricsModal = new MetricsModal({
     removeOnClose: true,
-    messageClass: 'dialogScrollMsg',
   }).render().open();
 
   return metricsModal;

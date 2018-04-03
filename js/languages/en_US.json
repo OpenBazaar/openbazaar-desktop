@@ -1723,11 +1723,12 @@
     "list": {
       "pages": "Pages loaded in the client, such as your user page, or the search page.",
       "clicks": "Clicks on elements. This records only the click, not any content.",
-      "errors": "Errors that occur in the app, including how long it takes to load content and if the content loads fail.",
-      "system": "Basic system data such as Operating System, CPU type, RAM, language, and screen resolution. This helps us determine how performance is correlated to types of computers.",
-      "node": "Information about your node such as your currency, cryptocurrency, language, vendor status whether you are a moderator, and if you are using Tor.",
-      "app": "Details about your app, which includes the version and whether it is installed from a downloadable package or from source.",
-      "orders": "When an order is made or moved from one state to another, it will be recorded with no identifiable information about the content of that order."
+      "errors": "Errors that occur in the app, including how long it takes to load content and whether the content loads fail.",
+      "system": "Basic system data such as Operating System, CPU type, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node such as your display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include the version and whether it is installed from a downloadable package or from source.",
+      "orders": "When an order changes state, the change will be recorded with no information about the content of that order."
     },
     "shareBtn": "Share",
     "declineBtn": "Decline",
