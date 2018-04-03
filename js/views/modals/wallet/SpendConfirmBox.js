@@ -1,8 +1,10 @@
 import $ from 'jquery';
-import { estimateFee } from '../../../utils/fees';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import { estimateFee } from '../../../utils/fees';
+import { recordEvent } from '../../../utils/metrics';
 import baseVw from '../../baseVw';
+import { getServerCurrency } from "../../../data/cryptoCurrencies";
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -95,15 +97,18 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
+          recordEvent('insufficientFundsWithFee');
         }
 
         this.setState(state);
       }).fail(xhr => {
+        const fetchError = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
         this.setState({
           fetchingFee: false,
           fetchFailed: true,
-          fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+          fetchError,
         });
+        recordEvent('estimateFeeFailed', { fetchError });
       });
   }
 
