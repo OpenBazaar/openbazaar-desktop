@@ -58,7 +58,7 @@
   </div>
   <div class="pad clrBr borderTop infoArea">
     <% if (ob.vendor) { %>
-      <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
+      <a class="userIconWrapper js-userLink" href="#<%= `${ob.vendor.peerID}/store` %>">
         <% const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : ''; %>
         <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap" <%= dataTip %>
         <% var avatarHash = ob.vendor.avatarHashes ? ob.isHiRez() ? ob.vendor.avatarHashes.small : ob.vendor.avatarHashes.tiny : ''; %>
@@ -88,7 +88,7 @@
     </div>
     <div class="flex">
       <div class="flexExpand tx5b">
-        <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+        <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
       </div>
       <div class="txB">
         <%=
@@ -111,7 +111,7 @@
   </div>
   <div class="verifiedModWrapper js-verifiedMod"></div>
 </div>
-<% } else { %>
+<% } else if (ob.viewType === 'list') { %>
   <div class="listViewContent">
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
@@ -125,7 +125,7 @@
         </div>
         <div class="flexVCent gutterHSm tx5b">
           <div class=" flexNoShrink">
-            <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+            <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
           </div>
           <div class="verifiedModWrapper js-verifiedMod"></div>
         </div>
@@ -197,7 +197,47 @@
       </div>
     </div>
   <% } %>
+<%
+  } else {
+  // viewType is 'cryptoList'
+  console.log('moo');
+  window.moo = ob;
+%>
+  <div class="flexVCent gutterH">
+    <div class="verifiedModWrapper js-verifiedMod"></div>
+    <div style="width: 190px">
+      <div class="flexCol gutterVTn">
+        <div class="clamp"><%= ob.title %> the west end of loo loo lemon and the dream weaver slick willies</div>
+        <div><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
+      </div>
+    </div>
+    <div style="width: 190px">
+      <div class="flex gutterH">
+        <div>
+          <a class="userIcon disc clrBr2 clrSh1 js-userLink" style="<%= ob.getAvatarBgImage(ob.vendor.avatarHashes) %>" href="<%= `#${ob.vendor.peerID}/store` %>"></a>
+        </div>
+        <div class="flexCol futterVTn">
+          <div>
+            <a class="clrT clamp js-userLink" href="<%= `#${ob.vendor.peerID}/store` %>"><%= ob.vendor.name %></a>
+          </div>
+          <%
+            let averageStoreRating;
+            let totalStoreRatings;
+
+            if (ob.vendor && ob.vendor.stats) {
+              averageStoreRating = ob.vendor.averageStoreRating;
+              totalStoreRatings = ob.vendor.totalStoreRatings;
+            }
+          %>
+          <div><%= ob.formatRating(averageStoreRating, totalStoreRatings) %></div>
+        </div>
+      </div>
+    </div>
+    <div style="width: 110px">
+    </div>
+  </div>
 <% } %>
+
 <div class="deleteOverlay overlayPanel">
   <div class="overlayPanelInner clrS"></div>
   <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>

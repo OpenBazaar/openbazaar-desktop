@@ -2,12 +2,12 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
+import { capitalize } from '../../utils/string';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
 import PageControls from '../components/PageControls';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
-
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -22,6 +22,7 @@ export default class extends baseVw {
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 24;
     this.reportsUrl = this.options.reportsUrl || '';
+    this.viewType = this.options.viewType || 'grid';
 
     this.cardViews = [];
     this.pageCollections = {};
@@ -47,6 +48,7 @@ export default class extends baseVw {
         model,
         vendor,
         onStore: false,
+        viewType: this.viewType,
       };
 
       return this.createChild(ListingCard, options);
@@ -148,7 +150,10 @@ export default class extends baseVw {
 
   render() {
     loadTemplate('search/results.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        viewTypeClass: this.viewType === 'grid' ?
+          '' : `listingsGrid${capitalize(this.viewType)}View`,
+      }));
 
       this.$resultsGrid = this.$('.js-resultsGrid');
       this.$displayText = this.$('.js-displayingText');

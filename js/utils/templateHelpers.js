@@ -22,7 +22,7 @@ import {
 } from './responsive';
 import { upToFixed } from './number';
 import twemoji from 'twemoji';
-import { splitIntoRows } from './';
+import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
 import is from 'is_js';
 
@@ -59,7 +59,7 @@ export function formatRating(average, count, skipCount) {
   const avIsNum = typeof average === 'number';
   const countIsNum = typeof count === 'number';
   const ratingAverage = avIsNum ? average.toFixed(1) : '?';
-  let ratingCount = countIsNum ? ` (${count})` : ' (?)';
+  let ratingCount = countIsNum ? ` (${abbrNum(count)})` : ' (?)';
   if (skipCount) ratingCount = '';
   const error = !avIsNum || (!countIsNum && !skipCount) ?
     ' <i class="ion-alert-circled clrTErr"></i>' : '';

@@ -114,7 +114,7 @@ export default class extends baseVw {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
       'click .js-clone': 'onClickClone',
-      'click .js-userIcon': 'onClickUserIcon',
+      'click .js-userLink': 'onClickUserLink',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
@@ -187,7 +187,7 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  onClickUserIcon(e) {
+  onClickUserLink(e) {
     e.stopPropagation();
   }
 
@@ -352,7 +352,7 @@ export default class extends baseVw {
   }
 
   set viewType(type) {
-    if (['list', 'grid'].indexOf(type) === -1) {
+    if (['list', 'grid', 'cryptoList'].indexOf(type) === -1) {
       throw new Error('The provided view type is not one of the available types.');
     }
 
@@ -418,7 +418,7 @@ export default class extends baseVw {
     }
     const moderators = this.model.get('moderators') || [];
     const verifiedIDs = app.verifiedMods.matched(moderators);
-    const verifiedID = verifiedIDs[0];
+    const verifiedID = verifiedIDs[0] || '123';
 
     if (this.verifiedMod) this.verifiedMod.remove();
 

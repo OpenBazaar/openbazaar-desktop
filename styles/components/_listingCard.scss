@@ -146,8 +146,8 @@
         height: 100%;
 
         .arrowBoxWrapper {
-          height: $thumbTn;
-          width: $thumbTn;
+          height: 21px;
+          width: 21px;
 
           .arrowBox {
             top: 36px; // height of the badge + height of the arrowtip
@@ -212,8 +212,6 @@
   }
 
   .listViewContent {
-    display: none;
-
     .listingImage {
       width: 45px;
       height: 45px;
@@ -265,27 +263,12 @@
     }
   }
 
-  // Some assumptions here:
-  // a.) We will only potentially have a "list view" style card
-  //     when the listingCard is inside a .listingsGrid.
-  // b.) The .listingsGridListView class will be applied to the
-  //     .listingsGrid element as opposed to each individual card.
-  //     This is so as you toggle to/from grid/list view, you only
-  //     change one class on a parent element and consequently have
-  //     only one DOM reflow/repaint.
-  .listingsGridListView & {
+  .listingsGridListView &,
+  .listingsGridCryptoListView & {
     padding: $pad;
     display: block;
     width: 100%;
     height: auto;
-
-    .listViewContent {
-      display: block;
-    }
-
-    .gridViewContent {
-      display: none;
-    }
 
     .additionalOverlay,
     .editOverlay {
@@ -296,8 +279,10 @@
 
     .additionalOverlay {
       padding-left: 13px; // make the left padding match top and bottom
-    }
+    }    
+  }
 
+  .listingsGridListView & {
     // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
     // content width on the price (e.g. some currencies may have quite large numbers)
     .priceCol {
@@ -306,6 +291,36 @@
 
     .freeShipCol {
       padding-right: 20px;
+    }
+  }
+
+  .listingsGridCryptoListView & {
+    height: 65px;
+
+    .verifiedModWrapper {
+      position: relative;
+      align-self: flex-start;
+      text-align: center;
+      left: -3px;
+      top: 8px;
+      width: 28px;
+      margin-right: 0;
+
+      .badge {
+        width: 21px;
+        height: 21px;
+      }
+    }
+
+    .verifiedMod {
+      position: relative;
+      top: 0;
+      left: 0;
+    }
+
+    .userIcon {
+      width: 30px;
+      height: 30px;
     }
   }
 

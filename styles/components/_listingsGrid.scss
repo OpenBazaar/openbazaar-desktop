@@ -66,7 +66,7 @@
     }
   }
 
-  &.listingsGridListView {
+  &.listingsGridListView, &.listingsGridCryptoListView {
     margin: 0;
 
     .listingCard {
@@ -85,6 +85,7 @@
         // we want the last listView row to have a border radius
         border-bottom-left-radius: $corner;
         border-bottom-right-radius: $corner;
+        margin-bottom: $padMd;
       }
 
       &:not(:last-child) {
