@@ -4,7 +4,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
 import { recordEvent } from '../../../utils/metrics';
 import baseVw from '../../baseVw';
-import { getServerCurrency } from "../../../data/cryptoCurrencies";
 
 export default class extends baseVw {
   constructor(options = {}) {
