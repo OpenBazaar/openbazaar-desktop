@@ -1,7 +1,7 @@
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
-import { changeMetrics } from '../../utils/metrics';
+import { changeMetrics, isMetricRestartNeeded } from '../../utils/metrics';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -27,6 +27,7 @@ export default class extends BaseModal {
       .done()
       .fail(() => {
         // the save is to local storage, this shouldn't happen
+        console.log('Saving shareMetrics as true has failed.');
       });
   }
 
@@ -35,6 +36,7 @@ export default class extends BaseModal {
       .done()
       .fail(() => {
         // the save is to local storage, this shouldn't happen
+        console.log('Saving shareMetrics as false has failed.');
       });
   }
 
@@ -42,7 +44,7 @@ export default class extends BaseModal {
     loadTemplate('modals/metricsModal.html', (t) => {
       this.$el.html(t({
         shareMetrics: app.localSettings.get('shareMetrics'),
-        restartRequired: app.localSettings.get('shareMetricsRestartNeeded'),
+        restartRequired: isMetricRestartNeeded(),
       }));
       super.render();
     });

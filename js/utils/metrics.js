@@ -2,11 +2,17 @@ import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
 import { version } from '../../package.json';
 
+let metricsRestartNeeded = false;
+
+export function isMetricRestartNeeded() {
+  return metricsRestartNeeded;
+}
+
 export function addMetrics() {
   function loadMetrics() {
     // Reverse the countly opt out
     window.localStorage.setItem('cly_ignore', 'false');
-    app.localSettings.save({ shareMetricsRestartNeeded: !!window.Countly });
+    metricsRestartNeeded = !!window.Countly;
 
     //  If Countly has already been added, it won't run again until the app is restarted.
     if (window.Countly) return;
@@ -44,7 +50,7 @@ export function addMetrics() {
 export function changeMetrics(bool) {
   if (bool) addMetrics();
   if (!bool && window.Countly) {
-    app.localSettings.save({ shareMetricsRestartNeeded: false });
+    metricsRestartNeeded = false;
     window.Countly.q.push(['opt_out']);
   }
   return app.localSettings.save({ shareMetrics: bool });

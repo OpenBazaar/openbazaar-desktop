@@ -1,6 +1,6 @@
 import app from '../../../../app';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { showMetricsModal } from '../../../../utils/metrics';
+import { showMetricsModal, isMetricRestartNeeded } from '../../../../utils/metrics';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
@@ -28,7 +28,7 @@ export default class extends BaseVw {
     loadTemplate('modals/settings/advanced/metricsStatus.html', (t) => {
       this.$el.html(t({
         shareMetrics: app.localSettings.get('shareMetrics'),
-        restartRequired: app.localSettings.get('shareMetricsRestartNeeded'),
+        restartRequired: isMetricRestartNeeded(),
       }));
       super.render();
     });
