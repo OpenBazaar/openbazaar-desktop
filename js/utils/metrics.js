@@ -1,6 +1,10 @@
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
 import { version } from '../../package.json';
+import * as os from 'os';
+import { getCurrentConnection } from './serverConnect';
+import { remote } from 'electron';
+
 
 let metricsRestartNeeded = false;
 
@@ -31,6 +35,23 @@ export function addMetrics() {
     window.Countly.q.push(['track_clicks']);
     window.Countly.q.push(['track_scrolls']);
     window.Countly.q.push(['track_errors']);
+    // add anonymous details
+    window.Countly.q.push(['user_details', {
+      custom: {
+        vendor: app.profile.get('vendor'),
+        listingCount: app.profile.get('stats').get('listingCount'),
+        ratingCount: app.profile.get('stats').get('ratingCount'),
+        moderator: app.profile.get('moderator'),
+        crypto: app.profile.get('currencies'),
+        displayCurrency: app.settings.get('localCurrency'),
+        displayLanguage: app.localSettings.get('language'),
+        systemLanguage: navigator.language,
+        bundled: remote.getGlobal('isBundledApp'),
+        Tor: getCurrentConnection().server.get('useTor'),
+        CPU: os.cpus()[0].model,
+        RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
+      },
+    }]);
 
     const scriptEl = document.createElement('script');
     scriptEl.id = 'metricsScrtipt';

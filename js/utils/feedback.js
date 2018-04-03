@@ -15,12 +15,13 @@ export function setFeedbackOptions() {
 
   window.doorbellOptions = {
     appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: profile.name || 'name data missing',
+    name: profile.name || 'profile data missing',
     properties: {
       settingsReadable: !!app.settings,
       profileReadable: !!app.profile,
-      peerID: profile.peerID || 'peerID data missing',
-      vendor: profile.vendor || 'vendor data missing',
+      peerID: profile.peerID || 'profile data missing',
+      vendor: profile.vendor || 'profile data missing',
+      moderator: profile.moderator || 'profile data missing',
       clientVersion: version,
       serverVersion,
       contactInfo,

@@ -1718,14 +1718,14 @@
   "metrics": {
     "title": "Optional Anonymous Metrics",
     "msg1": "Please help improve OpenBazaar by clicking the 'Share' button below to share anonymous data about your experience with the development team.",
-    "msg2": "No information that can be used to identify you, your orders, or any transactions, is shared.",
     "listTitle": "Below is a full list of the data that will be shared:",
     "list": {
       "pages": "Pages loaded in the client, such as your user page, or the search page.",
-      "clicks": "Clicks on elements. This records only the click, not the content.",
-      "errors": "Errors that occur in the app.",
-      "system": "Basic system data: Operating System, language, and screen resolution.",
-      "node": "Publicly available data: your currency, cryptocurrency, language, vendor status and whether you are a moderator.",
+      "clicks": "Clicks on elements. This records only the click, not any content.",
+      "errors": "Errors that occur in the app, including how long it takes to load content and if the content loads fail.",
+      "system": "Basic system data such as Operating System, CPU type, RAM, language, and screen resolution. This helps us determine how performance is correlated to types of computers.",
+      "node": "Information about your node such as your currency, cryptocurrency, language, vendor status whether you are a moderator, and if you are using Tor.",
+      "app": "Details about your app, which includes the version and whether it is installed from a downloadable package or from source.",
       "orders": "When an order is made or moved from one state to another, it will be recorded with no identifiable information about the content of that order."
     },
     "shareBtn": "Share",
