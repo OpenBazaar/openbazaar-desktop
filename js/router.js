@@ -498,6 +498,7 @@ export default class ObRouter extends Router {
       .always(() => {
         this.off(null, onWillRoute);
         endEvent('UserPageLoad', {
+          ownPage: guid === app.profile.id,
           pageState,
           listing: !!listingFetch,
           error: userPageFetchError,
