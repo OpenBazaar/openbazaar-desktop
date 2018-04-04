@@ -18,9 +18,9 @@ export default class extends BaseVw {
     this.verifiedModModel = app.verifiedMods.get(this._state.peerID);
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const nowIsVerifiedMod = app.verifiedMods.get(this._state.peerID);
-      if (nowIsVerifiedMod !== this.verifiedModModel) {
-        this.verifiedModModel = nowIsVerifiedMod;
+      const newVerifiedModModel = app.verifiedMods.get(this._state.peerID);
+      if (newVerifiedModModel !== this.verifiedModModel) {
+        this.verifiedModModel = newVerifiedModModel;
         this.render();
       }
     });

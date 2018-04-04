@@ -101,9 +101,9 @@ export default class extends BaseModal {
     this.hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const nowHasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
-      if (nowHasVerifiedMods !== this.hasVerifiedMods) {
-        this.hasVerifiedMods = nowHasVerifiedMods;
+      const newHasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+      if (newHasVerifiedMods !== this.hasVerifiedMods) {
+        this.hasVerifiedMods = newHasVerifiedMods;
         this.showDataChangedMessage();
       }
     });

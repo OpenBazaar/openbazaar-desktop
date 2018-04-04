@@ -99,12 +99,12 @@ export default class extends baseVw {
       this.setHideNsfwClass();
     });
 
-    this.verifiedModIDs = app.verifiedMods.matched(this.model.get('moderators'));
+    this.verifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const newVerifiedModIDs = app.verifiedMods.matched(this.model.get('moderators'));
-      if (newVerifiedModIDs !== this.verifiedModIDs) {
-        this.verifiedModIDs = newVerifiedModIDs;
+      const newverifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+      if (newverifiedMods !== this.verifiedMods) {
+        this.verifiedMods = newverifiedMods;
         this.render();
       }
     });
@@ -429,9 +429,9 @@ export default class extends baseVw {
 
     if (this.verifiedMod) this.verifiedMod.remove();
 
-    if (this.verifiedModIDs.length) {
+    if (this.verifiedMods.length) {
       this.verifiedMod = new VerifiedMod({
-        model: this.verifiedModIDs[0],
+        model: this.verifiedMods[0],
         data: app.verifiedMods.data,
         showLongText: true,
         genericText: true,

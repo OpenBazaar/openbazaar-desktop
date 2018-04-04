@@ -23,9 +23,9 @@ export default class extends BaseModal {
     this.verifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const nowIsVerifiedMod = app.verifiedMods.get(this.model.get('peerID'));
-      if (nowIsVerifiedMod !== this.verifiedModModel) {
-        this.verifiedModModel = nowIsVerifiedMod;
+      const newVerifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
+      if (newVerifiedModModel !== this.verifiedModModel) {
+        this.verifiedModModel = newVerifiedModModel;
         this.render();
       }
     });
