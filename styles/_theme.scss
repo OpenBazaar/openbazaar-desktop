@@ -215,6 +215,7 @@ input[type=range][class~="clrS"] {
 
 .clrBAlert2Grad {
   background: $alert2Gradient;
+  background-color: $alert2Background;
 }
 
 ::-webkit-scrollbar-track {

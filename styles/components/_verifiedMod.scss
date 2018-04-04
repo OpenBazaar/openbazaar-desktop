@@ -1,7 +1,4 @@
 .verifiedMod {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
   white-space: normal; // prevent inheriting no wraps from parent elements
 
   .badge {
@@ -10,42 +7,33 @@
     background-size: contain;
     background-position: center;
     position: relative;
-    top: -2px; // visually center relative to text
+    top: -1px; // visually center relative to text
+    flex-shrink: 0;
+    margin-right: 3px;
   }
 
   .warning {
-    margin-right: 4px;
-    font-size: 1.7rem;
+    font-size: $tx3;
+    margin-right: 5px;
   }
 
-  .tooltipWrapper .iconWrapper {
-    display: inline;
-    position: relative;
-
-    .arrowBoxWrapper {
-      display: none;
-    }
+  .arrowBox {
+    padding: $padMd $padLg;
   }
 
-  &:hover .tooltipWrapper .iconWrapper {
+  .arrowBoxTipWrap {
+    display: inline-block;
 
-    .arrowBoxWrapper {
-      display: block;
-      position: absolute;
-
-      .arrowBox {
-        @extend .verifiedModArrowBox;
-
-        &:before {
-          background: $alert2Background;
-          border-right-width: 2px;
-          border-bottom-width: 2px;
-        }
+    &.verified {
+      .textWrapper, .titleWrapper {
+        position: relative;
+        top: -2px; // visually center relative to text    
       }
-    }
+    }    
   }
 }
 
+// TODO is this below needed?
 .verifiedModArrowBox {
   border-width: 2px;
   font-size: $tx5;

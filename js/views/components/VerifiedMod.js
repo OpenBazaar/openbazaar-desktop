@@ -1,29 +1,44 @@
 import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
-import VerifiedMod from '../../models/VerifiedMod';
-import app from '../../app';
+// import VerifiedMod from '../../models/VerifiedMod';
+// import app from '../../app';
+import { isHiRez } from '../../utils/responsive';
 import { handleLinks } from '../../utils/dom';
 
 export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
-      arrowClass: '',
-      type: {},
-      data: {},
       ...options,
+      initialState: {
+        verified: false,
+        text: '',
+        textClass: 'txB',
+        textWrapperClass: 'flexVCent',
+        infoIconClass: 'ion-information-circled clrT2',
+        tipTitle: options.initialState &&
+          typeof options.initialState.tipTitle === 'undefined' &&
+          options.initialState.text || '',
+        tipTitleClass: 'tx4 txB',
+        titleWrapperClass: 'flexCent row',
+        tipBody: '',
+        arrowClass: 'arrowBoxCenteredTop',
+        badgeUrl: '',
+        ...options.initialState || {},
+      },
     };
 
-    super(opts);
-    this.options = opts;
-    // If no model is passed in, show the non-verified state instead
-    // For listings, this model might be just the first verified moderator on the listing.
-    this.verified = options.model && options.model instanceof VerifiedMod;
+    if (!opts.initialState.badgeUrl &&
+      typeof opts.badge === 'object') {
+      opts.initialState.badgeUrl = isHiRez ?
+        opts.badge.small : opts.badge.tiny;
+    }
 
+    super(opts);
     handleLinks(this.el);
   }
 
   className() {
-    return 'verifiedMod js-verifiedMod';
+    return 'verifiedMod';
   }
 
   events() {
@@ -40,10 +55,7 @@ export default class extends BaseVw {
     super.render();
     loadTemplate('/components/verifiedMod.html', (t) => {
       this.$el.html(t({
-        ...this.options,
-        ...(this.model ? this.model.toJSON() : {}),
-        data: app.verifiedMods.data,
-        verified: this.verified,
+        ...this.getState(),
       }));
     });
 

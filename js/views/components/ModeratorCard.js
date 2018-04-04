@@ -115,10 +115,32 @@ export default class extends BaseVw {
       }));
 
       if (this.verifiedMod) this.verifiedMod.remove();
+
       this.verifiedMod = this.createChild(VerifiedMod, {
-        model: verifiedMod,
-        data: app.verifiedMods.data,
-        showShortText: true,
+        badge: verifiedMod &&
+          verifiedMod.get('type').badge || undefined,
+        initialState: {
+          verified: !!verifiedMod,
+          text: !!verifiedMod ?
+            app.polyglot.t('verifiedMod.modVerified.titleShort') :
+            app.polyglot.t('verifiedMod.modUnverified.titleShort'),
+          textClass: 'txB tx5b',
+          tipTitle: !!verifiedMod ?
+            app.polyglot.t('verifiedMod.modVerified.titleLong') :
+            app.polyglot.t('verifiedMod.modUnverified.titleLong'),
+          tipBody: !!verifiedMod ?
+            app.polyglot.t('verifiedMod.modVerified.tipBody', {
+              name: `<b>${app.verifiedMods.data.name}</b>`,
+              link: app.verifiedMods.data.link ?
+                `<a class="txU noWrap" href="${app.verifiedMods.data.link}" data-open-external>` +
+                  `${app.polyglot.t('verifiedMod.modVerified.link')}</a>` :
+                '',
+            }) :
+            app.polyglot.t('verifiedMod.modUnverified.tipBody', {
+              name: `<b>${app.verifiedMods.data.name}</b>`,
+              not: `<b>${app.polyglot.t('verifiedMod.modUnverified.not')}</b>`,
+            }),
+        },
       });
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });

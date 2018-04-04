@@ -382,12 +382,13 @@
     padding: $pad;
     position: absolute;
     text-align: left;
-    min-width: 250px;
+    width: 250px;
     z-index: 1;
   }
 
   &:hover {
-    .arrowBox {
+    .arrowBoxCenteredTop,
+    .arrowBoxRightTop {
       display: block;
     }
   }

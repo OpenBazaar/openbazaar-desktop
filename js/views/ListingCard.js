@@ -385,7 +385,7 @@ export default class extends baseVw {
     let verifiedID = verifiedIDs[0];
 
     if (Math.round(Math.random())) {
-      verifiedID = undefined;
+      verifiedID = '12345';
     }
 
     loadTemplate('listingCard.html', (t) => {

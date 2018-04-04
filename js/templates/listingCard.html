@@ -166,7 +166,7 @@
     <div class="titleCol">
       <div class="flex gutterH">
         <div class="verifiedModWrapper">
-          <% if (ob.hasVerifiedMod) { %>
+          <% if (ob.hasVerifiedMod || true) { %>
             <div class="js-verifiedMod"></div>
           <% } else { %>
             <div class="arrowBoxTipWrap clrT tx5 txCtr">
@@ -211,7 +211,7 @@
   </div>
 <% } %>
 
-<% if (['list', 'cryptoList'].includes(ob.viewType)) { %>
+<% if (['list', 'crypt2oList'].includes(ob.viewType)) { %>
   <div class="blockedOverlay overlayPanel clrP">
     <div class="flexCent">
       <div>

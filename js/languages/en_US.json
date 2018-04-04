@@ -354,20 +354,31 @@
     "blockedUserOverlayText": "You blocked this user"
   },
   "verifiedMod": {
-    "verified": {
+    "modVerified": {
+      "titleShort": "Verified",
+      "titleLong": "Verified Moderator",
+      "link": "Learn More",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
+    },
+    "modUnverified": {
+      "titleShort": "Unverified",
+      "titleLong": "Unverified Moderator",
+      "not": "NOT",
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator."
+    },    
+    "verified111": {
       "label": "Verified",
       "title": "Verified Moderator",
       "body": "This moderator is verified by %{providerName}. %{link}",
       "bodyOrder": "This moderator is verified by %{providerName}. %{link}"
     },
-    "unverified": {
+    "unverified222": {
       "label": "Unverified",
       "title": "Unverified Moderator",
       "not": "NOT",
       "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
       "bodyOrder": "This moderator is %{not} verified by %{providerName}."
     },
-
     "link": "Learn More",
     "type": "Type: ",
     "typeCombined": "%{type}%{name}",
