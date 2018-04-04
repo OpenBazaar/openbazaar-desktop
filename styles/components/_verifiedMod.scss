@@ -34,10 +34,7 @@
       position: absolute;
 
       .arrowBox {
-        border-width: 2px;
-        font-size: $tx5;
-        text-align: left;
-        padding: $padMd $padLg;
+        @extend .verifiedModArrowBox;
 
         &:before {
           background: $alert2Background;
@@ -47,4 +44,11 @@
       }
     }
   }
+}
+
+.verifiedModArrowBox {
+  border-width: 2px;
+  font-size: $tx5;
+  text-align: left;
+  padding: $padMd $padLg;  
 }

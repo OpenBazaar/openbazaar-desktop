@@ -310,6 +310,10 @@
         width: 21px;
         height: 21px;
       }
+
+      .arrowBoxCenteredTop {
+        @extend .verifiedModArrowBox; 
+      }
     }
 
     .verifiedMod {
@@ -321,6 +325,15 @@
     .userIcon {
       width: 30px;
       height: 30px;
+    }
+
+    .priceCol {
+      width: 125px;
+      text-align: right;
+    }
+
+    .inventoryCol {
+      text-align: right;
     }
   }
 

@@ -380,6 +380,10 @@ export default class extends baseVw {
   render() {
     super.render();
 
+    const moderators = this.model.get('moderators') || [];
+    const verifiedIDs = app.verifiedMods.matched(moderators);
+    const verifiedID = verifiedIDs[0];
+
     loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -389,6 +393,7 @@ export default class extends baseVw {
         displayCurrency: app.settings.get('localCurrency'),
         isBlocked,
         isUnblocking,
+        hasVerifiedMod: !!verifiedID,
       }));
     });
 
@@ -416,12 +421,8 @@ export default class extends baseVw {
           .el
       );
     }
-    const moderators = this.model.get('moderators') || [];
-    const verifiedIDs = app.verifiedMods.matched(moderators);
-    const verifiedID = verifiedIDs[0] || '123';
 
     if (this.verifiedMod) this.verifiedMod.remove();
-
     if (verifiedID) {
       this.verifiedMod = new VerifiedMod({
         model: app.verifiedMods.get(verifiedID),

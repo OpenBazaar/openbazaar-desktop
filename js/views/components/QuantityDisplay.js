@@ -26,7 +26,6 @@ export default class extends baseVw {
         coinType: '',
         contentClass: 'txB',
         spinnerClass: 'spinnerSm',
-        // spacerText: '100',
         tipClass: 'clrT tx5 txCtr',
         localCur: app.settings.get('localCurrency'),
         // amount: undefined, // will be set on a 'inventory-change' or

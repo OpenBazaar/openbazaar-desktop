@@ -389,8 +389,6 @@ export default class extends baseVw {
       }
     }
 
-    console.log(`the view type is ${viewType}`);
-
     const resultsView = this.createChild(Results, {
       searchUrl,
       reportsUrl: this.sProvider.get('reports') || '',
