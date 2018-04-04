@@ -358,7 +358,7 @@ function fetchStartupData() {
       if (failed.length) {
         const firstFailedXhr = failed[0];
         let title = '';
-        let msg = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
+        const message = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
           firstFailedXhr.status || '';
         let btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
         let btnFrag = 'manageConnections';
@@ -375,7 +375,7 @@ function fetchStartupData() {
 
         const retryFetchStartupDataDialog = new Dialog({
           title,
-          message: msg,
+          message,
           buttons: [
             {
               text: app.polyglot.t('startUp.dialogs.btnRetry'),
