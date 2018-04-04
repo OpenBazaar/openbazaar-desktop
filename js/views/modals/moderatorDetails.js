@@ -19,7 +19,7 @@ export default class extends BaseModal {
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
-    
+
     this.verifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
 
     this.listenTo(app.verifiedMods, 'update', () => {
@@ -29,7 +29,6 @@ export default class extends BaseModal {
         this.render();
       }
     });
-
   }
 
   className() {
