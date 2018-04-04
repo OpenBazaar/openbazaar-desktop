@@ -1,6 +1,11 @@
 /* The listingsGrid is used anywhere were a grid of listings is shown. Currently this includes
    the store and search results views. Make sure to check both when making changes to this file.
  */
+
+$crytoListViewTitleWidth: 218px;
+$crytoListViewVendorWidth: 205px;
+$crytoListViewPriceWidth: 125px;
+
 .listingsGrid {
   flex-wrap: wrap;
   justify-content: space-between;
@@ -72,7 +77,7 @@
     .listingCard {
       margin: 0;
       border-radius: 0;
-      padding: 6px;
+      padding: 6px 10px;
       box-sizing: border-box;
       font-size: $tx5;
 
@@ -99,9 +104,53 @@
     }
   }
 
+  &.listingsGridCryptoListView {
+    .titleCol {
+      width: $crytoListViewTitleWidth;
+    }
+
+    .vendorCol {
+      width: $crytoListViewVendorWidth;
+    }
+
+    .priceCol {
+      width: $crytoListViewPriceWidth;
+    }
+  }
+
   &:empty {
     &::after {
       content: attr(data-no-results-text);
     }
+  }
+}
+
+.cryptoListViewHeader {
+  padding: 15px 10px;
+  border-width: 1px;
+  border-style: solid;
+  border-bottom-width: 0;
+  margin-bottom: 0;
+  font-size: $tx5;
+  word-break: break-word;
+  hyphens: auto;
+
+  .titleCol {
+    width: $crytoListViewTitleWidth;
+  }
+
+  .vendorCol {
+    width: $crytoListViewVendorWidth;
+  }
+
+  .priceCol {
+    width: $crytoListViewPriceWidth;
+    text-align: right;
+    // word-break: break-word;
+  }
+
+  .inventoryCol {
+    text-align: right;
+    // word-break: break-word;
   }
 }

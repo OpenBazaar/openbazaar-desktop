@@ -153,6 +153,7 @@ export default class extends baseVw {
       this.$el.html(t({
         viewTypeClass: this.viewType === 'grid' ?
           '' : `listingsGrid${capitalize(this.viewType)}View`,
+        viewType: this.viewType,
       }));
 
       this.$resultsGrid = this.$('.js-resultsGrid');

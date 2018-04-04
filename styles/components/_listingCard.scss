@@ -302,7 +302,6 @@
       align-self: flex-start;
       text-align: center;
       left: -3px;
-      top: 8px;
       width: 28px;
       margin-right: 0;
 
@@ -314,21 +313,22 @@
       .arrowBoxCenteredTop {
         @extend .verifiedModArrowBox; 
       }
+
+      .verifiedMod {
+        position: relative;
+        top: 0;
+        left: 0;
+      }      
     }
 
-    .verifiedMod {
-      position: relative;
-      top: 0;
-      left: 0;
-    }
-
-    .userIcon {
-      width: 30px;
-      height: 30px;
+    .vendorCol {
+      .userIcon {
+        width: 30px;
+        height: 30px;
+      }
     }
 
     .priceCol {
-      width: 125px;
       text-align: right;
     }
 

@@ -124,7 +124,7 @@
           <a class="clrT clamp3"><%= ob.title %></a>
         </div>
         <div class="flexVCent gutterHSm tx5b">
-          <div class=" flexNoShrink">
+          <div class="flexNoShrink">
             <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
           </div>
           <div class="verifiedModWrapper js-verifiedMod"></div>
@@ -154,7 +154,64 @@
       </div>
     </div>
   </div>
+<%
+  } else {
+  // viewType is 'cryptoList'
+  if (ob.title.startsWith('ETH - fat ass ETH')) {
+    console.log('moo');
+    window.moo = ob;
+  }
+%>
+  <div class="flexVCent gutterH">
+    <div class="titleCol">
+      <div class="flex gutterH">
+        <div class="verifiedModWrapper">
+          <% if (ob.hasVerifiedMod) { %>
+            <div class="js-verifiedMod"></div>
+          <% } else { %>
+            <div class="arrowBoxTipWrap clrT tx5 txCtr">
+              <i class="ion-alert-circled clrTAlert tx3"></i>
+              <div class="arrowBoxCenteredTop clrBr clrP">This listing does not have any verified moderators.</div>
+            </div>
+          <% } %>
+        </div>    
+        <div class="flexCol gutterVTn">
+          <div class="clamp"><%= ob.title %></div>
+          <div class="clrT2 tx6"><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
+        </div>
+      </div>
+    </div>
+    <div class="vendorCol">
+      <div class="flex gutterH">
+        <div>
+          <a class="userIcon disc clrBr2 clrSh1 js-userLink" style="<%= ob.getAvatarBgImage(ob.vendor.avatarHashes) %>" href="<%= `#${ob.vendor.peerID}/store` %>"></a>
+        </div>
+        <div class="flexCol gutterVTn">
+          <div>
+            <a class="clrT clamp js-userLink" href="<%= `#${ob.vendor.peerID}/store` %>"><%= ob.vendor.name %></a>
+          </div>
+          <%
+            let averageStoreRating;
+            let totalStoreRatings;
 
+            if (ob.vendor && ob.vendor.stats) {
+              averageStoreRating = ob.vendor.stats.averageRating;
+              totalStoreRatings = ob.vendor.stats.ratingCount;
+            }
+          %>
+          <div class="clamp clrT2 tx6"><%= ob.formatRating(averageStoreRating, totalStoreRatings) %>&nbsp;&nbsp;<%= ob.vendor.location %></div>
+        </div>
+      </div>
+    </div>
+    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></div>
+    <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(ob.price.amount, ob.coinType, {
+      minDisplayDecimals: 0,
+      maxDisplayDecimals: 4,
+    }) %></div>
+  </div>
+<% } %>
+
+<% if (['list', 'cryptoList'].includes(ob.viewType)) { %>
   <div class="blockedOverlay overlayPanel clrP">
     <div class="flexCent">
       <div>
@@ -197,61 +254,6 @@
       </div>
     </div>
   <% } %>
-<%
-  } else {
-  // viewType is 'cryptoList'
-  if (ob.title.startsWith('ETH - fat ass ETH')) {
-    console.log('moo');
-    window.moo = ob;
-  }
-
-  ob.coinType = 'CHARLIEGOESPOOPOOAROO';
-%>
-  <div class="flexVCent gutterH">
-    <div class="verifiedModWrapper">
-      <% if (ob.hasVerifiedMod) { %>
-        <div class="js-verifiedMod"></div>
-      <% } else { %>
-        <div class="arrowBoxTipWrap clrT tx5 txCtr">
-          <i class="ion-alert-circled clrTAlert tx3"></i>
-          <div class="arrowBoxCenteredTop clrBr clrP">This listing does not have any verified moderators.</div>
-        </div>
-      <% } %>
-    </div>
-    <div style="width: 190px">
-      <div class="flexCol gutterVTn">
-        <div class="clamp"><%= ob.title %></div>
-        <div><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
-      </div>
-    </div>
-    <div style="width: 205px">
-      <div class="flex gutterH">
-        <div>
-          <a class="userIcon disc clrBr2 clrSh1 js-userLink" style="<%= ob.getAvatarBgImage(ob.vendor.avatarHashes) %>" href="<%= `#${ob.vendor.peerID}/store` %>"></a>
-        </div>
-        <div class="flexCol gutterVTn">
-          <div>
-            <a class="clrT clamp js-userLink" href="<%= `#${ob.vendor.peerID}/store` %>"><%= ob.vendor.name %></a>
-          </div>
-          <%
-            let averageStoreRating;
-            let totalStoreRatings;
-
-            if (ob.vendor && ob.vendor.stats) {
-              averageStoreRating = ob.vendor.stats.averageRating;
-              totalStoreRatings = ob.vendor.stats.ratingCount;
-            }
-          %>
-          <div class="clamp"><%= ob.formatRating(averageStoreRating, totalStoreRatings) %>&nbsp;&nbsp;&nbsp;<%= ob.vendor.location %></div>
-        </div>
-      </div>
-    </div>
-    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></div>
-    <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(29684589.9284756, ob.coinType, {
-      minDisplayDecimals: 0,
-      maxDisplayDecimals: 4,
-    }) %></div>
-  </div>
 <% } %>
 
 <div class="deleteOverlay overlayPanel">

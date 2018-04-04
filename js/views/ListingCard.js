@@ -382,7 +382,11 @@ export default class extends baseVw {
 
     const moderators = this.model.get('moderators') || [];
     const verifiedIDs = app.verifiedMods.matched(moderators);
-    const verifiedID = verifiedIDs[0];
+    let verifiedID = verifiedIDs[0];
+
+    if (Math.round(Math.random())) {
+      verifiedID = undefined;
+    }
 
     loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
