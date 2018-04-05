@@ -22,11 +22,11 @@ export default class extends baseVw {
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 24;
     this.reportsUrl = this.options.reportsUrl || '';
-    // this.viewType = this.options.viewType || 'grid';
+    this.viewType = this.options.viewType || 'grid';
     // temp
     // temp
-    this.viewType = 'cryptoList';
-    // this.viewType = 'list';
+    // this.viewType = 'cryptoList';
+    this.viewType = 'list';
 
     this.cardViews = [];
     this.pageCollections = {};
