@@ -1,5 +1,6 @@
 .verifiedMod {
   white-space: normal; // prevent inheriting no wraps from parent elements
+  line-height: 0;
 
   .badge {
     height: $thumbTn;
@@ -23,6 +24,7 @@
 
   .arrowBoxTipWrap {
     display: inline-block;
+    line-height: 1.2;
 
     &.verified {
       .textWrapper, .titleWrapper {

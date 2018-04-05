@@ -5,10 +5,6 @@
    const arrowBoxClass = `${ob.arrowClass} ${arrowBoxColor}`;
 %>
 
-<%
-  console.log(`am i verified: ${ob.verified}`);
-%>
-
 <div class="arrowBoxTipWrap <%= ob.verified ? 'verified' : 'unverified' %>">
   <div class="textWrapper <%= ob.textWrapperClass %>">
     <% print(ob.verified ? badgeFrag : warnFrag) %>
