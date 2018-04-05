@@ -1,7 +1,8 @@
+<% ob.ownListing = false %>
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent posR">
   <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
-    <div class="nsfwOverlay overlayPanel clrP">
+    <div class="nsfwOverlay overlayPanel coverFull clrP">
       <div class="flexCent">
         <div>
           <div class="flexCol flexHCent gutterV">
@@ -14,7 +15,7 @@
         </div>
       </div>
     </div>
-    <div class="blockedOverlay overlayPanel clrP">
+    <div class="blockedOverlay overlayPanel coverFull clrP">
       <div class="flexCent">
         <div>
           <div class="flexCol flexHCent">
@@ -25,7 +26,7 @@
       </div>
     </div>
     <% if (ob.ownListing) { %>
-      <div class="editOverlay overlayPanel pad">
+      <div class="editOverlay overlayPanel">
         <div class="overlayPanelInner"></div>
         <div class="flex gutterHSm">
           <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
@@ -45,7 +46,7 @@
         </div>
       </div>
     <% } else { %>
-      <div class="additionalOverlay overlayPanel padSm">
+      <div class="additionalOverlay overlayPanel">
         <div class="flex gutterHSm">
           <div class="hideIfEmpty js-reportBtnWrapper"></div>
           <div class="js-blockBtnWrapper"></div>
@@ -204,8 +205,8 @@
   </div>
 <% } %>
 
-<% if (['list', 'crypt2oList'].includes(ob.viewType)) { %>
-  <div class="blockedOverlay overlayPanel clrP">
+<% if (['list', 'cryptoList'].includes(ob.viewType)) { %>
+  <div class="blockedOverlay overlayPanel coverFull clrP">
     <div class="flexCent">
       <div>
         <div class="flexCol flexHCent">
@@ -216,7 +217,7 @@
     </div>
   </div>
   <% if (ob.ownListing) { %>
-    <div class="editOverlay overlayPanel pad">
+    <div class="editOverlay overlayPanel clrP">
       <div class="overlayPanelInner"></div>
       <div class="flexHCent gutterHSm">
         <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
@@ -236,20 +237,22 @@
       </div>
     </div>
   <% } else { %>
-    <div class="additionalOverlay overlayPanel padSm">
+    <div class="additionalOverlay overlayPanel clrP">
       <div class="flex gutterHSm">
         <div class="hideIfEmpty js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
-        <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
-        <% if (ob.nsfw) { %>
-          <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
+        <% if (!ob.viewType === 'cryptoList') { %>
+          <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
+          <% if (ob.nsfw) { %>
+            <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
+          <% } %>
         <% } %>
       </div>
     </div>
   <% } %>
 <% } %>
 
-<div class="deleteOverlay overlayPanel">
+<div class="deleteOverlay coverFull overlayPanel">
   <div class="overlayPanelInner clrS"></div>
   <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>
   <div class="deletedText clrT tx5">

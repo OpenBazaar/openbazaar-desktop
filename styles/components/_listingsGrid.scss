@@ -94,7 +94,7 @@ $crytoListViewPriceWidth: 125px;
         margin-bottom: $padMd;
       }
 
-      &:not(:last-child) {
+      &:not(:last-child):not(:focus) {
         border-bottom-color: transparent;
 
         &:hover {

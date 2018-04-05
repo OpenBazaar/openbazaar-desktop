@@ -47,16 +47,30 @@
     .trimWidth {
       width: calc(100% - #{$thumb});
     }
+
+    .verifiedModWrapper {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+
+      .badge, .warning {
+        position: static;
+      }
+    }
+
+    .additionalOverlay, .editOverlay {
+      top: 8px;
+      left: 8px;
+    }
   }
 
   .overlayPanel {
     display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     z-index: 1; // so it's above the overlay icons
+    // background-color: pink;
+    // top: 0;
+    // bottom: 0;
 
     .overlayPanelInner {
       // Using seperate element just for the overlay so that
@@ -64,6 +78,13 @@
       // still use the clrS class (instead of RGBA).
       opacity: 0.9;
       position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    &.coverFull {
       top: 0;
       left: 0;
       right: 0;
@@ -93,6 +114,7 @@
 
   .listingsGrid:not(.listingsGridListView) &:hover {
     bottom: 4px;
+    z-index: 2;
   }
 
   &:hover:not(.listingDeleting):not(.listingDeleted) {
@@ -105,6 +127,10 @@
     display: none;
   }
 
+  .btnHideNsfw {
+    margin-right: 5px;
+  }
+
   .reportBtnShell {
     button {
       width: 30px;
@@ -112,48 +138,9 @@
     }
   }
 
-  .additionalOverlay {
-    top: auto;
-  }
-
   &:hover {
     .additionalOverlay {
       display: flex;
-    }
-  }
-
-  .verifiedModWrapper {
-    position: absolute;
-    top: 0;
-    width: 100%;
-
-    .verifiedMod {
-      position: absolute;
-      left: $padSm;
-      top: $padSm;
-
-      & > .badge {
-        top: 0;
-      }
-
-      .badgeText {
-        display: none;
-      }
-
-      .tooltipWrapper {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-
-        .arrowBoxWrapper {
-          height: 21px;
-          width: 21px;
-
-          .arrowBox {
-            top: 36px; // height of the badge + height of the arrowtip
-          }
-        }
-      }
     }
   }
 
@@ -220,45 +207,18 @@
 
     .verifiedModWrapper {
       position: static;
-      bottom: 0;
 
-      .verifiedMod {
-        position: static;
+      .badge {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        top: 2px;
+      }
 
-        & > .badge {
-          height: 1em;
-          width: 1em;
-          top: 0;
-          margin-right: 0.3em;
-        }
-
-        .tooltipWrapper {
-          position: static;
-          width: auto;
-          height: auto;
-
-          .badgeText {
-            display: inline;
-          }
-
-          .iconWrapper .arrowBoxWrapper {
-            width: 1em;
-            height: 1em;
-            top: 0;
-            right: 0;
-
-            .arrowBox {
-              right: -27px;
-              top: auto;
-              bottom: calc(100% + 14px);
-
-              &::before {
-                top: 100%;
-                transform: translate(-50%, -50%) rotate(45deg);
-              }
-            }
-          }
-        }
+      .warning {
+        position: relative;
+        font-size: $tx5;
+        top: 1px;
       }
     }
   }
@@ -270,16 +230,14 @@
     width: 100%;
     height: auto;
 
-    .additionalOverlay,
-    .editOverlay {
-      height: 100%;
-      box-sizing: border-box;
-      align-items: center;
+    .additionalOverlay {
+      @include center(false, true);
+      right: 5px;      
     }
 
-    .additionalOverlay {
-      padding-left: 13px; // make the left padding match top and bottom
-    }    
+    .editOverlay {
+      @include center();
+    }
   }
 
   .listingsGridListView & {
@@ -304,6 +262,7 @@
       left: -3px;
       width: 28px;
       margin-right: 0;
+      top: 2px;
 
       .badge {
         width: 21px;

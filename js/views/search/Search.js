@@ -376,11 +376,6 @@ export default class extends baseVw {
 
     let viewType = 'grid';
 
-    // TEMP || true
-    // TEMP || true
-    // TEMP || true
-    viewType = 'cryptoList';
-
     if (data && data.options && data.options.type &&
       data.options.type.options &&
       data.options.type.options.length) {
