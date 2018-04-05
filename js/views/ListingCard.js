@@ -13,7 +13,7 @@ import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
-import VerifiedMod from './components/VerifiedMod';
+import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -380,14 +380,6 @@ export default class extends baseVw {
   render() {
     super.render();
 
-    const moderators = this.model.get('moderators') || [];
-    const verifiedIDs = app.verifiedMods.matched(moderators);
-    let verifiedID = verifiedIDs[0];
-
-    if (Math.round(Math.random())) {
-      verifiedID = '12345';
-    }
-
     loadTemplate('listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
@@ -397,7 +389,6 @@ export default class extends baseVw {
         displayCurrency: app.settings.get('localCurrency'),
         isBlocked,
         isUnblocking,
-        hasVerifiedMod: !!verifiedID,
       }));
     });
 
@@ -426,16 +417,16 @@ export default class extends baseVw {
       );
     }
 
+    const moderators = this.model.get('moderators') || [];
+    const verifiedIDs = app.verifiedMods.matched(moderators);
+    const verifiedID = verifiedIDs[0];
+
     if (this.verifiedMod) this.verifiedMod.remove();
-    if (verifiedID) {
-      this.verifiedMod = new VerifiedMod({
-        model: app.verifiedMods.get(verifiedID),
-        data: app.verifiedMods.data,
-        showLongText: true,
-        genericText: true,
-      });
-      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
-    }
+    this.verifiedMod = this.createChild(VerifiedMod, getListingOptions({
+      model: verifiedID &&
+        app.verifiedMods.get(verifiedID),
+    }));
+    this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
 
     return this;
   }

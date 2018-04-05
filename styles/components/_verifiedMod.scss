@@ -10,16 +10,19 @@
     position: relative;
     top: -1px; // visually center relative to text
     flex-shrink: 0;
-    margin-right: 3px;
   }
 
   .warning {
     font-size: $tx3;
-    margin-right: 5px;
+    flex-shrink: 0;
   }
 
   .arrowBox {
     padding: $padMd $padLg;
+    border-width: 2px;
+    font-size: $tx5;
+    text-align: left;
+    padding: $padMd $padLg;    
   }
 
   .arrowBoxTipWrap {
@@ -33,12 +36,4 @@
       }
     }    
   }
-}
-
-// TODO is this below needed?
-.verifiedModArrowBox {
-  border-width: 2px;
-  font-size: $tx5;
-  text-align: left;
-  padding: $padMd $padLg;  
 }

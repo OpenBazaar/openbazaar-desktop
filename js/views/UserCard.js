@@ -256,7 +256,7 @@ export default class extends BaseVw {
 
       const verifiedMod = app.verifiedMods.get(this.guid);
       if (verifiedMod) {
-        this.verifiedMod = new VerifiedMod({
+        this.verifiedMod = this.createChild(VerifiedMod, {
           model: verifiedMod,
           arrowClass: 'arrowBoxRightTop',
           data: app.verifiedMods.data,

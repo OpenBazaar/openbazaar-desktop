@@ -166,14 +166,7 @@
     <div class="titleCol">
       <div class="flex gutterH">
         <div class="verifiedModWrapper">
-          <% if (ob.hasVerifiedMod || true) { %>
-            <div class="js-verifiedMod"></div>
-          <% } else { %>
-            <div class="arrowBoxTipWrap clrT tx5 txCtr">
-              <i class="ion-alert-circled clrTAlert tx3"></i>
-              <div class="arrowBoxCenteredTop clrBr clrP">This listing does not have any verified moderators.</div>
-            </div>
-          <% } %>
+          <div class="js-verifiedMod"></div>
         </div>    
         <div class="flexCol gutterVTn">
           <div class="clamp"><%= ob.title %></div>
