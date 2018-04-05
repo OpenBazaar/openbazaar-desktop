@@ -364,7 +364,8 @@
       "titleShort": "Unverified",
       "titleLong": "Unverified Moderator",
       "not": "NOT",
-      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator."
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
     },
     "listingVerified": {
       "link": "Learn More",

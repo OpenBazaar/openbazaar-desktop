@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
-import VerifiedMod from '../../components/VerifiedMod';
+import VerifiedMod, { getModeratorOptions } from '../../components/VerifiedMod';
 import app from '../../../app';
 
 export default class extends BaseVw {
@@ -46,13 +46,20 @@ export default class extends BaseVw {
       }));
 
       const verifiedMod = app.verifiedMods.get(this._state.peerID);
-      if (this.verifiedMod) this.verifiedMod.remove();
-      this.verifiedMod = this.createChild(VerifiedMod, {
+      const createOptions = getModeratorOptions({
         model: verifiedMod,
-        data: app.verifiedMods.data,
-        showShortText: true,
-        inOrder: true,
       });
+
+      if (!verifiedMod) {
+        createOptions.initialState.tipBody =
+          app.polyglot.t('verifiedMod.modUnverified.tipBodyOrderDetail', {
+            not: `<b>${app.polyglot.t('verifiedMod.modUnverified.not')}</b>`,
+            name: `<b>${app.verifiedMods.data.name}</b>`,
+          });
+      }
+
+      if (this.verifiedMod) this.verifiedMod.remove();
+      this.verifiedMod = this.createChild(VerifiedMod, createOptions);
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 
