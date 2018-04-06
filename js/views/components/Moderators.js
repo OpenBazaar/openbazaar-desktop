@@ -226,18 +226,20 @@ export default class extends baseVw {
         showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
       });
 
-      if (op.async) this.listenForIDs.push(...IDs);
+      if (op.async) {
+        this.listenForIDs.push(...IDs);
 
-      /* Listen to the websocket for moderators, the data may arrive before the POST that triggers
-         it returns. It's possible socket data for profiles will arrive from some other call, that's
-         fine as long as the socket responses have valid data.
-      */
+        /* Listen to the websocket for moderators, the data may arrive before the POST that triggers
+           it returns. It's possible socket data for profiles will arrive from some other call,
+           that's fine as long as the socket responses have valid data.
+        */
 
-      const serverSocket = getSocket();
-      if (serverSocket) {
-        this.listenTo(serverSocket, 'message', this.onSocketMessage);
-      } else {
-        throw new Error('There is no connection to the server to listen to.');
+        const serverSocket = getSocket();
+        if (serverSocket) {
+          this.listenTo(serverSocket, 'message', this.onSocketMessage);
+        } else {
+          throw new Error('There is no connection to the server to listen to.');
+        }
       }
 
       const fetch = $.ajax({
