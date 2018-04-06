@@ -126,8 +126,7 @@ export default class extends baseVw {
     });
     this.listenTo(this.moderatorsStatus, 'browseMore', () => this.onBrowseMore());
 
-    // listen to the websocket for moderator data
-    this.serverSocket = getSocket();
+    this.listenForIDs = [];
   }
 
   events() {
@@ -168,6 +167,29 @@ export default class extends baseVw {
     }
   }
 
+  onSocketMessage(event) {
+    const data = event.jsonData;
+    const excluded = [...this.allIDs, ...this.excludeIDs, app.profile.id];
+    /* If the event has a peerId and a profile or a peerId and an error use it. Then make sure the
+       peerId is either in the list to listen for, or the method is GET which returns random IDs
+       found on the network. Don't add any that have already been added or excluded, or have the
+       user's own id.
+    */
+
+    if (data.peerId && (data.profile || data.error) && !excluded.includes(data.peerId) &&
+    (this.listenForIDs.includes(data.peerId) || this.options.method === 'GET')) {
+      if (data.error) {
+        if (this.options.showInvalid) {
+          this.moderatorsCol.add(new Moderator(data, { parse: true }));
+        } else {
+          this.removeNotFetched(data.peerId);
+        }
+      } else if (data.profile) {
+        this.processMod(data.profile);
+      }
+    }
+  }
+
   getModeratorsByID(opts) {
     const op = {
       ...this.options,
@@ -204,34 +226,28 @@ export default class extends baseVw {
         showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
       });
 
+      if (op.async) this.listenForIDs.push(...IDs);
+
+      /* Listen to the websocket for moderators, the data may arrive before the POST that triggers
+         it returns. It's possible socket data for profiles will arrive from some other call, that's
+         fine as long as the socket responses have valid data.
+      */
+
+      const serverSocket = getSocket();
+      if (serverSocket) {
+        this.listenTo(serverSocket, 'message', this.onSocketMessage);
+      } else {
+        throw new Error('There is no connection to the server to listen to.');
+      }
+
       const fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
         method: op.method,
       })
           .done((data) => {
-            if (op.async) {
-              const socketID = data.id;
-              if (this.serverSocket) {
-                this.listenTo(this.serverSocket, 'message', (event) => {
-                  const eventData = event.jsonData;
-                  if (eventData.error) {
-                    // errors don't have a message id, check to see if the peerID matches
-                    if (IDs.includes(eventData.peerId)) {
-                      if (op.showInvalid) {
-                        this.moderatorsCol.add(new Moderator(eventData, { parse: true }));
-                      } else {
-                        this.removeNotFetched(eventData.peerId);
-                      }
-                    }
-                  } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
-                    this.processMod(eventData.profile);
-                  }
-                });
-              } else {
-                throw new Error('There is no connection to the server to listen to.');
-              }
-            } else {
+            // If op.async is true, the data is handled by the socket listener.
+            if (!op.async) {
               data.forEach(mod => {
                 if (!excluded.includes(mod.peerId)) this.processMod(mod.profile);
               });

@@ -41,7 +41,7 @@ export default class extends baseVw {
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
 
-    this.modsSelected = new Moderators({
+    this.modsSelected = this.createChild(Moderators, {
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
       notSelected: 'deselected',
@@ -50,7 +50,7 @@ export default class extends baseVw {
       showSpinner: false,
     });
 
-    this.modsByID = new Moderators({
+    this.modsByID = this.createChild(Moderators, {
       async: false,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
@@ -61,7 +61,7 @@ export default class extends baseVw {
 
     this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsFound(mOpts.guids));
 
-    this.modsAvailable = new Moderators({
+    this.modsAvailable = this.createChild(Moderators, {
       apiPath: 'moderators',
       excludeIDs: this.currentMods,
       showVerifiedOnly: true,
