@@ -16,7 +16,7 @@
 
     let icon = `<i class="${ob.infoIconClass}"></i>`;
 
-    if (ob.wrapIcon) {
+    if (ob.wrapInfoIcon) {
       icon = `
        <div class="arrowBoxTipWrap">
          ${icon}
@@ -37,7 +37,7 @@
 %>
 
 <div class="innerWrap <%= ob.verified ? 'verified' : 'unverified' %>">
-  <% if (!ob.wrapIcon) { %>
+  <% if (!ob.wrapInfoIcon) { %>
     <div class="arrowBoxTipWrap">
       <%= textWrapper %>
       <%= arrowBox %>

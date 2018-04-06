@@ -24,7 +24,7 @@ export default class extends BaseVw {
         tipBodyClass: '',
         arrowClass: 'arrowBoxCenteredTop',
         badgeUrl: '',
-        wrapIcon: options.initialState &&
+        wrapInfoIcon: options.initialState &&
           options.initialState.text || false,
         ...options.initialState || {},
       },

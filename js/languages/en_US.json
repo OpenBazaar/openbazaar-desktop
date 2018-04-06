@@ -1268,6 +1268,14 @@
         "transactions": "Transactions",
         "myPage": "My Page"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Title",
+      "colVendor": "Vendor",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Inventory",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",

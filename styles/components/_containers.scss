@@ -384,6 +384,8 @@
     text-align: left;
     width: 250px;
     z-index: 1;
+    text-align: center;
+    font-weight: normal;
   }
 
   &:hover {
@@ -427,6 +429,7 @@
     padding: $pad;
     top: 100%;
     margin-top: 13px;
+    text-align: center;
   }
 
   &:after {
@@ -457,6 +460,7 @@
     pointer-events: auto;
   }
 
+  // tip is above triggering element with pointer triangle on the bottom
   &.toolTipTop {
     &::before {
       top: -19px;
