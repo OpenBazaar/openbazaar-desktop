@@ -25,8 +25,8 @@ export default class extends baseVw {
     this.viewType = this.options.viewType || 'grid';
     // temp
     // temp
-    // this.viewType = 'cryptoList';
-    this.viewType = 'list';
+    this.viewType = 'cryptoList';
+    // this.viewType = 'list';
 
     this.cardViews = [];
     this.pageCollections = {};

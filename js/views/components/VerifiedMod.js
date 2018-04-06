@@ -21,8 +21,11 @@ export default class extends BaseVw {
         tipTitleClass: 'tx4 txB',
         titleWrapperClass: 'flexCent rowSm gutterHTn',
         tipBody: '',
+        tipBodyClass: '',
         arrowClass: 'arrowBoxCenteredTop',
         badgeUrl: '',
+        wrapIcon: options.initialState &&
+          options.initialState.text || false,
         ...options.initialState || {},
       },
     };

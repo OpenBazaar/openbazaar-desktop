@@ -2,38 +2,52 @@
   white-space: normal; // prevent inheriting no wraps from parent elements
   line-height: 0;
 
-  .badge {
-    height: $thumbTn;
-    width: $thumbTn;
-    background-size: contain;
-    background-position: center;
-    position: relative;
-    top: -1px; // visually center relative to text
-    flex-shrink: 0;
-  }
+  .innerWrap {
+    .badge {
+      height: $thumbTn;
+      width: $thumbTn;
+      background-size: contain;
+      background-position: center;
+      position: relative;
+      top: -1px; // visually center relative to text
+      flex-shrink: 0;
+    }
 
-  .warning {
-    font-size: $tx3;
-    flex-shrink: 0;
-  }
-
-  .arrowBox {
-    padding: $padMd $padLg;
-    border-width: 2px;
-    font-size: $tx5;
-    text-align: left;
-    padding: $padMd $padLg;    
-  }
-
-  .arrowBoxTipWrap {
-    display: inline-block;
-    line-height: 1.2;
-
-    &.verified {
-      .textWrapper, .titleWrapper {
-        position: relative;
-        top: -2px; // visually center relative to text    
+    .titleWrapper {
+      .badge {
+        top: 0;
       }
-    }    
+
+      .warning {
+        position: relative;
+        top: 0;
+      }
+    }
+
+    .warning {
+      font-size: $tx3;
+      flex-shrink: 0;
+    }
+
+    .arrowBox {
+      padding: $padMd $padLg;
+      border-width: 2px;
+      font-size: $tx5;
+      text-align: left;
+      padding: $padMd $padLg;
+      font-weight: normal;   
+    }
+
+    .arrowBoxTipWrap {
+      display: inline-block;
+      line-height: 1.2;
+    }
+  }
+
+  &.verified {
+    .textWrapper, .titleWrapper {
+      position: relative;
+      top: -2px; // visually center relative to text    
+    }
   }
 }

@@ -1,22 +1,48 @@
 <%
-   const badgeFrag = `<div class="badge" style="background-image: ${ob.badgeUrl ? `url(${ob.badgeUrl}),` : ''}url('../imgs/verifiedModeratorBadgeDefault-tiny.png');" tabindex="0"></div>`;
-   const warnFrag = `<div class="warning"><i class="ion-alert-circled clrTAlert"></i></div>`;
-   const arrowBoxColor = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
-   const arrowBoxClass = `${ob.arrowClass} ${arrowBoxColor}`;
+    const badgeFrag = `<div class="badge" style="background-image: ${ob.badgeUrl ? `url(${ob.badgeUrl}),` : ''}url('../imgs/verifiedModeratorBadgeDefault-tiny.png');" tabindex="0"></div>`;
+    const warnFrag = `<div class="warning"><i class="ion-alert-circled clrTAlert"></i></div>`;
+    const arrowBoxColor = ob.verified ? 'clrBrAlert2 clrBAlert2Grad' : 'clrP clrBr';
+    const arrowBoxClass = `${ob.arrowClass} ${arrowBoxColor}`;
+
+    const arrowBox = `
+      <div class="arrowBox ${arrowBoxClass}">
+        <div class="titleWrapper ${ob.titleWrapperClass}">
+          ${ob.verified ? badgeFrag : warnFrag}
+          <div class="${ob.tipTitleClass}">${ob.tipTitle}</div>
+        </div>
+        <div class="${ob.tipBodyClass}">${ob.tipBody}</div>
+      </div>     
+    `;
+
+    let icon = `<i class="${ob.infoIconClass}"></i>`;
+
+    if (ob.wrapIcon) {
+      icon = `
+       <div class="arrowBoxTipWrap">
+         ${icon}
+         ${arrowBox}
+       </div>
+      `;
+    }
+
+    const textWrapper = `
+      <div class="textWrapper ${ob.textWrapperClass}">
+        ${ob.verified ? badgeFrag : warnFrag}
+        ${
+          ob.text ?
+            `<span class="${ob.textClass}">${ob.text}${icon}</span>` : ''
+         }
+      </div>
+    `;    
 %>
 
-<div class="arrowBoxTipWrap <%= ob.verified ? 'verified' : 'unverified' %>">
-  <div class="textWrapper <%= ob.textWrapperClass %>">
-    <% print(ob.verified ? badgeFrag : warnFrag) %>
-    <% if (ob.text) { %>
-      <span class="<%= ob.textClass %>"><%= ob.text %> <%= `<i class="${ob.infoIconClass}"></i>` %></span>
-    <% } %>
-  </div>
-  <div class="arrowBox <%= arrowBoxClass %>">
-    <div class="titleWrapper <%= ob.titleWrapperClass %>">
-      <% print(ob.verified ? badgeFrag : warnFrag) %>
-      <div class="<%= ob.tipTitleClass %>"><%= ob.tipTitle %></div>
+<div class="innerWrap <%= ob.verified ? 'verified' : 'unverified' %>">
+  <% if (!ob.wrapIcon) { %>
+    <div class="arrowBoxTipWrap">
+      <%= textWrapper %>
+      <%= arrowBox %>
     </div>
-    <div class="<%= ob.tipBodyClass %>"><%= ob.tipBody %></div>
-  </div>
+  <% } else { %>
+    <%= textWrapper %>
+  <% } %>
 </div>

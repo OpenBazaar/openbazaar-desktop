@@ -20,6 +20,12 @@
       border-width: 1px;
       border-style: solid;
       padding: $pad;
+
+      .verifiedMod {
+        .textWrapper {
+          justify-content: center;
+        }
+      }
     }
   }
 }
