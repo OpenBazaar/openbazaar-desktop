@@ -1,4 +1,17 @@
 <%
+  const isCrypto = ob.listing.metadata.contractType = 'CRYPTOCURRENCY';
+  const coinType = ob.listing.metadata.coinType;
+
+  // todo
+  // todo
+  // todo temp
+  ob.order.shipping11 = {
+    address: '169 E. Harvey',
+    city: 'Mangala',
+    postalCode: '96785',
+    country: 'POLAND',
+  };
+
   if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
     var addressLine3 = `${ob.order.shipping.city ? `${ob.order.shipping.city}${ob.order.shipping.state ? ',' : ''}` : ''}${ob.order.shipping.state ? ` ${ob.order.shipping.state}` : ''}`;
     if (ob.order.shipping.postalCode) addressLine3 += `${addressLine3 ? ' ' : ''}${ob.order.shipping.postalCode}`;
@@ -41,42 +54,63 @@
       <% } %>
       <hr class="clrBr" />
       <div class="flexRow gutterH">
-        <div class="col4 gutterVTn">
-          <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shipToHeading') %></div>
-          <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
-            <div><%= ob.order.shipping.shipTo %></div>
-            <% if (ob.order.shipping.address) { %>
-              <div><%= ob.order.shipping.address %></div>
-            <% } %>
-            <% if (addressLine3) { %>
-              <div><%= addressLine3 %></div>
-            <% } %>
-              <div><%= addressLine4 %></div>
-            <%
-              let clipboardAddress = [ob.order.shipping.shipTo];
-              if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
-              if (addressLine3) clipboardAddress.push(addressLine3);
-              if (addressLine4) clipboardAddress.push(addressLine4);
-              clipboardAddress = clipboardAddress.join('\n');
-            %>
-            <div class="gutterH">
-              <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
-              <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
-            </div>
-            <% if (ob.order.shipping.addressNotes) { %>
-              <div class="addressNotes gutterVTn">
-                <div>
-                  <b><%= ob.polyT('orderDetail.summaryTab.orderDetails.addressNotes') %></b>
+        <div class="col4">
+          <div class="gutterVTn <% if (isCrypto) print('row') %>">
+            <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shipToHeading') %></div>
+            <% if (ob.order.shipping && ob.order.shipping.country !== 'NA') { %>
+              <div><%= ob.order.shipping.shipTo %></div>
+              <% if (ob.order.shipping.address) { %>
+                <div><%= ob.order.shipping.address %></div>
+              <% } %>
+              <% if (addressLine3) { %>
+                <div><%= addressLine3 %></div>
+              <% } %>
+                <div><%= addressLine4 %></div>
+              <%
+                let clipboardAddress = [ob.order.shipping.shipTo];
+                if (ob.order.shipping.address) clipboardAddress.push(ob.order.shipping.address);
+                if (addressLine3) clipboardAddress.push(addressLine3);
+                if (addressLine4) clipboardAddress.push(addressLine4);
+                clipboardAddress = clipboardAddress.join('\n');
+              %>
+              <div class="gutterH">
+                <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
+                <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
+              </div>
+              <% if (ob.order.shipping.addressNotes) { %>
+                <div class="addressNotes gutterVTn">
+                  <div>
+                    <b><%= ob.polyT('orderDetail.summaryTab.orderDetails.addressNotes') %></b>
+                  </div>
+                  <div>
+                    <%= ob.order.shipping.addressNotes %>
+                  </div>
                 </div>
+              <% } %>
+            <% } else { %>
+              <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+            <% } %>
+            <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
+          </div>
+          <% if (isCrypto) { %>
+            <div class="gutterVTn">
+              <%
+                const cointTypeNameKey = `cryptoCurrencies.${coinType}`;
+                const coinTypeName = ob.polyT(cointTypeNameKey);
+              %>
+              <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.paymentAddressHeading', {
+              coinType: coinTypeName === cointTypeNameKey ?
+                coinType : coinTypeName,
+              }) %></div>
+              <div class="flex gutterHSm">
+                <div class="clamp cryptoPaymentAddress"><%= item.paymentAddress %></div>
                 <div>
-                  <%= ob.order.shipping.addressNotes %>
+                  <a class="js-copyCryptoAddress clrTEm" data-address="<%= item.paymentAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
                 </div>
               </div>
-            <% } %>
-          <% } else { %>
-            <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
+              <span class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoAddressCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>              
+            </div>
           <% } %>
-          <span class="clrT2 hide orderDetailsCopiedToClipboard js-orderDetailsCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
         </div>
         <div class="col8">
           <div class="row">
@@ -91,7 +125,17 @@
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
-                <div><%= item.quantity %></div>
+                <%
+                  let quantity = item.quantity;
+
+                  if (isCrypto) {
+                    quantity = new Intl.NumberFormat(ob.locale, {
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 8,
+                    }).format(quantity);
+                  }
+                %>
+                <div><%= quantity %></div>
               </div>
             </div>
             <div class="flexRow gutterH row">
@@ -124,13 +168,13 @@
         <div class="col6">
           <div class="gutterVTn">
             <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shippingOption') %></div>
-            <div><%= item.shippingOption.name ? item.shippingOption.name : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+            <div><%= item.shippingOption && item.shippingOption.name ? item.shippingOption.name : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
           </div>
         </div>
         <div class="col6">
           <div class="gutterVTn">
             <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.shippingService') %></div>
-            <div><%= item.shippingOption.service ? item.shippingOption.service : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
+            <div><%= item.shippingOption && item.shippingOption.service ? item.shippingOption.service : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
           </div>
         </div>
       </div>

@@ -262,6 +262,10 @@
       margin-top: $pad;
     }
 
+    .cryptoPaymentAddress {
+      flex-shrink: 1000;
+    }
+
     .statusIconCol {
       text-align: center;
       flex-shrink: 0;

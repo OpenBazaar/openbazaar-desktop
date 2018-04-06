@@ -1694,6 +1694,7 @@
         "quantityHeading": "Quantity",
         "totalHeading": "Total",
         "moderatorHeading": "Moderator",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Copy",
         "viewOnMap": "View on map",
         "shippingOption": "Shipping Option",

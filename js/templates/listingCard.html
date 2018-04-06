@@ -192,10 +192,7 @@
       </div>
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></div>
-    <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(ob.price.amount, ob.coinType, {
-      minDisplayDecimals: 0,
-      maxDisplayDecimals: 4,
-    }) %></div>
+    <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(ob.price.amount, ob.coinType) %></div>
   </div>
 <% } %>
 
