@@ -102,7 +102,7 @@
     "install": "Install Now"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
   "testnet": "Test Mode",

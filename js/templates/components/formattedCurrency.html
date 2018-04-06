@@ -18,4 +18,4 @@
   const formattedPrice = ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur, { forceCryptoListingCur: true });
 %>
 
-<%= formattedPrice %><% if (!formattedPrice) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip') %>"><span class="<%= iconFullClass %>"></span></span>
+<%= formattedPrice %><% if (!formattedPrice) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>

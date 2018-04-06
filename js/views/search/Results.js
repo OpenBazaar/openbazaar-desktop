@@ -82,6 +82,7 @@ export default class extends baseVw {
 
     // if there are no models, add the no models message instead
     if (total < 1) noResults.appendTo(resultsFrag);
+    this.$el.toggleClass('noResults', total < 1);
 
     this.$resultsGrid.html(resultsFrag);
     // update the page controls
