@@ -84,7 +84,7 @@ export default class extends baseVw {
       { guids, smart_count: guids.length });
     this.showModByIDError(modsNotFound);
     if (this.modsByID.modCount === 0) {
-      this.getCachedEl('.js-modListAvailable').addClass('hide');
+      this.getCachedEl('.js-modListByID').addClass('hide');
     }
   }
 
