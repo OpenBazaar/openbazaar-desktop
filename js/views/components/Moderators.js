@@ -400,6 +400,7 @@ export default class extends baseVw {
         wrapperClasses: this.options.wrapperClasses,
         showVerifiedOnly: this.options.showVerifiedOnly,
         placeholder: !this.modCards.length,
+        purchase: this.options.purchase,
         ...this.getState(),
       }));
 
