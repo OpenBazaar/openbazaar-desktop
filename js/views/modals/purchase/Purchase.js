@@ -149,7 +149,7 @@ export default class extends BaseModal {
       const newHasVerifiedMods = app.verifiedMods.matched(moderatorIDs).length > 0;
       if (newHasVerifiedMods !== this.hasVerifiedMods) {
         this.hasVerifiedMods = newHasVerifiedMods;
-        this.showDataChangedMessage({ modsChanged: true });
+        this.showDataChangedMessage();
       }
     });
   }
@@ -175,7 +175,7 @@ export default class extends BaseModal {
     };
   }
 
-  showDataChangedMessage(opts) {
+  showDataChangedMessage() {
     if (this.dataChangePopIn && !this.dataChangePopIn.isRemoved()) {
       this.dataChangePopIn.$el.velocity('callout.shake', { duration: 500 });
     } else {
@@ -185,12 +185,8 @@ export default class extends BaseModal {
       });
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
-        if (opts.modsChanged) {
-          this.moderators.render();
-          this.dataChangePopIn.remove();
-        } else {
-          this.render();
-        }
+        this.render();
+        this.moderators.render();
       });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {

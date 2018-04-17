@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
@@ -102,9 +103,10 @@ export default class extends baseVw {
     this.verifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const newverifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
-      if (newverifiedMods !== this.verifiedMods) {
-        this.verifiedMods = newverifiedMods;
+      const newVerifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+      if ((this.verifiedMods.length && !newVerifiedMods.length) ||
+        (!this.verifiedMods.length && newVerifiedMods.length)) {
+        this.verifiedMods = newVerifiedMods;
         this.render();
       }
     });
