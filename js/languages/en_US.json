@@ -1622,6 +1622,9 @@
         "heading": "Fulfilled",
         "shippedByLabel": "Order Shipped via:",
         "trackingNumberLabel": "Tracking #:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Your note:",
         "noteFromVendorLabel": "Note from the vendor:",
         "noteFromStoreLabel": "Note from %{store}:",
@@ -1727,6 +1730,8 @@
       "fileUrlPlaceholder": "Link to file(s)",
       "passwordLabel": "Password",
       "passwordPlaceholder": "Password to file (optional)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Note",
       "notePlaceholder": "optional",
       "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
@@ -1936,7 +1941,8 @@
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Please provide a file url.",
-    "invalidUrl": "Please provide a valid url."
+    "invalidUrl": "Please provide a valid url.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "This User Could Not Be Found",

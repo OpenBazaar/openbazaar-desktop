@@ -544,14 +544,28 @@ export default class extends BaseVw {
         'data object has not been set.');
     }
 
+    const fulfilledState = {
+      contractType: this.contract.type,
+      showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
+      isLocalPickup: this.contract.isLocalPickup,
+    };
+
+    console.log('foo shilbert');
+    window.foo = this.contract;
+    window.shilbert = data[0];
+
+    if (this.contract.type === 'CRYPTOCURRENCY') {
+      fulfilledState.coinType =
+        this.contract.get('vendorListings').at(0)
+          .get('metadata')
+          .get('coinType');
+      // fulfilledState.transactionId = 
+    }
+
     if (this.fulfilled) this.fulfilled.remove();
     this.fulfilled = this.createChild(Fulfilled, {
       dataObject: data[0],
-      initialState: {
-        contractType: this.contract.type,
-        showPassword: this.moderator && this.moderator.id !== app.profile.id || true,
-        isLocalPickup: this.contract.isLocalPickup,
-      },
+      initialState: fulfilledState,
     });
 
     if (app.profile.id === this.vendor.id) {
