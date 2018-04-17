@@ -68,6 +68,31 @@ export default class extends baseVw {
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
     });
+
+    const modsToCheckOnVerifiedUpdate = [
+      {
+        view: this.modsSelected,
+        hasVerifiedMods: app.verifiedMods.matched(this.modsSelected.allIDs).length > 0,
+      },
+      {
+        view: this.modsByID,
+        hasVerifiedMods: app.verifiedMods.matched(this.modsByID.allIDs).length > 0,
+      },
+      {
+        view: this.modsAvailable,
+        hasVerifiedMods: app.verifiedMods.matched(this.modsAvailable.allIDs).length > 0,
+      },
+    ];
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      modsToCheckOnVerifiedUpdate.forEach(obj => {
+        const nowSelected = app.verifiedMods.matched(obj.view.allIDs).length > 0;
+        if (nowSelected !== obj.hasVerifiedMods) {
+          obj.hasVerifiedMods = nowSelected;
+          obj.view.render();
+        }
+      });
+    });
   }
 
   events() {
