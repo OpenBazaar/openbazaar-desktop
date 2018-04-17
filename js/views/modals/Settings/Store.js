@@ -59,7 +59,7 @@ export default class extends baseVw {
       showSpinner: false,
     });
 
-    this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsFound(mOpts.guids));
+    this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsByIDFound(mOpts.guids));
 
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
@@ -79,7 +79,7 @@ export default class extends baseVw {
     };
   }
 
-  noModsFound(guids) {
+  noModsByIDFound(guids) {
     const modsNotFound = app.polyglot.t('settings.storeTab.errors.modsNotFound',
       { guids, smart_count: guids.length });
     this.showModByIDError(modsNotFound);
