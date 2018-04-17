@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
