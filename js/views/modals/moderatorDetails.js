@@ -19,6 +19,16 @@ export default class extends BaseModal {
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
+
+    this.verifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newVerifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
+      if (newVerifiedModModel !== this.verifiedModModel) {
+        this.verifiedModModel = newVerifiedModModel;
+        this.render();
+      }
+    });
   }
 
   className() {
@@ -45,8 +55,6 @@ export default class extends BaseModal {
         return langData && langData.name || lang;
       });
 
-    const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
-
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({
         followedByYou: this.followedByYou,
@@ -55,7 +63,7 @@ export default class extends BaseModal {
         purchase: this.options.purchase,
         cardState: this.options.cardState,
         modLanguages,
-        verifiedMod,
+        verifiedMod: this.verifiedModModel,
         ...this.model.toJSON(),
       }));
       super.render();
@@ -75,7 +83,7 @@ export default class extends BaseModal {
 
       if (this.verifiedMod) this.verifiedMod.remove();
       this.verifiedMod = this.createChild(VerifiedMod, {
-        model: verifiedMod,
+        model: this.verifiedModModel,
         data: app.verifiedMods.data,
         showLongText: true,
       });
