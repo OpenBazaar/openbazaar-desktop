@@ -219,11 +219,7 @@ export default class extends baseVw {
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
                     if (IDs.includes(eventData.peerId)) {
-                      if (op.showInvalid) {
-                        this.processMod(eventData);
-                      } else {
-                        this.removeNotFetched(eventData.peerId);
-                      }
+                      this.processMod(eventData);
                     }
                   } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
                     this.processMod(eventData.profile);
