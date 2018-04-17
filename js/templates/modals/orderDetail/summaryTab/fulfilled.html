@@ -55,8 +55,8 @@
   <% } else if (ob.contractType === 'CRYPTOCURRENCY') { %>
     <% const cryptocurrencyDelivery = ob.cryptocurrencyDelivery && ob.cryptocurrencyDelivery[0] || {}; %>
     <div class="flex gutterH clrT">
-      <div class="statusIconCol"><span class="clrBr ion-cube"></span></div>
-      <div class="flexExpand tx5">
+      <div class="statusIconCol"><span class="clrBr ion-cash"></span></div>
+      <div class="flexExpand tx5 posR">
         <%
           const coinTypeTranslationKey = `cryptoCurrencies.${ob.coinType}`;
           const coinTypeVerbose = ob.polyT(coinTypeTranslationKey) === coinTypeTranslationKey ?
@@ -69,14 +69,10 @@
         <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.cryptoSentLabel', {
           coinTypeVerbose: coinTypeVerbose,
         }) %></div>
+
         <div class="row">
-          <% // todo todo todo: handle long transaction IDs %>
-          <% // todo todo todo: handle long transaction IDs %>
-          <% // todo todo todo: handle long transaction IDs %>
-          <% // todo todo todo: handle long transaction IDs %>
-          <% // todo todo todo: handle long transaction IDs %>
-          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <%= cryptocurrencyDelivery.transactionID %>
-          <a class="clrTEm js-copyText" data-content="<%= cryptocurrencyDelivery.transactionID %>" data-status-indicator=".js-transactionIdCopiedToClipboard"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
+          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <span class="clamp3 inline"><%= cryptocurrencyDelivery.transactionID %></span>
+          <a class="clrTEm js-copyText flexNoShrink" data-content="<%= cryptocurrencyDelivery.transactionID %>" data-status-indicator=".js-transactionIdCopiedToClipboard"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
           <a class="hide js-transactionIdCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
         </div>
         <div class="rowTn txB"><%= ob.noteFromLabel %></div>

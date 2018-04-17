@@ -559,7 +559,6 @@ export default class extends BaseVw {
         this.contract.get('vendorListings').at(0)
           .get('metadata')
           .get('coinType');
-      // fulfilledState.transactionId = 
     }
 
     if (this.fulfilled) this.fulfilled.remove();

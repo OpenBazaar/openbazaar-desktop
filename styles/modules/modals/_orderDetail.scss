@@ -315,6 +315,15 @@
             padding-top: 8px;
           }
         }
+
+        &.ion-cash {
+          font-size: 24px;
+
+          &::before {
+            padding-top: 6px;
+            padding-left: 2px;
+          }
+        }
       }
     }
 

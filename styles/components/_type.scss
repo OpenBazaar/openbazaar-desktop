@@ -154,6 +154,10 @@ a .txNoUnd:hover {
   white-space: normal;
 }
 
+.inlineClamp {
+  display: -webkit-inline-box;
+}
+
 .clamp2 {
   /* adds an ellipses to the end of wrapped text after 2 lines */
   @extend .clamp;
