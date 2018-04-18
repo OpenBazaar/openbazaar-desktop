@@ -80,17 +80,11 @@ export default class extends BaseView {
     const coinType = this.model.get('metadata')
       .get('coinType');
 
-    // TODO todo TDO - test this scenariusz
-    // TODO todo TDO - test this scenariusz
-    // TODO todo TDO - test this scenariusz
-    // TODO todo TDO - test this scenariusz
-    // TODO todo TDO - test this scenariusz
     if (coinType && coinType.length && !coinTypes.find(coin => (coin.code === coinType))) {
       // If the listing has a coin type that's not in our crypto currency list,
       // we'll just plop it at the end of the list. It may be that our crypto cur list
-      // needs to be updated. If not and it's not a legitamate currency, the price
-      // will show a warning indicating there is no exchange rate and the listing
-      // would not be purchasable.
+      // needs to be updated and/or the exchange rate api is misbehaving. In either case, if the
+      // exchange rate data is not available, a warning will be shown.
       coinTypes.push({
         code: coinType,
         name: coinType,
@@ -109,10 +103,6 @@ export default class extends BaseView {
     return app.polyglot.t('editListing.cryptoCurrencyType.helperType', { curCode: coinType });
   }
 
-  // todo: Test me with zest!
-  // todo: Test me with zest!
-  // todo: Test me with zest!
-  // todo: Test me with zest!
   tmplMarketValue(options = {}) {
     const opts = {
       getDataFromUi: false,

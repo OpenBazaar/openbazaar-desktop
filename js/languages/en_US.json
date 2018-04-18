@@ -379,19 +379,6 @@
       "not": "NOT",
       "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
     },    
-    "verified111": {
-      "label": "Verified",
-      "title": "Verified Moderator",
-      "body": "This moderator is verified by %{providerName}. %{link}",
-      "bodyOrder": "This moderator is verified by %{providerName}. %{link}"
-    },
-    "unverified222": {
-      "label": "Unverified",
-      "title": "Unverified Moderator",
-      "not": "NOT",
-      "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
-      "bodyOrder": "This moderator is %{not} verified by %{providerName}."
-    },
     "link": "Learn More",
     "type": "Type: ",
     "typeCombined": "%{type}%{name}",
