@@ -98,6 +98,17 @@ export default class extends baseVw {
       this._userClickedShowNsfw = null;
       this.setHideNsfwClass();
     });
+
+    this.verifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newVerifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+      if ((this.verifiedMods.length && !newVerifiedMods.length) ||
+        (!this.verifiedMods.length && newVerifiedMods.length)) {
+        this.verifiedMods = newVerifiedMods;
+        this.render();
+      }
+    });
   }
 
   className() {
@@ -427,6 +438,7 @@ export default class extends baseVw {
         app.verifiedMods.get(verifiedID),
     }));
     this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+
 
     return this;
   }

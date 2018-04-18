@@ -103,6 +103,16 @@ export default class extends BaseModal {
       this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
     }
 
+    this.hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newHasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
+      if (newHasVerifiedMods !== this.hasVerifiedMods) {
+        this.hasVerifiedMods = newHasVerifiedMods;
+        this.showDataChangedMessage();
+      }
+    });
+
     this.rating = this.createChild(Rating);
 
     // get the ratings data, if any
@@ -547,7 +557,6 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
-    const hasVerifiedMods = app.verifiedMods.matched(this.model.get('moderators')).length > 0;
     const defaultBadge = app.verifiedMods.defaultBadge(this.model.get('moderators'));
     let nsfwWarning;
 
@@ -579,7 +588,7 @@ export default class extends BaseModal {
         currencyValidity: getCurrencyValidity(
           this.model.get('metadata').get('pricingCurrency') || 'USD'
         ),
-        hasVerifiedMods,
+        hasVerifiedMods: this.hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
         isCrypto: this.model.isCrypto,

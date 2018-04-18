@@ -19,6 +19,16 @@ export default class extends BaseModal {
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
+
+    this.verifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newVerifiedModModel = app.verifiedMods.get(this.model.get('peerID'));
+      if (newVerifiedModModel !== this.verifiedModModel) {
+        this.verifiedModModel = newVerifiedModModel;
+        this.render();
+      }
+    });
   }
 
   className() {
