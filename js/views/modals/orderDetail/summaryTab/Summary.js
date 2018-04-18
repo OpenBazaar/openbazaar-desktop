@@ -550,10 +550,6 @@ export default class extends BaseVw {
       isLocalPickup: this.contract.isLocalPickup,
     };
 
-    console.log('foo shilbert');
-    window.foo = this.contract;
-    window.shilbert = data[0];
-
     if (this.contract.type === 'CRYPTOCURRENCY') {
       fulfilledState.coinType =
         this.contract.get('vendorListings').at(0)

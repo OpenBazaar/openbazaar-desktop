@@ -18,7 +18,7 @@ const events = {
 
 export { events };
 
-// supports circular dependancies
+// friendlier for circular dependancies
 export function getEvents() {
   return events;
 }

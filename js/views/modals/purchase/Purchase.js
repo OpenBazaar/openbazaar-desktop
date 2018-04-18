@@ -350,7 +350,7 @@ export default class extends BaseModal {
     this.setState({ phase: 'processing' });
 
     if (!this.order.validationError) {
-      if (this.listing.isOwnListing && false) {
+      if (this.listing.isOwnListing) {
         this.setState({ phase: 'pay' });
         // don't allow a seller to buy their own items
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
