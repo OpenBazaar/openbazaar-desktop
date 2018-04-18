@@ -18,6 +18,11 @@ const events = {
 
 export { events };
 
+// supports circular dependancies
+export function getEvents() {
+  return events;
+}
+
 export const btcSymbol = '₿';
 
 export function NoExchangeRateDataError(message) {
@@ -250,7 +255,7 @@ let exchangeRates = {};
  */
 export function fetchExchangeRates(options = {}) {
   const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
-    .done((data) => {
+    .done(data => {
       const changed = new Set();
 
       Object.keys(exchangeRates)
@@ -268,10 +273,13 @@ export function fetchExchangeRates(options = {}) {
         });
 
       const changedArray = Array.from(changed);
+      const prevExchangeRates = JSON.parse(JSON.stringify(exchangeRates));
+      exchangeRates = data;
+
       if (changed.size) {
         events.trigger('exchange-rate-change', { changed: changedArray });
         changedArray.forEach(cur => {
-          events.trigger(`exchange-rate-change-${cur}`, { previous: exchangeRates[cur] });
+          events.trigger(`exchange-rate-change-${cur}`, { previous: prevExchangeRates[cur] });
         });
       }
 

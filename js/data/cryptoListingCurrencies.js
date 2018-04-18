@@ -1,6 +1,11 @@
+import _ from 'underscore';
 import app from '../app';
 import fiatCurrencies from '../data/currencies';
-import { getExchangeRates } from '../utils/currency';
+import {
+  getExchangeRates,
+  getEvents as getCurrencyEvents,
+  // events as currencyEvents,
+} from '../utils/currency';
 
 // Since the exchange rate api is dependant on 3rd parties, we can't absolutely rely on
 // consistent results, so we'll start with a hard-coded list of crypto-listing currencies.
@@ -54,6 +59,7 @@ const baseCurrencies = [
   'ZEC',
 ];
 
+
 // Certain currencies are not in our fiat list, but they're also not crypto currencies.
 // They mainly conisist of obscure fiat currencies or precious metals.
 const excludes = [
@@ -73,9 +79,27 @@ const excludes = [
 
 let fiatCurrencyCodes;
 let currencies;
+let exchangeRateCurs = [];
 let currenciesNeedRefresh = true;
+let exchangeRateChangeBound = false;
 
 export function getCurrencies() {
+  if (!exchangeRateChangeBound) {
+    getCurrencyEvents().on('exchange-rate-change',
+      () => {
+        if (
+          !currenciesNeedRefresh &&
+          !_.isEqual(
+            Object.keys(getExchangeRates()).sort(),
+            exchangeRateCurs
+          )
+        ) {
+          currenciesNeedRefresh = true;
+        }
+      });
+    exchangeRateChangeBound = true;
+  }
+
   if (currencies && !currenciesNeedRefresh) return currencies;
 
   if (!fiatCurrencyCodes) {
@@ -84,7 +108,9 @@ export function getCurrencies() {
 
   const curs = new Set();
   baseCurrencies.forEach(cur => curs.add(cur));
-  Object.keys(getExchangeRates())
+  const _exchangeRateCurs = Object.keys(getExchangeRates());
+  exchangeRateCurs = _exchangeRateCurs.sort();
+  _exchangeRateCurs
     .forEach(cur => {
       // If it's not a fiat currency code (base on our hard-code list),
       // or on our exclude list, we'll assume it's a crypto currency.
@@ -108,7 +134,7 @@ export function getCurrencies() {
 let currenciesSortedByCode;
 
 export function getCurrenciesSortedByCode() {
-  if (currenciesSortedByCode) {
+  if (currenciesSortedByCode && !currenciesNeedRefresh) {
     return currenciesSortedByCode;
   }
 
@@ -120,7 +146,7 @@ export function getCurrenciesSortedByCode() {
 let currenciesSortedByName;
 
 export function getCurrenciesSortedByName() {
-  if (currenciesSortedByName) {
+  if (currenciesSortedByName && !currenciesNeedRefresh) {
     return currenciesSortedByName;
   }
 
@@ -138,8 +164,5 @@ export function getCurrenciesSortedByName() {
 
   return currenciesSortedByName;
 }
-
-console.log('moo');
-window.moo = module;
 
 export const defaultQuantityBaseUnit = 100000000;
