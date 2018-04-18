@@ -48,6 +48,7 @@ export function addMetrics() {
         systemLanguage: navigator.language,
         bundled: remote.getGlobal('isBundledApp'),
         Tor: getCurrentConnection().server.get('useTor'),
+        Testnet: !!app.serverConfig.testnet,
         CPU: os.cpus()[0].model,
         RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
       },
