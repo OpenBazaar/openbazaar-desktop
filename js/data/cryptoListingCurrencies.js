@@ -4,7 +4,6 @@ import fiatCurrencies from '../data/currencies';
 import {
   getExchangeRates,
   getEvents as getCurrencyEvents,
-  // events as currencyEvents,
 } from '../utils/currency';
 
 // Since the exchange rate api is dependant on 3rd parties, we can't absolutely rely on
@@ -144,8 +143,10 @@ export function getCurrenciesSortedByCode() {
 }
 
 let currenciesSortedByName;
+const defaultLang = app && app.localSettings &&
+  app.localSettings.standardizedTranslatedLang() || 'en-US';
 
-export function getCurrenciesSortedByName() {
+export function getCurrenciesSortedByName(lang = defaultLang) {
   if (currenciesSortedByName && !currenciesNeedRefresh) {
     return currenciesSortedByName;
   }
@@ -157,9 +158,7 @@ export function getCurrenciesSortedByName() {
       a : app.polyglot.t(aTranslationKey);
     const bName = app.polyglot.t(bTranslationKey) === bTranslationKey ?
       b : app.polyglot.t(bTranslationKey);
-    if (aName < bName) return -1;
-    if (aName > bName) return 1;
-    return 0;
+    return aName.localeCompare(bName, lang);
   });
 
   return currenciesSortedByName;
