@@ -41,7 +41,7 @@ export default class extends BaseModel {
     // temporary until server adds this in
     // temporary until server adds this in
     // temporary until server adds this in
-    parsedResponse.coinType = 'ZEC';
+    parsedResponse.coinType = 'ETH';
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];

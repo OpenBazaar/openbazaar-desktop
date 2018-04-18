@@ -42,6 +42,7 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
+
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
     this.totalPrice = this.model.get('item').get('price');

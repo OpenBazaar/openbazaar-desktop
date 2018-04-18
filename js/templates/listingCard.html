@@ -156,6 +156,10 @@
   </div>
 <%
   } else {
+  // cryptoList
+
+  console.log('slick');
+  window.slick = ob;
 %>
   <div class="flexVCent gutterH">
     <div class="titleCol">
@@ -191,7 +195,8 @@
         </div>
       </div>
     </div>
-    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(ob.price.amount, ob.price.currencyCode, ob.displayCurrency) %></div>
+    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
+    <% // todo - switch price.amount to inventory when it becomes available %>
     <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(ob.price.amount, ob.coinType) %></div>
   </div>
 <% } %>

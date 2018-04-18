@@ -40,7 +40,7 @@ export default class extends Collection {
         // make some random crypto listings
         if (Math.round(Math.random())) {
           updatedResult.contractType = 'CRYPTOCURRENCY';
-          updatedResult.coinType = 'ETH';
+          updatedResult.coinType = 'MIGGLES';
           updatedResult.price = {
             amount: 0,
             currencyCode: '',

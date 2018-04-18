@@ -125,9 +125,7 @@ export default class extends BaseVw {
         md.searchDescription = $('<div />').html(md.get('description'))
           .text()
           .toLocaleLowerCase();
-
         md.searchTitle = md.get('title').toLocaleLowerCase();
-
         const price = md.get('price');
 
         if (price.amount !== undefined) {

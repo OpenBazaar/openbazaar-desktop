@@ -46,7 +46,6 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-
     this.listing = opts.listing;
     this.variants = opts.variants;
     this.vendor = opts.vendor;
