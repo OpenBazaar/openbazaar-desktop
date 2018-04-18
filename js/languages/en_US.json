@@ -1718,23 +1718,23 @@
   "metrics": {
     "title": "Optional Anonymous Metrics",
     "msg1": "Please help improve OpenBazaar by clicking the 'Share' button below to share anonymous data about your experience with the development team.",
-    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. All of your private data is always stored on your node, and is not accessible by anyone else.",
-    "listTitle": "Below is a full list of the data that will be shared:",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
     "list": {
-      "pages": "Pages loaded in the client, such as your user page, or the search page.",
-      "clicks": "Clicks on elements. This records only the click, not any content.",
-      "errors": "Errors that occur in the app, including how long it takes to load content and whether the content loads fail.",
-      "system": "Basic system data such as Operating System, CPU type, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
       "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
-      "node": "Information about your node such as your display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
-      "app": "Details about your app, which include the version and whether it is installed from a downloadable package or from source.",
-      "orders": "When an order changes state, the change will be recorded with no information about the content of that order."
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process."
     },
     "shareBtn": "Share",
     "declineBtn": "Decline",
-    "sharingIsOn": "Data is Shared",
+    "sharingIsOn": "Data is Being Shared",
     "sharingWillBeOn": "Data will be Shared After Restarting",
-    "sharingIsOff": "Data is Not Shared"
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "There was an error accepting the order.",
