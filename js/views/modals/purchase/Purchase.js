@@ -323,7 +323,7 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
-    const segmentation = {};
+    const segmentation = { error: 'None' };
     startEvent('purchase');
 
     if (!this.order.validationError) {
@@ -333,7 +333,7 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        segmentation.error = 'OwnListing';
+        segmentation.error = 'Own Listing';
         endEvent('purchase', segmentation);
       } else {
         $.post({
