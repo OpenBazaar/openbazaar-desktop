@@ -9,7 +9,7 @@ import {
   getServerCurrency,
   getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
-import cryptoListingCurs from '../data/cryptoListingCurrencies';
+import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
 const events = {
@@ -180,7 +180,7 @@ export function formatCurrency(amount, currency, options) {
 
   // If we don't recognize the currency, we'll assume it's a crypto
   // listing cur.
-  const isCryptoListingCur = cryptoListingCurs.includes(cur) ||
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
     (!cryptoCur && !curData);
 
   if (cryptoCur) {
@@ -301,6 +301,14 @@ export function getExchangeRate(currency) {
   }
 
   return returnVal;
+}
+
+/**
+ * Will return an object containing all the available exchange rates for your servers
+ * crypto currency.
+ */
+export function getExchangeRates() {
+  return exchangeRates;
 }
 
 /**

@@ -63,10 +63,19 @@ export default class extends BaseView {
 
   get currencies() {
     const coinTypes = getCurrenciesSortedByName()
-      .map(coin => ({
-        code: coin,
-        name: app.polyglot.t(`cryptoCurrencies.${coin}`),
-      }));
+      .map(coin => {
+        const translationKey = `cryptoCurrencies.${coin}`;
+
+        return {
+          code: coin,
+          name: app.polyglot.t(translationKey) === translationKey ?
+            coin :
+            app.polyglot.t('cryptoCurrenciesNameCodePairing', {
+              name: app.polyglot.t(translationKey),
+              code: coin,
+            }),
+        };
+      });
 
     const coinType = this.model.get('metadata')
       .get('coinType');
