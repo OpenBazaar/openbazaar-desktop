@@ -51,6 +51,7 @@ export default class extends Model {
       listingsGridViewType: 'grid',
       bitcoinUnit: 'BTC',
       verifiedModsProvider: 'https://search.ob1.io/verified_moderators',
+      verifiedModsProviderTor: 'http://my7nrnmkscxr32zo.onion/verified_moderators',
       dontShowTorExternalLinkWarning: false,
     };
   }

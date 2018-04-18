@@ -143,6 +143,16 @@ export default class extends BaseModal {
     this.listenTo(this.order.get('items').at(0), 'someChange ', () => this.refreshPrices());
     this.listenTo(this.order.get('items').at(0).get('shipping'), 'change', () =>
       this.refreshPrices());
+
+    this.hasVerifiedMods = app.verifiedMods.matched(this.moderatorIDs).length > 0;
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newHasVerifiedMods = app.verifiedMods.matched(moderatorIDs).length > 0;
+      if (newHasVerifiedMods !== this.hasVerifiedMods) {
+        this.hasVerifiedMods = newHasVerifiedMods;
+        this.showDataChangedMessage();
+      }
+    });
   }
 
   className() {
@@ -175,7 +185,10 @@ export default class extends BaseModal {
           buildRefreshAlertMessage(app.polyglot.t('purchase.purchaseDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
+        this.render();
+        this.moderators.render();
+      });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();
