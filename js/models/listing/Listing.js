@@ -379,12 +379,6 @@ export default class extends BaseModel {
     this.unparsedResponse = JSON.parse(JSON.stringify(response)); // deep clone
     const parsedResponse = response.listing;
 
-    // TODO
-    // TODO
-    // TODO
-    // TODO
-    // parsedResponse.metadata.pricingCurrency = 'HOWDY_BOY';
-
     if (parsedResponse) {
       const isCrypto = parsedResponse.metadata &&
         parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';

@@ -249,18 +249,12 @@ export default class extends BaseModal {
     this.variantInventory.render();
   }
 
-  // Todo TODO Todo: move me yonder!
-  // Todo TODO Todo: move me yonder!
-  // Todo TODO Todo: move me yonder!
-  // Todo TODO Todo: move me yonder!
-  // Todo TODO Todo: move me yonder!
   setContractTypeClass(contractType) {
     const removeClasses = this.model.get('metadata')
       .contractTypes
       .reduce(
         (classes, type) => (`${classes} TYPE_${type}`), ''
       );
-
 
     this.$el.removeClass(removeClasses)
       .addClass(`TYPE_${contractType}`);
