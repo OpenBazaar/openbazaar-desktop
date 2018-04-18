@@ -100,8 +100,15 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
-      recordEvent('insufficientFunds', { currency: getServerCurrency().code });
+      recordEvent('payFromWallet', {
+        currency: getServerCurrency().code,
+        sufficientFunds: false,
+      });
     } else {
+      recordEvent('payFromWallet', {
+        currency: getServerCurrency().code,
+        sufficientFunds: true,
+      });
       this.spendConfirmBox.setState({ show: true });
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     }
@@ -124,10 +131,19 @@ export default class extends BaseVw {
         amount: this.balanceRemaining,
         currency,
       })
+        .done(() => {
+          recordEvent('walletSpend', {
+            currency,
+            err: '',
+          });
+        })
         .fail(jqXhr => {
           const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           this.showSpendError(err);
-          recordEvent('walletSpendFailed', { currency, err });
+          recordEvent('walletSpend', {
+            currency,
+            err,
+          });
           if (this.isRemoved()) return;
           this.getCachedEl('.js-payFromWallet').removeClass('processing');
         });

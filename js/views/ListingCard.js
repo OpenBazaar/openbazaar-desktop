@@ -14,6 +14,7 @@ import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
 import VerifiedMod from './components/VerifiedMod';
+import { startEvent, endEvent } from '../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -211,10 +212,16 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
+      startEvent('loadListing');
+
       const listingFetch = this.fetchFullListing();
       const loadListing = () => {
         app.loadingModal.open();
         listingFetch.done(jqXhr => {
+          endEvent('loadListing', {
+            ownListing: this.ownListing,
+            status: jqXhr.statusText || 'loaded',
+          });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
@@ -239,6 +246,10 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail(xhr => {
+          endEvent('loadListing', {
+            ownListing: this.ownListing,
+            status: xhr.statusText,
+          });
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
