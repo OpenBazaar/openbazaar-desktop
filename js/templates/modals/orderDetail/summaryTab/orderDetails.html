@@ -1,5 +1,5 @@
 <%
-  const isCrypto = ob.listing.metadata.contractType = 'CRYPTOCURRENCY';
+  const isCrypto = ob.listing.metadata.contractType === 'CRYPTOCURRENCY';
   const coinType = ob.listing.metadata.coinType;
 
   if (ob.order.shipping && ob.order.shipping.country !== 'NA') {
