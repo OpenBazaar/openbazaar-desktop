@@ -117,13 +117,9 @@ export default class extends BaseView {
     };
 
     const { displayCur, coinType } = opts;
-    const quantity = Number(opts.quantity);
+    let quantity = Number(opts.quantity);
 
-    if (isNaN(quantity)) {
-      // If we can't calculate a market value, we'll return an invisible
-      // spacer.
-      return '<span class="clrTEm tx4 txB invisible">${cryptoFormattedPrice}</span>';
-    }
+    if (isNaN(quantity)) quantity = 0;
 
     const cryptoExchangeRate = getExchangeRate(coinType);
     const displayCurExchangeRate = getExchangeRate(displayCur);
