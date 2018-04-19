@@ -1,6 +1,6 @@
 <% if (ob.viewType === 'grid') { %>
 <div class="gridViewContent posR">
-  <div class="listingImage" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.medium : ob.thumbnail.small}`) %>), url('../imgs/defaultItem.png')">
+  <div class="listingImage js-listingImage" style="url('../imgs/defaultItem.png')">
     <div class="nsfwOverlay overlayPanel clrP">
       <div class="flexCent">
         <div>
@@ -60,13 +60,7 @@
     <% if (ob.vendor) { %>
       <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
         <% const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : ''; %>
-        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap" <%= dataTip %>
-        <% var avatarHash = ob.vendor.avatarHashes ? ob.isHiRez() ? ob.vendor.avatarHashes.small : ob.vendor.avatarHashes.tiny : ''; %>
-        <% if (avatarHash) { %>
-        style="background-image: url(<%= ob.getServerUrl(`ob/images/${avatarHash}`) %>), url('../imgs/defaultAvatar.png')"
-        <% } else { %>
-        style="background-image: url('../imgs/defaultAvatar.png')"
-        <% } %>>
+        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap js-vendorIcon" style="background-image: url('../imgs/defaultAvatar.png')" <%= dataTip %>>
         </div>
       </a>
       <div class="userIconWrapper nsfwAvatarOverlay">
@@ -82,7 +76,7 @@
     <% } %>
     <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-      <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if(ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
+      <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
         <a class="clrT clamp"><%= ob.title %></a>
       </div>
     </div>
@@ -116,7 +110,7 @@
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
       <div class="flexNoShrink posR">
-        <div class="listingImage posR" style="background-image: url(<%= ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.thumbnail.small : ob.thumbnail.tiny}`) %>), url('../imgs/defaultItem.png')"></div>
+        <div class="listingImage js-listingImage posR" style="url('../imgs/defaultItem.png')"></div>
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
