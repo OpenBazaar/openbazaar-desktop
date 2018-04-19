@@ -863,7 +863,6 @@ export default class extends BaseModal {
         metadata: {
           ...formData.metadata,
           format: 'MARKET_PRICE',
-          pricingCurrency: undefined,
         },
         shippingOptions: [],
       };
