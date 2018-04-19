@@ -119,10 +119,7 @@
                   let quantity = item.quantity;
 
                   if (isCrypto) {
-                    quantity = new Intl.NumberFormat(ob.locale, {
-                      minimumFractionDigits: 0,
-                      maximumFractionDigits: 8,
-                    }).format(quantity);
+                    quantity = ob.currencyMod.formattedCurrency(quantity, coinType);
                   }
                 %>
                 <div><%= quantity %></div>

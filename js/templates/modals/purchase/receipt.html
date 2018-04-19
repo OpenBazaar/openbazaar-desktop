@@ -22,7 +22,7 @@
     if (ob.isCrypto) {
       quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
         priceObj.quantity :
-        quantity;
+        0;
     }
 
     let itemTotal = basePrice + surcharge;
