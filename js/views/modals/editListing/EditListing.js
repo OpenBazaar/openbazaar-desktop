@@ -848,9 +848,9 @@ export default class extends BaseModal {
       };
     } else {
       item.unset('condition');
+      item.unset('productId');
       item.unset('price');
       metadata.unset('pricingCurrency');
-      delete formData.metadata.pricingCurrency;
 
       formData = {
         ...formData,
@@ -863,6 +863,7 @@ export default class extends BaseModal {
         metadata: {
           ...formData.metadata,
           format: 'MARKET_PRICE',
+          pricingCurrency: undefined,
         },
         shippingOptions: [],
       };
@@ -973,10 +974,20 @@ export default class extends BaseModal {
     // Filter out hidden fields that are not applicable based on whether this is
     // a crypto currency listing.
     $fields = $fields.filter((index, el) => {
-      const $excludeContainer = isCrypto ?
-        this.getCachedEl('.js-standardTypeWrap') :
+      const $excludeContainers = isCrypto ?
+        this.getCachedEl('.js-standardTypeWrap')
+          .add(this.getCachedEl('.js-skuMatureContentRow')) :
         this.getCachedEl('.js-cryptoTypeWrap');
-      return !$.contains($excludeContainer[0], el);
+
+      let keep = true;
+
+      $excludeContainers.each((i, container) => {
+        if ($.contains(container, el)) {
+          keep = false;
+        }
+      });
+
+      return keep;
     });
 
     return $fields;

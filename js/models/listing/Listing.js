@@ -268,7 +268,8 @@ export default class extends BaseModel {
           options.attrs.metadata.coinDivisibility;
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          options.attrs.item.cryptoQuantity = options.attrs.item.cryptoQuantity * baseUnit;
+          options.attrs.item.cryptoQuantity =
+            Math.round(options.attrs.item.cryptoQuantity * baseUnit);
 
           // Don't send over the price on crypto listings.
           delete options.attrs.price;
