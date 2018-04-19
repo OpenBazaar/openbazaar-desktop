@@ -7,7 +7,7 @@
       <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
       <% }); %>
     </select>
-    <div class="clrT2 txSm helper js-helperContractType"><%= ob.helperType %></div>
+    <div class="clrT2 txSm helper"><%= ob.helperType %></div>
   </div>
   <div class="col6 simpleFlexCol">
     <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.coinType') %></label>

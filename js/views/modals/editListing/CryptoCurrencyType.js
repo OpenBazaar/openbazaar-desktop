@@ -5,6 +5,7 @@ import {
   convertAndFormatCurrency,
   events as currencyEvents,
 } from '../../../utils/currency';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -45,8 +46,6 @@ export default class extends BaseView {
   }
 
   onChangeCoinType(e) {
-    this.getCachedEl('.js-helperContractType')
-      .html(this.tmplTypeHelper(e.target.value));
     this.getCachedEl('.js-quantityCoinType')
       .text(e.target.value);
     this.getCachedEl('.js-marketValueWrap')
@@ -99,8 +98,9 @@ export default class extends BaseView {
       this.currencies[0].code;
   }
 
-  tmplTypeHelper(coinType = this.defaultCoinType) {
-    return app.polyglot.t('editListing.cryptoCurrencyType.helperType', { curCode: coinType });
+  tmplTypeHelper() {
+    return app.polyglot.t('editListing.cryptoCurrencyType.helperType',
+      { curCode: getServerCurrency().code });
   }
 
   tmplMarketValue(options = {}) {
