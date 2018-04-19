@@ -88,7 +88,7 @@
                     <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                     <% }); %>
                   </select>
-                  <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperType') %></div>
+                  <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperType', { smart_count: 4 }) %></div>
                 </div>
                 <div class="col6 simpleFlexCol">
                   <% // hiding until this is ready on the back end %>
