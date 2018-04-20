@@ -123,6 +123,7 @@ export default class extends baseVw {
 
     this.listingImage = new Image();
     this.listingImage.addEventListener('load', () => {
+      this.listingImage.loaded = true;
       this.$('.js-listingImage')
         .css('backgroundImage', `url(${listingImageSrc})`);
     });
@@ -136,6 +137,7 @@ export default class extends baseVw {
 
       this.avatarImage = new Image();
       this.avatarImage.addEventListener('load', () => {
+        this.avatarImage.loaded = true;
         this.$('.js-vendorIcon')
           .css('backgroundImage', `url(${avatarImageSrc})`);
       });
@@ -434,6 +436,10 @@ export default class extends baseVw {
         displayCurrency: app.settings.get('localCurrency'),
         isBlocked,
         isUnblocking,
+        listingImageSrc: this.listingImage.loaded &&
+          this.listingImage.src || '',
+        vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
+          this.avatarImage.src || '',
       }));
     });
 

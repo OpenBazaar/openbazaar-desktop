@@ -1,6 +1,13 @@
-<% if (ob.viewType === 'grid') { %>
+<%
+  const listingImageSrc = ob.listingImageSrc ?
+    `url(${ob.listingImageSrc}), ` : '';
+  const listingImageBgStyle =
+    `background-image: ${listingImageSrc}url('../imgs/defaultItem.png')`;
+
+  if (ob.viewType === 'grid') {
+%>
 <div class="gridViewContent posR">
-  <div class="listingImage js-listingImage" style="url('../imgs/defaultItem.png')">
+  <div class="listingImage js-listingImage" style="<%= listingImageBgStyle %>">
     <div class="nsfwOverlay overlayPanel clrP">
       <div class="flexCent">
         <div>
@@ -59,8 +66,12 @@
   <div class="pad clrBr borderTop infoArea">
     <% if (ob.vendor) { %>
       <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
-        <% const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : ''; %>
-        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap js-vendorIcon" style="background-image: url('../imgs/defaultAvatar.png')" <%= dataTip %>>
+        <%
+          const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : '';
+          const vendorAvatarImageSrc = ob.vendorAvatarImageSrc ?
+            `url(${ob.vendorAvatarImageSrc}), ` : '';
+        %>
+        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap js-vendorIcon" style="<%= `background-image: ${vendorAvatarImageSrc}url('../imgs/defaultAvatar.png')` %>" <%= dataTip %>>
         </div>
       </a>
       <div class="userIconWrapper nsfwAvatarOverlay">
@@ -110,7 +121,7 @@
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
       <div class="flexNoShrink posR">
-        <div class="listingImage js-listingImage posR" style="url('../imgs/defaultItem.png')"></div>
+        <div class="listingImage js-listingImage posR" style="<%= listingImageBgStyle %>"></div>
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
