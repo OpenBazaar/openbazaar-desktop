@@ -164,13 +164,7 @@ export default class Profile extends BaseModel {
     if (method !== 'read') {
       delete options.attrs.lastModified;
 
-      if (options.attrs.stats) {
-        delete options.attrs.stats.followerCount;
-        delete options.attrs.stats.followingCount;
-        delete options.attrs.stats.listingCount;
-        delete options.attrs.stats.ratingCount;
-        delete options.attrs.stats.averageRating;
-      }
+      if (options.attrs.stats) delete options.attrs.stats;
 
       const images = [options.attrs.avatarHashes, options.attrs.headerHashes];
       images.forEach(imageHashes => {

@@ -2,6 +2,7 @@ import _ from 'underscore';
 import { Collection } from 'backbone';
 import app from '../app';
 import Mod from '../models/VerifiedMod';
+import { getCurrentConnection } from '../utils/serverConnect';
 
 export default class extends Collection {
   constructor(...args) {
@@ -18,7 +19,8 @@ export default class extends Collection {
   }
 
   url() {
-    return app.localSettings.get('verifiedModsProvider');
+    const usingTor = getCurrentConnection().server.get('useTor');
+    return app.localSettings.get(`verifiedModsProvider${usingTor ? 'Tor' : ''}`);
   }
 
   get data() {
@@ -38,7 +40,7 @@ export default class extends Collection {
    * Return a list of verified moderators that match the ids passed in
    * @param IDs {array} - a list of IDs
    */
-  matched(IDs) {
+  matched(IDs = []) {
     return this.filter(mod => IDs.includes(mod.get('peerID')));
   }
 

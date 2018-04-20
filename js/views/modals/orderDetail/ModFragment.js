@@ -14,6 +14,16 @@ export default class extends BaseVw {
       showAvatar: false,
       ...options.initialState || {},
     };
+
+    this.verifiedModModel = app.verifiedMods.get(this._state.peerID);
+
+    this.listenTo(app.verifiedMods, 'update', () => {
+      const newVerifiedModModel = app.verifiedMods.get(this._state.peerID);
+      if (newVerifiedModModel !== this.verifiedModModel) {
+        this.verifiedModModel = newVerifiedModModel;
+        this.render();
+      }
+    });
   }
 
   getState() {
@@ -45,10 +55,9 @@ export default class extends BaseVw {
         ...this._state,
       }));
 
-      const verifiedMod = app.verifiedMods.get(this._state.peerID);
       if (this.verifiedMod) this.verifiedMod.remove();
       this.verifiedMod = this.createChild(VerifiedMod, {
-        model: verifiedMod,
+        model: this.verifiedModModel,
         data: app.verifiedMods.data,
         showShortText: true,
         inOrder: true,
