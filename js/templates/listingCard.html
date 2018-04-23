@@ -121,7 +121,7 @@
       </div>
       <div class="flexExpand">
         <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-        <div class="rowTn <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+        <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
           <a class="clrT clamp3"><%= ob.title %></a>
         </div>
         <div class="flexVCent gutterHSm tx5b">
@@ -149,9 +149,6 @@
             )
           %>
         </span>
-      </div>
-      <div class="flexNoShrink">
-        <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>
       </div>
     </div>
   </div>
