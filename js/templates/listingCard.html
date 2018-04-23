@@ -83,7 +83,7 @@
     <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
       <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if(ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
-        <a class="clrT clamp"><%= ob.title %></a>
+        <a class="clrT clamp listingTitle"><%= ob.title %></a>
       </div>
     </div>
     <div class="flex">
@@ -122,7 +122,7 @@
       <div class="flexExpand">
         <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
         <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
-          <a class="clrT clamp3"><%= ob.title %></a>
+          <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
         </div>
         <div class="flexVCent gutterHSm tx5b">
           <div class="flexNoShrink">
@@ -165,7 +165,7 @@
         <div class="flexCol gutterVTn">
           <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
           <div class="<%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
-            <a class="clrT clamp"><%= ob.title %></a>
+            <a class="clrT clamp listingTitle"><%= ob.title %></a>
           </div>
           <div class="clrT2 tx6"><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
         </div>

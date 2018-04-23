@@ -64,6 +64,10 @@
     }
   }
 
+  .listingTitle {
+    word-break: break-word;
+  }
+
   .overlayPanel {
     display: none;
     position: absolute;
