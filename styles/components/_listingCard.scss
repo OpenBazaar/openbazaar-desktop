@@ -109,7 +109,7 @@
     }
   }
 
-  .listingsGrid:not(.listingsGridListView) &:hover {
+  .listingsGrid:not(.listingsGridListView):not(.listingsGridCryptoListView) &:hover {
     bottom: 4px;
     z-index: 2;
   }

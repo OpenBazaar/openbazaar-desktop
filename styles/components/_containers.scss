@@ -462,12 +462,12 @@
   // tip is above triggering element with pointer triangle on the bottom
   &.toolTipTop {
     &::before {
-      top: -19px;
+      top: -26px;
       transform: translate(-50%, -100%);
     }
 
     &::after {
-      top: 1px;
+      top: -3px;
       left: 50%;
       transform: translate(-50%, -100%) rotate(-135deg);
       -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
