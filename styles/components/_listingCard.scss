@@ -109,11 +109,6 @@
     }
   }
 
-  .listingsGrid:not(.listingsGridListView):not(.listingsGridCryptoListView) &:hover {
-    bottom: 4px;
-    z-index: 2;
-  }
-
   &:hover:not(.listingDeleting):not(.listingDeleted) {
     .editOverlay {
       display: flex;
