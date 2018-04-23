@@ -120,7 +120,8 @@
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
-        <div class="rowTn">
+        <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+        <div class="rowTn <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
           <a class="clrT clamp3"><%= ob.title %></a>
         </div>
         <div class="flexVCent gutterHSm tx5b">
@@ -157,9 +158,6 @@
 <%
   } else {
   // cryptoList
-
-  console.log('slick');
-  window.slick = ob;
 %>
   <div class="flexVCent gutterH">
     <div class="titleCol">
@@ -168,7 +166,10 @@
           <div class="js-verifiedMod"></div>
         </div>    
         <div class="flexCol gutterVTn">
-          <div class="clamp"><%= ob.title %></div>
+          <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+          <div class="<%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+            <a class="clrT clamp"><%= ob.title %></a>
+          </div>
           <div class="clrT2 tx6"><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
         </div>
       </div>
