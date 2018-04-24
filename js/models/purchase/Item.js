@@ -16,7 +16,6 @@ export default class extends BaseModel {
       // the options sub model is optional
       // if the listing is not physical, the shipping sub model should have blank values
       listingHash: '',
-      // quantity: 0,
       options: new Options(),
       shipping: new Shipping(),
       memo: '',
@@ -76,9 +75,6 @@ export default class extends BaseModel {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
         } else if (typeof inventory === 'number' &&
           attrs.quantity > inventory) {
-          // If we have the inventory we'll ensure the quanity does not exceed it. If we don't have
-          // the inventory (it errored or hasn't loaded yet), we won't hold up the purchase and
-          // we'll rely on the server to do the check.
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory'));
         }
       }
