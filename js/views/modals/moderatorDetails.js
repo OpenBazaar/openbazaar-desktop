@@ -55,8 +55,6 @@ export default class extends BaseModal {
         return langData && langData.name || lang;
       });
 
-    const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
-
     loadTemplate('modals/moderatorDetails.html', (t) => {
       this.$el.html(t({
         followedByYou: this.followedByYou,
@@ -65,7 +63,7 @@ export default class extends BaseModal {
         purchase: this.options.purchase,
         cardState: this.options.cardState,
         modLanguages,
-        verifiedMod,
+        verifiedMod: this.verifiedModModel,
         ...this.model.toJSON(),
       }));
       super.render();

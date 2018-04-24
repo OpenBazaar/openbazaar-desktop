@@ -497,6 +497,7 @@ export default class extends BaseModal {
     const state = this.getState();
     const item = this.order.get('items')
       .at(0);
+    const quantity = item.get('quantity');
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
@@ -512,9 +513,8 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,
-        quantity: this.listing.isCrypto ?
-          toStandardNotation(item.get('quantity')) :
-          item.get('quantity'),
+        quantity: this.listing.isCrypto && typeof quantity === 'number' ?
+          toStandardNotation(quantity) : quantity,
       }));
 
       super.render();

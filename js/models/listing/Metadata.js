@@ -36,7 +36,6 @@ export default class extends BaseModel {
 
   get formats() {
     return [
-      'AUCTION',
       'FIXED_PRICE',
       'MARKET_PRICE',
     ];

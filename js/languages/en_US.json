@@ -371,10 +371,6 @@
       "link": "Learn More",
       "tipBody": "You can purchase this listing with a moderator verified by %{name}. %{link}"
     },
-    "listingVerified": {
-      "link": "Learn More",
-      "tipBody": "You can purchase this listing with a moderator verified by %{name}. %{link}"
-    },
     "listingUnverified": {
       "not": "NOT",
       "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
@@ -1915,6 +1911,7 @@
     "removeModerator": "An unmoderated purchase cannot have a moderator."
   },
   "purchaseItemModelErrors": {
+    "provideQuantity": "Please provide a quantity.",
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
     "quantityMustBeNumeric": "The quantity must be numeric.",

@@ -40,7 +40,6 @@ export default class extends BaseVw {
 
   onClickCopyText(e) {
     const $target = $(e.target);
-    console.log(`writing: ${$target.attr('data-content')}`);
     clipboard.writeText($target.attr('data-content'));
     this.getCachedEl($target.attr('data-status-indicator'))
       .velocity('stop')

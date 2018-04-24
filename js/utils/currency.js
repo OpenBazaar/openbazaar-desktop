@@ -282,8 +282,6 @@ export function fetchExchangeRates(options = {}) {
           events.trigger(`exchange-rate-change-${cur}`, { previous: prevExchangeRates[cur] });
         });
       }
-
-      exchangeRates = data;
     });
 
   events.trigger('fetching-exchange-rates', { xhr });

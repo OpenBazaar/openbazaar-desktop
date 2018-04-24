@@ -231,15 +231,13 @@
       </div>
     </div>
   <% } else { %>
-    <div class="additionalOverlay overlayPanel clrP">
+    <div class="additionalOverlay overlayPanel clrP millyBean">
       <div class="flex gutterHSm">
         <div class="hideIfEmpty js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
-        <% if (!ob.viewType === 'cryptoList') { %>
-          <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
-          <% if (ob.nsfw) { %>
-            <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
-          <% } %>
+        <button class="btn clrP clrBr iconBtnSm btnShowNsfw clrSh1 js-showNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipShowMatureContent') %>"><i class="ion-unlocked"></i></button>
+        <% if (ob.nsfw) { %>
+          <button class="btn clrP clrBr iconBtnSm btnHideNsfw clrSh1 js-hideNsfw toolTipNoWrap toolTipTop" tabindex="0" data-tip="<%= ob.polyT('listingCard.tipHideMatureContent') %>"><i class="ion-locked"></i></button>
         <% } %>
       </div>
     </div>
