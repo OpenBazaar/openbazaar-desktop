@@ -9,6 +9,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
+import { toStandardNotation } from '../../../utils/number';
 import { openSimpleMessage } from '../SimpleMessage';
 import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
@@ -494,6 +495,8 @@ export default class extends BaseModal {
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     const state = this.getState();
+    const item = this.order.get('items')
+      .at(0);
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
@@ -509,6 +512,9 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,
+        quantity: this.listing.isCrypto ?
+          toStandardNotation(item.get('quantity')) :
+          item.get('quantity'),
       }));
 
       super.render();
