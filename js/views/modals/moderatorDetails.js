@@ -83,7 +83,7 @@ export default class extends BaseModal {
 
       if (this.verifiedMod) this.verifiedMod.remove();
       this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({
-        model: verifiedMod,
+        model: this.verifiedModModel,
         shortText: false,
       }));
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
