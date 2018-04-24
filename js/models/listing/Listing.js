@@ -268,6 +268,7 @@ export default class extends BaseModel {
           options.attrs.metadata.coinDivisibility;
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+          // round to ensure integer
           options.attrs.item.cryptoQuantity =
             Math.round(options.attrs.item.cryptoQuantity * baseUnit);
 

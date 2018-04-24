@@ -367,7 +367,8 @@ export default class extends BaseModal {
               .map(item => ({
                 ...item.toJSON(),
                 quantity: this.listing.isCrypto ?
-                  item.get('quantity') * coinDivisibility :
+                  // round to ensure integer
+                  Math.round(item.get('quantity') * coinDivisibility) :
                   item.get('quantity'),
               })),
           }),
