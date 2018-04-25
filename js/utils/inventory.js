@@ -7,125 +7,78 @@ const events = {
 
 export { events };
 
-const inventoryCache = {};
+// const maxCachedProfiles = 500;
+// const profileCacheExpires = 1000 * 60 * 60;
+// let profileCacheExpiredInterval;
 
-function checkPeerIdSlug(peerId, slug) {
-  if (typeof peerId !== 'string' || !peerId.length) {
-    throw new Error('Please provide a peerId as a non-empty string.');
-  }
+const cacheExpires = 1000 * 60 * 5;
+const inventoryCache = new Map();
 
-  if (typeof slug !== 'string' || !slug.length) {
-    throw new Error('Please provide a slug as a non-empty string.');
+const moo = {
+  node1: {
+    'charlie-chuckles': {
+      inventory: 141,
+      lastUpdated: 'blah',
+      createAt: 'blah',
+    },
+    createAt: 'blah',
+  },
+  node2: {
+    'listing1': {
+      inventory: 141,
+      lastUpdated: 'blah',      
+    },
+    'listing2': {
+      inventory: 141,
+      lastUpdated: 'blah',      
+    }    
   }
 }
 
-function getCacheKey(peerId, slug) {
-  checkPeerIdSlug(peerId, slug);
-  return `${peerId}-${slug}`;
-}
+// get inventory:
+// if ()
 
-function setInventoryCache(peerId, slug, inventory) {
-  checkPeerIdSlug(peerId, slug);
-
-  if (typeof inventory !== 'number') {
-    throw new Error('Please provide the inventory as a number.');
+function checkInventoryArgs(peerId, options = {}) {
+  if (typeof peerId !== 'string') {
+    throw new Error('Please provide a peerId as a string.')
   }
 
-  const cacheKey = getCacheKey(peerId, slug);
-  const prevInventory = inventoryCache[cacheKey] ?
-    inventoryCache[cacheKey].inventory : null;
+  if (options.slug !== undefined && typeof options.slug !== 'string') {
+    throw new Error('If providing a slug, it must be provided as a string.');
+  }  
+}
 
-  if (inventory !== prevInventory) {
-    events.trigger('inventory-change', {
-      peerId,
-      slug,
-      prevInventory,
-      inventory,
+function expireCache(peerId, options = {}) {
+  checkInventoryArgs(peerId, options);
+  let cached = inventoryCache.get(peerId);
+  if (options.slug && cached) cached = cached[options.slug];
+
+  if (cached) {
+    cached.deferred.reject({
+      errCode: 'TIMED_OUT',
+      error: 'The inventory fetch timed out.',
     });
   }
 
-  inventoryCache[cacheKey] = {
-    ...inventoryCache[cacheKey],
-    inventory,
-  };
+  inventoryCache.delete(peerId);
 }
 
-export function getInventory(peerId, slug, options = {}) {
-  checkPeerIdSlug(peerId, slug);
+export function getInventory(peerId, options = {}) {
+  checkInventoryArgs(peerId, options);
+  const slug = options.slug;
+  let cached = inventoryCache.get(peerId);
+  if (cached && slug) cached = cached[slug];
 
-  const opts = {
-    // If true, if there's an already in-progress call for the inventory
-    // you are requesting, it will be returned rather than kicking off a
-    // new request.
-    useInProgress: true,
-    ...options,
-  };
-
-  const cacheKey = getCacheKey(peerId, slug);
-
-  if (opts.useInProgress && inventoryCache[cacheKey] &&
-    inventoryCache[cacheKey].xhr &&
-    inventoryCache[cacheKey].xhr.state() === 'pending') {
-    return inventoryCache[cacheKey];
+  // make sure the cache hasn't expired
+  if (cached && Date.now() - cached.createdAt >= cacheExpires) {
+    expireCache(peerId, options);
+    cached = null;
   }
 
-  // temporary stub for an inventory fetch. waiting on server to implement
-  const iFetchDeferred = $.Deferred();
+  if (!cached) {
 
-  // stub in some xhr functions like abort
-  const promise = {
-    ...iFetchDeferred.promise(),
-    abort: () => {},
-  };
-
-  inventoryCache[cacheKey] = {
-    ...inventoryCache[cacheKey],
-    xhr: promise,
-  };
-
-  events.trigger('inventory-fetching', {
-    peerId,
-    slug,
-    xhr: promise,
-  });
-
-  setTimeout(() => {
-    // randomly pass or fail
-    if (Math.round(Math.random() * 1)) {
-      const reason = 'The waves in the ocean had no locomotion.';
-      const updatedPromise = {
-        ...promise,
-        responseJSON: {
-          reason,
-        },
-      };
-
-      iFetchDeferred.reject(updatedPromise);
-      events.trigger('inventory-fetch-fail', {
-        peerId,
-        slug,
-        xhr: updatedPromise,
-        reason,
-      });
-    } else {
-      const inventory = Math.floor(Math.random() * 1000);
-      setInventoryCache(peerId, slug, inventory);
-      iFetchDeferred.resolve(inventory, 'great success', promise);
-      events.trigger('inventory-fetch-success', {
-        peerId,
-        slug,
-        xhr: promise,
-        inventory,
-      });
-    }
-  }, Math.floor(Math.random() * 3) * 1000); // random between 0 and 3 seconds
-
-  return promise;
+  }
 }
 
-export function isFetching(peerId, slug) {
-  checkPeerIdSlug(peerId, slug);
-  const cacheKey = getCacheKey(peerId, slug);
-  const cache = inventoryCache[cacheKey];
-  return cache && cache.xhr && cache.xhr.state() === 'pending';
+export function isFetching(peerId, options = {}) {
 }
