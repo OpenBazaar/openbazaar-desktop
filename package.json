@@ -90,5 +90,8 @@
     "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3",
     "yargs": "^6.6.0"
+  },
+  "optionalDependencies": {
+    "mouse-forward-back": "^1.0.1"
   }
 }
