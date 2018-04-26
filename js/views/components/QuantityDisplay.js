@@ -20,10 +20,11 @@ export default class extends baseVw {
     const opts = {
       ...options,
       initialState: {
-        isFetching: isFetching(options.peerId, options.slug),
+        isFetching: isFetching(options.peerId, { slug: options.slug }),
         fetchFailed: false,
         fetchError: '',
         coinType: '',
+        coinDivisibility: 100000000,
         contentClass: 'txB',
         spinnerClass: 'spinnerSm',
         tipClass: 'clrT tx5 txCtr',
@@ -38,7 +39,9 @@ export default class extends baseVw {
     this.options = options;
 
     this.listenTo(inventoryEvents, 'inventory-fetching', e => {
-      if (e.peerId !== options.peerId || e.slug !== options.slug) return;
+      console.log('they got me fetching dog');
+      window.dog = e;
+      if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
       this.setState({
         isFetching: true,
         fetchFailed: false,
@@ -47,7 +50,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(inventoryEvents, 'inventory-fetch-fail', e => {
-      if (e.peerId !== options.peerId || e.slug !== options.slug) return;
+      if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
       this.setState({
         isFetching: false,
         fetchFailed: true,
@@ -56,7 +59,7 @@ export default class extends baseVw {
     });
 
     this.listenTo(inventoryEvents, 'inventory-fetch-success', e => {
-      if (e.peerId !== options.peerId || e.slug !== options.slug) return;
+      if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
       this.setState({ isFetching: false });
     });
 
@@ -81,7 +84,7 @@ export default class extends baseVw {
   }
 
   onClickRetry() {
-    this.inventoryFetch = getInventory(this.options.peerId, this.options.slug);
+    this.inventoryFetch = getInventory(this.options.peerId, { slug: this.options.slug });
   }
 
   remove() {

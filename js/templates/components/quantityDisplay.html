@@ -1,16 +1,20 @@
+<% console.log('moo'); window.moo = ob %>
 <%
   if (typeof ob.amount === 'number') {
+    const amount = ob.coinDivisibility ?
+      ob.amount / ob.coinDivisibility :
+      ob.amount;
     let formattedAmount = new Intl.NumberFormat(ob.localCur, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 4,
-    }).format(ob.amount);
+    }).format(amount);
     formattedAmount = ob.coinType ?
       ob.polyT('cryptoCurrencyFormat.curCodeAmount', {
         amount: formattedAmount,
         code: ob.coinType.length > 8 ?
           `${ob.coinType.slice(0, 8)}…` : ob.coinType,
       }) :
-      formattedAmount; 
+      formattedAmount;
 %>
   <span class="content <%= ob.contentClass %>"><%= formattedAmount %></span>
 <% } else if (ob.isFetching) {

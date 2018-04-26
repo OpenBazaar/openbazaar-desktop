@@ -137,7 +137,7 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      this.inventoryFetch = getInventory(this.vendor.peerID, this.model.get('slug'));
+      this.inventoryFetch = getInventory(this.vendor.peerID, { slug: this.model.get('slug') });
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
@@ -645,6 +645,8 @@ export default class extends BaseModal {
           initialState: {
             coinType: this.model.get('metadata')
               .get('coinType'),
+            coinDivisibility: this.model.get('metadata')
+              .get('coinDivisibility'),
           },
         });
         this.getCachedEl('.js-cryptoInventory')

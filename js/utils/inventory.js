@@ -27,8 +27,9 @@ function getCache(peerId, options = {}) {
   checkInventoryArgs(peerId, options);
   let cacheByStore = inventoryCache.get(peerId);
   let cacheBySlug = options.slug && cacheByStore &&
-    cacheByStore[options.slug];
-  cacheByStore = cacheByStore.deferred || null;
+    cacheByStore[options.slug] && cacheByStore[options.slug].deferred ?
+      cacheByStore[options.slug] : null;
+  cacheByStore = cacheByStore && cacheByStore.deferred || null;
 
   // ensure the caches aren't expired
   [cacheByStore, cacheBySlug].forEach(cache => {
@@ -117,6 +118,18 @@ export function getInventory(peerId, options = {}) {
           slug: opts.slug,
           xhr,
         });
+
+        // clear failed fetches from the cache
+        const cache = inventoryCache.get(peerId);
+        if (cache) {
+          if (cache.deferred === deferred) {
+            delete cache.createdAt;
+            delete cache.deferred;
+          } else if (opts.slug && cache[opts.slug]) {
+            delete cache[opts.slug].createdAt;
+            delete cache[opts.slug].deferred;
+          }
+        }
       });
 
     const curCache = inventoryCache.get(peerId) || {};

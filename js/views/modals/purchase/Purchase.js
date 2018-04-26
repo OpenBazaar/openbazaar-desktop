@@ -152,7 +152,7 @@ export default class extends BaseModal {
       typeof this._inventory !== 'number') {
       this.inventoryFetch = getInventory(
         this.listing.get('vendorID').peerID,
-        this.listing.get('slug')
+        { slug: this.listing.get('slug') }
       );
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
@@ -566,6 +566,8 @@ export default class extends BaseModal {
           initialState: {
             amount: this._inventory,
             contentClass: 'clrT2',
+            coinDivisibility: this.listing.get('metadata')
+              .get('coinDivisibility'),            
             ...cryptoInventoryState,
           },
         });
