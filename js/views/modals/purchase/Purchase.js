@@ -153,7 +153,7 @@ export default class extends BaseModal {
       this.inventoryFetch = getInventory(
         this.listing.get('vendorID').peerID,
         { slug: this.listing.get('slug') }
-      );
+      ).done(e => this._inventory = e.inventory);
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }

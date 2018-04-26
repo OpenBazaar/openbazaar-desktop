@@ -39,8 +39,6 @@ export default class extends baseVw {
     this.options = options;
 
     this.listenTo(inventoryEvents, 'inventory-fetching', e => {
-      console.log('they got me fetching dog');
-      window.dog = e;
       if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
       this.setState({
         isFetching: true,
@@ -60,6 +58,7 @@ export default class extends baseVw {
 
     this.listenTo(inventoryEvents, 'inventory-fetch-success', e => {
       if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
+      
       this.setState({ isFetching: false });
     });
 

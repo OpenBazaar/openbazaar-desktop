@@ -8,6 +8,8 @@ export default class extends BaseModel {
     super(attrs, options);
     this.shippable = options.shippable || false;
     this.isCrypto = options.isCrypto || false;
+    // If the inventory is for a crypto listing, be sure to convert it from base units
+    // before sending it in.
     this.inventory = options.inventory || (() => 99999999999999);
   }
 
