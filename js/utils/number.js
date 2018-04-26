@@ -17,6 +17,7 @@ export function toStandardNotation(number, options) {
   return new Intl.NumberFormat('en-US', {
     minimumFractionDigits: opts.minDisplayDecimals,
     maximumFractionDigits: opts.maxDisplayDecimals,
+    useGrouping: false,
   }).format(number);
 }
 
