@@ -58,7 +58,7 @@ export default class extends baseVw {
 
     this.listenTo(inventoryEvents, 'inventory-fetch-success', e => {
       if (e.peerId !== options.peerId || (e.slug && e.slug !== options.slug)) return;
-      
+
       this.setState({ isFetching: false });
     });
 

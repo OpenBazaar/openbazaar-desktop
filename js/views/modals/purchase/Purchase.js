@@ -568,7 +568,7 @@ export default class extends BaseModal {
             amount: this._inventory,
             contentClass: 'clrT2',
             coinDivisibility: this.listing.get('metadata')
-              .get('coinDivisibility'),            
+              .get('coinDivisibility'),
             ...cryptoInventoryState,
           },
         });
