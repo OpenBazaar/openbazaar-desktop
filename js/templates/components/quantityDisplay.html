@@ -1,12 +1,9 @@
 <%
   if (typeof ob.amount === 'number') {
-    const amount = ob.coinDivisibility ?
-      ob.amount / ob.coinDivisibility :
-      ob.amount;
     let formattedAmount = new Intl.NumberFormat(ob.localCur, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 4,
-    }).format(amount);
+    }).format(ob.amount);
     formattedAmount = ob.coinType ?
       ob.polyT('cryptoCurrencyFormat.curCodeAmount', {
         amount: formattedAmount,

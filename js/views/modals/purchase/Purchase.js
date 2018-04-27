@@ -484,11 +484,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
-    // remove the "&& abort" when this becomes a real XHR.
-    // remove the "&& abort" when this becomes a real XHR.
-    // remove the "&& abort" when this becomes a real XHR.
-    // TODO TODO TODO
-    if (this.inventoryFetch && this.inventoryFetch.abort) this.inventoryFetch.abort();
+    if (this.inventoryFetch) this.inventoryFetch.abort();
     super.remove();
   }
 

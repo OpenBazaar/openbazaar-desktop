@@ -36,7 +36,7 @@ export default class extends BaseModal {
 
     const opts = {
       checkNsfw: true,
-      removeOnClose: false,
+      removeOnClose: true,
       ...options,
     };
 
@@ -138,9 +138,7 @@ export default class extends BaseModal {
 
     if (this.model.isCrypto) {
       this.inventoryFetch = getInventory(this.vendor.peerID, { slug: this.model.get('slug') })
-        .done(e => this._inventory = e.inventory);
-      console.log('charlie');
-      window.charlie = this.inventoryFetch;
+        .done(e => (this._inventory = e.inventory));
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
@@ -648,8 +646,7 @@ export default class extends BaseModal {
           initialState: {
             coinType: this.model.get('metadata')
               .get('coinType'),
-            coinDivisibility: this.model.get('metadata')
-              .get('coinDivisibility'),
+            amount: this._inventory,
           },
         });
         this.getCachedEl('.js-cryptoInventory')
