@@ -4,7 +4,8 @@
 
 $crytoListViewTitleWidth: 218px;
 $crytoListViewVendorWidth: 205px;
-$crytoListViewPriceWidth: 125px;
+$crytoListViewPriceWidth: 120px;
+$crytoListViewInventoryMaxWidth: 108px;
 
 .listingsGrid {
   flex-wrap: wrap;
@@ -73,6 +74,7 @@ $crytoListViewPriceWidth: 125px;
 
   &.listingsGridListView, &.listingsGridCryptoListView {
     margin: 0;
+    align-content: flex-start;
 
     .listingCard {
       margin: 0;
@@ -116,6 +118,10 @@ $crytoListViewPriceWidth: 125px;
     .priceCol {
       width: $crytoListViewPriceWidth;
     }
+
+    .inventoryCol {
+      max-width: $crytoListViewInventoryMaxWidth;
+    }
   }
 
   &:empty {
@@ -150,5 +156,6 @@ $crytoListViewPriceWidth: 125px;
 
   .inventoryCol {
     text-align: right;
+    max-width: $crytoListViewInventoryMaxWidth;
   }
 }

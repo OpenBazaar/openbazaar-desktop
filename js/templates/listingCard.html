@@ -194,8 +194,21 @@
       </div>
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
-    <% // todo - switch price.amount to inventory when it becomes available %>
-    <div class="inventoryCol flexExpand"><%= ob.currencyMod.formatCurrency(ob.price.amount, ob.coinType) %></div>
+    <%
+      let inventory = '';
+      let inventoryTxClass = '';
+
+      if (ob.totalInventoryQuantity >= 0) {
+        inventory = ob.currencyMod.formatCurrency(ob.totalInventoryQuantity, ob.coinType);
+      }
+
+      if (inventory.length > 14) {
+        inventoryTxClass = 'tx6';
+      } else if (inventory.length > 10) {
+        inventoryTxClass = 'tx5b';
+      }
+    %>
+    <div class="inventoryCol flexExpand <%= inventoryTxClass %>"><%= inventory %></div>
   </div>
 <% } %>
 

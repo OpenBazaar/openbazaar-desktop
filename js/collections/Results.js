@@ -33,21 +33,6 @@ export default class extends Collection {
       const relationships = result.relationships || {};
 
       if (updatedResult.type === 'listing') {
-        // TODO TODO temp Temp Tempers Todo
-        // TODO TODO temp Temp Tempers Todo
-        // TODO TODO temp Temp Tempers Todo
-        // TODO TODO temp Temp Tempers Todo
-        // make some random crypto listings
-        if (Math.round(Math.random())) {
-          updatedResult.contractType = 'CRYPTOCURRENCY';
-          updatedResult.coinType = 'MILLY';
-          updatedResult.price = {
-            amount: 0,
-            currencyCode: '',
-          };
-          updatedResult.title = 'ETH - fat ass ETH for SALE!';
-        }
-
         const vendor = relationships.vendor ? relationships.vendor.data : {};
         if (vendor) {
           vendor.guid = vendor.id;

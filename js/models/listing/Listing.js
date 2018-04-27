@@ -263,9 +263,8 @@ export default class extends BaseModel {
           }
         });
 
-        const baseUnit = method === 'create' ?
-          defaultQuantityBaseUnit :
-          options.attrs.metadata.coinDivisibility;
+        const baseUnit = options.attrs.metadata.coinDivisibility =
+          options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
           // round to ensure integer

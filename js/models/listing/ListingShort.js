@@ -35,14 +35,6 @@ export default class extends BaseModel {
   parse(response) {
     const parsedResponse = { ...response };
 
-    // temporary until server adds this in
-    // temporary until server adds this in
-    // temporary until server adds this in
-    // temporary until server adds this in
-    // temporary until server adds this in
-    // temporary until server adds this in
-    parsedResponse.coinType = 'ETH';
-
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];
 
@@ -52,6 +44,17 @@ export default class extends BaseModel {
         amount: 1,
         currencyCode: parsedResponse.coinType,
       };
+
+      if (parsedResponse.totalInventoryQuantity >= 0 &&
+        parsedResponse.coinDivisibility > 0) {
+        parsedResponse.totalInventoryQuantity =
+          parsedResponse.totalInventoryQuantity / parsedResponse.coinDivisibility;
+      } else {
+        // If they're not providing a inventory of 0 or more or a coinDivisibility > 0,
+        // we won't display the inventory since it's an invalid value or one we can't
+        // represent properly.
+        delete parsedResponse.totalInventoryQuantity;
+      }
     } else {
       const priceObj = parsedResponse.price;
       parsedResponse.price = {
