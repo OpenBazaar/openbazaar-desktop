@@ -85,7 +85,7 @@ export function getInventory(peerId, options = {}) {
   const opts = {
     useCache: true,
     // For crypto currency listings be sure to pass in the coinDivisibility so
-    // the inventory is converted to the UI readable units.
+    // the inventory is converted into UI readable units.
     coinDivisibility: undefined,
     ...options,
   };
