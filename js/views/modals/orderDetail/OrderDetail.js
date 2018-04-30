@@ -63,8 +63,7 @@ export default class extends BaseModal {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
-      recordEvent('order', {
-        id: md.get('id'),
+      recordEvent('order details state change', {
         state: md.get('state'),
         moderated: !!this.moderatorId, // collect only a boolean
       });

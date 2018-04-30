@@ -134,7 +134,7 @@ export default class extends BaseVw {
         .done(() => {
           recordEvent('walletSpend', {
             currency,
-            err: '',
+            errors: 'none',
           });
         })
         .fail(jqXhr => {
@@ -142,7 +142,7 @@ export default class extends BaseVw {
           this.showSpendError(err);
           recordEvent('walletSpend', {
             currency,
-            err,
+            errors: err || 'unknown error',
           });
           if (this.isRemoved()) return;
           this.getCachedEl('.js-payFromWallet').removeClass('processing');

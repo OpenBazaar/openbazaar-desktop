@@ -220,7 +220,7 @@ export default class extends baseVw {
         listingFetch.done(jqXhr => {
           endEvent('loadListing', {
             ownListing: this.ownListing,
-            status: jqXhr.statusText || 'loaded',
+            errors: 'none',
           });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
@@ -248,7 +248,7 @@ export default class extends baseVw {
         .fail(xhr => {
           endEvent('loadListing', {
             ownListing: this.ownListing,
-            status: xhr.statusText,
+            errors: xhr.statusText,
           });
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);

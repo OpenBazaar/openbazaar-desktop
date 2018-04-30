@@ -14,7 +14,7 @@ export function isMetricRestartNeeded() {
 
 export function addMetrics() {
   function loadMetrics() {
-    // Reverse the countly opt out
+    // Reverse the countly opt out in local storage. This is required or nothing will be tracked.
     window.localStorage.setItem('cly_ignore', 'false');
     metricsRestartNeeded = !!window.Countly;
 

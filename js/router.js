@@ -499,9 +499,9 @@ export default class ObRouter extends Router {
         this.off(null, onWillRoute);
         endEvent('UserPageLoad', {
           ownPage: guid === app.profile.id,
-          pageState,
+          tab: pageState,
           listing: !!listingFetch,
-          error: userPageFetchError,
+          errors: userPageFetchError || 'none',
         });
       });
   }

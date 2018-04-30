@@ -323,7 +323,6 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
-    const segmentation = { error: 'None' };
     startEvent('purchase');
 
     if (!this.order.validationError) {
@@ -333,8 +332,9 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        segmentation.error = 'Own Listing';
-        endEvent('purchase', segmentation);
+        endEvent('purchase', {
+          errors: 'own listing',
+        });
       } else {
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -354,7 +354,9 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            segmentation.id = data.orderId;
+            endEvent('purchase', {
+              errors: 'none',
+            });
           })
           .fail((jqXHR) => {
             this.setState({ phase: 'pay' });
@@ -362,10 +364,9 @@ export default class extends BaseModal {
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
-            segmentation.error = errMsg;
-          })
-          .always(() => {
-            endEvent('purchase', segmentation);
+            endEvent('purchase', {
+              errors: errMsg || 'unknown error',
+            });
           });
       }
     } else {
@@ -379,8 +380,9 @@ export default class extends BaseModal {
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      segmentation.error = `Error: ${purchaseErrs.join()}`;
-      endEvent('purchase', segmentation);
+      endEvent('purchase', {
+        errors: `Client errors ${purchaseErrs.join()}`,
+      });
     }
   }
 
