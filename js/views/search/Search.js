@@ -149,7 +149,6 @@ export default class extends baseVw {
   get providerUrl() {
     // if a provider was created by the address bar query, use it instead.
     // return false if no provider is available
-    return 'https://staging.search.ob1.io/search/listings';
     const currentProvider = this.sProvider;
     return currentProvider && currentProvider.get(this.urlType);
   }
