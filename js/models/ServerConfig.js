@@ -149,26 +149,6 @@ export default class extends BaseModel {
         addError('walletCurrency',
           `${attrs.walletCurrency} is not a currently supported crypto currency.`);
       }
-
-      if (attrs.walletCurrency === 'ZEC' && !attrs.zcashBinaryPath) {
-        addError('zcashBinaryPath',
-          app.polyglot.t('serverConfigModelErrors.provideZcashBinaryPath'));
-      }
-
-      if (attrs.zcashBinaryPath) {
-        let fsStat;
-
-        try {
-          fsStat = fs.statSync(attrs.zcashBinaryPath);
-        } catch (e) {
-          // pass
-        }
-
-        if (!fsStat || !fsStat.isFile()) {
-          addError('zcashBinaryPath',
-            app.polyglot.t('serverConfigModelErrors.invalidZcashBinaryPath'));
-        }
-      }
     }
 
     if (Object.keys(errObj).length) return errObj;

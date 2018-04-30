@@ -53,10 +53,6 @@
     "currencyHelper": "Выберите валюту для своего кошелька",
     "currencyHelper2": "Принимайте и отправляйте платежи в выбранной выше криптовалюте. Пожалуйста, хорошо подумайте, прежде чем принять решение. Вы не сможете изменить валюту, после того как сделаете выбор.",
     "curInUseTip": "У вас уже есть сервер с этой криптовалютой.",
-    "zcashBinaryLabel": "Zcash Binary",
-    "fullNodeLink": "здесь",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Просмотр",
     "btnNext": "Далее"
   },
   "unsupportedCryptoCurDialog": {
@@ -169,8 +165,7 @@
     },
     "connectMessaging": {
       "cancelLink": "отменить",
-      "connectAttemptMsg": "Подключение к %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
+      "connectAttemptMsg": "Подключение к %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
@@ -1842,9 +1837,7 @@
     "providePortAsNumber": "Укажите порт цифрами.",
     "provideValidPortRange": "Укажите число от 0 до 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
-    "provideWalletCurrency": "Пожалуйста, установите валюту кошелька.",
-    "provideZcashBinaryPath": "Укажите значение.",
-    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
+    "provideWalletCurrency": "Пожалуйста, установите валюту кошелька."
   },
   "shippingAddressModelErrors": {
     "provideName": "Укажите имя.",

@@ -53,10 +53,6 @@
     "currencyHelper": "Kies een currency voor je Wallet",
     "currencyHelper2": "Accepteer en verzend betalingen in de hierboven geselecteerde currency. Kies bewust, aangezien het op dit moment niet mogelijk is om je currency te veranderen nadat een keuze gemaakt is.",
     "curInUseTip": "Je hebt aleen ingebouwde server voor deze wallet currency.",
-    "zcashBinaryLabel": "Zcash binary",
-    "fullNodeLink": "hier",
-    "zcashBinaryHelper": "Een Zcash full node is noodzakelijk. Download een Zcash full node %{fullNodeLink}. Eenmaal geinstalleerd, voer het pad van je zcashd binary hierboven in",
-    "btnBrowse": "Browse",
     "btnNext": "Volgende"
   },
   "unsupportedCryptoCurDialog": {
@@ -169,8 +165,7 @@
     },
     "connectMessaging": {
       "cancelLink": "annuleren",
-      "connectAttemptMsg": "Verbinden met %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initialiseren van de zcash binary. Dit kan enkele minuten duren. %{cancelLink}"
+      "connectAttemptMsg": "Verbinden met %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
@@ -1842,9 +1837,7 @@
     "providePortAsNumber": "Geef de poort op als nummer",
     "provideValidPortRange": "Geef een nummer op tussen 0 en 65535.",
     "invalidTorProxy": "De waarde lijkt niet in het juiste formaat opgevoerd te zijn.het zou in het ip-adres:poort formaat moeten zijn, b.v. 127.0.0.1:9150. De poort moet een nummer zijn tussen 0 en 65535.",
-    "provideWalletCurrency": "Selecteer een wallet currency.",
-    "provideZcashBinaryPath": "Geef een waarde op",
-    "invalidZcashBinaryPath": "Het aangeboden pad moet een bestand zijn op uw systeem."
+    "provideWalletCurrency": "Selecteer een wallet currency."
   },
   "shippingAddressModelErrors": {
     "provideName": "Voer een naam in.",

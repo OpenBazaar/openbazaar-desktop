@@ -71,8 +71,6 @@ export default class extends baseVw {
       'change #serverConfigServerIp': 'onChangeServerIp',
       'change [name=useTor]': 'onChangeUseTor',
       'change [name=serverType]': 'onChangeServerType',
-      'change [name=walletCurrency]': 'onWalletCurrencyChange',
-      'click .js-browseZcashBinary': 'onClickBrowseZcashBinary',
       'click .js-inUseText': 'onClickInUseText',
     };
   }
@@ -150,18 +148,6 @@ export default class extends baseVw {
       .toggleClass('hide', e.target.value === 'STAND_ALONE');
     this.getCachedEl('.js-standAloneSection')
       .toggleClass('hide', e.target.value === 'BUILT_IN');
-  }
-
-  onWalletCurrencyChange(e) {
-    this.getCachedEl('.js-zcashSection').toggleClass('hide', e.target.value !== 'ZEC');
-  }
-
-  onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
-      if (e) {
-        this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
-      }
-    });
   }
 
   onClickInUseText() {
@@ -242,9 +228,6 @@ export default class extends baseVw {
         inUseCrypto: this.inUseCryptos,
         isNew: this.model.isNew(),
         isBundledApp: this.isBundledApp,
-        zcashBinaryPlaceholder: this.platform === 'win32' ?
-          'C:\\path\\to\\zcashd.exe' :
-          '/path/to/zcashd',
       }));
 
       this._$formFields = null;

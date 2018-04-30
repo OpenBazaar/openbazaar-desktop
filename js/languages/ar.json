@@ -53,10 +53,6 @@
     "currencyHelper": "اختر عملة لمحفظتك",
     "currencyHelper2": "قبول وإرسال الدفعات بالعملة المحددة أعلاه. يرجى الاختيار بعناية، حاليًا ليس ممكن تغيير عملتك بمجرد اختيارها.",
     "curInUseTip": "لديك بالفعل خادم مُدمج مع عملة المحفظة المحددة.",
-    "zcashBinaryLabel": "Zcash Binary",
-    "fullNodeLink": "هنا",
-    "zcashBinaryHelper": "مطلوب العقدة الكاملة لعملة Zcash. قم بتنزيلها %{fullNodeLink}. بمجرد التثبيت، قم بإدخال مسار zcashd binary أعلاه.",
-    "btnBrowse": "تصفح",
     "btnNext": "التالي"
   },
   "unsupportedCryptoCurDialog": {
@@ -169,8 +165,7 @@
     },
     "connectMessaging": {
       "cancelLink": "إلغاء",
-      "connectAttemptMsg": "يتصل على %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "تهيئة zcash binary. قد يستغرق هذا بضع دقائق. %{cancelLink}"
+      "connectAttemptMsg": "يتصل على %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
@@ -1842,9 +1837,7 @@
     "providePortAsNumber": "يرجى وضع رقم المنفذ.",
     "provideValidPortRange": "يرجى وضع رقم بين 0 و 65535.",
     "invalidTorProxy": "لا تظهر القيمة في التنسيق الصحيح. يجب أن يكون بتنسيق ip-address:port ، على سبيل المثال، 127.0.0.1:9150. يجب أن يكون المنفذ رقمًا بين 0 و 65535.",
-    "provideWalletCurrency": "يرجى اختيار عملة المحفظة.",
-    "provideZcashBinaryPath": "يرجى وضع قيمة",
-    "invalidZcashBinaryPath": "يجب أن يكون المسار المقدم ملفًا على نظامك."
+    "provideWalletCurrency": "يرجى اختيار عملة المحفظة."
   },
   "shippingAddressModelErrors": {
     "provideName": "يرجى وضع اسم.",
