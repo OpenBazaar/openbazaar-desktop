@@ -81,3 +81,18 @@ It is likely one of two things:
 
 If on Linux you are seeing an "ERR_INSECURE_RESPONSE" error, it is likely because the OS does not recognize the certificate as a trusted certificate. Complete step 2 in the section above. Not having done the last bullet point in that section is the stumbling block for most Linux users.
 
+#### Connecting to remote server via ssh tunnel
+
+If there is only one client (local `openbazaar-desktop`) that connects to the remote server's API it is safe enough to just establish a ssh tunnel. No SSL setup is necessary as there are no requests across the web (from outside the tunnel)
+
+1. You can run the remote server with the default configuration of `/ip4/127.0.0.1/tcp/4002`
+
+2. If it's a shared host you still want to enable json api authentication
+
+3. Put `127.0.0.1` into the `AllowedIPs` list to only let localhost connections through. This protects your json api from any external access
+
+4. Run the server
+
+5. Establish the ssh tunnel from the client machine (where you want to run `openbazaar-desktop`) via `ssh username@remote-server -L 4002:127.0.0.1:4002`
+
+6. Configure `openbazaar-desktop` to connect to localhost:4002 and authenticate with username/password (optional)
