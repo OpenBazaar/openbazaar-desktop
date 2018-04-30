@@ -1,12 +1,46 @@
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
 import { version } from '../../package.json';
-import * as os from 'os';
+import { cpus, totalmem, freemem } from 'os';
 import { getCurrentConnection } from './serverConnect';
 import { remote } from 'electron';
 
 
 let metricsRestartNeeded = false;
+
+export function prettyRAM(bytes) {
+  // from https://gist.github.com/lanqy/5193417
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+  if (bytes === 0) return '0 bytes';
+  const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+  if (i === 0) return `${bytes} ${sizes[i]})`;
+  return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`;
+}
+
+export function userStats() {
+  const p = app.profile;
+  const pErr = 'Profile Not Available';
+  const torErr = 'No Current Connection';
+
+  return {
+    // This may be called when the profile or settings isn't available yet.
+    vendor: p ? app.profile.get('vendor') : pErr,
+    listingCount: p ? app.profile.get('stats').get('listingCount') : pErr,
+    ratingCount: p ? app.profile.get('stats').get('ratingCount') : pErr,
+    moderator: p ? app.profile.get('moderator') : pErr,
+    crypto: p ? app.profile.get('currencies') : pErr,
+    displayCurrency: app.settings ? app.settings.get('localCurrency') : 'Settings Not Available',
+    displayLanguage: app.localSettings.get('language'),
+    bundled: remote.getGlobal('isBundledApp'),
+    Tor: getCurrentConnection() ? getCurrentConnection().server.get('useTor') : torErr,
+    Testnet: !!app.serverConfig.testnet,
+    systemLanguage: navigator.language,
+    numberOfCPUs: cpus().length, // how many cores?
+    CPU: cpus()[0].model, // how modern/powerful is this computer?
+    RAMtotal: prettyRAM(totalmem()), // does the user have enough RAM?
+    RAMfree: prettyRAM(freemem()), // is user overburdening their system?
+  };
+}
 
 export function isMetricRestartNeeded() {
   return metricsRestartNeeded;
@@ -38,19 +72,7 @@ export function addMetrics() {
     // add anonymous details
     window.Countly.q.push(['user_details', {
       custom: {
-        vendor: app.profile.get('vendor'),
-        listingCount: app.profile.get('stats').get('listingCount'),
-        ratingCount: app.profile.get('stats').get('ratingCount'),
-        moderator: app.profile.get('moderator'),
-        crypto: app.profile.get('currencies'),
-        displayCurrency: app.settings.get('localCurrency'),
-        displayLanguage: app.localSettings.get('language'),
-        systemLanguage: navigator.language,
-        bundled: remote.getGlobal('isBundledApp'),
-        Tor: getCurrentConnection().server.get('useTor'),
-        Testnet: !!app.serverConfig.testnet,
-        CPU: os.cpus()[0].model,
-        RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
+        ...userStats(),
       },
     }]);
 
