@@ -1,6 +1,6 @@
 import app from '../app';
 import { version } from '../../package.json';
-import * as os from 'os';
+import { userStats } from './metrics';
 
 
 /*
@@ -20,16 +20,10 @@ export function setFeedbackOptions() {
       settingsReadable: !!app.settings,
       profileReadable: !!app.profile,
       peerID: profile.peerID || 'profile data missing',
-      vendor: profile.vendor || 'profile data missing',
-      moderator: profile.moderator || 'profile data missing',
       clientVersion: version,
       serverVersion,
       contactInfo,
-      systemLanguage: navigator.language,
-      numberOfCPUs: os.cpus().length,
-      cpu: os.cpus()[0],
-      RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
-      RAMfree: ((os.freemem()) / 1048576).toFixed(2),
+      ...userStats(),
     },
   };
 }

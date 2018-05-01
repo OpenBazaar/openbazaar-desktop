@@ -128,9 +128,6 @@ app.loadingModal = new LoadingModal({
 
 handleLinks(document);
 
-// add the feedback mechanism
-addFeedback();
-
 app.verifiedMods = new VerifiedMods();
 
 const fetchConfigDeferred = $.Deferred();
@@ -627,6 +624,9 @@ function start() {
               }
             });
           }
+
+          // add the feedback mechanism
+          addFeedback();
         });
       });
     });

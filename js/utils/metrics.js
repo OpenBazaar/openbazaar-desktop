@@ -23,12 +23,11 @@ export function userStats() {
   const torErr = 'No Current Connection';
 
   return {
-    // This may be called when the profile or settings isn't available yet.
-    vendor: p ? app.profile.get('vendor') : pErr,
-    listingCount: p ? app.profile.get('stats').get('listingCount') : pErr,
-    ratingCount: p ? app.profile.get('stats').get('ratingCount') : pErr,
-    moderator: p ? app.profile.get('moderator') : pErr,
-    crypto: p ? app.profile.get('currencies') : pErr,
+    vendor: p ? p.get('vendor') : pErr,
+    listingCount: p ? p.get('stats').get('listingCount') : pErr,
+    ratingCount: p ? p.get('stats').get('ratingCount') : pErr,
+    moderator: p ? p.get('moderator') : pErr,
+    crypto: p ? p.get('currencies') : pErr,
     displayCurrency: app.settings ? app.settings.get('localCurrency') : 'Settings Not Available',
     displayLanguage: app.localSettings.get('language'),
     bundled: remote.getGlobal('isBundledApp'),
