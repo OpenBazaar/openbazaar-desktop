@@ -29,7 +29,11 @@
         <% } %>
       </div>
     <% } %>
-    <a class="btn clrP clrBr js-decline <% if (!ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.declineBtn') %></a>
-    <a class="btn clrP clrBr js-share <% if (ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.shareBtn') %></a>
+      <a class="btn clrP clrBr js-decline"><%= ob.polyT('metrics.declineBtn') %></a>
+      <a class="btn clrP clrBr js-share"><%= ob.polyT('metrics.acceptBtn') %></a>
+    <% } else { %>
+      <a class="btn clrP clrBr js-decline <% if (!ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.deactivateBtn') %></a>
+      <a class="btn clrP clrBr js-share <% if (ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.activateBtn') %></a>
+    <% } %>
   </div>
 </div>

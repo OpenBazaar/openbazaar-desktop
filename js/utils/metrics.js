@@ -99,9 +99,10 @@ export function changeMetrics(bool) {
   return app.localSettings.save({ shareMetrics: bool });
 }
 
-export function showMetricsModal() {
+export function showMetricsModal(opts) {
   const metricsModal = new MetricsModal({
     removeOnClose: true,
+    ...opts,
   }).render().open();
 
   return metricsModal;

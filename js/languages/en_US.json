@@ -1717,7 +1717,7 @@
   },
   "metrics": {
     "title": "Optional Anonymous Metrics",
-    "msg1": "Please help improve OpenBazaar by clicking the 'Share' button below to share anonymous data about your experience with the development team.",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
     "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
     "listTitle": "The following data will be shared:",
     "list": {
@@ -1730,8 +1730,10 @@
       "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
       "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process."
     },
-    "shareBtn": "Share",
+    "acceptBtn": "Accept",
     "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
     "sharingIsOn": "Data is Being Shared",
     "sharingWillBeOn": "Data will be Shared After Restarting",
     "sharingIsOff": "Data is Not Being Shared"

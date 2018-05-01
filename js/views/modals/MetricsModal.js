@@ -7,6 +7,8 @@ export default class extends BaseModal {
   constructor(options = {}) {
     super(options);
 
+    this.options = options;
+
     this.listenTo(app.localSettings, 'change:shareMetrics', () => this.render());
   }
 
@@ -24,7 +26,9 @@ export default class extends BaseModal {
 
   onShareClick() {
     changeMetrics(true)
-      .done()
+      .done(() => {
+        this.close();
+      })
       .fail(() => {
         // the save is to local storage, this shouldn't happen
         console.log('Saving shareMetrics as true has failed.');
@@ -33,7 +37,9 @@ export default class extends BaseModal {
 
   onDeclineClick() {
     changeMetrics(false)
-      .done()
+      .done(() => {
+        this.close();
+      })
       .fail(() => {
         // the save is to local storage, this shouldn't happen
         console.log('Saving shareMetrics as false has failed.');
@@ -43,6 +49,7 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/metricsModal.html', (t) => {
       this.$el.html(t({
+        showUndecided: this.options.showUndecided,
         shareMetrics: app.localSettings.get('shareMetrics'),
         restartRequired: isMetricRestartNeeded(),
       }));
