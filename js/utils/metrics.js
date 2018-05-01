@@ -54,13 +54,10 @@ export function addMetrics() {
     //  If Countly has already been added, it won't run again until the app is restarted.
     if (window.Countly) return;
 
-    const sVer = app.settings.get('version');
-    const serverVersion = sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
-
     window.Countly = {};
     window.Countly.q = [];
     window.Countly.app_key = '979774c41bab3a6e5232a3630e6e151e439c412e';
-    window.Countly.app_version = `client_${version}|server_${serverVersion}`;
+    window.Countly.app_version = `client_${version}|server_${app.settings.prettyServerVer}`;
     window.Countly.url = 'https://countly.openbazaar.org';
     window.Countly.interval = 30000;
     window.Countly.q.push(['track_sessions']);
