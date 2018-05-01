@@ -29,6 +29,7 @@
         <% } %>
       </div>
     <% } %>
+    <% if (ob.showUndecided) { %>
       <a class="btn clrP clrBr js-decline"><%= ob.polyT('metrics.declineBtn') %></a>
       <a class="btn clrP clrBr js-share"><%= ob.polyT('metrics.acceptBtn') %></a>
     <% } else { %>
