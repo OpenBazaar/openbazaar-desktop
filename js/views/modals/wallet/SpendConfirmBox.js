@@ -49,11 +49,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
+    recordEvent('confirmBoxSend');
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
+    recordEvent('confirmBoxCancel');
   }
 
   onClickRetry(e) {
@@ -62,6 +64,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
+    recordEvent('confirmBoxRetry');
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
