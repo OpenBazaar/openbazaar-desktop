@@ -583,13 +583,15 @@ function start() {
           }
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
-          Backbone.history.start();
 
           if (app.localSettings.get('shareMetrics') === undefined) {
             showMetricsModal({
               showCloseButton: false,
               showUndecided: true,
-            });
+            })
+              .on('close', () => Backbone.history.start());
+          } else {
+            Backbone.history.start();
           }
 
           // load chat
