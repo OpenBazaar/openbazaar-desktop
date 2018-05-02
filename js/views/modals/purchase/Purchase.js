@@ -7,6 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import {
   getInventory,
+  setInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { toStandardNotation } from '../../../utils/number';
@@ -394,11 +395,28 @@ export default class extends BaseModal {
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
           })
-          .fail((jqXHR) => {
+          .fail(jqXHR => {
             this.setState({ phase: 'pay' });
             if (jqXHR.statusText === 'abort') return;
-            const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
-            const errTitle = app.polyglot.t('purchase.errors.orderError');
+            let errTitle = app.polyglot.t('purchase.errors.orderError');
+            let errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
+
+            if (jqXHR.responseJSON &&
+              jqXHR.responseJSON.code === 'ERR_INSUFFICIENT_INVENTORY' &&
+              typeof jqXHR.responseJSON.remainingInventory === 'number') {
+              const remainingInventory = jqXHR.responseJSON.remainingInventory;
+              errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
+              errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody',
+                { smart_count: remainingInventory });
+              if (this.cryptoInventory) {
+                this._inventory = remainingInventory;
+                this.cryptoInventory.setState({
+                  amount: remainingInventory,
+                });
+                if (this.inventoryFetch) this.inventoryFetch.abort();
+              }
+            }
+
             openSimpleMessage(errTitle, errMsg);
           });
       }

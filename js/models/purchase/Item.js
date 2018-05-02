@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
 import Shipping from './Shipping';
@@ -10,7 +11,8 @@ export default class extends BaseModel {
     this.isCrypto = options.isCrypto || false;
     // If the inventory is for a crypto listing, be sure to convert it from base units
     // before sending it in.
-    this.inventory = options.inventory || (() => 99999999999999);
+    this.getInventory = () =>
+      _.result(options, 'inventory', 99999999999999);
   }
 
   defaults() {
@@ -68,7 +70,7 @@ export default class extends BaseModel {
           'crypto listings');
       }
     } else {
-      const inventory = this.inventory();
+      const inventory = this.getInventory();
 
       if (attrs.quantity !== undefined) {
         if (typeof attrs.quantity !== 'number') {
