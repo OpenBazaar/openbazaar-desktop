@@ -323,7 +323,7 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
-    startEvent('purchase');
+    startEvent('Purchase');
 
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
@@ -332,7 +332,7 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        endEvent('purchase', {
+        endEvent('Purchase', {
           errors: 'own listing',
         });
       } else {
@@ -354,7 +354,7 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            endEvent('purchase', {
+            endEvent('Purchase', {
               errors: 'none',
             });
           })
@@ -364,7 +364,7 @@ export default class extends BaseModal {
             const errMsg = jqXHR.responseJSON && jqXHR.responseJSON.reason || '';
             const errTitle = app.polyglot.t('purchase.errors.orderError');
             openSimpleMessage(errTitle, errMsg);
-            endEvent('purchase', {
+            endEvent('Purchase', {
               errors: errMsg || 'unknown error',
             });
           });
@@ -380,7 +380,7 @@ export default class extends BaseModal {
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      endEvent('purchase', {
+      endEvent('Purchase', {
         errors: `Client errors ${purchaseErrs.join()}`,
       });
     }
