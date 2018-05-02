@@ -1728,7 +1728,8 @@
       "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
       "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
       "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
-      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process."
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
     },
     "acceptBtn": "Accept",
     "declineBtn": "Decline",
