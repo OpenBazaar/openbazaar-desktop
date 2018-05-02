@@ -21,7 +21,6 @@ export default class extends BaseModel {
       addressNotes: '',
       moderator: '',
       items: new Items(),
-      memo: '',
       alternateContactInfo: '',
     };
   }
