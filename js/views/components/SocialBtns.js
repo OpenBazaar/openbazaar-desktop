@@ -2,6 +2,7 @@ import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { followedByYou, followUnfollow } from '../../utils/follow';
 import BlockBtn from './BlockBtn';
+import { recordEvent } from '../../utils/metrics';
 
 import BaseVw from '../baseVw';
 
@@ -44,6 +45,7 @@ export default class extends BaseVw {
   onClickMessage() {
     // activate the chat message
     app.chat.openConversation(this.options.targetID);
+    recordEvent('Social_OpenChat');
   }
 
   onClickFollow() {
@@ -54,6 +56,11 @@ export default class extends BaseVw {
         if (this.isRemoved()) return;
         this.setState({ isFollowing: false });
       });
+    if (type === 'follow') {
+      recordEvent('Follow');
+    } else {
+      recordEvent('Unfollow');
+    }
   }
 
   render() {
