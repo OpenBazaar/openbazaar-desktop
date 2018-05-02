@@ -461,7 +461,7 @@ export default class extends BaseModal {
 
     this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
     this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
-    recordEvent('startPurchase');
+    recordEvent('Purchase_Start');
   }
 
   get shipsFreeToMe() {

@@ -100,12 +100,12 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
-      recordEvent('payFromWallet', {
+      recordEvent('Purchase_PayFromWallet', {
         currency: getServerCurrency().code,
         sufficientFunds: false,
       });
     } else {
-      recordEvent('payFromWallet', {
+      recordEvent('Purchase_PayFromWallet', {
         currency: getServerCurrency().code,
         sufficientFunds: true,
       });
@@ -132,7 +132,7 @@ export default class extends BaseVw {
         currency,
       })
         .done(() => {
-          recordEvent('walletSpend', {
+          recordEvent('Purchase_SpendFromWallet', {
             currency,
             errors: 'none',
           });
@@ -140,7 +140,7 @@ export default class extends BaseVw {
         .fail(jqXhr => {
           const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           this.showSpendError(err);
-          recordEvent('walletSpend', {
+          recordEvent('Purchase_SpendFromWallet', {
             currency,
             errors: err || 'unknown error',
           });

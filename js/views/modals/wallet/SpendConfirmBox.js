@@ -49,13 +49,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
-    recordEvent('confirmBoxSend');
+    recordEvent('Purchase_ConfirmBoxSend');
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
-    recordEvent('confirmBoxCancel');
+    recordEvent('Purchase_ConfirmBoxCancel');
   }
 
   onClickRetry(e) {
@@ -64,7 +64,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
-    recordEvent('confirmBoxRetry');
+    recordEvent('Purchase_ConfirmBoxRetry');
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -99,7 +99,7 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          recordEvent('insufficientFundsWithFee');
+          recordEvent('Purchase_ConfirmBoxInsufficientFunds');
         }
 
         this.setState(state);
@@ -110,7 +110,7 @@ export default class extends baseVw {
           fetchFailed: true,
           fetchError,
         });
-        recordEvent('EstimateFeeFailed', { fetchError });
+        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', { fetchError });
       });
   }
 
