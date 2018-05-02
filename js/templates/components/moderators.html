@@ -16,7 +16,7 @@
               <% if (ob.noValidModerators) { %>
                 <h4 class="clrTErr"><%= ob.polyT('moderators.noValidModerators') %></h4>
                 <div class="tx4 clrTErr"><%= ob.polyT('moderators.noValidModeratorsBody') %></div>
-              <% } else if (ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
+              <% } else { %>
                 <h4><%= ob.polyT('moderators.noVerifiedModerators') %></h4>
                 <div class="tx4 clrT2"><%= ob.polyT('moderators.noVerifiedModeratorsBody') %></div>
                 <div class="padTn"><% // just a spacer %></div>
