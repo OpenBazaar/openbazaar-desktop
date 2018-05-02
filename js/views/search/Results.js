@@ -96,6 +96,7 @@ export default class extends baseVw {
   }
 
   loadPage(page = this.serverPage, size = this.pageSize) {
+    this.removeCardViews();
     // get the new page
     const url = new URL(this.searchUrl);
     const params = new URLSearchParams(url.search);
@@ -144,11 +145,16 @@ export default class extends baseVw {
     this.loadPage(this.serverPage);
   }
 
+  removeCardViews() {
+    this.cardViews.forEach(vw => vw.remove());
+    this.cardViews = [];
+  }
+
   remove() {
+    this.removeCardViews();
     if (this.newPageFetch) this.newPageFetch.abort();
     super.remove();
   }
-
 
   render() {
     loadTemplate('search/results.html', (t) => {
@@ -160,8 +166,7 @@ export default class extends baseVw {
 
       this.$resultsGrid = this.$('.js-resultsGrid');
       this.$displayText = this.$('.js-displayingText');
-      this.cardViews.forEach(vw => vw.remove());
-      this.cardViews = [];
+      this.removeCardViews();
 
       if (this.pageControls) this.pageControls.remove();
       this.pageControls = this.createChild(PageControls);

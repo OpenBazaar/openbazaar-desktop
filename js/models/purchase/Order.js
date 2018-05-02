@@ -20,8 +20,7 @@ export default class extends BaseModel {
       countryCode: '',
       addressNotes: '',
       moderator: '',
-      items: new Items([]),
-      memo: '',
+      items: new Items(),
       alternateContactInfo: '',
     };
   }
