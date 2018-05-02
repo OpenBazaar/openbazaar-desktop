@@ -110,7 +110,9 @@ export default class extends baseVw {
           fetchFailed: true,
           fetchError,
         });
-        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', { fetchError });
+        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', {
+          errror: fetchError || 'unknown error',
+        });
       });
   }
 

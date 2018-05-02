@@ -57,9 +57,9 @@ export default class extends BaseVw {
         this.setState({ isFollowing: false });
       });
     if (type === 'follow') {
-      recordEvent('Follow');
+      recordEvent('Social_Follow');
     } else {
-      recordEvent('Unfollow');
+      recordEvent('Social_Unfollow');
     }
   }
 
