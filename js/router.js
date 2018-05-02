@@ -16,7 +16,7 @@ import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
-import { startEvent, endEvent } from './utils/metrics';
+import { startEvent, endEvent, recordEvent } from './utils/metrics';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -516,9 +516,15 @@ export default class ObRouter extends Router {
       this.navigate('transactions/sales');
     }
 
+    const initialTab = tab || 'sales';
+
     this.loadPage(
-      new Transactions({ initialTab: tab || 'sales' }).render()
+      new Transactions({ initialTab }).render()
     );
+
+    recordEvent('TransactionsPageLoad', {
+      tab: initialTab,
+    });
   }
 
   connectedPeers() {
