@@ -3,6 +3,7 @@ import BaseView from '../baseVw';
 import Provider from './SearchProvider';
 import app from '../../app';
 import AddProvider from './AddProvider';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -40,6 +41,7 @@ export default class extends BaseView {
   onClickOpenAdd(e) {
     e.stopPropagation();
     this.createAddBox();
+    recordEvent('Discover_AddProvider');
   }
 
   createAddBox() {
