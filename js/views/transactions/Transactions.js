@@ -4,7 +4,7 @@ import { capitalize } from '../../utils/string';
 import { abbrNum, deparam } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import loadTemplate from '../../utils/loadTemplate';
-import { recordEvent} from '../../utils/metrics';
+import { recordEvent } from '../../utils/metrics';
 import Transactions from '../../collections/Transactions';
 import Order from '../../models/order/Order';
 import Case from '../../models/order/Case';

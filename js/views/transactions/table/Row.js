@@ -7,7 +7,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
-import { recordEvent} from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
