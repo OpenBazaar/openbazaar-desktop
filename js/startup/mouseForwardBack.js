@@ -1,3 +1,4 @@
+import $ from 'jquery';
 import { remote } from 'electron';
 
 // handles mouse back/forward buttons
