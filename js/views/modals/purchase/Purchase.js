@@ -7,7 +7,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import {
   getInventory,
-  setInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { toStandardNotation } from '../../../utils/number';
