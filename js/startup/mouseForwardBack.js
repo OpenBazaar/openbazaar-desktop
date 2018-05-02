@@ -1,12 +1,12 @@
+const mouseForwardBack = require('mouse-forward-back');
 import $ from 'jquery';
 import { remote } from 'electron';
 
 // handles mouse back/forward buttons
 
 export default function () {
-
   // app-command event is triggered on Windows only
-  $(window).on("app-command", (e, cmd) => {
+  $(window).on('app-command', (e, cmd) => {
     if (cmd === 'browser-backward') {
       window.history.back();
     } else if (cmd === 'browser-forward') {
@@ -16,7 +16,7 @@ export default function () {
 
 
   if (process.platform === 'linux') {
-    require('mouse-forward-back').register((button) => {
+    mouseForwardBack.register((button) => {
       if (button === 'back') {
         window.history.back();
       } else if (button === 'forward') {
