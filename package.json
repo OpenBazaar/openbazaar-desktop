@@ -89,9 +89,7 @@
     "underscore": "^1.8.3",
     "url-parse": "^1.1.7",
     "velocity-animate": "^1.2.3",
-    "yargs": "^6.6.0"
-  },
-  "optionalDependencies": {
+    "yargs": "^6.6.0",
     "mouse-forward-back": "^1.0.1"
   }
 }
