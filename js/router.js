@@ -52,6 +52,7 @@ export default class ObRouter extends Router {
 
     $(window).on('hashchange', () => {
       this.setAddressBarText();
+      window.Countly.q.push(['track_pageview', location.pathname + location.hash]);
     });
 
     ipcRenderer.on('external-route', (e, route) => {
