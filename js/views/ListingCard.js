@@ -4,6 +4,7 @@ import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
+import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -110,6 +111,39 @@ export default class extends baseVw {
         this.render();
       }
     });
+
+    // load necessary images in a cancelable way
+    const thumbnail = this.model.get('thumbnail');
+    const listingImageSrc = this.viewType === 'grid' ?
+      app.getServerUrl(
+        `ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`
+      ) :
+      app.getServerUrl(
+        `ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
+      );
+
+    this.listingImage = new Image();
+    this.listingImage.addEventListener('load', () => {
+      this.listingImage.loaded = true;
+      this.$('.js-listingImage')
+        .css('backgroundImage', `url(${listingImageSrc})`);
+    });
+    this.listingImage.src = listingImageSrc;
+
+    const vendor = this.model.get('vendor');
+    if (vendor && vendor.avatarHashes) {
+      const avatarImageSrc = app.getServerUrl(
+        `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
+      );
+
+      this.avatarImage = new Image();
+      this.avatarImage.addEventListener('load', () => {
+        this.avatarImage.loaded = true;
+        this.$('.js-vendorIcon')
+          .css('backgroundImage', `url(${avatarImageSrc})`);
+      });
+      this.avatarImage.src = avatarImageSrc;
+    }
   }
 
   className() {
@@ -393,6 +427,8 @@ export default class extends baseVw {
   }
 
   remove() {
+    this.listingImage.src = '';
+    if (this.avatarImage) this.avatarImage.src = '';
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off('click', this.boundDocClick);
@@ -411,6 +447,10 @@ export default class extends baseVw {
         displayCurrency: app.settings.get('localCurrency'),
         isBlocked,
         isUnblocking,
+        listingImageSrc: this.listingImage.loaded &&
+          this.listingImage.src || '',
+        vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
+          this.avatarImage.src || '',
       }));
     });
 
