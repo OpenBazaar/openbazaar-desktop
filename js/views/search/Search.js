@@ -408,6 +408,7 @@ export default class extends baseVw {
     if (e.which === 13) {
       this.serverPage = 0;
       this.processTerm(this.$searchInput.val());
+      recordEvent('Discover_EnterKeySearch');
     }
   }
 
@@ -421,6 +422,7 @@ export default class extends baseVw {
   changeFilter() {
     this.serverPage = 0;
     this.processTerm(this.term);
+    recordEvent('Discover_ChangeFilter');
   }
 
   onClickSuggestion(opts) {
