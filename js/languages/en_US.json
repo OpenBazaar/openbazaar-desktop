@@ -1419,7 +1419,8 @@
       "returnToFromOrder": "Return to cases"
     },
     "filters": {
-      "purchasing": "Purchasing",
+      "pending": "Pending",
+      "unfunded": "Unfunded",
       "ready": "Ready To Process",
       "fulfilled": "Fulfilled",
       "refunded": "Refunded",

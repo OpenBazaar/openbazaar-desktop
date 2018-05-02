@@ -178,7 +178,15 @@ export default class extends baseVw {
     return orderDetail;
   }
 
-  get salesPurchasesDefaultFilter() {
+  get salesDefaultFilter() {
+    return {
+      search: '',
+      sortBy: 'UNREAD',
+      states: [0, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14],
+    };
+  }
+
+  get purchasesDefaultFilter() {
     return {
       search: '',
       sortBy: 'UNREAD',
@@ -186,57 +194,68 @@ export default class extends baseVw {
     };
   }
 
-  get salesPurchasesFilterConfig() {
+  getSalesPurchasesFilterConfig(isSale) {
+    const defaulFilterStates = isSale ?
+      this.salesDefaultFilter.states :
+      this.purchasesDefaultFilter.states;
+
     return [
       {
-        id: 'filterPurchasing',
-        text: app.polyglot.t('transactions.filters.purchasing'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(0) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(1) > -1,
+        id: 'filterUnfunded',
+        text: app.polyglot.t('transactions.filters.unfunded'),
+        checked: defaulFilterStates.includes(1),
         className: 'filter',
-        targetState: [0, 1],
+        targetState: [1],
+      },
+      {
+        id: 'filterPending',
+        text: app.polyglot.t('transactions.filters.pending'),
+        checked: defaulFilterStates.includes(0),
+        className: 'filter',
+        targetState: [0],
       },
       {
         id: 'filterReady',
         text: app.polyglot.t('transactions.filters.ready'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(2) > -1,
+        checked: defaulFilterStates.includes(2) || defaulFilterStates.includes(3) ||
+          defaulFilterStates.includes(4),
         className: 'filter',
         targetState: [2, 3, 4],
       },
       {
         id: 'filterFulfilled',
         text: app.polyglot.t('transactions.filters.fulfilled'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(3) > -1,
+        checked: defaulFilterStates.includes(5) || defaulFilterStates.includes(13),
         className: 'filter',
         targetState: [5, 13],
       },
       {
         id: 'filterRefunded',
         text: app.polyglot.t('transactions.filters.refunded'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(9) > -1,
+        checked: defaulFilterStates.includes(9),
         className: 'filter',
         targetState: [9],
       },
       {
         id: 'filterDisputes',
         text: app.polyglot.t('transactions.filters.disputes'),
-        checked: [10, 11, 12].includes(this.salesPurchasesDefaultFilter.states),
+        checked: defaulFilterStates.includes(10) || defaulFilterStates.includes(11) ||
+          defaulFilterStates.includes(12),
         className: 'filter',
         targetState: [10, 11, 12],
       },
       {
         id: 'filterCompleted',
         text: app.polyglot.t('transactions.filters.completed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(6) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(7) > -1 ||
-          this.salesPurchasesDefaultFilter.states.indexOf(8) > -1,
+        checked: defaulFilterStates.includes(6) || defaulFilterStates.includes(7) ||
+          defaulFilterStates.includes(8),
         className: 'filter',
         targetState: [6, 7, 8],
       },
       {
         id: 'filterError',
         text: app.polyglot.t('transactions.filters.error'),
-        checked: [14].includes(this.salesPurchasesDefaultFilter.states),
+        checked: defaulFilterStates.includes(14),
         className: 'filter',
         targetState: [14],
       },
@@ -256,14 +275,14 @@ export default class extends baseVw {
       {
         id: 'filterDisputeOpen',
         text: app.polyglot.t('transactions.filters.disputeOpen'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(10) > -1,
+        checked: this.casesDefaultFilter.states.includes(10),
         className: 'filter',
         targetState: [10],
       },
       {
         id: 'filterDisputeClosed',
         text: app.polyglot.t('transactions.filters.disputeClosed'),
-        checked: this.salesPurchasesDefaultFilter.states.indexOf(12) > -1,
+        checked: this.casesDefaultFilter.states.includes(12),
         className: 'filter',
         targetState: [12],
       },
@@ -329,13 +348,13 @@ export default class extends baseVw {
       collection: this.purchasesCol,
       type: 'purchases',
       defaultFilter: {
-        ...this.salesPurchasesDefaultFilter,
+        ...this.purchasesDefaultFilter,
       },
       initialFilter: {
-        ...this.salesPurchasesDefaultFilter,
+        ...this.purchasesDefaultFilter,
         ...this.filterUrlParams,
       },
-      filterConfig: this.salesPurchasesFilterConfig,
+      filterConfig: this.getSalesPurchasesFilterConfig(false),
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
     });
@@ -348,13 +367,13 @@ export default class extends baseVw {
       collection: this.salesCol,
       type: 'sales',
       defaultFilter: {
-        ...this.salesPurchasesDefaultFilter,
+        ...this.salesDefaultFilter,
       },
       initialFilter: {
-        ...this.salesPurchasesDefaultFilter,
+        ...this.salesDefaultFilter,
         ...this.filterUrlParams,
       },
-      filterConfig: this.salesPurchasesFilterConfig,
+      filterConfig: this.getSalesPurchasesFilterConfig(true),
       openOrder: this.openOrder.bind(this),
       openedOrderModal: this.openedOrderModal,
     });

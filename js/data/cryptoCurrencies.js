@@ -65,12 +65,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/address/${address}` :
-        `https://blockdozer.com/insight/address/${address}`
+        `https://blockdozer.com/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/tx/${txid}` :
-        `https://blockdozer.com/insight/tx/${txid}`
+        `https://blockdozer.com/tx/${txid}`
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
