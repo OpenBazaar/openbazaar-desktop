@@ -523,7 +523,7 @@ export default class ObRouter extends Router {
       new Transactions({ initialTab }).render()
     );
 
-    recordEvent('TransactionsPageLoad', {
+    recordEvent('Transactions_PageLoad', {
       tab: initialTab,
     });
   }

@@ -110,7 +110,7 @@ export default class extends baseVw {
           fetchFailed: true,
           fetchError,
         });
-        recordEvent('estimateFeeFailed', { fetchError });
+        recordEvent('EstimateFeeFailed', { fetchError });
       });
   }
 

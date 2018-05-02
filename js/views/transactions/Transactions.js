@@ -73,7 +73,7 @@ export default class extends baseVw {
   onTabClick(e) {
     const tab = $(e.target).closest('.js-tab').attr('data-tab');
     this.selectTab(tab);
-    recordEvent('TransactionsTabChange', {
+    recordEvent('Transactions_TabChange', {
       tab,
     });
   }
