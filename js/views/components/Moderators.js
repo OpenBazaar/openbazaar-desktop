@@ -153,7 +153,6 @@ export default class extends baseVw {
   processMod(data) {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
-    // If the data comes from an error, the peerID is peerId instead.
     const validMod = data.moderator && data.moderatorInfo;
     // if the moderator has an invalid currency, remove them from the list
     const buyerCur = app.serverConfig.cryptoCurrency;
@@ -162,10 +161,10 @@ export default class extends baseVw {
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(data, { parse: true }));
-      this.removeNotFetched(data.peerID || data.peerId);
+      this.removeNotFetched(data.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
-      this.removeNotFetched(data.peerID || data.peerId);
+      this.removeNotFetched(data.peerID);
     }
   }
 
@@ -219,6 +218,8 @@ export default class extends baseVw {
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
                     if (IDs.includes(eventData.peerId)) {
+                      // provide the expected capitalization of peerID
+                      eventData.peerID = eventData.peerId;
                       this.processMod(eventData);
                     }
                   } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
