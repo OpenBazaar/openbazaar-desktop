@@ -106,7 +106,7 @@ export function getInventory(peerId, options = {}) {
             data.inventory / opts.coinDivisibility : data.inventory,
         };
 
-        deferred.resolve(data);
+        deferred.resolve(inventoryData);
         events.trigger('inventory-fetch-success', {
           peerId,
           slug: opts.slug,
