@@ -17,6 +17,11 @@ export function prettyRAM(bytes) {
   return `${(bytes / (1024 ** i)).toFixed(1)} ${sizes[i]}`;
 }
 
+export function freeRAMPercentage(total, free) {
+  const percentage = free / total * 100;
+  return `${percentage.toFixed(1)}%`;
+}
+
 export function userStats() {
   const p = app.profile;
   const pErr = 'Profile Not Available';
@@ -37,7 +42,7 @@ export function userStats() {
     numberOfCPUs: cpus().length, // how many cores?
     CPU: cpus()[0].model, // how modern/powerful is this computer?
     RAMtotal: prettyRAM(totalmem()), // does the user have enough RAM?
-    RAMfree: prettyRAM(freemem()), // is user overburdening their system?
+    RAMfree: freeRAMPercentage(totalmem(), freemem()), // is user overburdening their system?
   };
 }
 
