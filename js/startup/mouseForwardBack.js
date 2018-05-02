@@ -5,7 +5,7 @@ import { remote } from 'electron';
 
 export default function () {
 
-  // app-command works on Windows only
+  // app-command event is triggered on Windows only
   $(window).on("app-command", (e, cmd) => {
     if (cmd === 'browser-backward') {
       window.history.back();
