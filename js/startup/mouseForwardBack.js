@@ -1,4 +1,4 @@
-const mouseForwardBack = require('mouse-forward-back');
+import mouseForwardBack from 'mouse-forward-back';
 import $ from 'jquery';
 import { remote } from 'electron';
 
