@@ -9,6 +9,7 @@ import {
 } from '../../../utils/order';
 import { getCachedProfiles } from '../../../models/profile/Profile';
 import loadTemplate from '../../../utils/loadTemplate';
+import { recordEvent } from '../../../utils/metrics';
 import Case from '../../../models/order/Case';
 import OrderFulfillment from '../../../models/order/orderFulfillment/OrderFulfillment';
 import OrderDispute from '../../../models/order/OrderDispute';
@@ -58,10 +59,14 @@ export default class extends BaseModal {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', () => {
+    this.listenTo(this.model, 'change:state', (md) => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
+      recordEvent('OrderDetails_LiveStateChange', {
+        state: md.get('state'),
+        moderated: !!this.moderatorId, // collect only a boolean
+      });
     });
 
     this.listenTo(orderEvents, 'openDisputeComplete', () => {

@@ -40,6 +40,11 @@ export default class extends BaseModel {
     return this.get('storeModerators').indexOf(guid) !== -1;
   }
 
+  get prettyServerVer() {
+    const sVer = this.get('version');
+    return sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
+  }
+
   validate(attrs) {
     const errObj = this.mergeInNestedErrors({});
 

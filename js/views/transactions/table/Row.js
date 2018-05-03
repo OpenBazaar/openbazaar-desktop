@@ -7,6 +7,7 @@ import _ from 'underscore';
 import moment from 'moment';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
+import { recordEvent } from '../../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -70,28 +71,34 @@ export default class extends baseVw {
   onClickAcceptOrder(e) {
     this.trigger('clickAcceptOrder', { view: this });
     e.stopPropagation();
+    recordEvent('Transactions_AcceptOrder');
   }
 
   onClickRejectOrder(e) {
     this.trigger('clickRejectOrder', { view: this });
     e.stopPropagation();
+    recordEvent('Transactions_RejectOrder');
   }
 
   onClickCancelOrder(e) {
     this.trigger('clickCancelOrder', { view: this });
     e.stopPropagation();
+    recordEvent('Transactions_CancelOrder');
   }
 
   onClickUserColLink(e) {
     e.stopPropagation();
+    recordEvent('Transactions_ClickUser');
   }
 
   onClickListingColLink(e) {
     e.stopPropagation();
+    recordEvent('Transactions_ClickListing');
   }
 
   onRowClick() {
     this.trigger('clickRow', { view: this });
+    recordEvent('Transactions_ClickOrder');
   }
 
   getState() {

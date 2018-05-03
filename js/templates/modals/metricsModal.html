@@ -1,0 +1,41 @@
+<div class="contentBox padLg clrP clrBr clrSh3 dialogScrollMsg">
+  <h1><%= ob.polyT('metrics.title') %></h1>
+  <div class="rowMd innerMessage">
+    <div class="rowHg">
+      <p><%= ob.polyT('metrics.msg1') %></p>
+    </div>
+    <h4><%= ob.polyT('metrics.listTitle') %></h4>
+    <ul class="tx5 clrT2 padSmKids rowLg">
+      <li><%= ob.polyT('metrics.list.pages') %></li>
+      <li><%= ob.polyT('metrics.list.clicks') %></li>
+      <li><%= ob.polyT('metrics.list.orders') %></li>
+      <li><%= ob.polyT('metrics.list.user') %></li>
+      <li><%= ob.polyT('metrics.list.node') %></li>
+      <li><%= ob.polyT('metrics.list.app') %></li>
+      <li><%= ob.polyT('metrics.list.system') %></li>
+      <li><%= ob.polyT('metrics.list.path') %></li>
+      <li><%= ob.polyT('metrics.list.errors') %></li>
+    </ul>
+    <p class="tx5"><i><%= ob.polyT('metrics.msg2') %></i></p>
+  </div>
+  <div class="flexVCent flexHRight gutterH">
+    <% if (ob.shareMetrics !== undefined) {%>
+      <div class="flexExpand txLft">
+        <% if (ob.restartRequired) { %>
+          <span class="clrTEmph1"><%= ob.polyT('metrics.sharingWillBeOn') %></span>
+        <% } else if (ob.shareMetrics) { %>
+          <span class="clrTEmph1"><%= ob.polyT('metrics.sharingIsOn') %></span>
+        <% } else { %>
+          <span class="clrTErr"><%= ob.polyT('metrics.sharingIsOff') %></span>
+        <% } %>
+      </div>
+    <% } %>
+    <% if (ob.showUndecided) { %>
+      <a class="btn clrP clrBr js-decline"><%= ob.polyT('metrics.declineBtn') %></a>
+      <a class="btn clrP clrBr js-share"><%= ob.polyT('metrics.acceptBtn') %></a>
+    <% } else { %>
+      <a class="btn clrP clrBr js-decline <% if (!ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.deactivateBtn') %></a>
+      <a class="btn clrP clrBr js-share <% if (ob.shareMetrics) print('disabled') %>"><%= ob.polyT('metrics.activateBtn') %></a>
+    <% } %>
+  </div>
+</div>

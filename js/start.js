@@ -18,6 +18,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { addMetrics, showMetricsModal } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
 import Chat from './views/chat/Chat.js';
@@ -565,8 +566,7 @@ function start() {
           // add the default search providers
           app.searchProviders.add(defaultSearchProviders, { at: 0 });
 
-          // set the profile data for the feedback mechanism
-          setFeedbackOptions();
+          if (app.localSettings.get('shareMetrics')) addMetrics();
 
           if (externalRoute) {
             // handle opening the app from an an external ob link
@@ -583,7 +583,17 @@ function start() {
           }
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
-          Backbone.history.start();
+
+          if (app.localSettings.get('shareMetrics') === undefined) {
+            showMetricsModal({
+              showCloseButton: false,
+              dismissOnEscPress: false,
+              showUndecided: true,
+            })
+              .on('close', () => Backbone.history.start());
+          } else {
+            Backbone.history.start();
+          }
 
           // load chat
           const chatConvos = new ChatHeads();

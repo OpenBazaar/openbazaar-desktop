@@ -92,14 +92,11 @@ export default class extends BaseModal {
     this.btcTicker = this.createChild(BTCTicker);
     this.btcTicker.render();
 
-    const sVer = app.settings.get('version');
-    const serverVersion = sVer.substring(sVer.lastIndexOf(':') + 1, sVer.lastIndexOf('/'));
-
     loadTemplate('modals/about/about.html', (t) => {
       loadTemplate('brandingBox.html', brandingBoxT => {
         this.$el.html(t({
           brandingBoxT,
-          serverVersion,
+          serverVersion: app.settings.prettyServerVer,
           ...this.options,
           version,
           isBundledApp: this.isBundledApp,

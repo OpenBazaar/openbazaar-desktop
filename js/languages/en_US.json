@@ -635,6 +635,12 @@
         "macOS": "Mac (upper left)",
         "windowsOS": "Windows (upper right)"
       },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
+      },
       "statusSaving": "Saving advanced settings…",
       "statusSaveComplete": "Advanced settings saved.",
       "statusSaveFailed": "Unable to save advanced settings.",
@@ -1709,6 +1715,30 @@
     "actionBar": {
       "disputeOrderBtn": "Dispute Order"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Accept",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "There was an error accepting the order.",

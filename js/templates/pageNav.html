@@ -22,7 +22,7 @@
           <a class="iconBtn js-navFwd toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.forward') %>">
             <i class="ion-chevron-right"></i>
           </a>
-          <a class="iconBtn js-navReload toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.refresh') %>">
+          <a class="iconBtn js-navReload toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.refresh') %>"  id="Nav_Refresh">
             <i class="ion-refresh"></i>
           </a>
         </div>
@@ -45,7 +45,7 @@
       <div class="rowDivV clrBrBk"></div>
       <div>
         <div class="flexVCent box margLSm posR">
-          <a href="#search" class="toolTipNoWrap js-discover" data-tip="<%= ob.polyT('pageNav.toolTip.discover') %>">
+          <a href="#search" class="toolTipNoWrap js-discover" data-tip="<%= ob.polyT('pageNav.toolTip.discover') %>" id="Nav_Discover">
             <div class="discoverBtn navBtn" style="background-image: url('../imgs/obVectorIconSmall.svg')"></div>
           </a>
           <% if (ob.showDiscoverCallout) { %>
@@ -54,10 +54,10 @@
               <p><%= ob.polyT('pageNav.discoverCalloutBody') %></p>
             </div>
           <% } %>
-          <a class="navBtn toolTipNoWrap js-navWalletBtn" data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>">
+          <a class="navBtn toolTipNoWrap js-navWalletBtn" data-tip="<%= ob.polyT('pageNav.toolTip.wallet') %>" id="Nav_Wallet">
             <div class="iconBtn navWalletBtn "><%= ob.walletIconTmpl() %></div>
           </a>
-          <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>">
+          <a class="navBtn toolTipNoWrap js-navNotifBtn" data-tip="<%= ob.polyT('pageNav.toolTip.notifications') %>" id="Nav_Notifications">
             <i class="iconBtn ion-android-notifications"></i>
             <div class="discTn notifUnreadBadge js-notifUnreadBadge clrE1 clrTOnEmph clrBr2 clrSh2 hide"></div>
           </a>
