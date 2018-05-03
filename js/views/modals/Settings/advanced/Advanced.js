@@ -243,6 +243,7 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
     loadTemplate('modals/settings/advanced/advanced.html', (t) => {
       this.$el.html(t({
         errors: {
@@ -255,7 +256,6 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
-      super.render();
 
       const formFieldsSelector = `
         .contentBox:not(.js-contentBoxEmailIntegration) select[name],

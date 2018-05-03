@@ -128,6 +128,9 @@ app.loadingModal = new LoadingModal({
 
 handleLinks(document);
 
+// add the feedback mechanism
+addFeedback();
+
 app.verifiedMods = new VerifiedMods();
 
 const fetchConfigDeferred = $.Deferred();
@@ -563,9 +566,6 @@ function start() {
           // add the default search providers
           app.searchProviders.add(defaultSearchProviders, { at: 0 });
 
-          // set the profile data for the feedback mechanism
-          setFeedbackOptions();
-
           if (app.localSettings.get('shareMetrics')) addMetrics();
 
           if (externalRoute) {
@@ -587,6 +587,7 @@ function start() {
           if (app.localSettings.get('shareMetrics') === undefined) {
             showMetricsModal({
               showCloseButton: false,
+              dismissOnEscPress: false,
               showUndecided: true,
             })
               .on('close', () => Backbone.history.start());
@@ -631,9 +632,6 @@ function start() {
               }
             });
           }
-
-          // add the feedback mechanism
-          addFeedback();
         });
       });
     });
