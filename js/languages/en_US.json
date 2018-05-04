@@ -1414,7 +1414,7 @@
       "paymentFailed": "The Payment Could Not Be Completed",
       "zeroPrice": "You cannot purchase a listing with a total price of zero.",
       "insufficientInventoryTitle": "Insufficient Inventory",
-      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{smart_count} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{smart_count} items remain."
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {

@@ -36,6 +36,10 @@
     });
     const subTotal = itemTotal * quantity;
     const shippingTotal = shippingPrice + additionalShippingPrice * (quantity -1);
+    const formattedQuantity = new Intl.NumberFormat(ob.displayCurrency, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8,
+    }).format(quantity);
 %>
   <div class="flexRow">
     <span class="flexExpand">
@@ -96,7 +100,7 @@
   <% if (quantity) { %>
     <div class="flexRow">
       <span class="flexExpand">
-        <%= ob.polyT('purchase.receipt.subtotal', { quantity }) %>
+        <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
       </span>
       <b class="flexNoShrink">
         <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>

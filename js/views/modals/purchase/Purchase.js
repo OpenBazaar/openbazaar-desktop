@@ -423,8 +423,13 @@ export default class extends BaseModal {
                 this.listing.get('metadata')
                   .get('coinDivisibility');
               errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
-              errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody',
-                { smart_count: this.inventory });
+              errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody', {
+                smart_count: this.inventory,
+                remainingInventory: new Intl.NumberFormat(app.settings.get('localCurrency'), {
+                  minimumFractionDigits: 0,
+                  maximumFractionDigits: 8,
+                }).format(this.inventory),
+              });
               if (this.inventoryFetch) this.inventoryFetch.abort();
             }
 
