@@ -7,7 +7,7 @@ import { userStats } from './metrics';
  * Sets the options for the feedback tool
  */
 
-export function setFeedbackOptions() {
+function setFeedbackOptions() {
   const profile = app.profile ? app.profile.toJSON() : {};
   const contactInfo = profile.contactInfo || {};
   const sVer = app.settings && app.settings.get('version') || '';
