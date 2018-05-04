@@ -2,12 +2,9 @@
 // We are managing our own select2 JS source, since we've modified it slightly to fix
 // a scrolling issue.
 
-// We're still referencing the CSS from the NPM package, so it should still remain as an
-// NPM dependency.
-
-// We should keep the version locked at 4.0.3 so a.) the css stays in line with this JS
-// b.) we've done a lot of code gymnastics to make it work with this version and a new
-// version may introduce new behavior / markup / styling that wouldn't work with that.
+// We should keep the version locked at 4.0.3 since we've done a lot of code gymnastics to make
+// it work with this version and a new version may introduce new behavior / markup / styling
+// that wouldn't work with that.
 
 /*!
  * Select2 4.0.3

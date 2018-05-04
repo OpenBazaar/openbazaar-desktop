@@ -125,9 +125,7 @@ export default class extends BaseVw {
         md.searchDescription = $('<div />').html(md.get('description'))
           .text()
           .toLocaleLowerCase();
-
         md.searchTitle = md.get('title').toLocaleLowerCase();
-
         const price = md.get('price');
 
         if (price.amount !== undefined) {
@@ -233,7 +231,6 @@ export default class extends BaseVw {
         this.$el.toggleClass('listView');
 
         if (this.storeListings) {
-          // this.storeListings.viewType = type;
           this.renderListings(this.fullRenderedCollection);
         }
       }
@@ -446,7 +443,7 @@ export default class extends BaseVw {
     }
   }
 
-  renderListings(col = this.fullRenderedCollection || undefined) {
+  renderListings(col = this.fullRenderedCollection) {
     if (!col) {
       throw new Error('Please provide a collection.');
     }

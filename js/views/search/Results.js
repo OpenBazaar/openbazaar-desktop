@@ -2,13 +2,13 @@ import $ from 'jquery';
 import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
+import { capitalize } from '../../utils/string';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
 import PageControls from '../components/PageControls';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
-
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -23,6 +23,7 @@ export default class extends baseVw {
     this.serverPage = this.options.serverPage || 0;
     this.pageSize = this.options.pageSize || 24;
     this.reportsUrl = this.options.reportsUrl || '';
+    this.viewType = this.options.viewType || 'grid';
 
     this.cardViews = [];
     this.pageCollections = {};
@@ -42,12 +43,14 @@ export default class extends baseVw {
       vendor.avatar = vendor.avatarHashes;
       const base = vendor.handle ?
         `@${vendor.handle}` : vendor.peerID;
+
       const options = {
         listingBaseUrl: `${base}/store/`,
         reportsUrl: this.reportsUrl,
         model,
         vendor,
         onStore: false,
+        viewType: this.viewType,
       };
 
       return this.createChild(ListingCard, options);
@@ -76,6 +79,7 @@ export default class extends baseVw {
 
     // if there are no models, add the no models message instead
     if (total < 1) noResults.appendTo(resultsFrag);
+    this.$el.toggleClass('noResults', total < 1);
 
     this.$resultsGrid.html(resultsFrag);
     // update the page controls
@@ -157,7 +161,11 @@ export default class extends baseVw {
 
   render() {
     loadTemplate('search/results.html', (t) => {
-      this.$el.html(t());
+      this.$el.html(t({
+        viewTypeClass: this.viewType === 'grid' ?
+          '' : `listingsGrid${capitalize(this.viewType)}View`,
+        viewType: this.viewType,
+      }));
 
       this.$resultsGrid = this.$('.js-resultsGrid');
       this.$displayText = this.$('.js-displayingText');

@@ -1,6 +1,6 @@
 <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.inventoryManagement') %></h2>
 <hr class="clrBr rowMd">
-<div class="flexRow gutterH">
+<div class="flexRow gutterH rowSm">
   <div class="col6 simpleFlexCol">
     <select id="editInventoryManagementType" class="clrBr clrP clrSh2 marginTopAuto">
       <option value="DO_NOT_TRACK" <% if (ob.trackBy === 'DO_NOT_TRACK') print('selected') %>>
@@ -39,4 +39,4 @@
   }
 %>
 
-<div class="clrT2 txSm padSm"><%= helperText %></div>
+<div class="clrT2 txSm helper"><%= helperText %></div>

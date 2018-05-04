@@ -218,7 +218,7 @@ function expireCachedProfile(peerId) {
   if (cached) {
     cached.deferred.reject({
       errCode: 'TIMED_OUT',
-      error: 'The profile fetch timeed out.',
+      error: 'The profile fetch timed out.',
     });
   }
 

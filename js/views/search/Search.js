@@ -382,6 +382,18 @@ export default class extends baseVw {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
 
+    let viewType = 'grid';
+
+    if (data && data.options && data.options.type &&
+      data.options.type.options &&
+      data.options.type.options.length) {
+      if (data.options.type.options.find(
+        op => op.value === 'cryptocurrency' && op.checked
+      )) {
+        viewType = 'cryptoList';
+      }
+    }
+
     const resultsView = this.createChild(Results, {
       searchUrl,
       reportsUrl: this.sProvider.get('reports') || '',
@@ -390,6 +402,7 @@ export default class extends baseVw {
       serverPage: this.serverPage,
       pageSize: this.pageSize,
       initCol: this.resultsCol,
+      viewType,
     });
 
     this.$resultsWrapper.html(resultsView.render().el);

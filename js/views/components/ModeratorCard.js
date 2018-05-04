@@ -2,7 +2,7 @@ import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Profile from '../../models/profile/Profile';
-import VerifiedMod from './VerifiedMod';
+import VerifiedMod, { getModeratorOptions } from './VerifiedMod';
 import { handleLinks } from '../../utils/dom';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
 import { getLangByCode } from '../../data/languages';
@@ -117,11 +117,10 @@ export default class extends BaseVw {
       }));
 
       if (this.verifiedMod) this.verifiedMod.remove();
-      this.verifiedMod = this.createChild(VerifiedMod, {
+
+      this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({
         model: verifiedMod,
-        data: app.verifiedMods.data,
-        showShortText: true,
-      });
+      }));
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 

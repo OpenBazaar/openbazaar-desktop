@@ -69,6 +69,21 @@ export default class extends BaseModel {
     return this.isBuyerContractValid && this.isVendorContractValid;
   }
 
+  convertCryptoQuantity(contract = {}) {
+    contract.buyerOrder.items.forEach((item, index) => {
+      const listing = contract.vendorListings[index];
+
+      if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
+        const coinDivisibility = listing.metadata
+          .coinDivisibility;
+
+        item.quantity = item.quantity / coinDivisibility;
+      }
+    });
+
+    return contract;
+  }
+
   parse(response = {}) {
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
@@ -94,6 +109,8 @@ export default class extends BaseModel {
       response.buyerContract.buyerOrder.payment.amount =
         integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
           app.serverConfig.cryptoCurrency);
+
+      response.buyerContract = this.convertCryptoQuantity(response.buyerContract);
     }
 
     if (response.vendorContract) {

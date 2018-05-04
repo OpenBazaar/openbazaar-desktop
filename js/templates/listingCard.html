@@ -8,7 +8,7 @@
 %>
 <div class="gridViewContent posR">
   <div class="listingImage js-listingImage" style="<%= listingImageBgStyle %>">
-    <div class="nsfwOverlay overlayPanel clrP">
+    <div class="nsfwOverlay overlayPanel coverFull clrP">
       <div class="flexCent">
         <div>
           <div class="flexCol flexHCent gutterV">
@@ -21,7 +21,7 @@
         </div>
       </div>
     </div>
-    <div class="blockedOverlay overlayPanel clrP">
+    <div class="blockedOverlay overlayPanel coverFull clrP">
       <div class="flexCent">
         <div>
           <div class="flexCol flexHCent">
@@ -32,7 +32,7 @@
       </div>
     </div>
     <% if (ob.ownListing) { %>
-      <div class="editOverlay overlayPanel pad">
+      <div class="editOverlay overlayPanel">
         <div class="overlayPanelInner"></div>
         <div class="flex gutterHSm">
           <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
@@ -52,7 +52,7 @@
         </div>
       </div>
     <% } else { %>
-      <div class="additionalOverlay overlayPanel padSm">
+      <div class="additionalOverlay overlayPanel">
         <div class="flex gutterHSm">
           <div class="hideIfEmpty js-reportBtnWrapper"></div>
           <div class="js-blockBtnWrapper"></div>
@@ -65,13 +65,13 @@
   </div>
   <div class="pad clrBr borderTop infoArea">
     <% if (ob.vendor) { %>
-      <a class="userIconWrapper js-userIcon" href="#<%= `${ob.vendor.peerID}/store` %>">
+      <a class="userIconWrapper js-userLink" href="#<%= `${ob.vendor.peerID}/store` %>">
         <%
-          const dataTip = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : '';
+          const dataTipAttr = ob.vendor.name ? `data-tip="${ob.vendor.name}"` : '';
           const vendorAvatarImageSrc = ob.vendorAvatarImageSrc ?
             `url(${ob.vendorAvatarImageSrc}), ` : '';
         %>
-        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap js-vendorIcon" style="<%= `background-image: ${vendorAvatarImageSrc}url('../imgs/defaultAvatar.png')` %>" <%= dataTip %>>
+        <div class="userIcon disc clrBr2 clrSh1 toolTipNoWrap js-vendorIcon" style="<%= `background-image: ${vendorAvatarImageSrc}url('../imgs/defaultAvatar.png')` %>" <%= dataTipAttr %>>
         </div>
       </a>
       <div class="userIconWrapper nsfwAvatarOverlay">
@@ -88,12 +88,12 @@
     <div class="rowSm">
       <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
       <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
-        <a class="clrT clamp"><%= ob.title %></a>
+        <a class="clrT clamp listingTitle"><%= ob.title %></a>
       </div>
     </div>
     <div class="flex">
       <div class="flexExpand tx5b">
-        <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+        <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
       </div>
       <div class="txB">
         <%=
@@ -116,7 +116,7 @@
   </div>
   <div class="verifiedModWrapper js-verifiedMod"></div>
 </div>
-<% } else { %>
+<% } else if (ob.viewType === 'list') { %>
   <div class="listViewContent">
     <div class="flexVCent gutterHSm">
     <% // Since we have inconsistent padding/gutters, we'll inline some padding settings. %>
@@ -125,12 +125,13 @@
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
-        <div class="rowTn">
-          <a class="clrT clamp3"><%= ob.title %></a>
+        <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+        <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+          <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
         </div>
         <div class="flexVCent gutterHSm tx5b">
-          <div class=" flexNoShrink">
-            <% print(`${ob.formatRating(ob.averageRating, ob.ratingCount)}`) %>
+          <div class="flexNoShrink">
+            <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
           </div>
           <div class="verifiedModWrapper js-verifiedMod"></div>
         </div>
@@ -154,13 +155,70 @@
           %>
         </span>
       </div>
-      <div class="flexNoShrink">
-        <a class='btn clrP clrBr'><%= ob.polyT('listingCard.btnDetails') %></a>
-      </div>
     </div>
   </div>
+<%
+  } else {
+  // cryptoList
+%>
+  <div class="flexVCent gutterH">
+    <div class="titleCol">
+      <div class="flex gutterH">
+        <div class="verifiedModWrapper">
+          <div class="js-verifiedMod"></div>
+        </div>    
+        <div class="flexCol gutterVTn">
+          <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+          <div class="<%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+            <a class="clrT clamp listingTitle"><%= ob.title %></a>
+          </div>
+          <div class="clrT2 tx6"><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
+        </div>
+      </div>
+    </div>
+    <div class="vendorCol">
+      <div class="flex gutterH">
+        <div>
+          <a class="userIcon disc clrBr2 clrSh1 js-userLink" style="<%= ob.getAvatarBgImage(ob.vendor.avatarHashes) %>" href="<%= `#${ob.vendor.peerID}/store` %>"></a>
+        </div>
+        <div class="flexCol gutterVTn">
+          <div>
+            <a class="clrT clamp js-userLink" href="<%= `#${ob.vendor.peerID}/store` %>"><%= ob.vendor.name %></a>
+          </div>
+          <%
+            let averageStoreRating;
+            let totalStoreRatings;
 
-  <div class="blockedOverlay overlayPanel clrP">
+            if (ob.vendor && ob.vendor.stats) {
+              averageStoreRating = ob.vendor.stats.averageRating;
+              totalStoreRatings = ob.vendor.stats.ratingCount;
+            }
+          %>
+          <div class="clamp clrT2 tx6"><%= ob.formatRating(averageStoreRating, totalStoreRatings) %>&nbsp;&nbsp;<%= ob.vendor.location %></div>
+        </div>
+      </div>
+    </div>
+    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
+    <%
+      let inventory = '';
+      let inventoryTxClass = '';
+
+      if (ob.totalInventoryQuantity >= 0) {
+        inventory = ob.currencyMod.formatCurrency(ob.totalInventoryQuantity, ob.coinType);
+      }
+
+      if (inventory.length > 14) {
+        inventoryTxClass = 'tx6';
+      } else if (inventory.length > 10) {
+        inventoryTxClass = 'tx5b';
+      }
+    %>
+    <div class="inventoryCol flexExpand <%= inventoryTxClass %>"><%= inventory %></div>
+  </div>
+<% } %>
+
+<% if (['list', 'cryptoList'].includes(ob.viewType)) { %>
+  <div class="blockedOverlay overlayPanel coverFull clrP">
     <div class="flexCent">
       <div>
         <div class="flexCol flexHCent">
@@ -171,7 +229,7 @@
     </div>
   </div>
   <% if (ob.ownListing) { %>
-    <div class="editOverlay overlayPanel pad">
+    <div class="editOverlay overlayPanel clrP">
       <div class="overlayPanelInner"></div>
       <div class="flexHCent gutterHSm">
         <button class='iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-edit' data-tip="<%= ob.polyT('listingCard.editListingTooltip') %>"><span class="ion-edit"></span></button>
@@ -191,7 +249,7 @@
       </div>
     </div>
   <% } else { %>
-    <div class="additionalOverlay overlayPanel padSm">
+    <div class="additionalOverlay overlayPanel clrP">
       <div class="flex gutterHSm">
         <div class="hideIfEmpty js-reportBtnWrapper"></div>
         <div class="js-blockBtnWrapper"></div>
@@ -203,7 +261,8 @@
     </div>
   <% } %>
 <% } %>
-<div class="deleteOverlay overlayPanel">
+
+<div class="deleteOverlay coverFull overlayPanel">
   <div class="overlayPanelInner clrS"></div>
   <div class="deletingText clrT tx5"><%= ob.polyT('listingCard.deleting') %></div>
   <div class="deletedText clrT tx5">

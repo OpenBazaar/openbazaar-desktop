@@ -17,7 +17,7 @@ import serverConnect, {
 import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
-import { setFeedbackOptions, addFeedback } from './utils/feedback';
+import { addFeedback } from './utils/feedback';
 import { addMetrics, showMetricsModal } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';

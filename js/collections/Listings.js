@@ -1,5 +1,4 @@
 import app from '../app';
-import { integerToDecimal } from '../utils/currency';
 import { Collection } from 'backbone';
 import ListingShort from '../models/listing/ListingShort';
 
@@ -41,21 +40,5 @@ export default class extends Collection {
     // the listing is in and pass that into localeCompare().
     // https://github.com/OpenBazaar/openbazaar-go/issues/143
     return cats.sort();
-  }
-
-  parse(response) {
-    const parsedResponse = [];
-
-    response.forEach(listing => {
-      const updatedListing = listing;
-      const priceObj = updatedListing.price;
-
-      updatedListing.price.amount =
-        integerToDecimal(priceObj.amount, priceObj.currencyCode);
-
-      parsedResponse.push(updatedListing);
-    });
-
-    return parsedResponse;
   }
 }

@@ -179,7 +179,7 @@ const currencies = [
     code: 'CUP',
   },
   {
-    name: 'NeTherlands Antillean Guilder',
+    name: 'Netherlands Antillean Guilder',
     code: 'ANG',
   },
   {

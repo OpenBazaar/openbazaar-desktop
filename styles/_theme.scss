@@ -215,6 +215,7 @@ input[type=range][class~="clrS"] {
 
 .clrBAlert2Grad {
   background: $alert2Gradient;
+  background-color: $alert2Background;
 }
 
 ::-webkit-scrollbar-track {
@@ -361,6 +362,12 @@ input[type=range][class~="clrS"] {
   &:after {
     background-color: $primary;
     border-color: $border;
+  }
+}
+
+.arrowBoxTipWrap {
+  .arrowBox {
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);  
   }
 }
 

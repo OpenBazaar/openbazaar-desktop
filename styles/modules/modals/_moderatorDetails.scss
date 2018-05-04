@@ -22,27 +22,8 @@
       padding: $pad;
 
       .verifiedMod {
-        display: block;
-        bottom: 0;
-        font-weight: 700;
-        font-size: $tx5b;
-
-        & > .badge {
-          margin: 0 auto $padTn auto;
-        }
-
-        .tooltipWrapper {
-
-          .arrowBoxWrapper {
-            right: 0;
-            bottom: 0;
-            width: 11px;
-
-            .arrowBox {
-              top: 16px; // height of the i icon plus a little
-              left: 50%;
-            }
-          }
+        .textWrapper {
+          justify-content: center;
         }
       }
     }

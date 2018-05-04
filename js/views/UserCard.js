@@ -8,7 +8,7 @@ import Profile, { getCachedProfiles } from '../models/profile/Profile';
 import { isBlocked, events as blockEvents } from '../utils/block';
 import { launchModeratorDetailsModal } from '../utils/modalManager';
 import { openSimpleMessage } from './modals/SimpleMessage';
-import VerifiedMod from './components/VerifiedMod';
+import VerifiedMod, { getModeratorOptions } from './components/VerifiedMod';
 import BlockedBtn from './components/BlockBtn';
 
 export default class extends BaseVw {
@@ -255,11 +255,16 @@ export default class extends BaseVw {
       if (this.verifiedMod) this.verifiedMod.remove();
 
       const verifiedMod = app.verifiedMods.get(this.guid);
+      const createOptions = getModeratorOptions({
+        model: verifiedMod,
+      });
       if (verifiedMod) {
-        this.verifiedMod = new VerifiedMod({
-          model: verifiedMod,
-          arrowClass: 'arrowBoxRightTop',
-          data: app.verifiedMods.data,
+        this.verifiedMod = this.createChild(VerifiedMod, {
+          ...createOptions,
+          initialState: {
+            ...createOptions.initialState,
+            text: '',
+          },
         });
         this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
       }

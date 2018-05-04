@@ -44,6 +44,16 @@
       <input type="text" class="clrBr clrSh2" name="digitalDelivery.password" id="fulfillOrderPassword" value="<%= ob.digitalDelivery.password %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.passwordPlaceholder`) %>" />
     </div>
   </div>
+  <% } else if (ob.contractType === 'CRYPTOCURRENCY') { %>
+  <div class="flexRow gutterH">
+    <div class="col3">
+      <label for="fulfillOrderTransactionId" class="required"><%= ob.polyT(`orderDetail.fulfillOrderTab.transactionIdLabel`) %></label>
+    </div>
+    <div class="col7">
+      <% if (ob.errors['cryptocurrencyDelivery.transactionID']) print(ob.formErrorTmpl({ errors: ob.errors['cryptocurrencyDelivery.transactionID'] })) %>
+      <input type="text" class="clrBr clrSh2" name="cryptocurrencyDelivery.transactionID" id="fulfillOrderTransactionId" value="<%= ob.cryptocurrencyDelivery.transactionID %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.transactionIdPlaceholder`) %>" />
+    </div>
+  </div>  
   <% } %>
   <div class="flexRow gutterH rowHg">
     <div class="col3">
