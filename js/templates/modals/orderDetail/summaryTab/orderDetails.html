@@ -116,7 +116,7 @@
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
                 <%
-                  let quantity = typeof item.quantity === 'number' ?
+                  let quantity = item.quantity !== 0 ?
                     item.quantity : item.quantity64;
 
                   if (isCrypto) {
