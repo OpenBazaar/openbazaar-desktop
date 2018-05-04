@@ -83,7 +83,10 @@ export default class extends baseVw {
   }
 
   onClickRetry() {
-    this.inventoryFetch = getInventory(this.options.peerId, { slug: this.options.slug });
+    this.inventoryFetch = getInventory(this.options.peerId, {
+      slug: this.options.slug,
+      coinDivisibility: this.getState().coinDivisibility,
+    });
   }
 
   remove() {

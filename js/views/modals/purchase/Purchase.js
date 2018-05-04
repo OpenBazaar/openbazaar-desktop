@@ -82,8 +82,8 @@ export default class extends BaseModal {
       {
         isCrypto: this.listing.isCrypto,
         inventory: () =>
-          (typeof this._inventory === 'number' ?
-            this._inventory : 99999999999999999),
+          (typeof this.inventory === 'number' ?
+            this.inventory : 99999999999999999),
       }
     );
     // add the item to the order.
@@ -147,9 +147,9 @@ export default class extends BaseModal {
     });
 
     // If the parent has the inventory, pass it in, otherwise we'll fetch it.
-    this._inventory = this.options.inventory;
+    this.inventory = this.options.inventory;
     if (this.listing.isCrypto &&
-      typeof this._inventory !== 'number') {
+      typeof this.inventory !== 'number') {
       this.inventoryFetch = getInventory(
         this.listing.get('vendorID').peerID,
         {
@@ -158,9 +158,9 @@ export default class extends BaseModal {
             this.listing.get('metadata')
               .get('coinDivisibility'),
         }
-      ).done(e => (this._inventory = e.inventory));
+      ).done(e => (this.inventory = e.inventory));
       this.listenTo(inventoryEvents, 'inventory-change',
-        e => (this._inventory = e.inventory));
+        e => (this.inventory = e.inventory));
     }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
@@ -200,6 +200,22 @@ export default class extends BaseModal {
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       ...super.events(),
     };
+  }
+
+  get inventory() {
+    return this._inventory;
+  }
+
+  set inventory(inventory) {
+    if (inventory !== this._inventory) {
+      this._inventory = inventory;
+
+      if (this.cryptoInventory) {
+        this.cryptoInventory.setState({
+          amount: inventory,
+        });
+      }
+    }
   }
 
   showDataChangedMessage() {
@@ -403,17 +419,13 @@ export default class extends BaseModal {
             if (jqXHR.responseJSON &&
               jqXHR.responseJSON.code === 'ERR_INSUFFICIENT_INVENTORY' &&
               typeof jqXHR.responseJSON.remainingInventory === 'number') {
-              const remainingInventory = jqXHR.responseJSON.remainingInventory;
+              this.inventory = jqXHR.responseJSON.remainingInventory /
+                this.listing.get('metadata')
+                  .get('coinDivisibility');
               errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
               errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody',
-                { smart_count: remainingInventory });
-              if (this.cryptoInventory) {
-                this._inventory = remainingInventory;
-                this.cryptoInventory.setState({
-                  amount: remainingInventory,
-                });
-                if (this.inventoryFetch) this.inventoryFetch.abort();
-              }
+                { smart_count: this.inventory });
+              if (this.inventoryFetch) this.inventoryFetch.abort();
             }
 
             openSimpleMessage(errTitle, errMsg);
@@ -582,7 +594,7 @@ export default class extends BaseModal {
           peerId: this.listing.get('vendorID').peerID,
           slug: this.listing.get('slug'),
           initialState: {
-            amount: this._inventory,
+            amount: this.inventory,
             contentClass: 'clrT2',
             coinDivisibility: this.listing.get('metadata')
               .get('coinDivisibility'),
