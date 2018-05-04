@@ -150,21 +150,21 @@ export default class extends baseVw {
     this.checkNotFetched();
   }
 
-  processMod(profile) {
-    // don't add profiles that are not moderators unless showInvalid is true. The ID list may have
+  processMod(data) {
+    // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
-    const validMod = profile.moderator && profile.moderatorInfo;
+    const validMod = data.moderator && data.moderatorInfo;
     // if the moderator has an invalid currency, remove them from the list
     const buyerCur = app.serverConfig.cryptoCurrency;
-    const modCurs = profile.moderatorInfo && profile.moderatorInfo.acceptedCurrencies || [];
+    const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
     const validCur = modCurs.includes(buyerCur);
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
-      this.moderatorsCol.add(new Moderator(profile, { parse: true }));
-      this.removeNotFetched(profile.peerID);
+      this.moderatorsCol.add(new Moderator(data, { parse: true }));
+      this.removeNotFetched(data.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
-      this.removeNotFetched(profile.peerID);
+      this.removeNotFetched(data.peerID);
     }
   }
 
@@ -218,11 +218,9 @@ export default class extends baseVw {
                   if (eventData.error) {
                     // errors don't have a message id, check to see if the peerID matches
                     if (IDs.includes(eventData.peerId)) {
-                      if (op.showInvalid) {
-                        this.moderatorsCol.add(new Moderator(eventData, { parse: true }));
-                      } else {
-                        this.removeNotFetched(eventData.peerId);
-                      }
+                      // provide the expected capitalization of peerID
+                      eventData.peerID = eventData.peerId;
+                      this.processMod(eventData);
                     }
                   } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
                     this.processMod(eventData.profile);
@@ -400,6 +398,7 @@ export default class extends baseVw {
         wrapperClasses: this.options.wrapperClasses,
         showVerifiedOnly: this.options.showVerifiedOnly,
         placeholder: !this.modCards.length,
+        purchase: this.options.purchase,
         ...this.getState(),
       }));
 

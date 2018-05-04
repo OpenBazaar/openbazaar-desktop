@@ -71,7 +71,9 @@ export default class extends BaseVw {
   rotateSelectState() {
     if (this.cardState === 'selected' && !this.options.radioStyle) {
       this.changeSelectState(this.notSelected);
-    } else {
+    } else if (this.model.isModerator) {
+      /* Only change to selected if this is a valid moderator. Moderators that have become invalid
+         may be displayed, and can be de-selected to remove them. */
       this.changeSelectState('selected');
     }
   }

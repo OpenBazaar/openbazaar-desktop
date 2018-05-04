@@ -1,7 +1,9 @@
 <%
-   // check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
+   // Check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
-   const isDisabled = (!ob.valid && !ob.controlsOnInvalid) || !loaded ? 'disabled' : '';
+   /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
+      The view should prevent the invalid card from being selected again, disabling it is redundant but important visually. */
+   const isDisabled = (!ob.valid && !ob.controlsOnInvalid ) || (!ob.valid && ob.controlsOnInvalid && ob.cardState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
@@ -21,53 +23,55 @@
       <a class="userIcon disc clrBr2 clrSh1" style="<%= ob.getAvatarBgImage(ob.avatarHashes) %>"></a>
     </div>
     <div class="moderatorCardMiddle">
-      <% if (loaded && ob.valid) { %>
+      <% if (loaded) { %>
         <div class="flex snipKids gutterHSm rowSm">
           <strong class="txt5"><%= ob.name %></strong>
           <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
         </div>
         <div class="row">
-          <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
-          <% if (ob.modLanguages && ob.modLanguages.length) { %>
-            <div class="txSm">
-              <% if (ob.modLanguages.length > 1) {
-                   print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
-                 } else { %>
-                <%= ob.modLanguages[0] %>
-              <% } %>
+          <% if (ob.valid) { %>
+            <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
+            <% if (ob.modLanguages && ob.modLanguages.length) { %>
+              <div class="txSm">
+                <% if (ob.modLanguages.length > 1) {
+                     print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
+                   } else { %>
+                  <%= ob.modLanguages[0] %>
+                <% } %>
+              </div>
+            <% } %>
+          </div>
+          <div class="flex snipKids gutterH tx5 detailsRow">
+            <div class="flexNoShrink TODO">
+              <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
             </div>
-          <% } %>
-        </div>
-        <div class="flex snipKids gutterH tx5 detailsRow">
-          <div class="flexNoShrink TODO">
-            <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+            <div class="flexNoShrink">
+              <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+              <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+            </div>
+            <div>
+              <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
+            </div>
+            <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
+            <% } else { %>
+              <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
+            <% } %>
           </div>
-          <div class="flexNoShrink">
-            <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-            <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
-          </div>
-          <div>
-            <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
-          </div>
-          <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
-        </div>
       <% } else { %>
         <div class="flexCol gutterVSm clrTErr">
-          <strong class="txt5"><%= ob.peerID %></strong>
-          <% if (ob.valid) { %>
+          <strong class="txt5 noOverflow"><%= ob.peerID %></strong>
           <span><%= ob.polyT('moderatorCard.failed') %></span>
-          <% } else { %>
-          <span><%= ob.polyT('moderatorCard.invalid') %></span>
-          <% } %>
         </div>
       <% } %>
     </div>
     <div class="flexNoShrink">
       <% if (ob.valid || ob.controlsOnInvalid) { %>
         <div class="flexCol gutterV">
-          <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
-            <%= ob.polyT('moderatorCard.view') %>
-          </button>
+          <% if (ob.valid) { %>
+            <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
+              <%= ob.polyT('moderatorCard.view') %>
+            </button>
+          <% } %>
           <% if (!ob.radioStyle) { %>
             <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
               <i class="ion-checkmark showIfSelected clrTEmph1"></i>

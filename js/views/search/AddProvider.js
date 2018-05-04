@@ -4,6 +4,7 @@ import BaseView from '../baseVw';
 import app from '../../app';
 import ProviderMd from '../../models/search/SearchProvider';
 import { openSimpleMessage } from '../modals/SimpleMessage';
+import { recordEvent } from '../../utils/metrics';
 
 
 export default class extends BaseView {
@@ -54,6 +55,7 @@ export default class extends BaseView {
       if (save) {
         // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {
+          recordEvent('Discover_AddProviderSaved', { error: 'none' });
           app.searchProviders.add(this.model);
           this.trigger('newProviderSaved', this.model);
         })
@@ -63,6 +65,7 @@ export default class extends BaseView {
           });
       }
     } else {
+      recordEvent('Discover_AddProviderSaved', { error: 'Invalid' });
       this.render();
     }
   }
@@ -80,6 +83,7 @@ export default class extends BaseView {
 
   onClickCancel() {
     this.remove();
+    recordEvent('Discover_AddProviderCancel');
   }
 
   remove() {

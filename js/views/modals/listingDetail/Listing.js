@@ -16,6 +16,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
+import { recordEvent } from '../../../utils/metrics';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -487,6 +488,7 @@ export default class extends BaseModal {
 
     this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
     this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
+    recordEvent('Purchase_Start');
   }
 
   get shipsFreeToMe() {

@@ -1,7 +1,8 @@
 import $ from 'jquery';
-import { estimateFee } from '../../../utils/fees';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import { estimateFee } from '../../../utils/fees';
+import { recordEvent } from '../../../utils/metrics';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -48,11 +49,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
+    recordEvent('Purchase_ConfirmBoxSend');
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
+    recordEvent('Purchase_ConfirmBoxCancel');
   }
 
   onClickRetry(e) {
@@ -61,6 +64,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
+    recordEvent('Purchase_ConfirmBoxRetry');
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -95,14 +99,19 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
+          recordEvent('Purchase_ConfirmBoxInsufficientFunds');
         }
 
         this.setState(state);
       }).fail(xhr => {
+        const fetchError = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
         this.setState({
           fetchingFee: false,
           fetchFailed: true,
-          fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+          fetchError,
+        });
+        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', {
+          errror: fetchError || 'unknown error',
         });
       });
   }

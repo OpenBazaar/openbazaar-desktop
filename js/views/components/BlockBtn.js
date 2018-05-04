@@ -2,6 +2,7 @@ import app from '../../app';
 import * as block from '../../utils/block';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -62,8 +63,10 @@ export default class extends baseVw {
 
     if (this.getState().isBlocked) {
       block.unblock(this.targetId);
+      recordEvent('UnBlockUser');
     } else {
       block.block(this.targetId);
+      recordEvent('BlockUser');
     }
   }
 

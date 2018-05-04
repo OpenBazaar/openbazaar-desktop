@@ -24,7 +24,7 @@
 
 @mixin disabled {
   pointer-events: none;
-  // Bumbing this up until we have a more context specific
+  // Bumping this up until we have a more context specific
   // disable style. 0.2 is too low for most things.
   opacity: 0.4;
 }

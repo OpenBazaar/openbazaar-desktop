@@ -26,6 +26,7 @@ import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
 import QuantityDisplay from '../../components/QuantityDisplay';
+import { startEvent, endEvent } from '../../../utils/metrics';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -370,6 +371,8 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
+    startEvent('Purchase');
+
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
         this.setState({ phase: 'pay' });
@@ -377,6 +380,9 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
+        endEvent('Purchase', {
+          errors: 'own listing',
+        });
       } else {
         const coinDivisibility = this.listing.get('metadata')
           .get('coinDivisibility');
@@ -409,6 +415,9 @@ export default class extends BaseModal {
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
+            endEvent('Purchase', {
+              errors: 'none',
+            });
           })
           .fail(jqXHR => {
             this.setState({ phase: 'pay' });
@@ -434,16 +443,24 @@ export default class extends BaseModal {
             }
 
             openSimpleMessage(errTitle, errMsg);
+            endEvent('Purchase', {
+              errors: errMsg || 'unknown error',
+            });
           });
       }
     } else {
       this.setState({ phase: 'pay' });
+      const purchaseErrs = [];
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
+        purchaseErrs.push(domKey);
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
+      });
+      endEvent('Purchase', {
+        errors: `Client errors ${purchaseErrs.join()}`,
       });
     }
   }

@@ -194,6 +194,11 @@
   flex-shrink: 0;
 }
 
+.flexItemLeft {
+  //use on a flex child to set it to align left if the parent doesn't
+  align-self: center;
+}
+
 .flexItemCenter {
   //use on a flex child to set contents to vertically center if the parent doesn't
   align-self: center;

@@ -8,6 +8,7 @@ import UserCard from '../UserCard';
 import PageControls from '../components/PageControls';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -138,11 +139,13 @@ export default class extends baseVw {
   clickPagePrev() {
     this.serverPage--;
     this.loadPage(this.serverPage);
+    recordEvent('Discover_PrevPage');
   }
 
   clickPageNext() {
     this.serverPage++;
     this.loadPage(this.serverPage);
+    recordEvent('Discover_NextPage');
   }
 
   removeCardViews() {
