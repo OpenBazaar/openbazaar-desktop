@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Prøv igen",
       "btnManageConnections": "Håndtér forbindelser",
+      "btnContinue": "Continue",
       "retryConfig": {
         "title": "Kunne ikke indlæse din serveropsætning."
       },
@@ -156,7 +157,14 @@
         "title": "Kunne ikke indlæse tegnebogssaldo."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Unable to load search providers.",
+        "btnClose": "Continue Without Search Providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Unable to load verified moderators.",
+        "btnRetry": "Prøv igen",
+        "btnClose": "Continue",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
       "orderComplete": "%{buyerName} has left feedback on their order.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} has opened a dispute with you.",
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
@@ -345,11 +354,31 @@
     "tipModRemove": "Fjern som moderator",
     "blockedUserOverlayText": "You blocked this user"
   },
+  "verifiedMod": {
+    "verified": {
+      "label": "Verified",
+      "title": "Verified Moderator",
+      "body": "This moderator is verified by %{providerName}. %{link}",
+      "bodyOrder": "This moderator is verified by %{providerName}. %{link}"
+    },
+    "unverified": {
+      "label": "Unverified",
+      "title": "Unverified Moderator",
+      "not": "NOT",
+      "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
+      "bodyOrder": "This moderator is %{not} verified by %{providerName}."
+    },
+
+    "link": "Learn More",
+    "type": "Type: ",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+  },
   "moderatorCard": {
     "view": "Vis",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "Information om denne moderator kunne ikke indlæses.",
     "invalid": "Denne bruger er ikke moderator på nuværende tidspunkt.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -460,8 +489,9 @@
       "statusSaveComplete": "Generelle indstillinger er gemt.",
       "statusSaveFailed": "Kan ikke gemme generelle indstillinger.",
       "saveErrorAlertTitle": "Kan ikke gemme generelle indstillinger",
-      "searchProvider": "Søgeudbyder",
-      "restoreDefaultProvider": "Genopret standarder"
+      "verifiedMods": "Verified Moderators",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Genopret standarder"
     },
     "pageTab": {
       "helperAbout": "Vises på din hjemmeside",
@@ -657,9 +687,10 @@
       "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
       "moderatorByIDPlaceholder": "Enter a @handle or ID",
       "moderatoryByIDSubmit": "Find",
-      "availableModerators": "Available Moderators on the Network",
+      "availableModerators": "Available Moderators",
       "browseModerators": "Browse Moderators",
-      "browseMoreModerators": "Load More Moderators",
+      "verifiedOnly": "Verified moderators only",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
@@ -669,14 +700,13 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
-        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
-        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
-        "modAlreadyAdded": "You have already added that moderator.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
+        "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "You must add a moderator ID or handle",
-        "modIsInvalid": "%{guid} is not a valid moderator.",
-        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
-        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
+        "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
+        "dupeGUID": "%{guid} is one of your current moderators."
       }
     },
     "blockedTab": {
@@ -1275,11 +1305,9 @@
     "closeNote": "Din betaling er blevet sendt til sælgeren.",
     "moderatorNote": "* Moderatorens servicegebyr opkræves kun, hvis en uenighed åbnes.",
     "quantity": "Antal",
-    "useShapeShift": "Eller brug ShapeShift i det næste trin",
-    "moderatedPayment": "Modereret betaling",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
-    "noValidModerators": "Ingen gyldige moderatorer er tilgængelige for denne ordre.",
-    "moderationDisclaimer": "Din betaling vil blive holdt tilbage i en betinget krontrakt (escrow) på sikker vis. Hvis der opstår uenigheder, har du muligheden for sammen med en moderator at åbne en uenighed. * Moderatorens servicegebyr opkræves kun, hvis en uenighed åbnes.",
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Direkte betaling",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust, you will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Vælg denne moderator",
     "confirmPayment": {
       "title": "Ser alt fint ud?",
@@ -1346,12 +1374,19 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "Betalingen kunne ikke gennemføres",
-      "zeroPrice": "Du kan ikke købe en listning med en totalpris på nul.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "Du kan ikke købe en listning med en totalpris på nul."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Indlæser %{remaining} ud af %{total} moderatorer."
+    "moderatorsLoading": "Loading moderators…",
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Load More"
+
   },
   "transactions": {
     "sales": {
@@ -1388,10 +1423,11 @@
       "ready": "Klar til bearbejdning",
       "fulfilled": "Udført",
       "refunded": "Refunderet",
+      "disputes": "Disputes",
       "disputeOpen": "Uenighed åben",
-      "disputePending": "Uenighed afventer",
       "disputeClosed": "Uenighed lukket",
-      "completed": "Afsluttet"
+      "completed": "Afsluttet",
+      "error": "Errors"
     },
     "sort": {
       "label": "Sortér efter",
@@ -1427,7 +1463,8 @@
         "DISPUTED": "Uenighed er i gang",
         "DECIDED": "Afgjort",
         "RESOLVED": "Løst",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalized",
+        "PROCESSING_ERROR": "Error"
       },
       "btnReject": "Afvis",
       "btnAccept": "Acceptér",
@@ -1458,13 +1495,23 @@
     },
     "contractTab": {
       "heading": "Kontrakt (JSON)",
-      "buyerContractNotAvailable": "Køberens kontrakt er ikke tilgængelig i øjeblikket, indtil han/hun kommer online igen.",
-      "vendorContractNotAvailable": "Sælgerens kontrakt er ikke tilgængelig i øjeblikket, indtil han/hun kommer online igen.",
-      "buyerVendorContractVerified": "Både køberens og sælgerens kontrakter er verificeret som værende autentiske.",
-      "buyerContractNotAuthentic": "Køberens kontrakt indeholder valideringsfejl. Den er sandsynligvis blevet forfalsket.",
-      "vendorContractNotAuthentic": "Sælgerens kontrakt indeholder valideringsfejl. Den er sandsynligvis blevet forfalsket.",
       "buyerContractHeading": "Købers kontrakt:",
-      "vendorContractHeading": "Sælgers kontrakt:"
+      "vendorContractHeading": "Sælgers kontrakt:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Både køberens og sælgerens kontrakter er verificeret som værende autentiske.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Ordrenr.: %{orderId}",
@@ -1599,6 +1646,18 @@
         "addressNotes": "Delivery Notes",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "Varenr."
+      },
+      "processingError": {
+        "cancelLink": "annullér",
+        "disputeLink": "open a dispute",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "There was an error processing the order.",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1621,6 +1680,11 @@
       "heading": "Løs uenighed",
       "buyerAmountLabel": "Købers andel",
       "vendorAmountLabel": "Sælgers andel",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Kommentar",
       "commentPlaceholder": "Forklar dit valg…",
       "btnCancel": "Annullér",
@@ -1835,12 +1899,14 @@
     "service": "Serviceydelse"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",
     "percentageOutOfRange": "The amount must be between 0 and 100.",
     "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
