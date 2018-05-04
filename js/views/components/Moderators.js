@@ -220,6 +220,7 @@ export default class extends baseVw {
                     if (IDs.includes(eventData.peerId)) {
                       // provide the expected capitalization of peerID
                       eventData.peerID = eventData.peerId;
+                      delete eventData.peerId;
                       this.processMod(eventData);
                     }
                   } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
