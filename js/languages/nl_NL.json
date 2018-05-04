@@ -1,14 +1,14 @@
 {
   "publish": {
-    "failedRetryTitle": "Er trad een probleem op, er wordt opnieuw geprobeerd te publiceren.",
+    "failedRetryTitle": "Er is een probleem opgetreden, er wordt opnieuw geprobeerd te publiceren.",
     "statusPublishing": "Updates worden naar het netwerk gepubliceerd",
     "retryLink": "Probeer opnieuw",
     "statusPublishFailed": "Publiceren mislukt %{retryLink}",
     "statusPublishComplete": "Publiceren afgerond"
   },
   "localServerShutdownDialog": {
-    "title": "Shutting down the built-in server",
-    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
+    "title": "Ingebouwde server wordt afgesloten",
+    "body": "De ingebouwde server wordt afgesloten. Dit kan tot enkele minuten duren. Gedurende het afsluiten worden belangrijke opschoningsacties uitgevoerd. Het is belangrijk om dit proces niet te onderbreken. Als het proces klaar is, wordt het programma afgesloten. "
   },
   "follow": {
     "typeFollow": "volgen",
@@ -23,68 +23,68 @@
     "ECONOMIC": "Economisch"
   },
   "feeChangeWidget": {
-    "btnChange": "change",
-    "label": "%{cur} fee:"
+    "btnChange": "veranderen",
+    "label": "%{cur} vergoeding:"
   },
   "blockButton": {
-    "tipBlock": "Block this user",
-    "tipUnblock": "Unblock this user",
+    "tipBlock": "Blokkeer deze gebruiker",
+    "tipUnblock": "Deblokkeer deze gebruiker",
     "btnTxtBlock": "Blokkeer",
     "btnTxtUnblock": "Deblokker"
   },
   "blockedWarning": {
-    "heading": "You blocked this user",
-    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
-    "paragraph2": "Would you like to unblock and view their page?",
+    "heading": "Je hebt deze gebruiker geblokkeerd.",
+    "paragraph1": "Deze gebruiker staat op dit moment in de lijst van geblokkeerde gebruikers. Je kunt hun pagina's of artikelen niet zien wanneer ze geblokkeerd zijn. Geblokkeerde gebruikers kunnen ook geen berichten aan jou sturen of orders plaatsen in jouw winkel.",
+    "paragraph2": "Wil je deblokkeren en hun pagina bekijken? ",
     "btnCancel": "Annuleer",
-    "btnUnblock": "Yes, unblock"
+    "btnUnblock": "Ja, deblokkeer"
   },
   "nsfwWarning": {
-    "heading": "Mature content",
-    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "heading": "Inhoud voor volwassenen",
+    "paragraph1": "Deze listing is aangemerkt als inhoud voor volwassenen. Het kan aanstootgevend zijn. Klik op Cancel om naar het vorige scherm te gaan, als je de pagina niet wilt bekijken.",
     "paragraph2": "Weet je zeker dat je door wilt gaan?",
-    "nsfwOffLabel": "Always display mature content",
+    "nsfwOffLabel": "Laat inhoud voor volwassenen altijd zien.",
     "btnCancel": "Annuleer",
     "btnProceed": "Ja, ga door"
   },
   "walletSetup": {
-    "heading": "OpenBazaar Wallet Setup",
+    "heading": "OpenBazaar Wallet instellingen",
     "currencyLabel": "Valuta",
-    "currencyHelper": "Choose a currency for your Wallet",
-    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
-    "curInUseTip": "You already have a built-in server with this wallet currency.",
-    "zcashBinaryLabel": "Zcash Binary",
-    "fullNodeLink": "here",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
+    "currencyHelper": "Kies een currency voor je Wallet",
+    "currencyHelper2": "Accepteer en verzend betalingen in de hierboven geselecteerde currency. Kies bewust, aangezien het op dit moment niet mogelijk is om je currency te veranderen nadat een keuze gemaakt is.",
+    "curInUseTip": "Je hebt aleen ingebouwde server voor deze wallet currency.",
+    "zcashBinaryLabel": "Zcash binary",
+    "fullNodeLink": "hier",
+    "zcashBinaryHelper": "Een Zcash full node is noodzakelijk. Download een Zcash full node %{fullNodeLink}. Eenmaal geinstalleerd, voer het pad van je zcashd binary hierboven in",
     "btnBrowse": "Browse",
     "btnNext": "Volgende"
   },
   "unsupportedCryptoCurDialog": {
-    "title": "Unsupported Currency",
-    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
-    "connectLink": "connect"
+    "title": "Niet ondersteunde currency",
+    "body": "Niet mogelijk om door te gaan omdat de server een cryptocurrency (%{curCode}) gebruikt, welke niet door de client wordt ondersteund. Aub %{connectLink} naar een andere server",
+    "connectLink": "verbind"
   },
   "setValidCurDialog": {
-    "title": "Invalid Local Currency",
-    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
-    "settingsLink": "settings"
+    "title": "Ongeldige Local Currency",
+    "body": "Uw lokale valuta is op dit moment ingesteld op %{currency}, welke niet ondersteund wordt door deze client. Selecteer aub een andere valuta in %{settingsLink}.",
+    "settingsLink": "instellingen"
   },
   "consoleWarning": {
     "heading": "Stop!",
-    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
-    "line2": "Please close this window now."
+    "line1": "Dit is een terminal voor ontwikkelaars. Als iemand u vraagt dit scherm  te openen, zijn ze waarschijnlijk bezig u op te lichten en uw account en/of geldmiddelen (coins) te compromitteren. ",
+    "line2": "Sluit aub dit scherm."
   },
   "block": {
     "errorModal": {
-      "titleUnableToBlock": "Unable to block",
-      "titleUnableToUnblock": "Unable to unblock",
-      "titleUnableToBlockUnblock": "Unable to block / unblock",
-      "blockFailedListHeading": "Unable to block the following users:",
-      "unblockFailedListHeading": "Unable to unblock the following users:",
-      "reason": "Reason: %{reason}"
+      "titleUnableToBlock": "Blokkeren niet mogelijk",
+      "titleUnableToUnblock": "Blokkeren niet mogelijk",
+      "titleUnableToBlockUnblock": "Blokkeren/deblokkeren niet mogelijk",
+      "blockFailedListHeading": "Niet mogelijk om de volgende gebruikers te blokkeren:",
+      "unblockFailedListHeading": "Niet mogelijk om de volgende gebruikers te deblokkeren:",
+      "reason": "Reden: %{reason}"
     }
   },
-  "resyncBlockchainError": "There was an error reloading transactions.",
+  "resyncBlockchainError": "Fout opgetreden bij herladen van transacties.",
   "restartNow": "Nu Herstarten",
   "restartLater": "Later Herstarten",
   "langChangeRestartTitle": "Opnieuw starten is nodig voor een taal verandering",
@@ -102,7 +102,7 @@
     "install": "Nu installeren"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Het is niet mogelijk om prijs informatie te leveren omdat de prijs in een onbekende valuta is. "
   },
   "addressBarPlaceholder": "Type een @handle, OpenBazaar ID of zoek term",
   "testnet": "Test Modus",
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Probeer opnieuw",
       "btnManageConnections": "Beheer Verbindingen",
+      "btnContinue": "Verder",
       "retryConfig": {
         "title": "Kan uw server config niet verkrijgen"
       },
@@ -156,13 +157,20 @@
         "title": "Kan wallet saldo niet bepalen."
       },
       "unableToGetSearchProviders": {
-        "title": "Kan zoekmachines niet laden"
+        "title": "Kan zoekmachines niet laden",
+        "btnClose": "Verder zonder search providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Geverifieerde moderators kunnen niet geladen worden",
+        "btnRetry": "Probeer opnieuw",
+        "btnClose": "Verder",
+        "msg": "Klik Opnieuw om nogmaals te proberen, of Verder om het laden van geverifieerde moderators over te slaan. Reden van fout: %{reason}"
       }
     },
     "connectMessaging": {
       "cancelLink": "annuleren",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
+      "connectAttemptMsg": "Verbinden met %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initialiseren van de zcash binary. Dit kan enkele minuten duren. %{cancelLink}"
     }
   },
   "notifications": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} heeft uw order terugbetaald.",
       "fulfillment": "%{vendorName} heeft uw order afgerond.",
       "orderComplete": "%{buyerName} heeft feedback gegeven op hun bestelling.",
+      "processingError": "%{vendorName} kon uw order niet  verwerken vanwege een fout.",
       "disputeOpen": "%{disputerName} heeft een geschil met u geopend. ",
       "disputeOpenMod": "%{disputerName} heeft een geschil geopend met %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} heeft zijn contract gedeeld voor het geschil met %{disputerName}.",
@@ -199,7 +208,7 @@
     "discoverCalloutBody": "Browse en winkel bij honderden winkels op OpenBazaar",
     "myPage": "Mijn Pagina",
     "customizePage": "Pas Pagina Aan",
-    "createListing": "Creeer verkoopartikel",
+    "createListing": "Creeer artikel",
     "purchases": "Aankopen",
     "sales": "Verkopen",
     "cases": "Voorvallen",
@@ -214,7 +223,7 @@
       "notifications": "Notificaties",
       "nav": "Navigatie",
       "close": "Sluit",
-      "currentPrice": "Current %{cur} price"
+      "currentPrice": "Huidige %{cur} prijs"
     },
     "serversMenu": {
       "newServer": "Nieuwe Server",
@@ -238,14 +247,14 @@
       "typingIndicator": "%{user} is aan het typen...",
       "deleteConvoErrorTitle": "Kan gesprek niet verwijderen",
       "deletingOverlayText": "Gesprek verwijderen...",
-      "blockingOverlayText": "Blocking…"
+      "blockingOverlayText": "Blokkeren..."
     }
   },
   "userPage": {
     "followsYou": "Volgt U",
     "message": "Bericht",
     "customize": "Pas Aan",
-    "createListing": "Creeer verkoopartikel",
+    "createListing": "Creeer artikel",
     "block": "Blokkeer",
     "about": "Over",
     "aboutEmpty": "Over is leeg...",
@@ -268,7 +277,7 @@
       "store": "Winkel",
       "following": "Volgend",
       "followers": "Volgers",
-      "reputation": "Reputation"
+      "reputation": "Reputatie"
     },
     "followTab": {
       "noFollowers": "Niemand volgt %{name} nog",
@@ -283,22 +292,22 @@
     "modAddError": "Er was een fout bij het toevoegen van deze moderator %{errMsg}",
     "modRemoveError": "Er was een fout bij het verwijderen van deze moderator %{errMsg}",
     "storeWelcomeCalloutTitle": "Welkom in jouw winkel!",
-    "storeWelcomeCalloutBody": "Jouw OpenBazaar winkel is nu live op het netwerk. Begin met het aanmaken van een verkoopartikel.",
+    "storeWelcomeCalloutBody": "Jouw OpenBazaar winkel is nu live op het netwerk. Begin met het aanmaken van een artikel.",
     "storeWelcomeCalloutBtnClose": "Sluit",
     "store": {
       "retryStoreFetch": "Probeer opnieuw",
-      "unableToFetchListings": "Kan jouw verkoopartikelen niet ophalen",
-      "noListings": "Deze winkel heeft geen verkoopartikelen",
-      "noListingsFound": "Geen verkoopartikelen gevonden met jouw zoekcriteria",
+      "unableToFetchListings": "Kan jouw artikelen niet ophalen",
+      "noListings": "Deze winkel heeft geen artikelen",
+      "noListingsFound": "Geen artikelen gevonden met jouw zoekcriteria",
       "btnClearSearch": "Zoekcriteria wissen",
       "shipsToFilterAny": "(Alle landen)",
       "sortBy": "Sorteer op",
-      "countListings": "%{smart_count} verkoopartikel |||| %{smart_count} verkoopartikel",
+      "countListings": "%{smart_count} artikel |||| %{smart_count} artikel",
       "countListingsFound": "%{countListings} gevonden",
       "inactive": "Jouw winkel is nu inactief en verborgen voor het publiek. %{link}",
       "inactiveLink": "Verander",
-      "listingDataChangedPopin": "Listing data has changed.",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
+      "listingDataChangedPopin": "Artikel informatie is veranderd.",
+      "shippingDataChangedPopin": "Uw land en/of verzendadresgegevens zijn veranderd. Dit kan invloed hebben op welke artikelen gratis naar u verzonden kunnen worden.",
       "freeShippingBanner": "Gratis Verzending",
       "sortOpts": {
         "priceAsc": "Laagste prijs te hoog",
@@ -326,12 +335,12 @@
       "following": "Volgend",
       "followers": "Volgers"
     },
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Je hebt deze gebruiker geblokkeerd."
   },
   "reputation": {
-    "averageRating": "overall rating",
-    "totalReviews": "review |||| reviews",
-    "noTitle": "Listing title not found"
+    "averageRating": "totale rating",
+    "totalReviews": "beoordeling |||| beoordelingen",
+    "noTitle": "Titel van artikel niet gevonden"
 
   },
   "userShort": {
@@ -343,16 +352,36 @@
     "tipUnfollow": "Stop met volgen",
     "tipModAdd": "Toevoegen als moderator",
     "tipModRemove": "Verwijderen als moderator",
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Je hebt deze gebruiker geblokkeerd."
+  },
+  "verifiedMod": {
+    "verified": {
+      "label": "Geverifieerd",
+      "title": "Geverifieerde moderator",
+      "body": "Deze moderator is geverifieerd door %{providerName}. %{link}",
+      "bodyOrder": "Deze moderator is geverifieerd door %{providerName}. %{link}"
+    },
+    "unverified": {
+      "label": "Ongeverifieerd",
+      "title": "Ongeverifieerde moderator",
+      "not": "NIET",
+      "body": "Deze moderator is %{not} geverifieerd door %{providerName}. Ben op uw hoede als u door gaat met deze moderator of kies een geverifieerde moderator.",
+      "bodyOrder": "Deze moderator is %{not} geverifieerd door %{providerName}."
+    },
+
+    "link": "Meer informatie",
+    "type": "Type:",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "U kunt dit  artikel kopen met een moderator die geverifieerd is door  %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "Bekijk",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "De informatie over deze moderator kon niet geladen worden.",
     "invalid": "Deze gebruiker is op dit moment geen moderator.",
-    "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
+    "languages": "%{lang}, en %{smart_count} andere taal. |||| %{lang}, en %{smart_count} andere talen."
   },
   "moderatorDetails": {
     "messageButton": "Bericht",
@@ -368,8 +397,8 @@
     "addAsModeratorButton": "Voeg toe als Moderator",
     "disclaimer": "**De moderator servicekosten zijn alleen van toepassing in het geval van een geschil.",
     "languages": "Talen",
-    "currenciesSupported": "Currencies Supported",
-    "noCoinSupport": "This moderator does not support %{coin}."
+    "currenciesSupported": "Ondersteunde currencies",
+    "noCoinSupport": "Deze moderator heeft geen ondersteuning voor %{coin}."
   },
   "about": {
     "linkText": "Over OpenBazaar",
@@ -382,15 +411,15 @@
     "client": "Client",
     "server": "Server",
     "btnUpdateCheck": "Controleer op update",
-    "downloadLatest": "Download Latest",
+    "downloadLatest": "Download Laatste",
     "donationsTab": {
       "linkText": "Donaties",
       "sectionHeader": "Donaties ",
       "btnCopyAddress": "Kopieer adres",
       "btnOpenInWallet" : "Open in Wallet",
       "bannerCountDonations": "%{donationCountFloor}+ Donaties ontvangen!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
+      "bitcoinIntroLine": "Bitcoin donaties kunnen verzonden worden naar het volgende adres:",
+      "bchWarning": "Stuur geen Bitcoin Cash naar dit adres.",
       "unableToOpenInWallet": {
         "title": "Kan niet openen in wallet",
         "body": "Kan het adres niet openen in de wallet omdat een betaling wordt verzonden. Wacht tot verzending afgerond is en probeer opnieuw."
@@ -432,15 +461,15 @@
     "helpTab": {
       "linkText": "Help",
       "sectionHeader": "Help",
-      "supportLink": "Support page on OpenBazaar.org",
-      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
+      "supportLink": "Support pagina op OpenBazaar.org",
+      "text": "Hulp nodig met de OpenBazaar software? Bezoek aub de %{supportLink}. Er zijn veel support handleidingen en FAQs die u kunnen helpen om uw problemen op te lossen."
     }
   },
   "settings": {
     "settingsLabel": "Instellingen",
     "unrecognizedModelErrsWarning": {
       "title": "Kan je instellingen niet opslaan",
-      "body": "We are unable to save the settings for this tab because there are unrecognized errors. They are probably coming from invalid values in another tab. Please save out the other tabs in order to identify the field with an error. The error will be displayed above the field. After fixing the error, make sure to click Save on the tab the error was in. Afterwards, you may return to this tab to complete the save of this tab."
+      "body": "We kunnen de instellingen voor dit tabblad niet opslaan omdat er onbekende fouten zijn opgetreden. Waarschijnlijk wordt dit veroorzaakt door ongeldige waarden in een andere tabblad. Sla aub de andere tabbladen op om het veld met de ongeldige waarden en de foutmelding te identificeren. De error zal weergegeven worden boven het veld. Let op dat je na het aanpassen van de gegevens op Opslaan klikt op het tabblad waar de foutmelding verscheen. Hierna kun je terugkeren naar dit tabblad om dit tabblad op te slaan. "
     },
     "generalTab": {
       "helperLanguage": "Toon interface elementen in",
@@ -460,8 +489,9 @@
       "statusSaveComplete": "Algemene instellingen opgeslagen.",
       "statusSaveFailed": "Kan algemene instellingen niet opslaan.",
       "saveErrorAlertTitle": "Kan algemene instellingen niet opslaan.",
-      "searchProvider": "Search Provider",
-      "restoreDefaultProvider": "Herstel standaardinstelling"
+      "verifiedMods": "Geverifieerde moderators",
+      "verifiedModsHelper": "Verlaag uw risico door gebruik te maken van een lijst met geverifieerde moderators. Moderators met geverifieerde identiteiten, en artikelen die geverifieerde moderators beschikbaar hebben, zullen met een badge gemarkeerd worden.",
+      "restoreDefault": "Herstel standaardinstelling"
     },
     "pageTab": {
       "helperAbout": "Wordt getoond op jouw Home page",
@@ -562,7 +592,7 @@
         "reloadTransactionsWidget": {
           "resyncBtn": "Herlaad transacties ",
           "resyncComplete": "Je transacties starten opnieuw met synchroniseren. Dit kan vijf tot tien minuten duren.",
-          "syncUnavailable": "You can only reload transactions once per hour."
+          "syncUnavailable": "U kunt maar een keer per uur transacties herladen."
         },
         "purge": "Gedeelte bestanden opschonen",
         "purgeHelper": "Verwijder gecachte bestanden die je deelt met anderen",
@@ -584,16 +614,16 @@
           "introLine": "Jouw wallet seed is:",
           "directionLine": "Schrijf de volgende woorden op papier en bewaar deze op een veilige plaats. Ze moeten exact in de juiste volgorde staan.",
           "warningHeading": "Waarschuwing:",
-          "warning1": "Deel je seed nooit. Iedereen die deze seed weet kan je fondsen (coins) stelen. ",
+          "warning1": "Deel je seed nooit. Iedereen die deze seed weet kan je geldmiddelen (coins) stelen. ",
           "warning2": "Type dit nooit op een website in",
           "warning3": "Sla dit niet digitaal op",
-          "warning4": "Verlies je seed niet, anders zullen je funds (coins) voorgoed verloren zijn wanneer je data verwijderd is."
+          "warning4": "Verlies je seed niet, anders zullen je geldmiddelen (coins) voorgoed verloren zijn wanneer je data verwijderd is."
         }
       },
       "transaction": {
         "sectionName": "Transactions",
         "saveMetadata": "Metadata opslaan",
-        "defaultFee": "%{cur} Fee",
+        "defaultFee": "%{cur} Vergoeding",
         "low": "Economisch",
         "medium": "Normaal",
         "high": "Prioriteit"
@@ -613,7 +643,7 @@
     "moderationTab": {
       "sectionName": "Moderation",
       "disputeResolution": "Dispuutoplossing",
-      "disputeResolutionText": "Verkopers hebben de mogelijkheid om een Moderator te selecteren voor hun winkel. In het geval van een geschil tussen verkopers en klant, wordt je gevraagd om de details van de bestelling te beoordelen en te bepalen hoe het bedrag van de bestelling moet  worden verdeeld.",
+      "disputeResolutionText": "Verkopers hebben de mogelijkheid om een Moderator te selecteren voor hun winkel. In het geval van een geschil tussen verkopers en klant, wordt je gevraagd om de details van de bestelling te beoordelen en te bepalen hoe het bedrag (coins) van de bestelling moet  worden verdeeld.",
       "moderationStatus": "Geschillen modereren.",
       "pricePerDispute": "Prijs per dispuut",
       "pricePerDisputeOptions": {
@@ -657,9 +687,10 @@
       "selectedModeratorsEmptyWarning": "Alleen directe betaling is beschikbaar in jouw winkel",
       "moderatorByIDPlaceholder": "Voer een @handle of ID in",
       "moderatoryByIDSubmit": "Zoek",
-      "availableModerators": "Beschikbare moderators op het netwerk",
+      "availableModerators": "Beschikbare moderatoren",
       "browseModerators": "Zoek moderators",
-      "browseMoreModerators": "Laad meer moderators",
+      "verifiedOnly": "Alleen geverifieerde moderators",
+      "disclaimer": "* De moderator service heffing is alleen van toepassing wanneer er een dispuut is op een order.",
       "loading": "Laden",
       "status": {
         "saving": "Winkel instellingen worden opgeslagen",
@@ -669,20 +700,19 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderator niet gevonden",
-        "modNotFound": "%{guidOrHandle} kon niet gevonden worden op het netwerk. Waarschijnlijk is dit geen geldige ID of Handle. ",
-        "modNotFoundSelected": "%{guidOrHandle} kon niet gevonden worden op het netwerk. Waarschijnlijk is dit geen geldige ID of Handle. Ze zullen niet getoond worden in jouw lijst, maar worden wel opgeslagen alseen van jouw moderators.",
-        "availableModsFailed": "Beschikbare moderators konden niet gevonden worden op het netwerk.",
-        "modAlreadyAdded": "Je hebt al een moderator toegevoegd.",
+        "modsNotFound": "%{guids} kon niet gevonden worden op het netwerk. Het is mogelijk niet een valide peer ID. |||| %{guids} konden niet gevonden worden op het netwerk. Het zijn mogelijk niet valide peer IDs.",
+        "selectedModsTitle": "Uw huidige moderators konden niet geladen worden.",
+        "availableModsTitle": "Beschikbare moderators konden niet geladen worden.",
         "modIsBlank": "Je moet een ID of Handle van de moderator toevoegen.",
-        "modIsInvalid": "%{guid} is geen geldige moderator.",
-        "modsAreInvalid": "De volgende moderators zijn op dit moment geen geldige moderators: %{guids}",
-        "modsAreInvalidAsync": "De volgende moderators konden niet gevonden worden op het netwerk. Ze worden nog steeds opgeslagen in jouw lijst van moderators, maar er is geen informatie over hen beschikbaar. %{guids}"
+        "notGUID": "%{guid} is niet een valide peer ID",
+        "ownGUID": "%{guid} is uw peer ID. U kunt niet uw eigen orders modereren.",
+        "dupeGUID": "%{guid} is een van uw huidige moderators."
       }
     },
     "blockedTab": {
       "sectionName": "Geblokkeerd",
       "btnUnblock": "Deblokker",
-      "emptyBlockList": "You are not blocking anyone."
+      "emptyBlockList": "U blokkeert niemand."
     },
     "optional": "Optioneel",
     "language": "Taal",
@@ -750,7 +780,7 @@
     }
   },
   "connectionManagement": {
-    "builtInServerName": "Built-in Server - %{cur}",
+    "builtInServerName": "Ingebouwde Server - %{cur}",
     "statusBar": {
       "errorPreface": "Foutmelding",
       "needHelpLink": "Hulp nodig?",
@@ -758,13 +788,13 @@
       "errorConnectionLost": "%{errorPreface} De verbinding met %{serverName} is afgebrorken. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Fout bij verbinden met %{serverName}. De server is niet bereikbaar.%{links}",
       "errorAuthFailed": "%{errorPreface} Fout bij verbinden met %{serverName}. De gebruikersnaam en/of wachtwoord zijn incorrect. %{links}",
-      "errorAuthFailedBuiltInServer": "%{errorPreface} Failed to connect to %{serverName}. The authentication cookie is invalid. %{links}",
+      "errorAuthFailedBuiltInServer": "%{errorPreface} kon niet verbinden met %{serverName}. Het authenticatie cookie is invalide. %{links}",
       "editLink": "aanpassen",
       "errorTorNotConfigured": "Graag %{editLink} de %{serverName} configuratie om te bevestigen of je Tor wilt gebruiken of niet. %{links}",
       "errorTorNotAvailable": "Tor was niet gevonden. Graag %{editLink} de %{serverName} configuratie om Tor niet te gebruiken of te starten. %{links}",
       "cancelConnAttempt": "Annuleer",
       "connectAttemptMsg": "Proberen verbinding te maken met %{serverName}. %{cancelConnAttempt}",
-      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
+      "waitForServerStopMsg": "%{serverName} wordt gestopt. Dit kan enkele minuten duren."
     },
     "configurations": {
       "tabName": "Instellingen",
@@ -809,15 +839,15 @@
       "warning": "Waarschuwing:",
       "torServerWarning": "%{warning} Om anoniem te zijn, moet de server ook in Tor mode gestart  worden.",
       "lblServerType": "Type",
-      "helperServerType": "Select your server type",
-      "serverTypeBuiltin": "Built-in (local)",
-      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
-      "serverTypeStandalone": "Stand-alone (advanced)",
-      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
+      "helperServerType": "Selecteer uw server type",
+      "serverTypeBuiltin": "Ingebouwd (lokaal)",
+      "serverTypeBuiltinTip": "Deze server is gecreeerd en wordt gecontroleerd door deze app op deze computer en draait alleen als deze app draait. Dit wordt aanbevolen voor de meeste gebruikers. ",
+      "serverTypeStandalone": "Stand-alone (geavanceerd)",
+      "serverTypeStandaloneTip": "Deze server wordt handmatig geinstalleerd en wordt gecontroleerd vanuit de command line. Hij kan geinstalleerd worden op een remote computer. Hij moet al draaien voordat u er verbinding mee kunt maken.",
       "saveConfirm": {
         "title": "Weet u het zeker?",
-        "body": "When connecting to a remote server, it is highly recommended you have SSL turned on.",
-        "btnCancel": "No, cancel",
+        "body": "Bij het verbinden met een remote server wordt het zeer aangeraden om SSL geactiveerd te hebben. ",
+        "btnCancel": "Nee, annuleer",
         "btnConfirm": "Ja, ga door"
       }
     }
@@ -833,7 +863,7 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Sluit wallet",
-    "fundsHeader": "Vermogen (coins)",
+    "fundsHeader": "Geldmiddelen (coins)",
     "btnReceiveMoney": "Ontvang geld",
     "btnSendMoney": "Stuur geld",
     "valueInCurrencyLabel": "Waarde in %{currency}",
@@ -841,27 +871,27 @@
     "receiveMoney": {
       "title": "Ontvang geld",
       "btnCancel": "Annuleer",
-      "btnFundViaShapeshift": "Fund via ShapeShift",
-      "needCoinLink": "Need %{cur}?"
+      "btnFundViaShapeshift": "Betalen via ShapeShift",
+      "needCoinLink": "%{cur} nodig?"
     },
     "sendMoney": {
       "toLabel": "Naar",
-      "toPlaceholder": "Enter a %{cur} Address",
+      "toPlaceholder": "Voer een %{cur} address in.",
       "amountLabel": "Hoeveelheid",
       "noteLabel": "Notitie",
       "notePlaceholder": "Alleen voor jou zichtbaar",
       "sendBtn": "Verzend",
       "clear": "Leegmaken",
       "sendPaymentFailDialogTitle": "Kan betaling niet verzenden",
-      "errorInvalidAddress": "The payment address is not valid."
+      "errorInvalidAddress": "Het betalingsadres is niet valide."
     },
     "spendConfirmBox": {
       "heading": "Weet u het zeker?",
-      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
+      "body": "Een network vergoeding wordt toegevoegd, op dit moment geschat op %{currencyPairing}",
       "errorHeading": "Kan betaling niet verzenden",
-      "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
-      "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
-      "bodyGenericError": "There was an error estimating the fee: %{err}",
+      "bodyInsufficientFunds": "U heeft niet genoeg saldo (geldmiddelen/coins). Houd rekening met transactie vergoeding.",
+      "bodyDustAmount": "De transactievergoeding is te laag en valt onder het netwerk dust hoeveelheid. ",
+      "bodyGenericError": "Fout bij het bepalen van de vergoeding: %{err}",
       "btnRetry": "Probeer opnieuw",
       "btnCancel": "Annuleer",
       "btnConfirmSend": "Ja, verstuur",
@@ -870,27 +900,27 @@
     "transactions": {
       "header": "Transactions",
       "transaction": {
-        "outgoingText": "%{currencyPairing} to %{address}",
-        "incomingText": "%{currencyPairing} received",
+        "outgoingText": "%{currencyPairing} naar %{address}",
+        "incomingText": "%{currencyPairing} ontvangen",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} bevestiging) |||| %{timeAgo} (%{confirmationsCount} bevestigingen)",
         "viewDetailsBtn": "Bekijk Details",
         "retryTransactionBtn": "Verhoog toeslag",
         "retryPaymentConfirmBox": {
           "title": "Betaling opnieuw proberen",
-          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
-          "fetchError": "There was an error obtaining the estimated fees: %{err}",
+          "body": "Voeg %{currencyPairing}%{asterisk} toe aan de vergoeding en verstuur de transactie opnieuw.",
+          "insufficientFundsBody": "U heeft tenminste %{currencyPairing}%{asterisk} nodig in uw wallet om de transactie opnieuw te versturen met een hogere vergoeding.",
+          "fetchError": "Er was een fout bij het ophalen van de geschatte vergoedingen: %{err}",
           "subText": "%{asterisk} geschatte prijs",
           "btnCancel": "Annuleer",
           "btnConfirmSend": "Verzend",
           "btnRetry": "Probeer opnieuw"
         },
         "retryFailDialogTitle": "Kan betaling niet opnieuw proberen",
-        "retryFailInsufficientFunds": "Je hebt onvoldoende vermogen (coins) om deze transactie af te ronden.",
+        "retryFailInsufficientFunds": "Je hebt onvoldoende geldmiddelen (coins) om deze transactie af te ronden.",
         "feeBumpOf": "Fee verhoging van %{address}"
       },
       "noTransactionsPlaceholder": "Je hebt geen transacties",
-      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
+      "newTransactionsPopin": "%{smart_count} nieuwe transactie |||| %{smart_count} nieuwe transacties",
       "backupWalletWarningTitle": "Backup van recovery seed",
       "recoverySeedLink": "Backup maken van recovery seed",
       "backupWalletWarningBody": "Het lijkt er op dat je enkele transacties hebt. . Goed moment om %{link}."
@@ -912,19 +942,19 @@
     "edit": "Bewerkt",
     "delete": "Verwijder",
     "clone": "Kopieer",
-    "editListingReturnText": "Terug naar verkoopartikel",
+    "editListingReturnText": "Terug naar artikel",
     "freeShippingBanner": "Gratis Verzending",
-    "listingDataChangedPopin": "Listing data has changed.",
-    "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
+    "listingDataChangedPopin": "Artikel informatie is veranderd.",
+    "viewPhotos": "Bekijk %{count} foto |||| Bekijk %{count} foto's",
     "type": "Type: %{type}",
     "condition": "Conditie: %{condition}",
     "tags": "Tags",
-    "paymentsAccepted": "Payments Accepted",
+    "paymentsAccepted": "Betalingen geaccepteerd",
     "noTags": "Geen tags opgevoerd",
     "buyNow": "KOOP NU",
     "description": "Beschrijving",
     "noDescription": "Geen beschrijving opgevoerd",
-    "reviews": "Reviews",
+    "reviews": "Beoordelingen",
     "attachments": "Bijlagen",
     "refundPolicy": "Restitutie beleid",
     "noRefundPolicy": "Geen retour garantie opgevoerd",
@@ -933,19 +963,19 @@
     "shipping": "Verzending",
     "shipsFrom": "Wordt verstuurd vanuit %{country}",
     "shipTo": "Verstuur naar:",
-    "noShippingFound": "Verkoopartikel wordt niet naar het geselecteerde land verstuurd.",
+    "noShippingFound": "Artikel wordt niet naar het geselecteerde land verstuurd.",
     "localPickup": "Deze optie is alleen bij ophalen",
-    "deliveryTime": "Delivery Time",
-    "priceFirst": "Price (first item)",
-    "priceSecond": "Price (additional item)",
+    "deliveryTime": "Leveringstijd",
+    "priceFirst": "Prijs (eerste item)",
+    "priceSecond": "Prijs (elk volgend item)",
     "allCountries": "Alle landen",
     "returnToStore": "Terug naar winkel",
     "goToStore": "Naar winkel",
     "unableToPurchase": {
-      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
-      "unrecognizedCur": "The item is priced in an unrecognized currency.",
-      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
-      "unpurchaseable": "This listing is not purchasable."
+      "incompatibleCrypto": "De listing accepteert %{acceptedCurrencies}, terwijl  uw wallet alleen ondersteuning biedt in %{serverCur}.",
+      "unrecognizedCur": "Het artikel is geprijsd in een onbekende currency.",
+      "noExchangeRateInfo": "Het artikel is geprijsd in een valuta waarvoor de wisselkoers op dit moment onbeschikbaar is.",
+      "unpurchaseable": "Het artikel is niet te koop."
     },
     "confirmDelete": {
       "title": "Weet u het zeker?",
@@ -956,15 +986,15 @@
     "review": {
       "title": "%{time} door %{name}",
       "loadMore": "Laad meer",
-      "noReviews": "Geen reviews gevonden",
+      "noReviews": "Geen beoordelingen gevonden",
       "showMore": "Toon meer",
       "showLess": "Toon minder"
     },
     "errors": {
-      "fetchRatings": "Beoordelingen konden niet worden geladen.",
+      "fetchRatings": "Rating kon niet worden geladen.",
       "fetchReviews": "Er was een probleem met het laden van de beoordelingen. %{error}",
       "loadReview": "Beoordeling %{id} mislukt vanwege %{error}",
-      "noPurchaseTitle": "Dit verkoopartikel kan niet worden gekocht",
+      "noPurchaseTitle": "Dit artikel kan niet worden gekocht",
       "zeroPriceMsg": "Je kunt geen aankoop doen met een prijs van 0 of minder."
     }
   },
@@ -973,9 +1003,9 @@
     "freeShippingBanner": "Gratis Verzending",
     "deleting": "Verwijderen...",
     "deleted": "Verwijderd",
-    "editListingTooltip": "Edit listing",
-    "cloneListingTooltip": "Clone listing",
-    "deleteListingTooltip": "Delete listing",
+    "editListingTooltip": "Wijzigen artikel",
+    "cloneListingTooltip": "Kopieer artikel",
+    "deleteListingTooltip": "Verwijder artikel",
     "confirmDelete": {
       "title": "Weet u het zeker?",
       "body": "Eenmaal verwijderd, kan dit niet teruggehaald worden.",
@@ -983,38 +1013,38 @@
       "btnConfirm": "Ja, Verwijder"
     },
     "editFetchErrorDialog": {
-      "title": "There was an error retrieving the listing.",
-      "bodyNotFound": "The listing was not found. It may have been deleted by the owner."
+      "title": "Fout bij ophalen van artikel",
+      "bodyNotFound": "Artikel nie gevonden. Het is mogelijk verwijderd door de eigenaar."
     },
-    "btnShowMatureContent": "Show Mature Content",
-    "tipShowMatureContent": "Show Mature Content",
-    "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "btnShowMatureContent": "Toon volwassen inhoud",
+    "tipShowMatureContent": "Toon volwassen inhoud",
+    "tipHideMatureContent": "Verberg volwassen inhoud",
+    "blockedUser": "Je hebt deze gebruiker geblokkeerd."
   },
   "listingDelete": {
-    "deletingListing": "Verwijderen van verkoopartikel %{listing}",
-    "deletedListing": "Verkoopartikel %{listing} verwijderd. ",
-    "deletedFailedStatusMsg": "Kan verkoopartikel %{listing} niet verwijderen",
-    "deletedFailedDialogTitle": "Kan verkoopartikel niet verwijderen",
-    "deletedFailedDialogBody": "Er was een foutmelding bij het verwijderen van verkoopartikel %{listing}",
-    "deletedFailedDialogBodyWithReason": "Er was een foutmelding bij het verwijderen van verkoopartikel %{listing}: %{reason}",
+    "deletingListing": "Verwijderen van artikel %{listing}",
+    "deletedListing": "Artikel %{listing} verwijderd. ",
+    "deletedFailedStatusMsg": "Kan artikel %{listing} niet verwijderen",
+    "deletedFailedDialogTitle": "Kan artikel niet verwijderen",
+    "deletedFailedDialogBody": "Er was een foutmelding bij het verwijderen van artikel %{listing}",
+    "deletedFailedDialogBodyWithReason": "Er was een foutmelding bij het verwijderen van artikel %{listing}: %{reason}",
     "deletedFailedListingNotFound": "%{listing} is niet gevonden. Het is waarschijnlijk al verwijderd.",
     "deleteFailedBtnOk": "OK"
   },
   "listingReport": {
-    "btnTip": "Report this listing",
-    "btnTipReported": "This listing was reported",
-    "title": "Report Listing",
-    "message": "Why are you reporting this listing?",
-    "reasonOffensive": "Offensive Content",
-    "reasonFraud": "Fraudulent or Inaccurate",
-    "reasonIllegal": "Illegal in my Area",
-    "reasonOther": "Other",
-    "reasonOtherPlaceholder": "Explain why...",
+    "btnTip": "Rapporteer dit artikel",
+    "btnTipReported": "Dit artikel is gerapporteerd",
+    "title": "Rapporteer artikel",
+    "message": "Waarom rapporteer je dit artikel?",
+    "reasonOffensive": "Aanstootgevende inhoud",
+    "reasonFraud": "Frauduleus of Onnauwkeurig",
+    "reasonIllegal": "Illegaal in mijn regio",
+    "reasonOther": "Anders",
+    "reasonOtherPlaceholder": "Uitleg waarom...",
     "submit": "Verzend",
-    "errorTitle": "Your report could not be submitted due to an error.",
-    "error404": "The report url returned a 404 error, it could not be reached.",
-    "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
+    "errorTitle": "Uw rapportage kon niet worden verstuurd door een fout.  ",
+    "error404": "De rapportage url retourneerde een 404 error, kon niet gevonden worden.",
+    "postSubmitMsg": "Uw rapportage is verstuurd. Elke search provider heeft verschillende regels omtrent rapportages, mogelijk blijft u dit artikel terugzien in uw zoekresultaten totdat zijbesluiten om het te verwijderen. ",
     "closeBtn": "Sluit"
   },
   "editListing": {
@@ -1027,7 +1057,7 @@
       "attachments": "Bijlagen",
       "shipping": "Verzending",
       "tags": "Tags",
-      "tagsDetailed": "Tags (zodat je verkoopartikel makkelijer gevonden wordt)",
+      "tagsDetailed": "Tags (zodat je artikel makkelijker gevonden wordt)",
       "category": "Categorie",
       "categoryDetailed": "Categorie (voor het ordenen van je winkel)",
       "variants": "Uitvoeringen",
@@ -1041,25 +1071,25 @@
     },
     "placeholderTitle": "Voer je titel in...",
     "placeholderSKU": "Artikelnummer, Onderdeel nummer, ID, etc",
-    "placeholderDescription": "Beschrijf je verkoopartikel zo goed als mogelijk... voeg foto's toe. Link naar Youtube videos etc.",
+    "placeholderDescription": "Beschrijf je artikel zo goed als mogelijk... voeg foto's toe. Link naar Youtube videos etc.",
     "placeholderReturnPolicy": "Wat is jouw terugstuurbeleid? Binnen hoeveel dagen worden retourzendingen geaccepteerd? Wie betaald voor retourzendingen (indien nodig)? etc.",
-    "placeholderTerms": "Wat zijn de verkoopvoorwaarden van het verkoopartikel? Waarvoor ben je verantwoordelijk als verkoper? Is er een garantie? Wanneer is de transactie afgerond? etc.",
+    "placeholderTerms": "Wat zijn de verkoopvoorwaarden van het artikel? Waarvoor ben je verantwoordelijk als verkoper? Is er een garantie? Wanneer is de transactie afgerond? etc.",
     "helperTitle": "Beschrijving welke duidelijk aangeeft wat je verkoopt",
     "helperType": "Kies uit 3 types",
     "helperShipping": "Verstuur naar waar je maar wilt!",
     "helperPhotos": "Voeg tot %{maxPhotos} foto's toe",
-    "helperSKU": "Een unieke identificator voor je verkoopartikel",
+    "helperSKU": "Een unieke identificator voor je artikel",
     "helperSKUWithVariants": "In geval van uitvoeringen kunnen verhandelbare eenheden opgegeven worden in de %{variantInventoryLink} sectie",
     "variantInventoryLink": "Variatie voorraad",
-    "helperCondition": "De staat van je verkoopartikel",
-    "helperNSFW": "Markeer ja als dit verkoopartikel niet geschikt is voor op het werk (Not suitable for work)",
+    "helperCondition": "De staat van je artikel",
+    "helperNSFW": "Markeer ja als dit artikel niet geschikt is voor op het werk (Not suitable for work)",
     "helperTags": "Voeg veel tags toe. Voer een tag naam in en druk enter, herhaal.",
     "helperCategories": "Categorie nesting wordt niet ondersteund (b.v. Schoenen > Laarzen werkt op dit moment niet). Voer een categorienaam in, druk op enter, herhaal.",
-    "helperReturnPolicy": "Wanneer leeg gelaten, wordt het verkoopartikel weergegeven  als \"Geen terugstuur beleid opgevoerd\" ",
-    "helperTerms": "Wanneer leeg gelaten, wordt het verkoopartikel weergegeven als \"Geen verkoopvoorwaarden opgevoerd\" ",
-    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperReturnPolicy": "Wanneer leeg gelaten, wordt het artikel weergegeven  als \"Geen terugstuur beleid opgevoerd\" ",
+    "helperTerms": "Wanneer leeg gelaten, wordt het artikel weergegeven als \"Geen verkoopvoorwaarden opgevoerd\" ",
+    "helperPrice": "Bepaal uw prijs in Dollars, Yuan, %{cur}, wat u wilt",
     "createListingLabel": "Creeer Aanbieding",
-    "editListingLabel": "Wijzig verkoopartikel",
+    "editListingLabel": "Wijzig artikel",
     "title": "Titel",
     "type": "Type",
     "visibility": "Zichtbaarheid",
@@ -1076,11 +1106,11 @@
     "btnAddReturnPolicy": "Voer terugstuurbeleid toe.",
     "btnTermsAndConditions": "Voeg verkoopvoorwaarden toe.",
     "btnAddCoupon": "Voeg coupon toe",
-    "primaryPhoto": "PRIMARY PHOTO",
+    "primaryPhoto": "PRIMAIRE FOTO",
     "viewListingLink": "Bekijk Aanbieding",
     "unsupportedCurrencyDialog": {
-      "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "title": "Valuta niet herkend",
+      "body": "Dit artikel heeft een valuta (%{cur}) die niet ondersteund wordt door deze client. Selecteer aub hieronder een nieuwe valuta en klik OK. Controleer de prijzen daarna nogmaals om zeker te zijn dat ze correct zijn in de nieuwe valuta.",
       "btnOk": "OK"
     },
     "shippingOptions": {
@@ -1102,8 +1132,8 @@
         "namePlaceholder": "b.v. Standaard, Express, Overnight",
         "estimatedDeliveryLabel": "Verwachte leveringsdatum",
         "estimatedDeliveryPlaceholder": "b.v. 5-7 dagen",
-        "priceLabel": "Price (first item)",
-        "additionalItemPriceLabel": "Price (additional item)",
+        "priceLabel": "Prijs (eerste item)",
+        "additionalItemPriceLabel": "Prijs (elk volgend item)",
         "pricePlaceholder": "0.00",
         "addService": "+ Voeg service toe"
       },
@@ -1149,20 +1179,20 @@
       "placeholderSKU": "Items, ID, etc",
       "unlimitedQuantityLabel": "onbeperkt",
       "placeholderNeedMoreData": "De tabel voor uitvoeringsvoorraad wordt zichtbaar wanneer je de eerste uitvoering met keuzes hebt opgevoerd.",
-      "unableToCalcTotalPrice": "Unable to calculate",
-      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+      "unableToCalcTotalPrice": "Niet in staat om te berekenen",
+      "unableToCalcTotalPriceTip": "Zowel de artikelprijs als de toeslag moeten cijfers zijn. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\"."
     },
     "confirmCloseDialog": {
-      "title": "You have unsaved changes",
-      "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
-      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
+      "title": "U heeft niet opgeslagen wijzigingen",
+      "bodyCreate": "U heeft niet opgeslagen wijzigingen bij het aanmaken van een artikel. Weet u zeker dat u wilt sluiten? ",
+      "bodyEdit": "U heeft niet opgeslagen wijzigingen bij het wijzigen vaneen artikel. Weet u zeker dat u wilt sluiten?",
       "btnYes": "Ja",
       "btnNo": "Nee"
     },
     "maxCatsWarning": "Je hebt de maximum toegestane hoeveelheid categorieën bereikt.",
     "maxTagsWarning": "Je hebt het maximaal aantal toegestane tags bereikt.",
     "errors": {
-      "saveErrorTitle": "Er was een fout bij het opslaan van je verkoopartikel",
+      "saveErrorTitle": "Er was een fout bij het opslaan van je artikel",
       "tooManyPhotosTitle": "Teveel foto's",
       "tooManyPhotosBody": "Enkele of al je foto's zijn niet geupload, omdate je het maximaal aantal foto's bereikt hebt.",
       "unableToLoadImages": "Je afbeelding kon niet worden geladen. |||| Je  afbeelding kon niet worden geladen.",
@@ -1174,12 +1204,12 @@
     "searchBtn": "Zoek",
     "searchPlaceholder": "Voer een zoekterm of #tag in.",
     "suggestions": "Suggesties",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
-    "resultsTotal": "%{totalResults} verkoopartikelen",
+    "resultsFound": "<b>%{totalResults} artikel</b> gevonden voor <b>\"%{term}\"</b> |||| <b>%{totalResults} artikelen</b> gevonden voor <b>\"%{term}\"</b>",
+    "resultsTotal": "%{totalResults} artikelen",
     "sortBy": "Sorteer op",
     "changeProvider": "Sluit en kies een nieuwe searchprovider",
     "useDefault": "Zoek op \"%{term}\" met %{defaultProvider}",
-    "noResults": "Geen verkoopartikelen gevonden met jouw zoekcriteria",
+    "noResults": "Geen artikelen gevonden met jouw zoekcriteria",
     "addTitle": "Voeg een searchprovider toe",
     "addPlaceholder":"URL voor de search provider",
     "addTorPlaceholder": "Tor URL voor de search provider (optioneel)",
@@ -1212,7 +1242,7 @@
     "introScreen": {
       "connectionLbl": "Verbinding:",
       "btnChange": "Verander",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
+      "introLine": "Een gratis marktplaats. Geen vergoedingen. Geen restricties. Verdien %{cur}.",
       "tagLine": "Vrije koop en verkoop ",
       "btnGetStarted": "Begin"
     },
@@ -1230,7 +1260,7 @@
     },
     "tosScreen": {
       "heading": "Leveringsvoorwaarden",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "OpenBazaar is een network voor het verhandelen van goederen en diensten rechtstreeks tussen mensen - met gebruik van Cryptocurrencies - zonder centrale organisatie die het platform beheert. Dit betekent dat u verantwoordelijk bent voor uw eigen activiteit op het netwerk. OpenBazaar gebruikers zijn niet standaard anoniem. De meeste communicatie tussen partijen is versleuteld, maar IP adressen zijn publiek zichtbaar and kunnen geassocieerd worden met activiteit op het netwerk. Kwaadwillende partijen kunnen deze informatie tegen u gebruiken; het beschermen van uw privacy is uw eigen verantwoordelijkheid. OpenBazaar gebruikers moeten de wet van hun land en hun eigen geweten volgen. De OpenBazaar ontwikkelaars zijn niet verantwoordelijk voor illegaal gebruik van dit platform, en ondersteunen dit ook niet. De OpenBazaar ontwikkelaarsgroep heeft hard gewerkt om een platform voor wereldwijde handel te leveren. Maar zoals met elke software zullen er bugs gevonden worden. De ontwikkelaars zijn niet verantwoordelijk voor enig monetair verlies geassocieerd met problemen in de software. Door OpenBazaar te gebruiken accepteer je verantwoordelijkheid voor je eigen acties op het OpenBazaar netwerk. "
     }
   },
   "pageControls": {
@@ -1238,8 +1268,8 @@
     "displaying": "Weergegeven %{displayingCounts}"
   },
   "purchase": {
-    "purchaseDataChangedPopin": "The data for this listing has changed.",
-    "returnToListing": "Terug naar verkoopartikel.",
+    "purchaseDataChangedPopin": "De informatie van dit artikel is gewijzigd.",
+    "returnToListing": "Terug naar artikel.",
     "optional": "optioneel",
     "shippingTitle": "Verzending",
     "paymentTypeTitle": "Betalingstype",
@@ -1248,7 +1278,7 @@
     "serviceDetails": "%{price} — %{delivery}",
     "localPickup": "Zelf ophalen",
     "noAddresses": "U heeft geen opgeslagen adressen.",
-    "noShippableAddresses": "Dit verkoopartikel wordt niet naar uw adres verzonden.",
+    "noShippableAddresses": "Dit artikel wordt niet naar uw adres verzonden.",
     "informationTitle": "Aanvullende gegevens",
     "emailAddress": "Email adres of telefoonnummer",
     "emailPlaceholder": "name@email.com",
@@ -1268,18 +1298,16 @@
     "memoPlaceholder": "Voeg hier aanvullende details toe voor de verkoper (optioneel).",
     "pay": "BETAAL >",
     "payNote": "Door op betaal te klikken, zul je naar de laatste stap van het proces gaan.",
-    "scamWarning": "WARNING: Protect against scams",
+    "scamWarning": "WAARSCHUWING: Bescherming tegen oplichting",
     "pending": "In afwachting...",
     "pendingNote": "Aub de order betalen om de transactie af te ronden.",
     "close": "sluiten",
     "closeNote": "Je betaling is naar de verkoper gestuurd.",
     "moderatorNote": "De moderator service fee wordt alleen toegepast wanneer een geschil wordt geopend.",
     "quantity": "Hoeveelheid",
-    "useShapeShift": "Of gebruik ShapeShift in de volgende stap",
-    "moderatedPayment": "Gemodereerde betaling",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
-    "noValidModerators": "Geen geldige moderators beschikbaar voor deze order.",
-    "moderationDisclaimer": "Je betaling wordt veilig 'in escrow' gehouden. Als er problemen rijzen, heb je de mogelijkheid om een geschil te openen met een moderator. *De moderator service fee is alleen van toepassing als een geschil geopend wordt. ",
+    "moderatorsDisclaimer": "Uw betaling wordt in escrow bewaard. Als er een kwestie optreedt, heeft u de mogelijkheidom een dispuut te openen via uw gekozen moderator. *De moderator service vergoeding is alleen van toepassing als een dispuut is geopend.",
+    "directPayment": "Directe Betaling",
+    "directPaymentDetails": "Verstuur bedragen (geldmiddelen/coins) direct naar de verkoper zonder een moderator. Deze optie alleen gebruiken met verkopers die u vertrouwd, u zult geen dispuut kunnen opstarten als er iets mis gaat.",
     "chooseModerator": "Kies deze moderator",
     "confirmPayment": {
       "title": "Ziet het er allemaal goed uit?",
@@ -1300,11 +1328,11 @@
       "note3": "De moderator service toeslag is alleen van toepassing als een geschil wordt geopend.",
       "note4": "Als u heeft betaald, duurt het even voor het scherm ververst wordt.",
       "btnConfirmedPay": "Ja, Betaal",
-      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
-      "altcoinLink": "You can still fund your OB wallet with altcoins.",
-      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
-      "walletLink": "You can send funds to your OB wallet instead.",
-      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
+      "altcoinNote": "<b>Altcoins</b> zullen beschikbaar zijn wanneer Shapeshift update naar Segregated Witness.",
+      "altcoinLink": "Je kunt je OB wallet nog aanvullen met altcoins.",
+      "walletNote": "<b>Externe wallets</b> die geen Segregated Witness ondersteunen zullen niet voor transacties kunnen betalen.",
+      "walletLink": "In plaats daarvan kun je geldmiddelen (coins) naar jeOB wallet sturen.",
+      "feeNote": "<b>Houdt rekening met fees ( vergoedingen) </b> wanneer je geldmiddelen (coins) naar je OpenBazaar wallet stuurt."
     },
     "completeSection": {
       "paymentSent": "Betaling Verzonden!",
@@ -1318,40 +1346,47 @@
       "vendorMessageSent": "Jouw bericht is naar %{name} gestuurd, je kunt doorgaan naar de conversatie in de %{orderLink}.",
       "send": "Verzend",
       "share": {
-        "title": "Share with friends",
-        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
-        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
-        "postToTwitter": "Post to Twitter",
-        "postToFacebook": "Post to Facebook",
-        "postToPinterest": "Post to Pinterest",
-        "postToTumblr": "Post to Tumblr"
+        "title": "Deel met vrienden",
+        "body": "Ik heb net wat gekocht op OpenBazaar, de gratis marktplaats zonder kosten en zonder beperkingen. ",
+        "shareMsg": "Ik heb net wat gekocht op @OpenBazaar, de gratis marktplaats zonder kosten en zonder beperkingen. ",
+        "postToTwitter": "Post op Twitter",
+        "postToFacebook": "Deel op Facebook",
+        "postToPinterest": "Deel op Pinterest",
+        "postToTumblr": "Deel op Tumblr"
       }
     },
     "receipt": {
       "summary": "Bestellingsoverzicht",
-      "listing": "Verkoopartikel",
+      "listing": "Artikel",
       "coupon": "Coupon",
       "shipping": "Verzending",
-      "firstItem": "First Item",
-      "additionalItems": "Each Additional Item",
+      "firstItem": "Eerste artikel",
+      "additionalItems": "Elk volgend artikel",
       "options": "Opties",
-      "subtotal": "Subtotal (%{quantity})",
-      "shippingTotal": "Total Shipping",
+      "subtotal": "Subtotaal (%{quantity})",
+      "shippingTotal": "Totaal Verzending",
       "total": "Totaal"
     },
     "errors": {
       "moderatorsTitle": "Moderator data kon niet geladen worden",
-      "moderatorsMsg": "Dit verkoopartikel heeft moderators beschikbaar, maar ze konden niet geladen worden.",
+      "moderatorsMsg": "Dit artikel heeft moderators beschikbaar, maar ze konden niet geladen worden.",
       "orderError": "Je order kan niet verwerkt worden vanwege de volgende fouten.",
-      "ownIDTitle": "Je kunt niet je eigen verkoopartikelen aanschaffen",
-      "ownIDMsg": "Je kunt het verkoopproces voor je eigen verkoopartikelen zien, maar je kunt ze niet aanschaffen.",
+      "ownIDTitle": "Je kunt niet je eigen artikelen aanschaffen",
+      "ownIDMsg": "Je kunt het verkoopproces voor je eigen artikelen zien, maar je kunt ze niet aanschaffen.",
       "paymentFailed": "De betaling kon niet worden afgerond.",
-      "zeroPrice": "Je kunt een verkoopartikel met een prijs van nul niet aanschaffen.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "Je kunt een artikel met een prijs van nul niet aanschaffen."
     }
   },
   "moderators": {
-    "moderatorsLoading": "%{remaining} van %{total} moderators worden geladen."
+    "moderatorsLoading": "Moderators laden…",
+    "moderatorsLoaded": "%{total} moderators geladen.",
+    "noValidModerators": "Geen valide Moderators Beschikbaar.",
+    "noValidModeratorsBody": "Geen van de geladen moderators zijn geldig.",
+    "noVerifiedModerators": "Geen geverifieerde moderators beschikbaar",
+    "noVerifiedModeratorsBody": "Bekijk ongeverifieerde moderators of selecteer directe betaling hieronder. ",
+    "showUnverified": "Toon ongeverifieerde moderators",
+    "browseMoreModerators": "Laad meer"
+
   },
   "transactions": {
     "sales": {
@@ -1362,10 +1397,10 @@
       "noResults": "Geen verkopen gevonden",
       "returnToFromOrder": "Terugkeren naar verkopen",
       "resyncPopInMessage": {
-        "link": "Resync",
-        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "link": "Opnieuw syncroniseren",
+        "text": "Mogelijk dient u uw wallet opnieuw te synchroniseren om betalingen teontvangen vooreen of meer onbetaalde orders.",
         "message": "%{icon} %{text} %{link}",
-        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+        "completeText": "Uw transacties beginnen nu opnieuw gesynchroniseerd. Wacht vijf tot tien minuten of langer en ververs deze pagina of navigeer terug naar deze pagina. "
       }
     },
     "purchases": {
@@ -1388,10 +1423,11 @@
       "ready": "Klaar om te verwerken",
       "fulfilled": "Voldaan",
       "refunded": "Refunded",
+      "disputes": "Disputen",
       "disputeOpen": "Open geschillen",
-      "disputePending": "Geschil lopend",
       "disputeClosed": "Dispute Closed",
-      "completed": "Afgerond"
+      "completed": "Afgerond",
+      "error": "Foutmeldingen"
     },
     "sort": {
       "label": "Sorteer op",
@@ -1399,9 +1435,9 @@
       "dateAsc": "Nieuwste",
       "dateDesc": "Oudste"
     },
-    "placeholderSearchSales": "Search by Order #, Title or Buyer",
+    "placeholderSearchSales": "Zoek op Artikel #, Titel of Koper",
     "placeholderSearchPurchases": "Zoek op Order #, Title of Vendor",
-    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
+    "placeholderSearchCases": "Zoek op Artikel #, Titel, Koper of Verkoper",
     "resetFilters": "Herstel filters",
     "transactionsTable": {
       "headers": {
@@ -1427,7 +1463,8 @@
         "DISPUTED": "Betwist",
         "DECIDED": "Besloten",
         "RESOLVED": "Opgelost",
-        "PAYMENT_FINALIZED": "Betaling afgerond"
+        "PAYMENT_FINALIZED": "Betaling afgerond",
+        "PROCESSING_ERROR": "Foutmelding"
       },
       "btnReject": "Afgewezen",
       "btnAccept": "Geaccepteerd",
@@ -1458,13 +1495,23 @@
     },
     "contractTab": {
       "heading": "Contract (JSON)",
-      "buyerContractNotAvailable": "Het contract van de verkoper is nu onbeschikbaar en komt pas weer beschikbaar nadat deze online komt.",
-      "vendorContractNotAvailable": "Het contract van de koper is nu onbeschikbaar en komt pas weer beschikbaar nadat deze online komt.",
-      "buyerVendorContractVerified": "De contracten van zowel koper als verkoper zijn geverifieerd als authentiek.",
-      "buyerContractNotAuthentic": "Het contract van de koper heeft  validatie errors. Deze is waarschijnlijk vervalst.",
-      "vendorContractNotAuthentic": "Het contract van de verkoper heeft validatie errors. Deze is waarschijnlijk vervalst.",
       "buyerContractHeading": "Koper contract:",
-      "vendorContractHeading": "Verkoper contract:"
+      "vendorContractHeading": "Verkoper contract:",
+      "contractErrorHeading": "Het contract had de volgende validatie foutmeldingen. Het is mogelijk namaak/nagemaakt.",
+      "bothContractsValid": "De contracten van zowel koper als verkoper zijn geverifieerd als authentiek.",
+      "validBuyerVendorProcessingError": "Het contract van de koper is als authentiek geverifieerd. Het contract van de verkoper is niet beschikbaar omdat de verkoper een fout kreeg bij het verwerken van de order. ",
+      "vendorContractNotArrived": "Het contract van de verkoper is nog niet aangekomen. Het wordt verstuurd de volgende keer als de verkoper online komt.",
+      "buyerContractNotArrived": "Het contract van de verkoper is nog niet aangekomen. Het wordt verstuurd de volgende keer als de verkoper online komt.",
+      "vendorContractNotArrivedPotentialProcErr": "Het contract van de verkoper is nog niet aangekomen. Het contract van de koper geeft aan dat de verkoper een verwerkingsfout heeft gehad, maar dit kan niet worden bevestigd omdat het contact van de koper validatie outmeldingen heeft. Neem aub contact op met de verkoper om te bevestigen.",
+      "contractHeadingVendor": "Contact van verkoper:",
+      "contractHeadingBuyer": "Contract van koper: "
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Zowel het contract van de koper als het contract van de verkoper hebben validatie foutmeldingen.",
+      "tipBuyerContractHasError": "Het contract van de koper heeft validatie foutmeldingen.",
+      "tipVendorContractHasError": "Het contract van de verkoper heeft validatie foutmeldingen.",
+      "tipBuyerContractNotArrived": "Het contract van de koper is nog niet aangekomen.",
+      "tipVendorContractNotArrived": "Het contract van de koper is nog niet aangekomen."
     },
     "summaryTab": {
       "orderNumber": "Order #: %{orderId}",
@@ -1474,9 +1521,9 @@
       "payment": {
         "firstPaymentHeading": "Betalingsgegevens",
         "paymentHeading": "Betalingsgegevens #%{paymentNumber}",
-        "amountTo": "%{currencyPairing} to %{payeeName}",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "amountTo": "%{currencyPairing} naar %{payeeName}",
+        "refundedTo": "%{currencyPairing} gerestitutioneerd aan %{payeeName}",
+        "refunded": "%{currencyPairing} terugbetaald",
         "paidInFull": "Volledig betaald",
         "underpaidAmountShort": "Nog niet volledig betaald (%{amountShort} benodigd)",
         "cancelBtn": "Annuleer",
@@ -1486,7 +1533,7 @@
         "veryManyConfirmationsCount": "%{countText} bevestigingen",
         "rejectConfirm": {
           "title": "Weet u het zeker?",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "De originele hoeveelheid in %{cur} zal worden terugbetaald aan de koper",
           "btnCancel": "Annuleer",
           "btnConfirm": "Ja, afwijzen"
         },
@@ -1494,8 +1541,8 @@
       },
       "refund": {
         "heading": "Refunded",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "refundedTo": "%{currencyPairing} gerestitutioneerd aan %{payeeName}",
+        "refunded": "%{currencyPairing} terugbetaald",
         "confirmationsCount": "%{smart_count} bevestiging |||| %{smart_count} bevestigingen",
         "veryManyConfirmationsCount": "%{countText} bevestigingen "
       },
@@ -1510,7 +1557,7 @@
         "fulfillBtn": "Order voldoen",
         "refundConfirm": {
           "title": "Weet u het zeker?",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "De originele hoeveelheid in %{cur} zal worden terugbetaald aan de koper",
           "btnCancel": "Annuleer",
           "btnConfirm": "Ja, restitueren"
         }
@@ -1519,8 +1566,8 @@
         "heading": "Voldaan",
         "shippedByLabel": "De order was verstuurd via:",
         "trackingNumberLabel": "Tracking #:",
-        "yourNoteLabel": "Your note:",
-        "noteFromVendorLabel": "Note from the vendor:",
+        "yourNoteLabel": "Uw notitie:",
+        "noteFromVendorLabel": "Opmerking van de verkoper:",
         "noteFromStoreLabel": "Opmerking van %{store}:",
         "copyLink": "Kopieer",
         "digitalReadyForDlHeading": "Digitale gegevens zijn klaar voor download!",
@@ -1531,13 +1578,13 @@
       "completeOrderForm": {
         "heading": "Voltooi deze bestelling",
         "maxReviewChars": "%{max} karakters max.",
-        "reviewLabel": "Geschreven review",
+        "reviewLabel": "Geschreven beoordeling",
         "anonCheckLabel": "Toon mijn naam (voor iedereen zichtbaar)",
         "btnCompleteOrder": "Voltooi deze bestelling"
       },
       "orderComplete": {
         "heading": "Order afgerond",
-        "reviewLabel": "%{name}'s review:"
+        "reviewLabel": "%{name}'s beoordeling:"
       },
       "disputeStarted": {
         "heading": "Dispute Started",
@@ -1569,8 +1616,8 @@
         "genericBuyerAcceptedPayout": "De verkoper heeft de uitbetaling van het geschil geaccepteerd",
         "genericVendorAcceptedPayout": "De koper heeft de uitbetaling van het geschil geaccepteerd",
         "userAcceptedPayout": "%{name} heeft de uitbetaling van het geschil geaccepteerd.",
-        "orderCompleteWhenYouReview": "De order wordt afgerond wanneer je een review achterlaat.",
-        "orderCompleteWhenBuyerReviews": "Deorder wordt afgerond als de koper een review achterlaat."
+        "orderCompleteWhenYouReview": "De order wordt afgerond wanneer je een beoordeling achterlaat.",
+        "orderCompleteWhenBuyerReviews": "Deorder wordt afgerond als de koper een beoordeling achterlaat."
       },
       "orderDetails": {
         "progressBarStates": {
@@ -1593,12 +1640,24 @@
         "moderatorHeading": "Moderator",
         "copyAddress": "Kopieer",
         "viewOnMap": "Bekijk op kaart",
-        "shippingOption": "Shipping Option",
-        "shippingService": "Shipping Service",
+        "shippingOption": "Verzend Optie",
+        "shippingService": "Verzend Service",
         "memo": "Memo",
         "addressNotes": "Afgifte notities",
         "alternateContact": "Verdere contactgegevens",
         "skuLabel": "SKU"
+      },
+      "processingError": {
+        "cancelLink": "annuleren",
+        "disputeLink": "Start een Dispuut",
+        "procErrBuyerNoMsg": "De verkoper kon uw order niet verwerken.",
+        "procErrBuyerNoMsgCancelable": "De verkoper kon uw order niet verwerken. U kunt de order annuleren om uw betaling terug te ontvangen.",
+        "procErrBuyerNoMsgDisputable": "De verkoper kon de order niet verwerken. U kunt een dispuut openen en op deze manier de moderator vragen het bedrag terug aan u toe te wijzen.",
+        "youMayCancel": "U kunt de order annuleren om uw betaling terug te ontvangen.",
+        "youMayDispute": "U kunt een dispuut openen en op deze manier de moderator vragen het bedrag terug aan u toe te wijzen.",
+        "procErrBuyer": "De verkoper kon uw order niet  verwerken vanwege de volgende fouten:",
+        "procErrVendorNoMsg": "Er was een fout bij het verwerken van de order.",
+        "procErrVendor": "U kunt uw order niet verwerken vanwege de volgende fouten:"
       }
     },
     "fulfillOrderTab": {
@@ -1621,6 +1680,11 @@
       "heading": "Geschil oplossen ",
       "buyerAmountLabel": "Buyer Amount",
       "vendorAmountLabel": "Verkoper bedrag",
+      "vendorContractUnavailable": "U kunt geen geldmiddelen (coins) toewijzen aan de verkoper omdat hun contract nog niet gearriveerd is. ",
+      "vendorContractUnavailableTip": "De verkoper heeft zijn contract niet aangeleverd. Het contract wordt verstuurd wanneer de verkoper de volgende keer online komt. ",
+      "vendorContractUnavailableProcErr": "U kunt geen geldmiddelen (coins) toewijzen aan de verkoper omdat zij de order niet konden verwerken vanwege een verwerkingsfout.",
+      "buyerContractUnavailable": "U kunt geen geldmiddelen (coins) toewijzen aan de koper omdat hun contract nog niet gearriveerd is.",
+      "buyerContractUnavailableTip": "De koper heeft zijn contract niet aangeleverd. Het contract wordt verstuurd wanneer de koper de volgende keer online komt. ",
       "commentLabel": "Opmerking",
       "commentPlaceholder": "Uitleg over je beslissing...",
       "btnCancel": "Annuleer",
@@ -1701,9 +1765,9 @@
     "providePortAsNumber": "Geef de poort op als nummer",
     "provideValidPortRange": "Geef een nummer op tussen 0 en 65535.",
     "invalidTorProxy": "De waarde lijkt niet in het juiste formaat opgevoerd te zijn.het zou in het ip-adres:poort formaat moeten zijn, b.v. 127.0.0.1:9150. De poort moet een nummer zijn tussen 0 en 65535.",
-    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideWalletCurrency": "Selecteer een wallet currency.",
     "provideZcashBinaryPath": "Geef een waarde op",
-    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
+    "invalidZcashBinaryPath": "Het aangeboden pad moet een bestand zijn op uw systeem."
   },
   "shippingAddressModelErrors": {
     "provideName": "Voer een naam in.",
@@ -1722,7 +1786,7 @@
     "badConditionType": "De conditie is geen beschikbaar type.",
     "descriptionTooLong": "De beschrijving is langer dan toegestaan.",
     "provideAmount": "Voer een prijs in",
-    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericAmount": "Geef aub de prijs aan als nummer. Decimalen moeten aangegeven worden met een punt als scheidingsteken, bijvoorbeeld \"0.00\".",
     "provideAmountGreaterThanZero": "De prijs moet hoger zijn dan 0.",
     "imageRequired": "Voer tenminste 1 afbeelding op",
     "tooManyTags": "Je hebt het maximaal aantal van %{maxTags} tags overschreden.",
@@ -1740,7 +1804,7 @@
     "percentageLow": "Het percentage moet groter zijn dan nul.",
     "percentageHigh": "Je kunt niet een percentage opgeven gelijk aan of groter dan 100%" ,
     "priceLow": "De prijs moet hoger zijn dan nul.",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericDiscountAmount": "Geef aub de korting aan als nummer. Decimalen moeten aangegeven worden met een punt als scheidingsteken, bijvoorbeeld \\\"0.00\\\".",
     "needUniqueDiscountCode": "Je hebt al een coupon met die code. Geef een unieke coupon code in."
   },
   "shippingOptionModelErrors": {
@@ -1754,7 +1818,7 @@
     "provideService": "Voer tenminste 1 verzend service in.",
     "provideAmount": "Voer een prijs in.",
     "provideNumericAmount": "Voer de prijs in als nummer.",
-    "provideNonNegativePrice": "The price must be greater than or equal to 0."
+    "provideNonNegativePrice": "De prijs moet groter of gelijk zijn aan 0."
   },
   "moderatorModelErrors": {
     "noDescription": "Voer een beschrijving in.",
@@ -1765,14 +1829,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "Geef een geldige fee type op.",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "noPercentage": "Als je fee type een percentage is of vast plus percentage, dan moet je een geldig percentage opgeven. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\".",
     "percentageLow": "Je kunt geen percentage instellen onder 0 %",
     "percentageHigh": "Je kunt geen percentage instellen boven 100%",
     "percentageDecimals": "Je kunt geen fee percentage zetten met meer dan 2 decimalen."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "Als je fee type vast is of vast plus percentage, dan moet je een geldige valuta instellen voor je fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+    "noAmount": "Als je fee type vast is of vast plus percentage, dan moet je een geldige hoeveelheid instellen voor je vaste fee. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "Voer een hoeveelheid in.",
@@ -1791,11 +1855,11 @@
   },
   "spendModelErrors": {
     "provideAddress": "Voer adres in.",
-    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideAmountNumber": "Geef aub een bedrag op als nummer. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\".",
     "amountGreaterThanZero": "Bedrag moet  groter zijn dan nul.",
-    "insufficientFunds": "U heeft onvoldoende saldo om dit bedrag te versturen. Houdt rekening met de transactie toeslag.",
-    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
-    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
+    "insufficientFunds": "U heeft onvoldoende geldmiddelen (coins/saldo) om dit bedrag te versturen. Houdt rekening met de transactie toeslag.",
+    "missingExchangeRateData": "Kan niets spenderen in %{cur} omdat er geen wisselkoers beschikbaar is voor deze currency. Selecteer aub een andere currency. Als er voor geen van de currencies data beschikbaar is, kunt u altijd %{serverCur} selecteren.",
+    "invalidAddress": "Het opgegeven adres lijkt geen geldig %{cur} adres te zijn."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "Hoeveelheid moet 1 of meer zijn.",
@@ -1804,7 +1868,7 @@
     "missingAddress": "Kies een geldig verzendadres.",
     "missingShippingOption": "Kies een geldig verzend optie.",
     "needsModerator": "U moet een moderator kiezen wanneer u een Moderated Payment doen.",
-    "removeModerator": "An unmoderated purchase cannot have a moderator."
+    "removeModerator": "Een ongemodereerde aankoop kan geen moderator hebben."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Kies een transporteur.",
@@ -1814,17 +1878,17 @@
   "errorPage": {
     "userNotFoundTitle": "Deze gebruiker kon niet gevonden worden.",
     "userNotFoundMsg": "%{user} niet gevonden op het netwerk. Zorg dat je de correct handle of peerID hebt.",
-    "listingNotFoundTitle": "Het verkoopartikel kon niet gevonden worden.",
+    "listingNotFoundTitle": "Het artikel kon niet gevonden worden.",
     "listingNotFoundLink": "Klik hier om de andere artikelen te zien in deze winkel.",
     "listingNotFoundMsg": "%{listing} kon niet gevonden worden.",
     "pageNotFoundTitle": "Pagina kon niet gevonden worden.",
     "pageNotFoundMsg": "Controleer de adresbalk of de URL correct is.",
     "genericErrorTitle": "Er is een fout opgetreden.",
-    "listingErrorTitle": "Kan verkoopartikel niet ophalen.",
-    "listingErrorMsg": "Fout bij het ophalen van verkoopartikel %{listing}"
+    "listingErrorTitle": "Kan artikel niet ophalen.",
+    "listingErrorMsg": "Fout bij het ophalen van artikel %{listing}"
   },
   "orderCompletionModelErrors": {
-    "provideReview": "Voer een review in.",
+    "provideReview": "Voer een beoordeling in.",
     "provideRating": "Selecteer een rating."
   },
   "ratingLabels": {
@@ -1835,12 +1899,14 @@
     "service": "Dienst"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "Dit is geen geldige url voor een search provider"
+    "verifiedModsProvider": "Dit is geen geldige url voor een provider van een geverifieerde moderator."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Voer een hoeveelheid in.",
     "percentageOutOfRange": "Hoeveelheid moet tussen 0 en 100 zijn.",
     "providePercentageAsNumber": "Voer een verkoper hoeveelheid in als nummer.",
+    "vendorPercentageMustBe100": "Totdat het contract van de koper arriveert, moet deze waarde 100 zijn.",
+    "buyerPercentageMustBe100": "Totdat het contract van de verkoper arriveert, moet deze waarde 100 zijn.",
     "totalPercentageOutOfRange": "Hoeveelheden van koper en verkoper mag niet groter zijn dan 100.",
     "totalPercentageTooLow": "Hoeveelheden van koper en verkoper moet opgeteld 100 zijn.",
     "provideResolution": "Geef uitleg over je beslissing."
@@ -2282,232 +2348,232 @@
   },
   "languages": {
     "af": "Afrikaans",
-    "af-ZA": "Afrikaans (South Africa)",
-    "ar": "Arabic",
-    "ar-AE": "Arabic (U.A.E.)",
-    "ar-BH": "Arabic (Bahrain)",
-    "ar-DZ": "Arabic (Algeria)",
-    "ar-EG": "Arabic (Egypt)",
-    "ar-IQ": "Arabic (Iraq)",
-    "ar-JO": "Arabic (Jordan)",
-    "ar-KW": "Arabic (Kuwait)",
-    "ar-LB": "Arabic (Lebanon)",
-    "ar-LY": "Arabic (Libya)",
-    "ar-MA": "Arabic (Morocco)",
-    "ar-OM": "Arabic (Oman)",
-    "ar-QA": "Arabic (Qatar)",
-    "ar-SA": "Arabic (Saudi Arabia)",
-    "ar-SY": "Arabic (Syria)",
-    "ar-TN": "Arabic (Tunisia)",
-    "ar-YE": "Arabic (Yemen)",
-    "az": "Azeri (Latin)",
-    "az-AZ": "Azeri (Cyrillic) (Azerbaijan)",
-    "be": "Belarusian",
-    "be-BY": "Belarusian (Belarus)",
-    "bg": "Bulgarian",
-    "bg-BG": "Bulgarian (Bulgaria)",
-    "bs-BA": "Bosnian (Bosnia and Herzegovina)",
-    "ca": "Catalan",
-    "ca-ES": "Catalan (Spain)",
-    "cs": "Czech",
-    "cs-CZ": "Czech (Czech Republic)",
-    "cy": "Welsh",
-    "cy-GB": "Welsh (United Kingdom)",
-    "da": "Danish",
-    "da-DK": "Danish (Denmark)",
-    "de": "German",
-    "de-AT": "German (Austria)",
-    "de-CH": "German (Switzerland)",
-    "de-DE": "German (Germany)",
-    "de-LI": "German (Liechtenstein)",
-    "de-LU": "German (Luxembourg)",
+    "af-ZA": "Afrikaans (Zuid Afrika)",
+    "ar": "Arabisch",
+    "ar-AE": "Arabisch (V.A.E.)",
+    "ar-BH": "Arabisch (Bahrein)",
+    "ar-DZ": "Arabisch (Algerije)",
+    "ar-EG": "Arabisch (Egypte)",
+    "ar-IQ": "Arabisch (Irak)",
+    "ar-JO": "Arabisch (Jordanië)",
+    "ar-KW": "Arabisch (Koeweit)",
+    "ar-LB": "Arabisch (Libanon)",
+    "ar-LY": "Arabisch (Libië)",
+    "ar-MA": "Arabisch (Marokko)",
+    "ar-OM": "Arabisch (Oman)",
+    "ar-QA": "Arabisch (Qatar)",
+    "ar-SA": "Arabisch (Saoedi-Arabië)",
+    "ar-SY": "Arabisch (Syrië)",
+    "ar-TN": "Arabisch (Tunesië)",
+    "ar-YE": "Arabisch (Jemen)",
+    "az": "Azerbeidzjaans (Latijns)",
+    "az-AZ": "Azerbeidzjaans (Cyrillisch) (Azerbeidzjan)",
+    "be": "Wit-Russisch",
+    "be-BY": "Wit-Russisch (Wit-Rusland)",
+    "bg": "Bulgaars",
+    "bg-BG": "Bulgaars (Bulgarije)",
+    "bs-BA": "Bosnisch (Bosnië en Herzegovina)",
+    "ca": "Catalaans",
+    "ca-ES": "Catalaans (Spanje)",
+    "cs": "Tsjechisch",
+    "cs-CZ": "Tsjechisch (Tsjechische Republiek)",
+    "cy": "Welsh ",
+    "cy-GB": "Welsh (Verenigd Koninkrijk)",
+    "da": "Deens",
+    "da-DK": "Deens (Denemarken)",
+    "de": "Duits",
+    "de-AT": "Duits (Oostenrijk)",
+    "de-CH": "Duits (Zwitserland)",
+    "de-DE": "Duits (Duitsland)",
+    "de-LI": "Duits (Liechtenstein)",
+    "de-LU": "Duits (Luxemburg)",
     "dv": "Divehi",
-    "dv-MV": "Divehi (Maldives)",
-    "el": "Greek",
-    "el-GR": "Greek (Greece)",
-    "en": "English",
-    "en-AU": "English (Australia)",
-    "en-BZ": "English (Belize)",
-    "en-CA": "English (Canada)",
-    "en-CB": "English (Caribbean)",
-    "en-GB": "English (United Kingdom)",
-    "en-IE": "English (Ireland)",
-    "en-JM": "English (Jamaica)",
-    "en-NZ": "English (New Zealand)",
-    "en-PH": "English (Republic of the Philippines)",
-    "en-TT": "English (Trinidad and Tobago)",
-    "en-US": "English (United States)",
-    "en-ZA": "English (South Africa)",
-    "en-ZW": "English (Zimbabwe)",
+    "dv-MV": "Divehi (Malediven)",
+    "el": "Grieks",
+    "el-GR": "Grieks (Griekenland)",
+    "en": "Engels",
+    "en-AU": "Engels (Australië)",
+    "en-BZ": "Engels (Belize)",
+    "en-CA": "Engels (Canada)",
+    "en-CB": "Engels (Caraïben)",
+    "en-GB": "Engels (Verenigd Koninkrijk)",
+    "en-IE": "Engels (Ierland)",
+    "en-JM": "Engels (Jamaica)",
+    "en-NZ": "Engels (Nieuw Zeeland)",
+    "en-PH": "Engels (Filipijnen)",
+    "en-TT": "Engels (Trinidad en Tobago)",
+    "en-US": "Engels (Verenigde Staten)",
+    "en-ZA": "Engels (Zuid Afrika)",
+    "en-ZW": "Engels (Zimbabwe)",
     "eo": "Esperanto",
-    "es": "Spanish",
-    "es-AR": "Spanish (Argentina)",
-    "es-BO": "Spanish (Bolivia)",
-    "es-CL": "Spanish (Chile)",
-    "es-CO": "Spanish (Colombia)",
-    "es-CR": "Spanish (Costa Rica)",
-    "es-DO": "Spanish (Dominican Republic)",
-    "es-EC": "Spanish (Ecuador)",
-    "es-ES": "Spanish (Spain)",
-    "es-GT": "Spanish (Guatemala)",
-    "es-HN": "Spanish (Honduras)",
-    "es-MX": "Spanish (Mexico)",
-    "es-NI": "Spanish (Nicaragua)",
-    "es-PA": "Spanish (Panama)",
-    "es-PE": "Spanish (Peru)",
-    "es-PR": "Spanish (Puerto Rico)",
-    "es-PY": "Spanish (Paraguay)",
-    "es-SV": "Spanish (El Salvador)",
-    "es-UY": "Spanish (Uruguay)",
-    "es-VE": "Spanish (Venezuela)",
-    "et": "Estonian",
-    "et-EE": "Estonian (Estonia)",
-    "eu": "Basque",
-    "eu-ES": "Basque (Spain)",
+    "es": "Spaans",
+    "es-AR": "Spaans (Argentinië)",
+    "es-BO": "Spaans (Bolivia)",
+    "es-CL": "Spaans (Chili)",
+    "es-CO": "Spaans (Colombia)",
+    "es-CR": "Spaans (Costa Rica)",
+    "es-DO": "Spaans (Dominicaanse Republiek)",
+    "es-EC": "Spaans (Ecuador)",
+    "es-ES": "Spaans (Spanje)",
+    "es-GT": "Spaans (Guatemala)",
+    "es-HN": "Spaans (Honduras)",
+    "es-MX": "Spaans (Mexico)",
+    "es-NI": "Spaans (Nicaragua)",
+    "es-PA": "Spaans (Panama)",
+    "es-PE": "Spaans (Peru)",
+    "es-PR": "Spaans (Puerto Rico)",
+    "es-PY": "Spaans (Paraguay)",
+    "es-SV": "Spaans (El Salvador)",
+    "es-UY": "Spaans (Uruguay)",
+    "es-VE": "Spaans (Venezuela)",
+    "et": "Estisch",
+    "et-EE": "Estisch (Estland)",
+    "eu": "Baskisch",
+    "eu-ES": "Baskish (Spanje)",
     "fa": "Farsi",
     "fa-IR": "Farsi (Iran)",
-    "fi": "Finnish",
-    "fi-FI": "Finnish (Finland)",
-    "fo": "Faroese",
-    "fo-FO": "Faroese (Faroe Islands)",
-    "fr": "French",
-    "fr-BE": "French (Belgium)",
-    "fr-CA": "French (Canada)",
-    "fr-CH": "French (Switzerland)",
-    "fr-FR": "French (France)",
-    "fr-LU": "French (Luxembourg)",
-    "fr-MC": "French (Principality of Monaco)",
-    "gl": "Galician",
-    "gl-ES": "Galician (Spain)",
-    "gu": "Gujarati",
+    "fi": "Fins",
+    "fi-FI": "Fins (Finland)",
+    "fo": "Faeröers",
+    "fo-FO": "Faeröers (Faeröer)",
+    "fr": "Frans",
+    "fr-BE": "Frans (België)",
+    "fr-CA": "Frans (Canada)",
+    "fr-CH": "Frans (Zwitserland)",
+    "fr-FR": "Frans (Frankrijk)",
+    "fr-LU": "Frans (Luxemburg)",
+    "fr-MC": "Frans (Monaco)",
+    "gl": "Galicisch ",
+    "gl-ES": "Galicisch (Spanje)",
+    "gu": "Gujarati ",
     "gu-IN": "Gujarati (India)",
-    "he": "Hebrew",
-    "he-IL": "Hebrew (Israel)",
+    "he": "Hebreeuws",
+    "he-IL": "Hebreeuws (Israël)",
     "hi": "Hindi",
     "hi-IN": "Hindi (India)",
-    "hr": "Croatian",
-    "hr-BA": "Croatian (Bosnia and Herzegovina)",
-    "hr-HR": "Croatian (Croatia)",
-    "hu": "Hungarian",
-    "hu-HU": "Hungarian (Hungary)",
-    "hy": "Armenian",
-    "hy-AM": "Armenian (Armenia)",
-    "id": "Indonesian",
-    "id-ID": "Indonesian (Indonesia)",
-    "is": "Icelandic",
-    "is-IS": "Icelandic (Iceland)",
-    "it": "Italian",
-    "it-CH": "Italian (Switzerland)",
-    "it-IT": "Italian (Italy)",
-    "ja": "Japanese",
-    "ja-JP": "Japanese (Japan)",
-    "ka": "Georgian",
-    "ka-GE": "Georgian (Georgia)",
-    "kk": "Kazakh",
-    "kk-KZ": "Kazakh (Kazakhstan)",
+    "hr": "Kroatisch",
+    "hr-BA": "Kroatisch (Bosnië en Herzegovina)",
+    "hr-HR": "Kroatisch (Kroatië)",
+    "hu": "Hongaars",
+    "hu-HU": "Hongaars (Hongarije)",
+    "hy": "Armeens",
+    "hy-AM": "Armeens (Armenië)",
+    "id": "Indonesisch",
+    "id-ID": "Indonesisch (Indonesië)",
+    "is": "Ijslands",
+    "is-IS": "Ijslands (Ijsland)",
+    "it": "Italiaans",
+    "it-CH": "Italiaans (Zwitserland)",
+    "it-IT": "Italiaans (Italië)",
+    "ja": "Japans",
+    "ja-JP": "Japans (Japan)",
+    "ka": "Georgisch",
+    "ka-GE": "Georgisch (Georgië)",
+    "kk": "Kazachs",
+    "kk-KZ": "Kazachs (Kazachstan)",
     "kn": "Kannada",
     "kn-IN": "Kannada (India)",
-    "ko": "Korean",
-    "ko-KR": "Korean (Korea)",
-    "kok": "Konkani",
+    "ko": "Koreaans",
+    "ko-KR": "Koreaans (Korea)",
+    "kok": "Konkani ",
     "kok-IN": "Konkani (India)",
-    "ky": "Kyrgyz",
-    "ky-KG": "Kyrgyz (Kyrgyzstan)",
-    "lt": "Lithuanian",
-    "lt-LT": "Lithuanian (Lithuania)",
-    "lv": "Latvian",
-    "lv-LV": "Latvian (Latvia)",
+    "ky": "Kirgizisch",
+    "ky-KG": "Kirgizisch (Kirgizië)",
+    "lt": "Litouws",
+    "lt-LT": "Litouws (Litouwen)",
+    "lv": "Lets",
+    "lv-LV": "Lets (Letland)",
     "mi": "Maori",
-    "mi-NZ": "Maori (New Zealand)",
-    "mk": "FYRO Macedonian",
-    "mk-MK": "FYRO Macedonian (Former Yugoslav Republic of Macedonia)",
-    "mn": "Mongolian",
-    "mn-MN": "Mongolian (Mongolia)",
-    "mr": "Marathi",
+    "mi-NZ": "Maori (Nieuw Zeeland)",
+    "mk": "Macedonisch",
+    "mk-MK": "Macedonisch (Voormalige Socialistische Federale Republiek Joegoslavië)",
+    "mn": "Mongools",
+    "mn-MN": "Mongools (Mongolië)",
+    "mr": "Marathi ",
     "mr-IN": "Marathi (India)",
-    "ms": "Malay",
-    "ms-BN": "Malay (Brunei Darussalam)",
-    "ms-MY": "Malay (Malaysia)",
-    "mt": "Maltese",
-    "mt-MT": "Maltese (Malta)",
-    "nb": "Norwegian (Bokm?l)",
-    "nb-NO": "Norwegian (Bokm?l) (Norway)",
-    "nl": "Dutch",
-    "nl-BE": "Dutch (Belgium)",
-    "nl-NL": "Dutch (Netherlands)",
-    "nn-NO": "Norwegian (Nynorsk) (Norway)",
-    "ns": "Northern Sotho",
-    "ns-ZA": "Northern Sotho (South Africa)",
+    "ms": "Maleis",
+    "ms-BN": "Maleis (Brunei Darussalam)",
+    "ms-MY": "Maleis (Maleisië)",
+    "mt": "Maltees",
+    "mt-MT": "Maltees (Malta)",
+    "nb": "Noors (Bokmål)",
+    "nb-NO": "Noors (Bokmål) (Noorwegen)",
+    "nl": "Nederlands",
+    "nl-BE": "Nederlands (Belgie)",
+    "nl-NL": "Nederlands (Nederland)",
+    "nn-NO": "Noors (Nynorsk) (Noorwegen)",
+    "ns": "Noord-Sotho",
+    "ns-ZA": "Noord-Sotho (Zuid Afrika)",
     "pa": "Punjabi",
     "pa-IN": "Punjabi (India)",
-    "pl": "Polish",
-    "pl-PL": "Polish (Poland)",
-    "ps": "Pashto",
-    "ps-AR": "Pashto (Afghanistan)",
-    "pt": "Portuguese",
-    "pt-BR": "Portuguese (Brazil)",
-    "pt-PT": "Portuguese (Portugal)",
+    "pl": "Pools",
+    "pl-PL": "Pools (Polen)",
+    "ps": "Pasjtoe ",
+    "ps-AR": "Pasjtoe (Afghanistan)",
+    "pt": "Portugees",
+    "pt-BR": "Portugees (Brazilië)",
+    "pt-PT": "Portugees (Portugal)",
     "qu": "Quechua",
     "qu-BO": "Quechua (Bolivia)",
     "qu-EC": "Quechua (Ecuador)",
     "qu-PE": "Quechua (Peru)",
-    "ro": "Romanian",
-    "ro-RO": "Romanian (Romania)",
-    "ru": "Russian",
-    "ru-RU": "Russian (Russia)",
-    "sa": "Sanskrit",
-    "sa-IN": "Sanskrit (India)",
-    "se": "Sami (Northern)",
-    "se-FI": "Sami (Inari) (Finland)",
-    "se-NO": "Sami (Southern) (Norway)",
-    "se-SE": "Sami (Southern) (Sweden)",
-    "sk": "Slovak",
-    "sk-SK": "Slovak (Slovakia)",
-    "sl": "Slovenian",
-    "sl-SI": "Slovenian (Slovenia)",
-    "sq": "Albanian",
-    "sq-AL": "Albanian (Albania)",
-    "sr-BA": "Serbian (Cyrillic) (Bosnia and Herzegovina)",
-    "sr-SP": "Serbian (Cyrillic) (Serbia and Montenegro)",
-    "sv": "Swedish",
-    "sv-FI": "Swedish (Finland)",
-    "sv-SE": "Swedish (Sweden)",
+    "ro": "Roemeens",
+    "ro-RO": "Roemeens (Roemenië)",
+    "ru": "Russisch",
+    "ru-RU": "Russisch (Rusland)",
+    "sa": "Sanskriet",
+    "sa-IN": "Sanskriet (India)",
+    "se": "Samisch (Noord-Samisch)",
+    "se-FI": "Samisch (Inari-Samisch) (Finland)",
+    "se-NO": "Samisch (Zuid-Samisch) (Noorwegen)",
+    "se-SE": "Samisch (Zuid-Samisch) (Zweden)",
+    "sk": "Slowaaks",
+    "sk-SK": "Slowaaks (Slowakije)",
+    "sl": "Sloveens",
+    "sl-SI": "Sloveens (Slovenië)",
+    "sq": "Albanees",
+    "sq-AL": "Albanees (Albanië)",
+    "sr-BA": "Servisch (Cyrillisch) (Bosnië en Herzegovina)",
+    "sr-SP": "Servisch (Cyrillisch) (Servië en Montenegro)",
+    "sv": "Zweeds",
+    "sv-FI": "Zweeds (Finland)",
+    "sv-SE": "Zweeds (Zweden)",
     "sw": "Swahili",
-    "sw-KE": "Swahili (Kenya)",
-    "syr": "Syriac",
-    "syr-SY": "Syriac (Syria)",
+    "sw-KE": "Swahili (Kenia)",
+    "syr": "Syrisch",
+    "syr-SY": "Syrisch (Syrië)",
     "ta": "Tamil",
     "ta-IN": "Tamil (India)",
-    "te": "Telugu",
-    "te-IN": "Telugu (India)",
+    "te": "Teluga",
+    "te-IN": "Teluga (India)",
     "th": "Thai",
     "th-TH": "Thai (Thailand)",
     "tl": "Tagalog",
-    "tl-PH": "Tagalog (Philippines)",
-    "tn": "Tswana",
-    "tn-ZA": "Tswana (South Africa)",
-    "tr": "Turkish",
-    "tr-TR": "Turkish (Turkey)",
-    "tt": "Tatar",
-    "tt-RU": "Tatar (Russia)",
+    "tl-PH": "Tagalog (Filipijnen)",
+    "tn": "Tswana ",
+    "tn-ZA": "Tswana (Zuid Afrika)",
+    "tr": "Turks",
+    "tr-TR": "Turks (Turkije)",
+    "tt": "Tatar ",
+    "tt-RU": "Tatar (Rusland)",
     "ts": "Tsonga",
-    "uk": "Ukrainian",
-    "uk-UA": "Ukrainian (Ukraine)",
-    "ur": "Urdu",
-    "ur-PK": "Urdu (Islamic Republic of Pakistan)",
-    "uz": "Uzbek (Latin)",
-    "uz-UZ": "Uzbek (Cyrillic) (Uzbekistan)",
-    "vi": "Vietnamese",
-    "vi-VN": "Vietnamese (Viet Nam)",
-    "xh": "Xhosa",
-    "xh-ZA": "Xhosa (South Africa)",
-    "zh": "Chinese",
-    "zh-CN": "Chinese (S)",
-    "zh-HK": "Chinese (Hong Kong)",
-    "zh-MO": "Chinese (Macau)",
-    "zh-SG": "Chinese (Singapore)",
-    "zh-TW": "Chinese (T)",
-    "zu": "Zulu",
-    "zu-ZA": "Zulu (South Africa)"
+    "uk": "Oekraïens",
+    "uk-UA": "Oekraïens (Oekraïne)",
+    "ur": "Urdu ",
+    "ur-PK": "Urdu (Pakistan)",
+    "uz": "Oezbeeks (Latijns)",
+    "uz-UZ": "Oezbeeks (Cyrillisch) (Oezbekistan)",
+    "vi": "Vietnamees",
+    "vi-VN": "Vietnamees (Vietnam)",
+    "xh": "Xhosa ",
+    "xh-ZA": "Xhosa (Zuid Afrika)",
+    "zh": "Chinees",
+    "zh-CN": "Chinees (S)",
+    "zh-HK": "Chinees (Hong Kong)",
+    "zh-MO": "Chinees (Macau)",
+    "zh-SG": "Chinees (Singapore)",
+    "zh-TW": "Chinees (T)",
+    "zu": "Zoeloe",
+    "zu-ZA": "Zoeloe (Zuid Afrika)"
   }
 }

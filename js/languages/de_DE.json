@@ -8,7 +8,7 @@
   },
   "localServerShutdownDialog": {
     "title": "Der lokale Server wird heruntergefahren",
-    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
+    "body": "Der eingebaute Server wird heruntergefahren. Dies kann ein paar Minuten dauern. Während des herunterfahrens werden wichtige Säuberungsaufgaben erledigt. Es ist wichtig, diesen Prozess nicht zu unterbrechen. Wenn der Prozess abgeschlossen ist, wird sich die Anwendung schliessen."
   },
   "follow": {
     "typeFollow": "folgen",
@@ -24,7 +24,7 @@
   },
   "feeChangeWidget": {
     "btnChange": "Wechselgeld",
-    "label": "%{cur} fee:"
+    "label": "%{cur} Gebühr:"
   },
   "blockButton": {
     "tipBlock": "Diesen Benutzer blockieren",
@@ -35,7 +35,7 @@
   "blockedWarning": {
     "heading": "Du hast diesen Benutzer blockiert",
     "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
-    "paragraph2": "Would you like to unblock and view their page?",
+    "paragraph2": "Möchten Sie sie entblockieren und dann die Seite ansehen?",
     "btnCancel": "Abbrechen",
     "btnUnblock": "Ja, nicht mehr blockieren"
   },
@@ -50,13 +50,13 @@
   "walletSetup": {
     "heading": "Anlegen der OpenBazaar Brieftasche",
     "currencyLabel": "Währung",
-    "currencyHelper": "Choose a currency for your Wallet",
+    "currencyHelper": "Wählen Sie eine Währung für Ihre Brieftasche (Wallet)",
     "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
-    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "curInUseTip": "Sie haben schon einen eingebauten Server mit dieser Währung als Brieftasche (Wallet).",
     "zcashBinaryLabel": "Zcash Programm",
     "fullNodeLink": "hier",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Browse",
+    "btnBrowse": "Durchblättern",
     "btnNext": "Weiter"
   },
   "unsupportedCryptoCurDialog": {
@@ -77,11 +77,11 @@
   "block": {
     "errorModal": {
       "titleUnableToBlock": "Nicht möglich zu blockieren",
-      "titleUnableToUnblock": "Unable to unblock",
-      "titleUnableToBlockUnblock": "Unable to block / unblock",
-      "blockFailedListHeading": "Unable to block the following users:",
-      "unblockFailedListHeading": "Unable to unblock the following users:",
-      "reason": "Reason: %{reason}"
+      "titleUnableToUnblock": "Nicht möglich, die Blockade aufzuheben",
+      "titleUnableToBlockUnblock": "Nicht möglich zu blockieren / entblockieren",
+      "blockFailedListHeading": "Nicht möglich, die folgenden Nutzer zu blockieren:",
+      "unblockFailedListHeading": "Nicht möglich, die folgenden Nutzer zu entblockieren:",
+      "reason": "Grund: %{reason}"
     }
   },
   "resyncBlockchainError": "Beim nachladen der Transaktionen ist ein Fehler aufgetreten.",
@@ -102,7 +102,7 @@
     "install": "Jetzt installieren"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Keine M&ouml;glichkeit die Preisinformationen zu zeigen, da der Preis in einer unbekannten W&auml;hrung angegeben ist."
   },
   "addressBarPlaceholder": "Geben Sie einen @Benutzernamen, eine OpenBazaar-ID oder einen Suchbegriff ein",
   "testnet": "Testmodus",
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Erneut versuchen",
       "btnManageConnections": "Verbindungen verwalten",
+      "btnContinue": "Weiter",
       "retryConfig": {
         "title": "Ihre Servereinstellungen konnten nicht bezogen werden."
       },
@@ -156,13 +157,20 @@
         "title": "Ihr Wallet-Guthaben konnte nicht bezogen werden."
       },
       "unableToGetSearchProviders": {
-        "title": "Außerstande Suchanbieter zu laden."
+        "title": "Außerstande Suchanbieter zu laden.",
+        "btnClose": "Weitermachen ohne Suchanbieter"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Au&szlig;erstande die geprüften Moderatoren zu laden.",
+        "btnRetry": "Erneut versuchen",
+        "btnClose": "Weiter",
+        "msg": "Klicken Sie Wiederholen um es noch einmal zu probieren, oder Weiter um das Laden der gepr&uuml;ften Moderatoren zu &uuml;berspringen. Grund f&uuml;r den Fehler: %{reason}"
       }
     },
     "connectMessaging": {
       "cancelLink": "Abbrechen",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
+      "connectAttemptMsg": "Verbinde zu %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "Initialisiere das Programm zcash. Das kann ein paar Minuten dauern. %{cancelLink}"
     }
   },
   "notifications": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} hat Ihre Bestellung zurückerstattet.",
       "fulfillment": "%{vendorName} hat ihre Bestellung erfüllt.",
       "orderComplete": "%{buyerName} hat eine Rückmeldung zu seiner Bestellung hinterlassen.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} hat einen Konfliktfall mit ihnen eröffnet.",
       "disputeOpenMod": "%{disputerName} hat einen Konfliktfall mit %{disputeeName} eröffnet.",
       "disputeUpdate": "%{disputeeName} hat seinen Vertrag für den Konfliktfall mit %{disputerName} geteilt.",
@@ -204,7 +213,7 @@
     "sales": "Verkäufe",
     "cases": "Fälle",
     "settings": "Einstellungen",
-    "help": "Help",
+    "help": "Hilfe",
     "toolTip": {
       "back": "Zurück",
       "forward": "Vor",
@@ -214,7 +223,7 @@
       "notifications": "Benachrichtigungen",
       "nav": "Navigation",
       "close": "Schließen",
-      "currentPrice": "Current %{cur} price"
+      "currentPrice": "Aktueller %{cur} Preis"
     },
     "serversMenu": {
       "newServer": "Neuer Server",
@@ -238,7 +247,7 @@
       "typingIndicator": "%{user} schreibt …",
       "deleteConvoErrorTitle": "Das Gespräch kann nicht gelöscht werden",
       "deletingOverlayText": "Gespräch wird gelöscht …",
-      "blockingOverlayText": "Blocking…"
+      "blockingOverlayText": "Blockiere..."
     }
   },
   "userPage": {
@@ -326,12 +335,12 @@
       "following": "abonniert",
       "followers": "Abonnenten"
     },
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Sie haben diesen Benutzer blockiert"
   },
   "reputation": {
-    "averageRating": "overall rating",
-    "totalReviews": "review |||| reviews",
-    "noTitle": "Listing title not found"
+    "averageRating": "Durchschnittliche Bewertung",
+    "totalReviews": "Rezension |||| Rezensionen",
+    "noTitle": "Titel des Produkts nicht gefunden"
 
   },
   "userShort": {
@@ -343,13 +352,33 @@
     "tipUnfollow": "Nicht mehr folgen",
     "tipModAdd": "Als Moderator hinzufügen",
     "tipModRemove": "Als Moderator entfernen",
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Sie haben diesen Benutzer blockiert"
+  },
+  "verifiedMod": {
+    "verified": {
+      "label": "Geprüft",
+      "title": "Geprüfter Moderator",
+      "body": "This moderator is verified by %{providerName}. %{link}",
+      "bodyOrder": "This moderator is verified by %{providerName}. %{link}"
+    },
+    "unverified": {
+      "label": "Ungepr&uuml;ft",
+      "title": "Ungepr&uuml;fter Moderator",
+      "not": "NICHT",
+      "body": "This moderator is %{not} verified by %{providerName}. Proceed with caution or choose a verified moderator.",
+      "bodyOrder": "This moderator is %{not} verified by %{providerName}."
+    },
+
+    "link": "Erfahre mehr",
+    "type": "Art:",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "Anzeigen",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "Die Informationen für diesen Moderator konnten nicht geladen werden.",
     "invalid": "Dieser Benutzer ist momentan kein Moderator.",
     "languages": "%{lang}, und %{smart_count} andere Sprache. |||| %{lang}, und %{smart_count} andere Sprache."
@@ -368,8 +397,8 @@
     "addAsModeratorButton": "Als Moderator hinzufügen",
     "disclaimer": "** Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt entstehen.",
     "languages": "Sprachen",
-    "currenciesSupported": "Currencies Supported",
-    "noCoinSupport": "This moderator does not support %{coin}."
+    "currenciesSupported": "Unterst&uuml;tzte W&auml;hrungen",
+    "noCoinSupport": "Dieser Moderator unterst&uuml;tzt %{coin} nicht."
   },
   "about": {
     "linkText": "Über OpenBazaar",
@@ -389,8 +418,8 @@
       "btnCopyAddress": "Adresse kopieren",
       "btnOpenInWallet" : "In Wallet öffnen",
       "bannerCountDonations": "%{donationCountFloor}+ an Spenden empfangen!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
+      "bitcoinIntroLine": "Spenden in Bitcoin können an die folgende Adresse gesendet werden:",
+      "bchWarning": "Senden Sie kein Bitcoin Cash an diese Adresse",
       "unableToOpenInWallet": {
         "title": "Öffnen in Wallet nicht möglich",
         "body": "Die Adresse kann nicht in der Wallet geöffnet werden, da momentant eine Zahlung gesendet wird. Bitte warten Sie bis diese abgeschlossen wurde und versuchen Sie es anschließend erneut."
@@ -430,9 +459,9 @@
       }
     },
     "helpTab": {
-      "linkText": "Help",
-      "sectionHeader": "Help",
-      "supportLink": "Support page on OpenBazaar.org",
+      "linkText": "Hilfe",
+      "sectionHeader": "Hilfe",
+      "supportLink": "Hilfeseite auf OpenBazaar.org",
       "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
@@ -460,8 +489,9 @@
       "statusSaveComplete": "Allgemeine Einstellungen wurden gespeichert.",
       "statusSaveFailed": "Allgemeine Einstellungen konnten nicht gespeichert werden.",
       "saveErrorAlertTitle": "Allgemeine Einstellungen konnten nicht gespeichert werden",
-      "searchProvider": "Suchanbieter",
-      "restoreDefaultProvider": " Standardeinstellung wiederherstellen "
+      "verifiedMods": "Geprüfte Moderatoren",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": " Standardeinstellung wiederherstellen "
     },
     "pageTab": {
       "helperAbout": "Anzeigen auf Ihrer Startseite",
@@ -593,7 +623,7 @@
       "transaction": {
         "sectionName": "Transaktionen",
         "saveMetadata": "Metadaten speichern",
-        "defaultFee": "%{cur} Fee",
+        "defaultFee": "%{cur} Gebühren",
         "low": "Wirtschaftlich",
         "medium": "Normal",
         "high": "Dringend"
@@ -657,9 +687,10 @@
       "selectedModeratorsEmptyWarning": "In Ihrem Shop sind kann nur per Direktzahlung gezahlt werden",
       "moderatorByIDPlaceholder": "Geben Sie einen @Benutzernamen oder eine ID ein",
       "moderatoryByIDSubmit": "Finden",
-      "availableModerators": "Im Netzwerk verfügbare Moderatoren",
+      "availableModerators": "Verfügbare Moderatoren",
       "browseModerators": "Moderatoren durchsuchen",
-      "browseMoreModerators": "Weitere Moderatoren laden",
+      "verifiedOnly": "Nur gepr&uuml;fte Moderatoren",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Wird geladen",
       "status": {
         "saving": "Shop-Einstellungen werden gespeichert…",
@@ -669,20 +700,19 @@
       },
       "errors": {
         "modNotFoundTitle": "Der Moderator konnte nicht gefunden werden",
-        "modNotFound": "%{guidOrHandle} konnte nicht im Netzwerk gefunden werden. Möglicherweise handelt es sich hierbei um keine gültige ID oder keinen gültigen Benutzernamen.",
-        "modNotFoundSelected": "%{guidOrHandle} konnte nicht im Netzwerk gefunden werden. Möglicherweise handelt es sich hierbei um keine gültige ID oder keinen gültigen Benutzernamen. Er/Sie wird nicht in Ihrer Liste angezeigt, aber trotzdem als ein Moderator Ihres Shops gespeichert.",
-        "availableModsFailed": "Verfügbare Moderatoren konnten nicht aus dem Netzwerk abgerufen werden",
-        "modAlreadyAdded": "Sie haben diesen Moderator bereits hinzugefügt.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
+        "availableModsTitle": "Verfügbare Moderatoren konnten nicht geladen werden",
         "modIsBlank": "Sie müssen eine Moderator-ID oder -Benutzernamen angeben",
-        "modIsInvalid": "%{guid} ist kein zulässiger Moderator.",
-        "modsAreInvalid": "Die folgenden Moderatoren sind momentan keine zulässigen Moderatoren: %{guids}",
-        "modsAreInvalidAsync": "Die folgenden Moderatoren konnten nicht im Netzwerk gefunden werden. Sie sind noch in Ihrer Liste mit Moderatoren gespeichert, es sind jedoch keine Informationen über sie verfügbar. %{guids}"
+        "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
+        "dupeGUID": "%{guid} is one of your current moderators."
       }
     },
     "blockedTab": {
       "sectionName": "Blockiert",
       "btnUnblock": "Blockierung aufheben",
-      "emptyBlockList": "You are not blocking anyone."
+      "emptyBlockList": "Sie blockieren niemanden."
     },
     "optional": "optional",
     "language": "Sprache",
@@ -750,7 +780,7 @@
     }
   },
   "connectionManagement": {
-    "builtInServerName": "Built-in Server - %{cur}",
+    "builtInServerName": "Eingebauter Server - %{cur}",
     "statusBar": {
       "errorPreface": "Fehler:",
       "needHelpLink": "Brauchen Sie Hilfe?",
@@ -764,7 +794,7 @@
       "errorTorNotAvailable": "Tor wurde nicht erkannt. Bitte %{editLink} Sie die Einstellungen für %{serverName} und legen Sie fest, ob Tor nicht verwendet werden soll, oder starten Sie Tor. %{links}",
       "cancelConnAttempt": "Abbrechen",
       "connectAttemptMsg": "Es wird versucht eine Verbindung mit %{serverName} herzustellen. %{cancelConnAttempt}",
-      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
+      "waitForServerStopMsg": "Fahre den Server %{serverName} herunter. Dies kann ein paar Minuten dauern."
     },
     "configurations": {
       "tabName": "Konfigurationen",
@@ -809,10 +839,10 @@
       "warning": "Warnung:",
       "torServerWarning": "%{warning} Um anonym zu sein ist es wichtig, dass Sie auch den Server im Tor-Modus starten.",
       "lblServerType": "Typ",
-      "helperServerType": "Select your server type",
-      "serverTypeBuiltin": "Built-in (local)",
+      "helperServerType": "Wählen Sie Ihren Servertyp",
+      "serverTypeBuiltin": "Eingebaut (lokal)",
       "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
-      "serverTypeStandalone": "Stand-alone (advanced)",
+      "serverTypeStandalone": "Eigenständig (Fortgeschritten)",
       "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
       "saveConfirm": {
         "title": "Sind Sie sicher?",
@@ -842,18 +872,18 @@
       "title": "Geld empfangen",
       "btnCancel": "Abbrechen",
       "btnFundViaShapeshift": "Per ShapeShift finanzieren",
-      "needCoinLink": "Need %{cur}?"
+      "needCoinLink": "Brauchen Sie %{cur}?"
     },
     "sendMoney": {
       "toLabel": "An",
-      "toPlaceholder": "Enter a %{cur} Address",
+      "toPlaceholder": "Geben Sie eine %{cur} Adresse ein",
       "amountLabel": "Betrag",
       "noteLabel": "Anmerkung",
       "notePlaceholder": "Nur von Ihnen gesehen",
       "sendBtn": "Senden",
       "clear": "Löschen",
       "sendPaymentFailDialogTitle": "Zahlung konnte nicht gesendet werden",
-      "errorInvalidAddress": "The payment address is not valid."
+      "errorInvalidAddress": "Die Adresse zur Zahlung ist nicht g&uuml;ltig."
     },
     "spendConfirmBox": {
       "heading": "Sind Sie sicher?",
@@ -870,8 +900,8 @@
     "transactions": {
       "header": "Transaktionen",
       "transaction": {
-        "outgoingText": "%{currencyPairing} to %{address}",
-        "incomingText": "%{currencyPairing} received",
+        "outgoingText": "%{currencyPairing} an %{address}",
+        "incomingText": "%{currencyPairing} empfangen",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} Bestätigung) |||| %{timeAgo} (%{confirmationsCount} Bestätigungen)",
         "viewDetailsBtn": "Details ansehen",
         "retryTransactionBtn": "Gebühr erhöhen",
@@ -919,7 +949,7 @@
     "type": "Art: %{type}",
     "condition": "Zustand: %{condition}",
     "tags": "Tags",
-    "paymentsAccepted": "Payments Accepted",
+    "paymentsAccepted": "Zahlungen akzeptiert",
     "noTags": "Keine Tags vorhanden",
     "buyNow": "JETZT KAUFEN",
     "description": "Beschreibung",
@@ -943,9 +973,9 @@
     "goToStore": "Zum Shop",
     "unableToPurchase": {
       "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
-      "unrecognizedCur": "The item is priced in an unrecognized currency.",
+      "unrecognizedCur": "Der Artikel ist in einer unbekannten W&auml;hrung ausgezeichnet.",
       "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
-      "unpurchaseable": "This listing is not purchasable."
+      "unpurchaseable": "Dieser Artikel ist nicht kaufbar."
     },
     "confirmDelete": {
       "title": "Sind Sie sicher?",
@@ -986,10 +1016,10 @@
       "title": "Beim Abrufen des Artikels ist ein Fehler aufgetreten.",
       "bodyNotFound": "Der Artikel wurde nicht gefunden. Er kann vom Besitzer gelöscht worden sein."
     },
-    "btnShowMatureContent": "Show Mature Content",
-    "tipShowMatureContent": "Show Mature Content",
-    "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "btnShowMatureContent": "Zeige Inhalte für Volljährige",
+    "tipShowMatureContent": "Zeige Inhalte für Volljährige",
+    "tipHideMatureContent": "Verstecke Inhalte für Volljährige",
+    "blockedUser": "Sie haben diesen Benutzer blockiert"
   },
   "listingDelete": {
     "deletingListing": "Artikel %{listing} wird gelöscht …",
@@ -1057,7 +1087,7 @@
     "helperCategories": "Die Verschachtelung von Kategorien wird nicht unterstützt (z.B. Schuhe > Stiefel funktioniert momentan nicht). Geben Sie eine Kategorie ein, drücken Sie Enter, wiederholen Sie das Ganze.",
     "helperReturnPolicy": "Falls Sie das Feld leer lassen, wird für diesen Artikel \"Keine Rückgabe Methode eingetragen\" angezeigt",
     "helperTerms": "Falls Sie das Feld leer lassen, wird für diesen Artikel \"Keine Geschäftsbedingungen eingetragen\" angezeigt",
-    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperPrice": "Machen Sie Ihre Preise in Dollar, Yuan, %{cur} oder irgendetwas",
     "createListingLabel": "Artikel erstellen",
     "editListingLabel": "Artikel bearbeiten",
     "title": "Titel",
@@ -1079,7 +1109,7 @@
     "primaryPhoto": "PRIMÄRES FOTO",
     "viewListingLink": "Angebot ansehen",
     "unsupportedCurrencyDialog": {
-      "title": "Unrecognized currency",
+      "title": "W&auml;hrung nicht erkannt",
       "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
     },
@@ -1212,7 +1242,7 @@
     "introScreen": {
       "connectionLbl": "Verbindung:",
       "btnChange": "Ändern",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
+      "introLine": "Eine freie Handelsplattform. Keine Gebühren. Keine Einschränkungen. Verdienen Sie %{cur}.",
       "tagLine": "Kaufen und verkaufen Sie ohne Einschränkungen",
       "btnGetStarted": "Legen Sie los"
     },
@@ -1268,18 +1298,16 @@
     "memoPlaceholder": "Geben Sie hier zusätzliche Details für den Verkäufer an (optional).",
     "pay": "BEZAHLEN >",
     "payNote": "Das klicken auf \"BEZAHLEN >\" wird Sie zum letzten Schritt des Bestellvorgangs bringen.",
-    "scamWarning": "WARNING: Protect against scams",
+    "scamWarning": "WARNUNG: Schützen Sie sich gegen Betrug!",
     "pending": "Ausstehend …",
     "pendingNote": "Bitte finanzieren Sie Ihre Bestellung, um Ihre Transaktion abzuschließen.",
     "close": "schließen",
     "closeNote": "Ihre Zahlung wurde an den Verkäufer gesendet.",
     "moderatorNote": "* Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt geöffnet wird. ",
     "quantity": "Anzahl",
-    "useShapeShift": "Oder verwenden Sie im nächsten Schritt ShapeShift",
-    "moderatedPayment": "Moderierte Zahlung",
-    "tooLowForMods": "Basierend auf der momentan geschätzten Gebühr, ist die moderierte Zahlungsmethode nicht verfügbar für Zahlungen unter %{minModPrice}. Eine direkte Zahlung wird stattdessen genutzt.",
-    "noValidModerators": "Für diese Bestellung sind keine gültigen Moderatoren verfügbar.",
-    "moderationDisclaimer": "Ihre Zahlung wird sicher auf einem Escrow hinterlegt. Falls ein Problem auftritt, haben Sie die Möglichkeit, einen Konflikt mit einem Moderator zu öffnen. * Die Servicegebühr für den Moderator gilt nur, falls ein Konflikt geöffnet wird. ",
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Direkte Zahlung",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust, you will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Diesen Moderator wählen",
     "confirmPayment": {
       "title": "Alles in Ordnung?",
@@ -1346,12 +1374,19 @@
       "ownIDTitle": "Sie können Ihre eigenen Artikel nicht kaufen.",
       "ownIDMsg": "Sie können eine Vorschau des Kaufprozesses für Ihre eigenen Artikel sehen, diese jedoch nicht kaufen.",
       "paymentFailed": "Der Zahlungsvorgang konnte nicht abgeschlossen werden.",
-      "zeroPrice": "Sie können keinen Artikel mit dem Gesamtpreis von null kaufen.",
-      "feesFailed": "Transaktionsgebühren konnten nicht geladen werden"
+      "zeroPrice": "Sie können keinen Artikel mit dem Gesamtpreis von null kaufen."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Es werden noch %{remaining} von %{total} Moderatoren geladen."
+    "moderatorsLoading": "Lade Moderatorenliste...",
+    "moderatorsLoaded": "%{total} Moderatoren geladen.",
+    "noValidModerators": "Keine gültigen Moderatoren verfügbar.",
+    "noValidModeratorsBody": "Keine der geladenen Moderatoren ist gültig. Die Bestellung wird als eine direkte Zahlung durchgeführt.",
+    "noVerifiedModerators": "Keine überprüften Moderatoren verfügbar",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Zeige nicht geprüfte Moderatoren",
+    "browseMoreModerators": "Mehr laden"
+
   },
   "transactions": {
     "sales": {
@@ -1388,10 +1423,11 @@
       "ready": "Bereit für Weiterbearbeitung",
       "fulfilled": "Ausgeführt",
       "refunded": "Zurückerstattet",
+      "disputes": "Konfliktf&auml;lle",
       "disputeOpen": "Konflikt offen",
-      "disputePending": "Konflikt ausstehend",
       "disputeClosed": "Konflikt geschlossen",
-      "completed": "Abgeschlossen"
+      "completed": "Abgeschlossen",
+      "error": "Fehler"
     },
     "sort": {
       "label": "Sortieren nach",
@@ -1427,7 +1463,8 @@
         "DISPUTED": "Umstritten",
         "DECIDED": "Entschieden",
         "RESOLVED": "Gelöst",
-        "PAYMENT_FINALIZED": "Zahlung abgeschlossen"
+        "PAYMENT_FINALIZED": "Zahlung abgeschlossen",
+        "PROCESSING_ERROR": "Fehler"
       },
       "btnReject": "Ablehnen",
       "btnAccept": "Zustimmen",
@@ -1458,13 +1495,23 @@
     },
     "contractTab": {
       "heading": "Kaufvertrag (JSON)",
-      "buyerContractNotAvailable": "Der Vertrag des Käufer ist nicht erreichbar, bis dieser das nächste Mal online kommt.",
-      "vendorContractNotAvailable": "Der Vertrag des Verkäufer ist nicht erreichbar, bis dieser das nächste Mal online kommt.",
-      "buyerVendorContractVerified": "Sowohl der Vertrag des Käufers als auch der des Verkäufers wurden als glaubwürdig eingestuft.",
-      "buyerContractNotAuthentic": "Der Vertrag des Käufers beinhaltet Bestätigungsfehler. Er wurde wahrscheinlich gefälscht.",
-      "vendorContractNotAuthentic": "Der Vertrag des Verkäufers beinhaltet Bestätigungsfehler. Er wurde wahrscheinlich gefälscht.",
       "buyerContractHeading": "Vertrag des Käufers:",
-      "vendorContractHeading": "Vertrag des Verkäufers:"
+      "vendorContractHeading": "Vertrag des Verkäufers:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Sowohl der Vertrag des Käufers als auch der des Verkäufers wurden als glaubwürdig eingestuft.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "Der Vertrag des Verk&auml;ufers ist nocht nicht angekommen. Der Vertrag des K&auml;ufers zeigt an, dass der Verk&auml;ufer ein Bearbeitungsproblem hat, aber das kann nicht &uuml;berpr&uuml;ft werden, da der Vertrag des K&auml;ufers Fehler enth&auml;lt. Bitte kontaktieren Sie den Verk&auml;ufer, um dies zu best&auml;tigen.",
+      "contractHeadingVendor": "Vertrag des Verk&auml;ufers:",
+      "contractHeadingBuyer": "Vertrag des K&auml;fers:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Die Vertr&auml;ge sowohl von K&auml;ufer als auch Verk&auml;ufer enthalten Bestätigungsfehler.",
+      "tipBuyerContractHasError": "Der Vertrag des K&auml;ufers enthält Bestätigungsfehler.",
+      "tipVendorContractHasError": "Der Vertrag vom Verk&auml;ufer enthält Bestätigungsfehler.",
+      "tipBuyerContractNotArrived": "Der Vertrag des K&auml;ufers ist noch nicht angekommen.",
+      "tipVendorContractNotArrived": "Der Vertrag des Verk&auml;ufers ist noch nicht angekommen."
     },
     "summaryTab": {
       "orderNumber": "Bestellnummer: %{orderId}",
@@ -1474,9 +1521,9 @@
       "payment": {
         "firstPaymentHeading": "Zahlungsdetails",
         "paymentHeading": "Zahlungsdetails #%{paymentNumber}",
-        "amountTo": "%{currencyPairing} to %{payeeName}",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "amountTo": "%{currencyPairing} an %{payeeName}",
+        "refundedTo": "%{currencyPairing} an %{payeeName} zur&uuml;ckerstattet",
+        "refunded": "%{currencyPairing} zur&uuml;ckerstattet",
         "paidInFull": "Vollständig bezahlt",
         "underpaidAmountShort": "Zu wenig bezahlt (%{amountShort} benötigt)",
         "cancelBtn": "Abbrechen",
@@ -1486,7 +1533,7 @@
         "veryManyConfirmationsCount": "%{countText} Bestätigungen",
         "rejectConfirm": {
           "title": "Sind Sie sicher?",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "Der Betrag wird in %{cur} an den K&auml;ufer zur&uuml;ckerstattet",
           "btnCancel": "Abbrechen",
           "btnConfirm": "Ja, ablehnen"
         },
@@ -1494,8 +1541,8 @@
       },
       "refund": {
         "heading": "Zurückerstattet",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "refundedTo": "%{currencyPairing} an %{payeeName} zur&uuml;ckerstattet",
+        "refunded": "%{currencyPairing} zur&uuml;ckerstattet",
         "confirmationsCount": "%{smart_count} Bestätigung |||| %{smart_count} Bestätigungen",
         "veryManyConfirmationsCount": "%{countText} Bestätigungen"
       },
@@ -1510,7 +1557,7 @@
         "fulfillBtn": "Bestellung ausführen",
         "refundConfirm": {
           "title": "Sind Sie sicher?",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "Der Betrag wird in %{cur} an den K&auml;ufer zur&uuml;ckerstattet",
           "btnCancel": "Abbrechen",
           "btnConfirm": "Ja, zurückerstatten"
         }
@@ -1519,8 +1566,8 @@
         "heading": "Ausgeführt",
         "shippedByLabel": "Bestellung wurde versendet per:",
         "trackingNumberLabel": "Nummer zur Sendungsverfolgung:",
-        "yourNoteLabel": "Your note:",
-        "noteFromVendorLabel": "Note from the vendor:",
+        "yourNoteLabel": "Ihre Notiz:",
+        "noteFromVendorLabel": "Notiz des Anbieters:",
         "noteFromStoreLabel": "Anmerkung von %{store}:",
         "copyLink": "Kopieren",
         "digitalReadyForDlHeading": "Die digitalen Daten stehen zum Download bereit!",
@@ -1593,12 +1640,24 @@
         "moderatorHeading": "Moderator",
         "copyAddress": "Kopieren",
         "viewOnMap": "Auf Karte anzeigen",
-        "shippingOption": "Shipping Option",
-        "shippingService": "Shipping Service",
+        "shippingOption": "Versandoptionen",
+        "shippingService": "Versanddienstleister",
         "memo": "Notiz",
         "addressNotes": "Versandnotizen",
         "alternateContact": "Zusätzliche Kontakt Informationen",
         "skuLabel": "SKU"
+      },
+      "processingError": {
+        "cancelLink": "Abbrechen",
+        "disputeLink": "Einen Konfliktfall er&ouml;ffnen",
+        "procErrBuyerNoMsg": "Der Verk&auml;ufer konnte die Bestellung nicht bearbeiten.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "Es ist ein Fehler bei der Bearbeitung der Bestellung passiert",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1621,6 +1680,11 @@
       "heading": "Konflikt lösen",
       "buyerAmountLabel": "Betrag des Käufers",
       "vendorAmountLabel": "Betrag des Verkäufers",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Kommentieren",
       "commentPlaceholder": "Erläutern Sie Ihre Entscheidung…",
       "btnCancel": "Abbrechen",
@@ -1701,9 +1765,9 @@
     "providePortAsNumber": "Bitte geben Sie eine Portnummer an.",
     "provideValidPortRange": "Bitte geben Sie eine Portnummer zwischen 0 und 65535 an.",
     "invalidTorProxy": "Der Wert scheint nicht das richtige Format aufzuweisen. Das richtige Format wäre IP-Adresse:Port, z.B. 127.0.0.1:9150. Der Port muss eine Nummer zwischen 0 und 65535 sein.",
-    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideWalletCurrency": "Bitte w&auml;hlen Sie eine W&auml;hrung für die Brieftasche (Wallet)",
     "provideZcashBinaryPath": "Bitte geben Sie einen Wert an.",
-    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
+    "invalidZcashBinaryPath": "Der angegebene Pfad muss zu einer Datei auf Ihrem System führen."
   },
   "shippingAddressModelErrors": {
     "provideName": "Bitte geben Sie einen Namen an.",
@@ -1835,12 +1899,14 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "Dies ist keine gültige URL für einen Suchanbieter"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Bitte geben Sie einen Betrag an.",
     "percentageOutOfRange": "Der Betrag muss zwischen 0 und 100 liegen.",
     "providePercentageAsNumber": "Bitte geben Sie eine Nummer als Betrag für den Verkäufer an.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "Die Summer der Beträge für Käufer und Verkäufer darf nicht mehr als 100 ergeben.",
     "totalPercentageTooLow": "Die Summer der Beträge für Käufer und Verkäufer muss 100 ergeben.",
     "provideResolution": "Bitte erläutern Sie Ihre Entscheidung."

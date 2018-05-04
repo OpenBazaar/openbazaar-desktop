@@ -7,8 +7,8 @@
     "statusPublishComplete": "اكتمل النشر."
   },
   "localServerShutdownDialog": {
-    "title": "Shutting down the built-in server",
-    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
+    "title": "إيقاف تشغيل الخادم المُدمج",
+    "body": "يتم إيقاف تشغيل الخادم المُدمج. قد يستغرق إلى بضع دقائق. أثناء الإغلاق، تتم مهام التنظيف المهمة. من المهم عدم مقاطعة هذه العملية. عند اكتمال العملية، سيتم إغلاق التطبيق."
   },
   "follow": {
     "typeFollow": "متابع",
@@ -19,74 +19,74 @@
   },
   "feeLevels": {
     "PRIORITY": "أفضلية",
-    "NORMAL": "Normal",
+    "NORMAL": "عادي",
     "ECONOMIC": "اقتصادي"
   },
   "feeChangeWidget": {
     "btnChange": "تغيير",
-    "label": "%{cur} fee:"
+    "label": "%{cur} رسوم:"
   },
   "blockButton": {
-    "tipBlock": "Block this user",
-    "tipUnblock": "Unblock this user",
+    "tipBlock": "حظر المستخدم",
+    "tipUnblock": "فك حظر المستخدم",
     "btnTxtBlock": "احجب",
     "btnTxtUnblock": "فك الحجب"
   },
   "blockedWarning": {
-    "heading": "You blocked this user",
-    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
-    "paragraph2": "Would you like to unblock and view their page?",
+    "heading": "قُمت بحظر هذا المستخدم",
+    "paragraph1": "هذا المستخدم موجود حاليًا في قائمة المستخدمين المحظورين. لا يمكنك عرض صفحته أو قوائمه أثناء حظره. لا يستطيع المستخدمون المحظورون أيضًا إرسال رسائل إليك أو وضع طلبات على متجرك.",
+    "paragraph2": "هل تريد إلغاء الحظر وعرض صفحته؟",
     "btnCancel": "إلغاء",
-    "btnUnblock": "Yes, unblock"
+    "btnUnblock": "نعم, فك الحظر"
   },
   "nsfwWarning": {
-    "heading": "Mature content",
-    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "heading": "محتوى للبالغين",
+    "paragraph1": "تم تصنيف القائمة هذه على أنها تحتوي محتوى للبالغين. قد تكون مسيئة لبعض الناس. إذا كنت لا ترغب في عرضها، يرجى النقر فوق \"إلغاء\" للعودة إلى الشاشة السابقة.",
     "paragraph2": "هل أنت متأكد أنك تريد المتابعة؟",
-    "nsfwOffLabel": "Always display mature content",
+    "nsfwOffLabel": "عرض محتوى البالغين دائمًا",
     "btnCancel": "إلغاء",
     "btnProceed": "نعم, تابع"
   },
   "walletSetup": {
-    "heading": "OpenBazaar Wallet Setup",
+    "heading": "إعدادات محفظة أوبن بازار",
     "currencyLabel": "العملة",
-    "currencyHelper": "Choose a currency for your Wallet",
-    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
-    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "currencyHelper": "اختر عملة لمحفظتك",
+    "currencyHelper2": "قبول وإرسال الدفعات بالعملة المحددة أعلاه. يرجى الاختيار بعناية، حاليًا ليس ممكن تغيير عملتك بمجرد اختيارها.",
+    "curInUseTip": "لديك بالفعل خادم مُدمج مع عملة المحفظة المحددة.",
     "zcashBinaryLabel": "Zcash Binary",
-    "fullNodeLink": "here",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Browse",
+    "fullNodeLink": "هنا",
+    "zcashBinaryHelper": "مطلوب العقدة الكاملة لعملة Zcash. قم بتنزيلها %{fullNodeLink}. بمجرد التثبيت، قم بإدخال مسار zcashd binary أعلاه.",
+    "btnBrowse": "تصفح",
     "btnNext": "التالي"
   },
   "unsupportedCryptoCurDialog": {
-    "title": "Unsupported Currency",
-    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
-    "connectLink": "connect"
+    "title": "عملة غير مدعومة",
+    "body": "يتعذر علينا المتابعة نظرًا لأن الخادم يستخدم عملة تشفير (%{curCode}) التي التطبيق لا يدعمها. من فضلك %{connectLink} للخادم المختلف",
+    "connectLink": "إتصال"
   },
   "setValidCurDialog": {
-    "title": "Invalid Local Currency",
-    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
-    "settingsLink": "settings"
+    "title": "العملة المحلية غير صحيحة",
+    "body": "عُينت عملتك المحلية إلى %{currency}، التي لايدعمها هذا التطبيق. يرجى تحديد وحفظ عملة مختلفة في %{settingsLink}.",
+    "settingsLink": "الإعدادات"
   },
   "consoleWarning": {
     "heading": "إيقاف!",
-    "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
+    "line1": "هذه وحدة تحكم للمطورين. إذا طلب منك شخص ما فتح هذه النافذة، فمن المحتمل أن يحاول إختراق حسابك و/أو أموالك.",
     "line2": "الرجاء أغلق هذه النافذة الآن."
   },
   "block": {
     "errorModal": {
-      "titleUnableToBlock": "Unable to block",
-      "titleUnableToUnblock": "Unable to unblock",
-      "titleUnableToBlockUnblock": "Unable to block / unblock",
-      "blockFailedListHeading": "Unable to block the following users:",
-      "unblockFailedListHeading": "Unable to unblock the following users:",
-      "reason": "Reason: %{reason}"
+      "titleUnableToBlock": "غير قادر على الحظر",
+      "titleUnableToUnblock": "غير قادر على فك الحظر",
+      "titleUnableToBlockUnblock": "غير قادر على الحظر / فك الحظر",
+      "blockFailedListHeading": "غير قادر على حظر المستخدمين التاليين:",
+      "unblockFailedListHeading": "غير قادر على فك حظر المستخدمين التاليين:",
+      "reason": "السبب: %{reason}"
     }
   },
   "resyncBlockchainError": "حدث خطأ أثناء إعادة تحميل التحويلات.",
   "restartNow": "أعد التشغيل الآن",
-  "restartLater": "إعادة التشغيل لاحقا",
+  "restartLater": "إعادة التشغيل لاحقاً",
   "langChangeRestartTitle": "إعادة التشغيل مطلوبة لتغيير اللغة",
   "langChangeRestartMessage": "لكي يصبح تغيير لغتك ساري المفعول، يجب إعادة تشغيل التطبيق. إذا كان هناك عمليات حفظ أو نشر لا تزال قيد المعالجة، يرجى الانتظار حتى تنتهي.",
   "update": {
@@ -102,9 +102,9 @@
     "install": "التثبيت الآن"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "يتعذر تقديم معلومات الأسعار نظرًا لأن السعر بعملة غير معروفة."
   },
-  "addressBarPlaceholder": "Type a @handle, OpenBazaar ID or search term",
+  "addressBarPlaceholder": "اكتب @handle، اوبن بازار ID أو مصطلح بحث",
   "testnet": "وضع الاختبار",
   "testnetTooltip": "يستخدم وضع الاختبار عملات testnet، والتي تهدف لأغراض الاختبار فقط.",
   "tabMenuHeading": "قائمة",
@@ -123,7 +123,7 @@
   },
   "connectedPeersPage": {
     "heading": "الأطراف المتصلة",
-    "totalPeers": "%{totalPeers} تم ايجاد",
+    "totalPeers": "%{totalPeers} تم إيجاد",
     "noResults": "لايوجد أطراف متصلة",
     "loadMore": "حمل المزيد"
   },
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "إعادة المحاولة",
       "btnManageConnections": "إدارة الاتصالات",
+      "btnContinue": "إستمرار",
       "retryConfig": {
         "title": "تعذر الحصول على تكوين الخادم."
       },
@@ -156,13 +157,20 @@
         "title": "تعذر الحصول على رصيد المحفظة."
       },
       "unableToGetSearchProviders": {
-        "title": "غير قادر على تحميل مزودات البحث."
+        "title": "غير قادر على تحميل مزودات البحث.",
+        "btnClose": "تابع بدون تزويد البحث"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "غير قادر على تحميل المشرفين المؤكدين.",
+        "btnRetry": "أعد المحاوله",
+        "btnClose": "إستمرار",
+        "msg": "انقر فوق \"إعادة المحاولة\" للمحاولة مرة أخرى، أو إستمرار لتخطي تحميل المشرفين المؤكدين. سبب الفشل: %{reason}"
       }
     },
     "connectMessaging": {
       "cancelLink": "إلغاء",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
+      "connectAttemptMsg": "يتصل على %{serverName}. %{cancelLink}",
+      "zecBinaryInit": "تهيئة zcash binary. قد يستغرق هذا بضع دقائق. %{cancelLink}"
     }
   },
   "notifications": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} قام باسترجاع طلبك.",
       "fulfillment": "%{vendorName} قام بإتمام طلبك.",
       "orderComplete": "%{buyerName} قام بترك تعليق على طلبه. ",
+      "processingError": "%{vendorName} غير قادر على معالجة طلبك بسبب خطأ.",
       "disputeOpen": "%{disputerName} قد بدء نزاعاً معك.",
       "disputeOpenMod": "%{disputerName} بدء نزاعاً مع %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} قام بمشاركة العقد الخاص بهم, من أجل قضية النزاع مع %{disputerName}.",
@@ -204,7 +213,7 @@
     "sales": "مبيعات",
     "cases": "الحالات",
     "settings": "إعدادات",
-    "help": "Help",
+    "help": "مساعدة",
     "toolTip": {
       "back": "إلى الخلف",
       "forward": "إلى الأمام",
@@ -212,9 +221,9 @@
       "discover": "اكتشاف",
       "wallet": "المحفظة",
       "notifications": "إشعارات",
-      "nav": "جهت یابی",
+      "nav": "التنقل",
       "close": "أغلق",
-      "currentPrice": "Current %{cur} price"
+      "currentPrice": "سعر %{cur} الحالي"
     },
     "serversMenu": {
       "newServer": "خادم جديد",
@@ -238,7 +247,7 @@
       "typingIndicator": "%{user} يكتب…",
       "deleteConvoErrorTitle": "يتعذر حذف المحادثة",
       "deletingOverlayText": "جار حذف المحادثة ...",
-      "blockingOverlayText": "Blocking…"
+      "blockingOverlayText": "جارِ الحظر..."
     }
   },
   "userPage": {
@@ -268,7 +277,7 @@
       "store": "متجر",
       "following": "متابعة",
       "followers": "متابعون",
-      "reputation": "Reputation"
+      "reputation": "السمعة"
     },
     "followTab": {
       "noFollowers": "لا أحد يتابع %{name} بعد",
@@ -298,7 +307,7 @@
       "inactive": "متجرك غير نشط حاليا ومخفي عن الجمهور. %{link}",
       "inactiveLink": "تغيير",
       "listingDataChangedPopin": "تم تغيير بيانات القائمة.",
-      "shippingDataChangedPopin": "Your country and/or shipping address information has changed. This may affect which listings ship free to you.",
+      "shippingDataChangedPopin": "تم تغيير معلومات بلدك و/أو عنوان الشحن. هذا قد يؤثر على قوائم الشحن المجانية لك.",
       "freeShippingBanner": "الشحن مجانا",
       "sortOpts": {
         "priceAsc": "السعر من الأرخص إلى الأغلى",
@@ -326,12 +335,12 @@
       "following": "متابعة",
       "followers": "متابعون"
     },
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "قُمت بحظر هذا المستخدم"
   },
   "reputation": {
-    "averageRating": "overall rating",
-    "totalReviews": "review |||| reviews",
-    "noTitle": "Listing title not found"
+    "averageRating": "التقييم العام",
+    "totalReviews": "مراجعة |||| مراجعات",
+    "noTitle": "عنوان القائمة غير موجود"
 
   },
   "userShort": {
@@ -343,16 +352,36 @@
     "tipUnfollow": "إلغاء متابعة",
     "tipModAdd": "إضافة كمشرف",
     "tipModRemove": "إزالة كمشرف",
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "قُمت بحظر هذا المستخدم"
+  },
+  "verifiedMod": {
+    "verified": {
+      "label": "مؤكد",
+      "title": "مشرف مؤكد",
+      "body": "هذا المشرف مؤكد بواسطة %{providerName}. %{link}",
+      "bodyOrder": "هذا المشرف مؤكد بواسطة %{providerName}. %{link}"
+    },
+    "unverified": {
+      "label": "غير مؤكد",
+      "title": "مشرف غير مؤكد",
+      "not": "غير",
+      "body": "هذا المشرف %{not} مؤكد بواسطة %{providerName}. تابع بحذر أو اختر مشرفًا مؤكد.",
+      "bodyOrder": "هذا المشرف %{not} مؤكد بواسطة %{providerName}."
+    },
+
+    "link": "تعرف على المزيد",
+    "type": "النوع:",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "يمكنك شراء هذه القائمة مع مشرف مؤكد بواسطة %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "عرض",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "فشل في تحميل معلومات هذا المشرف.",
     "invalid": "هذا المستخدم ليس مشرفا حاليا.",
-    "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
+    "languages": "%{lang}، و %{smart_count} لغات أخرى. |||| %{lang}، و %{smart_count} لغات أخرى."
   },
   "moderatorDetails": {
     "messageButton": "رسالة",
@@ -368,8 +397,8 @@
     "addAsModeratorButton": "إضافة كمشرف",
     "disclaimer": "** لا ينطبق رسم خدمة المشرف إلا عندما ينشأ نزاع.",
     "languages": "اللغات",
-    "currenciesSupported": "Currencies Supported",
-    "noCoinSupport": "This moderator does not support %{coin}."
+    "currenciesSupported": "العملات المدعومة",
+    "noCoinSupport": "هذا المشرف لايقبل %{coin}."
   },
   "about": {
     "linkText": "حول أوبن بازار",
@@ -378,19 +407,19 @@
       "tradeFree": "أصبح أوبن بازار متوفرا من قبل مجتمع من المطورين والمتطوعين من كل أنحاء العالم, ساهموا وفي وقتهم للمساعدة في جعل التجارة الحرة."
     },
     "version": "الإصدار %{version}",
-    "bothVersions": "client %{cVer}, server %{sVer}",
-    "client": "Client",
+    "bothVersions": "التطبيق %{cVer}، الخادم %{sVer}",
+    "client": "التطبيق",
     "server": "الخادم",
     "btnUpdateCheck": "التأكد من وجود التحديثات",
-    "downloadLatest": "Download Latest",
+    "downloadLatest": "تحميل الأحدث",
     "donationsTab": {
       "linkText": "التبرعات",
       "sectionHeader": "التبرعات",
       "btnCopyAddress": "نسخ العنوان",
       "btnOpenInWallet" : "فتح في المحفظة",
-      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
+      "bannerCountDonations": "%{donationCountFloor}+ تبرعات مٌستقبلة!",
+      "bitcoinIntroLine": "تبرعات Bitcoin يمكن إرسالها إلى العنوان التالي:",
+      "bchWarning": "لا ترسل Bitcoin Cash إلى هذا العنوان.",
       "unableToOpenInWallet": {
         "title": "تعذر الفتح في المحفظة",
         "body": "تعذر فتح العنوان في المحفظة لأن هناك عملية دفع قيد الإرسال. يرجى الانتظار حتى يكتمل الإرسال والمحاولة مرة أخرى."
@@ -430,10 +459,10 @@
       }
     },
     "helpTab": {
-      "linkText": "Help",
-      "sectionHeader": "Help",
-      "supportLink": "Support page on OpenBazaar.org",
-      "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
+      "linkText": "مساعدة",
+      "sectionHeader": "مساعدة",
+      "supportLink": "صفحة الدعم على OpenBazaar.org",
+      "text": "هل تحتاج مساعدة حول تطبيق اوبن بازار؟ يرجى زيارة %{supportLink}. هناك العديد من أدلة الدعم و الأسئلة الشائعة التي من المفترض أن تساعدك في حل مشكلتك."
     }
   },
   "settings": {
@@ -460,24 +489,25 @@
       "statusSaveComplete": "تم حفظ الإعدادات العامة.",
       "statusSaveFailed": "تعذر حفظ الإعدادات العامة.",
       "saveErrorAlertTitle": "تعذر حفظ الإعدادات العامة.",
-      "searchProvider": "ابحث عن مزود",
-      "restoreDefaultProvider": "استعادة الضبط الافتراضي"
+      "verifiedMods": "المشرفين المؤكدين",
+      "verifiedModsHelper": "خفض المخاطر بإستخدام قائمة من المشرفين المؤكدين. المشرفين مؤكدة هوياتهم، والقوائم المتوفر بها مشرفين مؤكدين، ستتميز بعلامة.",
+      "restoreDefault": "استعادة الضبط الافتراضي"
     },
     "pageTab": {
       "helperAbout": "يعرض على صفحتك الرئيسية",
-      "helperHandle": "Handles make it easy to access your page/store",
+      "helperHandle": "يجعل عنوان الدخول من السهل الوصول إلى صفحتك / متجرك",
       "helperLocation": "أين موقعك؟",
-      "helperHandleRegister": "Register a unique handle at %{helperHandleRegisterLink}",
+      "helperHandleRegister": "سجل عنوان دخول فريد من خلال %{helperHandleRegisterLink}",
       "helperHandleRegisterLink": "Onename",
       "helperShortDescription": "160 حرفا أو أقل",
       "helperPrimaryColor": "ترويسة، حاويات، أزرار",
-      "helperSecondaryColor": "Body, Background",
+      "helperSecondaryColor": "الخلفية، وسط الصفحة",
       "helperTextColor": "نسخ، حول، الوصف",
       "helperHighlightColor": "الإخطارات، التنبيهات، شارات",
       "helperHighlightTextColor": "اللون ضمن الإشعارات",
       "placeholderAbout": "اكتب ما تريد على صفحتك ...",
       "placeholderName": "اسم صفحتك",
-      "placeholderHandle": "Enter your Onename @handle",
+      "placeholderHandle": "ادخل أسم وحيد لك @handle",
       "placeholderLocation": "أدخل موقعك",
       "placeholderShortDescription": "قل شيئا مثيرا للاهتمام ...",
       "placeholderWebsite": "http://",
@@ -517,8 +547,8 @@
     },
     "advancedTab": {
       "sectionName": "متقدم",
-      "helperVisualEffects": "Transitions, Easing, Opacity",
-      "helperWindowControls": "Maximize, Minimize & Close controls",
+      "helperVisualEffects": "التحولات، التحفيف، التعتيم",
+      "helperWindowControls": "عناصر تحكم التكبير، التصغير وإلاغلاق",
       "helperSaveMetaData": "تخزين معلومات إضافية للمعاملات",
       "helperDefaultFee": "يوصى بالأولوية لمعاملات أسرع",
       "smtp": {
@@ -537,11 +567,11 @@
         "placeholderSendFrom": "name@domain.com\n",
         "placeholderSendTo": "name@domain.com\n",
         "helperNotifications": "تلقي رسائل البريد الإلكتروني الخاصة بتحديثات الطلبية",
-        "helperServerAddress": "Enter an outgoing (SMTP) server url followed by the TLS port number",
+        "helperServerAddress": "أدخل رابط خادم الصادرة (SMTP) متبوعًا برقم منفذ TLS",
         "helperNewEmail": "أنشئ عنوان بريد إلكتروني على %{helperGmailLink}",
         "helperUsername": "اسم مستخدم SMTP",
         "helperPassword": "حفظت بأمان في قاعدة البيانات الخاصة بك",
-        "helperSendFrom": "The email address to send from. Make sure you whitelist this address in your receiving account.",
+        "helperSendFrom": "عنوان البريد الإلكتروني للإرسال منه. تأكد من وضع هذا العنوان في القائمة البيضاء في حسابك المتلقي.",
         "helperSendTo": "عنوان البريد الإلكتروني المرسل إليه. تحقق من مجلد الرسائل غير المرغوب فيها إذا لم تتلق إشعارات.",
         "helperGmailLink": "Gmail",
         "testSmtpSuccess": "نجاح فحص الاندماج, لاتنسى حفظ اعداداتك.",
@@ -564,44 +594,44 @@
           "resyncComplete": "ستبدأ معاملاتك في إعادة المزامنة. قد يستغرق ذلك من خمس إلى عشر دقائق أو أكثر.",
           "syncUnavailable": "يمكنك إعادة تحميل التحويلات مرة كل ساعة."
         },
-        "purge": "Purge Shared Files",
+        "purge": "تطهير الملفات المشتركة",
         "purgeHelper": "حذف الملفات المخزنة مؤقتا التي تشاركها مع الآخرين",
-        "purgeBtn": "Purge Files",
-        "purgeToolTip": "OpenBazaar shares cached content you have viewed with other users. If you have viewed text or images you don't want to share, this button will delete them. This will not affect any files that belong to you.",
+        "purgeBtn": "تطهير الملفات",
+        "purgeToolTip": "يشارك أوبن بازار المحتوى المخبأ الذي شاهدته مع المستخدمين الآخرين. إذا كنت قد شاهدت نصًا أو صورًا لا تريد مشاركتها، فسيؤدي هذا الزر إلى حذفها. لن يؤثر ذلك على أي ملفات تخصك.",
         "purgeError": "حدث خطأ، ربما لم يتم حذف الملفات المخزنة مؤقتا.",
         "purgeComplete": "تم حذف الملفات المخزنة مؤقتا (كاش).",
-        "blockData": "Block Data",
-        "blockDataHelper": "Show data useful for debugging.",
-        "blockDataBtn": "Show Block Data",
-        "blockDataError": "There was an error, your block data could not be retrieved.",
-        "blockDataTitle": "Your Block Data",
+        "blockData": "كتلة البيانات",
+        "blockDataHelper": "عرض البيانات المفيدة لتصحيح الأخطاء.",
+        "blockDataBtn": "إظهار بيانات الكتلة",
+        "blockDataError": "حدث خطأ، تعذر استرداد بيانات الكتلة.",
+        "blockDataTitle": "بيانات الكتلة الخاصة بك",
         "blockDataCopy": "نسخ إلى الحافظة الخاصة بك",
-        "backupWalletLbl": "Backup Wallet Seed",
-        "backupWalletHelper": "This seed will allow you to recover your wallet in case of computer failure.",
-        "unableToFetchSeedTitle": "There was an error fetching your wallet seed",
+        "backupWalletLbl": "حفظ نسخة من كلمات الإستعادة للمحفظة",
+        "backupWalletHelper": "هذه الكلمات سوف تسمح لك بإستعادة محفظتك في حالة عطل الكمبيوتر.",
+        "unableToFetchSeedTitle": "حدث خطأ أثناء جلب كلمات الإستعادة لمحفظتك",
         "walletSeed": {
-          "btnShowSeed": "Show Seed",
-          "introLine": "Your wallet generation seed is:",
+          "btnShowSeed": "إظهار كلمات الإستعادة",
+          "introLine": "كلمات الإستعادة لمحفظتك المكونة:",
           "directionLine": "أكتب الكلمات التالية على ورقة وأحفظها في مكان آمن. يجب أن يكونوا بنفس الترتيب.",
           "warningHeading": "تحذير:",
-          "warning1": "Never share your seed. Anyone with this seed can steal your funds.",
+          "warning1": "لا تشارك أبداً كلمات الإستعادة. يمكن لأي شخص لديه هذه الكلمات سرقة أموالك.",
           "warning2": "لا تكتبه مطلقا على موقع ويب.",
           "warning3": "لا تخزنه بشكل رقمي أو إلكتروني.",
-          "warning4": "Do not lose your seed, or your funds will be permanently lost if your data is erased."
+          "warning4": "لا تفقد كلمات الإستعادة، أو سيتم فقدان أموالك للأبد إذا مُسحت بياناتك."
         }
       },
       "transaction": {
         "sectionName": "العمليات التجارية",
         "saveMetadata": "حفظ البيانات الوصفية",
-        "defaultFee": "%{cur} Fee",
+        "defaultFee": "%{cur} رسوم",
         "low": "اقتصادي",
-        "medium": "Normal",
+        "medium": "عادي",
         "high": "أفضلية"
       },
       "appearance": {
         "sectionName": "المظهر الخارجي",
         "visualEffects": "تأثيرات بصرية",
-        "windowControlStyle": "Window Controls",
+        "windowControlStyle": "ضوابط النافذة",
         "macOS": "ماك (أعلى اليسار)",
         "windowsOS": "ويندوز (أعلى اليمين)"
       },
@@ -614,19 +644,19 @@
       "sectionName": "الإشراف",
       "disputeResolution": "حل النزاعات",
       "disputeResolutionText": "البائعين لديهم القدرة على تحديدك كمشرف لمخزنهم. في حالة نشوء نزاع بينهم وبين العميل، سيتم استدعاؤك لمراجعة تفاصيل الطلب وتحديد كيفية توزيع أموال الطلب.",
-      "moderationStatus": "Moderate Disputes",
+      "moderationStatus": "نزاعات معتدلة",
       "pricePerDispute": "السعر لكل نزاع",
       "pricePerDisputeOptions": {
         "percentageOfOrder": "النسبة المئوية للطلب",
         "fixedPrice": "رسوم ثابتة",
         "percentagePlusFixed": "رسوم ثابتة زائد النسبة المئوية"
       },
-      "pricePerDisputeHelper": "The amount you charge to review and close a dispute",
+      "pricePerDisputeHelper": "المبلغ الذي تحمّله لمراجعة النزاع وإغلاقه",
       "feeTypeAmount": "السعر لكل نزاع",
-      "fixed": "Fixed",
+      "fixed": "ثابتة",
       "percentage": "النسبة المئوية",
       "fixedPlusPercentage": "الثابتة زائد النسبة المئوية",
-      "feeTypeHelper": "The amount you charge to review and close a dispute.",
+      "feeTypeHelper": "المبلغ الذي تحمّله لمراجعة النزاع وإغلاقه.",
       "description": "وصف",
       "descriptionHelper": "أضف وصفك (على سبيل المثال: ما هي إستراتيجيتك لمراجعة الحالات؟ ما هو وقت الاستجابة المتوقع؟ ما هو جدول عملك؟ ما هي الساعات المتاحة يوميا؟)",
       "terms": "الشروط",
@@ -655,11 +685,12 @@
       "selectedModerators": "المشرفون المختارون",
       "selectedModeratorsEmpty": "لم تتم إضافة أي مشرفين",
       "selectedModeratorsEmptyWarning": "يتوفر الدفع المباشر فقط في متجرك",
-      "moderatorByIDPlaceholder": "Enter a @handle or ID",
+      "moderatorByIDPlaceholder": "أدخل @مقبض او اسم مستخدم",
       "moderatoryByIDSubmit": "بحث",
-      "availableModerators": "المشرفون المتاحون على الشبكة",
+      "availableModerators": "المشرفون المتاحون",
       "browseModerators": "تصفح المشرفين",
-      "browseMoreModerators": "تحميل المزيد من المراقبين",
+      "verifiedOnly": "المشرفين المؤكدين فقط",
+      "disclaimer": "* يتم تطبيق رسوم خدمة المشرف فقط عندما يُتنازع على أمر.",
       "loading": "جار التحميل",
       "status": {
         "saving": "جار حفظ إعدادات المتجر ...",
@@ -669,20 +700,19 @@
       },
       "errors": {
         "modNotFoundTitle": "المشرف غير متوفر",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
-        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
-        "availableModsFailed": "لا يمكن استرداد المشرفين من الشبكة",
-        "modAlreadyAdded": "لقد أضفت هذا المشرف من قبل.",
-        "modIsBlank": "You must add a moderator ID or handle",
-        "modIsInvalid": "%{guid} ليش مشرف صالح.",
-        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
-        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
+        "modsNotFound": "%{guids} لا يمكن العثور عليها بالشبكة. قد يكون معرف النظير غير صالح. |||| %{guids} لا يمكن العثور عليها بالشبكة. قد تكون معرفات النظير غير صالحة.",
+        "selectedModsTitle": "لا يمكن تحميل المشرفين الحاليين لديك.",
+        "availableModsTitle": "لا يمكن تحميل المشرفين المتاحون",
+        "modIsBlank": "يجب عليك إضافة معرف أو مقبض المشرف",
+        "notGUID": "%{guid} ليس معرف نظير صالح",
+        "ownGUID": "%{guid} هو معرف النظير الخاص بك. لا يمكنك الإشراف على طلباتك الخاصة.",
+        "dupeGUID": "%{guid} هو واحد من المشرفين الحاليين لديك."
       }
     },
     "blockedTab": {
       "sectionName": "تم الحجب",
       "btnUnblock": "فك الحجب",
-      "emptyBlockList": "You are not blocking anyone."
+      "emptyBlockList": "أنت لا تحظر أي شخص."
     },
     "optional": "اختياري",
     "language": "اللغات",
@@ -700,17 +730,17 @@
     "nsfwContent": "محتوى للبالغين ( إباحي, كلمات نابية, 18+, إلخ .... )",
     "avatar": "الصورة الرمزية",
     "loadAvatar": "اختر صورة",
-    "loadAvatarHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
+    "loadAvatarHelp": "مُستحسن %{minWidth}px في %{minHeight}px أو أكبر",
     "header": "صورة الغلاف",
     "loadHeader": "اختر صورة",
-    "loadHeaderHelp": "%{minWidth}px by %{minHeight}px or larger recommended",
-    "socialSection": "Social",
+    "loadHeaderHelp": "مُستحسن %{minWidth}px في %{minHeight}px أو أكبر",
+    "socialSection": "الشبكات الإجتماعية",
     "website": "موقع الكتروني",
     "email": "بريد إلكتروني",
     "socialAccounts": {
       "accountLabel": "حساب التوصل الاجتماعي",
       "accountPlaceholder": "Facebook",
-      "usernamePlaceholder": "Handle or Link to Page",
+      "usernamePlaceholder": "المقبض او الرابط للصفحة",
       "add": "+ إضافة حساب تواصل اجتماعي",
       "limitError": "لايمكنك أن تملك أكثر من %{max} حساب اجتماعي. |||| لايمكنك أن تملك أكثر من %{max} حساب اجتماعي."
     },
@@ -719,15 +749,15 @@
     "coverPhoto": "صورة الغلاف",
     "primaryColor": "لون الأصلي",
     "secondaryColor": "لون الثانوي",
-    "highlightColor": "Highlight Color",
-    "highlightTextColor": "Highlight Text Color",
+    "highlightColor": "لون التحديد",
+    "highlightTextColor": "لون النص المُحدد",
     "textColor": "لون النص",
     "addresses": {
       "sectionName": "عنوان جديد",
       "name": "الاسم",
       "company": "الشركة",
       "street": "الشارع",
-      "apt": "Apt/Unit/Suite",
+      "apt": "شقة/وحدة/جناح",
       "city": "المدينة",
       "state": "الدولة / المقاطعة / المنطقة",
       "country": "بلد",
@@ -750,7 +780,7 @@
     }
   },
   "connectionManagement": {
-    "builtInServerName": "Built-in Server - %{cur}",
+    "builtInServerName": "السيرفر المدمج - %{cur}",
     "statusBar": {
       "errorPreface": "خطأ:",
       "needHelpLink": "بحاجة لمساعدة؟",
@@ -760,11 +790,11 @@
       "errorAuthFailed": "%{errorPreface} فشل بالاتصال بـ %{serverName}. اسم المستتخدم و / أو كلمة المرور غير صحيحين. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} فشل بالاتصال بـ %{serverName}. كوكيز التوثيق غير صالحة. %{links}",
       "editLink": "تعديل",
-      "errorTorNotConfigured": "Please %{editLink} the %{serverName} configuration to confirm whether you want to use Tor or not. %{links}",
-      "errorTorNotAvailable": "Tor was not detected. Please %{editLink} the %{serverName} configuration to not use Tor or start Tor. %{links}",
+      "errorTorNotConfigured": "يرجى %{editLink} %{serverName} التكوين لتأكيد ما إذا كنت تريد استخدام تور أم لا. %{links}",
+      "errorTorNotAvailable": "لم يتم اكتشاف تور. يرجى %{editLink} %{serverName} التكوين لإيقاف إستعمال تور أو تشغيله. %{links}",
       "cancelConnAttempt": "إلغاء",
       "connectAttemptMsg": "محاولة الاتصال بـ %{serverName}. %{cancelConnAttempt}",
-      "waitForServerStopMsg": "Shutting down %{serverName}. This may take up to a few minutes."
+      "waitForServerStopMsg": "سيتم إيقاف %{serverName}. قد يستغرق هذا ما يصل إلى بضع دقائق."
     },
     "configurations": {
       "tabName": "تكوينات",
@@ -807,13 +837,13 @@
       "torPwLabel": "كلمة مرور Tor",
       "torPwPlaceholder": "كلمة المرور الغير مرمزة لتحكم Tor",
       "warning": "تحذير:",
-      "torServerWarning": "%{warning} In order to be anonymous, it is critical that you also start the server in Tor mode.",
+      "torServerWarning": "%{warning} لكي تكون مجهولاً ، فمن الأهمية بمكان أن تقوم أيضًا بتشغيل الخادم في وضع تور.",
       "lblServerType": "النوع",
-      "helperServerType": "Select your server type",
-      "serverTypeBuiltin": "Built-in (local)",
-      "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
-      "serverTypeStandalone": "Stand-alone (advanced)",
-      "serverTypeStandaloneTip": "This server is manually installed and controlled from the command line. It might be installed on a remote computer. It must already be running before you can connect to it.",
+      "helperServerType": "حدد نوع الخادم الخاص بك",
+      "serverTypeBuiltin": "مدمج (محلي)",
+      "serverTypeBuiltinTip": "يتم إنشاء هذا الخادم والتحكم فيه بواسطة هذا التطبيق على هذا الكمبيوتر، ولا يتم تشغيله إلا عند تشغيل التطبيق. موصى به لمعظم المستخدمين.",
+      "serverTypeStandalone": "قائم بذاته (متقدم)",
+      "serverTypeStandaloneTip": "يتم تثبيت هذا الخادم يدويًا والتحكم فيه من سطر الأوامر. قد يتم تثبيته على كمبيوتر بعيد. يجب أن يكون قيد التشغيل قبل أن تتمكن من الاتصال به.",
       "saveConfirm": {
         "title": "هل أنت متأكد؟",
         "body": "عند الاتصال بمخدم عن بعد, يفضل بشدة أن تكون SSL في وضعية التشغيل.",
@@ -824,7 +854,7 @@
   },
   "torExternalLinkWarning": {
     "heading": "تحذير",
-    "body": "You're attempting to visit an external link in your default web browser. If your default web browser is not set to Tor, you may be exposing your IP address.",
+    "body": "أنت تحاول زيارة رابط خارجي في متصفح الويب الافتراضي لديك. إذا لم يتم تعيين متصفح الويب الافتراضي الخاص بك على تور، فقد تقوم بتعريض عنوان IP الخاص بك للكشف.",
     "areYouSureToProceed": "هل أنت متأكد أنك تريد المتابعة؟",
     "doNotShowAgain": "لا تظهر هذا التحذير مرة أخرى",
     "btnCancel": "إلغاء",
@@ -833,7 +863,7 @@
   "wallet": {
     "title": "المحفظة",
     "closeLink": "أغلق المحفظة",
-    "fundsHeader": "Funds",
+    "fundsHeader": "الرصيد",
     "btnReceiveMoney": "استلام أموال",
     "btnSendMoney": "ارسل أموال",
     "valueInCurrencyLabel": "القيمة بـ %{currency}",
@@ -841,27 +871,27 @@
     "receiveMoney": {
       "title": "استلام أموال",
       "btnCancel": "إلغاء",
-      "btnFundViaShapeshift": "Fund via ShapeShift",
-      "needCoinLink": "Need %{cur}?"
+      "btnFundViaShapeshift": "الإيداع بواسطة ShapeShift",
+      "needCoinLink": "تريد %{cur}؟"
     },
     "sendMoney": {
       "toLabel": "إلى",
-      "toPlaceholder": "Enter a %{cur} Address",
+      "toPlaceholder": "ضع عنوان %{cur}",
       "amountLabel": "كمية",
       "noteLabel": "ملاحظة",
       "notePlaceholder": "يرى فقط من قبلك",
       "sendBtn": "ارسل",
       "clear": "مسح",
       "sendPaymentFailDialogTitle": "تعذر إرسال الدفعة",
-      "errorInvalidAddress": "The payment address is not valid."
+      "errorInvalidAddress": "عنوان الدفع غير صحيح."
     },
     "spendConfirmBox": {
       "heading": "هل أنت متأكد؟",
-      "body": "A network fee will be included, currently estimated at %{currencyPairing}",
+      "body": "سيتم تضمين رسوم الشبكة، المقدرة حاليًا بنسبة %{currencyPairing}",
       "errorHeading": "تعذر إرسال الدفعة",
-      "bodyInsufficientFunds": "You do not have enough funds. Be sure to account for the transaction fee.",
-      "bodyDustAmount": "The transaction amount is too small and falls below the network dust amount.",
-      "bodyGenericError": "There was an error estimating the fee: %{err}",
+      "bodyInsufficientFunds": "ليس لديك ما يكفي من الأموال. تأكد من حساب رسوم الحوالة.",
+      "bodyDustAmount": "حجم الحوالة صغير جدًا ويقع أسفل مقدار رسوم الشبكة.",
+      "bodyGenericError": "حدث خطأ في تقدير الرسوم: %{err}",
       "btnRetry": "أعد المحاوله",
       "btnCancel": "إلغاء",
       "btnConfirmSend": "نعم, ارسل",
@@ -870,15 +900,15 @@
     "transactions": {
       "header": "العمليات التجارية",
       "transaction": {
-        "outgoingText": "%{currencyPairing} to %{address}",
-        "incomingText": "%{currencyPairing} received",
+        "outgoingText": "%{currencyPairing} إلى %{address}",
+        "incomingText": "%{currencyPairing} أُستلم",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
         "viewDetailsBtn": "عرض التفاصيل",
         "retryTransactionBtn": "زيادة الرسوم",
         "retryPaymentConfirmBox": {
           "title": "إعادة محاولة دفع",
-          "body": "Add %{currencyPairing}%{asterisk} to the fee and resubmit the transaction.",
-          "insufficientFundsBody": "You need at least %{currencyPairing}%{asterisk} in your wallet to resubmit this transaction with a higher fee.",
+          "body": "ضع %{currencyPairing}%{asterisk} إلى الرسوم وأعد إرسال الحوالة.",
+          "insufficientFundsBody": "تحتاج إلى الأقل %{currencyPairing}%{asterisk} في محفظتك لإعادة تقديم هذه الحوالة برسوم أعلى.",
           "fetchError": "حدث خطأ أثناء تحميل الرسوم المقدرة: %{err}",
           "subText": "%{asterisk}السعر المقدر",
           "btnCancel": "إلغاء",
@@ -887,13 +917,13 @@
         },
         "retryFailDialogTitle": "تعذر إعادة محاولة الدفع",
         "retryFailInsufficientFunds": "ليس لديك أموال كافية لإتمام هذه المعاملة.",
-        "feeBumpOf": "Fee bump of %{address}"
+        "feeBumpOf": "عثرة الرسوم ل %{address}"
       },
       "noTransactionsPlaceholder": "أنت لاتملك أي معاملات.",
-      "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
-      "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
-      "recoverySeedLink": "backup your wallet recovery seed",
-      "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
+      "newTransactionsPopin": "%{smart_count} حوالة جديدة |||| %{smart_count} حوالات جديدة",
+      "backupWalletWarningTitle": "حفظ نسخة من كلمات الإستعادة للمحفظة",
+      "recoverySeedLink": "حفظ نسخة من كلمات الإستعادة لمحفظتك",
+      "backupWalletWarningBody": "يبدو أن لديك معاملة أو اثنتين. سيكون هذا هو الوقت المناسب ل %{link}."
     }
   },
   "formats": {
@@ -915,11 +945,11 @@
     "editListingReturnText": "العودة إلى القائمة",
     "freeShippingBanner": "الشحن مجانا",
     "listingDataChangedPopin": "تم تغيير بيانات القائمة.",
-    "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
+    "viewPhotos": "عرض %{count} صورة |||| عرض %{count} صور",
     "type": "النوع: %{type}",
     "condition": "الحالة: %{condition}",
     "tags": "وسوم Tags",
-    "paymentsAccepted": "Payments Accepted",
+    "paymentsAccepted": "الحوالات المقبولة",
     "noTags": "لم يتم ادخال وسوم Tag",
     "buyNow": "اشتري الآن",
     "description": "وصف",
@@ -935,17 +965,17 @@
     "shipTo": "شحن إلى",
     "noShippingFound": "هذه القائمة لاتشحن إلى البلد المحدد.",
     "localPickup": "هذا الخيار للأخذ المحلي فقط.",
-    "deliveryTime": "Delivery Time",
-    "priceFirst": "Price (first item)",
-    "priceSecond": "Price (additional item)",
+    "deliveryTime": "وقت الوصول",
+    "priceFirst": "السعر (البند الأول)",
+    "priceSecond": "السعر (البند الإضافي)",
     "allCountries": "أي بلد",
     "returnToStore": "العودة إلى المتجر",
     "goToStore": "اذهب إلى متجر",
     "unableToPurchase": {
-      "incompatibleCrypto": "The listing accepts %{acceptedCurrencies}, whereas your wallet only supports transacting in %{serverCur}.",
-      "unrecognizedCur": "The item is priced in an unrecognized currency.",
-      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
-      "unpurchaseable": "This listing is not purchasable."
+      "incompatibleCrypto": "القائمة تقبل %{acceptedCurrencies}، بينما تدعم محفظتك الحوالات من عملة %{serverCur}.",
+      "unrecognizedCur": "يتم تسعير السلعة بعملة غير معروفة.",
+      "noExchangeRateInfo": "يتم تسعير السلعة بعملة لا تتوفر بها بيانات سعر الصرف حاليًا.",
+      "unpurchaseable": "هذه القائمة لا يمكن شراؤها."
     },
     "confirmDelete": {
       "title": "هل أنت متأكد؟",
@@ -954,7 +984,7 @@
       "btnConfirm": "نعم، أحذف"
     },
     "review": {
-      "title": "%{time} by %{name}",
+      "title": "%{time} بواسطة %{name}",
       "loadMore": "حمل المزيد",
       "noReviews": "لم يتم العثور على مراجعات",
       "showMore": "اظهر المزيد",
@@ -962,8 +992,8 @@
     },
     "errors": {
       "fetchRatings": "قد لايتم تحميل التقييمات",
-      "fetchReviews": "There was a problem loading the reviews. %{error}",
-      "loadReview": "Review %{id} failed due to %{error}",
+      "fetchReviews": "حدثت مشكلة في تحميل المراجعات. %{error}",
+      "loadReview": "المراجعة %{id} فشلت بسبب %{error}",
       "noPurchaseTitle": "لا يمكن شراء هذه القائمة.",
       "zeroPriceMsg": "لا يمكنك إجراء عملية شراء بسعر صفر أو أقل."
     }
@@ -986,10 +1016,10 @@
       "title": "حدث خطأ أثناء استرداد القائمة.",
       "bodyNotFound": "لم يتم العثور على القائمة. قد تكون حذفت من قبل المالك؟"
     },
-    "btnShowMatureContent": "Show Mature Content",
-    "tipShowMatureContent": "Show Mature Content",
-    "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "btnShowMatureContent": "إظهار محتوى البالغين",
+    "tipShowMatureContent": "إظهار محتوى البالغين",
+    "tipHideMatureContent": "إخفاء محتوى البالغين",
+    "blockedUser": "قُمت بحظر هذا المستخدم"
   },
   "listingDelete": {
     "deletingListing": "جاري حذف قائمة %{listing}.",
@@ -1002,19 +1032,19 @@
     "deleteFailedBtnOk": "نعم"
   },
   "listingReport": {
-    "btnTip": "Report this listing",
-    "btnTipReported": "This listing was reported",
-    "title": "Report Listing",
-    "message": "Why are you reporting this listing?",
-    "reasonOffensive": "Offensive Content",
-    "reasonFraud": "Fraudulent or Inaccurate",
-    "reasonIllegal": "Illegal in my Area",
-    "reasonOther": "Other",
-    "reasonOtherPlaceholder": "Explain why...",
+    "btnTip": "التبليغ عن القائمة",
+    "btnTipReported": "بُلغ عن هذه القائمة",
+    "title": "البلاغ عن القائمة",
+    "message": "لماذا تقوم بالإبلاغ عن هذه القائمة؟",
+    "reasonOffensive": "محتوى غير لائق",
+    "reasonFraud": "إحتيالية أو غير دقيقة",
+    "reasonIllegal": "غير قانونية في منطقتي",
+    "reasonOther": "آخرى",
+    "reasonOtherPlaceholder": "اشرح السبب...",
     "submit": "اعتمد",
-    "errorTitle": "Your report could not be submitted due to an error.",
-    "error404": "The report url returned a 404 error, it could not be reached.",
-    "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
+    "errorTitle": "لا يمكن إرسال بلاغك بسبب خطأ.",
+    "error404": "عرض عنوان الرابط للبلاغ خطأ 404، بمعنى تعذر الوصول إليه.",
+    "postSubmitMsg": "أُستلم البلاغ الخاص بك. يمتلك كل مزود بحث قواعد مختلفة للتعامل مع البلاغات، وقد تستمر في رؤية القائمة في نتائج البحث إلى أن يقرر إزالتها.",
     "closeBtn": "أغلق"
   },
   "editListing": {
@@ -1027,7 +1057,7 @@
       "attachments": "مرفقات",
       "shipping": "الشحن",
       "tags": "وسوم Tags",
-      "tagsDetailed": "Tags (For getting your listing discovered)",
+      "tagsDetailed": "العلامات (للحصول على اكتشاف قائمتك)",
       "category": "التصنيف",
       "categoryDetailed": "التصنيف (لتنظيم متجرك)",
       "variants": "المتغيرات",
@@ -1040,24 +1070,24 @@
       "variantInventory": "المخزون المتغير"
     },
     "placeholderTitle": "أدخل عنوانك...",
-    "placeholderSKU": "SKU, Part Number, ID, etc",
+    "placeholderSKU": "SKU، رقم الجزء، المعرف، إلخ",
     "placeholderDescription": "أوصف قائمتك بأفضل ما يمكن ... ضع صور مضمنة. رابط إلى فيديوهات على يوتيوب. إلخ",
     "placeholderReturnPolicy": "ما هي سياسة الإرجاع الخاصة بك؟ كم عدد الأيام التي يتم بها قبول الإرجاع؟ من الذي يدفع لإعادة الشحن (إذا لزم الأمر)؟ إلخ",
-    "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
+    "placeholderTerms": "ما هي شروط وأحكام الإدراج؟ ما أنت مسؤول عنه كبائع؟ هل يوجد ضمان؟ متى تكون المعاملة نهائية؟ إلخ",
     "helperTitle": "شيء وصفي يوضح بدقة ما تبيعه",
     "helperType": "اختر من ثلاثة أنواع",
     "helperShipping": "إشحن إلى أي مكان!",
-    "helperPhotos": "Include up to %{maxPhotos} photos",
+    "helperPhotos": "تضمين مايصل إلى %{maxPhotos} من الصور",
     "helperSKU": "معرف خاص بقائمتك",
-    "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
+    "helperSKUWithVariants": "عندما تكون المتغيرات موجودة، يمكن إعلان Skus في جزء %{variantInventoryLink} ",
     "variantInventoryLink": "المخزون المتغير",
     "helperCondition": "الحالة العامة لقائمتك",
-    "helperNSFW": "Mark yes if the listing is NSFW",
+    "helperNSFW": "ضع علامة نعم إذا كانت القائمة بها أشياء غير لائقة",
     "helperTags": "إضافة العديد من العلامات. أدخل اسم العلامة، ثم اضغط على إدخال، كرر.",
-    "helperCategories": "Category nesting is not supported (e.g. Shoes > Boots doesn't currently work). Enter a category name, press enter, repeat.",
-    "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
-    "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
-    "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperCategories": "لا يتم دعم تداخل الفئة (على سبيل المثال ، الأحذية> الأحذية غير متوفرة حاليًا). أدخل اسم الفئة، اضغط على Enter، وكرر.",
+    "helperReturnPolicy": "إذا تركته فارغًا، فستعرض القائمة \"لا يوجد سياسة للإستعادة\"",
+    "helperTerms": "إذا تركته فارغًا، فستعرض القائمة \"لا يوجد أي بنود أو شروط\"",
+    "helperPrice": "حدد سعرك بالدولار، يوان الصيني، %{cur}، أي شيء",
     "createListingLabel": "إنشاء قائمة",
     "editListingLabel": "تعديل قائمة",
     "title": "عنوان",
@@ -1069,26 +1099,26 @@
     "description": "وصف",
     "uploading": "تحميل ...",
     "categoryPlaceholder": "أدخل تصنيف",
-    "tagsPlaceholder": "Enter #tags…",
+    "tagsPlaceholder": "أدخل #وسوم...",
     "btnCancelUpload": "إلغاء",
     "btnAddPhoto": "اضافة",
     "btnAddShippingOptionShort": "اضافة",
     "btnAddReturnPolicy": "اضف سياسة إرجاع",
     "btnTermsAndConditions": "إضافة البنود والشروط",
     "btnAddCoupon": "إضافة قسيمة",
-    "primaryPhoto": "PRIMARY PHOTO",
+    "primaryPhoto": "الصورة الأساسية",
     "viewListingLink": "عرض قائمة",
     "unsupportedCurrencyDialog": {
-      "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
-      "btnOk": "OK"
+      "title": "عملة غير معروفة",
+      "body": "يتم تعيين هذه القائمة بعملة (%{cur}) التي لا يدعمها هذا العميل. يرجى تحديد عملة جديدة أدناه والنقر فوق موافق. بعد ذلك، تأكد من التحقق مرة أخرى من الأسعار للتأكد من ملاءمتها للعملة الجديدة.",
+      "btnOk": "موافق"
     },
     "shippingOptions": {
       "optionHeading": "خيارات الشحن #%{listPosition}",
       "shippingDestinations": "الوجهات",
       "regionsPlaceholder": "إدخال البلدان ...",
       "nameLabel": "عنوان الخيار",
-      "namePlaceholder": "e.g. USA Shipping, International, etc",
+      "namePlaceholder": "مثلا تُشحن الولايات المتحدة الأمريكية، دوليًا، وما إلى ذلك",
       "typeLabel": "النوع",
       "shippingTypes": {
         "FIXED_PRICE": "سعر ثابت",
@@ -1099,11 +1129,11 @@
       "clearAll": "مسح الكل",
       "services": {
         "nameLabel": "خدمة",
-        "namePlaceholder": "e.g. Standard, Express, Overnight",
+        "namePlaceholder": "مثلا عادي، سريع، صباح اليوم التالي",
         "estimatedDeliveryLabel": "موعد التسليم ,المقدر",
         "estimatedDeliveryPlaceholder": "مثال. 5-7 أيام",
-        "priceLabel": "Price (first item)",
-        "additionalItemPriceLabel": "Price (additional item)",
+        "priceLabel": "السعر (البند الأول)",
+        "additionalItemPriceLabel": "السعر (البند الإضافي)",
         "pricePlaceholder": "0.00",
         "addService": "+ اضف خدمة"
       },
@@ -1118,7 +1148,7 @@
       "titlePlaceholder": "اختياري",
       "discountCodePlaceholder": "ادخل الرمز",
       "discountTypePercent": "نسبه مئويه",
-      "discountTypeFixed": "Fixed",
+      "discountTypeFixed": "ثابتة",
       "btnAddCoupon": "+ إضافة قسيمة",
       "toolTip": {
         "delete": "حذف"
@@ -1141,21 +1171,21 @@
       "trackSelectOption": "تتبع المخزون",
       "doNotTrackHelperText": "يمكن للمستهلكين شراء بقدر مايريدون",
       "trackByFixedHelperText": "ستنخفض الكمية حتى تصل إلى\"0\" الصفر, ثم ستعرض كمادة مباعة",
-      "trackByVariantsHelperText": "Inventory is tracked per variant / variant combination",
+      "trackByVariantsHelperText": "يتم تتبع المخزون لكل تركيبة مختلفة / متنوعة",
       "quantity": "كمية"
     },
     "variantInventory": {
-      "helperText": "Variant options with a quantity of 0 will not display",
-      "placeholderSKU": "SKU, ID, etc",
+      "helperText": "لن يتم عرض خيارات المتغير بكمية 0",
+      "placeholderSKU": "SKU، المعرف، إلخ",
       "unlimitedQuantityLabel": "غير محدود",
-      "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
-      "unableToCalcTotalPrice": "Unable to calculate",
-      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+      "placeholderNeedMoreData": "سوف يظهر جدول المخزون البديل عندما تعلن عن متغير واحد على الأقل له خيار واحد على الأقل.",
+      "unableToCalcTotalPrice": "غير قادر على الحساب",
+      "unableToCalcTotalPriceTip": "يجب إعداد كل من سعر القائمة والرسوم الإضافية. إذا تضمنت العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\"."
     },
     "confirmCloseDialog": {
-      "title": "You have unsaved changes",
-      "bodyCreate": "You have unsaved changes while creating a listing. Are you sure you want to close?",
-      "bodyEdit": "You have unsaved changes while editing a listing. Are you sure you want to close?",
+      "title": "لم تحفظ التغييرات",
+      "bodyCreate": "لديك تغييرات غير محفوظة أثناء إنشاء القائمة. هل أنت متأكد من الإغلاق؟",
+      "bodyEdit": "لديك تغييرات غير محفوظة أثناء تعديل القائمة. هل أنت متأكد من الإغلاق؟",
       "btnYes": "نعم",
       "btnNo": "لا"
     },
@@ -1172,13 +1202,13 @@
   "search": {
     "title": "اكتشاف",
     "searchBtn": "بحث",
-    "searchPlaceholder": "Enter a search term or #tag.",
+    "searchPlaceholder": "أدخل مصطلح بحث أو #وسم.",
     "suggestions": "اقتراحات",
-    "resultsFound": "<b>%{totalResults} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{totalResults} listings</b> found for <b>\"%{term}\"</b>",
+    "resultsFound": "<b>%{totalResults} قائمة</b> وجدت حول <b>\"%{term}\"</b> |||| <b>%{totalResults} قائمات</b> وجدت حول <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} قوائم",
     "sortBy": "ترتيب حسب",
     "changeProvider": "أغلق واختر مزود بحث جديد",
-    "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
+    "useDefault": "أبحث عن \"%{term}\" بإستخدام %{defaultProvider}",
     "noResults": "لا يوجد قوائم تطابق معايير البحث الذي تقوم به",
     "addTitle": "إضافة مزود بحث",
     "addPlaceholder":"رابط مزود البحث",
@@ -1187,17 +1217,17 @@
     "cancel": "إلغاء",
     "deleteProviderBtn": "إزالة مزود بحث",
     "makeDefaultBtn": "تعيين كافتراضي",
-    "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
+    "makeDefaultBtnHelper": "يتم استخدام موفر البحث الافتراضي لعمليات البحث في شريط العناوين.",
     "addQueryProviderBtn": "اضف مزود بحث",
     "chooseDefaultTitle": "اختر مزود البحص الافتراضي",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "chooseDefaultMsg": "سيتم استخدام هذا الموفر كخيار افتراضي لعمليات البحث المستقبلية حتى تقوم بتعيين جديد.",
     "providers": {
         "transactions": "العمليات التجارية",
         "myPage": "صفحتي"
     },
     "errors": {
-      "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
-      "searchFailReason": "The search provider returned the following message: %{error}",
+      "searchFailTitle": "استعلام البحث ل %{provider} فشل. اختر موفر آخر أعلاه.",
+      "searchFailReason": "رد موفر البحث بالرسالة التالية: %{error}",
       "connection": "أنت لم تعد متصلاً بالعقدة الخاصة بك. أعد الاتصال لإتمام البحث",
       "addError": "لا يمكن إضافة هذا المزود. تأكد من بياناتك وحاول مرة أخرى.",
       "locked": "لايمكن حذف مزودات البحث الافتراضية",
@@ -1212,7 +1242,7 @@
     "introScreen": {
       "connectionLbl": "إتصال:",
       "btnChange": "تغيير",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
+      "introLine": "سوق حرة. لا رسوم. لا قيود. اربح %{cur}.",
       "tagLine": "شراء وبيع بحرية",
       "btnGetStarted": "البدء"
     },
@@ -1230,12 +1260,12 @@
     },
     "tosScreen": {
       "heading": "شروط الخدمة",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "أوبن بازار هي شبكة لتجارة السلع والخدمات مباشرة بين الناس - باستخدام بيتكوين - من دون أي منظمة مركزية تتحكم بالمنصة. وهذا يعني أنك مسؤول عن النشاط الخاص بك على الشبكة.\n\n مستخدمين أوبن بازار ليسو مجهولون بالحالة الافتراضية, يتم تشفير معظم الاتصالات بين الأطراف، ولكن عناوين الشبكة عامة ويمكن ربطها بالنشاط على الشبكة. يمكن للأطراف الخبيثة استخدام هذه المعلومات ضدك ؛ وحماية خصوصيتك هي مسؤولية خاصة بك, يجب على مستخدمين أوبن بازار التقيد بالقوانين المعمول بها محليا وكذلك مراجعة ضمائرهم.  مطورين أوبن بازار لا تتغاضى - وغير مسؤولة عن - أي استخدام غير مشروع للمنصة. \n\nمجتمع مطورين أوبن بازار عمل بجد لتقديم منصة مجانية للتجارة إلى العالم. ولكن كما هو الحال مع أي برنامج، سيتم العثور على أخطاء.  المطورون ليسو مسؤولون عن أي خسارة نقدية مرتبطة بمشاكل في البرنامج. \n\nباستخدامك برنامج أوبن بازار أنت مسؤول عن النشاطات الخاصة بك على شبكة أوبن بازار."
     }
   },
   "pageControls": {
     "displayingCounts": "%{start}-%{end} من %{total}",
-    "displaying": "Displaying %{displayingCounts}"
+    "displaying": "يُعرض %{displayingCounts}"
   },
   "purchase": {
     "purchaseDataChangedPopin": "تم تغيير بيانات هذه القائمة.",
@@ -1264,22 +1294,20 @@
       "blank": "يجب إدخال رمز."
     },
     "removeCode": "إزالة",
-    "memo": "Memo",
+    "memo": "مذكرة",
     "memoPlaceholder": "أعطي تفاصيل إضافية للمورد هنا (اختياري).",
-    "pay": "PAY >",
+    "pay": "دفع >",
     "payNote": "سوف ينقلك الضغط على دفع إلى الخطوة النهائية.",
-    "scamWarning": "WARNING: Protect against scams",
+    "scamWarning": "تحذير: حماية ضد حيل السرقة",
     "pending": "قيد الانتظار...",
-    "pendingNote": "Please fund the order to complete your transaction.",
+    "pendingNote": "يرجى تمويل الطلب لإكمال معاملتك.",
     "close": "أغلق",
     "closeNote": "تم إرسال دفعتك إلى المورد.",
     "moderatorNote": "* لا تنطبق رسوم خدمة المشرف إلا إذا تم فتح نزاع.",
     "quantity": "كمية",
-    "useShapeShift": "Or use ShapeShift in the next step",
-    "moderatedPayment": "تم الإشراف على الدفع",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
-    "noValidModerators": "لا يتوفر مشرفون مناسبون لهذا الطلب.",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderatorsDisclaimer": "سيتم عقد دفعتك بشكل آمن في الضمان. إذا ظهرت أية مشكلات، فستتمكن من فتح نزاع مع مشرفك المختار. * تسري رسوم خدمة المشرف فقط في حالة فتح أي نزاع.",
+    "directPayment": "دفع مباشر",
+    "directPaymentDetails": "أرسل الأموال مباشرة إلى البائع دون مشرف. يجب عليك فقط استخدام هذا الخيار مع البائعين الذين تثق بهم، ولن تتمكن من الاعتراض على الطلب إذا حدث خطأ ما.",
     "chooseModerator": "اختر هذا المشرف",
     "confirmPayment": {
       "title": "هل كل شيء على مايرام؟",
@@ -1294,17 +1322,17 @@
       "to": "إلى: %{address}",
       "payFromWallet": "الدفع من المحفظة",
       "payWithAlt": "ادفع بعملة Altcoins",
-      "note1": "If you need help getting started with Bitcoin, please read %{link}.",
+      "note1": "إذا كنت بحاجة إلى مساعدة للبدء في استخدام Bitcoin ، فالرجاء قراءة ٪{link}.",
       "note1Link": "تحتاج بيتكوين؟ على OpenBazaar.org",
-      "note2": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute.",
+      "note2": "سيتم عقد دفعتك بشكل آمن في الضمان. إذا نشأت أي مشكلات، فستتمكن من فتح نزاع.",
       "note3": "* لا تنطبق رسوم خدمة المشرف إلا إذا تم فتح نزاع.",
       "note4": "بمجرد الدفع، قد يستغرق الأمر قليلا لتحديث الواجهة.",
       "btnConfirmedPay": "نعم, ادفع",
-      "altcoinNote": "<b>Altcoins</b> will be available when ShapeShift updates to Segregated Witness.",
+      "altcoinNote": "<b>العملات المشفرة</b> ستتوفر عندما ShapeShift يتحدث ويدعم المزايا المطلوبة.",
       "altcoinLink": "لا يزال بإمكانك تمويل محفظة أوبن بازار OB الخاصة بك بعملة altcoins..",
-      "walletNote": "<b>External wallets</b> that don't support Segregated Witness may not be able to pay for transactions.",
-      "walletLink": "You can send funds to your OB wallet instead.",
-      "feeNote": "<b>Remember to cover any fees</b> when you send funds to your OpenBazaar wallet."
+      "walletNote": "<b>المحفظات الخارجية</b> التي لاتدعم ميزة Segregated Witness قد لا تكون قادرة على دفع ثمن الحوالات.",
+      "walletLink": "يمكنك إرسال الأموال إلى محفظة اوبن بازار بدلاً من ذلك.",
+      "feeNote": "<b>تذكير لتغطية أي رسوم</b> عند إرسال الأموال إلى محفظة اوبن بازار."
     },
     "completeSection": {
       "paymentSent": "تم ارسال الدفعه!",
@@ -1314,13 +1342,13 @@
       "noData": "غير محدد",
       "vendorMessage": "رسالة للمورد (اختياري)",
       "vendorMessagePlaceholder": "تقديم تفاصيل إضافية, إطرح سؤال, قدم تعليقات ...",
-      "vendorMessageLink": "discussion section of the order details",
+      "vendorMessageLink": "قسم المناقشة في تفاصيل الطلب",
       "vendorMessageSent": "تم إرسال رسالتك إلى %{name}, يمكنك تمام المحادثة في %{orderLink}.",
       "send": "ارسل   ",
       "share": {
         "title": "شارك مع أصدقائك",
-        "body": "I just made a purchase on OpenBazaar, the free marketplace without fees or restrictions. Learn more at %{link}.",
-        "shareMsg": "I just made a purchase on @OpenBazaar, the free marketplace without fees or restrictions.",
+        "body": "لقد أجريت للتو عملية شراء على اوبن بازار، السوق الحر بدون رسوم أو قيود. اعرف المزيد على %{link}.",
+        "shareMsg": "لقد أجريت للتو عملية شراء على @OpenBazaar، السوق الحر بدون رسوم أو قيود.",
         "postToTwitter": "نشر على تويتر",
         "postToFacebook": "نشر على فيسبوك",
         "postToPinterest": "نشر على بينتريست",
@@ -1332,11 +1360,11 @@
       "listing": "قائمة",
       "coupon": "قسيمة",
       "shipping": "الشحن",
-      "firstItem": "First Item",
-      "additionalItems": "Each Additional Item",
+      "firstItem": "الصنف الأول",
+      "additionalItems": "كل صنف إضافي",
       "options": "خيارات",
-      "subtotal": "Subtotal (%{quantity})",
-      "shippingTotal": "Total Shipping",
+      "subtotal": "المجموع (%{quantity})",
+      "shippingTotal": "إجمالي الشحن",
       "total": "مجموع"
     },
     "errors": {
@@ -1346,31 +1374,38 @@
       "ownIDTitle": "لا يمكنك شراء القوائم الخاصة بك",
       "ownIDMsg": "يمكنك معاينة عملية الشراء لقوائمك الخاصة، ولكن لا يمكنك شرائها.",
       "paymentFailed": "تعذر إتمام الدفع",
-      "zeroPrice": "لا يمكنك شراء قائمة بسعر إجمالي قدره صفر.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "zeroPrice": "لا يمكنك شراء قائمة بسعر إجمالي قدره صفر."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+    "moderatorsLoading": "جارٍ تحميل المشرفين...",
+    "moderatorsLoaded": "%{total} مشرف مٌحميله.",
+    "noValidModerators": "لا يتوفر مشرفون مناسبون.",
+    "noValidModeratorsBody": "لا يتوفر مشرفون مناسبون. سيكون هذا الطلب دفعة مباشرة.",
+    "noVerifiedModerators": "لا يتوفر مشرفون مؤكدين.",
+    "noVerifiedModeratorsBody": "حاول مشاهدة المشرفين الغير مؤكدين أو حدد الدفع المباشر أدناه.",
+    "showUnverified": "إظهار المشرفين غير المؤكدين",
+    "browseMoreModerators": "حمل المزيد"
+
   },
   "transactions": {
     "sales": {
       "heading": "مبيعات",
-      "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
+      "countTransactions": "%{smart_count} بيع |||| %{smart_count} مبيعات",
       "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "unableToFetch": "تعذر الحصول على مبيعاتك.",
       "noResults": "لم يتم العثور على مبيعات",
       "returnToFromOrder": "العودة إلى المبيعات",
       "resyncPopInMessage": {
         "link": "أعد المزامنة",
-        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "text": "قد تحتاج إلى إعادة مزامنة محفظتك لتلقي دفعات لواحد أو أكثر من الطلبات غير الممولة.",
         "message": "%{icon} %{text} %{link}",
-        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+        "completeText": "سوف تبدأ حوالاتك في إعادة المزامنة. انتظر من خمس إلى عشر دقائق أو أكثر ثم قم بالتحديث أو العودة إلى هذه الصفحة."
       }
     },
     "purchases": {
       "heading": "المشتريات",
-      "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
+      "countTransactions": "%{smart_count} شراء |||| %{smart_count} مشتريات",
       "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "unableToFetch": "تعذر الحصول على مشترياتك.",
       "noResults": "لم يتم العثور على عمليات شراء",
@@ -1378,7 +1413,7 @@
     },
     "cases": {
       "heading": "الحالات",
-      "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
+      "countTransactions": "%{smart_count} قضية |||| %{smart_count} قضايا",
       "countTransactionsFound": "تم ايجاد %{countTransactions}",
       "noResults": "لم يتم العثور على أية حالات",
       "returnToFromOrder": "العودة إلى الحالات"
@@ -1388,10 +1423,11 @@
       "ready": "جاهز للمعالجة",
       "fulfilled": "استيفاء",
       "refunded": "مسترجع",
+      "disputes": "النزاعات",
       "disputeOpen": "الجدال مفتوح",
-      "disputePending": "الجدال في انتظار المراجعة",
       "disputeClosed": "تم إغلاق الجدال",
-      "completed": "منجز"
+      "completed": "منجز",
+      "error": "الاخطاء"
     },
     "sort": {
       "label": "ترتيب حسب",
@@ -1399,9 +1435,9 @@
       "dateAsc": "الأحدث",
       "dateDesc": "الأقدم"
     },
-    "placeholderSearchSales": "Search by Order #, Title or Buyer",
-    "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
-    "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
+    "placeholderSearchSales": "إبحث بواسطة رقم الطلب #، عنوان أو مشترِ",
+    "placeholderSearchPurchases": "إبحث بواسطة رقم الطلب #، عنوان أو بائع",
+    "placeholderSearchCases": "إبحث بواسطة رقم الطلب #، عنوان، مشترِ أو بائع",
     "resetFilters": "إعادة تعيين الفلاتر",
     "transactionsTable": {
       "headers": {
@@ -1426,8 +1462,9 @@
         "REFUNDED": "مسترجع",
         "DISPUTED": "المتنازع عليها",
         "DECIDED": "مقرر",
-        "RESOLVED": "Resolved",
-        "PAYMENT_FINALIZED": "تم الانتهاء من الدفع"
+        "RESOLVED": "حُلت",
+        "PAYMENT_FINALIZED": "تم الانتهاء من الدفع",
+        "PROCESSING_ERROR": "خطأ"
       },
       "btnReject": "رفض",
       "btnAccept": "قبول",
@@ -1439,7 +1476,7 @@
     "navMenu": {
       "summary": "ملخص",
       "discussion": "نقاش",
-      "contract": "Contract (JSON)"
+      "contract": "الإتفاقية (JSON)"
     },
     "backToSummary": "الرجوع إلى الملخص",
     "discussionTab": {
@@ -1450,35 +1487,45 @@
       "isTyping": "%{userRole} جاري الكتابة...",
       "areTyping": "%{userRole1} و %{userRole2} يقومون بالكتابة...",
       "enterMessagePlaceholder": "أدخل رسالة ...",
-      "enterMessageNoMoreModPlaceholder": "Enter message... (the moderator has issued a decision and will no longer see any new chat messages)",
-      "modCannotChat": "You have issued a decision and cannot send further messages.",
+      "enterMessageNoMoreModPlaceholder": "أدخل الرسالة... (أصدر المشرف قرارًا ولن يرى أي رسائل دردشة جديدة)",
+      "modCannotChat": "لقد أصدرت قرارًا ولا يمكنك إرسال رسائل مرة أخرى.",
       "loadMessagesError": "حدث خطأ أثناء تحميل الرسائل %{retryLink}",
       "retryLink": "أعد المحاوله",
       "btnSend": "ارسل"
     },
     "contractTab": {
-      "heading": "Contract (JSON)",
-      "buyerContractNotAvailable": "عقد المشتريين غير متوفر حاليا حتى يعاودوا الاتصال بالانترنت.",
-      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
-      "buyerVendorContractVerified": "تم التحقق من صحة كل من عقود المشتري والبائع.",
-      "buyerContractNotAuthentic": "يحتوي عقد المشتري على أخطاء في التحقق. ومن المرجح أن تكون مزورة.",
-      "vendorContractNotAuthentic": "يحتوي عقد المورد على أخطاء في التحقق. ومن المرجح أن تكون مزورة.",
+      "heading": "الإتفاقية (JSON)",
       "buyerContractHeading": "عقد المشتري:",
-      "vendorContractHeading": "عقد المورد:"
+      "vendorContractHeading": "عقد المورد:",
+      "contractErrorHeading": "تحتوي الإتفاقية على أخطاء المتحقق من صحتها التالية. ربما تم تزويرها.",
+      "bothContractsValid": "تم التحقق من صحة كل من عقود المشتري والبائع.",
+      "validBuyerVendorProcessingError": "تُحقق من الإتفاقية للمشتري بأنها أصلية. إتفاقية البائع غير متاحة لأن البائع واجه خطا في معالجة الطلب.",
+      "vendorContractNotArrived": "إتفاقية البائع لم تصل بعد. ستُرسل في المرة القادمة عند تواجده عبر الإنترنت.",
+      "buyerContractNotArrived": "إتفاقية البائع لم تصل بعد. ستُرسل في المرة القادمة عند تواجده عبر الإنترنت.",
+      "vendorContractNotArrivedPotentialProcErr": "إتفاقية البائع لم تصل بعد. تشير إتفاقية المشتري إلى أن البائع واجه خطأ أثناء المعالجة، ولكن لا يمكن التحقق من صحة ذلك لأن إتفاقية المشتري بها أخطاء في التحقق. يرجى الإتصال بالبائع للتأكد.",
+      "contractHeadingVendor": "عقد البائع:",
+      "contractHeadingBuyer": "عقد المشتري:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "كل من إتفاقيات المشتري والبائع تحتوي على أخطاء بالتحقق.",
+      "tipBuyerContractHasError": "إتفاقية المشتري تحتوي على أخطاء بالتحقق.",
+      "tipVendorContractHasError": "إتفاقية البائع تحتوي على أخطاء بالتحقق.",
+      "tipBuyerContractNotArrived": "إتفاقية المشتري لم تصل بعد.",
+      "tipVendorContractNotArrived": "إتفاقية البائع لم تصل بعد."
     },
     "summaryTab": {
-      "orderNumber": "Order #: %{orderId}",
+      "orderNumber": "رقم الطلب #: %{orderId}",
       "copyLink": "نسخ",
       "notApplicable": "غير متوفر",
       "vendorFinalizedPayment": "لقد انتهيت من إعداد الطلب يدويا.",
       "payment": {
         "firstPaymentHeading": "بيانات الدفع",
         "paymentHeading": "تفاصيل الدفعة #%{paymentNumber}",
-        "amountTo": "%{currencyPairing} to %{payeeName}",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "amountTo": "%{currencyPairing} إلى %{payeeName}",
+        "refundedTo": "%{currencyPairing} أُسترجعت إلى %{payeeName}",
+        "refunded": "%{currencyPairing} مُسترجعة",
         "paidInFull": "مدفوعة بالكامل",
-        "underpaidAmountShort": "Underpaid (%{amountShort} required)",
+        "underpaidAmountShort": "أجر غير كافي (%{amountShort} مطلوب)",
         "cancelBtn": "إلغاء",
         "rejectBtn": "رفض",
         "acceptBtn": "قبول",
@@ -1486,7 +1533,7 @@
         "veryManyConfirmationsCount": "%{countText} تأكيدات",
         "rejectConfirm": {
           "title": "هل أنت متأكد؟",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "المبلغ الأصلي في %{cur} سيُسترجع إلى المشتري",
           "btnCancel": "إلغاء",
           "btnConfirm": "نعم, أرفض"
         },
@@ -1494,8 +1541,8 @@
       },
       "refund": {
         "heading": "مسترجع",
-        "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
-        "refunded": "%{currencyPairing} refunded",
+        "refundedTo": "%{currencyPairing} أُسترجعت إلى %{payeeName}",
+        "refunded": "%{currencyPairing} مُسترجعة",
         "confirmationsCount": "%{smart_count} تأكيد |||| %{smart_count} تأكيدات",
         "veryManyConfirmationsCount": "%{countText} تأكيدات"
       },
@@ -1506,11 +1553,11 @@
         "vendorReceived": "لقد تلقيت الطلب.",
         "buyerOrderAccepted": "شكرا لك على الشراء!",
         "modOrderAccepted": "لقد قبل المورد الطلب.",
-        "refundBtn": "Refund",
+        "refundBtn": "الإسترجاع",
         "fulfillBtn": "الوفاء بالطلبات",
         "refundConfirm": {
           "title": "هل أنت متأكد؟",
-          "body": "The original amount in %{cur} will be returned to the buyer",
+          "body": "المبلغ الأصلي في %{cur} سيُسترجع إلى المشتري",
           "btnCancel": "إلغاء",
           "btnConfirm": "نعم، استرداد"
         }
@@ -1518,9 +1565,9 @@
       "fulfilled": {
         "heading": "استيفاء",
         "shippedByLabel": "يتم شحن الطلب عبر:",
-        "trackingNumberLabel": "Tracking #:",
-        "yourNoteLabel": "Your note:",
-        "noteFromVendorLabel": "Note from the vendor:",
+        "trackingNumberLabel": "رقم التتبع #:",
+        "yourNoteLabel": "ملاحظاتك:",
+        "noteFromVendorLabel": "ملاحظة من البائع:",
         "noteFromStoreLabel": "ملاحظة من %{store}:",
         "copyLink": "نسخ",
         "digitalReadyForDlHeading": "الملفات الرقمية جاهزة للتحميل!",
@@ -1537,17 +1584,17 @@
       },
       "orderComplete": {
         "heading": "الطلب جاهز",
-        "reviewLabel": "%{name}'s Review:"
+        "reviewLabel": "المراجع %{name}:"
       },
       "disputeStarted": {
         "heading": "تم بدء الجدال\n",
-        "partyIsDisputing": "%{name} is disputing the order:",
+        "partyIsDisputing": "%{name} يتنازع حول الطلب:",
         "resolveBtn": "حل خلاف",
         "genericIsDisputed": "يتم الخلاف على الطلب:",
         "noReasonProvided": "ولم يقدم أي سبب."
       },
       "disputePayout": {
-        "heading": "Dispute Payout",
+        "heading": "مقاضاة الدفع",
         "buyerHeading": "مشتر",
         "buyerHeadingWithName": "%{name} (الشاري)",
         "vendorHeading": "بائع",
@@ -1556,7 +1603,7 @@
         "moderatorHeadingWithName": "%{name} (مشرف)",
         "noteFromHeading": "ملاحظة من المشرف:",
         "noteFromHeadingWithName": "ملاحظة من %{name}:",
-        "btnAcceptPayout": "Accept Payout",
+        "btnAcceptPayout": "قبول الدفع",
         "acceptPayoutConfirm": {
           "title": "هل أنت متأكد؟",
           "body": "بمجرد القبول، سيتم معالجة العوائد فورا",
@@ -1566,9 +1613,9 @@
       },
       "disputeAcceptance": {
         "heading": "تم إغلاق الجدال",
-        "genericBuyerAcceptedPayout": "The buyer accepted the dispute payout",
-        "genericVendorAcceptedPayout": "The vendor accepted the dispute payout",
-        "userAcceptedPayout": "%{name} accepted the dispute payout",
+        "genericBuyerAcceptedPayout": "المشتري وافق على دفع النزاع",
+        "genericVendorAcceptedPayout": "البائع وافق على دفع النزاع",
+        "userAcceptedPayout": "%{name} وافق على دفع النزاع",
         "orderCompleteWhenYouReview": "سيتم اتمام الطلب عندما تترك تعليق أو رأي.",
         "orderCompleteWhenBuyerReviews": "سيتم اتمام الطلب عندما يترك الشاري تعليق أو رأي."
       },
@@ -1582,7 +1629,7 @@
           "declined": "رفض",
           "refunded": "مسترجع",
           "decided": "مقرر",
-          "resolved": "Resolved",
+          "resolved": "حُلت",
           "disputed": "المتنازع عليها"
         },
         "heading": "تفاصيل الطلب",
@@ -1593,19 +1640,31 @@
         "moderatorHeading": "مشرف",
         "copyAddress": "نسخ",
         "viewOnMap": "اظهر على الخريطة",
-        "shippingOption": "Shipping Option",
-        "shippingService": "Shipping Service",
-        "memo": "Memo",
+        "shippingOption": "خيار الشحن",
+        "shippingService": "خدمة الشحن",
+        "memo": "مذكرة",
         "addressNotes": "ملاحظات التوصيل",
         "alternateContact": "معلومات اتصال إضافية",
         "skuLabel": "وحدة حفظ الأوراق المالية SKU"
+      },
+      "processingError": {
+        "cancelLink": "إلغاء",
+        "disputeLink": "فتح نزاع",
+        "procErrBuyerNoMsg": "لم يتمكن البائع من معالجة الطلب.",
+        "procErrBuyerNoMsgCancelable": "لم يتمكن البائع من معالجة الطلب. يمكنك إلغاء الطلب لإسترداد دفعتك.",
+        "procErrBuyerNoMsgDisputable": "لم يتمكن البائع من معالجة الطلب. يمكنك فتح نزاع لتطلب من المشرف أن يعيد الأموال إليك.",
+        "youMayCancel": "يمكنك إلغاء الطلب لاسترداد دفعتك.",
+        "youMayDispute": "يمكنك فتح نزاع لتطلب من المشرف أن يعيد الأموال إليك.",
+        "procErrBuyer": "لم يتمكن البائع من معالجة الطلب بسبب الأخطاء التالية:",
+        "procErrVendorNoMsg": "حدث خطأ في معالجة الطلب.",
+        "procErrVendor": "لم تتمكن من معالجة الطلب بسبب الأخطاء التالية:"
       }
     },
     "fulfillOrderTab": {
       "heading": "الوفاء بالطلبات",
       "shippingCarrierLabel": "شركة الشحن",
       "shippingCarrierPlaceholder": "UPS, FedEx, DHL, إلخ",
-      "trackingLabel": "Tracking #",
+      "trackingLabel": "رقم التتبع #",
       "trackingPlaceholder": "اختياري",
       "fileUrlLabel": "رابط ملف",
       "fileUrlPlaceholder": "رابط لملف أو ملفات",
@@ -1619,8 +1678,13 @@
     },
     "resolveDisputeTab": {
       "heading": "حل خلاف",
-      "buyerAmountLabel": "Buyer Amount",
-      "vendorAmountLabel": "Vendor Amount",
+      "buyerAmountLabel": "مبلغ المشتري",
+      "vendorAmountLabel": "مبلغ البائع",
+      "vendorContractUnavailable": "لا يمكنك منح أي أموال إلى البائع بسبب عدم وصول الإتفاقية.",
+      "vendorContractUnavailableTip": "لم يقدم البائع الإتفاقية. ستُرسل في المرة القادمة عند تواجده عبر الإنترنت.",
+      "vendorContractUnavailableProcErr": "لا يمكنك منح أي أموال إلى البائع نظرًا لعدم تمكنه من معالجة الطلب بسبب خطأ في المعالجة.",
+      "buyerContractUnavailable": "لا يمكنك منح أي أموال للمشتري بسبب عدم وصول إتفاقيته.",
+      "buyerContractUnavailableTip": "لم يقدم المشتري الإتفاقية. ستُرسل في المرة القادمة عند تواجده عبر الإنترنت.",
       "commentLabel": "تعليق",
       "commentPlaceholder": "وضح قرارك...",
       "btnCancel": "إلغاء",
@@ -1633,7 +1697,7 @@
       }
     },
     "disputeOrderTab": {
-      "heading": "Dispute Order",
+      "heading": "النزاع حول الطلب",
       "moderatorLabel": "مشرف",
       "reasonLabel": "السبب",
       "reasonPlaceholder": "يرجى توضيح سببك لفتح النزاع ...",
@@ -1642,7 +1706,7 @@
       "btnSubmit": "اعتمد"
     },
     "actionBar": {
-      "disputeOrderBtn": "Dispute Order"
+      "disputeOrderBtn": "النزاع حول الطلب"
     }
   },
   "orderUtil": {
@@ -1659,7 +1723,7 @@
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "جار جلب أسعار الصرف ...",
     "fetchingRatesSuccessStatusMsg": "تم الحصول على أسعار الصرف بنجاح.",
-    "fetchingRatesFailStatusMsg": "Unable to obtain exchange rates. %{retryLink}",
+    "fetchingRatesFailStatusMsg": "غير قادر على الحصول على أسعار الصرف. %{retryLink}",
     "fetchingRatesFailStatusMsgRetryLink": "أعد المحاوله"
   },
   "debugLog": {
@@ -1669,17 +1733,17 @@
     "provideName": "يجب وضع اسم.",
     "provideValidHexColor": "يرجى تقديم لون hex صالح.",
     "locationTooLong": "تجاوز الموقع الحد الأقصى المسموح به للطول.",
-    "shortDescriptionTooLong": "The short description cannot exceed %{count} characters."
+    "shortDescriptionTooLong": "لا يمكن أن يتجاوز الوصف المختصر %{count} حروف."
   },
   "contactModelErrors": {
     "provideUsername": "يرجى وضع اسم مستخدم.",
     "provideValidEmail": "يرجى وضع عنوان بريد إلكتروني صالح.",
     "provideValidURL": "يرجى وضع رابط url صالح.",
-    "tooManySocialAccounts": "You cannot have more than %{max} social accounts",
+    "tooManySocialAccounts": "لا يمكنك الحصول على أكثر من %{max} حسابات إجتماعية",
     "duplicateSocialAccount": "لايمكنك إضافة نفس الحساب الاجتماعي مرتين."
   },
   "socialAccountModelErrors": {
-    "provideUsername": "Please provide a handle or link.",
+    "provideUsername": "يرجى تقديم مقبض أو رابط.",
     "provideType": "يرجى وضع نوع (فيسبوك, تويتر, إلخ)."
   },
   "smtpModelErrors": {
@@ -1700,10 +1764,10 @@
     "invalidIp": "لا يبدو هذا عنوان IP صالح.",
     "providePortAsNumber": "يرجى وضع رقم المنفذ.",
     "provideValidPortRange": "يرجى وضع رقم بين 0 و 65535.",
-    "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
-    "provideWalletCurrency": "Please select a wallet currency.",
+    "invalidTorProxy": "لا تظهر القيمة في التنسيق الصحيح. يجب أن يكون بتنسيق ip-address:port ، على سبيل المثال، 127.0.0.1:9150. يجب أن يكون المنفذ رقمًا بين 0 و 65535.",
+    "provideWalletCurrency": "يرجى اختيار عملة المحفظة.",
     "provideZcashBinaryPath": "يرجى وضع قيمة",
-    "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
+    "invalidZcashBinaryPath": "يجب أن يكون المسار المقدم ملفًا على نظامك."
   },
   "shippingAddressModelErrors": {
     "provideName": "يرجى وضع اسم.",
@@ -1713,7 +1777,7 @@
     "returnPolicyTooLong": "تتجاوز سياسة الإرجاع الحد الأقصى المسموح به.",
     "termsAndConditionsTooLong": "تجاوزت الشروط والأحكام الحد الأقصى المسموح به للطول.",
     "provideShippingOption": "للبضائع والأشياء المادية، مطلوب خيار شحن واحد على الأقل.",
-    "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
+    "tooManyCoupons": "لا يمكنك الحصول على أكثر من %{maxCouponCount} من القسائم.",
     "couponsPriceTooLarge": "لا يمكن أن يكون مبلغ الخصم مساويا أو أكبر من سعر القائمة."
   },
   "itemModelErrors": {
@@ -1722,17 +1786,17 @@
     "badConditionType": "الحالة ليست من الأنواع المتاحة.",
     "descriptionTooLong": "تجاوز الوصف الحد الأقصى المسموح به للطول.",
     "provideAmount": "يرجى تقديم سعر.",
-    "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericAmount": "يرجى تقديم السعر كرقم. إذا تضمن العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
     "provideAmountGreaterThanZero": "يجب أن يكون السعر أكبر من الرقم صفر 0 .",
     "imageRequired": "يرجى وضع صورة واحدة على الأقل",
-    "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
-    "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
-    "duplicateOptionName": "You already have a variant with this name.",
-    "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
+    "tooManyTags": "لقد تجاوزت الحد الأقصى المسموح به من %{maxTags} الوسوم.",
+    "tooManyCats": "لقد تجاوزت الحد الأقصى المسموح به من %{maxCats} التصنيفات.",
+    "duplicateOptionName": "لديك نوع مختلف بهذا الاسم بالفعل.",
+    "tooManyOptions": "لا يمكنك الحصول على أكثر من %{maxOptionCount} خيارات.",
     "provideQuantity": "يجرى وضع كمية.",
     "provideNumericQuantity": "يرجى وضع الكمية كرقم.",
     "quantityMustBePositive": "يجب أن تكون الكمية أكثر من الصفر.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+    "duplicateVariantName": "لديك \"%{name}\" خيارات متعددة. يجب أن تكون الأسماء المختارة فريدة."
   },
   "couponModelErrors": {
     "provideDiscountCode": "يرجى وضع رمز القسيمة.",
@@ -1740,7 +1804,7 @@
     "percentageLow": "يجب أن تكون قيمة النسبة المئوية أكبر من الصفر.",
     "percentageHigh": "لا يمكنك تعيين نسبة رسوم أعلى أو تساوي 100٪" ,
     "priceLow": "يجب أن يكون السعر أكبر من الرقم صفر.",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericDiscountAmount": "يرجى تقديم مبلغ الخصم كرقم. إذا تضمن العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
     "needUniqueDiscountCode": "أنت لديك أساسا قسيمة باستخدام هذا الرمز. يرجى تقديم رمز قسيمة فريد."
   },
   "shippingOptionModelErrors": {
@@ -1754,7 +1818,7 @@
     "provideService": "يرجى تقديم خدمة شحن واحدة على الأقل.",
     "provideAmount": "يرجى تقديم سعر.",
     "provideNumericAmount": "يرجى تقديم السعر كرقم.",
-    "provideNonNegativePrice": "The price must be greater than or equal to 0."
+    "provideNonNegativePrice": "يجب أن يكون السعر أكبر من أو يساوي 0."
   },
   "moderatorModelErrors": {
     "noDescription": "يرجى ادخال وصف.",
@@ -1765,14 +1829,14 @@
   },
   "feeModelErrors": {
     "noFeeType": "يرجى تحديد نوع رسوم صالح",
-    "noPercentage": "If your fee type is percentage or fixed plus percentage, you must set a valid percentage. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "noPercentage": "إذا كان نوع الرسوم هو نسبة مئوية أو ثابتة بالإضافة إلى النسبة المئوية، فيجب عليك تحديد نسبة صحيحة. إذا تضمنت العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
     "percentageLow": "لا يمكنك تعيين نسبة رسوم تحت 0٪",
     "percentageHigh": "لا يمكنك تعيين نسبة رسوم أعلى من 100٪",
     "percentageDecimals": "لا يمكنك تعيين نسبة رسوم أكثر من 2 من حقول المنازل العشرية."
   },
   "fixedFeeModelErrors": {
     "noCurrency": "إذا كان نوع الرسوم الثابتة أو الثابتة بالإضافة إلى النسبة المئوية، يجب عليك تعيين عملة صالحة للرسوم الخاصة بك.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+    "noAmount": "إذا كان نوع الرسوم ثابتة أو ثابتة بالإضافة إلى النسبة المئوية، فيجب عليك تحديد نسبة ثابته. إذا تضمنت العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\"."
   },
   "skuModelErrors": {
     "provideQuantity": "يرجى وضع كمية.",
@@ -1787,15 +1851,15 @@
   },
   "variantModelErrors": {
     "provideName": "يرجى وضع عنوان.",
-    "nameTooLong": "%{name} exceeds the maximum length of %{maxLength} characters."
+    "nameTooLong": "%{name} يتجاوز الحد الأقصى لعدد %{maxLength} من الأحرف."
   },
   "spendModelErrors": {
     "provideAddress": "يرجى وضع عنوان.",
-    "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideAmountNumber": "يرجى تقديم المبلغ كرقم. إذا تضمن العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
     "amountGreaterThanZero": "الكمية يجب أن تكون أكبر من صفر",
-    "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee.",
-    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
-    "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
+    "insufficientFunds": "ليس لديك ما يكفي من الأموال لإرسال هذا المبلغ. تأكد من حساب رسوم الحوالة.",
+    "missingExchangeRateData": "غير قادر على الإنفاق في %{cur} بسبب عدم توفر بيانات أسعار الصرف لتلك العملة. يرجى اختيار عملة أخرى. إذا لم تتوفر بيانات لأي عملة، فيمكنك دائمًا تحديد %{serverCur}.",
+    "invalidAddress": "لا يبدو العنوان المقدم عنوانًا %{cur} صالحًا."
   },
   "orderModelErrors": {
     "mustHaveQuantity": "يجب أن تكون الكمية 1 أو أكثر",
@@ -1804,7 +1868,7 @@
     "missingAddress": "الرجاء اختيار عنوان شحن صالح.",
     "missingShippingOption": "الرجاء اختيار خيار شحن صالح.",
     "needsModerator": "يجب تحديد مشرف لإجراء دفعة تحت الإشراف.",
-    "removeModerator": "An unmoderated purchase cannot have a moderator."
+    "removeModerator": "لا يمكن أن يُعين للعملية المباشرة مشرفًا عليها."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "يرجى تقديم شركة شحن.",
@@ -1813,7 +1877,7 @@
   },
   "errorPage": {
     "userNotFoundTitle": "تعذر العثور على هذا المستخدم",
-    "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
+    "userNotFoundMsg": "%{user} غير موجود في الشبكة. تأكد من حصولك على المقبض الصحيح أو معرف النظير.",
     "listingNotFoundTitle": "لايمكن العثور على هذه القائمة",
     "listingNotFoundLink": "انقر هنا لتصفح قوائم أخرى في هذا المتجر.",
     "listingNotFoundMsg": "لايمكن العثور على %{listing}.",
@@ -1835,14 +1899,16 @@
     "service": "خدمة"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "هذا رابط غير صالح لمزود البحث"
+    "verifiedModsProvider": "لا يعد هذا الرابط صالحًا لمشرف مؤكد."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "يرجى وضع كمية",
     "percentageOutOfRange": "يجب أن يكون المقدار بين 0 والـ 100",
-    "providePercentageAsNumber": "Please provide a vendor amount as a number.",
-    "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
-    "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
+    "providePercentageAsNumber": "يرجى تقديم مبلغ البائع كرقم.",
+    "vendorPercentageMustBe100": "حتى يصل عقد المشتري، يجب أن تكون هذه القيمة 100.",
+    "buyerPercentageMustBe100": "حتى يصل عقد البائع، يجب أن تكون هذه القيمة 100.",
+    "totalPercentageOutOfRange": "لا يمكن أن يتجاوز مجموع قيمة المشتري والبائع 100.",
+    "totalPercentageTooLow": "يجب أن يصل مجموع مبلغ المشتري والبائع إلى 100.",
     "provideResolution": "يرجى توضيح قرارك."
   },
   "searchProviderModelErrors": {
@@ -1856,7 +1922,7 @@
   "bitcoinCurrencyUnits": {
     "BTC": "BTC",
     "MBTC": "mBTC",
-    "UBTC": "μBTC",
+    "UBTC": "µBTC",
     "SATOSHI": "sat"
   },
   "cryptoCurrencyFormat": {
@@ -2281,233 +2347,233 @@
     "ZEC": "Zcash"
   },
   "languages": {
-    "af": "Afrikaans",
-    "af-ZA": "Afrikaans (South Africa)",
-    "ar": "Arabic",
-    "ar-AE": "Arabic (U.A.E.)",
-    "ar-BH": "Arabic (Bahrain)",
-    "ar-DZ": "Arabic (Algeria)",
-    "ar-EG": "Arabic (Egypt)",
-    "ar-IQ": "Arabic (Iraq)",
-    "ar-JO": "Arabic (Jordan)",
-    "ar-KW": "Arabic (Kuwait)",
-    "ar-LB": "Arabic (Lebanon)",
-    "ar-LY": "Arabic (Libya)",
-    "ar-MA": "Arabic (Morocco)",
-    "ar-OM": "Arabic (Oman)",
-    "ar-QA": "Arabic (Qatar)",
-    "ar-SA": "Arabic (Saudi Arabia)",
-    "ar-SY": "Arabic (Syria)",
-    "ar-TN": "Arabic (Tunisia)",
-    "ar-YE": "Arabic (Yemen)",
-    "az": "Azeri (Latin)",
-    "az-AZ": "Azeri (Cyrillic) (Azerbaijan)",
-    "be": "Belarusian",
-    "be-BY": "Belarusian (Belarus)",
-    "bg": "Bulgarian",
-    "bg-BG": "Bulgarian (Bulgaria)",
-    "bs-BA": "Bosnian (Bosnia and Herzegovina)",
-    "ca": "Catalan",
-    "ca-ES": "Catalan (Spain)",
-    "cs": "Czech",
-    "cs-CZ": "Czech (Czech Republic)",
-    "cy": "Welsh",
-    "cy-GB": "Welsh (United Kingdom)",
-    "da": "Danish",
-    "da-DK": "Danish (Denmark)",
-    "de": "German",
-    "de-AT": "German (Austria)",
-    "de-CH": "German (Switzerland)",
-    "de-DE": "German (Germany)",
-    "de-LI": "German (Liechtenstein)",
-    "de-LU": "German (Luxembourg)",
-    "dv": "Divehi",
-    "dv-MV": "Divehi (Maldives)",
-    "el": "Greek",
-    "el-GR": "Greek (Greece)",
-    "en": "English",
-    "en-AU": "English (Australia)",
-    "en-BZ": "English (Belize)",
-    "en-CA": "English (Canada)",
-    "en-CB": "English (Caribbean)",
-    "en-GB": "English (United Kingdom)",
-    "en-IE": "English (Ireland)",
-    "en-JM": "English (Jamaica)",
-    "en-NZ": "English (New Zealand)",
-    "en-PH": "English (Republic of the Philippines)",
-    "en-TT": "English (Trinidad and Tobago)",
-    "en-US": "English (United States)",
-    "en-ZA": "English (South Africa)",
-    "en-ZW": "English (Zimbabwe)",
-    "eo": "Esperanto",
-    "es": "Spanish",
-    "es-AR": "Spanish (Argentina)",
-    "es-BO": "Spanish (Bolivia)",
-    "es-CL": "Spanish (Chile)",
-    "es-CO": "Spanish (Colombia)",
-    "es-CR": "Spanish (Costa Rica)",
-    "es-DO": "Spanish (Dominican Republic)",
-    "es-EC": "Spanish (Ecuador)",
-    "es-ES": "Spanish (Spain)",
-    "es-GT": "Spanish (Guatemala)",
-    "es-HN": "Spanish (Honduras)",
-    "es-MX": "Spanish (Mexico)",
-    "es-NI": "Spanish (Nicaragua)",
-    "es-PA": "Spanish (Panama)",
-    "es-PE": "Spanish (Peru)",
-    "es-PR": "Spanish (Puerto Rico)",
-    "es-PY": "Spanish (Paraguay)",
-    "es-SV": "Spanish (El Salvador)",
-    "es-UY": "Spanish (Uruguay)",
-    "es-VE": "Spanish (Venezuela)",
-    "et": "Estonian",
-    "et-EE": "Estonian (Estonia)",
-    "eu": "Basque",
-    "eu-ES": "Basque (Spain)",
-    "fa": "Farsi",
-    "fa-IR": "Farsi (Iran)",
-    "fi": "Finnish",
-    "fi-FI": "Finnish (Finland)",
-    "fo": "Faroese",
-    "fo-FO": "Faroese (Faroe Islands)",
-    "fr": "French",
-    "fr-BE": "French (Belgium)",
-    "fr-CA": "French (Canada)",
-    "fr-CH": "French (Switzerland)",
-    "fr-FR": "French (France)",
-    "fr-LU": "French (Luxembourg)",
-    "fr-MC": "French (Principality of Monaco)",
-    "gl": "Galician",
-    "gl-ES": "Galician (Spain)",
-    "gu": "Gujarati",
-    "gu-IN": "Gujarati (India)",
-    "he": "Hebrew",
-    "he-IL": "Hebrew (Israel)",
-    "hi": "Hindi",
-    "hi-IN": "Hindi (India)",
-    "hr": "Croatian",
-    "hr-BA": "Croatian (Bosnia and Herzegovina)",
-    "hr-HR": "Croatian (Croatia)",
-    "hu": "Hungarian",
-    "hu-HU": "Hungarian (Hungary)",
-    "hy": "Armenian",
-    "hy-AM": "Armenian (Armenia)",
-    "id": "Indonesian",
-    "id-ID": "Indonesian (Indonesia)",
-    "is": "Icelandic",
-    "is-IS": "Icelandic (Iceland)",
-    "it": "Italian",
-    "it-CH": "Italian (Switzerland)",
-    "it-IT": "Italian (Italy)",
-    "ja": "Japanese",
-    "ja-JP": "Japanese (Japan)",
-    "ka": "Georgian",
-    "ka-GE": "Georgian (Georgia)",
-    "kk": "Kazakh",
-    "kk-KZ": "Kazakh (Kazakhstan)",
-    "kn": "Kannada",
-    "kn-IN": "Kannada (India)",
-    "ko": "Korean",
-    "ko-KR": "Korean (Korea)",
-    "kok": "Konkani",
-    "kok-IN": "Konkani (India)",
-    "ky": "Kyrgyz",
-    "ky-KG": "Kyrgyz (Kyrgyzstan)",
-    "lt": "Lithuanian",
-    "lt-LT": "Lithuanian (Lithuania)",
-    "lv": "Latvian",
-    "lv-LV": "Latvian (Latvia)",
-    "mi": "Maori",
-    "mi-NZ": "Maori (New Zealand)",
-    "mk": "FYRO Macedonian",
-    "mk-MK": "FYRO Macedonian (Former Yugoslav Republic of Macedonia)",
-    "mn": "Mongolian",
-    "mn-MN": "Mongolian (Mongolia)",
-    "mr": "Marathi",
-    "mr-IN": "Marathi (India)",
-    "ms": "Malay",
-    "ms-BN": "Malay (Brunei Darussalam)",
-    "ms-MY": "Malay (Malaysia)",
-    "mt": "Maltese",
-    "mt-MT": "Maltese (Malta)",
-    "nb": "Norwegian (Bokm?l)",
-    "nb-NO": "Norwegian (Bokm?l) (Norway)",
-    "nl": "Dutch",
-    "nl-BE": "Dutch (Belgium)",
-    "nl-NL": "Dutch (Netherlands)",
-    "nn-NO": "Norwegian (Nynorsk) (Norway)",
-    "ns": "Northern Sotho",
-    "ns-ZA": "Northern Sotho (South Africa)",
-    "pa": "Punjabi",
-    "pa-IN": "Punjabi (India)",
-    "pl": "Polish",
-    "pl-PL": "Polish (Poland)",
-    "ps": "Pashto",
-    "ps-AR": "Pashto (Afghanistan)",
-    "pt": "Portuguese",
-    "pt-BR": "Portuguese (Brazil)",
-    "pt-PT": "Portuguese (Portugal)",
-    "qu": "Quechua",
-    "qu-BO": "Quechua (Bolivia)",
-    "qu-EC": "Quechua (Ecuador)",
-    "qu-PE": "Quechua (Peru)",
-    "ro": "Romanian",
-    "ro-RO": "Romanian (Romania)",
-    "ru": "Russian",
-    "ru-RU": "Russian (Russia)",
-    "sa": "Sanskrit",
-    "sa-IN": "Sanskrit (India)",
-    "se": "Sami (Northern)",
-    "se-FI": "Sami (Inari) (Finland)",
-    "se-NO": "Sami (Southern) (Norway)",
-    "se-SE": "Sami (Southern) (Sweden)",
-    "sk": "Slovak",
-    "sk-SK": "Slovak (Slovakia)",
-    "sl": "Slovenian",
-    "sl-SI": "Slovenian (Slovenia)",
-    "sq": "Albanian",
-    "sq-AL": "Albanian (Albania)",
-    "sr-BA": "Serbian (Cyrillic) (Bosnia and Herzegovina)",
-    "sr-SP": "Serbian (Cyrillic) (Serbia and Montenegro)",
-    "sv": "Swedish",
-    "sv-FI": "Swedish (Finland)",
-    "sv-SE": "Swedish (Sweden)",
-    "sw": "Swahili",
-    "sw-KE": "Swahili (Kenya)",
-    "syr": "Syriac",
-    "syr-SY": "Syriac (Syria)",
-    "ta": "Tamil",
-    "ta-IN": "Tamil (India)",
-    "te": "Telugu",
-    "te-IN": "Telugu (India)",
-    "th": "Thai",
-    "th-TH": "Thai (Thailand)",
-    "tl": "Tagalog",
-    "tl-PH": "Tagalog (Philippines)",
-    "tn": "Tswana",
-    "tn-ZA": "Tswana (South Africa)",
-    "tr": "Turkish",
-    "tr-TR": "Turkish (Turkey)",
-    "tt": "Tatar",
-    "tt-RU": "Tatar (Russia)",
-    "ts": "Tsonga",
-    "uk": "Ukrainian",
-    "uk-UA": "Ukrainian (Ukraine)",
-    "ur": "Urdu",
-    "ur-PK": "Urdu (Islamic Republic of Pakistan)",
-    "uz": "Uzbek (Latin)",
-    "uz-UZ": "Uzbek (Cyrillic) (Uzbekistan)",
-    "vi": "Vietnamese",
-    "vi-VN": "Vietnamese (Viet Nam)",
-    "xh": "Xhosa",
-    "xh-ZA": "Xhosa (South Africa)",
-    "zh": "Chinese",
-    "zh-CN": "Chinese (S)",
-    "zh-HK": "Chinese (Hong Kong)",
-    "zh-MO": "Chinese (Macau)",
-    "zh-SG": "Chinese (Singapore)",
-    "zh-TW": "Chinese (T)",
-    "zu": "Zulu",
-    "zu-ZA": "Zulu (South Africa)"
+    "af": "الأفريكانية",
+    "af-ZA": "الأفريكانية (جنوب أفريقيا)",
+    "ar": "العربية",
+    "ar-AE": "العربية (الإمارات العربية المتحدة)",
+    "ar-BH": "العربية (البحرين)",
+    "ar-DZ": "العربية (الجزائر)",
+    "ar-EG": "العربية (مصر)",
+    "ar-IQ": "العربية (العراق)",
+    "ar-JO": "العربية (الأردن)",
+    "ar-KW": "العربية (الكويت)",
+    "ar-LB": "العربية (لبنان)",
+    "ar-LY": "العربية (ليبيا)",
+    "ar-MA": "العربية (المغرب)",
+    "ar-OM": "العربية (عمان)",
+    "ar-QA": "العربية (قطر)",
+    "ar-SA": "العربية (السعودية)",
+    "ar-SY": "العربية (سوريا)",
+    "ar-TN": "العربية (تونس)",
+    "ar-YE": "العربية (اليمن)",
+    "az": "الأذرية (اللاتينية)",
+    "az-AZ": "الاذرية (سيريليك) (اذربيجان)",
+    "be": "البيلاروسية",
+    "be-BY": "البيلاروسية (بيلاروسيا)",
+    "bg": "البلغارية",
+    "bg-BG": "البلغارية (بلغاريا)",
+    "bs-BA": "بوسني (البوسنة و الهرسك)",
+    "ca": "الكاتالونية",
+    "ca-ES": "الكاتالونية (إسبانيا)",
+    "cs": "تشيكي",
+    "cs-CZ": "تشيكي (جمهورية التشيك)",
+    "cy": "الويلزية",
+    "cy-GB": "الويلزية (المملكة المتحدة)",
+    "da": "دانماركي",
+    "da-DK": "دانماركي (الدنمارك)",
+    "de": "ألمانية",
+    "de-AT": "الألمانية (النمسا)",
+    "de-CH": "الألمانية (سويسرا)",
+    "de-DE": "الألمانية (ألمانيا)",
+    "de-LI": "الألمانية (ليختنشتاين)",
+    "de-LU": "الألمانية (لوكسمبورغ)",
+    "dv": "المالديفية",
+    "dv-MV": "المالديفية (جزر المالديف)",
+    "el": "الإغريقي",
+    "el-GR": "الإغريقي (اليونان)",
+    "en": "الإنجليزية",
+    "en-AU": "الإنجليزية (أستراليا)",
+    "en-BZ": "الإنجليزية (بليز)",
+    "en-CA": "الإنجليزية (كندا)",
+    "en-CB": "الإنجليزية (منطقة البحر الكاريبي)",
+    "en-GB": "الإنجليزية (المملكة المتحدة)",
+    "en-IE": "الإنجليزية (أيرلندا)",
+    "en-JM": "الإنجليزية (جامايكا)",
+    "en-NZ": "الإنجليزية (نيوزيلندا)",
+    "en-PH": "الإنجليزية (جمهورية الفلبين)",
+    "en-TT": "الإنجليزية (ترينيداد وتوباغو)",
+    "en-US": "الإنجليزية (الولايات المتحدة)",
+    "en-ZA": "الإنجليزية (جنوب إفريقيا)",
+    "en-ZW": "الإنجليزية (زيمبابوي)",
+    "eo": "الاسبرانتو",
+    "es": "الأسبانية",
+    "es-AR": "الاسبانية (الارجنتين)",
+    "es-BO": "الاسبانية (بوليفيا)",
+    "es-CL": "الاسبانية (تشيلي)",
+    "es-CO": "الاسبانية (كولومبيا)",
+    "es-CR": "الأسبانية (كوستاريكا)",
+    "es-DO": "الأسبانية (الجمهورية الدومينيكية)",
+    "es-EC": "الاسبانية (الاكوادور)",
+    "es-ES": "الاسبانية (اسبانيا)",
+    "es-GT": "الاسبانية (غواتيمالا)",
+    "es-HN": "الاسبانية (هندوراس)",
+    "es-MX": "الاسبانية (المكسيك)",
+    "es-NI": "الاسبانية (نيكاراغوا)",
+    "es-PA": "الاسبانية (بنما)",
+    "es-PE": "الاسبانية (بيرو)",
+    "es-PR": "الاسبانية (بورتوريكو)",
+    "es-PY": "الاسبانية (باراغواي)",
+    "es-SV": "الإسبانية (السلفادور)",
+    "es-UY": "الإسبانية (أوروغواي)",
+    "es-VE": "الاسبانية (فنزويلا)",
+    "et": "الإستونية",
+    "et-EE": "الإستونية (إستونيا)",
+    "eu": "الباسكي",
+    "eu-ES": "الباسكي (اسبانيا)",
+    "fa": "الفارسية",
+    "fa-IR": "الفارسية (إيران)",
+    "fi": "الفنلندية",
+    "fi-FI": "الفنلندية (فنلندا)",
+    "fo": "الفارويز",
+    "fo-FO": "الفارويز (جزر الفارو)",
+    "fr": "الفرنسية",
+    "fr-BE": "الفرنسية (بلجيكا)",
+    "fr-CA": "الفرنسية (كندا)",
+    "fr-CH": "الفرنسية (سويسرا)",
+    "fr-FR": "الفرنسية (فرنسا)",
+    "fr-LU": "الفرنسية (لوكسمبورغ)",
+    "fr-MC": "الفرنسية (إمارة موناكو)",
+    "gl": "الجاليكية",
+    "gl-ES": "الجاليكية (اسبانيا)",
+    "gu": "الغوجاراتية",
+    "gu-IN": "الغوجاراتية (الهند)",
+    "he": "العبرية",
+    "he-IL": "العبرية (إسرائيل)",
+    "hi": "الهندية",
+    "hi-IN": "الهندية (الهند)",
+    "hr": "الكرواتية",
+    "hr-BA": "الكرواتية (البوسنة و الهرسك)",
+    "hr-HR": "الكرواتية (كرواتيا)",
+    "hu": "الهنغارية",
+    "hu-HU": "الهنغارية (هنغاريا)",
+    "hy": "الأرميني",
+    "hy-AM": "الأرميني (أرمينيا)",
+    "id": "الأندونيسية",
+    "id-ID": "الاندونيسية (اندونيسيا)",
+    "is": "أيسلندي",
+    "is-IS": "ايسلندي (ايسلندا)",
+    "it": "الايطالية",
+    "it-CH": "الايطالية (سويسرا)",
+    "it-IT": "الايطالية (ايطاليا)",
+    "ja": "اليابانية",
+    "ja-JP": "اليابانية (اليابان)",
+    "ka": "الجورجية",
+    "ka-GE": "الجورجية (جورجيا)",
+    "kk": "الكازاخستانية",
+    "kk-KZ": "الكازاخستانية (كازاخستان)",
+    "kn": "الكانادا",
+    "kn-IN": "الكانادا (الهند)",
+    "ko": "الكورية",
+    "ko-KR": "الكورية (كوريا)",
+    "kok": "الكونكانية",
+    "kok-IN": "الكونكانية (الهند)",
+    "ky": "قيرغيزستان",
+    "ky-KG": "قرغيزستان (قرغيزستان)",
+    "lt": "اللتوانية",
+    "lt-LT": "اللتوانية (ليتوانيا)",
+    "lv": "اللاتفية",
+    "lv-LV": "اللاتفية (لاتفيا)",
+    "mi": "الماوري",
+    "mi-NZ": "الماوري (نيوزيلندا)",
+    "mk": "FYRO مقدونيا",
+    "mk-MK": "FYRO مقدونيا (جمهورية مقدونيا اليوغوسلافية السابقة)",
+    "mn": "المنغولية",
+    "mn-MN": "المنغولية (منغوليا)",
+    "mr": "المهاراتية",
+    "mr-IN": "المهاراتية (الهند)",
+    "ms": "الملايو",
+    "ms-BN": "الملايو (بروناي دار السلام)",
+    "ms-MY": "الملايو (ماليزيا)",
+    "mt": "المالطية",
+    "mt-MT": "المالطية (مالطا)",
+    "nb": "النرويجية (بوكمال)",
+    "nb-NO": "النرويجية (بوكمال) (النرويج)",
+    "nl": "الهولندية",
+    "nl-BE": "الهولندية (بلجيكا)",
+    "nl-NL": "الهولندية (هولندا)",
+    "nn-NO": "النرويجية (نينورسك) (النرويج)",
+    "ns": "شمال السوتو",
+    "ns-ZA": "شمال السوتو (جنوب افريقيا)",
+    "pa": "البنجابية",
+    "pa-IN": "البنجابية (الهند)",
+    "pl": "البولندي",
+    "pl-PL": "البولندي (بولندا)",
+    "ps": "الباشتو",
+    "ps-AR": "الباشتو (أفغانستان)",
+    "pt": "البرتغالية",
+    "pt-BR": "البرتغالية (البرازيل)",
+    "pt-PT": "البرتغالية (البرتغال)",
+    "qu": "الكيشوا",
+    "qu-BO": "الكيشوا (بوليفيا)",
+    "qu-EC": "الكيشوا (إكوادور)",
+    "qu-PE": "الكيشوا (بيرو)",
+    "ro": "الروماني",
+    "ro-RO": "الروماني (رومانيا)",
+    "ru": "الروسية",
+    "ru-RU": "الروسية (روسيا)",
+    "sa": "سنسكريتي",
+    "sa-IN": "سنسكريتي (الهند)",
+    "se": "سامي (الشمالية)",
+    "se-FI": "سامي (إيناري) (فنلندا)",
+    "se-NO": "سامي (جنوب) (النرويج)",
+    "se-SE": "سامي (جنوب) (السويد)",
+    "sk": "السلوفاكية",
+    "sk-SK": "السلوفاكية (سلوفاكيا)",
+    "sl": "سلوفيني",
+    "sl-SI": "سلوفيني (سلوفينيا)",
+    "sq": "الألبانية",
+    "sq-AL": "الألبانية (ألبانيا)",
+    "sr-BA": "الصربية (السيريلية) (البوسنة والهرسك)",
+    "sr-SP": "الصربية (السيريلية) (صربيا والجبل الأسود)",
+    "sv": "السويدية",
+    "sv-FI": "السويدية (فنلندا)",
+    "sv-SE": "السويدية (السويد)",
+    "sw": "السواحلية",
+    "sw-KE": "السواحلية (كينيا)",
+    "syr": "السورية",
+    "syr-SY": "السورية (سوريا)",
+    "ta": "التاميل",
+    "ta-IN": "التاميل (الهند)",
+    "te": "التيلجو",
+    "te-IN": "التيلجو (الهند)",
+    "th": "التايلاندية",
+    "th-TH": "التايلاندية (تايلاند)",
+    "tl": "التغالوغ",
+    "tl-PH": "التغالوغ (الفلبين)",
+    "tn": "التسوانية",
+    "tn-ZA": "التسوانية (جنوب أفريقيا)",
+    "tr": "التركية",
+    "tr-TR": "التركية (تركيا)",
+    "tt": "تتاري",
+    "tt-RU": "تتاري (روسيا)",
+    "ts": "تسونجا",
+    "uk": "الأوكراني",
+    "uk-UA": "الأوكراني (أوكرانيا)",
+    "ur": "الأردية",
+    "ur-PK": "الأردية (جمهورية باكستان الإسلامية)",
+    "uz": "الأوزبكية (اللاتينية)",
+    "uz-UZ": "الأوزبكية (سيريليك) (اوزبكستان)",
+    "vi": "الفيتنامية",
+    "vi-VN": "الفيتنامية (فيتنام)",
+    "xh": "خوزا",
+    "xh-ZA": "خوزا (جنوب أفريقيا)",
+    "zh": "الصينية",
+    "zh-CN": "الصينية (S)",
+    "zh-HK": "الصينية (هونج كونج)",
+    "zh-MO": "الصينية (ماكاو)",
+    "zh-SG": "الصينية (سنغافورة)",
+    "zh-TW": "الصينية (T)",
+    "zu": "الزولو",
+    "zu-ZA": "الزولو (جنوب إفريقيا)"
   }
 }
