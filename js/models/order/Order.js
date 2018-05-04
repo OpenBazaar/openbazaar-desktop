@@ -47,7 +47,7 @@ export default class extends BaseModel {
     const contract = this.get('contract');
     return contract && Array.isArray(contract.get('errors'));
   }
-
+  
   parse(response = {}) {
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),

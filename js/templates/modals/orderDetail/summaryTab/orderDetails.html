@@ -116,7 +116,8 @@
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
                 <%
-                  let quantity = item.quantity;
+                  let quantity = typeof item.quantity === 'number' ?
+                    item.quantity : item.quantity64;
 
                   if (isCrypto) {
                     quantity = ob.currencyMod.formattedCurrency(quantity, coinType);
