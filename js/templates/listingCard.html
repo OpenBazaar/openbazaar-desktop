@@ -200,7 +200,7 @@
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
     <%
-      let inventory = '';
+      let inventory = '<i class="ion-alert-circled margRSm clrTAlert"></i>';
       let inventoryTxClass = '';
 
       if (ob.totalInventoryQuantity >= 0) {
