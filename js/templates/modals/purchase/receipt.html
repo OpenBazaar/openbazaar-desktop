@@ -41,7 +41,7 @@
       maximumFractionDigits: 8,
     }).format(quantity);
 %>
-  <div class="flexRow">
+  <div class="flexRow gutterHSm">
     <span class="flexExpand">
       <%= ob.polyT('purchase.receipt.listing') %>
     </span>
@@ -54,7 +54,7 @@
     </div>
   </div>
   <% ob.coupons.forEach((coupon) => { %>
-    <div class="flexRow">
+    <div class="flexRow gutterHSm">
       <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.coupon') %>
       </span>
@@ -73,12 +73,12 @@
   <% }); %>
 
   <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingPrice !== additionalShippingPrice && quantity > 1) { %>
-  <div class="flexRow">
+  <div class="flexRow gutterHSm">
         <span class="flexExpand">
           <%= ob.polyT('purchase.receipt.shipping') %>
         </span>
   </div>
-  <div class="flexRow subShipping">
+  <div class="flexRow subShipping gutterHSm">
     <span class="flexExpand">
       <%= ob.polyT('purchase.receipt.firstItem') %>
     </span>
@@ -90,7 +90,7 @@
       </div>
     </div>
   </div>
-  <div class="flexRow subShipping">
+  <div class="flexRow subShipping gutterHSm">
     <span class="flexExpand">
       <%= ob.polyT('purchase.receipt.additionalItems') %>
     </span>
@@ -103,7 +103,7 @@
     </div>
   </div>
   <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
-    <div class="flexRow">
+    <div class="flexRow gutterHSm">
       <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.shipping') %>
       </span>
@@ -118,7 +118,7 @@
   <% } %>
   <hr class="clrBr">
   <% if (quantity) { %>
-    <div class="flexRow">
+    <div class="flexRow gutterHSm">
       <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
       </span>
@@ -131,7 +131,7 @@
       </div>
     </div>
     <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingTotal) { %>
-      <div class="flexRow">
+      <div class="flexRow gutterHSm">
         <span class="flexExpand">
           <%= ob.polyT('purchase.receipt.shippingTotal') %>
         </span>
