@@ -74,10 +74,14 @@
         padding-left: $pad;
       }
 
-      .constrainedWidth {
-        max-width: 50%;
+      .expandedWidth {
+        flex-basis: 50%;
         flex-grow: 1;
-        flex-shrink: 0;        
+        margin-right: 10px;
+      }
+
+      .constrainedWidth {
+        max-width: calc(50% - 10px);
       }
     }
   }
