@@ -45,22 +45,30 @@
     <span class="flexExpand">
       <%= ob.polyT('purchase.receipt.listing') %>
     </span>
-    <b class="flexNoShrink">
-      <%= ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency) %>
-    </b>
+    <div class="constrainedWidth">
+      <div class="flexHRight">
+        <b>
+          <%= ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency) %>
+        </b>
+      </div>
+    </div>
   </div>
   <% ob.coupons.forEach((coupon) => { %>
     <div class="flexRow">
       <span class="flexExpand">
         <%= ob.polyT('purchase.receipt.coupon') %>
       </span>
-      <b class="flexNoShrink">
-        <% if (coupon.percentDiscount) {
-             print(`-${coupon.percentDiscount}%`);
-        } else if (coupon.priceDiscount) {
-          print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
-        } %>
-      </b>
+      <div class="constrainedWidth">
+        <div class="flexHRight">
+          <b>
+            <% if (coupon.percentDiscount) {
+                 print(`-${coupon.percentDiscount}%`);
+            } else if (coupon.priceDiscount) {
+              print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
+            } %>
+          </b>
+        </div>
+      </div>
     </div>
   <% }); %>
 
@@ -71,58 +79,82 @@
         </span>
   </div>
   <div class="flexRow subShipping">
-          <span class="flexExpand">
-            <%= ob.polyT('purchase.receipt.firstItem') %>
-          </span>
-    <b class="flexNoShrink">
-      <%= ob.currencyMod.formatCurrency(shippingPrice, viewingCurrency) %>
-    </b>
+    <span class="flexExpand">
+      <%= ob.polyT('purchase.receipt.firstItem') %>
+    </span>
+    <div class="constrainedWidth">
+      <div class="flexHRight">
+        <b>
+          <%= ob.currencyMod.formatCurrency(shippingPrice, viewingCurrency) %>
+        </b>
+      </div>
+    </div>
   </div>
   <div class="flexRow subShipping">
-          <span class="flexExpand">
-            <%= ob.polyT('purchase.receipt.additionalItems') %>
-          </span>
-    <b class="flexNoShrink">
-      <%= ob.currencyMod.formatCurrency(additionalShippingPrice, viewingCurrency) %>
-    </b>
+    <span class="flexExpand">
+      <%= ob.polyT('purchase.receipt.additionalItems') %>
+    </span>
+    <div class="constrainedWidth">
+      <div class="flexHRight">
+        <b>
+          <%= ob.currencyMod.formatCurrency(additionalShippingPrice, viewingCurrency) %>
+        </b>
+      </div>
+    </div>
   </div>
   <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
     <div class="flexRow">
-          <span class="flexExpand">
-            <%= ob.polyT('purchase.receipt.shipping') %>
-          </span>
-      <b class="flexNoShrink">
-        <%= ob.currencyMod.formatCurrency(shippingPrice, viewingCurrency) %>
-      </b>
+      <span class="flexExpand">
+        <%= ob.polyT('purchase.receipt.shipping') %>
+      </span>
+      <div class="constrainedWidth">
+        <div class="flexHRight">      
+          <b>
+            <%= ob.currencyMod.formatCurrency(shippingPrice, viewingCurrency) %>
+          </b>
+        </div>
+      </div>
     </div>
   <% } %>
   <hr class="clrBr">
   <% if (quantity) { %>
     <div class="flexRow">
-      <span class="flexExpand">
+      <span class="flexExpand constrainedCol">
         <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
       </span>
-      <b class="flexNoShrink">
-        <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
-      </b>
+      <div class="constrainedWidth">
+        <div class="flexHRight">      
+          <b>
+            <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
+          </b>
+        </div>
+      </div>
     </div>
     <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingTotal) { %>
       <div class="flexRow">
-            <span class="flexExpand">
-              <%= ob.polyT('purchase.receipt.shippingTotal') %>
-            </span>
-        <b class="flexNoShrink">
-          <%= ob.currencyMod.formatCurrency(shippingTotal, viewingCurrency) %>
-        </b>
+        <span class="flexExpand constrainedCol">
+          <%= ob.polyT('purchase.receipt.shippingTotal') %>
+        </span>
+        <div class="constrainedWidth">
+          <div class="flexHRight">        
+            <b>
+              <%= ob.currencyMod.formatCurrency(shippingTotal, viewingCurrency) %>
+            </b>
+          </div>
+        </div>
       </div>
     <% } %>
   <% } %>
   <div class="flexRow">
-    <span class="flexExpand">
+    <span class="flexExpand constrainedCol">
       <%= ob.polyT('purchase.receipt.total') %>
     </span>
-    <b class="flexNoShrink">
-      <%= ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
-    </b>
+    <div class="constrainedWidth">
+      <div class="flexHRight">    
+        <b>
+          <%= ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
+        </b>
+      </div>
+    </div>
   </div>
 <% }); %>
