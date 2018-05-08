@@ -64,6 +64,10 @@ export default class extends BaseModel {
         const listing = response.contract
           .vendorListings[index];
 
+        // standardize the quantity field
+        item.quantity = item.quantity === 0 ?
+          item.quantity64 : item.quantity;
+
         if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
           const coinDivisibility = listing.metadata
             .coinDivisibility;
