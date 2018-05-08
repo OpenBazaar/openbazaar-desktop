@@ -1038,7 +1038,8 @@
     "btnShowMatureContent": "Show Mature Content",
     "tipShowMatureContent": "Show Mature Content",
     "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "blockedUser": "You blocked this user",
+    "unknownInventory": "unknown"
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
