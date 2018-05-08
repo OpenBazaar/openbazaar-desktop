@@ -73,13 +73,13 @@
                       const checked = checkedIndex === ind ? 'checked' : '';
                       var parsedLabel = ob.parseEmojis(option.label);
                       print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
-                      print(`<label for="${key + ind}">${parsedLabel}</label>`);
+                      print(`<label for="${key + ind}"><span>${parsedLabel}</span></label>`);
                      %>
                   </div>
                 <% }); %>
                 </div>
               <% } else if (val.type ==='checkbox') { %>
-                <div class="flexCol">
+                <div class="flexCol checkboxCol">
                 <%
                   const anyChecked = val.options.filter(opt => opt.checked);
                   val.options.forEach((option, index) => {
@@ -90,7 +90,7 @@
                     }
                     var parsedLabel = ob.parseEmojis(option.label);
                     print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}" value="${option.value}">`);
-                    print(`<label for="${key + index}">${parsedLabel}</label>`);
+                    print(`<label for="${key + index}"><span>${parsedLabel}</span></label>`);
                   });
                 %>
                 </div>
