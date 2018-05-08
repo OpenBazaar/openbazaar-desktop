@@ -1765,7 +1765,7 @@
   "metrics": {
     "title": "Optional Anonymous Metrics",
     "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
-    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and cannot be accessed by anyone else.",
     "listTitle": "The following data will be shared:",
     "list": {
       "pages": "Which pages you load, such as the search page or the store page.",
