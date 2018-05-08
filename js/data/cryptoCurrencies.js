@@ -24,12 +24,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBTC/address/${address}` :
-        `https://blockchain.info/address/${address}`
+        `https://blockchair.com/bitcoin/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBTC/tx/${txid}` :
-        `https://blockchain.info/tx/${txid}`
+        `https://blockchair.com/bitcoin/transaction/${txid}`
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
