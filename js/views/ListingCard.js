@@ -246,13 +246,13 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
-      startEvent('LoadListingFromCard');
+      startEvent('Listing_LoadFromCard');
 
       const listingFetch = this.fetchFullListing();
       const loadListing = () => {
         app.loadingModal.open();
         listingFetch.done(jqXhr => {
-          endEvent('LoadListingFromCard', {
+          endEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
             errors: 'none',
           });
@@ -280,7 +280,7 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail(xhr => {
-          endEvent('LoadListingFromCard', {
+          endEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
             errors: xhr.responseJSON.reason || xhr.statusText || 'unknown error',
           });
