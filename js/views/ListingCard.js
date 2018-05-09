@@ -253,7 +253,7 @@ export default class extends baseVw {
         app.loadingModal.open();
         listingFetch.done(jqXhr => {
           endEvent('LoadListingFromCard', {
-            ownListing: this.ownListing,
+            ownListing: !!this.ownListing,
             errors: 'none',
           });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
@@ -281,8 +281,8 @@ export default class extends baseVw {
         })
         .fail(xhr => {
           endEvent('LoadListingFromCard', {
-            ownListing: this.ownListing,
-            errors: xhr.statusText,
+            ownListing: !!this.ownListing,
+            errors: xhr.responseJSON.reason || xhr.statusText || 'unknown error',
           });
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
