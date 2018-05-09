@@ -954,7 +954,8 @@
   "inventoryDisplay": {
     "retryLink": "Retry",
     "fetchError": "There was an error obtaining the inventory. %{retryLink}",
-    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}",
+    "unknownInventory": "unknown"
   },
   "listingDetail": {
     "edit": "Edit",
@@ -1038,8 +1039,7 @@
     "btnShowMatureContent": "Show Mature Content",
     "tipShowMatureContent": "Show Mature Content",
     "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user",
-    "unknownInventory": "unknown"
+    "blockedUser": "You blocked this user"
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",

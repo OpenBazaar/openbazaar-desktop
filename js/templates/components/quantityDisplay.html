@@ -17,8 +17,8 @@
   print(ob.spinner({ className: `${ob.spinnerClass}` }))
 } else if (ob.fetchFailed) { %>
   <div class="content">
-    <div class="arrowBoxTipWrap <%= ob.tipClass %>">
-      <i class="ion-alert-circled margRSm clrTAlert"></i>
+    <div class="arrowBoxTipWrap">
+      <i class="clrT2"><%= ob.polyT('inventoryDisplay.unknownInventory') %></i>
       <% if (ob.fetchError) { %>
         <%
           const retryLink = `<a class="js-retry">${ob.polyT('inventoryDisplay.retryLink')}</a>`;
@@ -27,13 +27,12 @@
           });
 
           if (ob.fetchError) {
-            message = ob.polyT('inventoryDisplay.fetchErrorWithMsg', {
+            message = `<div class="rowSm">${ob.polyT('inventoryDisplay.fetchErrorWithMsg', {
               msg: ob.fetchError,
-            });
-            message += `<br /> <br /><div class="txCtr">${retryLink}</div>`;
+            })}</div><div class="txCtr">${retryLink}</div>`;
           }
         %>
-        <div class="arrowBoxCenteredTop clrBr clrP"><%= message %></div>
+        <div class="arrowBoxCenteredTop clrBr clrP <%= ob.tipClass %>"><%= message %></div>
       <% } %>
     </div>
   </div>

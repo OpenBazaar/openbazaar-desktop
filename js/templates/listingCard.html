@@ -200,7 +200,7 @@
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
     <%
-      let inventory = `<i class="clrT2 tx6">${ob.polyT('listingCard.unknownInventory')}</i>`;
+      let inventory = `<i class="clrT2 tx6">${ob.polyT('inventoryDisplay.unknownInventory')}</i>`;
       let inventoryTxClass = '';
 
       if (ob.totalInventoryQuantity >= 0) {
