@@ -16,7 +16,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
-import { recordEvent } from '../../../utils/metrics';
+import { endEvent, recordEvent, startEvent } from '../../../utils/metrics';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -138,12 +138,25 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
+      startEvent('Listing_InventoryFetch');
       this.inventoryFetch = getInventory(this.vendor.peerID, {
         slug: this.model.get('slug'),
         coinDivisibility: this.model.get('metadata')
           .get('coinDivisibility'),
       })
-        .done(e => (this._inventory = e.inventory));
+        .done(e => {
+          this._inventory = e.inventory;
+          endEvent('Listing_InventoryFetch', {
+            ownListing: !!this.ownListing,
+            errors: 'none',
+          });
+        })
+        .fail(e => {
+          endEvent('Listing_InventoryFetch', {
+            ownListing: !!this.ownListing,
+            errors: e.error || e.errCode || 'unknown error',
+          });
+        });
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
