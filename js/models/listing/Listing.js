@@ -347,6 +347,12 @@ export default class extends BaseModel {
 
       returnSync.done(data => {
         const hasChanged = () => (!_.isEqual(attrsBeforeSync, this.toJSON()));
+        const hasCryptoQuantityChanged = () => {
+          return attrsBeforeSync.item.cryptoQuantity !== this.get('item').get('cryptoQuantity');
+        };
+        console.log(attrsBeforeSync.item.cryptoQuantity)
+        console.log(this.get('item').get('cryptoQuantity'))
+        console.log(attrsBeforeSync.item.cryptoQuantity === this.get('item').get('cryptoQuantity'))
 
         if (data.slug) {
           this.set('slug', data.slug);
@@ -357,6 +363,7 @@ export default class extends BaseModel {
           created: method === 'create',
           slug: this.get('slug'),
           hasChanged,
+          hasCryptoQuantityChanged,
         });
       });
     } else if (method === 'delete') {

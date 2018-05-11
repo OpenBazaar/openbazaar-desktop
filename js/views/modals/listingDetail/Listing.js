@@ -90,9 +90,14 @@ export default class extends BaseModal {
     if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('slug');
+        console.log(md)
+        console.log(savedOpts)
+        console.log(savedOpts.hasChanged())
+        console.log(savedOpts.hasCryptoQuantityChanged())
 
         if (savedOpts.slug === slug && savedOpts.hasChanged()) {
           this.showDataChangedMessage();
+          this.hasCryptoQuantityChanged = savedOpts.hasCryptoQuantityChanged;
         }
       });
 
@@ -138,25 +143,7 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startEvent('Listing_InventoryFetch');
-      this.inventoryFetch = getInventory(this.vendor.peerID, {
-        slug: this.model.get('slug'),
-        coinDivisibility: this.model.get('metadata')
-          .get('coinDivisibility'),
-      })
-        .done(e => {
-          this._inventory = e.inventory;
-          endEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
-            errors: 'none',
-          });
-        })
-        .fail(e => {
-          endEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
-            errors: e.error || e.errCode || 'unknown error',
-          });
-        });
+      this.fetchInventory();
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
@@ -165,6 +152,32 @@ export default class extends BaseModal {
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
+  }
+
+  fetchInventory(useCache = true) {
+    console.log('fetch the inventory, useCache: ' + useCache)
+    startEvent('Listing_InventoryFetch');
+    if (this.inventoryFetch) this.inventoryFetch.abort();
+
+    this.inventoryFetch = getInventory(this.vendor.peerID, {
+      slug: this.model.get('slug'),
+      coinDivisibility: this.model.get('metadata')
+        .get('coinDivisibility'),
+      useCache,
+    })
+      .done(e => {
+        this._inventory = e.inventory;
+        endEvent('Listing_InventoryFetch', {
+          ownListing: !!this.ownListing,
+          errors: 'none',
+        });
+      })
+      .fail(e => {
+        endEvent('Listing_InventoryFetch', {
+          ownListing: !!this.ownListing,
+          errors: e.error || e.errCode || 'unknown error',
+        });
+      });
   }
 
   className() {
@@ -428,7 +441,11 @@ export default class extends BaseModal {
           buildRefreshAlertMessage(app.polyglot.t('listingDetail.listingDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
+        this.render();
+        console.log(this.hasCryptoQuantityChanged())
+        if (this.hasCryptoQuantityChanged()) this.fetchInventory(false);
+      });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();
