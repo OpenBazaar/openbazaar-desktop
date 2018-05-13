@@ -838,7 +838,7 @@
       "placeholderName": "Entrez un nom...",
       "placeholderServerIp": "L'IP vers votre serveur (ou localhost)",
       "placeholderUsername": "Le nom d'utilisateur de votre serveur",
-      "placeholderPassword": "Le mot de passe vers votre serveur",
+      "placeholderPassword": "Le mot de passe de votre serveur",
       "placeholderPort": "Le port de votre serveur",
       "torLabel": "Tor",
       "useTor": "Utiliser Tor",
@@ -882,7 +882,7 @@
     "transactionsLabel": "Transactions",
     "receiveMoney": {
       "title": "Recevoir de l'argent",
-      "btnCancel": "Cancel",
+      "btnCancel": "Annuler",
       "btnFundViaShapeshift": "Approvisionner avec ShapeShift",
       "needCoinLink": "Besoin de %{cur} ?"
     },
@@ -893,7 +893,7 @@
       "noteLabel": "Remarque",
       "notePlaceholder": "Vu uniquement par vous",
       "sendBtn": "Envoyer",
-      "clear": "Clear",
+      "clear": "Effacer",
       "sendPaymentFailDialogTitle": "Impossible d'envoyer le paiement",
       "errorInvalidAddress": "L'adresse de paiement n'est pas valide."
     },
@@ -927,7 +927,7 @@
           "btnConfirmSend": "Envoyer",
           "btnRetry": "Réessayer"
         },
-        "retryFailDialogTitle": "Incapable de réessayer le paiement",
+        "retryFailDialogTitle": "Impossible de réessayer le paiement",
         "retryFailInsufficientFunds": "Vous n'avez pas les fonds suffisants pour compléter cette transaction.",
         "feeBumpOf": "Augmentation des frais de %{adresse}"
       },
