@@ -195,7 +195,7 @@
       "moderatorAdd": "%{name} vous a ajouté comme modérateur.",
       "moderatorRemove": "%{name} vous a supprimé comme modérateur."
     },
-    "errorHeading": "Une erreur s'est produite lors de la réception des notifications.",
+    "errorHeading": "Une erreur s'est produite lors de la récupération des notifications.",
     "btnRetry": "Réessayer",
     "tabAll": "Toutes",
     "tabOrders": "Commandes",
@@ -401,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Conditions de service",
     "addAsModeratorButton": "Ajouter comme modérateur",
-    "disclaimer": "*Les frais de service du modérateur ne s'appliquent qu'après un litige.",
+    "disclaimer": "* Les frais de service du modérateur ne s'appliquent qu'après un litige.",
     "languages": "Langues",
     "currenciesSupported": "Monnaies prises en charge",
     "noCoinSupport": "Ce modérateur ne prend pas en charge %{coin}."
@@ -452,12 +452,12 @@
       "linkText": "L'histoire",
       "sectionHeader": "L'histoire d'OpenBazaar",
       "paragraphs": {
-        "taakisDarkMarket": "En avril 2014, dans un hackathon secret de Toronto, un projet intitulé « Dark Market » fut créé. Amir Taaki dirige alors une petite équipe de développeurs pour construire une preuve de concept d'un marché décentralisé. Le logiciel était complètement pair à pair, sans aucun contrôle d'une organisation centrale. Dark Market gagna le hackathon, mais Amir et son équipe décidèrent de ne pas continuer à travailler sur le projet.",
-        "briansOpenBazaar": "Brian Hoffman parla à Amir de Dark Market et apprit qu'ils n'allaient pas poursuivre le développement. Il aima l'idée d'un marché décentralisé, mais n'aima pas son utilisation sur les marchés darknet. Alors il clona le projet et le renomma OpenBazaar.",
+        "taakisDarkMarket": "En avril 2014, dans un hackathon secret de Toronto, un projet intitulé « Dark Market » fut créé. Amir Taaki dirige alors une petite équipe de développeurs pour élaborer une preuve de concept d'un marché décentralisé. Le logiciel était complètement pair à pair, sans aucun contrôle d'une organisation centrale. Dark Market gagna le hackathon, mais Amir et son équipe décidèrent de ne pas continuer à travailler sur le projet.",
+        "briansOpenBazaar": "Brian Hoffman parla à Amir de Dark Market et décidèrent qu'ils n'allaient pas poursuivre le développement. Il aima l'idée d'un marché décentralisé, mais n'aima pas son utilisation sur les marchés darknet. Alors il clona le projet et le renomma OpenBazaar.",
         "alphaTeamalphaRelease": "L'idée d'un marché sans autorisation était puissante, et des personnes du monde entier se joignirent à Brian pour aider à créer ce logiciel open source. En septembre, cette équipe publia la première version de test du logiciel.",
         "momentOfTruth": "Au cours des mois suivants, l'équipe continua à améliorer le logiciel et obtint une réponse encourageante de la communauté Bitcoin. Ils visitèrent FOSSDEM (Free Open Source Software Developers European Meeting) à Bruxelles en début d'année 2015 et présentèrent le projet à une foule enthousiaste. Brian, et quelques membres de l'équipe, décidèrent qu'il était temps de transformer ce projet bénévole en une campagne sérieuse et bien financée pour apporter le libre-échange au monde entier.",
         "foundedAndFunded": "Ils fondèrent une entreprise, OB1, avec un investissement de capital-risque de 1 million de dollars auprès de Union Square Ventures et Andreessen Horowitz, et commencèrent à embaucher des développeurs pour créer une meilleure version du logiciel.",
-        "marketOpening": "En avril 2016, la première version complète du logiciel fut publiée, et des dizaines de milliers de personnes à travers le monde téléchargèrent  OpenBazaar et commencèrent à acheter et à vendre directement avec Bitcoin.",
+        "marketOpening": "En avril 2016, la première version complète du logiciel fut publiée, et des dizaines de milliers de personnes à travers le monde téléchargèrent OpenBazaar et commencèrent à acheter et à vendre directement avec Bitcoin.",
         "toInfinityAndBeyond": "Le travail de l'équipe initiale a permis de recueillir 3 millions de dollars de promesses d'investissements fin 2016. À partir de leur travail révolutionnaire de la version 1, une équipe OB1 agrandie s'est attaquée à la construction d'OpenBazaar 2, avec comme but de rendre le commerce libre et gratuit pour encore plus de personnes autour du monde.",
         "cashCTA": "Donnez maintenant",
         "or": "ou",
@@ -468,7 +468,7 @@
       "linkText": "Aide",
       "sectionHeader": "Aide",
       "supportLink": "Page de support sur OpenBazaar.org",
-      "text": "Besoin d'aide avec le logiciel OpenBazaar ? Veuillez visiter le %{supportLink}. Il existe de nombreux guides d'assistance et des FAQ qui devraient vous aider à résoudre votre problème."
+      "text": "Besoin d'aide avec le logiciel OpenBazaar ? Veuillez visiter le %{supportLink}. Il existe de nombreux guides d'aide et des FAQ qui devraient vous aider à résoudre votre problème."
     }
   },
   "settings": {
@@ -1337,12 +1337,12 @@
     "memoPlaceholder": "Fournir plus de détails pour le vendeur ici (optionnel).",
     "pay": "Payer >",
     "payNote": "Cliquer sur payer vous fera passer à l'étape finale.",
-    "scamWarning": "Attention: Protection contre les arnaques",
+    "scamWarning": "Attention : Protection contre les arnaques",
     "pending": "En attente...",
     "pendingNote": "Veuillez payer la commande pour terminer votre transaction.",
     "close": "fermer",
     "closeNote": "Le paiement a été envoyé au vendeur.",
-    "moderatorNote": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
+    "moderatorNote": "* Les frais de service de modération ne s'appliquent qu'après un litige.",
     "quantity": "Quantité",
     "inventory": "Max : %{inventory}",
     "cryptoAddressHeading": "Votre adresse %{coinType}",
@@ -1369,7 +1369,7 @@
       "note1": "Si vous débutez avec les bitcoins, merci de lire %{link}.",
       "note1Link": "Besoin de bitcoins ? sur OpenBazaar.org",
       "note2": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige.",
-      "note3": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
+      "note3": "* Les frais de service de modération ne s'appliquent qu'après un litige.",
       "note4": "Une fois que vous avez payé, l'interface peut prendre un certain temps pour s'actualiser.",
       "btnConfirmedPay": "Oui, payer",
       "altcoinNote": "<b>Les altcoins</b> seront disponibles lorsque ShapeShift utilisera Segregated Witness.",
@@ -1739,7 +1739,7 @@
       "buyerContractUnavailable": "Vous ne pouvez pas attribuer de fonds à l'acheteur parce que leur contrat n'est pas arrivé.",
       "buyerContractUnavailableTip": "L'acheteur n'a pas fourni son contrat. Il sera envoyé la prochaine fois qu'ils seront en ligne.",
       "commentLabel": "Commentaire",
-      "commentPlaceholder": "Expliquer votre décision...",
+      "commentPlaceholder": "Expliquez votre décision...",
       "btnCancel": "Annuler",
       "btnSubmit": "Envoyer",
       "resolveConfirm": {
