@@ -88,7 +88,7 @@
   "restartNow": "Redémarrer maintenant",
   "restartLater": "Redémarrer plus tard",
   "langChangeRestartTitle": "Redémarrage requis pour le changement de langue",
-  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des sauvegardes ou des publications sont en cours, attendez qu'ils se terminent.",
+  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des sauvegardes ou des publications sont en cours, attendez qu'elles se terminent.",
   "update": {
     "checking": "Vérification des mises à jour...",
     "error": "Une erreur s’est produite lors de la vérification des mises à jour. Erreur : %{error}",
@@ -387,7 +387,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "L'information pour ce modérateur n'a pas pu être chargée.",
     "invalid": "Cet utilisateur n'est pas actuellement modérateur.",
-    "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, and %{smart_count} autres langues."
+    "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, et %{smart_count} autres langues."
   },
   "moderatorDetails": {
     "messageButton": "Message",
