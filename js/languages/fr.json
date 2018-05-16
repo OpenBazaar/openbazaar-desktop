@@ -88,7 +88,7 @@
   "restartNow": "Redémarrer maintenant",
   "restartLater": "Redémarrer plus tard",
   "langChangeRestartTitle": "Redémarrage requis pour le changement de langue",
-  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des sauvegardes ou des publications sont en cours, attendez qu'ils se terminent.",
+  "langChangeRestartMessage": "Pour que votre changement de langue prenne pleinement effet, vous devez redémarrer l'application. Si des sauvegardes ou des publications sont en cours, attendez qu'elles se terminent.",
   "update": {
     "checking": "Vérification des mises à jour...",
     "error": "Une erreur s’est produite lors de la vérification des mises à jour. Erreur : %{error}",
@@ -102,7 +102,7 @@
     "install": "Installer maintenant"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Impossible de fournir des informations sur le prix car celui-ci est dans une devise non reconnue."
+    "unrecognizedCurrencyTip": "Impossible de fournir des informations sur le prix car celui-ci est dans une devise non reconnue (%{cur})."
   },
   "addressBarPlaceholder": "Tapez un @handle, un identifiant ou un terme de recherche OpenBazaar",
   "testnet": "Mode de test",
@@ -195,7 +195,7 @@
       "moderatorAdd": "%{name} vous a ajouté comme modérateur.",
       "moderatorRemove": "%{name} vous a supprimé comme modérateur."
     },
-    "errorHeading": "Une erreur s'est produite lors de la réception des notifications.",
+    "errorHeading": "Une erreur s'est produite lors de la récupération des notifications.",
     "btnRetry": "Réessayer",
     "tabAll": "Toutes",
     "tabOrders": "Commandes",
@@ -341,7 +341,6 @@
     "averageRating": "évaluation générale",
     "totalReviews": "évaluation |||| évaluations",
     "noTitle": "Titre d'annonce introuvable"
-
   },
   "userShort": {
     "userLoading": "Chargement...",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "Vous avez bloqué cet utilisateur"
   },
   "verifiedMod": {
-    "verified": {
-      "label": "Vérifié",
-      "title": "Modérateur vérifié",
-      "body": "Ce modérateur est vérifié par %{providerName}. %{link}",
-      "bodyOrder": "Ce modérateur est vérifié par %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "Vérifié",
+      "titleLong": "Modérateur vérifié",      
+      "link": "En savoir plus",
+      "tipBody": "Ce modérateur est vérifié par %{name}. %{link}"
     },
-    "unverified": {
-      "label": "Non vérifié",
-      "title": "Modérateur non vérifié",
+    "modUnverified": {
+      "titleShort": "Non vérifié",
+      "titleLong": "Modérateur non vérifié",
       "not": "PAS",
-      "body": "Ce modérateur n'est %{not} vérifié par %{providerName}. Procédez avec prudence ou choisissez un modérateur vérifié.",
-      "bodyOrder": "Ce modérateur n'est %{not} vérifié par %{providerName}."
+      "tipBody": "Ce modérateur n'est %{not} vérifié par %{name}. Procédez avec prudence ou choisissez un modérateur vérifié.",
+      "tipBodyOrderDetail": "Ce modérateur n'est %{not} vérifié par %{name}."
     },
-
+    "listingVerified": {
+      "link": "En savoir plus",
+      "tipBody": "Vous pouvez acheter cette annonce avec un modérateur vérifié par %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "PAS",
+      "tipBody": "Cette annonce ne comporte %{not} de modérateurs vérifiés. Procédez avec prudence."
+    },    
     "link": "En savoir plus",
     "type": "Type :",
     "typeCombined": "%{type}%{name}",
@@ -381,7 +387,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "L'information pour ce modérateur n'a pas pu être chargée.",
     "invalid": "Cet utilisateur n'est pas actuellement modérateur.",
-    "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, and %{smart_count} autres langues."
+    "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, et %{smart_count} autres langues."
   },
   "moderatorDetails": {
     "messageButton": "Message",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Conditions de service",
     "addAsModeratorButton": "Ajouter comme modérateur",
-    "disclaimer": "**Les frais de service du modérateur ne s'appliquent qu'après un litige.",
+    "disclaimer": "* Les frais de service du modérateur ne s'appliquent qu'après un litige.",
     "languages": "Langues",
     "currenciesSupported": "Monnaies prises en charge",
     "noCoinSupport": "Ce modérateur ne prend pas en charge %{coin}."
@@ -446,12 +452,12 @@
       "linkText": "L'histoire",
       "sectionHeader": "L'histoire d'OpenBazaar",
       "paragraphs": {
-        "taakisDarkMarket": "En avril 2014, dans un hackathon secret de Toronto, un projet intitulé « Dark Market » fut créé. Amir Taaki dirige alors une petite équipe de développeurs pour construire une preuve de concept d'un marché décentralisé. Le logiciel était complètement pair à pair, sans aucun contrôle d'une organisation centrale. Dark Market gagna le hackathon, mais Amir et son équipe décidèrent de ne pas continuer à travailler sur le projet.",
-        "briansOpenBazaar": "Brian Hoffman parla à Amir de Dark Market et apprit qu'ils n'allaient pas poursuivre le développement. Il aima l'idée d'un marché décentralisé, mais n'aima pas son utilisation sur les marchés darknet. Alors il clona le projet et le renomma OpenBazaar.",
+        "taakisDarkMarket": "En avril 2014, dans un hackathon secret de Toronto, un projet intitulé « Dark Market » fut créé. Amir Taaki dirige alors une petite équipe de développeurs pour élaborer une preuve de concept d'un marché décentralisé. Le logiciel était complètement pair à pair, sans aucun contrôle d'une organisation centrale. Dark Market gagna le hackathon, mais Amir et son équipe décidèrent de ne pas continuer à travailler sur le projet.",
+        "briansOpenBazaar": "Brian Hoffman parla à Amir de Dark Market et décidèrent qu'ils n'allaient pas poursuivre le développement. Il aima l'idée d'un marché décentralisé, mais n'aima pas son utilisation sur les marchés darknet. Alors il clona le projet et le renomma OpenBazaar.",
         "alphaTeamalphaRelease": "L'idée d'un marché sans autorisation était puissante, et des personnes du monde entier se joignirent à Brian pour aider à créer ce logiciel open source. En septembre, cette équipe publia la première version de test du logiciel.",
         "momentOfTruth": "Au cours des mois suivants, l'équipe continua à améliorer le logiciel et obtint une réponse encourageante de la communauté Bitcoin. Ils visitèrent FOSSDEM (Free Open Source Software Developers European Meeting) à Bruxelles en début d'année 2015 et présentèrent le projet à une foule enthousiaste. Brian, et quelques membres de l'équipe, décidèrent qu'il était temps de transformer ce projet bénévole en une campagne sérieuse et bien financée pour apporter le libre-échange au monde entier.",
         "foundedAndFunded": "Ils fondèrent une entreprise, OB1, avec un investissement de capital-risque de 1 million de dollars auprès de Union Square Ventures et Andreessen Horowitz, et commencèrent à embaucher des développeurs pour créer une meilleure version du logiciel.",
-        "marketOpening": "En avril 2016, la première version complète du logiciel fut publiée, et des dizaines de milliers de personnes à travers le monde téléchargèrent  OpenBazaar et commencèrent à acheter et à vendre directement avec Bitcoin.",
+        "marketOpening": "En avril 2016, la première version complète du logiciel fut publiée, et des dizaines de milliers de personnes à travers le monde téléchargèrent OpenBazaar et commencèrent à acheter et à vendre directement avec Bitcoin.",
         "toInfinityAndBeyond": "Le travail de l'équipe initiale a permis de recueillir 3 millions de dollars de promesses d'investissements fin 2016. À partir de leur travail révolutionnaire de la version 1, une équipe OB1 agrandie s'est attaquée à la construction d'OpenBazaar 2, avec comme but de rendre le commerce libre et gratuit pour encore plus de personnes autour du monde.",
         "cashCTA": "Donnez maintenant",
         "or": "ou",
@@ -462,7 +468,7 @@
       "linkText": "Aide",
       "sectionHeader": "Aide",
       "supportLink": "Page de support sur OpenBazaar.org",
-      "text": "Besoin d'aide avec le logiciel OpenBazaar ? Veuillez visiter le %{supportLink}. Il existe de nombreux guides d'assistance et des FAQ qui devraient vous aider à résoudre votre problème."
+      "text": "Besoin d'aide avec le logiciel OpenBazaar ? Veuillez visiter le %{supportLink}. Il existe de nombreux guides d'aide et des FAQ qui devraient vous aider à résoudre votre problème."
     }
   },
   "settings": {
@@ -472,7 +478,7 @@
       "body": "Nous ne pouvons pas enregistrer les paramètres de cet onglet car il existe des erreurs inconnues. Elles proviennent probablement de valeurs non valides dans un autre onglet. Veuillez enregistrer les autres onglets afin d'identifier le champ comportant une erreur. L'erreur sera affichée au-dessus du champ. Après avoir corrigé l'erreur, assurez-vous de cliquer sur Enregistrer sur l'onglet dans lequel l'erreur s'est produite. Ensuite, vous pouvez revenir à cet onglet pour terminer l'enregistrement."
     },
     "generalTab": {
-      "helperLanguage": "Affichez les éléments de l'interface en",
+      "helperLanguage": "Afficher les éléments de l'interface en",
       "helperCountry": "Le pays dans lequel vous résidez principalement",
       "helperCurrency": "Afficher les prix en",
       "helperTranslations": "Aidez à traduire OpenBazaar sur %{helperTranslationsLink}",
@@ -568,7 +574,7 @@
         "placeholderSendTo": "name@domain.com",
         "helperNotifications": "Recevoir des e-mails pour des mises à jour de commande",
         "helperServerAddress": "Entrez une URL de serveur sortant (SMTP) suivie du numéro de port TLS",
-        "helperNewEmail": "Créer une adresse email sur %{helperGmailLink}",
+        "helperNewEmail": "Créez une adresse e-mail sur %{helperGmailLink}",
         "helperUsername": "Votre nom d'utilisateur SMTP",
         "helperPassword": "Sauvegardé en privé dans votre base de données",
         "helperSendFrom": "L'adresse e-mail d'envoi. Assurez-vous de l'ajouter à la liste blanche dans votre compte de réception.",
@@ -635,6 +641,12 @@
         "macOS": "Mac (en haut à gauche)",
         "windowsOS": "Windows (en haut à droite)"
       },
+      "integrations": {
+        "sectionName": "Intégrations",
+        "sharing": "Partage de données",
+        "sharingHelper": "Les données anonymes sont partagées avec l'équipe de développement.",
+        "changeBtn": "Modifier les paramètres de partage"
+      },
       "statusSaving": "Sauvegarde des paramètres avancés...",
       "statusSaveComplete": "Paramètres avancés sauvegardés.",
       "statusSaveFailed": "Échec de la sauvegarde des paramètres avancés.",
@@ -682,7 +694,7 @@
       "storeStatusHelper": "Ajoutez une boutique à votre page",
       "moderators": "Modérateurs",
       "moderatorsHelper": "Choisissez quelques modérateurs pour votre boutique.",
-      "selectedModerators": "Choisissez des modérateurs",
+      "selectedModerators": "Modérateurs sélectionnés",
       "selectedModeratorsEmpty": "Aucun modérateur ajouté",
       "selectedModeratorsEmptyWarning": "Seul le paiement direct est disponible dans votre boutique",
       "moderatorByIDPlaceholder": "Saisissez un @handle ou un ID",
@@ -729,10 +741,10 @@
     "about": "À propos",
     "nsfwContent": "Contenu interdit aux mineurs",
     "avatar": "Avatar",
-    "loadAvatar": "Choisir une image",
+    "loadAvatar": "Choisir une photo",
     "loadAvatarHelp": "%{minWidth}px par %{minHeight}px ou plus grand recommandé",
     "header": "Photo de couverture",
-    "loadHeader": "Chosir une image",
+    "loadHeader": "Choisir une photo",
     "loadHeaderHelp": "%{minWidth}px par %{minHeight}px ou plus grand recommandé",
     "socialSection": "Social",
     "website": "Site web",
@@ -826,7 +838,7 @@
       "placeholderName": "Entrez un nom...",
       "placeholderServerIp": "L'IP vers votre serveur (ou localhost)",
       "placeholderUsername": "Le nom d'utilisateur de votre serveur",
-      "placeholderPassword": "Le mot de passe vers votre serveur",
+      "placeholderPassword": "Le mot de passe de votre serveur",
       "placeholderPort": "Le port de votre serveur",
       "torLabel": "Tor",
       "useTor": "Utiliser Tor",
@@ -870,7 +882,7 @@
     "transactionsLabel": "Transactions",
     "receiveMoney": {
       "title": "Recevoir de l'argent",
-      "btnCancel": "Cancel",
+      "btnCancel": "Annuler",
       "btnFundViaShapeshift": "Approvisionner avec ShapeShift",
       "needCoinLink": "Besoin de %{cur} ?"
     },
@@ -881,7 +893,7 @@
       "noteLabel": "Remarque",
       "notePlaceholder": "Vu uniquement par vous",
       "sendBtn": "Envoyer",
-      "clear": "Clear",
+      "clear": "Effacer",
       "sendPaymentFailDialogTitle": "Impossible d'envoyer le paiement",
       "errorInvalidAddress": "L'adresse de paiement n'est pas valide."
     },
@@ -915,7 +927,7 @@
           "btnConfirmSend": "Envoyer",
           "btnRetry": "Réessayer"
         },
-        "retryFailDialogTitle": "Incapable de réessayer le paiement",
+        "retryFailDialogTitle": "Impossible de réessayer le paiement",
         "retryFailInsufficientFunds": "Vous n'avez pas les fonds suffisants pour compléter cette transaction.",
         "feeBumpOf": "Augmentation des frais de %{adresse}"
       },
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Bien physique",
     "DIGITAL_GOOD": "Bien numérique",
-    "SERVICE": "Service"
+    "SERVICE": "Service",
+    "CRYPTOCURRENCY": "Crypto-monnaie"
   },
   "conditionTypes": {
     "NEW": "Neuf",
@@ -937,6 +950,11 @@
     "USED_GOOD": "Utilisé - Bon",
     "USED_POOR": "Occasion - Usé",
     "REFURBISHED": "Remis à neuf"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Réessayer",
+    "fetchError": "Une erreur s'est produite lors de l'obtention de l'inventaire. %{retryLink}",
+    "fetchErrorWithMsg": "Une erreur s'est produite lors de l'obtention de l'inventaire : %{msg}"
   },
   "listingDetail": {
     "edit": "Modifier",
@@ -948,6 +966,7 @@
     "viewPhotos": "Voir %{count} photo |||| Voir %{count} photos",
     "type": "Type : %{type}",
     "condition": "État : %{condition}",
+    "inventory": "Inventaire : %{inventory}",
     "tags": "Mots-clés",
     "paymentsAccepted": "Paiements acceptés",
     "noTags": "Aucun mot-clé entré",
@@ -963,8 +982,8 @@
     "shipping": "Expédition",
     "shipsFrom": "Expédie depuis %{country}",
     "shipTo": "Expédie vers :",
-    "noShippingFound": "Cette annonce ne peut être expédiée vers le pays choisi.",
-    "localPickup": "Cette option est seulement pour une récupération locale. ",
+    "noShippingFound": "Cette annonce ne peut pas être expédiée vers le pays choisi.",
+    "localPickup": "Cette option est uniquement pour une récupération locale. ",
     "deliveryTime": "Délai de livraison",
     "priceFirst": "Prix (premier article)",
     "priceSecond": "Prix (article supplémentaire)",
@@ -995,11 +1014,11 @@
       "fetchReviews": "Une erreur s'est produite lors du chargement des évaluations. %{error}",
       "loadReview": "L'évaluation %{id} a échoué à cause de l'erreur %{error}",
       "noPurchaseTitle": "Vous ne pouvez pas acheter cette annonce",
-      "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins."
+      "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins.",
+      "outOfStock": "Vous ne pouvez pas effectuer d'achat car l'article est actuellement en rupture de stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Détails",
     "freeShippingBanner": "Expédition gratuite",
     "deleting": "Suppression...",
     "deleted": "Supprimé",
@@ -1066,18 +1085,18 @@
       "returnPolicy": "Conditions de retour",
       "termsAndConditions": "Conditions générales",
       "coupons": "Codes promotionnels",
-      "inventoryManagement": "Gestion d'inventaire",
+      "inventoryManagement": "Gestion de l'inventaire",
       "variantInventory": "Inventaire des variantes"
     },
     "placeholderTitle": "Entrez votre titre...",
     "placeholderSKU": "SKU, Numéro d'article, ID, etc",
-    "placeholderDescription": "Décrivez votre annonce le mieux possible... Ajoutez des photos. Lien vers des vidéos Youtube. etc",
+    "placeholderDescription": "Décrivez votre annonce le mieux possible... Ajoutez des photos. Des liens vers des vidéos Youtube. etc",
     "placeholderReturnPolicy": "Quelles sont vos conditions de retour ? Combien de jours sont acceptés pour les retours ? Qui paye les frais de retour (si il y en a) ? ...",
     "placeholderTerms": "Quels sont les termes et conditions de l'annonce ? En quoi êtes-vous responsable en tant que vendeur ? Existe-t-il une garantie ? Quand la transaction est-elle définitive ? etc",
     "helperTitle": "Quelque chose de descriptif qui explique clairement ce que vous vendez",
-    "helperType": "Choisissez parmi 3 types",
+    "helperType": "Choisissez parmi %{smart_count} type |||| Choisissez parmi %{smart_count} types",
     "helperShipping": "Envoyez où vous voulez !",
-    "helperPhotos": "Ajoutez jusqu'à %{maxPhotos} images",
+    "helperPhotos": "Ajoutez jusqu'à %{maxPhotos} photos",
     "helperSKU": "Un identifiant unique pour votre annonce",
     "helperSKUWithVariants": "Quand il y a des variantes, les SKUs peuvent être ajoutés dans la section %{variantInventoryLink}",
     "variantInventoryLink": "Inventaire des variantes",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "Voir l'annonce",
     "unsupportedCurrencyDialog": {
       "title": "Devise non reconnue",
-      "body": "Cette annonce est définie dans une devise (%{cur}) que ce client ne prend pas en charge. Veuillez sélectionner une nouvelle devise ci-dessous et cliquer sur OK. Ensuite, assurez-vous de revérifier les prix pour s'assurer qu'ils sont appropriés pour la nouvelle monnaie.",
+      "body": "Cette annonce est facturée dans une devise (%{cur}) que ce client ne prend pas en charge. Veuillez sélectionner une nouvelle devise ci-dessous et cliquez sur OK. Ensuite, assurez-vous de revérifier les prix pour s'assurer qu'ils sont appropriés pour la nouvelle monnaie.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Vendez une crypto-monnaie et recevez un paiement en %{curCode}",
+      "helperCoinType": "Choisissez la crypto-monnaie que vous souhaitez vendre",
+      "helperQuantity": "Les acheteurs peuvent acheter une fraction ou le montant total",
+      "helperMarketValue": "Les acheteurs payent le prix du marché. Le prix de l'annonce reflétera automatiquement le prix du marché.",
+      "marketValueLabel": "Prix du marché actuel",
+      "marketValuePerCoin": "(%{amount} par %{curCode})",
+      "coinType": "Type de crypto-monnaie",
+      "quantity": "Quantité",
+      "tipMissingCryptoExchangeRate": "Il n'y a pas de données de taux de change disponibles pour %{coinType}. Si les données ne sont pas disponibles au moment de l'achat, l'annonce ne sera pas achetable.",
+      "tipMissingLocalExchangeRate": "Impossible d'afficher dans votre devise locale, car les données de taux de change ne sont pas disponibles pour ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Option d'expédition #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "Transactions",
         "myPage": "Ma page"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Titre",
+      "colVendor": "Vendeur",
+      "colPrice": "Prix (1 unité)",
+      "colInventory": "Inventaire",
+      "tipPrice": "Le prix représente 1 unité entière de la monnaie. Des fractions d'une unité peuvent être achetées. Le prix sera calculé lors de la commande.",
+      "tipInventory": "L'inventaire est estimé en fonction du moment où le fournisseur de recherche a exploré l'annonce pour la dernière fois et depuis le moment où le fournisseur a été mis en ligne pour la dernière fois."
+    },
     "errors": {
       "searchFailTitle": "La requête de recherche vers %{provider} a échoué. Choisissez un autre fournisseur ci-dessus.",
       "searchFailReason": "Le fournisseur de recherche a renvoyé le message suivant : %{error}",
@@ -1248,7 +1287,7 @@
     },
     "infoScreen": {
       "nameLbl": "Nom",
-      "placeholderName": "Entrer votre nom",
+      "placeholderName": "Entrez votre nom",
       "descriptionLbl": "Description",
       "descriptionHelper": "(%{count} caractères max)",
       "placeholderDescription": "Dites quelque chose d'intéressant...",
@@ -1298,16 +1337,21 @@
     "memoPlaceholder": "Fournir plus de détails pour le vendeur ici (optionnel).",
     "pay": "Payer >",
     "payNote": "Cliquer sur payer vous fera passer à l'étape finale.",
-    "scamWarning": "Attention: Protection contre les arnaques",
+    "scamWarning": "Attention : Protection contre les arnaques",
     "pending": "En attente...",
     "pendingNote": "Veuillez payer la commande pour terminer votre transaction.",
     "close": "fermer",
     "closeNote": "Le paiement a été envoyé au vendeur.",
-    "moderatorNote": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
+    "moderatorNote": "* Les frais de service de modération ne s'appliquent qu'après un litige.",
     "quantity": "Quantité",
+    "inventory": "Max : %{inventory}",
+    "cryptoAddressHeading": "Votre adresse %{coinType}",
+    "cryptoAddressPlaceholder": "Collez ici votre adresse %{coinType}",
+    "cryptoAddressHelper": "Le vendeur enverra %{coinType} à cette adresse. %{warning}",
+    "cryptoAddressHelperWarning": "L'adresse ne peut pas être modifiée une fois la commande passée.",    
     "moderatorsDisclaimer": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige avec un modérateur de votre choix. *Les frais de service de modération ne s'appliquent qu'après un litige.",
     "directPayment": "Paiement direct",
-    "directPaymentDetails": "L'envoi des fonds se fait directement au vendeur sans modérateur. Vous ne devez utiliser cette option qu'avec des vendeurs de confiance, vous ne pourrez pas contester la commande si quelque chose ne va pas.",
+    "directPaymentDetails": "L'envoi des fonds se fait directement au vendeur sans modérateur. Vous ne devez utiliser cette option qu'avec des vendeurs de confiance. Vous ne pourrez pas contester la commande si quelque chose se passe mal.",
     "chooseModerator": "Choisir ce modérateur",
     "confirmPayment": {
       "title": "Tout semble ok ?",
@@ -1325,7 +1369,7 @@
       "note1": "Si vous débutez avec les bitcoins, merci de lire %{link}.",
       "note1Link": "Besoin de bitcoins ? sur OpenBazaar.org",
       "note2": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige.",
-      "note3": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
+      "note3": "* Les frais de service de modération ne s'appliquent qu'après un litige.",
       "note4": "Une fois que vous avez payé, l'interface peut prendre un certain temps pour s'actualiser.",
       "btnConfirmedPay": "Oui, payer",
       "altcoinNote": "<b>Les altcoins</b> seront disponibles lorsque ShapeShift utilisera Segregated Witness.",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "Vous ne pouvez pas acheter vos propres annonces",
       "ownIDMsg": "Vous pouvez prévisualiser le processus d'achat pour vos propres annonces, mais vous ne pouvez pas les acheter.",
       "paymentFailed": "Le paiement n'a pas pu s'achever",
-      "zeroPrice": "Vous ne pouvez pas acheter une annonce avec un prix total de zéro."
+      "zeroPrice": "Vous ne pouvez pas acheter une annonce avec un prix total de zéro.",
+      "insufficientInventoryTitle": "Inventaire insuffisant",
+      "insufficientInventoryBody": "Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} article. |||| Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} articles."
     }
   },
   "moderators": {
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "Revenir aux litiges"
     },
     "filters": {
-      "purchasing": "Achat",
+      "pending": "En attente",
+      "unfunded": "Non provisionné",
       "ready": "Prêt(e) à traiter",
       "fulfilled": "Réalisé(e)",
       "refunded": "Remboursé(e)",
@@ -1566,6 +1613,9 @@
         "heading": "Réalisé(e)",
         "shippedByLabel": "Commande expédiée par :",
         "trackingNumberLabel": "Numéro de suivi # :",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} envoyé",
+        "transactionIdLabel": "ID de transaction :",
         "yourNoteLabel": "Votre remarque :",
         "noteFromVendorLabel": "Remarque du vendeur :",
         "noteFromStoreLabel": "Remarque de %{store} :",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "Quantité",
         "totalHeading": "Total",
         "moderatorHeading": "Modérateur",
+        "paymentAddressHeading": "Adresse %{coinType}",
         "copyAddress": "Copier",
         "viewOnMap": "Voir sur la carte",
         "shippingOption": "Option d'expédition",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "Liens vers les fichiers",
       "passwordLabel": "Mot de passe",
       "passwordPlaceholder": "Mot de passe au fichier (optionnel)",
+      "transactionIdLabel": "ID de transaction",
+      "transactionIdPlaceholder": "Collez l'ID de transaction",
       "noteLabel": "Remarque",
       "notePlaceholder": "optionnel",
       "noteHelperTextDigital": "L'acheteur recevra une notification contenant les informations sur le fichier",
@@ -1686,7 +1739,7 @@
       "buyerContractUnavailable": "Vous ne pouvez pas attribuer de fonds à l'acheteur parce que leur contrat n'est pas arrivé.",
       "buyerContractUnavailableTip": "L'acheteur n'a pas fourni son contrat. Il sera envoyé la prochaine fois qu'ils seront en ligne.",
       "commentLabel": "Commentaire",
-      "commentPlaceholder": "Expliquer votre décision...",
+      "commentPlaceholder": "Expliquez votre décision...",
       "btnCancel": "Annuler",
       "btnSubmit": "Envoyer",
       "resolveConfirm": {
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Contester la commande"
     }
+  },
+  "metrics": {
+    "title": "Métriques anonymes facultatives",
+    "msg1": "Vous pouvez aider à améliorer OpenBazaar en acceptant de partager des données anonymes avec l'équipe de développement sur votre expérience.",
+    "msg2": "Aucune information pouvant être utilisée pour vous identifier, vos commandes ou vos transactions ne sont pas partagée avec nous. Vos données personnelles sont toujours stockées sur votre propre ordinateur et ne sont accessibles à personne d'autre.",
+    "listTitle": "Les données suivantes seront partagées :",
+    "list": {
+      "pages": "Les pages que vous chargez, telle que la page de recherche ou la page de la boutique.",
+      "clicks": "Les cliques sur les éléments. Cela enregistre uniquement ce qui a été cliqué.",
+      "errors": "Les données de performance comme les erreurs et la durée de chargement du contenu.",
+      "system": "Les données système de base tels que l'OS, le CPU, la RAM et la résolution d'écran. Cela nous aide à savoir si les problèmes sont liés à certains types d'ordinateurs.",
+      "user": "Les informations publiques, y compris si vous êtes un vendeur ou un modérateur, et combien d'annonces et d'avis vous avez.",
+      "node": "Les informations sur votre nœud, y compris la devise d'affichage, la crypto-monnaie, la langue et si vous utilisez Tor. Cela nous aide à prioriser le développement.",
+      "app": "Les détails de votre application, qui incluent sa version et si elle est installée à partir d'un package téléchargeable ou à partir du code source.",
+      "orders": "Les informations sur le changement d'état de vos commandes. Cela nous aide à identifier les problèmes dans le processus de commande.",
+      "path": "Le chemin de votre installation d'OpenBazaar. Cela partagera le nom de tous les dossiers du chemin d'installation, ce qui peut inclure votre dossier racine et / ou utilisateur."
+    },
+    "acceptBtn": "Accepter",
+    "declineBtn": "Refuser",
+    "activateBtn": "Activer",
+    "deactivateBtn": "Désactiver",
+    "sharingIsOn": "Les données sont partagées",
+    "sharingWillBeOn": "Les données seront partagées après redémarrage",
+    "sharingIsOff": "Les données ne sont pas partagées"
   },
   "orderUtil": {
     "failedAcceptHeading": "Une erreur s'est produite lors de l'acception de la commande.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Merci d'entrer un titre.",
     "titleTooLong": "Le titre est trop long.",
-    "badConditionType": "L'état ne fait pas partie de l'un des types disponibles.",
     "descriptionTooLong": "La description dépasse la longueur maximale autorisée.",
+    "badConditionType": "L'état ne fait pas partie de l'un des types disponibles.",
     "provideAmount": "Merci d'entrer un prix.",
     "provideNumericAmount": "Merci d'entrer le prix sous la forme d'un nombre. Si vous incluez un nombre décimal, un point doit être utilisé comme séparateur, par exemple \"0.00\".",
     "provideAmountGreaterThanZero": "Le prix ne peut pas être nul.",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "L'adresse fournie ne semble pas être une adresse %{cur} valide."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "La quantité doit être au moins égale à 1",
-    "quantityMustBeNumber": "La quantité doit être un nombre",
-    "noItems": "Vous devez acheter au moins un objet.",
     "missingAddress": "Vous devez choisir une adresse valide.",
-    "missingShippingOption": "Vous devez choisir un mode d'envoi valide.",
     "needsModerator": "Vous devez choisir un modérateur pour faire un paiement modéré.",
     "removeModerator": "Un achat non modéré ne peut pas avoir de modérateur."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Merci d'entrer une quantité.",
+    "mustHaveQuantity": "La quantité doit être au moins égale à 1",
+    "quantityMustBeInteger": "La quantité doit être un nombre non décimal valide.",
+    "quantityMustBeNumeric": "La quantité doit être au format numérique.",
+    "quantityMustBePositive": "La quantité doit être supérieure à zéro.",
+    "missingShippingOption": "Vous devez choisir un mode d'envoi valide.",
+    "insufficientInventory": "La quantité dépasse le stock restant.",
+    "providePaymentAddress": "Merci d'entrer une adresse de paiement.",
+    "paymentAddressLength": "La longueur de l'adresse de paiement doit être comprise entre %{min} et %{max} caractères."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Merci d'entrer un transporteur.",
     "provideUrl": "Merci d'entrer l'URL d'un fichier.",
-    "invalidUrl": "Merci d'entrer une URL valide."
+    "invalidUrl": "Merci d'entrer une URL valide.",
+    "provideTransactionId": "Merci d'enter un ID de transaction."
   },
   "errorPage": {
     "userNotFoundTitle": "L'utilisateur n'a pas été trouvé",
@@ -2342,10 +2427,52 @@
     "ZWL": "Zimbabwe Dollar"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (South Africa)",
