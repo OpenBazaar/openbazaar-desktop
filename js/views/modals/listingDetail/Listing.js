@@ -138,25 +138,7 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startEvent('Listing_InventoryFetch');
-      this.inventoryFetch = getInventory(this.vendor.peerID, {
-        slug: this.model.get('slug'),
-        coinDivisibility: this.model.get('metadata')
-          .get('coinDivisibility'),
-      })
-        .done(e => {
-          this._inventory = e.inventory;
-          endEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
-            errors: 'none',
-          });
-        })
-        .fail(e => {
-          endEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
-            errors: e.error || e.errCode || 'unknown error',
-          });
-        });
+      this.fetchInventory();
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
@@ -165,6 +147,31 @@ export default class extends BaseModal {
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
+  }
+
+  fetchInventory(useCache = true) {
+    startEvent('Listing_InventoryFetch');
+    if (this.inventoryFetch) this.inventoryFetch.abort();
+
+    this.inventoryFetch = getInventory(this.vendor.peerID, {
+      slug: this.model.get('slug'),
+      coinDivisibility: this.model.get('metadata')
+        .get('coinDivisibility'),
+      useCache,
+    })
+      .done(e => {
+        this._inventory = e.inventory;
+        endEvent('Listing_InventoryFetch', {
+          ownListing: !!this.ownListing,
+          errors: 'none',
+        });
+      })
+      .fail(e => {
+        endEvent('Listing_InventoryFetch', {
+          ownListing: !!this.ownListing,
+          errors: e.error || e.errCode || 'unknown error',
+        });
+      });
   }
 
   className() {
@@ -428,7 +435,10 @@ export default class extends BaseModal {
           buildRefreshAlertMessage(app.polyglot.t('listingDetail.listingDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.render()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
+        this.render();
+        this.fetchInventory(false);
+      });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();
