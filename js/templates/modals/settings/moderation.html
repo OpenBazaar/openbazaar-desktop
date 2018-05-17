@@ -76,7 +76,7 @@
               <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                 <select  id="moderationCurrency" name="moderatorInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">
                   <% ob.currencyList.forEach((currency) => { %>
-                  <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name %></option>
+                  <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.name + " (" + currency.code + ")" %></option>
                   <% }); %>
                 </select>
               </div>
