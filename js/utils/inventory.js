@@ -81,8 +81,6 @@ function setInventory(peerId, data = {}, options = {}) {
 }
 
 export function getInventory(peerId, options = {}) {
-  console.log("internal get inventory")
-  console.log(options)
   checkInventoryArgs(peerId, options);
   const opts = {
     useCache: true,
@@ -94,10 +92,8 @@ export function getInventory(peerId, options = {}) {
   const cacheObj = opts.useCache && getCache(peerId, options);
   let deferred = $.Deferred();
 
-  console.log(!opts.useCache)
   if (!opts.useCache || (!cacheObj.cacheBySlug && !cacheObj.cacheByStore)) {
     // no cached data available, need to fetch
-    console.log('need to fetch')
     const url =
       `ob/inventory/${peerId}${opts.slug ? `/${opts.slug}` : ''}` +
         `${opts.useCache ? '?usecache=true' : ''}`;

@@ -90,14 +90,9 @@ export default class extends BaseModal {
     if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
         const slug = this.model.get('slug');
-        console.log(md)
-        console.log(savedOpts)
-        console.log(savedOpts.hasChanged())
-        console.log(savedOpts.hasCryptoQuantityChanged())
 
         if (savedOpts.slug === slug && savedOpts.hasChanged()) {
           this.showDataChangedMessage();
-          this.hasCryptoQuantityChanged = savedOpts.hasCryptoQuantityChanged;
         }
       });
 
@@ -155,7 +150,6 @@ export default class extends BaseModal {
   }
 
   fetchInventory(useCache = true) {
-    console.log('fetch the inventory, useCache: ' + useCache)
     startEvent('Listing_InventoryFetch');
     if (this.inventoryFetch) this.inventoryFetch.abort();
 
@@ -443,8 +437,7 @@ export default class extends BaseModal {
 
       this.listenTo(this.dataChangePopIn, 'clickRefresh', () => {
         this.render();
-        console.log(this.hasCryptoQuantityChanged())
-        if (this.hasCryptoQuantityChanged()) this.fetchInventory(false);
+        this.fetchInventory(false);
       });
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
