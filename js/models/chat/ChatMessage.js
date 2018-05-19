@@ -211,7 +211,7 @@ export default class ChatMessage extends BaseModel {
     options.attrs = options.attrs || model.toJSON(options);
 
     if (method === 'create') {
-      const timestamp = moment(Date.now()).format();
+      const timestamp = new Date().toISOString();
       options.attrs.timestamp = timestamp;
       this.set('timestamp', timestamp);
     }
