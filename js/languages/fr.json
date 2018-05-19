@@ -1318,7 +1318,7 @@
     "localPickup": "Collecte locale",
     "noAddresses": "Vous n'avez pas d'adresses enregistrées.",
     "noShippableAddresses": "Cette annonce ne peut être expédiée à votre adresse.",
-    "informationTitle": "Information additionnelle",
+    "informationTitle": "Informations additionnelles",
     "emailAddress": "Adresse e-mail ou numéro de téléphone",
     "emailPlaceholder": "name@email.com",
     "emailNote": "Un autre moyen de vous contacter.",
@@ -1452,7 +1452,7 @@
     "purchases": {
       "heading": "Achats",
       "countTransactions": "%{smart_count} achat |||| %{smart_count} achats",
-      "countTransactionsFound": "%{countTransactions} trouvés",
+      "countTransactionsFound": "%{countTransactions} trouvées",
       "unableToFetch": "Impossible d'obtenir vos achats.",
       "noResults": "Aucun achat n'a été trouvé",
       "returnToFromOrder": "Revenir aux achats"
