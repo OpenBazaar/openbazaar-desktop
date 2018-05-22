@@ -102,7 +102,7 @@
     "install": "Instalar Agora"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Não é possível fornecer informações sobre o preço porque o preço está em uma moeda não reconhecida."
+    "unrecognizedCurrencyTip": "Não é possível fornecer informação de preço porque o preço está definido em uma moeda não reconhecida (%{cur})."
   },
   "addressBarPlaceholder": "Insira um @apelido, ID do OpenBazaar ou um termo de busca",
   "testnet": "Modo de Testes",
@@ -341,7 +341,6 @@
     "averageRating": "qualificação geral",
     "totalReviews": "qualificação |||| qualificações",
     "noTitle": "Título do anúncio não encontrado"
-
   },
   "userShort": {
     "userLoading": "Carregando…",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "Você bloqueou esse usuário"
   },
   "verifiedMod": {
-    "verified": {
-      "label": "Verificado",
-      "title": "Moderador Verificado",
-      "body": "Este moderador é verificado por %{providerName}. %{link}",
-      "bodyOrder": "Este moderador é verificado por %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "Verificado",
+      "titleLong": "Moderador Verificado",      
+      "link": "Descubra Mais",
+      "tipBody": "Este moderador é verificado por %{name}. %{link}"
     },
-    "unverified": {
-      "label": "Não verificado",
-      "title": "Moderador não verificado",
+    "modUnverified": {
+      "titleShort": "Não verificado",
+      "titleLong": "Moderador não verificado",
       "not": "NÃO",
-      "body": "Este moderador %{not} é verificado por %{providerName}. Continue com cautela ou escolha um moderador verificado.",
-      "bodyOrder": "Este moderador %{not} é verificado por %{providerName}."
+      "tipBody": "Este moderado %{not} é verificado por %{name}. Continue com cautela ou escolha um moderador verificado.",
+      "tipBodyOrderDetail": "Este moderado %{not} é verificado por %{name}."
     },
-
+    "listingVerified": {
+      "link": "Descubra Mais",
+      "tipBody": "Você pode comprar esse anúncio com um moderador verificado por %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "NÃO",
+      "tipBody": "Este anúncio %{not} possui um moderador verificado. Continue com cautela."
+    },    
     "link": "Descubra Mais",
     "type": "Tipo:",
     "typeCombined": "%{type}%{name}",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Termos do Serviço",
     "addAsModeratorButton": "Adicionar como Moderador",
-    "disclaimer": "**O serviço de moderação só será cobrado se uma disputa for aberta.",
+    "disclaimer": "*O serviço de moderação só será cobrado se uma disputa for aberta.",
     "languages": "Idiomas",
     "currenciesSupported": "Moedas Suportadas",
     "noCoinSupport": "Esse moderador não suporta %{coin}."
@@ -634,6 +640,12 @@
         "windowControlStyle": "Controles de Janela",
         "macOS": "Mac (canto superior esquerdo)",
         "windowsOS": "Windows (canto superior direito)"
+      },
+      "integrations": {
+        "sectionName": "Integrações",
+        "sharing": "Compartilhamento de Dados",
+        "sharingHelper": "Dados anônimos são compartilhados com a equipe de desenvolvedores.",
+        "changeBtn": "Modificar Configurações de Compartilhamento"
       },
       "statusSaving": "Salvando configurações avançadas…",
       "statusSaveComplete": "Configurações avançadas salvas.",
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Item Físico",
     "DIGITAL_GOOD": "Item Digital",
-    "SERVICE": "Serviço"
+    "SERVICE": "Serviço",
+    "CRYPTOCURRENCY": "Criptomoeda"
   },
   "conditionTypes": {
     "NEW": "Novo",
@@ -937,6 +950,11 @@
     "USED_GOOD": "Usado - Bom estado",
     "USED_POOR": "Usado - Mau estado",
     "REFURBISHED": "Recondicionado"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Tentar novamente",
+    "fetchError": "Houve um erro ao obter o inventário. %{retryLink}",
+    "fetchErrorWithMsg": "Houve um erro ao obter o inventário: %{msg}"
   },
   "listingDetail": {
     "edit": "Editar",
@@ -948,8 +966,9 @@
     "viewPhotos": "Ver %{count} Foto |||| Ver %{count} Fotos",
     "type": "Tipo: %{type}",
     "condition": "Condição: %{condition}",
+    "inventory": "Estoque: %{inventory}",
     "tags": "Tags",
-    "paymentsAccepted": "Pagamentos Aceitos",
+    "paymentsAccepted": "Formas de Pagamento Aceitas",
     "noTags": "Nenhuma tag",
     "buyNow": "COMPRAR",
     "description": "Descrição",
@@ -995,11 +1014,11 @@
       "fetchReviews": "Houve um problema ao carregar as qualificações. %{error}",
       "loadReview": "A qualificação %{id} falhou devido a %{error}",
       "noPurchaseTitle": "Esse Anúncio Não Poder Ser Comprado",
-      "zeroPriceMsg": "Você não pode fazer uma compra com um preço menor ou igual a zero."
+      "zeroPriceMsg": "Você não pode fazer uma compra com um preço menor ou igual a zero.",
+      "outOfStock": "Você não pode comprar esse item agora porque ele está fora de estoque."
     }
   },
   "listingCard": {
-    "btnDetails": "Detalhes",
     "freeShippingBanner": "Frete Grátis",
     "deleting": "Apagando…",
     "deleted": "Excluído",
@@ -1075,7 +1094,7 @@
     "placeholderReturnPolicy": "Qual é a sua política de devolução? Você aceita devoluções dentro de quantos dias no máximo? Quem é que deve pagar pelo frete da devolução (se necessário)? etc.",
     "placeholderTerms": "Quais são os termos e condições da listagem? Você que é o responsável por ser o fornecedor? Existe uma garantia? Quando é a transação final? etc.",
     "helperTitle": "Alguma descrição que explique claramente o que você está vendendo",
-    "helperType": "Escolha um dos 3 tipos",
+    "helperType": "Escolha %{smart_count} tipo |||| Escolha %{smart_count} tipos",
     "helperShipping": "Entregue onde você quiser!",
     "helperPhotos": "Inclua no máximo %{maxPhotos} fotos",
     "helperSKU": "Um identificador único para o seu anúncio",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "Ver Anúncio",
     "unsupportedCurrencyDialog": {
       "title": "Moeda não reconhecida",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Vender uma criptomoeda e receber pagamento em %{curCode}",
+      "helperCoinType": "Escolha a moeda que você quer vender",
+      "helperQuantity": "Os compradores podem comprar uma fração ou todo o estoque",
+      "helperMarketValue": "Os compradores pagam o valor de mercado. O preço do anúncio irá refletir automaticamente o valor de mercado.",
+      "marketValueLabel": "Valor de Mercado Atual",
+      "marketValuePerCoin": "(%{amount} por %{curCode})",
+      "coinType": "Tipo da Moeda",
+      "quantity": "Quantidade",
+      "tipMissingCryptoExchangeRate": "Não existem dados de cotação disponíveis para %{coinType}. Se os dados não estiverem disponíveis no momento da compra, o anúncio não poderá ser comprado.",
+      "tipMissingLocalExchangeRate": "Não foi possível exibir em sua moeda local porque os dados de cotação não estão disponíveis para ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Opção de Frete #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "Transações",
         "myPage": "Minha Página"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Título",
+      "colVendor": "Vendedor",
+      "colPrice": "Preço unitário",
+      "colInventory": "Inventário",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "Houve uma falha ao pesquisar em %{provider}. Escolha outro provedor de busca acima.",
       "searchFailReason": "O provedor de busca retornou a seguinte mensagem: %{error}",
@@ -1305,9 +1344,14 @@
     "closeNote": "O seu pagamento foi enviado para o vendedor.",
     "moderatorNote": "*A taxa do serviço de moderação só será cobrada se uma disputa for aberta.",
     "quantity": "Quantidade",
+    "inventory": "Máx.: %{inventory}",
+    "cryptoAddressHeading": "Seu endereço %{coinType}",
+    "cryptoAddressPlaceholder": "Cole o seu endereço %{coinType} aqui",
+    "cryptoAddressHelper": "O vendedor irá enviar %{coinType} para esse endereço. %{warning}",
+    "cryptoAddressHelperWarning": "O endereço não pode ser modificado após a realização do pedido.",    
     "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Pagamento Direto",
-    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust, you will not be able to dispute the order if something goes wrong.",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Escolher Esse Moderador",
     "confirmPayment": {
       "title": "Está tudo em ordem?",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "Você Não Pode Comprar os Seus Próprios Anúncios",
       "ownIDMsg": "Você pode pré-visualizar o processo de compra de seus anúncios, mas você não pode comprá-los.",
       "paymentFailed": "O Pagamento Não Pode ser Completado",
-      "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero."
+      "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero.",
+      "insufficientInventoryTitle": "Estoque Insuficiente",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
@@ -1383,7 +1429,7 @@
     "noValidModerators": "Nenhum Moderador Válido Disponível.",
     "noValidModeratorsBody": "Nenhum dos moderadores carregados é válido. O pedido será feito com pagamento direto.",
     "noVerifiedModerators": "Nenhum Moderador Válido Disponível",
-    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "noVerifiedModeratorsBody": "Tente exibir moderadores não-verificados ou selecione abaixo a opção pagamento direto.",
     "showUnverified": "Exibir Moderadores Não Verificados",
     "browseMoreModerators": "Carregar Mais"
 
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "Voltar às disputas"
     },
     "filters": {
-      "purchasing": "Comprando",
+      "pending": "Pendente",
+      "unfunded": "Não-pagos",
       "ready": "Pronto para Processar",
       "fulfilled": "Enviado",
       "refunded": "Reembolsado",
@@ -1566,6 +1613,9 @@
         "heading": "Enviado",
         "shippedByLabel": "Pedido Enviado via:",
         "trackingNumberLabel": "Código de Rastreamento #:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} enviado",
+        "transactionIdLabel": "ID da transação:",
         "yourNoteLabel": "Sua nota:",
         "noteFromVendorLabel": "Nota do vendedor:",
         "noteFromStoreLabel": "Nota de %{store}:",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "Quantidade",
         "totalHeading": "Total",
         "moderatorHeading": "Moderador",
+        "paymentAddressHeading": "Endereço %{coinType}",
         "copyAddress": "Copiar",
         "viewOnMap": "Ver no mapa",
         "shippingOption": "Opção de Frete",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "Link para o(s) arquivo(s)",
       "passwordLabel": "Senha",
       "passwordPlaceholder": "Senha para o arquivo (opcional)",
+      "transactionIdLabel": "ID da transação",
+      "transactionIdPlaceholder": "Colar o ID da transação",
       "noteLabel": "Nota",
       "notePlaceholder": "opcional",
       "noteHelperTextDigital": "O comprador irá receber uma notificação contendo as informações do arquivo",
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Disputar Pedido"
     }
+  },
+  "metrics": {
+    "title": "Métricas Anônimas Opcionais",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "Os seguintes dados serão compartilhados:",
+    "list": {
+      "pages": "Quais páginas você carrega, como a página de busca ou a página de loja",
+      "clicks": "Clique em elementos. Será registrado apenas o que foi clicado.",
+      "errors": "Dados de desemprenho como erros e o tempo necessário para carregar.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Informações públicas, incluindo se você é um vendedor ou moderador, e quantos anúncios e avaliações você tem.",
+      "node": "Informações sobre o seu nodo, incluindo moeda de exibição, criptomoeda, idioma e se você está usando o Tor. Isso nos ajuda a priorizar o desenvolvimento.",
+      "app": "Detalhes sobre o seu app, incluindo a sua versão e se ele foi instalado a partir de um pacote de download ou a partir do código-fonte.",
+      "orders": "Informações sobre quantos de seus pedidos modificaram de um estado para outro. Isso nos ajuda a identificar problemas no processamento dos pedidos.",
+      "path": "A pasta de instalação do OpenBazaar. Isso irá compartilhar o nome de quaisquer pastas no caminho para a pasta de instalação, o que pode incluir a sua raiz e/ou o sua pasta de usuário."
+    },
+    "acceptBtn": "Aceitar",
+    "declineBtn": "Recusar",
+    "activateBtn": "Ativar",
+    "deactivateBtn": "Desativar",
+    "sharingIsOn": "Os dados estão sendo compartilhados",
+    "sharingWillBeOn": "Os dados serão compartilhados após a reinicialização",
+    "sharingIsOff": "Os dados não estão sendo compartilhados"
   },
   "orderUtil": {
     "failedAcceptHeading": "Houve um erro ao aceitar o pedido.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Por favor, forneça um título.",
     "titleTooLong": "O título é mais longo do que o permitido.",
-    "badConditionType": "A condição não é um dos tipos disponíveis.",
     "descriptionTooLong": "A descrição é mais longa do que o permitido.",
+    "badConditionType": "A condição não é um dos tipos disponíveis.",
     "provideAmount": "Por favor, forneça um preço.",
     "provideNumericAmount": "Por favor, forneça o preço em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "provideAmountGreaterThanZero": "O preço deve ser maior do que 0.",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "O endereço fornecido não parece ser um endereço %{cur} válido."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "A quantidade deve ser maior ou igual a 1",
-    "quantityMustBeNumber": "A quantidade deve ser um número válido",
-    "noItems": "Você precisa fazer pelo menos uma compra.",
     "missingAddress": "Por favor, escolha um endereço de entrega válido.",
-    "missingShippingOption": "Por favor, escolha uma opção de frete válida.",
     "needsModerator": "Você precisa escolher um moderador para fazer um Pagamento Moderado.",
     "removeModerator": "Uma compra não moderada não pode ter um moderador."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Por favor, forneça uma quantidade.",
+    "mustHaveQuantity": "A quantidade deve ser maior ou igual a 1",
+    "quantityMustBeInteger": "A quantia precisa ser um número não-decimal válido",
+    "quantityMustBeNumeric": "A quantia precisa ser um número.",
+    "quantityMustBePositive": "A quantia deve ser maior do que zero.",
+    "missingShippingOption": "Por favor, escolha uma opção de frete válida.",
+    "insufficientInventory": "A quantia é maior do que o disponível em estoque.",
+    "providePaymentAddress": "Por favor, forneça um endereço de pagamento.",
+    "paymentAddressLength": "O endereço de pagamento deve ter entre %{min} e %{max} caracteres."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Por favor, forneça uma empresa de frete.",
     "provideUrl": "Por favor, forneça um URL do arquivo.",
-    "invalidUrl": "Por favor, forneça um URL válido."
+    "invalidUrl": "Por favor, forneça um URL válido.",
+    "provideTransactionId": "Por favor, forneça um ID de transação."
   },
   "errorPage": {
     "userNotFoundTitle": "Esse Usuário Não Pode ser Encontrado",
@@ -2342,10 +2427,52 @@
     "ZWL": "Dólar do Zimbábue"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Africânea",
     "af-ZA": "Africânea (África do Sul)",

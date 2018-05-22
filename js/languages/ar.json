@@ -102,7 +102,7 @@
     "install": "التثبيت الآن"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "يتعذر تقديم معلومات الأسعار نظرًا لأن السعر بعملة غير معروفة."
+    "unrecognizedCurrencyTip": "يتعذر تقديم معلومات الأسعار لأنها مسعرة بعملة غير معروفة (%{cur})."
   },
   "addressBarPlaceholder": "اكتب @handle، اوبن بازار ID أو مصطلح بحث",
   "testnet": "وضع الاختبار",
@@ -341,7 +341,6 @@
     "averageRating": "التقييم العام",
     "totalReviews": "مراجعة |||| مراجعات",
     "noTitle": "عنوان القائمة غير موجود"
-
   },
   "userShort": {
     "userLoading": "جار التحميل…",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "قُمت بحظر هذا المستخدم"
   },
   "verifiedMod": {
-    "verified": {
-      "label": "مؤكد",
-      "title": "مشرف مؤكد",
-      "body": "هذا المشرف مؤكد بواسطة %{providerName}. %{link}",
-      "bodyOrder": "هذا المشرف مؤكد بواسطة %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "مؤكد",
+      "titleLong": "مشرف مؤكد",      
+      "link": "تعرف على المزيد",
+      "tipBody": "تم التحقق من هذا المشرف بواسطة %{name}. %{link}"
     },
-    "unverified": {
-      "label": "غير مؤكد",
-      "title": "مشرف غير مؤكد",
+    "modUnverified": {
+      "titleShort": "غير مؤكد",
+      "titleLong": "مشرف غير مؤكد",
       "not": "غير",
-      "body": "هذا المشرف %{not} مؤكد بواسطة %{providerName}. تابع بحذر أو اختر مشرفًا مؤكد.",
-      "bodyOrder": "هذا المشرف %{not} مؤكد بواسطة %{providerName}."
+      "tipBody": "هذا المشرف %{not} مؤكد بواسطة %{name}. تابع بحذر أو اختر مشرفاً تم التحقق منه.",
+      "tipBodyOrderDetail": "هذا المشرف %{not} مؤكد بواسطة %{name}."
     },
-
+    "listingVerified": {
+      "link": "تعرف على المزيد",
+      "tipBody": "يمكنك شراء هذه القائمة مع مشرف مؤكد بواسطة %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "غير",
+      "tipBody": "هذه البضاعة %{not} تحوي على مشرف مؤكد. تابع بحذر"
+    },    
     "link": "تعرف على المزيد",
     "type": "النوع:",
     "typeCombined": "%{type}%{name}",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "شروط الخدمة",
     "addAsModeratorButton": "إضافة كمشرف",
-    "disclaimer": "** لا ينطبق رسم خدمة المشرف إلا عندما ينشأ نزاع.",
+    "disclaimer": "* لا تنطبق رسوم خدمة المشرف إلا عند نشوء نزاع.",
     "languages": "اللغات",
     "currenciesSupported": "العملات المدعومة",
     "noCoinSupport": "هذا المشرف لايقبل %{coin}."
@@ -634,6 +640,12 @@
         "windowControlStyle": "ضوابط النافذة",
         "macOS": "ماك (أعلى اليسار)",
         "windowsOS": "ويندوز (أعلى اليمين)"
+      },
+      "integrations": {
+        "sectionName": "الاندماجات",
+        "sharing": "مشاركة البيانات",
+        "sharingHelper": "بيانات غير شخصية ستتم مشاركتها مع فريق التطوير.",
+        "changeBtn": "تغيير إعدادات المشاركة"
       },
       "statusSaving": "جار حفظ الإعدادات المتقدمة ...",
       "statusSaveComplete": "تم حفظ الإعدادات المتقدمة.",
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "بضاعة مادية",
     "DIGITAL_GOOD": "بضاعة رقمية",
-    "SERVICE": "خدمة"
+    "SERVICE": "خدمة",
+    "CRYPTOCURRENCY": "عملة رقمية"
   },
   "conditionTypes": {
     "NEW": "جدید",
@@ -937,6 +950,11 @@
     "USED_GOOD": "مستعمل - جيد",
     "USED_POOR": "مستعمل - جودة منخفضة",
     "REFURBISHED": "معاد تجديده"
+  },
+  "inventoryDisplay": {
+    "retryLink": "أعد المحاوله",
+    "fetchError": "حدث خطأ أثناء الوصول إلى المخزون. %{retryLink}",
+    "fetchErrorWithMsg": "حدث خطأ أثناء الوصول إلى المخزون%{msg}"
   },
   "listingDetail": {
     "edit": "تعديل",
@@ -948,6 +966,7 @@
     "viewPhotos": "عرض %{count} صورة |||| عرض %{count} صور",
     "type": "النوع: %{type}",
     "condition": "الحالة: %{condition}",
+    "inventory": "المخزون: %{inventory}",
     "tags": "وسوم Tags",
     "paymentsAccepted": "الحوالات المقبولة",
     "noTags": "لم يتم ادخال وسوم Tag",
@@ -995,11 +1014,11 @@
       "fetchReviews": "حدثت مشكلة في تحميل المراجعات. %{error}",
       "loadReview": "المراجعة %{id} فشلت بسبب %{error}",
       "noPurchaseTitle": "لا يمكن شراء هذه القائمة.",
-      "zeroPriceMsg": "لا يمكنك إجراء عملية شراء بسعر صفر أو أقل."
+      "zeroPriceMsg": "لا يمكنك إجراء عملية شراء بسعر صفر أو أقل.",
+      "outOfStock": "لا يمكنك إجراء عملية شراء لأن البضاعة غير متوفر حاليًا."
     }
   },
   "listingCard": {
-    "btnDetails": "تفاصيل",
     "freeShippingBanner": "الشحن مجانا",
     "deleting": "حذف ...",
     "deleted": "تم حذفه",
@@ -1075,7 +1094,7 @@
     "placeholderReturnPolicy": "ما هي سياسة الإرجاع الخاصة بك؟ كم عدد الأيام التي يتم بها قبول الإرجاع؟ من الذي يدفع لإعادة الشحن (إذا لزم الأمر)؟ إلخ",
     "placeholderTerms": "ما هي شروط وأحكام الإدراج؟ ما أنت مسؤول عنه كبائع؟ هل يوجد ضمان؟ متى تكون المعاملة نهائية؟ إلخ",
     "helperTitle": "شيء وصفي يوضح بدقة ما تبيعه",
-    "helperType": "اختر من ثلاثة أنواع",
+    "helperType": "اختر النوع من %{smart_count} |||| اختر النوع من %{smart_count}",
     "helperShipping": "إشحن إلى أي مكان!",
     "helperPhotos": "تضمين مايصل إلى %{maxPhotos} من الصور",
     "helperSKU": "معرف خاص بقائمتك",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "عرض قائمة",
     "unsupportedCurrencyDialog": {
       "title": "عملة غير معروفة",
-      "body": "يتم تعيين هذه القائمة بعملة (%{cur}) التي لا يدعمها هذا العميل. يرجى تحديد عملة جديدة أدناه والنقر فوق موافق. بعد ذلك، تأكد من التحقق مرة أخرى من الأسعار للتأكد من ملاءمتها للعملة الجديدة.",
+      "body": "هذه القائمة مسعرة بعملة (٪ {cur}) لا يدعمها هذا العميل. يرجى تحديد عملة جديدة أدناه والنقر فوق موافق. بعد ذلك ، تأكد من التحقق مرة أخرى من الأسعار للتأكد من ملاءمتها للعملة الجديدة.",
       "btnOk": "موافق"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "قم ببيع العملة الرقمية واستلم الدفع بـ %{curCode}",
+      "helperCoinType": "اختر العملة التي ترغب في بيعها",
+      "helperQuantity": "يمكن للمشتري (المشترون) شراء جزء أو مبلغ كامل",
+      "helperMarketValue": "المشتري (ون) دفع القيمة السوقية. سعر البضاعة سوف يعكس تلقائياً القيمة السوقية.",
+      "marketValueLabel": "القيمة السوقية الحالية",
+      "marketValuePerCoin": "(%{amount} لكل %{curCode})",
+      "coinType": "نوع العملة",
+      "quantity": "كمية",
+      "tipMissingCryptoExchangeRate": "لا تتوفر بيانات أسعار الصرف لـ %{coinType}. إذا لم تكن البيانات متاحة في وقت الشراء ، فلن تكون البضاعة قابلة للشراء.",
+      "tipMissingLocalExchangeRate": "يتعذر العرض بالعملة المحلية لأن بيانات أسعار الصرف غير متاحة مقابل ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "خيارات الشحن #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "العمليات التجارية",
         "myPage": "صفحتي"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "عنوان",
+      "colVendor": "بائع",
+      "colPrice": "السعر (1 وحدة)",
+      "colInventory": "المخزون",
+      "tipPrice": "يمثل السعر وحدة واحدة كاملة للعملة. يمكن شراء أجزاء من وحدة. سيتم احتساب السعر أثناء الدفع.",
+      "tipInventory": "يتم تقدير المخزون استناداً إلى آخر مرة وصل فيها مزود البحث إلى القوائم وعندما كان البائع متصلاً بالإنترنت آخر مرة."
+    },
     "errors": {
       "searchFailTitle": "استعلام البحث ل %{provider} فشل. اختر موفر آخر أعلاه.",
       "searchFailReason": "رد موفر البحث بالرسالة التالية: %{error}",
@@ -1305,9 +1344,14 @@
     "closeNote": "تم إرسال دفعتك إلى المورد.",
     "moderatorNote": "* لا تنطبق رسوم خدمة المشرف إلا إذا تم فتح نزاع.",
     "quantity": "كمية",
+    "inventory": "الحد الأقصى: %{inventory}",
+    "cryptoAddressHeading": "عنوانك لعملة %{coinType}",
+    "cryptoAddressPlaceholder": "ألصق عنوان %{coinType} الخاص بك هنا",
+    "cryptoAddressHelper": "المزود سوف يرسل %{coinType} إلى هذا العنوان. %{warning}",
+    "cryptoAddressHelperWarning": "لا يمكن تغيير العنوان بمجرد تقديم الطلب.",    
     "moderatorsDisclaimer": "سيتم عقد دفعتك بشكل آمن في الضمان. إذا ظهرت أية مشكلات، فستتمكن من فتح نزاع مع مشرفك المختار. * تسري رسوم خدمة المشرف فقط في حالة فتح أي نزاع.",
     "directPayment": "دفع مباشر",
-    "directPaymentDetails": "أرسل الأموال مباشرة إلى البائع دون مشرف. يجب عليك فقط استخدام هذا الخيار مع البائعين الذين تثق بهم، ولن تتمكن من الاعتراض على الطلب إذا حدث خطأ ما.",
+    "directPaymentDetails": "أرسل الأموال مباشرة إلى البائع دون مشرف. يجب عليك فقط استخدام هذا الخيار مع البائعين الذين تثق بهم. لن تتمكن من الاعتراض على الأمر إذا حدث خطأ ما.",
     "chooseModerator": "اختر هذا المشرف",
     "confirmPayment": {
       "title": "هل كل شيء على مايرام؟",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "لا يمكنك شراء القوائم الخاصة بك",
       "ownIDMsg": "يمكنك معاينة عملية الشراء لقوائمك الخاصة، ولكن لا يمكنك شرائها.",
       "paymentFailed": "تعذر إتمام الدفع",
-      "zeroPrice": "لا يمكنك شراء قائمة بسعر إجمالي قدره صفر."
+      "zeroPrice": "لا يمكنك شراء قائمة بسعر إجمالي قدره صفر.",
+      "insufficientInventoryTitle": "جرد غير كاف",
+      "insufficientInventoryBody": "ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. |||| ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. "
     }
   },
   "moderators": {
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "العودة إلى الحالات"
     },
     "filters": {
-      "purchasing": "شراء",
+      "pending": "قيد الانتظار",
+      "unfunded": "غير ممولة",
       "ready": "جاهز للمعالجة",
       "fulfilled": "استيفاء",
       "refunded": "مسترجع",
@@ -1566,6 +1613,9 @@
         "heading": "استيفاء",
         "shippedByLabel": "يتم شحن الطلب عبر:",
         "trackingNumberLabel": "رقم التتبع #:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} تم الإرسال",
+        "transactionIdLabel": "معرف المعاملة:",
         "yourNoteLabel": "ملاحظاتك:",
         "noteFromVendorLabel": "ملاحظة من البائع:",
         "noteFromStoreLabel": "ملاحظة من %{store}:",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "كمية",
         "totalHeading": "مجموع",
         "moderatorHeading": "مشرف",
+        "paymentAddressHeading": "عنوان %{coinType}",
         "copyAddress": "نسخ",
         "viewOnMap": "اظهر على الخريطة",
         "shippingOption": "خيار الشحن",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "رابط لملف أو ملفات",
       "passwordLabel": "كلمة المرور",
       "passwordPlaceholder": "كلمة مرور للملف (اختياري)",
+      "transactionIdLabel": "معرف المعاملة",
+      "transactionIdPlaceholder": "ألصق معرف المعاملة ( التحويلة )",
       "noteLabel": "ملاحظة",
       "notePlaceholder": "اختياري",
       "noteHelperTextDigital": "سيتلقى المشتري إشعارا يحتوي على معلومات الملف",
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "النزاع حول الطلب"
     }
+  },
+  "metrics": {
+    "title": "مقاييس المجهوهلية اختيارية",
+    "msg1": "الرجاء المساعدة في تحسين OpenBazaar بالموافقة على مشاركة بيانات مجهولة المصدر عن تجربتك مع فريق التطوير.",
+    "msg2": "لا توجد معلومات يمكن استخدامها لتحديد هويتك أو طلباتك أو أي من معاملاتك معنا. يتم تخزين بياناتك الخاصة دائمًا على جهاز الكمبيوتر الخاص بك ، ولا يمكن الوصول إليها بواسطة أي شخص آخر.",
+    "listTitle": "ستتم مشاركة البيانات التالية:",
+    "list": {
+      "pages": "الصفحات التي يتم تحميلها ، مثل صفحة البحث أو صفحة المتجر.",
+      "clicks": "اضغط على العناصر. هذا سيقوم بتسجيل ماتم الضغط عليه فقط.",
+      "errors": "بيانات الأداء مثل الأخطاء ومدة تحميل المحتوى.",
+      "system": "بيانات النظام الأساسية مثل نظام التشغيل ، وحدة المعالجة المركزية ، ذاكرة الوصول العشوائي ، ودقة الشاشة. يساعدنا ذلك في تتبع ما إذا كانت المشكلات مرتبطة بأنواع معينة من أجهزة الكمبيوتر.",
+      "user": "المعلومات العامة بما في ذلك ما إذا كنت بائعًا أو مشرفًا ، وعدد إعلاناتك والتعليقات التي لديك.",
+      "node": "معلومات حول العقدة الطرفية الخاصة بك بما في ذلك عملة العرض ، والعملة الرقمية ، واللغة ، وإذا كنت تستخدم شبكة تور. هذا يساعدنا في تحديد أولويات التطوير",
+      "app": "تفاصيل حول تطبيقك ، بما في ذلك إصداره وما إذا كان مثبتًا من حزمة قابلة للتحميل أو من المصدر.",
+      "orders": "معلومات حول عدد الطلبات التي تم نقلها من مكان إلى آخر. يساعدنا ذلك في تحديد المشكلات في عملية الطلب.",
+      "path": "مكان تثبيت OpenBazaar. سيؤدي هذا إلى مشاركة اسم أي مجلدات في المسار إلى حافظة التثبيت ، والتي قد تتضمن المجلد الأساسي و / أو مجلد المستخدم."
+    },
+    "acceptBtn": "قبول",
+    "declineBtn": "رفض",
+    "activateBtn": "تفعيل",
+    "deactivateBtn": "تعطيل",
+    "sharingIsOn": "تمت مشاركة البيانات",
+    "sharingWillBeOn": "ستتم مشاركة البيانات بعد إعادة التشغيل",
+    "sharingIsOff": "لم يتم مشاركة البيانات"
   },
   "orderUtil": {
     "failedAcceptHeading": "حدث خطأ أثناء قبول الطلب.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "يرجى وضع عنوان.",
     "titleTooLong": "يتجاوز العنوان الحد الأقصى المسموح به.",
-    "badConditionType": "الحالة ليست من الأنواع المتاحة.",
     "descriptionTooLong": "تجاوز الوصف الحد الأقصى المسموح به للطول.",
+    "badConditionType": "الحالة ليست من الأنواع المتاحة.",
     "provideAmount": "يرجى تقديم سعر.",
     "provideNumericAmount": "يرجى تقديم السعر كرقم. إذا تضمن العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
     "provideAmountGreaterThanZero": "يجب أن يكون السعر أكبر من الرقم صفر 0 .",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "لا يبدو العنوان المقدم عنوانًا %{cur} صالحًا."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "يجب أن تكون الكمية 1 أو أكثر",
-    "quantityMustBeNumber": "يجب أن تكون الكمية رقما صحيحا",
-    "noItems": "يجب إجراء عملية شراء واحدة على الأقل.",
     "missingAddress": "الرجاء اختيار عنوان شحن صالح.",
-    "missingShippingOption": "الرجاء اختيار خيار شحن صالح.",
     "needsModerator": "يجب تحديد مشرف لإجراء دفعة تحت الإشراف.",
     "removeModerator": "لا يمكن أن يُعين للعملية المباشرة مشرفًا عليها."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "يجرى وضع كمية.",
+    "mustHaveQuantity": "يجب أن تكون الكمية 1 أو أكثر",
+    "quantityMustBeInteger": "يجب أن تكون الكمية رقمًا بدون فوصل أو بصيغة عشرية.",
+    "quantityMustBeNumeric": "يجب أن تكون الكمية رقماً.",
+    "quantityMustBePositive": "يجب أن تكون الكمية أكبر من الصفر.",
+    "missingShippingOption": "الرجاء اختيار خيار شحن صالح.",
+    "insufficientInventory": "تجاوزت الكمية المخزون المتبقي.",
+    "providePaymentAddress": "يرجى وضع عنوان الدفع.",
+    "paymentAddressLength": "يجب أن يكون عنوان الدفع بين %{min} و %{max} محرف."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "يرجى تقديم شركة شحن.",
     "provideUrl": "الرجاء وضع رابط الملف url.",
-    "invalidUrl": "يرجى وضع عنوان url صالح."
+    "invalidUrl": "يرجى وضع عنوان url صالح.",
+    "provideTransactionId": "يرجى وضع معرف المعاملة ( التحويلة )."
   },
   "errorPage": {
     "userNotFoundTitle": "تعذر العثور على هذا المستخدم",
@@ -2342,10 +2427,52 @@
     "ZWL": "الدولار الزيمبابوي"
   },
   "cryptoCurrencies": {
-    "BTC": "بيتكوين",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "بيتكوين",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code}",
   "languages": {
     "af": "الأفريكانية",
     "af-ZA": "الأفريكانية (جنوب أفريقيا)",

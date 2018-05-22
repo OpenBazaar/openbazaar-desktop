@@ -102,7 +102,7 @@
     "install": "Installer nå"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Kan ikke gi prisinformasjon da prisen er angitt i en ukjent valuta."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Skriv @navn, OpenBazaar ID eller søkeord",
   "testnet": "Testmodus",
@@ -341,7 +341,6 @@
     "averageRating": "alt i alt vurdering",
     "totalReviews": "anmeldelse |||| anmeldelser",
     "noTitle": "Oppføringens tittel ble ikke funnet"
-
   },
   "userShort": {
     "userLoading": "Laster...",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "Du blokkerte denne brukeren"
   },
   "verifiedMod": {
-    "verified": {
-      "label": "Verifisert",
-      "title": "Verifisert Moderator",
-      "body": "Denne moderatoren er verifisert av %{providerName}. %{link}",
-      "bodyOrder": "Denne moderatoren er verifisert av %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "Verifisert",
+      "titleLong": "Verifisert Moderator",      
+      "link": "Lær Mer",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
     },
-    "unverified": {
-      "label": "Uverifisert",
-      "title": "Uverifisert Moderator",
+    "modUnverified": {
+      "titleShort": "Uverifisert",
+      "titleLong": "Uverifisert Moderator",
       "not": "IKKE",
-      "body": "Denne moderatoren er %{not} verifisert av %{providerName}. Fortsett med forsiktighet eller velg en verifisert moderator.",
-      "bodyOrder": "Denne moderatoren er %{not} verifisert av %{providerName}."
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
     },
-
+    "listingVerified": {
+      "link": "Lær Mer",
+      "tipBody": "Du kan kjøpe denne oppføringen med en moderator verifisert av%{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "IKKE",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
     "link": "Lær Mer",
     "type": "Type:",
     "typeCombined": "%{type}%{name}",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Vilkår for Bruk",
     "addAsModeratorButton": "Legg til som Moderator",
-    "disclaimer": "** Dette moderator tjenestegebyret gjelder kun om en tvist oppstår.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Språk",
     "currenciesSupported": "Støttede Valutaer",
     "noCoinSupport": "Denne moderatoren støtter ikke %{coin}."
@@ -634,6 +640,12 @@
         "windowControlStyle": "Vinduskontrollelementer",
         "macOS": "Mac (opp til venstre)",
         "windowsOS": "Windows (opp til høyre)"
+      },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
       },
       "statusSaving": "Lagrer avanserte innstillinger...",
       "statusSaveComplete": "Avanserte innstillinger lagret.",
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Fysisk Vare",
     "DIGITAL_GOOD": "Digital Vare",
-    "SERVICE": "Tjeneste"
+    "SERVICE": "Tjeneste",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Ny",
@@ -937,6 +950,11 @@
     "USED_GOOD": "Brukt - God",
     "USED_POOR": "Brukt - Dårlig",
     "REFURBISHED": "Renovert"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Forsøk på nytt",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Rediger",
@@ -948,6 +966,7 @@
     "viewPhotos": "Vis %{count} Bilde |||| Vis %{count} Bilder",
     "type": "Type: %{type}",
     "condition": "Tilstand: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Merkelapper",
     "paymentsAccepted": "Aksepterte Betalinger",
     "noTags": "Ingen merkelapper oppgitt",
@@ -995,11 +1014,11 @@
       "fetchReviews": "Det oppstod en feil ved lasting av anmeldelser. %{error}",
       "loadReview": "Anmeldelse %{id} feilet på grunn av %{error}",
       "noPurchaseTitle": "Denne oppføringen kan ikke kjøpes",
-      "zeroPriceMsg": "Du kan ikke utføre et kjøp med en pris som er null eller mindre."
+      "zeroPriceMsg": "Du kan ikke utføre et kjøp med en pris som er null eller mindre.",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Detaljer",
     "freeShippingBanner": "Gratis Frakt",
     "deleting": "Sletter...",
     "deleted": "Slettet",
@@ -1075,7 +1094,7 @@
     "placeholderReturnPolicy": "Hva er dine regler for retur? I hvor mange dager vil en retur bli akseptert? Hvem betaler frakt for returen (hvis nødvendig)? osv",
     "placeholderTerms": "Hvilke vilkår og betingelser gjelder for oppføringen? Hva er ditt ansvar som selger? Gis det noen garanti? Når er transaksjonen sluttført? osv",
     "helperTitle": "Noe beskrivende som forteller hva du selger",
-    "helperType": "Velg fra 3 typer",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
     "helperShipping": "Send hvor du vil!",
     "helperPhotos": "Inkludér opptil %{maxPhotos} bilder",
     "helperSKU": "En unik ID for oppføringen din",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "Vis Oppføring",
     "unsupportedCurrencyDialog": {
       "title": "Ukjent valuta",
-      "body": "Oppføringen er i valuta (%{cur}) som ikke støttes av denne klienten. Vennligst velg en ny valuta under og klikk OK. Etterpå, pass på å dobbeltsjekke prisene for å se at de er riktige for den nye valutaen.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Antall",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Fraktvalg #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "Transaksjoner",
         "myPage": "Min Side"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Tittel",
+      "colVendor": "Selger",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Inventar",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "Søket til %{provider} har feilet. Velg en annen leverandør over.",
       "searchFailReason": "Søkeleverandøren returnerte følgende melding: %{error}",
@@ -1305,9 +1344,14 @@
     "closeNote": "Din betaling har blitt sendt til selger.",
     "moderatorNote": "* Moderatoravgiften blir kun gjeldene om en tvist oppstår.",
     "quantity": "Antall",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
     "moderatorsDisclaimer": "Din betaling vil holdes sikker i escrow. Hvis et problem oppstår vil du kunne starte en tvistesak med din valgte moderator. *Moderatorgebyr gjelder kun om en tvist oppstår.",
     "directPayment": "Direktebetaling",
-    "directPaymentDetails": "Send penger direkte til selger uten moderator. Du bør bare bruke dette valget med selgere du stoler på, du vil ikke kunne opprette en tvistesak om noe går galt.",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Velg denne moderatoren",
     "confirmPayment": {
       "title": "Alt ser bra ut?",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "Du kan ikke kjøpe dine egne oppføringer",
       "ownIDMsg": "Du kan se en forhåndsvisning av kjøpeprosessen for dine egne oppføringer, men du kan ikke kjøpe dem.",
       "paymentFailed": "Betalingen kunne ikke fullføres",
-      "zeroPrice": "Du kan ikke kjøpe noe med totalpris null."
+      "zeroPrice": "Du kan ikke kjøpe noe med totalpris null.",
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "Tilbake til saker"
     },
     "filters": {
-      "purchasing": "Kjøp",
+      "pending": "Venter",
+      "unfunded": "Unfunded",
       "ready": "Klar for å prosessere",
       "fulfilled": "Oppfylt",
       "refunded": "Refundert",
@@ -1566,6 +1613,9 @@
         "heading": "Fullført",
         "shippedByLabel": "Bestilling sendt via:",
         "trackingNumberLabel": "Sporingsnr:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Din melding:",
         "noteFromVendorLabel": "Melding fra selger:",
         "noteFromStoreLabel": "Melding fra %{store}:",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "Antall",
         "totalHeading": "Totalpris",
         "moderatorHeading": "Moderator",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Kopiér",
         "viewOnMap": "Vis på kart",
         "shippingOption": "Fraktalternativer",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "Lenke til fil(er)",
       "passwordLabel": "Passord",
       "passwordPlaceholder": "Passord til fil (valgfritt)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Merknad",
       "notePlaceholder": "valgfri",
       "noteHelperTextDigital": "Kjøperen vil motta en melding med filinformasjonen",
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Lag tvist om bestilling"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Godta",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "En feil oppstod ved aksept av bestillingen.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Vennligst angi en tittel.",
     "titleTooLong": "Tittelen overskrider maks tillatte lengde.",
-    "badConditionType": "Tilstanden er ikke en av de tilgjengelige typene.",
     "descriptionTooLong": "Beskrivelsen overskrider maks tillatte lengde.",
+    "badConditionType": "Tilstanden er ikke en av de tilgjengelige typene.",
     "provideAmount": "Vennligst angi en pris.",
     "provideNumericAmount": "Vennligst angi prisen som et tall. For å inkludere desimaler må et punktum brukes som separator, for eksempel \"0.00\".",
     "provideAmountGreaterThanZero": "Prisen må være over 0.",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "Den angitte adressen er ikke en gyldig %{cur} adresse."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Antallet må være 1 eller mer",
-    "quantityMustBeNumber": "Antallet må være et gyldig tall",
-    "noItems": "Du må gjøre minst ett kjøp",
     "missingAddress": "Vennligst velg en gyldig fraktadresse",
-    "missingShippingOption": "Vennligst velg et gyldig fraktalternativ",
     "needsModerator": "Du må velge en moderator for å utføre en moderert betaling.",
     "removeModerator": "Et umoderert kjøp kan ikke ha en moderator."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Vennligst angi et antall.",
+    "mustHaveQuantity": "Antallet må være 1 eller mer",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Vennligst velg et gyldig fraktalternativ",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Vennligst angi et fraktselskap",
     "provideUrl": "Vennligst oppgi en fil URL.",
-    "invalidUrl": "Vennligst oppgi en gyldig URL."
+    "invalidUrl": "Vennligst oppgi en gyldig URL.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "Denne brukeren ble ikke funnet",
@@ -2342,10 +2427,52 @@
     "ZWL": "Zimbabwisk Dollar"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (Sør-Afrika)",
