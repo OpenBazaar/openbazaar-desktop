@@ -66,7 +66,7 @@ export function addMetrics() {
     window.Countly.url = 'https://countly.openbazaar.org';
     window.Countly.interval = 30000;
     window.Countly.q.push(['track_sessions']);
-    window.Countly.q.push(['track_pageview', location.pathname + location.hash]);
+    window.Countly.q.push(['track_pageview', location.hash]);
     window.Countly.q.push(['track_clicks']);
     window.Countly.q.push(['track_links']);
     window.Countly.q.push(['track_scrolls']);
