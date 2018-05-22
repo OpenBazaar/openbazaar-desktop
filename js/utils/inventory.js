@@ -126,6 +126,11 @@ listingEvents.on('saved', md => {
     };
 
     setInventory(app.profile.id, inventoryData, { slug: flatMd.slug });
+
+    // todo: would be good to also abort any existing xhr, although it's unlikely there
+    // would be a pending one for your own listings since I think that comes from the db
+    // and should be quick. Anyhow, it would likely require exposing the xhr in the
+    // inventoryCache.
   }
 });
 
