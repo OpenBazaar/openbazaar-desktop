@@ -102,7 +102,7 @@
     "install": "Встановити зараз"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Неможливо надати інформацію про ціну, оскільки ціна в нерозпізнаній валюті."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Вкажіть @нікнейм, OpenBazaar ID або пошуковий термін",
   "testnet": "Тестовий режим",
@@ -341,7 +341,6 @@
     "averageRating": "Загальний рейтинг",
     "totalReviews": "Огляд |||| Відгуки",
     "noTitle": "Схожого не знайдено"
-
   },
   "userShort": {
     "userLoading": "Завантаження...",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "Ви заблокували цього користувача"
   },
   "verifiedMod": {
-    "verified": {
-      "label": "Авторизований",
-      "title": "Авторизований модератором",
-      "body": "Цей модератор авторизований %{providerName}. %{link}",
-      "bodyOrder": "Цей модератор авторизований %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "Авторизований",
+      "titleLong": "Авторизований модератором",      
+      "link": "Дізнатися більше",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
     },
-    "unverified": {
-      "label": "Не авторизований",
-      "title": "Не авторизований модератор",
+    "modUnverified": {
+      "titleShort": "Не авторизований",
+      "titleLong": "Не авторизований модератор",
       "not": "НЕ",
-      "body": "Цей модератор %{not} авторизований %{providerName}. Продовжуйте уважніше, або виберіть авторизованого модератора.",
-      "bodyOrder": "Цей модератор %{not} авторизований %{providerName}."
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
     },
-
+    "listingVerified": {
+      "link": "Дізнатися більше",
+      "tipBody": "Товари з цього списку авторизовані модератором %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "НЕ",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
     "link": "Дізнатися більше",
     "type": "Тип:",
     "typeCombined": "%{type}%{name}",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Умови використання",
     "addAsModeratorButton": "Додати як модератора",
-    "disclaimer": "**Оплата за послуги модератора діє за умови наявності спорів.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Мови",
     "currenciesSupported": "Підтримувані валюти",
     "noCoinSupport": "Цей модератор не використовує %{coin}."
@@ -634,6 +640,12 @@
         "windowControlStyle": "Керування вікном",
         "macOS": "Mac (зверху зліва)",
         "windowsOS": "Windows (зверху справа)"
+      },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
       },
       "statusSaving": "Збереження розширених налаштувань...",
       "statusSaveComplete": "Розширені налаштування збережено.",
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Фізичний товар",
     "DIGITAL_GOOD": "Електронний товар",
-    "SERVICE": "Послуга"
+    "SERVICE": "Послуга",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Додати товар",
@@ -937,6 +950,11 @@
     "USED_GOOD": "Було у вжитку - хороший стан",
     "USED_POOR": "Було у вжитку - середній стан",
     "REFURBISHED": "Відремонтовано"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Спробувати знову",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Редагувати",
@@ -948,6 +966,7 @@
     "viewPhotos": "Переглянути %{count} фото |||| Переглянути %{count} фотографії",
     "type": "Тип: %{type}",
     "condition": "Стан: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Tags, Теги",
     "paymentsAccepted": "Платіж прийнятий",
     "noTags": "Теги не вказано",
@@ -995,11 +1014,11 @@
       "fetchReviews": "Сталася помилка під час завантаження відгуків. %{error}",
       "loadReview": "Ой, не вдалося відкрити %{id} трапилася помилка %{error}",
       "noPurchaseTitle": "Цей товар не можливо придбати",
-      "zeroPriceMsg": "Ви не можете купити товар з ціною менше нуля. "
+      "zeroPriceMsg": "Ви не можете купити товар з ціною менше нуля. ",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Подробиці",
     "freeShippingBanner": "Безкоштовна доставка",
     "deleting": "Видалення...",
     "deleted": "Видалено",
@@ -1075,7 +1094,7 @@
     "placeholderReturnPolicy": "Як повернути товар? Скільки часу необхідно для повернення? Хто платить за доставку(якщо необхідно)? і т.д.",
     "placeholderTerms": "Які умови та правила відносно списку/переліку ваших товарів/послуг? Яка ваша відповідальність як постачальника? Чи є гарантія? Коли транзакція вважається закінченою? тощо",
     "helperTitle": "Напишіть конкретно, що саме ви пропонуєте або продаєте.",
-    "helperType": "Оберіть поміж 3 типів",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
     "helperShipping": "Відправляю в любий куточок світу!",
     "helperPhotos": "Не більше %{maxPhotos} фотографій",
     "helperSKU": "Унікальний ідентифікатор для Вашого товару",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "Відобразити перелік",
     "unsupportedCurrencyDialog": {
       "title": "Нерозпізнана валюта",
-      "body": "Цей список встановлено у валюті (%{cur}), яку цей клієнт не підтримує. Будь ласка, виберіть нову валюту нижче та натисніть кнопку ОК. Після цього обов'язково подвійно перевіряйте ціни, щоб переконатись, що вони відповідають новій валюті.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Кількість",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Опція доставки #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "Транзакції",
         "myPage": "Моя сторінка"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Назва",
+      "colVendor": "Продавець",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Інвентар",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "Не вдалося виконати пошуковий запит %{provider}. Виберіть іншого постачальника вище.",
       "searchFailReason": "Постачальник пошуку повернув таке повідомлення: %{error}",
@@ -1305,9 +1344,14 @@
     "closeNote": "Ваш платіж було надіслано продавцеві.",
     "moderatorNote": "* Плата за користування модератором застосовується лише у випадку відкриття суперечки.",
     "quantity": "Кількість",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
     "moderatorsDisclaimer": "Ваш платіж буде забезпечений додатково в депозиті. Якщо виникнуть різного роду проблеми, ви зможете відкрити дискусію із вибраним модератором. *Плата за користування модератором застосовується лише у випадку відкриття суперечки.",
     "directPayment": "Прямий платіж",
-    "directPaymentDetails": "Відправляти кошти безпосередньо продавцеві без модератора. Ви повинні використовувати цей варіант лише для продавців, яким ви довіряєте, ви не зможете оскаржити замовлення, якщо щось не так.",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Обрати цього модератора",
     "confirmPayment": {
       "title": "Все виглядає добре?",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "Ви не можете купувати з власних списків",
       "ownIDMsg": "Ви можете переглянути процес придбання для власних списків, але їх не можна придбати в самого себе.",
       "paymentFailed": "Оплата не могла бути завершена",
-      "zeroPrice": "Ви не можете купувати зі списків де загальна вартість має значення \"0\"."
+      "zeroPrice": "Ви не можете купувати зі списків де загальна вартість має значення \"0\".",
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "Повернутися до справ"
     },
     "filters": {
-      "purchasing": "Купівля",
+      "pending": "Очікування",
+      "unfunded": "Unfunded",
       "ready": "Готовий до процесу",
       "fulfilled": "Виконано",
       "refunded": "Відшкодовано",
@@ -1566,6 +1613,9 @@
         "heading": "Виконано",
         "shippedByLabel": "Замовлення доставлено через:",
         "trackingNumberLabel": "Відстеження №:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Ваша примітка:",
         "noteFromVendorLabel": "Примітка від продавця:",
         "noteFromStoreLabel": "Нотатка від %{store}:",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "Кількість",
         "totalHeading": "Всього",
         "moderatorHeading": "Модератор",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Копіювати",
         "viewOnMap": "Переглянути на мапі",
         "shippingOption": "Варіант доставки",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "Посилання на файл(и)",
       "passwordLabel": "Пароль",
       "passwordPlaceholder": "Пароль на файл(и)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Зауваження",
       "notePlaceholder": "опціонально",
       "noteHelperTextDigital": "Покупець отримає сповіщення, включно інформацію про файли",
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Оскаржити замовлення"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Прийняти",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "Ой! Під час прийняття замовлення сталася помилка.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Будь ласка, надайте назву.",
     "titleTooLong": "Назва перевищує максимально допустиму довжину.",
-    "badConditionType": "Умова не є одним з доступних типів.",
     "descriptionTooLong": "Опис перевищує максимально допустиму довжину.",
+    "badConditionType": "Умова не є одним з доступних типів.",
     "provideAmount": "Будь ласка, вкажіть вартість.",
     "provideNumericAmount": "Будь ласка, вкажіть ціну як число. Якщо врахувати десяткове число, то слід використовувати період як роздільник, наприклад \"0,00\".",
     "provideAmountGreaterThanZero": "Вартість повинна складати більше 0.",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "Надана адреса не є дійсною адресою %{cur}."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Кількість повинна бути 1 або більше",
-    "quantityMustBeNumber": "Кількість повинна бути в числовому форматі",
-    "noItems": "Ви повинні зробити принаймні одну покупку.",
     "missingAddress": "Будь ласка, виберіть чинну адресу доставки.",
-    "missingShippingOption": "Будь ласка, виберіть чинний варіант доставки.",
     "needsModerator": "Ви повинні вибрати модератора, щоб здійснити Модеруючий платіж.",
     "removeModerator": "Без модераторна купівля, не може мати модератора."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Будь ласка, вкажіть кількість.",
+    "mustHaveQuantity": "Кількість повинна бути 1 або більше",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Будь ласка, виберіть чинний варіант доставки.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Будь ласка, вкажіть перевізника.",
     "provideUrl": "Вкажіть URL-адресу файлу.",
-    "invalidUrl": "Будь ласка, вкажіть дійсну URL-адресу."
+    "invalidUrl": "Будь ласка, вкажіть дійсну URL-адресу.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "Користувача не знайдено",
@@ -2342,10 +2427,52 @@
     "ZWL": "Зімбабвійський долар"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (South Africa)",

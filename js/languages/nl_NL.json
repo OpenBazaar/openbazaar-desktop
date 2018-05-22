@@ -102,7 +102,7 @@
     "install": "Nu installeren"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Het is niet mogelijk om prijs informatie te leveren omdat de prijs in een onbekende valuta is. "
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Type een @handle, OpenBazaar ID of zoek term",
   "testnet": "Test Modus",
@@ -341,7 +341,6 @@
     "averageRating": "totale rating",
     "totalReviews": "beoordeling |||| beoordelingen",
     "noTitle": "Titel van artikel niet gevonden"
-
   },
   "userShort": {
     "userLoading": "Aan het laden...",
@@ -355,20 +354,27 @@
     "blockedUserOverlayText": "Je hebt deze gebruiker geblokkeerd."
   },
   "verifiedMod": {
-    "verified": {
-      "label": "Geverifieerd",
-      "title": "Geverifieerde moderator",
-      "body": "Deze moderator is geverifieerd door %{providerName}. %{link}",
-      "bodyOrder": "Deze moderator is geverifieerd door %{providerName}. %{link}"
+    "modVerified": {
+      "titleShort": "Geverifieerd",
+      "titleLong": "Geverifieerde moderator",      
+      "link": "Meer informatie",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
     },
-    "unverified": {
-      "label": "Ongeverifieerd",
-      "title": "Ongeverifieerde moderator",
+    "modUnverified": {
+      "titleShort": "Ongeverifieerd",
+      "titleLong": "Ongeverifieerde moderator",
       "not": "NIET",
-      "body": "Deze moderator is %{not} geverifieerd door %{providerName}. Ben op uw hoede als u door gaat met deze moderator of kies een geverifieerde moderator.",
-      "bodyOrder": "Deze moderator is %{not} geverifieerd door %{providerName}."
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
     },
-
+    "listingVerified": {
+      "link": "Meer informatie",
+      "tipBody": "U kunt dit  artikel kopen met een moderator die geverifieerd is door  %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "NIET",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
     "link": "Meer informatie",
     "type": "Type:",
     "typeCombined": "%{type}%{name}",
@@ -395,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Leveringsvoorwaarden",
     "addAsModeratorButton": "Voeg toe als Moderator",
-    "disclaimer": "**De moderator servicekosten zijn alleen van toepassing in het geval van een geschil.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Talen",
     "currenciesSupported": "Ondersteunde currencies",
     "noCoinSupport": "Deze moderator heeft geen ondersteuning voor %{coin}."
@@ -634,6 +640,12 @@
         "windowControlStyle": "Window controls",
         "macOS": "Mac (linksboven)",
         "windowsOS": "Windows (rechtsboven)"
+      },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
       },
       "statusSaving": "Uitgebreide instellingen worden opgeslagen...",
       "statusSaveComplete": "Uitgebreide instellingen opgeslagen.",
@@ -929,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Fysiek goed",
     "DIGITAL_GOOD": "Digitaal goed",
-    "SERVICE": "Dienst"
+    "SERVICE": "Dienst",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Nieuw",
@@ -937,6 +950,11 @@
     "USED_GOOD": "Gebruikt - goede staat",
     "USED_POOR": "Gebruikt - slechte staat",
     "REFURBISHED": "Gerenoveerd"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Probeer opnieuw",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Bewerkt",
@@ -948,6 +966,7 @@
     "viewPhotos": "Bekijk %{count} foto |||| Bekijk %{count} foto's",
     "type": "Type: %{type}",
     "condition": "Conditie: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Tags",
     "paymentsAccepted": "Betalingen geaccepteerd",
     "noTags": "Geen tags opgevoerd",
@@ -995,11 +1014,11 @@
       "fetchReviews": "Er was een probleem met het laden van de beoordelingen. %{error}",
       "loadReview": "Beoordeling %{id} mislukt vanwege %{error}",
       "noPurchaseTitle": "Dit artikel kan niet worden gekocht",
-      "zeroPriceMsg": "Je kunt geen aankoop doen met een prijs van 0 of minder."
+      "zeroPriceMsg": "Je kunt geen aankoop doen met een prijs van 0 of minder.",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Details",
     "freeShippingBanner": "Gratis Verzending",
     "deleting": "Verwijderen...",
     "deleted": "Verwijderd",
@@ -1075,7 +1094,7 @@
     "placeholderReturnPolicy": "Wat is jouw terugstuurbeleid? Binnen hoeveel dagen worden retourzendingen geaccepteerd? Wie betaald voor retourzendingen (indien nodig)? etc.",
     "placeholderTerms": "Wat zijn de verkoopvoorwaarden van het artikel? Waarvoor ben je verantwoordelijk als verkoper? Is er een garantie? Wanneer is de transactie afgerond? etc.",
     "helperTitle": "Beschrijving welke duidelijk aangeeft wat je verkoopt",
-    "helperType": "Kies uit 3 types",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
     "helperShipping": "Verstuur naar waar je maar wilt!",
     "helperPhotos": "Voeg tot %{maxPhotos} foto's toe",
     "helperSKU": "Een unieke identificator voor je artikel",
@@ -1110,8 +1129,20 @@
     "viewListingLink": "Bekijk Aanbieding",
     "unsupportedCurrencyDialog": {
       "title": "Valuta niet herkend",
-      "body": "Dit artikel heeft een valuta (%{cur}) die niet ondersteund wordt door deze client. Selecteer aub hieronder een nieuwe valuta en klik OK. Controleer de prijzen daarna nogmaals om zeker te zijn dat ze correct zijn in de nieuwe valuta.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Hoeveelheid",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Verzend Optie #%{listPosition}",
@@ -1225,6 +1256,14 @@
         "transactions": "Transactions",
         "myPage": "Mijn Pagina"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Titel",
+      "colVendor": "Verkoper",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Inventaris",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "De zoekopdarcht bij %{provider} is mislukt. Kies een andere search provider.",
       "searchFailReason": "De search provider geeft de volgende foutmelding terug: %{error}",
@@ -1305,9 +1344,14 @@
     "closeNote": "Je betaling is naar de verkoper gestuurd.",
     "moderatorNote": "De moderator service fee wordt alleen toegepast wanneer een geschil wordt geopend.",
     "quantity": "Hoeveelheid",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
     "moderatorsDisclaimer": "Uw betaling wordt in escrow bewaard. Als er een kwestie optreedt, heeft u de mogelijkheidom een dispuut te openen via uw gekozen moderator. *De moderator service vergoeding is alleen van toepassing als een dispuut is geopend.",
     "directPayment": "Directe Betaling",
-    "directPaymentDetails": "Verstuur bedragen (geldmiddelen/coins) direct naar de verkoper zonder een moderator. Deze optie alleen gebruiken met verkopers die u vertrouwd, u zult geen dispuut kunnen opstarten als er iets mis gaat.",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Kies deze moderator",
     "confirmPayment": {
       "title": "Ziet het er allemaal goed uit?",
@@ -1374,7 +1418,9 @@
       "ownIDTitle": "Je kunt niet je eigen artikelen aanschaffen",
       "ownIDMsg": "Je kunt het verkoopproces voor je eigen artikelen zien, maar je kunt ze niet aanschaffen.",
       "paymentFailed": "De betaling kon niet worden afgerond.",
-      "zeroPrice": "Je kunt een artikel met een prijs van nul niet aanschaffen."
+      "zeroPrice": "Je kunt een artikel met een prijs van nul niet aanschaffen.",
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
@@ -1419,7 +1465,8 @@
       "returnToFromOrder": "Terug naar zaken"
     },
     "filters": {
-      "purchasing": "Aankopen",
+      "pending": "Lopend",
+      "unfunded": "Unfunded",
       "ready": "Klaar om te verwerken",
       "fulfilled": "Voldaan",
       "refunded": "Refunded",
@@ -1566,6 +1613,9 @@
         "heading": "Voldaan",
         "shippedByLabel": "De order was verstuurd via:",
         "trackingNumberLabel": "Tracking #:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Uw notitie:",
         "noteFromVendorLabel": "Opmerking van de verkoper:",
         "noteFromStoreLabel": "Opmerking van %{store}:",
@@ -1638,6 +1688,7 @@
         "quantityHeading": "Hoeveelheid",
         "totalHeading": "Totaal",
         "moderatorHeading": "Moderator",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Kopieer",
         "viewOnMap": "Bekijk op kaart",
         "shippingOption": "Verzend Optie",
@@ -1670,6 +1721,8 @@
       "fileUrlPlaceholder": "Link naar bestand(en)",
       "passwordLabel": "Wachtwoord",
       "passwordPlaceholder": "Wachtwoord voor bestand (optioneel)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Notitie",
       "notePlaceholder": "Optioneel",
       "noteHelperTextDigital": "De koper zal een bericht ontvangen met de bestandsinformatie",
@@ -1708,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Geschil opstarten over order"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Geaccepteerd",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "Er was een fout bij het accepteren van de order.",
@@ -1783,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Geef een titel op.",
     "titleTooLong": "De titel is langer dan toegestaan.",
-    "badConditionType": "De conditie is geen beschikbaar type.",
     "descriptionTooLong": "De beschrijving is langer dan toegestaan.",
+    "badConditionType": "De conditie is geen beschikbaar type.",
     "provideAmount": "Voer een prijs in",
     "provideNumericAmount": "Geef aub de prijs aan als nummer. Decimalen moeten aangegeven worden met een punt als scheidingsteken, bijvoorbeeld \"0.00\".",
     "provideAmountGreaterThanZero": "De prijs moet hoger zijn dan 0.",
@@ -1862,18 +1939,26 @@
     "invalidAddress": "Het opgegeven adres lijkt geen geldig %{cur} adres te zijn."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Hoeveelheid moet 1 of meer zijn.",
-    "quantityMustBeNumber": "Hoeveelheid moet een geldig nummer zijn.",
-    "noItems": "U moet tenminste 1 aankoop doen.",
     "missingAddress": "Kies een geldig verzendadres.",
-    "missingShippingOption": "Kies een geldig verzend optie.",
     "needsModerator": "U moet een moderator kiezen wanneer u een Moderated Payment doen.",
     "removeModerator": "Een ongemodereerde aankoop kan geen moderator hebben."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Voer een hoeveelheid in.",
+    "mustHaveQuantity": "Hoeveelheid moet 1 of meer zijn.",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Kies een geldig verzend optie.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Kies een transporteur.",
     "provideUrl": "Geef een url voor het bestand.",
-    "invalidUrl": "Voer een geldige url in."
+    "invalidUrl": "Voer een geldige url in.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "Deze gebruiker kon niet gevonden worden.",
@@ -2342,10 +2427,52 @@
     "ZWL": "Zimbabwaanse Dollar"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (Zuid Afrika)",
