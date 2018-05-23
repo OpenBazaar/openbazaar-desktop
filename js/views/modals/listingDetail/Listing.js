@@ -88,11 +88,20 @@ export default class extends BaseModal {
       });
 
     if (this.model.isOwnListing) {
-      this.listenTo(listingEvents, 'saved', (md, savedOpts) => {
+      this.listenTo(listingEvents, 'saved', (md, e) => {
         const slug = this.model.get('slug');
+        if (e.slug === slug) {
+          // Factoring out the inventory from the listing data because
+          // the inventory will auto-update on a change - no need for a
+          // refresh pop-up if that's the only thing that changed.
+          const prev = e.prev;
+          delete prev.item.cryptoQuantity;
+          const cur = this.model.toJSON();
+          delete cur.item.cryptoQuantity;
 
-        if (savedOpts.slug === slug && savedOpts.hasChanged()) {
-          this.showDataChangedMessage();
+          if (!(_.isEqual(prev, cur))) {
+            this.showDataChangedMessage();
+          }
         }
       });
 

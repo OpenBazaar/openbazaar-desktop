@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../app';
 import { Events } from 'backbone';
+import { events as listingEvents } from '../models/listing/';
 import { guid } from '../utils';
 
 const events = {
@@ -30,7 +31,11 @@ function getCache(peerId, options = {}) {
   let cacheBySlug = options.slug && cacheByStore &&
     cacheByStore[options.slug] && cacheByStore[options.slug].deferred ?
       cacheByStore[options.slug] : null;
-  cacheByStore = cacheByStore && cacheByStore.deferred || null;
+  cacheByStore = cacheByStore && cacheByStore.deferred ?
+    {
+      deferred: cacheByStore.deferred,
+      createdAt: cacheByStore.createdAt,
+    } : null;
 
   // ensure the caches aren't expired
   [cacheByStore, cacheBySlug].forEach(cache => {
@@ -70,6 +75,23 @@ function setInventory(peerId, data = {}, options = {}) {
       data.inventory : data[slug].inventory;
 
     if (curInventory !== prevInventory) {
+      if (options.slug) {
+        curCache[options.slug] = {
+          ...curCache[options.slug],
+          ...data,
+        };
+      } else {
+        Object.keys(data)
+          .forEach(inventorySlug => {
+            curCache[inventorySlug] = {
+              ...curCache[inventorySlug],
+              ...data[inventorySlug],
+            };
+          });
+      }
+
+      inventoryCache.set(peerId, curCache);
+
       events.trigger('inventory-change', {
         peerId,
         slug,
@@ -80,12 +102,47 @@ function setInventory(peerId, data = {}, options = {}) {
   });
 }
 
+listingEvents.on('saved', md => {
+  const flatMd = md.toJSON();
+
+  // will only update the inventory for crypto listings since the inventory
+  // is not being represented properly for non-crypto when it comes to variants.
+  if (flatMd.metadata.contractType === 'CRYPTOCURRENCY') {
+    const inventory = flatMd.item.cryptoQuantity;
+    let curCache = inventoryCache.get(app.profile.id) || {};
+    curCache = curCache[flatMd.slug];
+    const deferred = curCache.deferred && curCache.deferred.state === 'pending' ?
+       curCache.deferred : $.Deferred();
+    const lastUpdated = new Date().toISOString();
+    deferred.resolve({
+      inventory,
+    });
+    const inventoryData = {
+      ...curCache,
+      lastUpdated,
+      createdAt: Date.now(),
+      inventory,
+      deferred,
+    };
+
+    setInventory(app.profile.id, inventoryData, { slug: flatMd.slug });
+
+    // todo: would be good to also abort any existing xhr, although it's unlikely there
+    // would be a pending one for your own listings since I think that comes from the db
+    // and should be quick. Anyhow, it would likely require exposing the xhr in the
+    // inventoryCache.
+  }
+});
+
 export function getInventory(peerId, options = {}) {
   checkInventoryArgs(peerId, options);
   const opts = {
     useCache: true,
     // For crypto currency listings be sure to pass in the coinDivisibility so
-    // the inventory is converted into UI readable units.
+    // the inventory is converted into UI readable units. If fetching the
+    // inventory for an entire store, this should be passed in as an object
+    // keyed by slug, e.g:
+    // { zec-for-sale: 100000000, eth-for-sale: 100000000000 }
     coinDivisibility: undefined,
     ...options,
   };
@@ -94,17 +151,38 @@ export function getInventory(peerId, options = {}) {
 
   if (!opts.useCache || (!cacheObj.cacheBySlug && !cacheObj.cacheByStore)) {
     // no cached data available, need to fetch
+
+    // for local listings do not get cached data from the server - if client
+    // side cache is available, it would be used since that is updated if the
+    // user updates the listing (at least via this client)
+    const useCache = peerId === app.profile.id ? false : opts.useCache;
+
     const url =
       `ob/inventory/${peerId}${opts.slug ? `/${opts.slug}` : ''}` +
-        `${opts.useCache ? '?usecache=true' : ''}`;
+        `${useCache ? '?usecache=true' : ''}`;
 
     const xhr = $.get(app.getServerUrl(url))
       .done(data => {
-        const inventoryData = {
-          ...data,
-          inventory: typeof opts.coinDivisibility === 'number' ?
-            data.inventory / opts.coinDivisibility : data.inventory,
-        };
+        let inventoryData = {};
+
+        if (opts.slug) {
+          inventoryData = {
+            ...data,
+            inventory: typeof opts.coinDivisibility === 'number' ?
+              data.inventory / opts.coinDivisibility : data.inventory,
+          };
+        } else {
+          Object.keys(data)
+            .forEach(slug => {
+              inventoryData[slug] = {
+                ...data[slug],
+                inventory: typeof opts.coinDivisibility === 'object' &&
+                  typeof opts.coinDivisibility[slug] === 'number' ?
+                  data[slug].inventory / opts.coinDivisibility[slug] :
+                    data[slug].inventory,
+              };
+            });
+        }
 
         deferred.resolve(inventoryData);
         events.trigger('inventory-fetch-success', {
@@ -211,7 +289,11 @@ export function getInventory(peerId, options = {}) {
       cacheObj.cacheByStore.deferred;
   }
 
-  return deferred._getPromise(guid());
+
+  const promise = deferred._getPromise ?
+    deferred._getPromise(guid()) : deferred.promise();
+  promise.abort = promise.abort || (() => {});
+  return promise;
 }
 
 export function isFetching(peerId, options = {}) {
