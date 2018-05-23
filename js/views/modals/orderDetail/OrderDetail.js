@@ -68,13 +68,13 @@ export default class extends BaseModal {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', () => {
+    this.listenTo(this.model, 'change:state', (md, state) => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
 
       recordEvent('OrderDetails_LiveStateChange', {
-        state: md.get('state'),
+        state,
         moderated: !!this.moderatorId, // collect only a boolean
       });
     });
