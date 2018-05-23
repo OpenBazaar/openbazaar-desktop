@@ -81,10 +81,6 @@ export default class extends BaseVw {
         this.completeOrderForm = null;
       }
 
-      if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
-        this.renderPaymentFinalized();
-      }
-
       if (state === 'PROCESSING_ERROR') {
         if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
           this.payForOrder.remove();
@@ -391,6 +387,7 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
+    // todo: check this son!
     return (
       getServerCurrency().supportsEscrowTimeout &&
       (
