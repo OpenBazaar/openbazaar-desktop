@@ -1,0 +1,40 @@
+<%
+  if (typeof ob.amount === 'number') {
+    let formattedAmount = new Intl.NumberFormat(ob.localCur, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 4,
+    }).format(ob.amount);
+    formattedAmount = ob.coinType ?
+      ob.polyT('cryptoCurrencyFormat.curCodeAmount', {
+        amount: formattedAmount,
+        code: ob.coinType.length > 8 ?
+          `${ob.coinType.slice(0, 8)}…` : ob.coinType,
+      }) :
+      formattedAmount;
+%>
+  <span class="content <%= ob.contentClass %>"><%= formattedAmount %></span>
+<% } else if (ob.isFetching) {
+  print(ob.spinner({ className: `${ob.spinnerClass}` }))
+} else if (ob.fetchFailed) { %>
+  <div class="content">
+    <div class="arrowBoxTipWrap <%= ob.tipClass %>">
+      <i class="ion-alert-circled margRSm clrTAlert"></i>
+      <% if (ob.fetchError) { %>
+        <%
+          const retryLink = `<a class="js-retry">${ob.polyT('inventoryDisplay.retryLink')}</a>`;
+          let message = ob.polyT('inventoryDisplay.fetchError', {
+            retryLink,
+          });
+
+          if (ob.fetchError) {
+            message = ob.polyT('inventoryDisplay.fetchErrorWithMsg', {
+              msg: ob.fetchError,
+            });
+            message += `<br /> <br /><div class="txCtr">${retryLink}</div>`;
+          }
+        %>
+        <div class="arrowBoxCenteredTop clrBr clrP"><%= message %></div>
+      <% } %>
+    </div>
+  </div>
+<% } %>

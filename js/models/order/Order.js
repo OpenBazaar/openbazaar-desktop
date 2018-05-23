@@ -157,6 +157,23 @@ export default class extends BaseOrder {
         integerToDecimal(response.contract.buyerOrder.payment.amount,
           app.serverConfig.cryptoCurrency);
 
+      // convert crypto listing quantities
+      response.contract.buyerOrder.items.forEach((item, index) => {
+        const listing = response.contract
+          .vendorListings[index];
+
+        // standardize the quantity field
+        item.quantity = item.quantity === 0 ?
+          item.quantity64 : item.quantity;
+
+        if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
+          const coinDivisibility = listing.metadata
+            .coinDivisibility;
+
+          item.quantity = item.quantity / coinDivisibility;
+        }
+      });
+
       if (response.contract.disputeResolution) {
         response.contract.disputeResolution.payout.buyerOutput =
           response.contract.disputeResolution.payout.buyerOutput || {};

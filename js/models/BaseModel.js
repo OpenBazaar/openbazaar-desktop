@@ -168,7 +168,9 @@ export default class extends Model {
           const nestedErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
 
           Object.keys(nestedErrs).forEach((nestedErrKey) => {
-            prefixedErrs[`${key}.${nestedErrKey}`] = nestedErrs[nestedErrKey];
+            const prefixedKey = `${key}.${nestedErrKey}`;
+            prefixedErrs[prefixedKey] = errObj[prefixedKey] || [];
+            prefixedErrs[prefixedKey].push(nestedErrs[nestedErrKey]);
           });
         }
       });
@@ -194,8 +196,9 @@ export default class extends Model {
 
             Object.keys(nestedMdErrs).forEach((nestedMdErrKey) => {
               // since indexes can change, we'll index using the model's client id (cid)
-              prefixedErrs[`${key}[${nestedMd.cid}].${nestedMdErrKey}`]
-                = nestedMdErrs[nestedMdErrKey];
+              const prefixedKey = `${key}[${nestedMd.cid}].${nestedMdErrKey}`;
+              prefixedErrs[prefixedKey] = errObj[prefixedKey] || [];
+              prefixedErrs[prefixedKey].push(nestedMdErrs[nestedMdErrKey]);
             });
 
             mergedErrs = {

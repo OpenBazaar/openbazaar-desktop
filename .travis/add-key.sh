@@ -15,3 +15,5 @@ security set-keychain-settings -t 3600 -l ~/Library/Keychains/osx-build.keychain
 # Add certificates to keychain and allow codesign to access them
 security import ./.travis/AppleWWDRCA.cer -k ~/Library/Keychains/osx-build.keychain -T /usr/bin/codesign
 security import ./.travis/cert.p12 -k ~/Library/Keychains/osx-build.keychain -P $KEY_PASSWORD -T /usr/bin/codesign
+
+security set-key-partition-list -S apple-tool:,apple: -s -k travis osx-build.keychain > /dev/null

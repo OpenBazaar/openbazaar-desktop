@@ -12,12 +12,18 @@ import {
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
+import {
+  getInventory,
+  events as inventoryEvents,
+} from '../../../utils/inventory';
+import { endEvent, recordEvent, startEvent } from '../../../utils/metrics';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
+import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -31,12 +37,13 @@ export default class extends BaseModal {
 
     const opts = {
       checkNsfw: true,
-      removeOnClose: false,
+      removeOnClose: true,
       ...options,
     };
 
     super(opts);
     this.options = opts;
+
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
     this.totalPrice = this.model.get('item').get('price');
@@ -129,6 +136,30 @@ export default class extends BaseModal {
         isFetchingRatings: true,
       },
     });
+
+    if (this.model.isCrypto) {
+      startEvent('Listing_InventoryFetch');
+      this.inventoryFetch = getInventory(this.vendor.peerID, {
+        slug: this.model.get('slug'),
+        coinDivisibility: this.model.get('metadata')
+          .get('coinDivisibility'),
+      })
+        .done(e => {
+          this._inventory = e.inventory;
+          endEvent('Listing_InventoryFetch', {
+            ownListing: !!this.ownListing,
+            errors: 'none',
+          });
+        })
+        .fail(e => {
+          endEvent('Listing_InventoryFetch', {
+            ownListing: !!this.ownListing,
+            errors: e.error || e.errCode || 'unknown error',
+          });
+        });
+      this.listenTo(inventoryEvents, 'inventory-change',
+        e => (this._inventory = e.inventory));
+    }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -431,10 +462,19 @@ export default class extends BaseModal {
   }
 
   startPurchase() {
-    if (this.totalPrice <= 0) {
-      openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
-        app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
-      return;
+    if (!this.model.isCrypto) {
+      if (this.totalPrice <= 0) {
+        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+          app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
+        return;
+      }
+    } else {
+      if (typeof this._inventory === 'number' &&
+        this._inventory <= 0) {
+        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+          app.polyglot.t('listingDetail.errors.outOfStock'));
+        return;
+      }
     }
 
     const selectedVariants = [];
@@ -454,12 +494,14 @@ export default class extends BaseModal {
       removeOnClose: true,
       showCloseButton: false,
       phase: 'pay',
+      inventory: this._inventory,
     })
       .render()
       .open();
 
     this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
     this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
+    recordEvent('Purchase_Start');
   }
 
   get shipsFreeToMe() {
@@ -528,6 +570,7 @@ export default class extends BaseModal {
     if (this.purchaseModal) this.purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
+    if (this.inventoryFetch) this.inventoryFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
   }
@@ -549,10 +592,13 @@ export default class extends BaseModal {
     }
 
     loadTemplate('modals/listingDetail/listing.html', t => {
+      const flatModel = this.model.toJSON();
+
       this.$el.html(t({
-        ...this.model.toJSON(),
+        ...flatModel,
         shipsFreeToMe: this.shipsFreeToMe,
         ownListing: this.model.isOwnListing,
+        price: this.model.price,
         displayCurrency: app.settings.get('localCurrency'),
         // the ships from data doesn't exist yet
         // shipsFromCountry: this.model.get('shipsFrom');
@@ -561,11 +607,12 @@ export default class extends BaseModal {
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
         currencyValidity: getCurrencyValidity(
-          this.model.get('metadata').get('pricingCurrency')
+          this.model.get('metadata').get('pricingCurrency') || 'USD'
         ),
         hasVerifiedMods: this.hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
+        isCrypto: this.model.isCrypto,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -609,6 +656,21 @@ export default class extends BaseModal {
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
       this.adjustPriceBySku();
+
+      if (this.model.isCrypto) {
+        if (this.cryptoInventory) this.cryptoInventory.remove();
+        this.cryptoInventory = this.createChild(QuantityDisplay, {
+          peerId: this.vendor.peerID,
+          slug: this.model.get('slug'),
+          initialState: {
+            coinType: this.model.get('metadata')
+              .get('coinType'),
+            amount: this._inventory,
+          },
+        });
+        this.getCachedEl('.js-cryptoInventory')
+          .html(this.cryptoInventory.render().el);
+      }
 
       if (nsfwWarning) {
         setTimeout(() => {

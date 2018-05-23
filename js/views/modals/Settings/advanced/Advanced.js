@@ -8,6 +8,7 @@ import baseVw from '../../../baseVw';
 import WalletSeed from './WalletSeed';
 import SmtpSettings from './SmtpSettings';
 import ReloadTransactions from './ReloadTransactions';
+import MetricsStatus from './MetricsStatus';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -284,6 +285,10 @@ export default class extends baseVw {
       if (this.reloadTransactions) this.reloadTransactions.delegateEvents();
       this.getCachedEl('.js-reloadTransactionsContainer')
         .append(this.reloadTransactions.render().el);
+
+      if (this.metricsStatus) this.metricsStatus.remove();
+      this.metricsStatus = this.createChild(MetricsStatus);
+      this.getCachedEl('.js-metricsStatusWrapper').append(this.metricsStatus.render().el);
     });
 
     return this;

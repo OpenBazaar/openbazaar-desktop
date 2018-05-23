@@ -1,13 +1,13 @@
 import app from '../app';
 import { version } from '../../package.json';
-import * as os from 'os';
+import { userStats } from './metrics';
 
 
 /*
  * Sets the options for the feedback tool
  */
 
-export function setFeedbackOptions() {
+function setFeedbackOptions() {
   const profile = app.profile ? app.profile.toJSON() : {};
   const contactInfo = profile.contactInfo || {};
   const sVer = app.settings && app.settings.get('version') || '';
@@ -15,20 +15,15 @@ export function setFeedbackOptions() {
 
   window.doorbellOptions = {
     appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
-    name: profile.name || 'name data missing',
+    name: profile.name || 'profile data missing',
     properties: {
       settingsReadable: !!app.settings,
       profileReadable: !!app.profile,
-      peerID: profile.peerID || 'peerID data missing',
-      vendor: profile.vendor || 'vendor data missing',
+      peerID: profile.peerID || 'profile data missing',
       clientVersion: version,
       serverVersion,
       contactInfo,
-      systemLanguage: navigator.language,
-      numberOfCPUs: os.cpus().length,
-      cpu: os.cpus()[0],
-      RAMtotal: ((os.totalmem()) / 1048576).toFixed(2),
-      RAMfree: ((os.freemem()) / 1048576).toFixed(2),
+      ...userStats(),
     },
   };
 }

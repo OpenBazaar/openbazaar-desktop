@@ -4,6 +4,7 @@ import app from '../../app';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -67,6 +68,28 @@ export default class extends BaseModel {
     return app.profile.id === this.guid;
   }
 
+  get isCrypto() {
+    return this.get('metadata')
+      .get('contractType') === 'CRYPTOCURRENCY';
+  }
+
+  get price() {
+    if (this.isCrypto) {
+      return {
+        amount: 1,
+        currencyCode: this.get('metadata')
+          .get('coinType'),
+      };
+    }
+
+    return {
+      amount: this.get('item')
+        .get('price'),
+      currencyCode: this.get('metadata')
+        .get('pricingCurrency'),
+    };
+  }
+
   /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
@@ -88,6 +111,15 @@ export default class extends BaseModel {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+    const metadata = {
+      ...this.get('metadata').toJSON(),
+      ...attrs.metadata,
+    };
+    const contractType = metadata.contractType;
+    const item = {
+      ...this.get('item').toJSON(),
+      ...attrs.item,
+    };
 
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
@@ -106,9 +138,41 @@ export default class extends BaseModel {
       }
     }
 
-    if (this.get('metadata').get('contractType') === 'PHYSICAL_GOOD' &&
-      !attrs.shippingOptions.length) {
-      addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
+    if (contractType === 'PHYSICAL_GOOD') {
+      if (!attrs.shippingOptions.length) {
+        addError('shippingOptions', app.polyglot.t('listingModelErrors.provideShippingOption'));
+      }
+    }
+
+    if (contractType === 'CRYPTOCURRENCY') {
+      if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
+        addError('metadata.coinType', 'The coin type must be provided as a string.');
+      }
+
+      if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
+        addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
+          'cryptocurrency listings.');
+      }
+
+      if (item && typeof item.price !== 'undefined') {
+        addError('item.price', 'The price should not be set on cryptocurrency ' +
+          'listings.');
+      }
+
+      if (item && typeof item.condition !== 'undefined') {
+        addError('item.condition', 'The condition should not be set on cryptocurrency ' +
+          'listings.');
+      }
+
+      if (item && typeof item.quantity !== 'undefined') {
+        addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
+          'listings.');
+      }
+    } else {
+      if (item && typeof item.cryptoQuantity !== 'undefined') {
+        addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
+          'listings.');
+      }
     }
 
     if (attrs.coupons.length > this.max.couponCount) {
@@ -117,6 +181,17 @@ export default class extends BaseModel {
     }
 
     errObj = this.mergeInNestedErrors(errObj);
+
+    if (contractType === 'CRYPTOCURRENCY') {
+      // Remove the validation of certain fields that should not be set for
+      // cryptocurrency listings.
+      delete errObj['metadata.pricingCurrency'];
+      delete errObj['item.price'];
+      delete errObj['item.condition'];
+      delete errObj['item.quantity'];
+    } else {
+      delete errObj['item.cryptoQuantity'];
+    }
 
     // Coupon price discount cannot exceed the item price.
     attrs.coupons.forEach(coupon => {
@@ -187,6 +262,18 @@ export default class extends BaseModel {
               options.attrs.metadata.pricingCurrency);
           }
         });
+
+        const baseUnit = options.attrs.metadata.coinDivisibility =
+          options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
+
+        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+          // round to ensure integer
+          options.attrs.item.cryptoQuantity =
+            Math.round(options.attrs.item.cryptoQuantity * baseUnit);
+
+          // Don't send over the price on crypto listings.
+          delete options.attrs.price;
+        }
         // END - convert price fields
 
         // If providing a quanitity and / or productID on the Item and not
@@ -196,7 +283,9 @@ export default class extends BaseModel {
         if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
-          if (typeof options.attrs.item.quantity === 'number') {
+          if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+            dummySku.quantity = options.attrs.item.cryptoQuantity;
+          } else if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
           }
 
@@ -292,6 +381,9 @@ export default class extends BaseModel {
     const parsedResponse = response.listing;
 
     if (parsedResponse) {
+      const isCrypto = parsedResponse.metadata &&
+        parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';
+
       // set the hash
       parsedResponse.hash = response.hash;
 
@@ -364,7 +456,14 @@ export default class extends BaseModel {
         parsedResponse.item.skus.length === 1 &&
         typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
         const dummySku = parsedResponse.item.skus[0];
-        parsedResponse.item.quantity = dummySku.quantity;
+
+        if (isCrypto) {
+          parsedResponse.item.cryptoQuantity = dummySku.quantity /
+            parsedResponse.metadata.coinDivisibility;
+        } else {
+          parsedResponse.item.quantity = dummySku.quantity;
+        }
+
         parsedResponse.item.productID = dummySku.productID;
       }
 
@@ -388,10 +487,6 @@ export default class extends BaseModel {
         // END - convert price fields
       }
     }
-
-    // todo: acceptedCurrency (which is a field we don't use now, but might
-    // if we implement cryptocurrency) is comming in with a lower-cased
-    // currency code. Capitalize it.
 
     return parsedResponse;
   }

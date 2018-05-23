@@ -13,24 +13,15 @@
   const iconBaseClass = ob.iconBaseClass || 'ion-alert-circled clrTAlert';
   const iconClass = ob.iconClass || '';
   const iconFullClass = `${iconBaseClass} ${iconClass}`;
-
   const showTooltipOnUnrecognizedCur = ob.showTooltipOnUnrecognizedCur || true;
-
   const fromCurValidity = ob.currencyMod.getCurrencyValidity(fromCur);
-  const toCurValidity = ob.currencyMod.getCurrencyValidity(toCur);
 
-  let tip;
-
-  if (fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    tip = ob.polyT('formattedCurrency.unrecognizedCurrencyTip');
-  }
+  // If the price is not a number, we'll show the unrecognized currency tooltip. This most likely happened
+  // because a model was unable to convert the price to/from base units because it doesn't recognize the
+  // currency and therefore doesn't know what base units to use.
+  const formattedPrice = typeof price === 'number' ?
+    ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur, { forceCryptoListingCur: true }) :
+    false;
 %>
 
-<%
-  if (fromCurValidity !== 'UNRECOGNIZED_CURRENCY') {
-    print(ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur));
-  }
-%>
-<% if (fromCurValidity === 'UNRECOGNIZED_CURRENCY' && showTooltipOnUnrecognizedCur) { %>
-&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= tip %>"><span class="<%= iconFullClass %>"></span></span>
-<% } %>
+<%= formattedPrice %><% if (formattedPrice === false) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>

@@ -262,6 +262,10 @@
       margin-top: $pad;
     }
 
+    .cryptoPaymentAddress {
+      flex-shrink: 1000;
+    }
+
     .statusIconCol {
       text-align: center;
       flex-shrink: 0;
@@ -309,6 +313,15 @@
 
           &::before {
             padding-top: 8px;
+          }
+        }
+
+        &.ion-cash {
+          font-size: 24px;
+
+          &::before {
+            padding-top: 6px;
+            padding-left: 2px;
           }
         }
       }

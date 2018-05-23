@@ -4,7 +4,7 @@ import Profile from '../../models/profile/Profile';
 import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
 import { getLangByCode } from '../../data/languages';
-import VerifiedMod from '../components/VerifiedMod';
+import VerifiedMod, { getModeratorOptions } from '../components/VerifiedMod';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -82,11 +82,10 @@ export default class extends BaseModal {
       this.$('.js-socialBtns').append(this.socialBtns.render().$el);
 
       if (this.verifiedMod) this.verifiedMod.remove();
-      this.verifiedMod = this.createChild(VerifiedMod, {
+      this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({
         model: this.verifiedModModel,
-        data: app.verifiedMods.data,
-        showLongText: true,
-      });
+        shortText: false,
+      }));
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
     });
 

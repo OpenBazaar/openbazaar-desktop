@@ -102,7 +102,7 @@
     "install": "Install Now"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Indtast et @brugernavn, OpenBazaar-ID eller søgeord",
   "testnet": "Testtilstand",
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Prøv igen",
       "btnManageConnections": "Håndtér forbindelser",
+      "btnContinue": "Continue",
       "retryConfig": {
         "title": "Kunne ikke indlæse din serveropsætning."
       },
@@ -156,7 +157,14 @@
         "title": "Kunne ikke indlæse tegnebogssaldo."
       },
       "unableToGetSearchProviders": {
-        "title": "Unable to load search providers."
+        "title": "Unable to load search providers.",
+        "btnClose": "Continue Without Search Providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Unable to load verified moderators.",
+        "btnRetry": "Prøv igen",
+        "btnClose": "Continue",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
       "orderComplete": "%{buyerName} has left feedback on their order.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} has opened a dispute with you.",
       "disputeOpenMod": "%{disputerName} has opened a dispute with %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} shared their contract for the dispute with %{disputerName}.",
@@ -332,7 +341,6 @@
     "averageRating": "overall rating",
     "totalReviews": "review |||| reviews",
     "noTitle": "Listing title not found"
-
   },
   "userShort": {
     "userLoading": "Indlæser…",
@@ -345,11 +353,38 @@
     "tipModRemove": "Fjern som moderator",
     "blockedUserOverlayText": "You blocked this user"
   },
+  "verifiedMod": {
+    "modVerified": {
+      "titleShort": "Verified",
+      "titleLong": "Verified Moderator",      
+      "link": "Learn More",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
+    },
+    "modUnverified": {
+      "titleShort": "Unverified",
+      "titleLong": "Unverified Moderator",
+      "not": "NOT",
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
+    },
+    "listingVerified": {
+      "link": "Learn More",
+      "tipBody": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "NOT",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
+    "link": "Learn More",
+    "type": "Type: ",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+  },
   "moderatorCard": {
     "view": "Vis",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "Information om denne moderator kunne ikke indlæses.",
     "invalid": "Denne bruger er ikke moderator på nuværende tidspunkt.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -366,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Servicevilkår",
     "addAsModeratorButton": "Tilføj som moderator",
-    "disclaimer": "**Moderatorens servicegebyr opkræves kun, hvis der opstår en uenighed.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Languages",
     "currenciesSupported": "Currencies Supported",
     "noCoinSupport": "This moderator does not support %{coin}."
@@ -460,8 +495,9 @@
       "statusSaveComplete": "Generelle indstillinger er gemt.",
       "statusSaveFailed": "Kan ikke gemme generelle indstillinger.",
       "saveErrorAlertTitle": "Kan ikke gemme generelle indstillinger",
-      "searchProvider": "Søgeudbyder",
-      "restoreDefaultProvider": "Genopret standarder"
+      "verifiedMods": "Verified Moderators",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Genopret standarder"
     },
     "pageTab": {
       "helperAbout": "Vises på din hjemmeside",
@@ -605,6 +641,12 @@
         "macOS": "Mac (upper left)",
         "windowsOS": "Windows (upper right)"
       },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
+      },
       "statusSaving": "Saving advanced settings…",
       "statusSaveComplete": "Advanced settings saved.",
       "statusSaveFailed": "Unable to save advanced settings.",
@@ -657,9 +699,10 @@
       "selectedModeratorsEmptyWarning": "Only direct payment is available in your store",
       "moderatorByIDPlaceholder": "Enter a @handle or ID",
       "moderatoryByIDSubmit": "Find",
-      "availableModerators": "Available Moderators on the Network",
+      "availableModerators": "Available Moderators",
       "browseModerators": "Browse Moderators",
-      "browseMoreModerators": "Load More Moderators",
+      "verifiedOnly": "Verified moderators only",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Loading",
       "status": {
         "saving": "Saving store settings...",
@@ -669,14 +712,13 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderator Not Found",
-        "modNotFound": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle.",
-        "modNotFoundSelected": "%{guidOrHandle} could not be found on the network. It may not be a valid ID or Handle. They will not be shown in your list, but are still saved as one of your moderators.",
-        "availableModsFailed": "Available Moderators Could Not Be Retrieved from the Network",
-        "modAlreadyAdded": "You have already added that moderator.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
+        "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "You must add a moderator ID or handle",
-        "modIsInvalid": "%{guid} is not a valid moderator.",
-        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
-        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
+        "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
+        "dupeGUID": "%{guid} is one of your current moderators."
       }
     },
     "blockedTab": {
@@ -899,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Fysisk vare",
     "DIGITAL_GOOD": "Digital vare",
-    "SERVICE": "Tjenesteydelse"
+    "SERVICE": "Tjenesteydelse",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Ny",
@@ -907,6 +950,11 @@
     "USED_GOOD": "Brugt – God",
     "USED_POOR": "Brugt – Dårlig",
     "REFURBISHED": "Renoveret"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Prøv igen",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Redigér",
@@ -918,6 +966,7 @@
     "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Type: %{type}",
     "condition": "Stand: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Mærkater",
     "paymentsAccepted": "Payments Accepted",
     "noTags": "Ingen mærkater er indtastet",
@@ -965,11 +1014,11 @@
       "fetchReviews": "Der opstod et problem under indlæsning af bedømmelser. %{error}",
       "loadReview": "Bedømmelse %{id} mislykkedes på grund af %{error}",
       "noPurchaseTitle": "Denne listning kan ikke købes",
-      "zeroPriceMsg": "Du kan ikke gøre et køb med en pris på nul eller mindre."
+      "zeroPriceMsg": "Du kan ikke gøre et køb med en pris på nul eller mindre.",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Detaljer",
     "freeShippingBanner": "Gratis forsendelse",
     "deleting": "Sletter…",
     "deleted": "Slettet",
@@ -1045,7 +1094,7 @@
     "placeholderReturnPolicy": "Hvad er din politik om returret? Efter hvor mange dage kan varer returneres? Hvem betaler for returforsendelsen (om nødvendigt)? Etc.",
     "placeholderTerms": "Hvad er dine betingelser og vilkår for denne listning? Hvad er du ansvarlig for som sælger? Er der garanti? Hvornår regnes transaktionen for endelig? Etc.",
     "helperTitle": "Noget beskrivende, som tydeligt forklarer, hvad du sælger",
-    "helperType": "Choose from 3 types",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
     "helperShipping": "Afsend når du har lyst!",
     "helperPhotos": "Tilføj op til %{maxPhotos} fotos",
     "helperSKU": "Et unikt ID for din listning",
@@ -1080,8 +1129,20 @@
     "viewListingLink": "Vis listning",
     "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Antal",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Forsendelsesmulighed nr. %{listPosition}",
@@ -1195,6 +1256,14 @@
         "transactions": "Transaktioner",
         "myPage": "Min side"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Titel",
+      "colVendor": "Sælger",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Lagerbeholdning",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "Søgeudbyderen returnerede følgende besked: %{error}",
@@ -1275,11 +1344,14 @@
     "closeNote": "Din betaling er blevet sendt til sælgeren.",
     "moderatorNote": "* Moderatorens servicegebyr opkræves kun, hvis en uenighed åbnes.",
     "quantity": "Antal",
-    "useShapeShift": "Eller brug ShapeShift i det næste trin",
-    "moderatedPayment": "Modereret betaling",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
-    "noValidModerators": "Ingen gyldige moderatorer er tilgængelige for denne ordre.",
-    "moderationDisclaimer": "Din betaling vil blive holdt tilbage i en betinget krontrakt (escrow) på sikker vis. Hvis der opstår uenigheder, har du muligheden for sammen med en moderator at åbne en uenighed. * Moderatorens servicegebyr opkræves kun, hvis en uenighed åbnes.",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Direkte betaling",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Vælg denne moderator",
     "confirmPayment": {
       "title": "Ser alt fint ud?",
@@ -1347,11 +1419,20 @@
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "Betalingen kunne ikke gennemføres",
       "zeroPrice": "Du kan ikke købe en listning med en totalpris på nul.",
-      "feesFailed": "Transaction Fees Cannot Be Loaded"
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Indlæser %{remaining} ud af %{total} moderatorer."
+    "moderatorsLoading": "Loading moderators…",
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Load More"
+
   },
   "transactions": {
     "sales": {
@@ -1384,14 +1465,16 @@
       "returnToFromOrder": "Tilbage til sager"
     },
     "filters": {
-      "purchasing": "Bestilt",
+      "pending": "Afventer",
+      "unfunded": "Unfunded",
       "ready": "Klar til bearbejdning",
       "fulfilled": "Udført",
       "refunded": "Refunderet",
+      "disputes": "Disputes",
       "disputeOpen": "Uenighed åben",
-      "disputePending": "Uenighed afventer",
       "disputeClosed": "Uenighed lukket",
-      "completed": "Afsluttet"
+      "completed": "Afsluttet",
+      "error": "Errors"
     },
     "sort": {
       "label": "Sortér efter",
@@ -1427,7 +1510,8 @@
         "DISPUTED": "Uenighed er i gang",
         "DECIDED": "Afgjort",
         "RESOLVED": "Løst",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalized",
+        "PROCESSING_ERROR": "Error"
       },
       "btnReject": "Afvis",
       "btnAccept": "Acceptér",
@@ -1458,13 +1542,23 @@
     },
     "contractTab": {
       "heading": "Kontrakt (JSON)",
-      "buyerContractNotAvailable": "Køberens kontrakt er ikke tilgængelig i øjeblikket, indtil han/hun kommer online igen.",
-      "vendorContractNotAvailable": "Sælgerens kontrakt er ikke tilgængelig i øjeblikket, indtil han/hun kommer online igen.",
-      "buyerVendorContractVerified": "Både køberens og sælgerens kontrakter er verificeret som værende autentiske.",
-      "buyerContractNotAuthentic": "Køberens kontrakt indeholder valideringsfejl. Den er sandsynligvis blevet forfalsket.",
-      "vendorContractNotAuthentic": "Sælgerens kontrakt indeholder valideringsfejl. Den er sandsynligvis blevet forfalsket.",
       "buyerContractHeading": "Købers kontrakt:",
-      "vendorContractHeading": "Sælgers kontrakt:"
+      "vendorContractHeading": "Sælgers kontrakt:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Både køberens og sælgerens kontrakter er verificeret som værende autentiske.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Ordrenr.: %{orderId}",
@@ -1519,6 +1613,9 @@
         "heading": "Udført",
         "shippedByLabel": "Ordre afsendt via:",
         "trackingNumberLabel": "Trackingnr.:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Your note:",
         "noteFromVendorLabel": "Note from the vendor:",
         "noteFromStoreLabel": "Bemærkning fra %{store}:",
@@ -1591,6 +1688,7 @@
         "quantityHeading": "Antal",
         "totalHeading": "Total",
         "moderatorHeading": "Moderator",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Kopiér",
         "viewOnMap": "Se på kort",
         "shippingOption": "Shipping Option",
@@ -1599,6 +1697,18 @@
         "addressNotes": "Delivery Notes",
         "alternateContact": "Additional Contact Information",
         "skuLabel": "Varenr."
+      },
+      "processingError": {
+        "cancelLink": "annullér",
+        "disputeLink": "open a dispute",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "There was an error processing the order.",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1611,6 +1721,8 @@
       "fileUrlPlaceholder": "Link til fil(er)",
       "passwordLabel": "Adgangskode",
       "passwordPlaceholder": "Adgangskode til filen (valgfri)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Bemærkning",
       "notePlaceholder": "valgfri",
       "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
@@ -1621,6 +1733,11 @@
       "heading": "Løs uenighed",
       "buyerAmountLabel": "Købers andel",
       "vendorAmountLabel": "Sælgers andel",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Kommentar",
       "commentPlaceholder": "Forklar dit valg…",
       "btnCancel": "Annullér",
@@ -1644,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Opret en uenighed om ordren"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Acceptér",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "En fejl opstod under acceptering af ordren.",
@@ -1719,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
     "titleTooLong": "The title exceeds the maximum allowable length.",
-    "badConditionType": "The condition is not one of the available types.",
     "descriptionTooLong": "The description exceeds the maximum allowable length.",
+    "badConditionType": "The condition is not one of the available types.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "The price must be greater than 0.",
@@ -1798,18 +1939,26 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Antallet skal være 1 eller mere",
-    "quantityMustBeNumber": "Antallet skal være et gyldigt tal",
-    "noItems": "You must make at least one purchase.",
     "missingAddress": "Please choose a valid shipping address.",
-    "missingShippingOption": "Please choose a valid shipping option.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
     "removeModerator": "An unmoderated purchase cannot have a moderator."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Angiv venligst et antal.",
+    "mustHaveQuantity": "Antallet skal være 1 eller mere",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Please choose a valid shipping option.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Please provide a file url.",
-    "invalidUrl": "Angiv venligst en gyldig URL."
+    "invalidUrl": "Angiv venligst en gyldig URL.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "This User Could Not Be Found",
@@ -1835,12 +1984,14 @@
     "service": "Serviceydelse"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "This is not a valid url for a search provider"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Please provide an amount.",
     "percentageOutOfRange": "The amount must be between 0 and 100.",
     "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Please explain your decision."
@@ -2276,10 +2427,52 @@
     "ZWL": "Zimbabwiske dollars"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (South Africa)",

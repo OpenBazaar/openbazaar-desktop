@@ -45,8 +45,8 @@
       <h2 class="txUnb flexNoShrink js-price">
         <%=
           ob.currencyMod.formattedCurrency(
-            ob.item.price,
-            ob.metadata.pricingCurrency,
+            ob.price.amount,
+            ob.price.currencyCode,
             ob.displayCurrency
           )
         %>
@@ -95,10 +95,14 @@
                     acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
                     serverCur: serverCurCode,
                   });
-              } else if (ob.currencyValidity !== 'VALID') {
+              } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+                ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
                   ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+              } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
+                !ob.currencyMod.getExchangeRate(ob.price.currencyCode)) {
+                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
               } else {
                 buyNowClass = '';
                 unpurchaseable = false;
@@ -112,7 +116,7 @@
             <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
-              <% if(ob.shipsFreeToMe) { %>
+              <% if (ob.shipsFreeToMe) { %>
               <div class="txCtr">
                 <a class="clrE1 clrTOnEmph phraseBox txNoUnd js-freeShippingLabel"><%= ob.polyT('listingDetail.freeShippingBanner') %></a>
               </div>
@@ -124,8 +128,16 @@
           <div>
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
-          <% if (ob.item.condition) { %>
-            <div><%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %></div>
+          <% if (ob.isCrypto) { %>
+            <div>
+              <%= ob.polyT('listingDetail.inventory', {
+                inventory: '<span class="js-cryptoInventory"></span>'
+              }) %>
+            </div>
+          <% } else if (ob.metadata.type === 'PHYSICAL_GOOD') { %>
+            <div>
+              <%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %>
+            </div>
           <% } %>
         </div>
         <hr class="rowLg">
@@ -150,11 +162,10 @@
           }) %>
         </ul>
         <% if (ob.hasVerifiedMods) { %>
-        <div class="verifiedMod">
-          <div class="confirmBox clrBrAlert2 clrBAlert2Grad">
-            <div class="flexVCent flexHCent gutterHTn rowTn">
+          <div class="verifiedModBox clrBrAlert2 clrBAlert2Grad">
+            <div class="flexVCent flexHCent gutterHTn rowSm">
               <div class="badge" style="background-image: url(<%= ob.defaultBadge.tiny %>), url('../imgs/verifiedModeratorBadgeDefault.png');"></div>
-              <div class="tx5 txB"><%= ob.polyT('verifiedMod.verified.title') %></div>
+              <div class="tx5 txB"><%= ob.polyT('verifiedMod.modVerified.titleLong') %></div>
             </div>
             <div class="flexColRows gutterVSm tx5b">
               <%
@@ -164,7 +175,6 @@
               <div><%= ob.polyT('verifiedMod.genericDescription', { name: providerName, link: verifiedModLink }) %></div>
             </div>
           </div>
-        </div>
         <% } %>
       </div>
     </div>

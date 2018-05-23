@@ -1,7 +1,7 @@
 <% if (!ob.inventory.length) { %>
 <div class="rowMd"><%= ob.polyT(`editListing.variantInventory.placeholderNeedMoreData`) %></div>
 <% } else { %>
-<div class="inventoryTableWrap">
+<div class="inventoryTableWrap rowSm">
   <table>
     <tr>
       <% ob.columns.forEach(column => { %>
@@ -14,5 +14,5 @@
     </tr>
   </table>
 </div>
-<div class="clrT2 txSm padSm"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
+<div class="clrT2 txSm helper"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
 <% } %>

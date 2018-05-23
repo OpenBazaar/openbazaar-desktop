@@ -2,6 +2,19 @@ import app from '../../../app';
 import BaseModel from '../../BaseModel';
 import PhysicalDelivery from './PhysicalDelivery';
 import DigitalDelivery from './DigitalDelivery';
+import CryptoDelivery from './CryptoDelivery';
+
+function defaults(attrs = {}, context = {}) {
+  if (context.contractType === 'DIGITAL_GOOD') {
+    attrs.digitalDelivery = new DigitalDelivery(attrs.digitalDelivery || {});
+  } else if (context.contractType === 'CRYPTOCURRENCY') {
+    attrs.cryptocurrencyDelivery = new CryptoDelivery(attrs.cryptocurrencyDelivery || {});
+  } else if (context.contractType === 'PHYSICAL_GOOD' && !context.isLocalPickup) {
+    attrs.physicalDelivery = new PhysicalDelivery(attrs.physicalDelivery || {});
+  }
+
+  return attrs;
+}
 
 export default class extends BaseModel {
   constructor(attrs = {}, options = {}) {
@@ -14,32 +27,13 @@ export default class extends BaseModel {
         'be picked up locally.');
     }
 
-    // Since the contract type is not available on this when
-    // the defaults are initially called, we need to set the
-    // initial contract type dependant attributes here. We also
-    // set them in defaults, so if the model is reset, they'll
-    // be restored properly.
-    if (options.contractType === 'DIGITAL_GOOD') {
-      attrs.digitalDelivery = new DigitalDelivery(attrs.digitalDelivery || {});
-    } else if (options.contractType === 'PHYSICAL_GOOD' && !options.isLocalPickup) {
-      attrs.physicalDelivery = new PhysicalDelivery(attrs.physicalDelivery || {});
-    }
-
-    super(attrs, options);
+    super(defaults(attrs, options), options);
     this.contractType = options.contractType;
     this.isLocalPickup = options.isLocalPickup;
   }
 
   defaults() {
-    const defaults = {};
-
-    if (this.contractType === 'DIGITAL_GOOD') {
-      defaults.digitalDelivery = new DigitalDelivery();
-    } else if (this.contractType === 'PHYSICAL_GOOD' && !this.isLocalPickup) {
-      defaults.physicalDelivery = new PhysicalDelivery();
-    }
-
-    return defaults;
+    return defaults({}, this);
   }
 
   url() {
@@ -54,6 +48,7 @@ export default class extends BaseModel {
     return {
       physicalDelivery: PhysicalDelivery,
       digitalDelivery: DigitalDelivery,
+      cryptocurrencyDelivery: CryptoDelivery,
     };
   }
 
@@ -69,17 +64,20 @@ export default class extends BaseModel {
     if (method === 'create' || method === 'update') {
       options.type = 'POST';
 
-      // The server is expecting an array for any physicalDelivery or
-      // digitalDelivery options in order to support multiple listings.
-      // Since the client and design aren't supporting that at this time,
-      // we'll convert to an array here. Once we support it, the nested
-      // models should be changed to nested collections.
+      // The server is expecting an array for the <type>Delivery object in
+      // order to support multiple listings. Since the client and design aren't
+      // supporting that at this time, we'll convert to an array here. Once we
+      // support it, the nested models should be changed to nested collections.
       if (options.attrs.physicalDelivery) {
         options.attrs.physicalDelivery = [options.attrs.physicalDelivery];
       }
 
       if (options.attrs.digitalDelivery) {
         options.attrs.digitalDelivery = [options.attrs.digitalDelivery];
+      }
+
+      if (options.attrs.cryptocurrencyDelivery) {
+        options.attrs.cryptocurrencyDelivery = [options.attrs.cryptocurrencyDelivery];
       }
     }
 

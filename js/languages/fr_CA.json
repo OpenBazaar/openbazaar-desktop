@@ -102,7 +102,7 @@
     "install": "Installer maintenant"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Tapez un @handle, un identifiant ou un terme de recherche OpenBazaar",
   "testnet": "Mode de test",
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Recommencez",
       "btnManageConnections": "Gérer les connexions",
+      "btnContinue": "Continue",
       "retryConfig": {
         "title": "Impossible d'obtenir votre configuration de serveur."
       },
@@ -156,7 +157,14 @@
         "title": "Impossible d'obtenir le solde du portefeuille."
       },
       "unableToGetSearchProviders": {
-        "title": "Impossible de charger les fournisseurs de recherche."
+        "title": "Impossible de charger les fournisseurs de recherche.",
+        "btnClose": "Continue Without Search Providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Unable to load verified moderators.",
+        "btnRetry": "Réessayer",
+        "btnClose": "Continue",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} a remboursé votre commande.",
       "fulfillment": "%{vendorName} a réalisé votre commande.",
       "orderComplete": "%{buyerName} a laissé une évaluation sur sa commande.",
+      "processingError": "%{vendorName} was unable to process your order due to an error.",
       "disputeOpen": "%{disputerName} a ouvert un litige avec vous.",
       "disputeOpenMod": "%{disputerName} a ouvert un litige avec %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} a partagé son contrat pour le litige avec %{disputerName}.",
@@ -332,7 +341,6 @@
     "averageRating": "overall rating",
     "totalReviews": "review |||| reviews",
     "noTitle": "Listing title not found"
-
   },
   "userShort": {
     "userLoading": "Chargement...",
@@ -345,11 +353,38 @@
     "tipModRemove": "Supprimer comme modérateur",
     "blockedUserOverlayText": "You blocked this user"
   },
+  "verifiedMod": {
+    "modVerified": {
+      "titleShort": "Verified",
+      "titleLong": "Verified Moderator",      
+      "link": "Learn More",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
+    },
+    "modUnverified": {
+      "titleShort": "Unverified",
+      "titleLong": "Unverified Moderator",
+      "not": "NOT",
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
+    },
+    "listingVerified": {
+      "link": "Learn More",
+      "tipBody": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "NOT",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
+    "link": "Learn More",
+    "type": "Type: ",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+  },
   "moderatorCard": {
     "view": "Voir",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "L'information pour ce modérateur n'a pas pu être chargée.",
     "invalid": "Cet utilisateur n'est pas actuellement modérateur.",
     "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, and %{smart_count} autres langues."
@@ -366,7 +401,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Conditions de service",
     "addAsModeratorButton": "Ajouter comme modérateur",
-    "disclaimer": "**Les frais de service du modérateur ne s'appliquent qu'après un litige.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Langues",
     "currenciesSupported": "Currencies Supported",
     "noCoinSupport": "This moderator does not support %{coin}."
@@ -460,8 +495,9 @@
       "statusSaveComplete": "Paramètres généraux sauvegardés.",
       "statusSaveFailed": "Impossible d'enregistrer les paramètres généraux.",
       "saveErrorAlertTitle": "Impossible d'enregistrer les paramètres généraux",
-      "searchProvider": "Fournisseur de recherche",
-      "restoreDefaultProvider": "Réinitialiser"
+      "verifiedMods": "Verified Moderators",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Réinitialiser"
     },
     "pageTab": {
       "helperAbout": "S'affiche sur votre page d'accueil",
@@ -605,6 +641,12 @@
         "macOS": "Mac (en haut à gauche)",
         "windowsOS": "Windows (en haut à droite)"
       },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
+      },
       "statusSaving": "Sauvegarde des paramètres avancés...",
       "statusSaveComplete": "Paramètres avancés sauvegardés.",
       "statusSaveFailed": "Échec de la sauvegarde des paramètres avancés.",
@@ -657,9 +699,10 @@
       "selectedModeratorsEmptyWarning": "Seul le paiement direct est disponible dans votre boutique",
       "moderatorByIDPlaceholder": "Saisissez un @handle ou un ID",
       "moderatoryByIDSubmit": "Trouver",
-      "availableModerators": "Modérateurs disponibles sur le réseau",
+      "availableModerators": "Available Moderators",
       "browseModerators": "Parcourir les modérateurs",
-      "browseMoreModerators": "Charger plus de modérateurs",
+      "verifiedOnly": "Verified moderators only",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Chargement",
       "status": {
         "saving": "Sauvegarde des réglages de la boutique...",
@@ -669,14 +712,13 @@
       },
       "errors": {
         "modNotFoundTitle": "Modérateur non trouvé",
-        "modNotFound": "%{guidOrHandle} n'a pas pu être trouvé sur le réseau. Le handle ou l'ID n'est peut-être pas valide.",
-        "modNotFoundSelected": "%{guidOrHandle} n'a pas pu être trouvé sur le réseau. Le handle ou l'ID n'est peut-être pas valide. Ils ne seront pas affichés dans votre liste, mais ils sont toujours enregistrés comme un de vos modérateurs.",
-        "availableModsFailed": "Aucun modérateur disponible n'a pu être trouvé sur le réseau",
-        "modAlreadyAdded": "Vous avez déjà ajouté ce modérateur.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
+        "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "Vous devez ajouter un ID de modérateur ou un handle",
-        "modIsInvalid": "%{guid} n'est pas un modérateur valide.",
-        "modsAreInvalid": "Les modérateurs suivants ne sont pas actuellement des modérateurs valides: %{guids}",
-        "modsAreInvalidAsync": "Les modérateurs suivants n'ont pas pu être trouvés sur le réseau. Ils sont quand même sauvegardés dans votre liste de modérateurs, mais leurs informations ne sont pas disponibles. %{guids}"
+        "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
+        "dupeGUID": "%{guid} is one of your current moderators."
       }
     },
     "blockedTab": {
@@ -899,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Bien physique",
     "DIGITAL_GOOD": "Bien numérique",
-    "SERVICE": "Service"
+    "SERVICE": "Service",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Neuf",
@@ -907,6 +950,11 @@
     "USED_GOOD": "Utilisé - Bon",
     "USED_POOR": "Occasion - Usé",
     "REFURBISHED": "Remis à neuf"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Réessayer",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Modifier",
@@ -918,6 +966,7 @@
     "viewPhotos": "Voir %{count} photo |||| Voir %{count} photos",
     "type": "Type: %{type}",
     "condition": "État: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Mots-clés",
     "paymentsAccepted": "Payments Accepted",
     "noTags": "Aucun mot-clé entré",
@@ -965,11 +1014,11 @@
       "fetchReviews": "Une erreur s'est produite lors du chargement des évaluations. %{error}",
       "loadReview": "L'évaluation %{id} a échoué à cause de l'erreur %{error}",
       "noPurchaseTitle": "Vous ne pouvez pas acheter cette annonce",
-      "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins."
+      "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins.",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Détails",
     "freeShippingBanner": "Expédition gratuite",
     "deleting": "Suppression...",
     "deleted": "Supprimé",
@@ -1045,7 +1094,7 @@
     "placeholderReturnPolicy": "Quelles sont vos conditions de retour ? Combien de jours sont acceptés pour les retours ? Qui paye les frais de retour (si il y en a) ? ...",
     "placeholderTerms": "Quels sont les termes et conditions de l'annonce ? En quoi êtes-vous responsable en tant que vendeur ? Existe-t-il une garantie ? Quand la transaction est-elle définitive ? etc",
     "helperTitle": "Quelque chose de descriptif qui explique clairement ce que vous vendez",
-    "helperType": "Choisissez parmi 3 types",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
     "helperShipping": "Envoyez où vous voulez!",
     "helperPhotos": "Ajoutez jusqu'à %{maxPhotos} images",
     "helperSKU": "Un identifiant unique pour votre annonce",
@@ -1080,8 +1129,20 @@
     "viewListingLink": "Voir l'annonce",
     "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
       "btnOk": "OK"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Quantité",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Option d'expédition #%{listPosition}",
@@ -1195,6 +1256,14 @@
         "transactions": "Transactions",
         "myPage": "Ma page"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Titre",
+      "colVendor": "Vendeur",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Inventaire",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "La requête de recherche vers %{provider} a échoué. Choisissez un autre fournisseur ci-dessus.",
       "searchFailReason": "Le fournisseur de recherche a renvoyé le message suivant: %{error}",
@@ -1275,11 +1344,14 @@
     "closeNote": "Le paiement a été envoyé au vendeur.",
     "moderatorNote": "*Les frais de service de modération ne s'appliquent qu'après un litige.",
     "quantity": "Quantité",
-    "useShapeShift": "Ou utilisez ShapeShift à la prochaîne étape",
-    "moderatedPayment": "Paiement modéré",
-    "tooLowForMods": "Selon les frais estimés actuels, l'option de paiement modéré n'est pas disponible pour les commandes inférieures à %{minModPrice}. Un paiement direct sera utilisé à la place.",
-    "noValidModerators": "Aucun modérateur n'est disponible pour cette commande.",
-    "moderationDisclaimer": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige avec un modérateur. *Les frais de service de modération ne s'appliquent qu'après un litige.",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Paiement direct",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Choisir ce modérateur",
     "confirmPayment": {
       "title": "Tout semble ok ?",
@@ -1347,11 +1419,20 @@
       "ownIDMsg": "Vous pouvez prévisualiser le processus d'achat pour vos propres annonces, mais vous ne pouvez pas les acheter.",
       "paymentFailed": "Le paiement n'a pas pu s'achever",
       "zeroPrice": "Vous ne pouvez pas acheter une annonce avec un prix total de zéro.",
-      "feesFailed": "Les frais de transaction ne peuvent pas être chargés"
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Chargement de %{remaining} modérateurs restants sur un total de %{total}."
+    "moderatorsLoading": "Loading moderators…",
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Charger plus"
+
   },
   "transactions": {
     "sales": {
@@ -1384,14 +1465,16 @@
       "returnToFromOrder": "Revenir aux litiges"
     },
     "filters": {
-      "purchasing": "Achat",
+      "pending": "En attente",
+      "unfunded": "Unfunded",
       "ready": "Prêt(e) à traiter",
       "fulfilled": "Réalisé(e)",
       "refunded": "Remboursé(e)",
+      "disputes": "Disputes",
       "disputeOpen": "Litige ouvert",
-      "disputePending": "Litige en attente",
       "disputeClosed": "Litige résolu",
-      "completed": "Terminé(e)"
+      "completed": "Terminé(e)",
+      "error": "Errors"
     },
     "sort": {
       "label": "Trier par",
@@ -1427,7 +1510,8 @@
         "DISPUTED": "Litigieux",
         "DECIDED": "Décidée",
         "RESOLVED": "Résolu",
-        "PAYMENT_FINALIZED": "Paiement finalisé"
+        "PAYMENT_FINALIZED": "Paiement finalisé",
+        "PROCESSING_ERROR": "Error"
       },
       "btnReject": "Refuser",
       "btnAccept": "Accepter",
@@ -1458,13 +1542,23 @@
     },
     "contractTab": {
       "heading": "Contrat (JSON)",
-      "buyerContractNotAvailable": "Le contrat de l'acheteur est actuellement indisponible jusqu'à ce qu'ils soient en ligne.",
-      "vendorContractNotAvailable": "Le contrat du vendeur est actuellement indisponible jusqu'à ce qu'ils soient en ligne.",
-      "buyerVendorContractVerified": "Les contrats de l'acheteur et du vendeur ont été vérifiés comme authentiques.",
-      "buyerContractNotAuthentic": "Le contrat de l'acheteur a des erreurs de validation. Il a probablement été falsifié.",
-      "vendorContractNotAuthentic": "Le contrat du vendeur a des erreurs de validation. Il a probablement été falsifié.",
       "buyerContractHeading": "Contrat de l'acheteur:",
-      "vendorContractHeading": "Contrat du vendeur:"
+      "vendorContractHeading": "Contrat du vendeur:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Les contrats de l'acheteur et du vendeur ont été vérifiés comme authentiques.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Commande #: %{orderId}",
@@ -1519,6 +1613,9 @@
         "heading": "Réalisé(e)",
         "shippedByLabel": "Commande expédiée par:",
         "trackingNumberLabel": "Numéro de suivi #:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
         "yourNoteLabel": "Your note:",
         "noteFromVendorLabel": "Note from the vendor:",
         "noteFromStoreLabel": "Note de %{store}:",
@@ -1591,6 +1688,7 @@
         "quantityHeading": "Quantité",
         "totalHeading": "Total",
         "moderatorHeading": "Modérateur",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Copier",
         "viewOnMap": "Voir sur la carte",
         "shippingOption": "Shipping Option",
@@ -1599,6 +1697,18 @@
         "addressNotes": "Remarques pour la livraison",
         "alternateContact": "Informations de contact supplémentaires",
         "skuLabel": "SKU"
+      },
+      "processingError": {
+        "cancelLink": "annuler",
+        "disputeLink": "open a dispute",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "There was an error processing the order.",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1611,6 +1721,8 @@
       "fileUrlPlaceholder": "Liens vers les fichiers",
       "passwordLabel": "Mot de passe",
       "passwordPlaceholder": "Mot de passe au fichier (optionnel)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Note",
       "notePlaceholder": "optionnel",
       "noteHelperTextDigital": "L'acheteur recevra une notification contenant les informations sur le fichier",
@@ -1621,6 +1733,11 @@
       "heading": "Résoudre le litige",
       "buyerAmountLabel": "Montant de l'acheteur",
       "vendorAmountLabel": "Montant du vendeur",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Commentaire",
       "commentPlaceholder": "Expliquer votre décision...",
       "btnCancel": "Annuler",
@@ -1644,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Contester la commande"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Accepter",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "Une erreur s'est produite lors de l'acception de la commande.",
@@ -1719,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Merci d'entrer un titre.",
     "titleTooLong": "Le titre est trop long.",
-    "badConditionType": "L'état ne fait pas partie de l'un des types disponibles.",
     "descriptionTooLong": "La description dépasse la longueur maximale autorisée.",
+    "badConditionType": "L'état ne fait pas partie de l'un des types disponibles.",
     "provideAmount": "Merci d'entrer un prix.",
     "provideNumericAmount": "Merci d'entrer le prix sous la forme d'un nombre. Si vous incluez un nombre décimal, un point doit être utilisé comme séparateur, par exemple \"0.00\".",
     "provideAmountGreaterThanZero": "Le prix ne peut pas être nul.",
@@ -1798,18 +1939,26 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "La quantité doit être au moins égale à 1",
-    "quantityMustBeNumber": "La quantité doit être un nombre",
-    "noItems": "Vous devez acheter au moins un objet.",
     "missingAddress": "Vous devez choisir une adresse valide.",
-    "missingShippingOption": "Vous devez choisir un mode d'envoi valide.",
     "needsModerator": "Vous devez choisir un modérateur pour faire un paiement modéré.",
     "removeModerator": "Un achat non modéré ne peut pas avoir de modérateur."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Merci d'entrer une quantité.",
+    "mustHaveQuantity": "La quantité doit être au moins égale à 1",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Vous devez choisir un mode d'envoi valide.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Merci d'entrer un transporteur.",
     "provideUrl": "Merci d'entrer l'URL d'un fichier.",
-    "invalidUrl": "Merci d'entrer une URL valide."
+    "invalidUrl": "Merci d'entrer une URL valide.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "L'utilisateur n'a pas été trouvé",
@@ -1835,12 +1984,14 @@
     "service": "Service"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "Ce n'est pas une URL valide pour un fournisseur de recherche"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Merci d'entrer une somme.",
     "percentageOutOfRange": "La somme doit être entre 0 et 100.",
     "providePercentageAsNumber": "Merci d'entrer un montant de vendeur sous la forme d'un nombre.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "La somme des montants de l'acheteur et du vendeur ne peut excéder 100.",
     "totalPercentageTooLow": "La somme des montants de l'acheteur et du vendeur doit aller jusqu'à 100.",
     "provideResolution": "Merci d'expliquer votre décision."
@@ -2276,10 +2427,52 @@
     "ZWL": "Zimbabwe Dollar"
   },
   "cryptoCurrencies": {
-    "BTC": "Bitcoin",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (South Africa)",

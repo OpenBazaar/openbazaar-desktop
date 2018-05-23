@@ -4,10 +4,6 @@
     top: 75px;
   }
 
-  #purchaseQuantity {
-    text-align: center;
-  }
-
   #confirmPay {
     padding: 0;
     top: calc(100% + #{$padSm});
@@ -76,6 +72,16 @@
     .receipt {
       .subShipping {
         padding-left: $pad;
+      }
+
+      .constrainedWidth {
+        max-width: 50%;
+        flex-grow: 1;
+        flex-shrink: 0;
+
+        & > .flexHRight {
+          text-align: left;
+        }
       }
     }
   }

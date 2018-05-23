@@ -125,6 +125,19 @@
   }
 }
 
-.hideIfEmpty:empty {
-  display: none;
+.quantityDisplay {
+  position: relative;
+  display: inline-block;
+
+  // Dimensions will probably need to be adjusted if your spinner and/or alert icon vary from
+  // the defaults. If you need to change these, please override somewhere else as other places
+  // are likely using these defaults.
+  min-width: 20px;
+  min-height: 13px;
+
+  .spinner {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
 }

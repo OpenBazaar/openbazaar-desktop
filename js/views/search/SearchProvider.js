@@ -1,6 +1,7 @@
 import loadTemplate from '../../utils/loadTemplate';
 import BaseView from '../baseVw';
 import ProviderMd from '../../models/search/SearchProvider';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -24,6 +25,9 @@ export default class extends BaseView {
 
   onClickProvider() {
     this.trigger('click', this.model);
+    recordEvent('Discover_ChangeProvider', {
+      name: this.model.get('name'),
+    });
   }
 
   render() {

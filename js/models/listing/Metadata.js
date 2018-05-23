@@ -1,6 +1,8 @@
+import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { getCurrencyByCode } from '../../data/currencies';
+import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 
 export default class extends BaseModel {
   defaults() {
@@ -9,6 +11,7 @@ export default class extends BaseModel {
       format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
+      coinDivisibility: defaultQuantityBaseUnit,
     };
   }
 
@@ -17,10 +20,27 @@ export default class extends BaseModel {
       'PHYSICAL_GOOD',
       'DIGITAL_GOOD',
       'SERVICE',
+      'CRYPTOCURRENCY',
     ];
   }
 
-  // todo: validate the listing type is one of the available types
+  get contractTypesVerbose() {
+    return this.contractTypes
+      .map((contractType) => (
+        {
+          code: contractType,
+          name: app.polyglot.t(`formats.${contractType}`),
+        }
+      ));
+  }
+
+  get formats() {
+    return [
+      'FIXED_PRICE',
+      'MARKET_PRICE',
+    ];
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -28,8 +48,12 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (this.contractTypes.indexOf(attrs.contractType) === -1) {
-      addError('contractType', 'The contract type is not one of the available types.');
+    if (!this.contractTypes.includes(attrs.contractType)) {
+      addError('contractType', `The contract type must be one of ${this.contractTypes}.`);
+    }
+
+    if (!this.formats.includes(attrs.format)) {
+      addError('format', `The format must be one of ${this.formats}.`);
     }
 
     const firstDayOf2038 = new Date(2038, 0, 1, 0, 0, 0, 0);

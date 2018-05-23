@@ -16,6 +16,7 @@ import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
+import { startEvent, endEvent, recordEvent } from './utils/metrics';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -51,6 +52,9 @@ export default class ObRouter extends Router {
 
     $(window).on('hashchange', () => {
       this.setAddressBarText();
+      if (window.Countly) {
+        window.Countly.q.push(['track_pageview', location.hash]);
+      }
     });
 
     ipcRenderer.on('external-route', (e, route) => {
@@ -407,6 +411,9 @@ export default class ObRouter extends Router {
     let profileFetch;
     let listing;
     let listingFetch;
+    let userPageFetchError = '';
+
+    startEvent('UserPageLoad');
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -485,11 +492,21 @@ export default class ObRouter extends Router {
       // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
         this.userNotFound(guid);
+        userPageFetchError = 'User Not Found';
       } else if (listingFetch.state() === 'rejected') {
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
+        userPageFetchError = 'Listing Not Found';
       }
     })
-      .always(() => (this.off(null, onWillRoute)));
+      .always(() => {
+        this.off(null, onWillRoute);
+        endEvent('UserPageLoad', {
+          ownPage: guid === app.profile.id,
+          tab: pageState,
+          listing: !!listingFetch,
+          errors: userPageFetchError || 'none',
+        });
+      });
   }
 
   transactions(tab) {
@@ -502,9 +519,15 @@ export default class ObRouter extends Router {
       this.navigate('transactions/sales');
     }
 
+    const initialTab = tab || 'sales';
+
     this.loadPage(
-      new Transactions({ initialTab: tab || 'sales' }).render()
+      new Transactions({ initialTab }).render()
     );
+
+    recordEvent('Transactions_PageLoad', {
+      tab: initialTab,
+    });
   }
 
   connectedPeers() {

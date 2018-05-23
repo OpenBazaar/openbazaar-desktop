@@ -15,6 +15,7 @@ import { clipboard, remote } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';
+import { recordEvent } from '../../../utils/metrics';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -99,7 +100,15 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
+      recordEvent('Purchase_PayFromWallet', {
+        currency: getServerCurrency().code,
+        sufficientFunds: false,
+      });
     } else {
+      recordEvent('Purchase_PayFromWallet', {
+        currency: getServerCurrency().code,
+        sufficientFunds: true,
+      });
       this.spendConfirmBox.setState({ show: true });
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     }
@@ -114,15 +123,27 @@ export default class extends BaseVw {
   walletConfirm() {
     this.getCachedEl('.js-payFromWallet').addClass('processing');
     this.spendConfirmBox.setState({ show: false });
+    const currency = getServerCurrency().code;
 
     try {
       spend({
         address: this.paymentAddress,
         amount: this.balanceRemaining,
-        currency: getServerCurrency().code,
+        currency,
       })
+        .done(() => {
+          recordEvent('Purchase_SpendFromWallet', {
+            currency,
+            errors: 'none',
+          });
+        })
         .fail(jqXhr => {
-          this.showSpendError(jqXhr.responseJSON && jqXhr.responseJSON.reason || '');
+          const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+          this.showSpendError(err);
+          recordEvent('Purchase_SpendFromWallet', {
+            currency,
+            errors: err || 'unknown error',
+          });
           if (this.isRemoved()) return;
           this.getCachedEl('.js-payFromWallet').removeClass('processing');
         });

@@ -55,13 +55,17 @@
         }
       }
 
-      .verifiedMod {
+      .verifiedModBox {
         display: block;
+        border-width: 2px;
+        border-style: solid;
+        padding: $padMd;
+        text-align: center;
 
-        .confirmBox {
-          width: 100%;
-          box-sizing: border-box;
-          padding: $padMd;
+        .badge {
+          width: 24px;
+          height: 24px;
+          background-size: contain;
         }
       }
 

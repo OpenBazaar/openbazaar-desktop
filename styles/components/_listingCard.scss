@@ -47,15 +47,30 @@
     .trimWidth {
       width: calc(100% - #{$thumb});
     }
+
+    .verifiedModWrapper {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+
+      .badge, .warning {
+        position: static;
+      }
+    }
+
+    .additionalOverlay, .editOverlay {
+      bottom: 8px;
+      left: 8px;
+    }
+  }
+
+  .listingTitle {
+    word-break: break-word;
   }
 
   .overlayPanel {
     display: none;
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
     z-index: 1; // so it's above the overlay icons
 
     .overlayPanelInner {
@@ -64,6 +79,13 @@
       // still use the clrS class (instead of RGBA).
       opacity: 0.9;
       position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+    }
+
+    &.coverFull {
       top: 0;
       left: 0;
       right: 0;
@@ -91,10 +113,6 @@
     }
   }
 
-  .listingsGrid:not(.listingsGridListView) &:hover {
-    bottom: 4px;
-  }
-
   &:hover:not(.listingDeleting):not(.listingDeleted) {
     .editOverlay {
       display: flex;
@@ -105,6 +123,10 @@
     display: none;
   }
 
+  .btnHideNsfw {
+    margin-right: 5px;
+  }
+
   .reportBtnShell {
     button {
       width: 30px;
@@ -112,48 +134,9 @@
     }
   }
 
-  .additionalOverlay {
-    top: auto;
-  }
-
   &:hover {
     .additionalOverlay {
       display: flex;
-    }
-  }
-
-  .verifiedModWrapper {
-    position: absolute;
-    top: 0;
-    width: 100%;
-
-    .verifiedMod {
-      position: absolute;
-      left: $padSm;
-      top: $padSm;
-
-      & > .badge {
-        top: 0;
-      }
-
-      .badgeText {
-        display: none;
-      }
-
-      .tooltipWrapper {
-        position: absolute;
-        width: 100%;
-        height: 100%;
-
-        .arrowBoxWrapper {
-          height: $thumbTn;
-          width: $thumbTn;
-
-          .arrowBox {
-            top: 36px; // height of the badge + height of the arrowtip
-          }
-        }
-      }
     }
   }
 
@@ -212,8 +195,6 @@
   }
 
   .listViewContent {
-    display: none;
-
     .listingImage {
       width: 45px;
       height: 45px;
@@ -222,82 +203,40 @@
 
     .verifiedModWrapper {
       position: static;
-      bottom: 0;
 
-      .verifiedMod {
-        position: static;
+      .badge {
+        position: relative;
+        width: 20px;
+        height: 20px;
+        top: 2px;
+      }
 
-        & > .badge {
-          height: 1em;
-          width: 1em;
-          top: 0;
-          margin-right: 0.3em;
-        }
-
-        .tooltipWrapper {
-          position: static;
-          width: auto;
-          height: auto;
-
-          .badgeText {
-            display: inline;
-          }
-
-          .iconWrapper .arrowBoxWrapper {
-            width: 1em;
-            height: 1em;
-            top: 0;
-            right: 0;
-
-            .arrowBox {
-              right: -27px;
-              top: auto;
-              bottom: calc(100% + 14px);
-
-              &::before {
-                top: 100%;
-                transform: translate(-50%, -50%) rotate(45deg);
-              }
-            }
-          }
-        }
+      .warning {
+        position: relative;
+        font-size: $tx5;
+        top: 1px;
       }
     }
   }
 
-  // Some assumptions here:
-  // a.) We will only potentially have a "list view" style card
-  //     when the listingCard is inside a .listingsGrid.
-  // b.) The .listingsGridListView class will be applied to the
-  //     .listingsGrid element as opposed to each individual card.
-  //     This is so as you toggle to/from grid/list view, you only
-  //     change one class on a parent element and consequently have
-  //     only one DOM reflow/repaint.
-  .listingsGridListView & {
+  .listingsGridListView &,
+  .listingsGridCryptoListView & {
     padding: $pad;
     display: block;
     width: 100%;
     height: auto;
 
-    .listViewContent {
-      display: block;
-    }
-
-    .gridViewContent {
-      display: none;
-    }
-
-    .additionalOverlay,
-    .editOverlay {
-      height: 100%;
-      box-sizing: border-box;
-      align-items: center;
-    }
-
     .additionalOverlay {
-      padding-left: 13px; // make the left padding match top and bottom
+      @include center(false, true);
+      right: 5px;      
     }
 
+    .editOverlay {
+      @include center();
+    }
+  }
+
+  .listingsGridListView & {
     // This isn't ideal, but there's inconistent spacing / widths of cols, plus there's variable
     // content width on the price (e.g. some currencies may have quite large numbers)
     .priceCol {
@@ -306,6 +245,46 @@
 
     .freeShipCol {
       padding-right: 20px;
+    }
+  }
+
+  .listingsGridCryptoListView & {
+    height: 65px;
+
+    .verifiedModWrapper {
+      position: relative;
+      align-self: flex-start;
+      text-align: center;
+      left: -3px;
+      width: 28px;
+      margin-right: 0;
+      top: 2px;
+
+      .badge {
+        width: 21px;
+        height: 21px;
+      }
+
+      .verifiedMod {
+        position: relative;
+        top: 0;
+        left: 0;
+      }      
+    }
+
+    .vendorCol {
+      .userIcon {
+        width: 30px;
+        height: 30px;
+      }
+    }
+
+    .priceCol {
+      text-align: right;
+    }
+
+    .inventoryCol {
+      text-align: right;
     }
   }
 

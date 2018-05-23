@@ -183,6 +183,13 @@
     .select2 {
       margin-top: 12px;
     }
+
+    .btnRadio, .checkboxCol {
+      label > span .emoji {
+        position: relative;
+        top: 0.1em;
+      }
+    }
   }
 
   .searchResults {
@@ -204,6 +211,12 @@
       }
 
       .listingsGrid {
+        display: none;
+      }
+    }
+
+    &.noResults {
+      .cryptoListViewHeader {
         display: none;
       }
     }

@@ -1,0 +1,10 @@
+<a class="btn clrP clrBr clrSh2 js-changeSharing flexNoShrink"><%= ob.polyT('settings.advancedTab.integrations.changeBtn') %></a>
+<div class="flexExpand txLft">
+  <% if (ob.restartRequired) { %>
+  <span class="clrTEmph1"><%= ob.polyT('metrics.sharingWillBeOn') %></span>
+  <% } else if (ob.shareMetrics) { %>
+  <span class="clrTEmph1"><%= ob.polyT('metrics.sharingIsOn') %></span>
+  <% } else { %>
+  <span class="clrTErr"><%= ob.polyT('metrics.sharingIsOff') %></span>
+  <% } %>
+</div>

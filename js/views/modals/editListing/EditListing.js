@@ -29,6 +29,7 @@ import VariantInventory from './VariantInventory';
 import InventoryManagement from './InventoryManagement';
 import SkuField from './SkuField';
 import UnsupportedCurrency from './UnsupportedCurrency';
+import CryptoCurrencyType from './CryptoCurrencyType';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -169,6 +170,7 @@ export default class extends BaseModal {
       'click .js-return': 'onClickReturn',
       'click .js-save': 'onSaveClick',
       'change #editContractType': 'onChangeContractType',
+      'change #editListingCryptoContractType': 'onChangeCryptoContractType',
       'change .js-price': 'onChangePrice',
       'change #inputPhotoUpload': 'onChangePhotoUploadInput',
       'click .js-addPhoto': 'onClickAddPhoto',
@@ -247,16 +249,39 @@ export default class extends BaseModal {
     this.variantInventory.render();
   }
 
-  onChangeContractType(e) {
-    if (e.target.value !== 'PHYSICAL_GOOD') {
-      this.$conditionWrap
-        .add(this.$sectionShipping)
-        .addClass('disabled');
-    } else {
-      this.$conditionWrap
-        .add(this.$sectionShipping)
-        .removeClass('disabled');
+  setContractTypeClass(contractType) {
+    const removeClasses = this.model.get('metadata')
+      .contractTypes
+      .reduce(
+        (classes, type) => (`${classes} TYPE_${type}`), ''
+      );
+
+    this.$el.removeClass(removeClasses)
+      .addClass(`TYPE_${contractType}`);
+  }
+
+  onChangeContractType(e, data = {}) {
+    this.setContractTypeClass(e.target.value);
+
+    if (!data.fromCryptoTypeChange) {
+      if (e.target.value === 'CRYPTOCURRENCY') {
+        this.getCachedEl('#editListingCryptoContractType')
+          .val('CRYPTOCURRENCY');
+        this.getCachedEl('#editListingCryptoContractType')
+          .trigger('change')
+          .focus();
+      }
     }
+  }
+
+  onChangeCryptoContractType(e) {
+    if (e.target.value === 'CRYPTOCURRENCY') return;
+
+    this.getCachedEl('#editContractType')
+      .val(e.target.value);
+    this.getCachedEl('#editContractType')
+      .trigger('change', { fromCryptoTypeChange: true })
+      .focus();
   }
 
   getOrientation(file, callback) {
@@ -745,8 +770,21 @@ export default class extends BaseModal {
 
     // render so errrors are shown / cleared
     this.render(!!save);
-    const $firstErr = this.$('.errorList:first');
-    if ($firstErr.length) $firstErr[0].scrollIntoViewIfNeeded();
+
+    if (!save) {
+      const $firstErr = this.$('.errorList:visible').eq(0);
+      if ($firstErr.length) {
+        $firstErr[0].scrollIntoViewIfNeeded();
+      } else {
+        // There's a model error that's not represented in the UI - likely
+        // developer error.
+        const msg = Object.keys(this.model.validationError)
+          .reduce((str, errKey) =>
+            `${str}${errKey}: ${this.model.validationError[errKey].join(', ')}<br>`, '');
+        openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
+          msg);
+      }
+    }
   }
 
   onChangeManagementType(e) {
@@ -769,8 +807,10 @@ export default class extends BaseModal {
    * and collections which are managed by nested views.
    */
   setModelData() {
-    const formData = this.getFormData(this.$formFields);
+    let formData = this.getFormData(this.$formFields);
     const item = this.model.get('item');
+    const metadata = this.model.get('metadata');
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY';
 
     // set model / collection data for various child views
     this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.setModelData());
@@ -778,27 +818,54 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
-    if (item.get('options').length) {
-      // If we have options, we shouldn't be providing a top-level quantity or
-      // productID.
-      item.unset('quantity');
-      item.unset('productID');
+    if (!isCrypto) {
+      if (item.get('options').length) {
+        // If we have options, we shouldn't be providing a top-level quantity or
+        // productID.
+        item.unset('quantity');
+        item.unset('productID');
 
-      // If we have options and are not tracking inventory, we'll set the infiniteInventory
-      // flag for any skus.
-      if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-        item.get('skus')
-          .forEach(sku => {
-            sku.set({
-              infiniteInventory: true,
-              quantity: -1,
+        // If we have options and are not tracking inventory, we'll set the infiniteInventory
+        // flag for any skus.
+        if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+          item.get('skus')
+            .forEach(sku => {
+              sku.set({
+                infiniteInventory: true,
+                quantity: -1,
+              });
             });
-          });
+        }
+      } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+        // If we're not tracking inventory and don't have any variants, we should provide
+        // a top-level quantity as -1, so it's considered infinite.
+        formData.item.quantity = -1;
       }
-    } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-      // If we're not tracking inventory and don't have any variants, we should provide a top-level
-      // quantity as -1, so it's considered infinite.
-      formData.item.quantity = -1;
+
+      formData.metadata = {
+        ...formData.metadata,
+        format: 'FIXED_PRICE',
+      };
+    } else {
+      item.unset('condition');
+      item.unset('productId');
+      item.unset('price');
+      metadata.unset('pricingCurrency');
+
+      formData = {
+        ...formData,
+        coupons: [],
+        item: {
+          ...formData.item,
+          options: [],
+          skus: [],
+        },
+        metadata: {
+          ...formData.metadata,
+          format: 'MARKET_PRICE',
+        },
+        shippingOptions: [],
+      };
     }
 
     this.model.set({
@@ -813,7 +880,7 @@ export default class extends BaseModal {
     });
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
-    if (this.model.get('metadata').get('contractType') !== 'PHYSICAL_GOOD') {
+    if (metadata.get('contractType') !== 'PHYSICAL_GOOD') {
       this.model.get('shippingOptions').reset();
     } else {
       // If any shipping options have a type of 'LOCAL_PICKUP', we'll
@@ -839,7 +906,7 @@ export default class extends BaseModal {
         return this;
       }
 
-      if (getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
+      if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,
         }).render().open();
@@ -890,16 +957,39 @@ export default class extends BaseModal {
   }
 
   get $formFields() {
+    const isCrypto = this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY';
+    const cryptoExcludes = isCrypto ? ', .js-inventoryManagementSection' : '';
     const excludes = '.js-sectionShipping, .js-couponsSection, .js-variantsSection, ' +
-      '.js-variantInventorySection';
+      `.js-variantInventorySection${cryptoExcludes}`;
 
-    return this.$(
-        `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
-        `.js-formSectionsContainer > section:not(${excludes}) ` +
-          'textarea[name]:not([class*="trumbowyg"])'
-      );
+    let $fields = this.$(
+      `.js-formSectionsContainer > section:not(${excludes}) select[name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) input[name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) div[contenteditable][name],` +
+      `.js-formSectionsContainer > section:not(${excludes}) ` +
+        'textarea[name]:not([class*="trumbowyg"])'
+    );
+
+    // Filter out hidden fields that are not applicable based on whether this is
+    // a crypto currency listing.
+    $fields = $fields.filter((index, el) => {
+      const $excludeContainers = isCrypto ?
+        this.getCachedEl('.js-standardTypeWrap')
+          .add(this.getCachedEl('.js-skuMatureContentRow')) :
+        this.getCachedEl('.js-cryptoTypeWrap');
+
+      let keep = true;
+
+      $excludeContainers.each((i, container) => {
+        if ($.contains(container, el)) {
+          keep = false;
+        }
+      });
+
+      return keep;
+    });
+
+    return $fields;
   }
 
   get $currencySelect() {
@@ -910,11 +1000,6 @@ export default class extends BaseModal {
   get $priceInput() {
     return this._$priceInput ||
       (this._$priceInput = this.$('#editListingPrice'));
-  }
-
-  get $conditionWrap() {
-    return this._$conditionWrap ||
-      (this._$conditionWrap = this.$('.js-conditionWrap'));
   }
 
   get $saveButton() {
@@ -1024,13 +1109,13 @@ export default class extends BaseModal {
   remove() {
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
-
     super.remove();
   }
 
   render(restoreScrollPos = true) {
     let prevScrollPos = 0;
     const item = this.model.get('item');
+    const metadata = this.model.get('metadata');
 
     if (restoreScrollPos) {
       prevScrollPos = this.el.scrollTop;
@@ -1046,10 +1131,7 @@ export default class extends BaseModal {
         returnText: this.options.returnText,
         listingCurrency: this.currency,
         currencies: this.currencies,
-        contractTypes: this.model.get('metadata')
-          .contractTypes
-          .map((contractType) => ({ code: contractType,
-            name: app.polyglot.t(`formats.${contractType}`) })),
+        contractTypes: metadata.contractTypesVerbose,
         conditionTypes: this.model.get('item')
           .conditionTypes
           .map((conditionType) => ({ code: conditionType,
@@ -1073,13 +1155,13 @@ export default class extends BaseModal {
         ...this.model.toJSON(),
       }));
 
+      this.setContractTypeClass(metadata.get('contractType'));
       super.render();
 
       this._$scrollLinks = null;
       this._$scrollToSections = null;
       this._$currencySelect = null;
       this._$priceInput = null;
-      this._$conditionWrap = null;
       this._$buttonSave = null;
       this._$inputPhotoUpload = null;
       this._$photoUploadingLabel = null;
@@ -1283,6 +1365,13 @@ export default class extends BaseModal {
         onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
       });
 
+      if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
+      this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
+        model: this.model,
+      });
+      this.getCachedEl('.js-cryptoTypeWrap')
+        .html(this.cryptoCurrencyType.render().el);
+
       setTimeout(() => {
         if (!this.rendered) {
           this.rendered = true;
@@ -1300,6 +1389,7 @@ export default class extends BaseModal {
         setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
       });
 
+      // This block should be after any dom manipulation in render.
       if (this.createMode) {
         if (!this.attrsAtCreate) {
           this.setModelData();

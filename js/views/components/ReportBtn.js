@@ -1,5 +1,6 @@
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -30,6 +31,7 @@ export default class extends baseVw {
     e.stopPropagation();
     if (!this.getState().reported) {
       this.trigger('startReport');
+      recordEvent('ReportListing');
     }
   }
 

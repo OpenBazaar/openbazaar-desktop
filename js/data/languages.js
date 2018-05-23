@@ -608,11 +608,11 @@ const languages = [
   },
   {
     code: 'nb',
-    name: 'Norwegian (Bokm?l)',
+    name: 'Norwegian (Bokmål)',
   },
   {
     code: 'nb-NO',
-    name: 'Norwegian (Bokm?l) (Norway)',
+    name: 'Norwegian (Bokmål) (Norway)',
   },
   {
     code: 'nl',
@@ -1125,14 +1125,18 @@ export const translationLangs = [
   //   name: '日本語 (Japanese, Japan)',
   //   code: 'ja_JP',
   // },
+  {
+    name: 'Norwegian (Bokmål)',
+    code: 'nb',
+  },
   // {
   //   name: '한국어 (Korean)',
   //   code: 'ko',
   // },
-  // {
-  // name: 'Polski (Polish)',
-  // code: 'pl',
-  // },
+  {
+    name: 'Polski (Polish)',
+    code: 'pl',
+  },
   {
     name: 'Português (Portuguese, Brazil)',
     code: 'pt_BR',
@@ -1152,11 +1156,11 @@ export const translationLangs = [
   // {
   //   name: 'Turkish (Turkish)',
   //   code: 'tr',
-  // },
-  // {
-  //   name: 'Українська (Ukrainian)',
-  //   code: 'uk',
-  // },
+// },
+  {
+    name: 'Українська (Ukrainian)',
+    code: 'uk',
+  },
   // {
   //   name: 'Uzbek (Uzbek)',
   //   code: 'uz',

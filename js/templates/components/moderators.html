@@ -6,27 +6,29 @@
       </div>
     </div>
   <% } %>
-  <% if (ob.noValidModerators) { %>
-  <p class="clrTErr">
-    <%= ob.polyT('moderators.noValidModerators') %>
-    <%= ob.polyT('moderators.noValidModeratorsBody') %>
-  </p>
-  <% } %>
-  <% if (ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
-    <div class="moderatorCard moderatorsMessage clrBr">
-      <div class="moderatorCardInner">
-        <div class="flexCent">
-          <div class="flexColRows flexHCent gutterVTn">
-            <h4><%= ob.polyT('moderators.noVerifiedModerators') %></h4>
-            <div class="tx4 clrT2"><%= ob.polyT('moderators.noVerifiedModeratorsBody') %></div>
-            <div class="padTn"><% // just a spacer %></div>
-            <div>
-            <button class="btn clrP clrBr js-showUnverified"><%= ob.polyT('moderators.showUnverified') %></button>
+  <% if (ob.purchase) { %>
+  <% // only show the errors below if this is a purchase. TODO: move this to the purchase template. %>
+    <% if (ob.noValidModerators || ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
+      <div class="moderatorCard moderatorsMessage clrBr">
+        <div class="moderatorCardInner">
+          <div class="flexCent">
+            <div class="flexColRows flexHCent gutterVTn">
+              <% if (ob.noValidModerators) { %>
+                <h4 class="clrTErr"><%= ob.polyT('moderators.noValidModerators') %></h4>
+                <div class="tx4 clrTErr"><%= ob.polyT('moderators.noValidModeratorsBody') %></div>
+              <% } else { %>
+                <h4><%= ob.polyT('moderators.noVerifiedModerators') %></h4>
+                <div class="tx4 clrT2"><%= ob.polyT('moderators.noVerifiedModeratorsBody') %></div>
+                <div class="padTn"><% // just a spacer %></div>
+                <div>
+                  <button class="btn clrP clrBr js-showUnverified"><%= ob.polyT('moderators.showUnverified') %></button>
+                </div>
+              <% } %>
             </div>
           </div>
         </div>
       </div>
-    </div>
+    <% } %>
   <% } %>
 </div>
 <div class="js-statusWrapper"></div>

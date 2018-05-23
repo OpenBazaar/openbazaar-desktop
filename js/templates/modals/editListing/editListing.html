@@ -14,17 +14,44 @@
     <div class="boxList tx4 clrTx1Br">
       <%
         [
-          ob.polyT('editListing.sectionNames.general'),
-          ob.polyT('editListing.sectionNames.photos'),
-          ob.polyT('editListing.sectionNames.shipping'),
-          ob.polyT('editListing.sectionNames.tags'),
-          ob.polyT('editListing.sectionNames.category'),
-          ob.polyT('editListing.sectionNames.variants'),
-          ob.polyT('editListing.sectionNames.returnPolicy'),
-          ob.polyT('editListing.sectionNames.termsAndConditions'),
-          ob.polyT('editListing.sectionNames.coupons'),
-        ].forEach((tabName, index) => {
-          print(`<a class="js-scrollLink tab row ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tabName}</a>`)
+          {
+            key: 'general',
+            name: ob.polyT('editListing.sectionNames.general'),
+          },
+          {
+            key: 'photos',
+            name: ob.polyT('editListing.sectionNames.photos'),
+          },
+          {
+            key: 'shipping',
+            name: ob.polyT('editListing.sectionNames.shipping'),
+          },
+          {
+            key: 'tags',
+            name: ob.polyT('editListing.sectionNames.tags'),
+          },
+          {
+            key: 'category',
+            name: ob.polyT('editListing.sectionNames.category'),
+          },
+          {
+            key: 'variants',
+            name: ob.polyT('editListing.sectionNames.variants'),
+          },
+          {
+            key: 'returnPolicy',
+            name: ob.polyT('editListing.sectionNames.returnPolicy'),
+          },
+          {
+            key: 'termsAndConditions',
+            name: ob.polyT('editListing.sectionNames.termsAndConditions'),
+          },
+          {
+            key: 'coupons',
+            name: ob.polyT('editListing.sectionNames.coupons'),
+          }
+        ].forEach((tab, index) => {
+          print(`<a class="js-scrollLink tab row tab-${tab.key} ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tab.name}</a>`)
         });
       %>
     </div>
@@ -48,60 +75,63 @@
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTitle') %></div>
+                <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
-            <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
-                <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
-                <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto">
-                  <% ob.contractTypes.forEach((contractType) => { %>
-                  <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
-                  <% }); %>
-                </select>
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperType') %></div>
-              </div>
-              <div class="col6 simpleFlexCol">
-                <% // hiding until this is ready on the back end %>
-                <div class="hide">
-                  <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
-                  <select id="editListingVisibility" class="clrBr clrP clrSh2 marginTopAuto">
-                    <%
-                      // todo: will translate and implement fully when this field is implemented into the API.
-                    %>
-                    <option value="hidden">Hidden (doesn't display in store)</option>
-                  </select>
-                </div>
-              </div>
-            </div>
-            <div class="flexRow gutterH">
-              <div class="col6 simpleFlexCol">
-                <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
-                  <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
-                <div class="inputSelect marginTopAuto">
-                  <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
-                  <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
-                    <% ob.currencies.forEach((currency) => {%>
-                    <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+            <div class="standardTypeWrap js-standardTypeWrap pad0 padSmKids padStackAll">
+              <div class="flexRow gutterH">
+                <div class="col6 simpleFlexCol">
+                  <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>
+                  <% if (ob.errors['metadata.contractType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.contractType'] })) %>
+                  <select id="editContractType" name="metadata.contractType" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
+                    <% ob.contractTypes.forEach((contractType) => { %>
+                    <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
                     <% }); %>
                   </select>
+                  <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperType', { smart_count: 4 }) %></div>
                 </div>
-                <div class="clrT2 txSm padSm"><%= 
-                ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                <div class="col6 simpleFlexCol">
+                  <% // hiding until this is ready on the back end %>
+                  <div class="hide">
+                    <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
+                    <select id="editListingVisibility" class="clrBr clrP clrSh2 marginTopAuto">
+                      <%
+                        // todo: will translate and implement fully when this field is implemented into the API.
+                      %>
+                      <option value="hidden">Hidden (doesn't display in store)</option>
+                    </select>
+                  </div>
+                </div>
               </div>
-              <div class="col6 simpleFlexCol js-conditionWrap <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
-                <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
-                <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
-                <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto">
-                  <% ob.conditionTypes.forEach((conditionType) => { %>
-                  <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
-                  <% }); %>
-                </select>
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperCondition') %></div>
+              <div class="flexRow gutterH">
+                <div class="col6 simpleFlexCol">
+                  <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
+                  <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
+                  <div class="inputSelect marginTopAuto">
+                    <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' && ob.metadata.pricingCurrency ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
+                    <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
+                      <% ob.currencies.forEach((currency) => {%>
+                      <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+                      <% }); %>
+                    </select>
+                  </div>
+                  <div class="clrT2 txSm helper"><%= 
+                  ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                </div>
+                <div class="col6 simpleFlexCol conditionWrap">
+                  <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
+                  <% if (ob.errors['item.condition']) print(ob.formErrorTmpl({ errors: ob.errors['item.condition'] })) %>
+                  <select id="editListingCondition" name="item.condition" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
+                    <% ob.conditionTypes.forEach((conditionType) => { %>
+                    <option value="<%= conditionType.code %>" <% if (conditionType.code === ob.item.condition) print('selected') %>><%= conditionType.name %></option>
+                    <% }); %>
+                  </select>
+                  <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperCondition') %></div>
+                </div>
               </div>
             </div>
-            <div class="flexRow gutterH">
+            <div class="cryptoTypeWrap js-cryptoTypeWrap pad0"></div>
+            <div class="flexRow gutterH skuMatureContentRow js-skuMatureContentRow">
               <div class="col6 simpleFlexCol js-skuFieldContainer"></div>
               <div class="col6 simpleFlexCol">
                 <label><%= ob.polyT('editListing.nsfwLabel') %></label>
@@ -126,7 +156,7 @@
                     <label for="editListingNSFWInputFalse"><%= ob.polyT('editListing.nsfwNo') %></label>
                   </div>
                 </div>
-                <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperNSFW') %></div>
+                <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperNSFW') %></div>
               </div>
             </div>
             <div class="flexRow gutterH">
@@ -148,7 +178,7 @@
         </div>
         <% if (ob.errors['item.images']) print(ob.formErrorTmpl({ errors: ob.errors['item.images'] })) %>
         <input type="file" id="inputPhotoUpload" accept="image/*" class="hide" multiple>
-        <ul class="unstyled uploadItems clrBr js-photoUploadItems">
+        <ul class="unstyled uploadItems clrBr rowSm js-photoUploadItems">
           <li class="addElement tile js-addPhotoWrap">
             <span class="imagesIcon ion-images clrT4"></span>
             <button class="btn clrP clrBr clrT tx6 js-addPhoto"><%= ob.polyT('editListing.btnAddPhoto') %></button>
@@ -158,10 +188,10 @@
             });
           %>
         </ul>
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperPhotos', { maxPhotos: ob.max.photos }) %></div>
       </section>
 
-      <section class="js-scrollToSection js-sectionShipping shippingSection <% if (ob.metadata.contractType !== 'PHYSICAL_GOOD') print('disabled') %>">
+      <section class="js-scrollToSection js-sectionShipping shippingSection">
         <div class="gutterVMd">
           <div class="js-shippingOptionsWrap shippingOptionsWrap gutterVMd"></div>
           <div class="contentBox padMd clrP clrBr clrSh3 tx3 shipOptPlaceholder">
@@ -172,8 +202,8 @@
               })) %>
             <h2 class="h4 clrT js-addShipOptSectionHeading"><%= ob.polyT('editListing.shippingOptions.optionHeading', { listPosition: ob.shippingOptions.length + 1 }) %></h2>
             <hr class="clrBr rowMd" />
-            <a class="btn clrBr clrP clrSh2 js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
-            <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperShipping') %></div>
+            <a class="btn clrBr clrP clrSh2 rowSm js-addShippingOption"><%= ob.polyT('editListing.shippingOptions.btnAddShippingOption') %></a>
+            <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperShipping') %></div>
           </div>
         </div>
       </section>
@@ -184,7 +214,7 @@
         <% if (ob.errors['item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
         <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTags') %></div>        
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTags') %></div>        
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
@@ -215,18 +245,18 @@
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.returnPolicy') %></h2>
         <hr class="clrBr rowMd" />
         <% if (ob.errors['refundPolicy']) print(ob.formErrorTmpl({ errors: ob.errors['refundPolicy'] })) %>
-        <a class="btn clrP clrBr clrSh2 js-addReturnPolicy <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
+        <a class="btn clrP clrBr clrSh2 js-addReturnPolicy rowSm <% ob.expandedReturnPolicy && print('hide') %>"><%= ob.polyT('editListing.btnAddReturnPolicy') %></a>
         <textarea rows="8" name="refundPolicy" class="clrBr clrP clrSh2 <% !ob.expandedReturnPolicy && print('hide') %>" id="editListingReturnPolicy" placeholder="<%= ob.polyT('editListing.placeholderReturnPolicy') %>"><%= ob.refundPolicy %></textarea>
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperReturnPolicy') %></div>
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperReturnPolicy') %></div>
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.termsAndConditions') %></h2>
         <hr class="clrBr rowMd" />
         <% if (ob.errors['termsAndConditions']) print(ob.formErrorTmpl({ errors: ob.errors['termsAndConditions'] })) %>
-        <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
+        <a class="btn clrP clrBr clrSh2 js-addTermsAndConditions rowSm <% ob.expandedTermsAndConditions && print('hide') %>"><%= ob.polyT('editListing.btnTermsAndConditions') %></a>
         <textarea rows="8" name="termsAndConditions" class="clrBr clrP clrSh2 <% !ob.expandedTermsAndConditions && print('hide') %>" id="editListingTermsAndConditions" placeholder="<%= ob.polyT('editListing.placeholderTerms') %>"><%= ob.termsAndConditions %></textarea>
-        <div class="clrT2 txSm padSm"><%= ob.polyT('editListing.helperTerms') %></div>
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTerms') %></div>
       </section>
 
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 couponsSection js-couponsSection <% ob.coupons.length && print('expandedCouponView') %>">

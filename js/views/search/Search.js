@@ -17,6 +17,7 @@ import '../../lib/select2';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
+import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -211,6 +212,7 @@ export default class extends baseVw {
 
   clickDeleteProvider() {
     this.deleteProvider();
+    recordEvent('Discover_DeleteProvider');
   }
 
   makeDefaultProvider() {
@@ -224,6 +226,7 @@ export default class extends baseVw {
 
   clickMakeDefaultProvider() {
     this.makeDefaultProvider();
+    recordEvent('Discover_MakeDefaultProvider');
   }
 
   addQueryProvider() {
@@ -233,6 +236,7 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
+    recordEvent('Discover_AddQueryProvider');
   }
 
   callSearchProvider(searchUrl) {
@@ -368,11 +372,27 @@ export default class extends baseVw {
       this.activateProvider(app.searchProviders.at(0));
       errorDialog.close();
     });
+
+    recordEvent('Discover_SearchError', {
+      error: msg || 'unknown error',
+    });
   }
 
   createResults(data, searchUrl) {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
+
+    let viewType = 'grid';
+
+    if (data && data.options && data.options.type &&
+      data.options.type.options &&
+      data.options.type.options.length) {
+      if (data.options.type.options.find(
+        op => op.value === 'cryptocurrency' && op.checked
+      )) {
+        viewType = 'cryptoList';
+      }
+    }
 
     const resultsView = this.createChild(Results, {
       searchUrl,
@@ -382,6 +402,7 @@ export default class extends baseVw {
       serverPage: this.serverPage,
       pageSize: this.pageSize,
       initCol: this.resultsCol,
+      viewType,
     });
 
     this.$resultsWrapper.html(resultsView.render().el);
@@ -393,12 +414,14 @@ export default class extends baseVw {
   clickSearchBtn() {
     this.serverPage = 0;
     this.processTerm(this.$searchInput.val());
+    recordEvent('Discover_ClickSearch');
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
       this.serverPage = 0;
       this.processTerm(this.$searchInput.val());
+      recordEvent('Discover_EnterKeySearch');
     }
   }
 
@@ -406,15 +429,18 @@ export default class extends baseVw {
     this.sortBySelected = $(e.target).val();
     this.serverPage = 0;
     this.processTerm(this.term);
+    recordEvent('Discover_ChangeSortBy');
   }
 
   changeFilter() {
     this.serverPage = 0;
     this.processTerm(this.term);
+    recordEvent('Discover_ChangeFilter');
   }
 
   onClickSuggestion(opts) {
     this.processTerm(opts.suggestion);
+    recordEvent('Discover_ClickSuggestion');
   }
 
   scrollToTop() {

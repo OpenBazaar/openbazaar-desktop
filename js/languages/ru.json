@@ -7,8 +7,8 @@
     "statusPublishComplete": "Успешно опубликовано. "
   },
   "localServerShutdownDialog": {
-    "title": "Shutting down the built-in server",
-    "body": "The built-in server is being shut down. This may take up to a few minutes. During shutdown, important cleanup tasks are done. It is important not to interrupt this process. When the process completes, the app will close."
+    "title": "Отключаем встроенный сервер",
+    "body": "Встроенный сервер отключается. Это может занять несколько минут. В процессе отключения будут проведены важные задачи по очистке. Важно не прерывать этот процесс. Когда процесс будет завершён, приложение закроется."
   },
   "follow": {
     "typeFollow": "подписаться",
@@ -24,50 +24,50 @@
   },
   "feeChangeWidget": {
     "btnChange": "изменить",
-    "label": "%{cur} fee:"
+    "label": "%{cur} комиссия:"
   },
   "blockButton": {
-    "tipBlock": "Block this user",
-    "tipUnblock": "Unblock this user",
+    "tipBlock": "Заблокировать этого пользователя",
+    "tipUnblock": "Разблокировать этого пользователя",
     "btnTxtBlock": "Блокировка",
     "btnTxtUnblock": "Разблокировка"
   },
   "blockedWarning": {
-    "heading": "You blocked this user",
-    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
-    "paragraph2": "Would you like to unblock and view their page?",
+    "heading": "Вы заблокировали этого пользователя",
+    "paragraph1": "Пользователь находится в списке заблокированных вами пользователей. Вы не можете просматривать его страницу или листинги, пока страница заблокирована. Заблокированные пользователи также не могут отправлять вам сообщения или размещать заказы в вашем магазине.",
+    "paragraph2": "Вы хотите разблокировать и просмотреть эту страницу?",
     "btnCancel": "Отмена",
-    "btnUnblock": "Yes, unblock"
+    "btnUnblock": "Да, разблокировать"
   },
   "nsfwWarning": {
-    "heading": "Mature content",
-    "paragraph1": "This listing has been labeled as containing mature content. It may be offensive to some people. If you don't want to view it, please click cancel to return to the previous screen.",
+    "heading": "Материалы для взрослых",
+    "paragraph1": "Содержимое было отмечено как содержащее контент только для взрослых. Некоторые люди могут посчитать его оскорбительным. Если вы не хотите просматривать его, пожалуйста, нажмите на кнопку возврата на предыдущий экран.",
     "paragraph2": "Вы уверены, что хотите продолжить?",
-    "nsfwOffLabel": "Always display mature content",
+    "nsfwOffLabel": "Всегда показывать материалы для взрослых",
     "btnCancel": "Отмена",
     "btnProceed": "Да, продолжать"
   },
   "walletSetup": {
-    "heading": "OpenBazaar Wallet Setup",
+    "heading": "Настройка кошелька OpenBazaar",
     "currencyLabel": "Валюта",
-    "currencyHelper": "Choose a currency for your Wallet",
-    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
-    "curInUseTip": "You already have a built-in server with this wallet currency.",
+    "currencyHelper": "Выберите валюту для своего кошелька",
+    "currencyHelper2": "Принимайте и отправляйте платежи в выбранной выше криптовалюте. Пожалуйста, хорошо подумайте, прежде чем принять решение. Вы не сможете изменить валюту, после того как сделаете выбор.",
+    "curInUseTip": "У вас уже есть сервер с этой криптовалютой.",
     "zcashBinaryLabel": "Zcash Binary",
-    "fullNodeLink": "here",
+    "fullNodeLink": "здесь",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Browse",
+    "btnBrowse": "Просмотр",
     "btnNext": "Далее"
   },
   "unsupportedCryptoCurDialog": {
-    "title": "Unsupported Currency",
-    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
-    "connectLink": "connect"
+    "title": "Неподдерживаемая валюта",
+    "body": "Мы не смогли обработать ваш запрос, поскольку сервер использует криптовалюту (%{curCode}), которая не поддерживается этим клиентом. Пожалуйста, %{connectLink} к другому серверу.",
+    "connectLink": "Соединение"
   },
   "setValidCurDialog": {
     "title": "Invalid Local Currency",
     "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
-    "settingsLink": "settings"
+    "settingsLink": "Настройки"
   },
   "consoleWarning": {
     "heading": "Стоп!",
@@ -76,12 +76,12 @@
   },
   "block": {
     "errorModal": {
-      "titleUnableToBlock": "Unable to block",
-      "titleUnableToUnblock": "Unable to unblock",
-      "titleUnableToBlockUnblock": "Unable to block / unblock",
-      "blockFailedListHeading": "Unable to block the following users:",
-      "unblockFailedListHeading": "Unable to unblock the following users:",
-      "reason": "Reason: %{reason}"
+      "titleUnableToBlock": "Невозможно заблокировать",
+      "titleUnableToUnblock": "Невозможно разблокировать",
+      "titleUnableToBlockUnblock": "Невозможно заблокировать / разблокировать",
+      "blockFailedListHeading": "Невозможно заблокировать следующих пользователей:",
+      "unblockFailedListHeading": "Невозможно разблокировать следующих пользователей:",
+      "reason": "Причина: %{reason}"
     }
   },
   "resyncBlockchainError": "Ошибка при перезагрузке транзакций.",
@@ -102,7 +102,7 @@
     "install": "Установить Сейчас"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because the price is in an unrecognized currency."
+    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
   },
   "addressBarPlaceholder": "Напишите @handle, OpenBazaar ID или ищите по ключевому слову",
   "testnet": "Режим Тестирования",
@@ -140,6 +140,7 @@
     "dialogs": {
       "btnRetry": "Повторить",
       "btnManageConnections": "Управление Соединениями",
+      "btnContinue": "Продолжить",
       "retryConfig": {
         "title": "Невозможно определить настройки Вашего сервера."
       },
@@ -156,12 +157,19 @@
         "title": "Невозможно получить баланс кошелька."
       },
       "unableToGetSearchProviders": {
-        "title": "Невозможно загрузить поставщиков поиска."
+        "title": "Невозможно загрузить поставщиков поиска.",
+        "btnClose": "Continue Without Search Providers"
+      },
+      "unableToGetVerifiedMods": {
+        "title": "Невозможно загрузить верифицированных модераторов.",
+        "btnRetry": "Обновить",
+        "btnClose": "Продолжить",
+        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
       }
     },
     "connectMessaging": {
       "cancelLink": "отменить",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
+      "connectAttemptMsg": "Подключение к %{serverName}. %{cancelLink}",
       "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
     }
   },
@@ -177,6 +185,7 @@
       "refunded": "%{vendorName} отклонил ваш заказ.",
       "fulfillment": "%{vendorName} выполнил ваш заказ.",
       "orderComplete": "%{buyerName} оставил отзыв по своему заказу.",
+      "processingError": "%{vendorName} не смог обработать ваш заказ из-за ошибки.",
       "disputeOpen": "%{disputerName} открыл спор с вами.",
       "disputeOpenMod": "%{disputerName} открыл спор с %{disputeeName}.",
       "disputeUpdate": "%{disputeeName} использует свой договор для оспаривания с %{disputerName}.",
@@ -204,7 +213,7 @@
     "sales": "Продажи",
     "cases": "История",
     "settings": "Настройки",
-    "help": "Help",
+    "help": "Помощь",
     "toolTip": {
       "back": "Назад",
       "forward": "Вперед",
@@ -214,7 +223,7 @@
       "notifications": "Уведомления",
       "nav": "Навигация",
       "close": "Закрыть",
-      "currentPrice": "Current %{cur} price"
+      "currentPrice": "Текущая %{cur} цена"
     },
     "serversMenu": {
       "newServer": "Новый сервер",
@@ -268,7 +277,7 @@
       "store": "Магазин",
       "following": "Читаемые",
       "followers": "Подписчики",
-      "reputation": "Reputation"
+      "reputation": "Репутация"
     },
     "followTab": {
       "noFollowers": "Никто не подписан на %{name} пока",
@@ -326,13 +335,12 @@
       "following": "Читаемые",
       "followers": "Читатели"
     },
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Вы заблокировали этого пользователя"
   },
   "reputation": {
-    "averageRating": "overall rating",
+    "averageRating": "общая оценка",
     "totalReviews": "review |||| reviews",
     "noTitle": "Listing title not found"
-
   },
   "userShort": {
     "userLoading": "Загрузка...",
@@ -343,13 +351,40 @@
     "tipUnfollow": "Отписаться",
     "tipModAdd": "Добавить в качестве модератора",
     "tipModRemove": "Удалить модератора",
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "Вы заблокировали этого пользователя"
+  },
+  "verifiedMod": {
+    "modVerified": {
+      "titleShort": "Верифицирован",
+      "titleLong": "Проверенный модератор",      
+      "link": "Узнать больше",
+      "tipBody": "This moderator is verified by %{name}. %{link}"
+    },
+    "modUnverified": {
+      "titleShort": "Не верифицирован",
+      "titleLong": "Непроверенный модератор",
+      "not": "НЕТ",
+      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
+    },
+    "listingVerified": {
+      "link": "Узнать больше",
+      "tipBody": "You can purchase this listing with a moderator verified by %{name}. %{link}"
+    },
+    "listingUnverified": {
+      "not": "НЕТ",
+      "tipBody": "This listing does %{not} include a verified moderator. Proceed with caution."
+    },    
+    "link": "Узнать больше",
+    "type": "Тип:",
+    "typeCombined": "%{type}%{name}",
+    "genericDescription": "You can purchase this listing with a moderator verified by %{name}. %{link}"
   },
   "moderatorCard": {
     "view": "Просмотр",
-    "FIXED": "%{amount}**",
-    "PERCENTAGE": "%{percentage}%**",
-    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)**",
+    "FIXED": "%{amount}*",
+    "PERCENTAGE": "%{percentage}%*",
+    "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "Информация о этом модераторе не удалось загрузить.",
     "invalid": "Этот пользователь сейчас не является модератором.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -366,9 +401,9 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage})**",
     "termsOfService": "Условия предоставления услуг",
     "addAsModeratorButton": "Добавить в качестве модератора",
-    "disclaimer": "** Плата за услуги модератора действует только в случае возникновения спора.",
+    "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Языки",
-    "currenciesSupported": "Currencies Supported",
+    "currenciesSupported": "Поддерживаемые валюты",
     "noCoinSupport": "This moderator does not support %{coin}."
   },
   "about": {
@@ -382,15 +417,15 @@
     "client": "Клиент",
     "server": "Сервер",
     "btnUpdateCheck": "Проверить обновления",
-    "downloadLatest": "Download Latest",
+    "downloadLatest": "Скачать последнее",
     "donationsTab": {
       "linkText": "Пожертвования",
       "sectionHeader": "Пожертвования ",
       "btnCopyAddress": "Скопировать адрес",
       "btnOpenInWallet" : "Открыть в кошельке",
       "bannerCountDonations": "%{donationCountFloor}+ Пожертвования получены!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
+      "bitcoinIntroLine": "Пожертвования в биткоинах можно отправлять на следующий адрес:",
+      "bchWarning": "Не отправляйте Bitcoin Cash на этот адрес.",
       "unableToOpenInWallet": {
         "title": "Невозможно открыть в кошельке",
         "body": "Не удалось открыть этот адрес в кошельке, потому что передаётся платеж . Подождите, пока передача завершится и повторите попытку."
@@ -430,9 +465,9 @@
       }
     },
     "helpTab": {
-      "linkText": "Help",
-      "sectionHeader": "Help",
-      "supportLink": "Support page on OpenBazaar.org",
+      "linkText": "Помощь",
+      "sectionHeader": "Помощь",
+      "supportLink": "Страница поддержки OpenBazaar.org",
       "text": "Need help with the OpenBazaar software? Please visit the %{supportLink}. There are many support guides and FAQs that should help you resolve your issue."
     }
   },
@@ -460,8 +495,9 @@
       "statusSaveComplete": "Основные настройки сохранены.",
       "statusSaveFailed": "Не удалось сохранить основные настройки.",
       "saveErrorAlertTitle": "Не удалось сохранить основные настройки.",
-      "searchProvider": "Найти провайдера",
-      "restoreDefaultProvider": "Сброс настроек"
+      "verifiedMods": "Проверенные модераторы",
+      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "restoreDefault": "Сброс настроек"
     },
     "pageTab": {
       "helperAbout": "Отображается на вашей домашней странице",
@@ -605,6 +641,12 @@
         "macOS": "Mac (верх слева)",
         "windowsOS": "Windows (верх справа)"
       },
+      "integrations": {
+        "sectionName": "Integrations",
+        "sharing": "Data Sharing",
+        "sharingHelper": "Anonymous data is shared with the development team.",
+        "changeBtn": "Change Sharing Settings"
+      },
       "statusSaving": "Сохранение расширенных настроек...",
       "statusSaveComplete": "Расширенные настройки сохранены.",
       "statusSaveFailed": "Не удалось сохранить расширенные настройки.",
@@ -657,9 +699,10 @@
       "selectedModeratorsEmptyWarning": "В Вашем магазине доступна только прямая оплата",
       "moderatorByIDPlaceholder": "Введите Ваш @handle или ID",
       "moderatoryByIDSubmit": "Найти",
-      "availableModerators": "Доступные модераторы в сети",
+      "availableModerators": "Доступные модераторы",
       "browseModerators": "Просмотреть модераторов",
-      "browseMoreModerators": "Загрузить больше модераторов",
+      "verifiedOnly": "Только для верифицированных модераторов",
+      "disclaimer": "* The moderator service charge only applies when an order is disputed.",
       "loading": "Загрузка",
       "status": {
         "saving": "Сохранение настроек магазина...",
@@ -669,14 +712,13 @@
       },
       "errors": {
         "modNotFoundTitle": "Модератор не найден",
-        "modNotFound": "% {guidOrHandle} не удалось найти в сети. Возможно причина в недействительном ID или Handle.",
-        "modNotFoundSelected": "% {guidOrHandle} не удалось найти в сети. Возможно причина в недействительном ID или Handle. Они не будут отображаться в вашем списке, но сохранятся как один из ваших модераторов.",
-        "availableModsFailed": "Не удалось обнаружить в сети доступных модераторов.",
-        "modAlreadyAdded": "Вы уже добавили этого модератора.",
+        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
+        "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "Необходимо добавить ID или дескриптор модератора.",
-        "modIsInvalid": "%{guid} не является модератором.",
-        "modsAreInvalid": "The followings mods are not currently valid moderators: %{guids}",
-        "modsAreInvalidAsync": "The following mods could not be found on the network. They are still saved in your list of moderators, but information for them is not available. %{guids}"
+        "notGUID": "%{guid} is not a valid peer ID",
+        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
+        "dupeGUID": "%{guid} is one of your current moderators."
       }
     },
     "blockedTab": {
@@ -809,7 +851,7 @@
       "warning": "Предупреждение:",
       "torServerWarning": "%{warning} Чтобы быть анонимным, очень важно, чтобы Вы также запустили сервер через Tor.",
       "lblServerType": "Тип",
-      "helperServerType": "Select your server type",
+      "helperServerType": "Выберите тип вашего сервера",
       "serverTypeBuiltin": "Built-in (local)",
       "serverTypeBuiltinTip": "This server is created and controlled by this app on this computer, and only runs when this app is running. This is recommended for most users.",
       "serverTypeStandalone": "Stand-alone (advanced)",
@@ -853,7 +895,7 @@
       "sendBtn": "Отправить",
       "clear": "Очистить",
       "sendPaymentFailDialogTitle": "Невозможно отправить оплату",
-      "errorInvalidAddress": "The payment address is not valid."
+      "errorInvalidAddress": "Недопустимый адрес оплаты."
     },
     "spendConfirmBox": {
       "heading": "Вы уверены?",
@@ -899,7 +941,8 @@
   "formats": {
     "PHYSICAL_GOOD": "Физический товар",
     "DIGITAL_GOOD": "Цифровой товар",
-    "SERVICE": "Услуга"
+    "SERVICE": "Услуга",
+    "CRYPTOCURRENCY": "Cryptocurrency"
   },
   "conditionTypes": {
     "NEW": "Новый",
@@ -907,6 +950,11 @@
     "USED_GOOD": "Б/у - Хорошее",
     "USED_POOR": "Б/у - Плохое",
     "REFURBISHED": "Восстановленный"
+  },
+  "inventoryDisplay": {
+    "retryLink": "Обновить",
+    "fetchError": "There was an error obtaining the inventory. %{retryLink}",
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
   },
   "listingDetail": {
     "edit": "Изменить",
@@ -918,6 +966,7 @@
     "viewPhotos": "View %{count} Photo |||| View %{count} Photos",
     "type": "Тип: %{type}",
     "condition": "Состояние: %{condition}",
+    "inventory": "Inventory: %{inventory}",
     "tags": "Теги",
     "paymentsAccepted": "Payments Accepted",
     "noTags": "Теги не указаны.",
@@ -965,11 +1014,11 @@
       "fetchReviews": "Произошла ошибка при загрузке отзывов. %{error}",
       "loadReview": "Обзор %{id} не удался %{error}",
       "noPurchaseTitle": "Этот товар недоступен для продажи",
-      "zeroPriceMsg": "Вы не можете совершить покупку с нулевой ценой или ниже"
+      "zeroPriceMsg": "Вы не можете совершить покупку с нулевой ценой или ниже",
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
     }
   },
   "listingCard": {
-    "btnDetails": "Детали",
     "freeShippingBanner": "Бесплатная доставка",
     "deleting": "Удаление...",
     "deleted": "Удалено ",
@@ -986,10 +1035,10 @@
       "title": "Произошла ошибка загрузки товара.",
       "bodyNotFound": "Листинг не найден. Он мог быть удален создателем."
     },
-    "btnShowMatureContent": "Show Mature Content",
-    "tipShowMatureContent": "Show Mature Content",
-    "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "btnShowMatureContent": "Показать контент для взрослых",
+    "tipShowMatureContent": "Показать контент для взрослых",
+    "tipHideMatureContent": "Скрыть контент для взрослых",
+    "blockedUser": "Вы заблокировали этого пользователя"
   },
   "listingDelete": {
     "deletingListing": "Удаление товара %{listing}…",
@@ -1031,7 +1080,7 @@
       "category": "Категория",
       "categoryDetailed": "Категория (Для организации Вашего магазина)",
       "variants": "Варианты",
-      "variantsDetailed": "Variants (Add additional sizes, colors, materials, etc)",
+      "variantsDetailed": "Варианты (добавьте дополнительные размеры, цвета, материалы и т. д.)",
       "inventory": "Inventory",
       "returnPolicy": "Политика возвратов",
       "termsAndConditions": "Правила и условия",
@@ -1045,8 +1094,8 @@
     "placeholderReturnPolicy": "What is your return policy? How many days are returns accepted for? Who pays for return shipping (if needed)? etc",
     "placeholderTerms": "What are the terms and conditions of the listing? What are you responsible for as the vendor? Is there a warranty? When is the transaction final? etc",
     "helperTitle": "Something descriptive that clearly explains what you're selling",
-    "helperType": "Выберите из трех видов",
-    "helperShipping": "Ship wherever you'd like!",
+    "helperType": "Choose from %{smart_count} type |||| Choose from %{smart_count} types",
+    "helperShipping": "Доставка куда вам угодно!",
     "helperPhotos": "Include up to %{maxPhotos} photos",
     "helperSKU": "Уникальный идентификатор для Вашего листинга",
     "helperSKUWithVariants": "When variants are present, Skus can be declared in the %{variantInventoryLink} section",
@@ -1080,8 +1129,20 @@
     "viewListingLink": "Просмотр товара",
     "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
-      "body": "This listing is set in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
-      "btnOk": "OK"
+      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "btnOk": "ОК"
+    },
+    "cryptoCurrencyType": {
+      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
+      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
+      "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
+      "marketValueLabel": "Current Market Value",
+      "marketValuePerCoin": "(%{amount} per %{curCode})",
+      "coinType": "Coin Type",
+      "quantity": "Количество",
+      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
+      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1094,7 +1155,7 @@
         "FIXED_PRICE": "Фиксированная цена",
         "LOCAL_PICKUP": "Самовывоз"
       },
-      "btnAddShippingOption": "Add Shipping Option",
+      "btnAddShippingOption": "Добавить опцию доставки",
       "btnDeleteShippingOption": "Удалить",
       "clearAll": "Clear All",
       "services": {
@@ -1147,7 +1208,7 @@
     "variantInventory": {
       "helperText": "Variant options with a quantity of 0 will not display",
       "placeholderSKU": "SKU, ID, и т. д.",
-      "unlimitedQuantityLabel": "unlimited",
+      "unlimitedQuantityLabel": "неограниченный",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
       "unableToCalcTotalPrice": "Unable to calculate",
       "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
@@ -1195,6 +1256,14 @@
         "transactions": "Операции",
         "myPage": "Моя страница"
     },
+    "cryptoListViewHeader": {
+      "colTitle": "Название",
+      "colVendor": "Вендор",
+      "colPrice": "Price (1 unit)",
+      "colInventory": "Inventory",
+      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
+      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+    },
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
@@ -1214,7 +1283,7 @@
       "btnChange": "Изменить",
       "introLine": "A free marketplace. No fees. No restrictions. Earn %{cur}.",
       "tagLine": "Buy and Sell Freely",
-      "btnGetStarted": "Get Started"
+      "btnGetStarted": "Начать"
     },
     "infoScreen": {
       "nameLbl": "Имя",
@@ -1275,11 +1344,14 @@
     "closeNote": "Ваш платеж был отправлен поставщику.",
     "moderatorNote": "*Плата за услугу модератора применяется только в случае открытия спора.",
     "quantity": "Количество",
-    "useShapeShift": "Или воспользуйтесь ShapeShift в следующем шаге",
-    "moderatedPayment": "Модерируемый платёж",
-    "tooLowForMods": "Based on the current estimated fee, the moderated payment option is not available for orders under %{minModPrice}. A direct payment will be used instead.",
-    "noValidModerators": "Для этого заказа нет доступных модераторов.",
-    "moderationDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with a moderator. *The moderator service fee only applies if a dispute is opened.",
+    "inventory": "Max: %{inventory}",
+    "cryptoAddressHeading": "Your %{coinType} address",
+    "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
+    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",    
+    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "directPayment": "Оплатить напрямую",
+    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
     "chooseModerator": "Выберите этого модератора",
     "confirmPayment": {
       "title": "Все выглядит хорошо ?",
@@ -1313,7 +1385,7 @@
       "estimatedProcessing": "Расчетное время обработки: %{time}",
       "noData": "Не Определено",
       "vendorMessage": "Сообщение для поставщика (необязательно)",
-      "vendorMessagePlaceholder": "Provide additional details, ask a question, provide feedback…",
+      "vendorMessagePlaceholder": "Предоставьте дополнительную информацию, задайте вопрос, оставьте отзыв...",
       "vendorMessageLink": "раздел обсуждения деталей заказа",
       "vendorMessageSent": "Your message has been sent to %{name}, you can continue the conversation in the %{orderLink}.",
       "send": "Отправить",
@@ -1347,11 +1419,20 @@
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "Оплата не может быть завершена",
       "zeroPrice": "You cannot purchase a listing with a total price of zero.",
-      "feesFailed": "Комиссии транзакций не могут быть загружены"
+      "insufficientInventoryTitle": "Insufficient Inventory",
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
     }
   },
   "moderators": {
-    "moderatorsLoading": "Loading %{remaining} out of %{total} moderators."
+    "moderatorsLoading": "Loading moderators…",
+    "moderatorsLoaded": "%{total} moderators loaded.",
+    "noValidModerators": "No Valid Moderators Available.",
+    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
+    "noVerifiedModerators": "No Verified Moderators Available",
+    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "showUnverified": "Show Unverified Moderators",
+    "browseMoreModerators": "Загрузить больше"
+
   },
   "transactions": {
     "sales": {
@@ -1360,12 +1441,12 @@
       "countTransactionsFound": "%{countTransactions} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
-      "returnToFromOrder": "Return to sales",
+      "returnToFromOrder": "Вернуться к продажам",
       "resyncPopInMessage": {
-        "link": "Resync",
-        "text": "You may need to resync your wallet to receive payments for one or more unfunded orders.",
+        "link": "Повторная синхронизация ",
+        "text": "Возможно, вам придется повторно синхронизировать ваш кошелек, чтобы получить платежи за один или несколько не подтверждённых заказов.",
         "message": "%{icon} %{text} %{link}",
-        "completeText": "Your transactions will begin resyncing. Wait five to ten minutes or longer and then refresh or return to this page."
+        "completeText": "Ваши транзакции начнут повторную синхронизацию. Подождите от пяти до десяти минут или дольше, а затем обновите или вернитесь на эту страницу."
       }
     },
     "purchases": {
@@ -1384,14 +1465,16 @@
       "returnToFromOrder": "Return to cases"
     },
     "filters": {
-      "purchasing": "Purchasing",
+      "pending": "В ожидании",
+      "unfunded": "Unfunded",
       "ready": "Ready To Process",
       "fulfilled": "Fulfilled",
       "refunded": "Возмещено",
+      "disputes": "Ваши споры",
       "disputeOpen": "Спор открыт",
-      "disputePending": "Dispute Pending",
       "disputeClosed": "Спор закрыт",
-      "completed": "Завершено"
+      "completed": "Завершено",
+      "error": "Ошибки"
     },
     "sort": {
       "label": "Сортировать по",
@@ -1402,7 +1485,7 @@
     "placeholderSearchSales": "Search by Order #, Title or Buyer",
     "placeholderSearchPurchases": "Search by Order #, Title or Vendor",
     "placeholderSearchCases": "Search by Order #, Title, Buyer or Vendor",
-    "resetFilters": "Reset filters",
+    "resetFilters": "Сбросить фильтры",
     "transactionsTable": {
       "headers": {
         "orderId": "Заказ ID",
@@ -1414,20 +1497,21 @@
         "status": "Статус"
       },
       "status": {
-        "PENDING": "Pending",
-        "AWAITING_PAYMENT": "Awaiting Payment",
+        "PENDING": "В ожидании",
+        "AWAITING_PAYMENT": "Ожидание оплаты",
         "AWAITING_PICKUP": "Awaiting Pickup",
         "AWAITING_FULFILLMENT": "Awaiting Fulfillment",
         "PARTIALLY_FULFILLED": "Partially Fulfilled",
         "FULFILLED": "Fulfilled",
         "COMPLETED": "Complete",
         "CANCELED": "Отменен",
-        "DECLINED": "Declined",
+        "DECLINED": "Отклонено",
         "REFUNDED": "Возмещено",
         "DISPUTED": "Оспорено",
         "DECIDED": "Decided",
         "RESOLVED": "Решено",
-        "PAYMENT_FINALIZED": "Payment Finalized"
+        "PAYMENT_FINALIZED": "Payment Finalized",
+        "PROCESSING_ERROR": "Ошибка"
       },
       "btnReject": "Отклонить",
       "btnAccept": "Принять",
@@ -1458,13 +1542,23 @@
     },
     "contractTab": {
       "heading": "Контракт (JSON)",
-      "buyerContractNotAvailable": "The buyer's contract is currently unavailable until they next come online.",
-      "vendorContractNotAvailable": "The vendor's contract is currently unavailable until the next time they come online.",
-      "buyerVendorContractVerified": "Both the buyer's and vendor's contracts have been verified as authentic.",
-      "buyerContractNotAuthentic": "The buyer's contract has validation errors. It has likely been forged.",
-      "vendorContractNotAuthentic": "The vendor's contract has validation errors. It has likely been forged.",
       "buyerContractHeading": "Контракт покупателя:",
-      "vendorContractHeading": "Контракт продавца:"
+      "vendorContractHeading": "Контракт продавца:",
+      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "bothContractsValid": "Both the buyer's and vendor's contracts have been verified as authentic.",
+      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "vendorContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "The vendor's contract has not yet arrived. It will be sent over the next time they come online.",
+      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
+      "contractHeadingVendor": "Vendor's contract:",
+      "contractHeadingBuyer": "Buyer's contract:"
+    },
+    "contractMenuItem": {
+      "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
+      "tipBuyerContractHasError": "The buyer's contract has validation errors.",
+      "tipVendorContractHasError": "The vendor's contract has validation errors.",
+      "tipBuyerContractNotArrived": "The buyer's contract has not yet arrived.",
+      "tipVendorContractNotArrived": "The vendor's contract has not yet arrived."
     },
     "summaryTab": {
       "orderNumber": "Сделка #: %{orderId}",
@@ -1472,7 +1566,7 @@
       "notApplicable": "n/a",
       "vendorFinalizedPayment": "You have manually finalized the order.",
       "payment": {
-        "firstPaymentHeading": "Payment Details",
+        "firstPaymentHeading": "Детали оплаты",
         "paymentHeading": "Payment Details #%{paymentNumber}",
         "amountTo": "%{currencyPairing} to %{payeeName}",
         "refundedTo": "%{currencyPairing} refunded to %{payeeName}",
@@ -1519,30 +1613,33 @@
         "heading": "Fulfilled",
         "shippedByLabel": "Order Shipped via:",
         "trackingNumberLabel": "Отслеживание #:",
-        "yourNoteLabel": "Your note:",
-        "noteFromVendorLabel": "Note from the vendor:",
+        "coinTypeVerbose": "%{coinName} (%{coinCode})",
+        "cryptoSentLabel": "%{coinTypeVerbose} sent",
+        "transactionIdLabel": "Transaction ID:",
+        "yourNoteLabel": "Ваше примечание:",
+        "noteFromVendorLabel": "Примечание от продавца:",
         "noteFromStoreLabel": "Note from %{store}:",
         "copyLink": "Копировать",
         "digitalReadyForDlHeading": "Цифровые файлы готовы для скачивания!",
-        "digitalReadyForDlText": "The files have been delivered. Download when you're ready.",
+        "digitalReadyForDlText": "Файлы были доставлены. Скачайте, когда будете готовы.",
         "urlLabel": "Ссылка файла",
         "passwordLabel": "Пароль сервера"
       },
       "completeOrderForm": {
         "heading": "Завершить заказ",
         "maxReviewChars": "%{max} chars. max",
-        "reviewLabel": "Written Review",
+        "reviewLabel": "Оставьте отзыв",
         "anonCheckLabel": "Include my name (seen publicly)",
         "btnCompleteOrder": "Завершить заказ"
       },
       "orderComplete": {
-        "heading": "Order Complete",
+        "heading": "Заказ выполнен",
         "reviewLabel": "%{name}'s Review:"
       },
       "disputeStarted": {
         "heading": "Начать спор",
         "partyIsDisputing": "%{name} is disputing the order:",
-        "resolveBtn": "Resolve Dispute",
+        "resolveBtn": "Пожалуйста проверьте дважды, что все выглядит хорошо",
         "genericIsDisputed": "The order is being disputed:",
         "noReasonProvided": "No reason was provided."
       },
@@ -1574,31 +1671,44 @@
       },
       "orderDetails": {
         "progressBarStates": {
-          "paid": "Paid",
+          "paid": "Оплачен ",
           "accepted": "Принято",
           "fulfilled": "Fulfilled",
           "complete": "Complete",
           "canceled": "Отменен",
-          "declined": "Declined",
+          "declined": "Отклонено",
           "refunded": "Возмещено",
           "decided": "Decided",
           "resolved": "Решено",
           "disputed": "Оспорено"
         },
         "heading": "Детали заказа",
-        "shipToHeading": "Ship to",
+        "shipToHeading": "Адрес получателя",
         "couponHeading": "Купоны",
         "quantityHeading": "Количество",
         "totalHeading": "Суммарный",
         "moderatorHeading": "Модератор",
+        "paymentAddressHeading": "%{coinType} Address",
         "copyAddress": "Копировать",
-        "viewOnMap": "View on map",
-        "shippingOption": "Shipping Option",
-        "shippingService": "Shipping Service",
+        "viewOnMap": "Посмотреть на карте",
+        "shippingOption": "Вариант доставки",
+        "shippingService": "Службы доставки",
         "memo": "Напоминание",
         "addressNotes": "Накладные",
-        "alternateContact": "Additional Contact Information",
+        "alternateContact": "Дополнительная контактная информация",
         "skuLabel": "Артикул"
+      },
+      "processingError": {
+        "cancelLink": "отменить",
+        "disputeLink": "открыть спор",
+        "procErrBuyerNoMsg": "The vendor was unable to process the order.",
+        "procErrBuyerNoMsgCancelable": "The vendor was unable to process the order. You may cancel the order to retrieve your payment.",
+        "procErrBuyerNoMsgDisputable": "The vendor was unable to process the order. You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayCancel": "You may cancel the order to retrieve your payment.",
+        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
+        "procErrVendorNoMsg": "При обработке заказа произошла ошибка.",
+        "procErrVendor": "You were unable to process the order due to the following errors:"
       }
     },
     "fulfillOrderTab": {
@@ -1608,9 +1718,11 @@
       "trackingLabel": "Tracking #",
       "trackingPlaceholder": "необязательно",
       "fileUrlLabel": "Ссылка файла",
-      "fileUrlPlaceholder": "Link to file(s)",
-      "passwordLabel": "Пароль сервера",
-      "passwordPlaceholder": "Password to file (optional)",
+      "fileUrlPlaceholder": "Ссылка на файл(ы)",
+      "passwordLabel": "Пароль",
+      "passwordPlaceholder": "Пароль к файлу (необязательно)",
+      "transactionIdLabel": "Transaction ID",
+      "transactionIdPlaceholder": "Paste the Transaction ID",
       "noteLabel": "Заметка",
       "notePlaceholder": "необязательно",
       "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
@@ -1621,13 +1733,18 @@
       "heading": "Resolve Dispute",
       "buyerAmountLabel": "Buyer Amount",
       "vendorAmountLabel": "Vendor Amount",
+      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
+      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Комментарий",
       "commentPlaceholder": "Объясните свое решение...",
       "btnCancel": "Отмена",
       "btnSubmit": "Подтвердить",
       "resolveConfirm": {
         "title": "Вы уверены?",
-        "body": "Please double check everything looks good",
+        "body": "Пожалуйста проверьте дважды, что все выглядит хорошо",
         "btnCancel": "Отмена",
         "btnSubmit": "Подтвердить"
       }
@@ -1636,7 +1753,7 @@
       "heading": "Dispute Order",
       "moderatorLabel": "Модератор",
       "reasonLabel": "Причина",
-      "reasonPlaceholder": "Please explain your reason for opening a dispute…",
+      "reasonPlaceholder": "Пожалуйста, объясните причину открытия спора ...",
       "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
       "btnCancel": "Отмена",
       "btnSubmit": "Подтвердить"
@@ -1644,6 +1761,30 @@
     "actionBar": {
       "disputeOrderBtn": "Dispute Order"
     }
+  },
+  "metrics": {
+    "title": "Optional Anonymous Metrics",
+    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
+    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "listTitle": "The following data will be shared:",
+    "list": {
+      "pages": "Which pages you load, such as the search page or the store page.",
+      "clicks": "Clicks on elements. This records only what was clicked on.",
+      "errors": "Performance data like errors and how long content takes to load.",
+      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "orders": "Information about how many of your orders have moved from one state to another. This helps us identify problems in the order process.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation foler, which may include your root and/or user folder."
+    },
+    "acceptBtn": "Принять",
+    "declineBtn": "Decline",
+    "activateBtn": "Activate",
+    "deactivateBtn": "Deactivate",
+    "sharingIsOn": "Data is Being Shared",
+    "sharingWillBeOn": "Data will be Shared After Restarting",
+    "sharingIsOff": "Data is Not Being Shared"
   },
   "orderUtil": {
     "failedAcceptHeading": "Ошибка при принятии заказа.",
@@ -1680,7 +1821,7 @@
   },
   "socialAccountModelErrors": {
     "provideUsername": "Please provide a handle or link.",
-    "provideType": "Please provide a type (Facebook, Twitter, etc.)."
+    "provideType": "Пожалуйста укажите тип (Facebook, Twitter и т. д.)."
   },
   "smtpModelErrors": {
     "username": {
@@ -1701,7 +1842,7 @@
     "providePortAsNumber": "Укажите порт цифрами.",
     "provideValidPortRange": "Укажите число от 0 до 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
-    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideWalletCurrency": "Пожалуйста, установите валюту кошелька.",
     "provideZcashBinaryPath": "Укажите значение.",
     "invalidZcashBinaryPath": "The provided path must be to be a file on your system."
   },
@@ -1719,8 +1860,8 @@
   "itemModelErrors": {
     "provideTitle": "Укажите название.",
     "titleTooLong": "Название превышает максимально допустимую длину.",
-    "badConditionType": "Данный тип состояния не доступен.",
     "descriptionTooLong": "Описание превышает максимально допустимую длину.",
+    "badConditionType": "Данный тип состояния не доступен.",
     "provideAmount": "Пожалуйста, укажите цену.",
     "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "provideAmountGreaterThanZero": "Цена должна быть больше 0",
@@ -1798,18 +1939,26 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
-    "mustHaveQuantity": "Количество должно быть 1 или больше",
-    "quantityMustBeNumber": "The quantity must be a valid number",
-    "noItems": "You must make at least one purchase.",
-    "missingAddress": "Please choose a valid shipping address.",
-    "missingShippingOption": "Please choose a valid shipping option.",
+    "missingAddress": "Выберите действительный адрес доставки.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
     "removeModerator": "An unmoderated purchase cannot have a moderator."
+  },
+  "purchaseItemModelErrors": {
+    "provideQuantity": "Укажите количество.",
+    "mustHaveQuantity": "Количество должно быть 1 или больше",
+    "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
+    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "missingShippingOption": "Выберите действительный вариант доставки.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "providePaymentAddress": "Please provide a payment address.",
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Укажите url файла.",
-    "invalidUrl": "Укажите url файла."
+    "invalidUrl": "Укажите url файла.",
+    "provideTransactionId": "Please provide a transaction ID."
   },
   "errorPage": {
     "userNotFoundTitle": "Этот пользователь не может быть найден",
@@ -1835,12 +1984,14 @@
     "service": "Услуга"
   },
   "localSettingsModelErrors": {
-    "searchProvider": "Это не действительный URL-адрес для поискового провайдера"
+    "verifiedModsProvider": "This is not a valid url for a verified moderators provider."
   },
   "resolveDisputeModelErrors": {
     "provideAmount": "Укажите сумму.",
     "percentageOutOfRange": "Сумма должна быть от 0 до 100.",
     "providePercentageAsNumber": "Please provide a vendor amount as a number.",
+    "vendorPercentageMustBe100": "Until the buyer's contract arrives, this value must be 100.",
+    "buyerPercentageMustBe100": "Until the vendor's contract arrives, this value must be 100.",
     "totalPercentageOutOfRange": "The sum of the buyer and vendor amounts cannot exceed 100.",
     "totalPercentageTooLow": "The sum of the buyer and vendor amounts must add up to 100.",
     "provideResolution": "Пожалуйста, объясните свое решение."
@@ -1883,7 +2034,7 @@
     "BAHRAIN": "Бахрейн",
     "BANGLADESH": "Бангладеш",
     "BARBADOS": "Барбадос",
-    "BELARUS": "Белоруссия",
+    "BELARUS": "Беларусь",
     "BELGIUM": "Бельгия",
     "BELIZE": "Бельгийский",
     "BENIN": "Бенин",
@@ -2276,10 +2427,52 @@
     "ZWL": "Зимбабвийский доллар"
   },
   "cryptoCurrencies": {
-    "BTC": "Биткойн",
+    "ADA": "Cardano",
+    "ARK": "Ark",
     "BCH": "Bitcoin Cash",
+    "BCN": "Bytecoin",
+    "BTC": "Bitcoin",
+    "BTCD": "BitcoinDark",
+    "BTG": "Bitcoin Gold",
+    "BTS": "BitShares",
+    "DASH": "Dash",
+    "DCR": "Decred",
+    "DGB": "DigiByte",
+    "DOGE": "Dogecoin",
+    "ETC": "Ethereum Classic",
+    "ETH": "Ethereum",
+    "FCT": "Factom",
+    "HSR": "Hshare",
+    "IOTA": "Iota",
+    "KMD": "Komodo",
+    "LSK": "Lisk",
+    "LTC": "Litecoin",
+    "MONA": "MonaCoin",
+    "NANO": "Nano",
+    "NEBL": "Neblio",
+    "NEO": "NEO",
+    "NXS": "Nexus",
+    "NXT": "Nxt",
+    "PIVX": "PIVX",
+    "QTUM": "Qtum",
+    "RDD": "ReddCoin",
+    "SC": "Siacoin",
+    "STEEM": "Steem",
+    "STRAT": "Stratis",
+    "SYS": "Syscoin",
+    "VEN": "VeChain",
+    "WAVES": "Waves",
+    "XDN": "DigitalNote",
+    "XEM": "NEM",
+    "XLM": "Stellar",
+    "XMR": "Monero",
+    "XRP": "Ripple",
+    "XVC": "VCash",
+    "XVG": "Verge",
+    "ZCL": "ZClassic",
     "ZEC": "Zcash"
   },
+  "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
   "languages": {
     "af": "Afrikaans",
     "af-ZA": "Afrikaans (South Africa)",
@@ -2302,15 +2495,15 @@
     "ar-YE": "Arabic (Yemen)",
     "az": "Azeri (Latin)",
     "az-AZ": "Azeri (Cyrillic) (Azerbaijan)",
-    "be": "Belarusian",
+    "be": "Белорусский",
     "be-BY": "Belarusian (Belarus)",
     "bg": "Bulgarian",
     "bg-BG": "Bulgarian (Bulgaria)",
     "bs-BA": "Bosnian (Bosnia and Herzegovina)",
     "ca": "Catalan",
     "ca-ES": "Catalan (Spain)",
-    "cs": "Czech",
-    "cs-CZ": "Czech (Czech Republic)",
+    "cs": "Чешский",
+    "cs-CZ": "Чешский (Чешская Республика)",
     "cy": "Welsh",
     "cy-GB": "Welsh (United Kingdom)",
     "da": "Danish",
@@ -2323,7 +2516,7 @@
     "de-LU": "Немецкий (Люксембург)",
     "dv": "Divehi",
     "dv-MV": "Divehi (Maldives)",
-    "el": "Greek",
+    "el": "Греческий",
     "el-GR": "Greek (Greece)",
     "en": "Английский",
     "en-AU": "English (Australia)",
@@ -2360,8 +2553,8 @@
     "es-SV": "Spanish (El Salvador)",
     "es-UY": "Spanish (Uruguay)",
     "es-VE": "Spanish (Venezuela)",
-    "et": "Estonian",
-    "et-EE": "Estonian (Estonia)",
+    "et": "Эстонский",
+    "et-EE": "Эстонский (Эстония)",
     "eu": "Basque",
     "eu-ES": "Basque (Spain)",
     "fa": "Фарси",
@@ -2411,12 +2604,12 @@
     "ko-KR": "Корейский (Корея)",
     "kok": "Konkani",
     "kok-IN": "Konkani (India)",
-    "ky": "Kyrgyz",
-    "ky-KG": "Kyrgyz (Kyrgyzstan)",
-    "lt": "Lithuanian",
-    "lt-LT": "Lithuanian (Lithuania)",
-    "lv": "Latvian",
-    "lv-LV": "Latvian (Latvia)",
+    "ky": "Киргизский",
+    "ky-KG": "Киргизский (Кыргызстан)",
+    "lt": "Литва",
+    "lt-LT": "Литовский (Литва)",
+    "lv": "Латышский",
+    "lv-LV": "Латышский (Латвия)",
     "mi": "Маори",
     "mi-NZ": "Маори (Новая Зеландия)",
     "mk": "FYRO Macedonian",
@@ -2428,8 +2621,8 @@
     "ms": "Malay",
     "ms-BN": "Malay (Brunei Darussalam)",
     "ms-MY": "Malay (Malaysia)",
-    "mt": "Maltese",
-    "mt-MT": "Maltese (Malta)",
+    "mt": "Мальтийский",
+    "mt-MT": "Мальтийский (Мальта)",
     "nb": "Norwegian (Bokm?l)",
     "nb-NO": "Norwegian (Bokm?l) (Norway)",
     "nl": "Dutch",

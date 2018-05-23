@@ -24,12 +24,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBTC/address/${address}` :
-        `https://blockchain.info/address/${address}`
+        `https://blockchair.com/bitcoin/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBTC/tx/${txid}` :
-        `https://blockchain.info/tx/${txid}`
+        `https://blockchair.com/bitcoin/transaction/${txid}`
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
@@ -67,12 +67,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/address/${address}` :
-        `https://blockdozer.com/insight/address/${address}`
+        `https://blockdozer.com/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/tx/${txid}` :
-        `https://blockdozer.com/insight/tx/${txid}`
+        `https://blockdozer.com/tx/${txid}`
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,

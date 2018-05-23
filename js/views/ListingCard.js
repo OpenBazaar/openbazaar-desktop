@@ -4,6 +4,7 @@ import loadTemplate from '../utils/loadTemplate';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { launchEditListingModal } from '../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
+import { isHiRez } from '../utils/responsive';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -13,7 +14,8 @@ import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
-import VerifiedMod from './components/VerifiedMod';
+import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
+import { startEvent, endEvent } from '../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -109,6 +111,39 @@ export default class extends baseVw {
         this.render();
       }
     });
+
+    // load necessary images in a cancelable way
+    const thumbnail = this.model.get('thumbnail');
+    const listingImageSrc = this.viewType === 'grid' ?
+      app.getServerUrl(
+        `ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`
+      ) :
+      app.getServerUrl(
+        `ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
+      );
+
+    this.listingImage = new Image();
+    this.listingImage.addEventListener('load', () => {
+      this.listingImage.loaded = true;
+      this.$('.js-listingImage')
+        .css('backgroundImage', `url(${listingImageSrc})`);
+    });
+    this.listingImage.src = listingImageSrc;
+
+    const vendor = this.model.get('vendor');
+    if (vendor && vendor.avatarHashes) {
+      const avatarImageSrc = app.getServerUrl(
+        `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
+      );
+
+      this.avatarImage = new Image();
+      this.avatarImage.addEventListener('load', () => {
+        this.avatarImage.loaded = true;
+        this.$('.js-vendorIcon')
+          .css('backgroundImage', `url(${avatarImageSrc})`);
+      });
+      this.avatarImage.src = avatarImageSrc;
+    }
   }
 
   className() {
@@ -125,7 +160,7 @@ export default class extends baseVw {
       'click .js-edit': 'onClickEdit',
       'click .js-delete': 'onClickDelete',
       'click .js-clone': 'onClickClone',
-      'click .js-userIcon': 'onClickUserIcon',
+      'click .js-userLink': 'onClickUserLink',
       'click .js-deleteConfirmed': 'onClickConfirmedDelete',
       'click .js-deleteConfirmCancel': 'onClickConfirmCancel',
       'click .js-deleteConfirmedBox': 'onClickDeleteConfirmBox',
@@ -198,7 +233,7 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  onClickUserIcon(e) {
+  onClickUserLink(e) {
     e.stopPropagation();
   }
 
@@ -211,10 +246,16 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
+      startEvent('Listing_LoadFromCard');
+
       const listingFetch = this.fetchFullListing();
       const loadListing = () => {
         app.loadingModal.open();
         listingFetch.done(jqXhr => {
+          endEvent('Listing_LoadFromCard', {
+            ownListing: !!this.ownListing,
+            errors: 'none',
+          });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
           const listingDetail = new ListingDetail({
@@ -239,6 +280,10 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail(xhr => {
+          endEvent('Listing_LoadFromCard', {
+            ownListing: !!this.ownListing,
+            errors: xhr.responseJSON.reason || xhr.statusText || 'unknown error',
+          });
           if (xhr.statusText === 'abort') return;
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
@@ -363,7 +408,7 @@ export default class extends baseVw {
   }
 
   set viewType(type) {
-    if (['list', 'grid'].indexOf(type) === -1) {
+    if (['list', 'grid', 'cryptoList'].indexOf(type) === -1) {
       throw new Error('The provided view type is not one of the available types.');
     }
 
@@ -382,6 +427,8 @@ export default class extends baseVw {
   }
 
   remove() {
+    this.listingImage.src = '';
+    if (this.avatarImage) this.avatarImage.src = '';
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off('click', this.boundDocClick);
@@ -400,6 +447,10 @@ export default class extends baseVw {
         displayCurrency: app.settings.get('localCurrency'),
         isBlocked,
         isUnblocking,
+        listingImageSrc: this.listingImage.loaded &&
+          this.listingImage.src || '',
+        vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
+          this.avatarImage.src || '',
       }));
     });
 
@@ -428,17 +479,17 @@ export default class extends baseVw {
       );
     }
 
-    if (this.verifiedMod) this.verifiedMod.remove();
+    const moderators = this.model.get('moderators') || [];
+    const verifiedIDs = app.verifiedMods.matched(moderators);
+    const verifiedID = verifiedIDs[0];
 
-    if (this.verifiedMods.length) {
-      this.verifiedMod = new VerifiedMod({
-        model: this.verifiedMods[0],
-        data: app.verifiedMods.data,
-        showLongText: true,
-        genericText: true,
-      });
-      this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
-    }
+    if (this.verifiedMod) this.verifiedMod.remove();
+    this.verifiedMod = this.createChild(VerifiedMod, getListingOptions({
+      model: verifiedID &&
+        app.verifiedMods.get(verifiedID),
+    }));
+    this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+
 
     return this;
   }

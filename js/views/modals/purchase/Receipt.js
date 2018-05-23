@@ -22,7 +22,7 @@ export default class extends BaseView {
 
     this.options = options;
     this._coupons = options.couponObj || [];
-
+    this.listing = options.listing;
     this.prices = options.prices;
   }
 
@@ -49,10 +49,12 @@ export default class extends BaseView {
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        listing: this.options.listing.toJSON(),
+        listing: this.listing.toJSON(),
+        listingCurrency: this.listing.price.currencyCode,
         coupons: this.coupons,
         displayCurrency: app.settings.get('localCurrency'),
         prices: this.prices,
+        isCrypto: this.listing.isCrypto,
       }));
     });
 
