@@ -111,7 +111,7 @@ listingEvents.on('saved', md => {
     const inventory = flatMd.item.cryptoQuantity;
     let curCache = inventoryCache.get(app.profile.id) || {};
     curCache = curCache[flatMd.slug];
-    const deferred = curCache.deferred && curCache.deferred.state === 'pending' ?
+    const deferred = curCache && curCache.deferred && curCache.deferred.state === 'pending' ?
        curCache.deferred : $.Deferred();
     const lastUpdated = new Date().toISOString();
     deferred.resolve({
