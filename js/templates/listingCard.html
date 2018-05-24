@@ -166,7 +166,7 @@
       <div class="flex gutterH">
         <div class="verifiedModWrapper">
           <div class="js-verifiedMod"></div>
-        </div>    
+        </div>
         <div class="flexCol gutterVTn">
           <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
           <div class="<%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
@@ -200,7 +200,7 @@
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
     <%
-      let inventory = '<i class="ion-alert-circled margRSm clrTAlert"></i>';
+      let inventory = `<i class="clrT2 tx6">${ob.polyT('inventoryDisplay.unknownInventory')}</i>`;
       let inventoryTxClass = '';
 
       if (ob.totalInventoryQuantity >= 0) {
