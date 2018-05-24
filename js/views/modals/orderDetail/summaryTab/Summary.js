@@ -387,7 +387,6 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
-    // todo: check this son!
     return (
       getServerCurrency().supportsEscrowTimeout &&
       (

@@ -180,6 +180,7 @@
       "order": "%{buyerName} has purchased %{listingTitle}.",
       "payment": "Your payment has been delivered.",
       "declined": "%{vendorName} has declined your order.",
+      "orderConfirmation": "%{vendorName} has accepted your order.",
       "canceled": "%{buyerName} has canceled their order.",
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
@@ -192,7 +193,9 @@
       "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
       "follow": "%{name} has followed you.",
       "moderatorAdd": "%{name} has added you as a moderator.",
-      "moderatorRemove": "%{name} has removed you as a moderator."
+      "moderatorRemove": "%{name} has removed you as a moderator.",
+      "vendorDisputeTimeout": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
+      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}"
     },
     "errorHeading": "There was an error fetching the notifications.",
     "btnRetry": "Retry",

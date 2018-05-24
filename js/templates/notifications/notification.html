@@ -2,7 +2,7 @@
   <div class="unreadBorder clrBAtt1"></div>
   <div class="flexVCent gutterHSm pad">
     <%
-      const isOrderNotif = !!ob.notification.orderId;
+      const isOrderNotif = !!ob.notification.orderId || !!ob.notification.purchaseOrderId;
       const imageFunc = isOrderNotif ?
         'getListingBgImage' : 'getAvatarBgImage';
     %>
@@ -15,7 +15,7 @@
     <% } %>
     <div class="flexExpand">
       <div class="rowTn clamp2 notifMsg"><%= ob.notifText %></div>
-      <div class="clrT2 tx6"><%= ob.renderedTimeAgo %></div>
+      <div class="clrT2 tx6"><%= ob.renderedTimeAgo %> - <%= ob.timestamp %></div>
     </div>
   </div>
 </div>
