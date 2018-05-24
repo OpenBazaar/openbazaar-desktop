@@ -68,7 +68,8 @@ export default class extends baseVw {
   }
 
   copyAddressToClipboard() {
-    clipboard.writeText(this.getState().address);
+    let qrCodeText = getServerCurrency().qrCodeText(this.getState().address)
+    clipboard.writeText(qrCodeText);
     clearTimeout(this.copyTextFadeoutTimeout);
     this.$copiedText.stop()
       .fadeIn(600, () => {
@@ -89,15 +90,18 @@ export default class extends baseVw {
       // when the spinner is showing
       let qrDataUri = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
       const address = this.getState().address;
-
+      let qrCodeText = address;
+          
       if (address) {
-        qrDataUri = qr(getServerCurrency().qrCodeText(address),
+        qrCodeText = getServerCurrency().qrCodeText(address)
+        qrDataUri = qr(qrCodeText,
           { type: 6, size: 5, level: 'Q' });
       }
 
       this.$el.html(t({
         ...this._state,
         qrDataUri,
+        qrCodeText,
         errors: {},
       }));
 
