@@ -205,7 +205,9 @@ export function getNotifDisplayData(attrs, options = {}) {
     const orderIdShort = `#${attrs.purchaseOrderId.slice(0, 4)}…`;
     route = `#transactions/sales?orderId=${attrs.purchaseOrderId}`;
     text = app.polyglot.t('notifications.text.vendorDisputeTimeout', {
-      orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+      orderLink: opts.native ?
+        orderIdShort :
+        `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
     });
   } else if (attrs.type === 'buyerDisputeTimeout') {
     // attrs.expiresIn > 0
@@ -220,7 +222,9 @@ export function getNotifDisplayData(attrs, options = {}) {
       moment.relativeTimeThreshold('d', 364);
 
       text = app.polyglot.t('notifications.text.buyerDisputeTimeout', {
-        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+        orderLink: opts.native ?
+          orderIdShort :
+          `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
         timeRemaining: moment(Date.now())
           .from(Date.now() - (attrs.expiresIn * 1000), true),
       });
@@ -229,7 +233,9 @@ export function getNotifDisplayData(attrs, options = {}) {
       moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
     } else {
       text = app.polyglot.t('notifications.text.buyerDisputeTimeoutOrderExpired', {
-        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+        orderLink: opts.native ?
+          orderIdShort :
+          `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
       });
     }
   }
