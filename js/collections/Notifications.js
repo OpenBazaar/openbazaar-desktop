@@ -9,9 +9,6 @@ export default class extends Collection {
   }
 
   parse(response) {
-    console.log('moo');
-    window.moo = this;
-    window.moment = moment;
     return response.notifications.map(notif => {
       const innerNotif = notif.notification;
 
@@ -213,22 +210,28 @@ export function getNotifDisplayData(attrs, options = {}) {
   } else if (attrs.type === 'buyerDisputeTimeout') {
     // attrs.expiresIn > 0
     const orderIdShort = `#${attrs.orderId.slice(0, 4)}…`;
-
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
-    
-    // temporarily upping the moment threshold of number of days before month is used,
-    // so e,g. 45 is represented as '45 days' instead of '1 month'.
-    moment.relativeTimeThreshold('d', 364);
 
     route = `#transactions/sales?orderId=${attrs.orderId}`;
-    text = app.polyglot.t('notifications.text.buyerDisputeTimeout', {
-      orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
-      timeRemaining: moment(Date.now())
-        .from(Date.now() - (attrs.expiresIn * 1000), true),
-    });
 
-    // restore the days timeout threshold
-    moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+    if (attrs.expiresIn > 0) {
+      // temporarily upping the moment threshold of number of days before month is used,
+      // so e,g. 45 is represented as '45 days' instead of '1 month'.
+      moment.relativeTimeThreshold('d', 364);
+
+      text = app.polyglot.t('notifications.text.buyerDisputeTimeout', {
+        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+        timeRemaining: moment(Date.now())
+          .from(Date.now() - (attrs.expiresIn * 1000), true),
+      });
+
+      // restore the days timeout threshold
+      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);      
+    } else {
+      text = app.polyglot.t('notifications.text.buyerDisputeTimeoutOrderExpired', {
+        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`
+      });
+    }
   }
 
   return {
