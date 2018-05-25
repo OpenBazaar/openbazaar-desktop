@@ -14,18 +14,20 @@ export default class extends baseView {
     if (!this.model || !(this.model instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
-    this.shippingOptions = this.createChild(ShippingOptions, {
-      model: this.model,
-    });
 
-    this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
-      this.trigger('shippingOptionSelected', opts);
-    }));
+    this.selectedAddress = app.settings.get('shippingAddresses').length ?
+      app.settings.get('shippingAddresses').at(0) : '';
+
     this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
       // if all the addresses were deleted, update with blank values
-      if (!col.models.length) this.trigger('shippingOptionSelected', { name: '', service: '' });
+      if (!col.models.length) {
+        this.selectedAddress = '';
+        this.trigger('shippingOptionSelected', { name: '', service: '' });
+      }
       this.render();
     });
+
+    this.selectedOption = {};
   }
 
   className() {
@@ -38,24 +40,34 @@ export default class extends baseView {
     };
   }
 
+  get selectedAddress() {
+    return this._selectedAddress;
+  }
+
+  set selectedAddress(address) {
+    this._selectedAddress = address;
+  }
+
+  get countryCode() {
+    return this.selectedAddress ? this.selectedAddress.get('country') : '';
+  }
+
   changeShippingAddress(e) {
     const index = $(e.target).val();
     this.selectedAddress = app.settings.get('shippingAddresses').at(index);
-    const code = this.selectedAddress.get('country');
-    // if an address with the same country is chosen, don't re-render the options
-    if (code !== this.countryCode) {
-      this.countryCode = code;
-      this.shippingOptions.countryCode = code;
-      this.shippingOptions.render();
-    }
+    this.shippingOptions.countryCode = this.countryCode;
+    this.shippingOptions.render();
   }
 
   render() {
     const userAddresses = app.settings.get('shippingAddresses');
+    const selectedAddressIndex = userAddresses.length ?
+      userAddresses.indexOf(this.selectedAddress) : '';
 
     loadTemplate('modals/purchase/shipping.html', t => {
       this.$el.html(t({
         userAddresses: userAddresses.toJSON(),
+        selectedAddressIndex,
       }));
     });
     this.$('#shippingAddress').select2({
@@ -63,14 +75,18 @@ export default class extends baseView {
       minimumResultsForSearch: Infinity,
     });
 
-    if (userAddresses.length) {
-      this.selectedAddress = userAddresses.at(0);
-      this.shippingOptions.countryCode = this.selectedAddress.get('country');
-      this.shippingOptions.delegateEvents();
-      this.$('.js-shippingOptionsWrapper').html(this.shippingOptions.render().el);
-    } else {
-      this.selectedAddress = null;
-    }
+    if (this.shippingOptions) this.shippingOptions.remove();
+    this.shippingOptions = this.createChild(ShippingOptions, {
+      model: this.model,
+      countryCode: this.countryCode,
+      selectedOption: this.selectedOption,
+    });
+    this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
+
+    this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
+      this.selectedOption = opts;
+      this.trigger('shippingOptionSelected', opts);
+    }));
 
     return this;
   }

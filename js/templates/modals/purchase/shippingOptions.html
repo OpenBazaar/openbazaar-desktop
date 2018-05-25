@@ -1,18 +1,20 @@
 <% if (ob.validShippingOptions.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
     <% ob.validShippingOptions.forEach((option, i) => {
-      option.services.forEach((service, j) => { %>
+      option.services.forEach((service, j) => {
+      const selected = ob.selectedOption && ob.selectedOption.name === option.name && ob.selectedOption.service === service.name;
+      const optionId = `${option.name}-${service.name}`;
+    %>
         <div>
           <div class="btnRadio width100">
             <input type="radio"
                    class="js-shippingOption"
-                   id="<%= `${i}${j}` %>"
-                   <% if (i===0 && j === 0) print('checked') %>
+                   id="<%= optionId %>"
+                   <% if (ob.selectedOption && selected || i===0 && j === 0) print('checked') %>
                    data-name="<%= option.name %>"
-                   data-type="<%= option.type %>"
-                   data-service="<%= service.name %>"
+                   data-service="<%= service.name%>"
                    name="shippingOption">
-            <label for="<%= `${i}${j}` %>" class="flex gutterH pad">
+            <label for="<%= optionId %>" class="flex gutterH pad">
               <div>
                 <div class="tx5 rowSm txB"><%= option.name %>: <%= service.name %></div>
                 <div class="tx5b clrT2 txUnb">

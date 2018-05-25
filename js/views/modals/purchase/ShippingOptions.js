@@ -12,6 +12,7 @@ export default class extends baseView {
     this.options = options;
 
     this._countryCode = options.countryCode || '';
+    this._selectedOption = options.selectedOption || {};
 
     if (!this.model || !(this.model instanceof Listing)) {
       throw new Error('Please provide a listing model');
@@ -24,18 +25,21 @@ export default class extends baseView {
 
   events() {
     return {
-      'click .js-shippingOption': 'changeShippingOption',
+      'click .js-shippingOption': 'onSelectShippingOption',
     };
   }
 
-  changeShippingOption(e) {
-    const option = $(e.target);
-    const sOpts = {};
-    sOpts.name = option.attr('data-name');
-    if (option.attr('data-type') !== 'LOCAL_PICKUP') {
-      sOpts.service = option.attr('data-service');
-    }
-    this.trigger('shippingOptionSelected', sOpts);
+  get selectedOption() {
+    return this._selectedOption;
+  }
+
+  set selectedOption(opts) {
+    this._selectedOption = opts;
+    this.trigger('shippingOptionSelected', opts);
+  }
+
+  onSelectShippingOption(e) {
+    this.selectedOption = $(e.target).data();
   }
 
   get countryCode() {
@@ -48,7 +52,7 @@ export default class extends baseView {
 
   render() {
     const validShippingOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
-    option.regions.indexOf(this.countryCode) !== -1 || option.regions.indexOf('ALL') !== -1);
+      option.regions.indexOf(this.countryCode) !== -1 || option.regions.indexOf('ALL') !== -1);
 
     if (validShippingOptions.length) {
       validShippingOptions.forEach(option => {
@@ -59,21 +63,19 @@ export default class extends baseView {
         option.services = _.sortBy(option.services, 'price');
       });
 
-      const sOpts = {};
-      sOpts.name = validShippingOptions[0].name;
-      if (validShippingOptions[0].type !== 'LOCAL_PICKUP') {
-        sOpts.service = validShippingOptions[0].services[0].name;
+      if (!this.selectedOption) {
+        this.selectedOption = {
+          name: validShippingOptions[0].name,
+          service: validShippingOptions[0].services[0].name,
+        };
       }
-      this.trigger('shippingOptionSelected', sOpts);
-    } else {
-      // if no valid option is available, set it to blank
-      this.trigger('shippingOptionSelected', { name: '', service: '' });
     }
 
     loadTemplate('modals/purchase/shippingOptions.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
         validShippingOptions,
+        selectedOption: this.selectedOption,
         displayCurrency: app.settings.get('localCurrency'),
       }));
     });
