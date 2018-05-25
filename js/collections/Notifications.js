@@ -226,10 +226,10 @@ export function getNotifDisplayData(attrs, options = {}) {
       });
 
       // restore the days timeout threshold
-      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);      
+      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
     } else {
       text = app.polyglot.t('notifications.text.buyerDisputeTimeoutOrderExpired', {
-        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`
+        orderLink: `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
       });
     }
   }
