@@ -39,7 +39,7 @@ export default class extends BaseVw {
     super(options);
     this.options = options;
     this._balanceRemaining = options.balanceRemaining;
-    this.paymentAddress = options.paymentAddress;
+    this.paymentAddress = getServerCurrency().qrCodeText(options.paymentAddress);
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
 
@@ -124,10 +124,11 @@ export default class extends BaseVw {
     this.getCachedEl('.js-payFromWallet').addClass('processing');
     this.spendConfirmBox.setState({ show: false });
     const currency = getServerCurrency().code;
-
+    const addressNoPrefix = this.paymentAddress.split(":")[1]
+      
     try {
       spend({
-        address: this.paymentAddress,
+        address: addressNoPrefix,
         amount: this.balanceRemaining,
         currency,
       })
@@ -195,8 +196,7 @@ export default class extends BaseVw {
   }
 
   get qrDataUri() {
-    const address = getServerCurrency().qrCodeText(this.paymentAddress);
-    const URL = `${address}?amount=${this.balanceRemaining}`;
+    const URL = `${this.paymentAddress}?amount=${this.balanceRemaining}`;
     return qr(URL, { type: 8, size: 5, level: 'Q' });
   }
 
