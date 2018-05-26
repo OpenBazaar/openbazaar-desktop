@@ -55,7 +55,7 @@
     "curInUseTip": "Vous avez déjà un serveur intégré avec cette monnaie de portefeuille.",
     "zcashBinaryLabel": "Zcash Binary",
     "fullNodeLink": "ici",
-    "zcashBinaryHelper": "Un full node Zcash est requis. Téléchargez un full node Zcash %{fullNodeLink}. Une fois installé, entrez le chemin de votre binaire zcashd au dessus.",
+    "zcashBinaryHelper": "Un full node Zcash est requis. Téléchargez un full node Zcash %{fullNodeLink}. Une fois installé, entrez le chemin de votre binaire zcashd au dessus.",
     "btnBrowse": "Parcourir",
     "btnNext": "Suivant"
   },
@@ -475,7 +475,7 @@
     "settingsLabel": "Paramètres",
     "unrecognizedModelErrsWarning": {
       "title": "Impossible d'enregistrer vos paramètres",
-      "body": "Nous ne pouvons pas enregistrer les paramètres de cet onglet car il existe des erreurs inconnues. Elles proviennent probablement de valeurs non valides dans un autre onglet. Veuillez enregistrer les autres onglets afin d'identifier le champ comportant une erreur. L'erreur sera affichée au-dessus du champ. Après avoir corrigé l'erreur, assurez-vous de cliquer sur Enregistrer sur l'onglet dans lequel l'erreur s'est produite. Ensuite, vous pouvez revenir à cet onglet pour terminer l'enregistrement."
+      "body": "Nous ne pouvons pas enregistrer les paramètres de cet onglet car il existe des erreurs inconnues. Elles proviennent probablement de valeurs non valides dans un autre onglet. Veuillez enregistrer les autres onglets afin d'identifier le champ comportant une erreur. L'erreur sera affichée au-dessus du champ. Après avoir corrigé l'erreur, assurez-vous de cliquer sur Enregistrer sur l'onglet dans lequel l'erreur s'est produite. Ensuite, vous pourrez revenir à cet onglet pour terminer l'enregistrement."
     },
     "generalTab": {
       "helperLanguage": "Afficher les éléments de l'interface en",
@@ -496,7 +496,7 @@
       "statusSaveFailed": "Impossible d'enregistrer les paramètres généraux.",
       "saveErrorAlertTitle": "Impossible d'enregistrer les paramètres généraux",
       "verifiedMods": "Modérateurs vérifiés",
-      "verifiedModsHelper": "Réduisez votre risque en utilisant une liste de modérateurs vérifiés. Les modérateurs ayant des identités vérifiées et les listes ayant des modérateurs vérifiés seront marqués d'un badge.",
+      "verifiedModsHelper": "Réduisez le risque en utilisant une liste de modérateurs vérifiés. Les modérateurs ayant des identités vérifiées et les annonces ayant des modérateurs vérifiés seront marqués d'un badge.",
       "restoreDefault": "Réinitialiser"
     },
     "pageTab": {
@@ -558,7 +558,7 @@
       "helperSaveMetaData": "Enregistre des informations supplémentaires de transaction",
       "helperDefaultFee": "Des frais prioritaires sont recommandés pour des transactions rapides",
       "smtp": {
-        "sectionName": "Intégration du protocole email (SMTP)",
+        "sectionName": "Intégration du protocole e-mail (SMTP)",
         "testAction": "Tester l'intégration",
         "clearAction": "Tout effacer",
         "notifications": "Notifications",
@@ -674,7 +674,7 @@
       "terms": "Conditions",
       "termsHelper": "Ajoutez vos conditions de service (par exemple, avez-vous des limitations légales ? Que se passe-t-il après avoir pris une décision ? Etc.)",
       "languages": "Langues",
-      "languagesHelper": "Entres les langues que vous maîtrisez (c'est à dire avec lesquels vous pouvez communiquer clairement).",
+      "languagesHelper": "Entrez les langues que vous maîtrisez (c'est à dire avec lesquels vous pouvez communiquer clairement).",
       "acceptGuidelines": "J'ai lu et accepté les %{acceptGuidelinesLink}",
       "acceptGuidelinesLink": "directives d'OpenBazaar recommandées sur le règlement des litiges",
       "understandRequirements": "Je comprends que je dois offrir mes services pour résoudre les litiges à quiconque les demande, à moins que les conditions décrites ci-dessus ne soient pas respectées.",
