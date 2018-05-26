@@ -922,7 +922,7 @@
           "body": "Ajoutez %{currencyPairing}%{asterisk} aux frais et renvoyez la transaction.",
           "insufficientFundsBody": "Vous avez besoin d'au moins %{currencyPairing}%{asterisk} dans votre portefeuille pour soumettre à nouveau cette transaction avec des frais plus élevés.",
           "fetchError": "Une erreur s'est produite lors de la récupération des frais estimés : %{err}",
-          "subText": "%{asterisk}prix estimé",
+          "subText": "%{asterisk} prix estimé",
           "btnCancel": "Annuler",
           "btnConfirmSend": "Envoyer",
           "btnRetry": "Réessayer"
@@ -1672,13 +1672,13 @@
       "orderDetails": {
         "progressBarStates": {
           "paid": "Payé(e)",
-          "accepted": "Acceptée",
+          "accepted": "Accepté(e)",
           "fulfilled": "Réalisé(e)",
           "complete": "Terminé(e)",
-          "canceled": "Annulée",
-          "declined": "Refusée",
+          "canceled": "Annulé(e)",
+          "declined": "Refusé(e)",
           "refunded": "Remboursé(e)",
-          "decided": "Décidée",
+          "decided": "Décidé(e)",
           "resolved": "Résolue",
           "disputed": "Litigieux"
         },
