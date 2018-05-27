@@ -750,11 +750,11 @@
     "website": "Site web",
     "email": "E-mail",
     "socialAccounts": {
-      "accountLabel": "Compte",
+      "accountLabel": "Compte social",
       "accountPlaceholder": "Facebook",
       "usernamePlaceholder": "Handle ou lien de page",
       "add": "+ Ajouter un compte de réseau social",
-      "limitError": "Vous ne pouvez pas avoir plus de %{max} comptes de réseaux sociaux. |||| Vous ne pouves pas avoir plus de %{max} comptes de réseaux sociaux."
+      "limitError": "Vous ne pouvez pas avoir plus de %{max} compte de réseau social. |||| Vous ne pouvez pas avoir plus de %{max} comptes de réseaux sociaux."
     },
     "themesSection": "Thème",
     "standardThemes": "Thèmes standards",
@@ -802,8 +802,8 @@
       "errorAuthFailed": "%{errorPreface} Echec de la connexion à %{serverName}. Le nom d'utilisateur et / ou le mot de passe est incorrect. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} Échec de la connexion à %{serverName}. Le cookie d'authentification est invalide. %{links}",
       "editLink": "modifier",
-      "errorTorNotConfigured": "Merci de modifier la configuration %{editLink} de %{serverName} pour confirmer si vous voulez utiliser Tor ou pas. %{links}",
-      "errorTorNotAvailable": "Tor n'a pas été trouvé. Merci de %{editLink} la configuraton de %{serverName} pour ne pas utiliser Tor ou le démarrer. %{links}",
+      "errorTorNotConfigured": "Merci de %{editLink} la configuration de %{serverName} pour confirmer si vous voulez utiliser Tor ou pas. %{links}",
+      "errorTorNotAvailable": "Tor n'a pas été trouvé. Merci de %{editLink} la configuration de %{serverName} pour ne pas utiliser Tor ou le démarrer. %{links}",
       "cancelConnAttempt": "Annuler",
       "connectAttemptMsg": "Tentative de connexion à %{serverName}. %{cancelConnAttempt}",
       "waitForServerStopMsg": "Arrêt de %{serverName}. Cela peut prendre quelques minutes."
