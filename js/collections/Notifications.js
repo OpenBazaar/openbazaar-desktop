@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import moment from 'moment';
+import { capitalize } from '../utils/string';
 import { Collection } from 'backbone';
 import app from '../app';
 
@@ -202,6 +203,9 @@ export function getNotifDisplayData(attrs, options = {}) {
       name,
     });
   } else if (attrs.type === 'vendorDisputeTimeout') {
+    // This currently only comes when the timeout has expired (expiresIn = 0). If that
+    // changes and warnings come before expiration, we'll need to update the notification
+    // to handle the case similar to how the buyerDisputeTimeout is handled below.
     const orderIdShort = `#${attrs.purchaseOrderId.slice(0, 4)}…`;
     route = `#transactions/sales?orderId=${attrs.purchaseOrderId}`;
     text = app.polyglot.t('notifications.text.vendorDisputeTimeout', {
@@ -210,7 +214,6 @@ export function getNotifDisplayData(attrs, options = {}) {
         `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
     });
   } else if (attrs.type === 'buyerDisputeTimeout') {
-    // attrs.expiresIn > 0
     const orderIdShort = `#${attrs.orderId.slice(0, 4)}…`;
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
 
@@ -221,12 +224,14 @@ export function getNotifDisplayData(attrs, options = {}) {
       // so e,g. 45 is represented as '45 days' instead of '1 month'.
       moment.relativeTimeThreshold('d', 364);
 
+      const timeRemaining = moment(Date.now())
+        .from(Date.now() - (attrs.expiresIn * 1000), true);
+
       text = app.polyglot.t('notifications.text.buyerDisputeTimeout', {
         orderLink: opts.native ?
           orderIdShort :
           `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
-        timeRemaining: moment(Date.now())
-          .from(Date.now() - (attrs.expiresIn * 1000), true),
+        timeRemaining: capitalize(timeRemaining),
       });
 
       // restore the days timeout threshold
