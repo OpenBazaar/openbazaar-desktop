@@ -53,7 +53,7 @@ export function parseEmojis(text, className = '', attrs = {}) {
  * If the average is a number, show the last 2 digits and trim any trailing zeroes.
  * @param {number} average - the average rating
  * @param {number} count - the number of ratings
- * @param {boolean) skipCount = a count wasn't sent, don't show it or test it for validity
+ * @param {boolean) skipCount - a count wasn't sent, don't show it or test it for validity
  */
 export function formatRating(average, count, skipCount) {
   const avIsNum = typeof average === 'number';
