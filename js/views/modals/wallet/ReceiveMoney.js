@@ -68,7 +68,7 @@ export default class extends baseVw {
   }
 
   copyAddressToClipboard() {
-    let qrCodeText = getServerCurrency().qrCodeText(this.getState().address)
+    const qrCodeText = getServerCurrency().qrCodeText(this.getState().address);
     clipboard.writeText(qrCodeText);
     clearTimeout(this.copyTextFadeoutTimeout);
     this.$copiedText.stop()
@@ -91,9 +91,9 @@ export default class extends baseVw {
       let qrDataUri = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
       const address = this.getState().address;
       let qrCodeText = address;
-          
+
       if (address) {
-        qrCodeText = getServerCurrency().qrCodeText(address)
+        qrCodeText = getServerCurrency().qrCodeText(address);
         qrDataUri = qr(qrCodeText,
           { type: 6, size: 5, level: 'Q' });
       }
