@@ -124,8 +124,8 @@ export default class extends BaseVw {
     this.getCachedEl('.js-payFromWallet').addClass('processing');
     this.spendConfirmBox.setState({ show: false });
     const currency = getServerCurrency().code;
-    const addressNoPrefix = this.paymentAddress.split(":")[1]
-      
+    const addressNoPrefix = this.paymentAddress.split(':')[1];
+
     try {
       spend({
         address: addressNoPrefix,
