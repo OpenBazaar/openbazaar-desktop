@@ -3,7 +3,7 @@
     <% ob.validShippingOptions.forEach((option, i) => {
       option.services.forEach((service, j) => {
       const selected = ob.selectedOption && ob.selectedOption.name === option.name && ob.selectedOption.service === service.name;
-      const optionId = `${option.name}-${service.name}`;
+      const optionId = `option${i}${j}`;
     %>
         <div>
           <div class="btnRadio width100">
