@@ -23,6 +23,11 @@ export default class extends baseView {
       if (!col.models.length) {
         this.selectedAddress = '';
         this.trigger('shippingOptionSelected', { name: '', service: '' });
+      } else {
+        // If the old selected address doesn't exist any more, select the first address.
+        const userAddresses = app.settings.get('shippingAddresses');
+        this.selectedAddress = userAddresses.get(this.selectedAddress) ?
+          this.selectedAddress : userAddresses.at(0);
       }
       this.render();
     });
