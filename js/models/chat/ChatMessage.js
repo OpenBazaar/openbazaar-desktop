@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import moment from 'moment';
 import is from 'is_js';
 import { getEmojiByName } from '../../data/emojis';
 import sanitizeHtml from 'sanitize-html';
