@@ -4021,7 +4021,8 @@
         "ZSE": "ZSEcoin",
         "ZUR": "Zurcoin",
         "ZYD": "Zayedcoin",
-        "ZZC": "ZoZoCoin"
+        "ZZC": "ZoZoCoin",
+        "NEC": "Nectar"
     },
     "cryptoCurrenciesNameCodePairing": "%{name} (%{code})",
     "languages": {

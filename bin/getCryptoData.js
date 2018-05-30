@@ -3,6 +3,7 @@ import fetch from 'node-fetch';
 import Promise from 'bluebird';
 import fs from 'fs';
 import jsonformat from 'json-format';
+import draftLog from 'draftlog';
 
 const iconOutputPath = `${__dirname}${path.sep}..${path.sep}imgs${path.sep}cryptoIcons${path.sep}/`;
 const translationFile = `${__dirname}${path.sep}..${path.sep}js${path.sep}` +
@@ -15,6 +16,8 @@ const translationFile = `${__dirname}${path.sep}..${path.sep}js${path.sep}` +
 const whitelist = {
   BTG: 2083,
 };
+
+draftLog(console);
 
 function getCoinList() {
   return new Promise((resolve, reject) => {
@@ -38,6 +41,19 @@ function logError(msg = '') {
 
 let iconsWritten = 0;
 let totalCoins;
+const draft = console.draft();
+
+function setIconsWritten(count) {
+  if (typeof count !== 'number') {
+    throw new Error('Please provide a numeric count.');
+  }
+
+  if (count !== iconsWritten) {
+    iconsWritten = count;
+    draft(`Obtained ${count}/${typeof totalCoins === 'number' ? totalCoins : '?'}` +
+      ' icons.');
+  }
+}
 
 function getIcon(coin) {
   if (typeof coin !== 'object') {
@@ -53,7 +69,7 @@ function getIcon(coin) {
         logError(`There was an error writing the icon for symbol ${coin.symbol},` +
           ` with an id of ${coin.id}: ${err}`);
       });
-      writeStream.on('finish', () => iconsWritten++);
+      writeStream.on('finish', () => setIconsWritten(iconsWritten + 1));
       res.body.pipe(writeStream);
     })
     .catch(err => {
@@ -66,7 +82,7 @@ function getIcon(coin) {
     });
 }
 
-console.log('Obtaining crypto icons...');
+draft('Obtaining crypto icons...');
 
 getCoinList()
   .then(results => {
@@ -140,7 +156,7 @@ getCoinList()
     }
   });
 
-process.on('exit', () => {
-  console.log(`Obtained ${iconsWritten}/${typeof totalCoins === 'number' ? totalCoins : '?'}` +
-    ' icons.');
-});
+// process.on('exit', () => {
+//   console.log(`Obtained ${iconsWritten}/${typeof totalCoins === 'number' ? totalCoins : '?'}` +
+//     ' icons.');
+// });

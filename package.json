@@ -20,7 +20,8 @@
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
     "babel": "babel js --out-dir prod; babel main.js --out-file mainBuilt.js",
     "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders",
-    "binaries": "./build.sh"
+    "binaries": "./build.sh",
+    "getCryptoData": "cross-env NODE_ENV=development babel-node ./bin/getCryptoData.js"
   },
   "repository": {
     "type": "git",
@@ -40,6 +41,7 @@
     "chai": "^3.5.0",
     "copyfiles": "^1.0.0",
     "cross-env": "^1.0.8",
+    "draftlog": "^1.0.12",
     "electron": "^1.7.11",
     "electron-winstaller": "2.5.2",
     "eslint": "^2.13.1",
