@@ -155,8 +155,3 @@ getCoinList()
       logError(err);
     }
   });
-
-// process.on('exit', () => {
-//   console.log(`Obtained ${iconsWritten}/${typeof totalCoins === 'number' ? totalCoins : '?'}` +
-//     ' icons.');
-// });
