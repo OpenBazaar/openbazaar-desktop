@@ -53,7 +53,6 @@
       </div>
     </div>
   <% } else if (ob.contractType === 'CRYPTOCURRENCY') { %>
-    <% const cryptocurrencyDelivery = ob.cryptocurrencyDelivery && ob.cryptocurrencyDelivery[0] || {}; %>
     <div class="flex gutterH clrT">
       <div class="statusIconCol"><span class="clrBr ion-cash"></span></div>
       <div class="flexExpand tx5 posR">
@@ -71,9 +70,13 @@
         }) %></div>
 
         <div class="row">
-          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <span class="clamp3 inline"><%= cryptocurrencyDelivery.transactionID %></span>
-          <a class="clrTEm js-copyText flexNoShrink" data-content="<%= cryptocurrencyDelivery.transactionID %>" data-status-indicator=".js-transactionIdCopiedToClipboard"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
+          <% if (ob.isTransactionIdAUrl) { %>
+          <a class="clrTEm" href="<%= ob.transactionIDOrUrl %>" data-open-external><%= ob.transactionIDOrUrl %></a>
+          <% } else { %>
+          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <span class="clamp3 inline"><%= ob.transactionIDOrUrl %></span>
+          <a class="clrTEm js-copyText flexNoShrink" data-content="<%= ob.transactionIDOrUrl %>" data-status-indicator=".js-transactionIdCopiedToClipboard"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
           <a class="hide js-transactionIdCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
+          <% } %>
         </div>
         <div class="rowTn txB"><%= ob.noteFromLabel %></div>
         <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
