@@ -6,6 +6,8 @@ import '../../../../utils/lib/velocity';
 import app from '../../../../app';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
+import is from 'is_js';
+import { stripHtml } from '../../../../utils/dom';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -73,10 +75,19 @@ export default class extends BaseVw {
   }
 
   render() {
+    const cryptocurrencyDelivery = this.dataObject.cryptocurrencyDelivery;
+    let transactionIDOrUrl = cryptocurrencyDelivery && cryptocurrencyDelivery[0] || {};
+    transactionIDOrUrl = transactionIDOrUrl.transactionID || '';
+    const isTransactionIdAUrl = is.url(transactionIDOrUrl);
+
+    transactionIDOrUrl = stripHtml(transactionIDOrUrl);
+
     loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
         ...this._state,
         ...this.dataObject || {},
+        isTransactionIdAUrl,
+        transactionIDOrUrl,
         moment,
       }));
     });
