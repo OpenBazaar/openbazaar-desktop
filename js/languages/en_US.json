@@ -251,6 +251,7 @@
     }
   },
   "userPage": {
+    "peerID": "Peer ID",
     "followsYou": "Follows You",
     "message": "Message",
     "customize": "Customize",
