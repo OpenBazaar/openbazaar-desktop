@@ -72,11 +72,31 @@ export default class extends BaseVw {
     return this;
   }
 
+  revealEscapeChars(input) {
+    const output = input.replace(/[<>&\n"]/g, x => ({
+      '<': '&amp;lt;',
+      '>': '&amp;gt;',
+      '&': '&amp;&',
+      '"': '&amp;quot;',
+      '\n': '<br />',
+    }[x]
+    ));
+
+    return output;
+  }
+
   render() {
+    const cryptocurrencyDelivery = this.dataObject.cryptocurrencyDelivery;
+    let transactionID = cryptocurrencyDelivery && cryptocurrencyDelivery[0] || {};
+    transactionID = transactionID.transactionID || '';
+
+    transactionID = this.revealEscapeChars(transactionID);
+
     loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
         ...this._state,
         ...this.dataObject || {},
+        transactionID,
         moment,
       }));
     });
