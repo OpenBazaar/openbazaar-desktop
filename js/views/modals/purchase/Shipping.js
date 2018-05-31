@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 import '../../../lib/select2';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -15,24 +16,25 @@ export default class extends baseView {
       throw new Error('Please provide a listing model');
     }
 
+    // Always select the first address when the view is created.
     this.selectedAddress = app.settings.get('shippingAddresses').length ?
       app.settings.get('shippingAddresses').at(0) : '';
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
-      // if all the addresses were deleted, update with blank values
+      // If all the addresses were deleted, set the selections to blank values.
       if (!col.models.length) {
         this.selectedAddress = '';
-        this.trigger('shippingOptionSelected', { name: '', service: '' });
+        this.selectedOption = { name: '', service: '' };
       } else {
-        // If the old selected address doesn't exist any more, select the first address.
+        // If the old selected address doesn't exist any more, select the first address and set the
+        // selection to a blank value. The shipping options view will set a new option on render.
         const userAddresses = app.settings.get('shippingAddresses');
         this.selectedAddress = userAddresses.get(this.selectedAddress) ?
           this.selectedAddress : userAddresses.at(0);
+        this.selectedOption = { name: '', service: '' };
       }
       this.render();
     });
-
-    this.selectedOption = {};
   }
 
   className() {
@@ -43,6 +45,17 @@ export default class extends baseView {
     return {
       'change #shippingAddress': 'changeShippingAddress',
     };
+  }
+
+  get selectedOption() {
+    return this._selectedOption;
+  }
+
+  set selectedOption(opts) {
+    if (!_.isEqual(this._selectedOption, opts)) {
+      this._selectedOption = opts;
+      this.trigger('shippingOptionSelected', opts);
+    }
   }
 
   get selectedAddress() {
@@ -86,12 +99,13 @@ export default class extends baseView {
       countryCode: this.countryCode,
       selectedOption: this.selectedOption,
     });
-    this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
-
     this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
       this.selectedOption = opts;
-      this.trigger('shippingOptionSelected', opts);
     }));
+
+    this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
+
+
 
     return this;
   }

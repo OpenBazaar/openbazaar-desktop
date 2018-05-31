@@ -57,13 +57,13 @@ export default class extends baseView {
     if (validShippingOptions.length) {
       validShippingOptions.forEach(option => {
         if (option.type === 'LOCAL_PICKUP') {
-          // local pickup options need a name and price
+          // local pickup options need a service and price
           option.services[0] = { name: app.polyglot.t('purchase.localPickup'), price: 0 };
         }
         option.services = _.sortBy(option.services, 'price');
       });
 
-      if (!this.selectedOption) {
+      if (!this.selectedOption || !this.selectedOption.name) {
         this.selectedOption = {
           name: validShippingOptions[0].name,
           service: validShippingOptions[0].services[0].name,
