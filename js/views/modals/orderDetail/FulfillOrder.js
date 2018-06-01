@@ -98,6 +98,9 @@ export default class extends BaseVw {
   }
 
   render() {
+    const cryptoDelivery = this.model.get('cryptocurrencyDelivery');
+    const transactionIDLength = cryptoDelivery && cryptoDelivery.max.transactionIDLength || 0;
+
     loadTemplate('modals/orderDetail/fulfillOrder.html', (t) => {
       this.$el.html(t({
         contractType: this.contractType,
@@ -105,6 +108,9 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         fulfillingOrder: fulfillingOrder(this.model.id),
+        max: {
+          transactionIDLength,
+        },
       }));
 
       this._$btnCancel = null;

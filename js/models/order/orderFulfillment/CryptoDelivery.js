@@ -8,6 +8,12 @@ export default class extends BaseModel {
     };
   }
 
+  get max() {
+    return {
+      transactionIDLength: 512,
+    };
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -18,6 +24,12 @@ export default class extends BaseModel {
     if (!attrs.transactionID ||
       (typeof attrs.transactionID === 'string' && !attrs.transactionID.trim())) {
       addError('transactionID', app.polyglot.t('orderFulfillmentModelErrors.provideTransactionId'));
+    }
+
+    if (attrs.transactionID.length > this.max.transactionIDLength) {
+      addError('transactionID',
+        app.polyglot.t('orderFulfillmentModelErrors.transactionIDTooLong',
+        { maxLength: this.max.transactionIDLength }));
     }
 
     if (Object.keys(errObj).length) return errObj;

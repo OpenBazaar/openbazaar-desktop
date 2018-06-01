@@ -1958,7 +1958,8 @@
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Please provide a file url.",
     "invalidUrl": "Please provide a valid url.",
-    "provideTransactionId": "Please provide a transaction ID."
+    "provideTransactionId": "Please provide a transaction ID.",
+    "transactionIDTooLong": "Transaction ID exceeds the maximum length of %{maxLength} characters."
   },
   "errorPage": {
     "userNotFoundTitle": "This User Could Not Be Found",
