@@ -52,6 +52,13 @@
     .tabContent {
       .cryptoTypeWrap {
         .cryptoCurrencyType {
+          .titleWrap {
+            .cryptoIcon {
+              width: 20px;
+              height: 20px;
+            }
+          }
+
           .cryptoQuantityCoinType {
             position: absolute;
             right: 15px;
@@ -356,5 +363,15 @@
         display: none;
       }
     }
+  }
+
+  .viewListingLinks {
+    display: none;
+  }
+
+  &.editMode {
+    .viewListingLinks {
+      display: block;
+    }    
   }
 }

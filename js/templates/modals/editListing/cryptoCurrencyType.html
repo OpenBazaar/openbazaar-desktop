@@ -1,3 +1,14 @@
+<div class="flexRow titleWrap">
+  <div class="col12">
+    <div class="flexRow">
+      <div class="flexExpand">
+        <label for="editListingTitle"><%= ob.polyT('editListing.title') %></label>
+        <%= ob.currencyMod.cryptoIcon({ code: 'BTC' }) %>
+      </div>
+      <%= ob.viewListingsT({ createMode: ob.createMode }) %>
+    </div>
+  </div>
+</div>
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoContractType" class="required"><%= ob.polyT('editListing.type') %></label>

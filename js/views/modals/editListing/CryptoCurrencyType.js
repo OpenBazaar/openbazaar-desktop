@@ -156,42 +156,45 @@ export default class extends BaseView {
   render() {
     super.render();
 
-    loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
-      this.$el.html(t({
-        contractTypes: this.model.get('metadata').contractTypesVerbose,
-        coinTypes: this.currencies,
-        helperType: this.tmplTypeHelper(),
-        marketVal: this.tmplMarketValue(),
-        errors: this.model.validationError || {},
-        ...this.model.toJSON(),
-      }));
+    loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
+      loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
+        this.$el.html(t({
+          contractTypes: this.model.get('metadata').contractTypesVerbose,
+          coinTypes: this.currencies,
+          helperType: this.tmplTypeHelper(),
+          marketVal: this.tmplMarketValue(),
+          errors: this.model.validationError || {},
+          viewListingsT,
+          ...this.model.toJSON(),
+        }));
 
-      this.$('#editListingCryptoContractType').select2({
-        minimumResultsForSearch: Infinity,
-      });
+        this.$('#editListingCryptoContractType').select2({
+          minimumResultsForSearch: Infinity,
+        });
 
-      this.$('#editListingCoinType').select2({
-        minimumResultsForSearch: 5,
-        matcher: (params, data) => {
-          if (!params.term || params.term.trim() === '') {
-            return data;
-          }
+        this.$('#editListingCoinType').select2({
+          minimumResultsForSearch: 5,
+          matcher: (params, data) => {
+            if (!params.term || params.term.trim() === '') {
+              return data;
+            }
 
-          const term = params.term
-            .toUpperCase()
-            .trim();
-
-          if (
-            data.text
+            const term = params.term
               .toUpperCase()
-              .includes(term) ||
-            data.id.includes(term)
-          ) {
-            return data;
-          }
+              .trim();
 
-          return null;
-        },
+            if (
+              data.text
+                .toUpperCase()
+                .includes(term) ||
+              data.id.includes(term)
+            ) {
+              return data;
+            }
+
+            return null;
+          },
+        });
       });
     });
 
