@@ -240,13 +240,11 @@
     // The price column is a set width and the free shipping column is a maximum of 200px and 4 lines.
     // This leaves the title/description/rating to flex to take up the remaining space.
     .priceCol {
-      padding-right: 20px;
       width: 100px;
       text-align: right;
     }
 
     .freeShipCol {
-      padding-right: 20px;
       max-width: 200px;
       word-break: break-word;
     }
