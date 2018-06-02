@@ -1,4 +1,4 @@
 <div class="flexVCent clrP clrBr clrSh3 contentBox padSm toolTipNoWrap" data-tip="<%= ob.polyT('pageNav.toolTip.currentPrice', { cur: ob.currencyMod.getServerCurrency().name }) %>">
-  <%= ob.currencyMod.cryptoIcon({ className: 'margRSm'}) %>
+  <%= ob.crypto.cryptoIcon({ className: 'margRSm'}) %>
   <strong class="tx5"><%= ob.currencyMod.formatCurrency(ob.currentPrice, ob.localCurrency) %></strong>
 </div>

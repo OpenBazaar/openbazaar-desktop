@@ -1,0 +1,36 @@
+.cryptoTradingPair {
+  @extend .flexInline;
+  align-items: center;
+  
+  .fromCur, .toCur {
+    font-weight: bold;
+    line-height: 1;
+  }
+
+  .pairingSeparator {
+    &::before {
+      font-weight: bold;
+    }
+  }  
+}
+
+.cryptoTradingPairLg {
+  @extend .cryptoTradingPair;
+  
+  .cryptoIcon {
+    margin-right: $padSm;
+  }
+
+  .fromCur, .toCur {
+    font-size: $tx3;
+    position: relative;
+    top: 1px;
+  }
+
+  .pairingSeparator {
+    margin: 0 10px;
+    font-size: $tx3;
+    position: relative;
+    top: 1px;    
+  }
+}

@@ -3,7 +3,10 @@
     <div class="flexRow">
       <div class="flexExpand">
         <label for="editListingTitle"><%= ob.polyT('editListing.title') %></label>
-        <%= ob.currencyMod.cryptoIcon({ code: 'BTC' }) %>
+        <%= ob.crypto.tradingPair({
+              fromCur: 'BTC',
+              toCur: 'ZEC',
+            }) %>
       </div>
       <%= ob.viewListingsT({ createMode: ob.createMode }) %>
     </div>
