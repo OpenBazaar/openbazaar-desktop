@@ -109,7 +109,7 @@
   "testnetTooltip": "Le Mode de test utilise des monnaies testnet, qui sont uniquement proposées à des fins de test.",
   "tabMenuHeading": "MENU",
   "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
-  "copiedToClipboard": "Copié dans le presse-papiers",
+  "copiedToClipboard": "Copié dans le presse-papier",
   "copiedToClipboardShort": "Copié",
   "refreshAlertPopInMessage": {
     "refreshLink": "Actualiser",
@@ -373,7 +373,7 @@
     },
     "listingUnverified": {
       "not": "PAS",
-      "tipBody": "Cette annonce ne comporte %{not} de modérateurs vérifiés. Procédez avec prudence."
+      "tipBody": "Cette annonce n'inclut %{not} un modérateur vérifié. Procédez avec prudence."
     },    
     "link": "En savoir plus",
     "type": "Type :",
@@ -611,7 +611,7 @@
         "blockDataBtn": "Afficher les données de bloc",
         "blockDataError": "Une erreur s'est produite, vos données de bloc n'ont pas pu être récupérées.",
         "blockDataTitle": "Vos données de bloc",
-        "blockDataCopy": "Copier dans votre presse-papiers",
+        "blockDataCopy": "Copier dans votre presse-papier",
         "backupWalletLbl": "Sauvegarder la phrase de récupération",
         "backupWalletHelper": "Cette phrase de récupération vous permet de récupérer votre portefeuille en cas de défaillance de votre ordinateur.",
         "unableToFetchSeedTitle": "Une erreur s'est produite lors de la récupération de votre phrase",
@@ -799,7 +799,7 @@
       "viewLocalServerDebugLogLink": "Log de débuggage",
       "errorConnectionLost": "%{errorPreface} La connexion à %{serverName} a été perdue. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Échec de la connexion à %{serverName}. Le serveur ne peut être atteint. %{links}",
-      "errorAuthFailed": "%{errorPreface} Echec de la connexion à %{serverName}. Le nom d'utilisateur et / ou le mot de passe est incorrect. %{links}",
+      "errorAuthFailed": "%{errorPreface} Échec de la connexion à %{serverName}. Le nom d'utilisateur et / ou le mot de passe est incorrect. %{links}",
       "errorAuthFailedBuiltInServer": "%{errorPreface} Échec de la connexion à %{serverName}. Le cookie d'authentification est invalide. %{links}",
       "editLink": "modifier",
       "errorTorNotConfigured": "Merci de %{editLink} la configuration de %{serverName} pour confirmer si vous voulez utiliser Tor ou pas. %{links}",
@@ -1299,7 +1299,7 @@
     },
     "tosScreen": {
       "heading": "Conditions d'utilisation",
-      "tos": "OpenBazaar est un réseau commercial de biens et services de personne à personne - utilisant des crypto-monnaies - sans aucune organisation centrale exerçant une autorité sur la plate-forme. Cela signifie que vous êtes seul responsable de votre activité sur le réseau. \n\nLes utilisateurs d'OpenBazaar ne sont pas anonymes par défaut. La plupart des communications entre les partis sont chiffrées, mais les adresses IP sont publiques et peuvent être associées à une activité sur le réseau. Des partis malveillants pourraient utiliser ces informations contre vous ; protéger votre vie privée est votre propre responsabilité. \n\nLes utilisateurs d'OpenBazaar doivent respecter les lois de leur propre juridiction aussi bien que leur conscience. Les développeurs d'OpenBazaar ne tolèrent pas - et ne sont pas responsables -  de toute utilisation de la plate-forme à des fins illégales. \n\nLa communauté des développeurs d'OpenBazaar a travaillé sans relâche afin d'offrir une plate-forme commerciale libre et mondiale. Mais, comme avec tout logiciel, des bugs seront trouvés. Les développeurs ne sont pas responsables de toute perte monétaire associée à des problèmes dans le logiciel. \n\nEn utilisant OpenBazaar vous êtes seul responsable de vos actions sur le réseau d'OpenBazaar."
+      "tos": "OpenBazaar est un réseau commercial de biens et services de personne à personne - utilisant des crypto-monnaies - sans aucune organisation centrale exerçant une autorité sur la plate-forme. Cela signifie que vous êtes seul responsable de votre activité sur le réseau. \n\nLes utilisateurs d'OpenBazaar ne sont pas anonymes par défaut. La plupart des communications entre les partis sont chiffrées, mais les adresses IP sont publiques et peuvent être associées à une activité sur le réseau. Des partis malveillants pourraient utiliser ces informations contre vous ; protéger votre vie privée est votre propre responsabilité. \n\nLes utilisateurs d'OpenBazaar doivent respecter les lois de leur propre pays aussi bien que leur conscience. Les développeurs d'OpenBazaar ne tolèrent pas - et ne sont pas responsables -  de toute utilisation de la plate-forme à des fins illégales. \n\nLa communauté des développeurs d'OpenBazaar a travaillé sans relâche afin d'offrir une plate-forme commerciale libre et mondiale. Mais, comme avec tout logiciel, des bugs seront trouvés. Les développeurs ne sont pas responsables de toute perte monétaire associée à des problèmes dans le logiciel. \n\nEn utilisant OpenBazaar vous êtes seul responsable de vos actions sur le réseau d'OpenBazaar."
     }
   },
   "pageControls": {
@@ -1315,9 +1315,9 @@
     "moderatorTitle": "Modérateur",
     "newAddress": "Nouvelle adresse",
     "serviceDetails": "%{price} — %{delivery}",
-    "localPickup": "Collecte locale",
+    "localPickup": "Récupération locale",
     "noAddresses": "Vous n'avez pas d'adresses enregistrées.",
-    "noShippableAddresses": "Cette annonce ne peut être expédiée à votre adresse.",
+    "noShippableAddresses": "Cette annonce ne peut pas être expédiée à votre adresse.",
     "informationTitle": "Informations additionnelles",
     "emailAddress": "Adresse e-mail ou numéro de téléphone",
     "emailPlaceholder": "name@email.com",
@@ -1334,7 +1334,7 @@
     },
     "removeCode": "supprimer",
     "memo": "Mémo",
-    "memoPlaceholder": "Fournir plus de détails pour le vendeur ici (optionnel).",
+    "memoPlaceholder": "Fournissez plus de détails pour le vendeur ici (optionnel).",
     "pay": "Payer >",
     "payNote": "Cliquer sur payer vous fera passer à l'étape finale.",
     "scamWarning": "Attention : Protection contre les arnaques",
@@ -1452,7 +1452,7 @@
     "purchases": {
       "heading": "Achats",
       "countTransactions": "%{smart_count} achat |||| %{smart_count} achats",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "unableToFetch": "Impossible d'obtenir vos achats.",
       "noResults": "Aucun achat n'a été trouvé",
       "returnToFromOrder": "Revenir aux achats"
@@ -1460,7 +1460,7 @@
     "cases": {
       "heading": "Litiges",
       "countTransactions": "%{smart_count} litige |||| %{smart_count} litiges",
-      "countTransactionsFound": "%{countTransactions} trouvées",
+      "countTransactionsFound": "%{countTransactions} trouvés",
       "noResults": "Aucun litige trouvé",
       "returnToFromOrder": "Revenir aux litiges"
     },
@@ -1765,7 +1765,7 @@
   "metrics": {
     "title": "Métriques anonymes facultatives",
     "msg1": "Vous pouvez aider à améliorer OpenBazaar en acceptant de partager des données anonymes avec l'équipe de développement sur votre expérience.",
-    "msg2": "Aucune information pouvant être utilisée pour vous identifier, vos commandes ou vos transactions ne sont pas partagée avec nous. Vos données personnelles sont toujours stockées sur votre propre ordinateur et ne sont accessibles à personne d'autre.",
+    "msg2": "Aucune information n'est utilisée pour vous identifier, vos commandes ou vos transactions ne sont pas partagées avec nous. Vos données personnelles sont toujours stockées sur votre propre ordinateur et ne sont accessibles à personne d'autre.",
     "listTitle": "Les données suivantes seront partagées :",
     "list": {
       "pages": "Les pages que vous chargez, telle que la page de recherche ou la page de la boutique.",
@@ -1804,7 +1804,7 @@
     "fetchingRatesFailStatusMsgRetryLink": "réessayer"
   },
   "debugLog": {
-    "copyToClipboard": "Copier dans le presse-papiers"
+    "copyToClipboard": "Copier dans le presse-papier"
   },
   "profileModelErrors": {
     "provideName": "Vous devez entrer un nom.",
