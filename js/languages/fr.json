@@ -373,7 +373,7 @@
     },
     "listingUnverified": {
       "not": "PAS",
-      "tipBody": "Cette annonce n'inclut %{not} un modérateur vérifié. Procédez avec prudence."
+      "tipBody": "Cette annonce n'inclut %{not} de modérateur vérifié. Procédez avec prudence."
     },    
     "link": "En savoir plus",
     "type": "Type :",
@@ -771,7 +771,7 @@
       "street": "Rue",
       "apt": "Appartement",
       "city": "Ville",
-      "state": "État / Région / Département",
+      "state": "Région / Département",
       "country": "Pays",
       "postalCode": "Code postal",
       "notes": "Remarques pour la livraison"
