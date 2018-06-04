@@ -204,7 +204,7 @@ export default class extends BaseModal {
       this._createMode = bool;
       this.$el.toggleClass('editMode', !this._createMode);
     }
-  }  
+  }
 
   onClickReturn() {
     this.trigger('click-return', { view: this });
@@ -1323,7 +1323,8 @@ export default class extends BaseModal {
         });
 
         this.$('.js-inventoryManagementSection').html(this.inventoryManagement.render().el);
-        this.listenTo(this.inventoryManagement, 'changeManagementType', this.onChangeManagementType);
+        this.listenTo(this.inventoryManagement, 'changeManagementType',
+          this.onChangeManagementType);
 
         // render variant inventory
         if (this.variantInventory) this.variantInventory.remove();
