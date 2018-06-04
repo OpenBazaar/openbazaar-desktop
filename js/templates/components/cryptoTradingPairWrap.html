@@ -1,0 +1,31 @@
+<%
+  const tradingPairOptions = Object.assign({
+    className: ob.tradingPairClass,
+    fromCur: ob.fromCur,
+    toCur: ob.toCur,
+  }, ob);
+%>
+<%= ob.crypto.tradingPair(tradingPairOptions) %>
+<%
+  let exchangeRateLine = '1 BTC = 23.4301 ZEC (0.04268014)';
+  let exchangeRateClass = ob.exchangeRateClass;
+
+  if (ob.toCur && typeof ob.toCurAmount === 'number' &&
+    typeof ob.fromCurAmount === 'number') {
+    const formattedFromCurAmount = new Intl.NumberFormat(ob.localCurrency, {
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 8,
+    }).format(ob.fromCurAmount);
+
+    exchangeRateLine = ob.polyT('cryptoConversionPairing', {
+      fromPairing: ob.currencyMod.formatCurrency(1, ob.fromCur, { useCryptoSymbol: false }),
+      toPairing: ob.currencyMod.formatCurrency(ob.toCurAmount, ob.toCur),
+      fromCurAmount: formattedFromCurAmount,
+    });
+  } else {
+    exchangeRateClass += 'invisible'; // If the data is invalid or unavailable to
+                                      // display an exchange rate, for spacing purposes
+                                      // we'll show an invisible line.
+  }
+%>
+<div class="<%= ob.exchangeRateClass %>"><%= exchangeRateLine %></div>

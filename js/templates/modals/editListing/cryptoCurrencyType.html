@@ -3,11 +3,7 @@
     <div class="flexRow">
       <div class="flexExpand">
         <label for="editListingTitle"><%= ob.polyT('editListing.title') %></label>
-        <%= ob.crypto.tradingPair({
-          className: 'cryptoTradingPairLg row',
-          fromCur: 'BTC',
-          toCur: '',
-        }) %>
+        <div class="js-cryptoTradingPairContainer"></div>
       </div>
       <%= ob.viewListingsT({ createMode: ob.createMode }) %>
     </div>
@@ -46,7 +42,7 @@
     </div>
     <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperQuantity') %></div>
   </div>
-  <div class="col6 simpleFlexCol">
+  <div class="col6 simpleFlexCol hide hide hide hide hide hide hide">
     <label for="editListingCryptoMarketValue">
     <%= ob.polyT('editListing.cryptoCurrencyType.marketValueLabel') %></label>
     <div class="js-marketValueWrap clrT2 tx5"><%= ob.marketVal %></div>

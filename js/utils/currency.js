@@ -162,6 +162,9 @@ export function formatCurrency(amount, currency, options) {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
+    useCryptoSymbol: true, // For crypto currencies, if a symbol is specified in the
+                           // cryptoCurrencies data module, it will be displayed in liu
+                           // of the currency code.
     ...options,
   };
 
@@ -189,7 +192,7 @@ export function formatCurrency(amount, currency, options) {
     (!cryptoCur && !curData);
 
   if (cryptoCur) {
-    let curSymbol = curData.symbol || cur;
+    let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
     let bitcoinConvertUnit;
     let amt = amount;
 
