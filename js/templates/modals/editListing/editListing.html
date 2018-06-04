@@ -268,7 +268,7 @@
 
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexHRight flexVCent gutterH">
-          <a class="txU js-viewListing js-viewListingWrap <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
+          <%= ob.viewListingsT({ createMode: ob.createMode }) %>
           <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
       </div>
