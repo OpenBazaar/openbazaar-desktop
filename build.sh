@@ -10,7 +10,7 @@
 ##
 
 
-ELECTRONVER=1.7.8
+ELECTRONVER=1.8.7
 NODEJSVER=5.1.1
 
 OS="${1}"
@@ -83,7 +83,7 @@ case "$TRAVIS_OS_NAME" in
     APPNAME="openbazaar2"
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/ 
@@ -101,7 +101,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=x64 --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
     mkdir dist/${APPNAME}-linux-x64/resources/openbazaar-go/
@@ -119,7 +119,7 @@ case "$TRAVIS_OS_NAME" in
     APPNAME="openbazaar2client"
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_ia32.client.json
@@ -130,7 +130,7 @@ case "$TRAVIS_OS_NAME" in
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=x64 --version=${ELECTRONVER} --overwrite --prune --out=dist
+    electron-packager . ${APPNAME} --platform=linux --arch=x64 --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Create debian archive'
     electron-installer-debian --config .travis/config_amd64.client.json

@@ -1,7 +1,7 @@
 {
   "name": "openbazaar-desktop",
   "productName": "OpenBazaar Desktop Client",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "description": "Decentralized p2p marketplace for Bitcoin",
   "main": "bootstrapper.js",
   "scripts": {
@@ -42,8 +42,7 @@
     "copyfiles": "^1.0.0",
     "cross-env": "^1.0.8",
     "draftlog": "^1.0.12",
-    "electron": "^1.7.11",
-    "electron-winstaller": "2.5.2",
+    "electron": "^1.8.7",
     "eslint": "^2.13.1",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-config-defaults": "^9.0.0",
