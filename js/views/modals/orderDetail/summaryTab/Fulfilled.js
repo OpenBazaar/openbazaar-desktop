@@ -40,7 +40,7 @@ export default class extends BaseVw {
 
   onClickCopyText(e) {
     const $target = $(e.target);
-    clipboard.writeText($target.attr('data-content'));
+    clipboard.writeText($target.attr('data-content').replace(/\[\!\$quote\$\!\]/g, '"'));
     this.getCachedEl($target.attr('data-status-indicator'))
       .velocity('stop')
       .velocity('fadeIn', {
@@ -72,11 +72,29 @@ export default class extends BaseVw {
     return this;
   }
 
+  revealEscapeChars(input) {
+    const output = input.replace(/[<>&\n"]/g, x => ({
+      '<': '&amp;lt;',
+      '>': '&amp;gt;',
+      '&': '&amp;&',
+      '"': '&amp;quot;',
+      '\n': '<br />',
+    }[x]
+    ));
+
+    return output;
+  }
+
   render() {
+    const cd = this.dataObject.cryptocurrencyDelivery;
+    const transactionID = cd && cd[0] && cd[0].transactionID || '';
+    
     loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
         ...this._state,
         ...this.dataObject || {},
+        transactionID: transactionID.replace(/["]/g, '[!$quote$!]'),
+        encodedTxId: this.revealEscapeChars(transactionID),
         moment,
       }));
     });
