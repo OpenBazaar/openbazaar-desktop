@@ -70,7 +70,7 @@
         }) %></div>
 
         <div class="row">
-          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <span class="clamp3 inline"><%= ob.transactionID %></span>
+          <span><%= ob.polyT('orderDetail.summaryTab.fulfilled.transactionIdLabel') %></span> <span class="clamp3 inline"><%= ob.encodedTxId %></span>
           <a class="clrTEm js-copyText flexNoShrink" data-content="<%= ob.transactionID %>" data-status-indicator=".js-transactionIdCopiedToClipboard"><%= ob.polyT('orderDetail.summaryTab.fulfilled.copyLink') %></a>
           <a class="hide js-transactionIdCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></a>
         </div>
