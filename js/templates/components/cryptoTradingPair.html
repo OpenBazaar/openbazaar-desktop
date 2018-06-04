@@ -2,6 +2,8 @@
   <%= ob.crypto.cryptoIcon({ code: ob.fromCur }) %>
   <span class="fromCur <%= ob.fromCurClass %>"><%= ob.fromCur %></span>
   <span class="pairingSeparator ion-android-arrow-forward <%= ob.arrowIconClass %>"></span>
-  <%= ob.crypto.cryptoIcon({ code: ob.toCur }) %>
-  <span class="toCur <%= ob.toCurClass %>"><%= ob.toCur %></span>
+  <% if (ob.toCur) { %>
+    <%= ob.crypto.cryptoIcon({ code: ob.toCur }) %>
+    <span class="toCur <%= ob.toCurClass %>"><%= ob.toCur %></span>
+  <% } %>  
 </span>

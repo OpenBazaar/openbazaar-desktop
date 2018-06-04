@@ -2013,6 +2013,7 @@
         "curSymbolAmount": "%{symbol}%{amount}",
         "curCodeAmount": "%{amount} %{code}"
     },
+    "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{amountFromCurPerOneToCurUnit})",    
     "countries": {
         "AFGHANISTAN": "Afghanistan",
         "ALAND_ISLANDS": "Aland Islands",

@@ -9,6 +9,7 @@ import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -168,11 +169,11 @@ export default class extends BaseView {
           ...this.model.toJSON(),
         }));
 
-        this.$('#editListingCryptoContractType').select2({
+        this.getCachedEl('#editListingCryptoContractType').select2({
           minimumResultsForSearch: Infinity,
         });
 
-        this.$('#editListingCoinType').select2({
+        this.getCachedEl('#editListingCoinType').select2({
           minimumResultsForSearch: 5,
           matcher: (params, data) => {
             if (!params.term || params.term.trim() === '') {
@@ -195,6 +196,8 @@ export default class extends BaseView {
             return null;
           },
         });
+
+        this.getCachedEl('.js-cryptoTradingPairContainer');
       });
     });
 

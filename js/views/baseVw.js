@@ -244,6 +244,10 @@ export default class baseVw extends View {
     };
     let newState;
 
+    if (typeof state !== 'object') {
+      throw new Error('The state must be provided as an object.');
+    }
+
     if (opts.replace) {
       this._state = {};
     } else {

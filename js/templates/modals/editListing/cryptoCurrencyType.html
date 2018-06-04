@@ -4,9 +4,10 @@
       <div class="flexExpand">
         <label for="editListingTitle"><%= ob.polyT('editListing.title') %></label>
         <%= ob.crypto.tradingPair({
-              fromCur: 'BTC',
-              toCur: 'ZEC',
-            }) %>
+          className: 'cryptoTradingPairLg row',
+          fromCur: 'BTC',
+          toCur: '',
+        }) %>
       </div>
       <%= ob.viewListingsT({ createMode: ob.createMode }) %>
     </div>
