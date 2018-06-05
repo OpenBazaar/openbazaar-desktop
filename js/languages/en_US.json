@@ -1140,9 +1140,7 @@
             "marketValueLabel": "Current Market Value",
             "marketValuePerCoin": "(%{amount} per %{curCode})",
             "coinType": "Coin Type",
-            "quantity": "Quantity",
-            "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
-            "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
+            "quantity": "Quantity"
         },
         "shippingOptions": {
             "optionHeading": "Shipping Option #%{listPosition}",
@@ -2014,6 +2012,10 @@
         "curCodeAmount": "%{amount} %{code}"
     },
     "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
+    "cryptoTradingPair": {
+      "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
+      "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
+    },
     "countries": {
         "AFGHANISTAN": "Afghanistan",
         "ALAND_ISLANDS": "Aland Islands",

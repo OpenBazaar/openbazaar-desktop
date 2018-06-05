@@ -7,25 +7,30 @@
 %>
 <%= ob.crypto.tradingPair(tradingPairOptions) %>
 <%
-  let exchangeRateLine = '1 BTC = 23.4301 ZEC (0.04268014)';
-  let exchangeRateClass = ob.exchangeRateClass;
+  let exchangeRateLine;
 
-  if (ob.toCur && typeof ob.toCurAmount === 'number' &&
-    typeof ob.fromCurAmount === 'number') {
+  if (!ob.exchangeRateUnavailable) {
     const formattedFromCurAmount = new Intl.NumberFormat(ob.localCurrency, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,
-    }).format(ob.fromCurAmount);
+    }).format(ob.fromCurConvertedAmount);
 
     exchangeRateLine = ob.polyT('cryptoConversionPairing', {
-      fromPairing: ob.currencyMod.formatCurrency(1, ob.fromCur, { useCryptoSymbol: false }),
-      toPairing: ob.currencyMod.formatCurrency(ob.toCurAmount, ob.toCur),
+      fromPairing: ob.currencyMod.formatCurrency(ob.fromCurAmount, ob.fromCur, { useCryptoSymbol: false }),
+      toPairing: ob.currencyMod.formatCurrency(ob.toCurAmount, ob.toCur, { useCryptoSymbol: false }),
       fromCurAmount: formattedFromCurAmount,
     });
   } else {
-    exchangeRateClass += 'invisible'; // If the data is invalid or unavailable to
-                                      // display an exchange rate, for spacing purposes
-                                      // we'll show an invisible line.
+    let icon = `<span class="${ob.iconClass}"></span>`;
+
+    if (ob.noExchangeRateTip) {
+      icon = `<span class="toolTip" data-tip="${ob.noExchangeRateTip}">${icon}</span>`;
+    }
+
+    exchangeRateLine = ob.polyT('cryptoTradingPair.cryptoConversionPairingNoToCurExchangeRate', {
+      fromPairing: ob.currencyMod.formatCurrency(ob.fromCurAmount, ob.fromCur, { useCryptoSymbol: false }),
+      icon,
+    });
   }
 %>
 <div class="<%= ob.exchangeRateClass %>"><%= exchangeRateLine %></div>
