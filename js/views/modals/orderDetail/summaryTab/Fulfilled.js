@@ -40,7 +40,7 @@ export default class extends BaseVw {
 
   onClickCopyText(e) {
     const $target = $(e.target);
-    clipboard.writeText($target.attr('data-content').replace(/\[\!\$quote\$\!\]/g, '"'));
+    clipboard.writeText($target.attr('data-content').replace(/\[!\$quote\$!\]/g, '"'));
     this.getCachedEl($target.attr('data-status-indicator'))
       .velocity('stop')
       .velocity('fadeIn', {
@@ -88,7 +88,7 @@ export default class extends BaseVw {
   render() {
     const cd = this.dataObject.cryptocurrencyDelivery;
     const transactionID = cd && cd[0] && cd[0].transactionID || '';
-    
+
     loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
         ...this._state,
