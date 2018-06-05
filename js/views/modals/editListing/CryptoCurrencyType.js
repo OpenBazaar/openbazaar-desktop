@@ -33,6 +33,8 @@ export default class extends BaseView {
   onChangeCoinType(e) {
     this.getCachedEl('.js-quantityCoinType')
       .text(e.target.value);
+    this.getCachedEl('.js-helperCoinType')
+      .html(this.tmplCoinTypeHelper(e.target.value));
     this.cryptoTradingPair.setState({
       toCur: this.getCachedEl('#editListingCoinType').val(),
     });
@@ -71,9 +73,16 @@ export default class extends BaseView {
     return coinTypes;
   }
 
-  tmplTypeHelper() {
-    return app.polyglot.t('editListing.cryptoCurrencyType.helperType',
-      { curCode: getServerCurrency().code });
+  get defaultFromCur() {
+    return this.model.get('metadata').get('coinType') ||
+      this.currencies[0].code;
+  }
+
+  tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
+    return app.polyglot.t('editListing.cryptoCurrencyType.helperCoinType', {
+      toCur: getServerCurrency().code,
+      fromCur,
+    });
   }
 
   render() {
@@ -84,7 +93,7 @@ export default class extends BaseView {
         this.$el.html(t({
           contractTypes: this.model.get('metadata').contractTypesVerbose,
           coinTypes: this.currencies,
-          helperType: this.tmplTypeHelper(),
+          helperCoinType: this.tmplCoinTypeHelper(),
           errors: this.model.validationError || {},
           viewListingsT,
           ...this.model.toJSON(),

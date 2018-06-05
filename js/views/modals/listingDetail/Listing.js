@@ -96,6 +96,7 @@ export default class extends BaseModal {
           // refresh pop-up if that's the only thing that changed.
           const prev = e.prev;
           delete prev.item.cryptoQuantity;
+
           const cur = this.model.toJSON();
           delete cur.item.cryptoQuantity;
 

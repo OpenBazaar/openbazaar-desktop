@@ -1134,14 +1134,14 @@
             "btnOk": "OK"
         },
         "cryptoCurrencyType": {
-            "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
-            "helperCoinType": "Choose the coin you’d like to sell",
+            "helperType": "Trade cryptocurrencies for free",
+            "helperCoinType": "Receive %{toCur} in exchange for %{fromCur}",
             "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
             "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
             "marketValueLabel": "Current Market Value",
             "marketValuePerCoin": "(%{amount} per %{curCode})",
-            "coinType": "Coin Type",
-            "quantity": "Quantity"
+            "coinType": "Trade",
+            "quantity": "Inventory"
         },
         "shippingOptions": {
             "optionHeading": "Shipping Option #%{listPosition}",
