@@ -270,7 +270,6 @@ export function fetchExchangeRates(options = {}) {
 
       Object.keys(data)
         .forEach(cur => {
-          data[cur] = Math.random() * 10;
           if (data[cur] !== exchangeRates[cur]) {
             changed.add(cur);
           }

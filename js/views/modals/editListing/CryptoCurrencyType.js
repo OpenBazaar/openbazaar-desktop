@@ -1,10 +1,5 @@
 import app from '../../../app';
 import '../../../lib/select2';
-import {
-  getExchangeRate,
-  convertAndFormatCurrency,
-  events as currencyEvents,
-} from '../../../utils/currency';
 import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';

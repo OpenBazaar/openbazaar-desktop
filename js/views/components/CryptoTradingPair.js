@@ -32,9 +32,6 @@ export default class extends BaseVw {
 
     super(opts);
 
-    console.log('silly');
-    window.silly = this;
-
     // Since the initial state is not being piped through setState in the
     // base class, this is a hack to run it through setState now and ensure
     // setState updates the exchange rate which is based on the toCur changing.
@@ -46,7 +43,7 @@ export default class extends BaseVw {
         toCur,
       });
     }
-    
+
     this.listenTo(currencyEvents, 'exchange-rate-change', e => {
       if (
         e.changed.includes(this.getState().toCur) ||
@@ -56,7 +53,7 @@ export default class extends BaseVw {
         this.setState({
           ...curState,
           ...this.getConversionState(curState.fromCur, curState.toCur, curState.fromCurAmount),
-        })
+        });
       }
     });
   }
@@ -95,14 +92,14 @@ export default class extends BaseVw {
   }
 
   getConversionState(fromCur, toCur, fromCurAmount) {
-    const exchangeRate = getExchangeRate(toCur); 
+    const exchangeRate = getExchangeRate(toCur);
     const toCurAmount = fromCurAmount * getExchangeRate(toCur);
 
     return {
       toCurAmount,
       fromCurConvertedAmount: fromCurAmount / toCurAmount,
       exchangeRateUnavailable: exchangeRate === undefined,
-    }
+    };
   }
 
   render() {

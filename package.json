@@ -63,9 +63,7 @@
     "pre-push": "^0.1.1",
     "sinon": "^1.17.6"
   },
-  "pre-commit": [
-    
-  ],
+  "pre-commit": [],
   "pre-push": [
     "lint"
   ],
