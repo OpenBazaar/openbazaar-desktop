@@ -59,9 +59,13 @@
     "nodemon": "^1.9.2",
     "npm-run-all": "^2.2.0",
     "pre-commit": "^1.2.2",
+    "pre-push": "^0.1.1",
     "sinon": "^1.17.6"
   },
   "pre-commit": [
+    
+  ],
+  "pre-push": [
     "lint"
   ],
   "dependencies": {
