@@ -94,7 +94,7 @@ export default class extends baseView {
     if (this.validOptions.length) {
       // If the previously selected shipping option is no longer valid, select the first valid
       // shipping option. this.selectionOption only has a name and service, as that's the expected
-      // data for the server, the validOptions have additonal data in them.
+      // data for the server, the validOptions have additional data in them.
       const isSelectedValid = this.selectedOption && this.selectedOption.name &&
         !!this.validOptions.filter(option => option.name === this.selectedOption.name &&
           option.service === this.selectedOption.service).length;
@@ -114,10 +114,6 @@ export default class extends baseView {
       this.shippingOptions.selectedOption = this.selectedOption;
       this.shippingOptions.render();
     }
-  }
-
-  get countryCode() {
-    return this.selectedAddress ? this.selectedAddress.get('country') : '';
   }
 
   changeShippingAddress(e) {
