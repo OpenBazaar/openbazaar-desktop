@@ -196,13 +196,13 @@ export default class extends BaseModal {
     this.trigger('click-return', { view: this });
   }
 
-  onClickViewListing(e) {
+  onClickViewListing() {
     if (this.options.onClickViewListing) {
       this.options.onClickViewListing.call(this);
     } else {
       const slug = this.model.get('slug');
       if (slug) {
-          app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
+        app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
       }
     }
   }
