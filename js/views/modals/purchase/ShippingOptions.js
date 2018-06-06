@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import app from '../../../app';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';

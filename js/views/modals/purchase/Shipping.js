@@ -55,7 +55,6 @@ export default class extends baseView {
   }
 
   extractValidOptions() {
-    console.log('extract')
     // Any time the address is selected, the options valid for that address need to be extracted.
     this.validOptions = [];
 
@@ -157,7 +156,7 @@ export default class extends baseView {
     }));
 
     this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
-    
+
     return this;
   }
 }
