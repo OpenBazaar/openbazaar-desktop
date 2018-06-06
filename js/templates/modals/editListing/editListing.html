@@ -71,9 +71,12 @@
               <div class="col12">
                 <div class="flexRow">
                   <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <a class="txU js-viewListing <% if (ob.createMode) print('hide') %>" data-type="client"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
-                  <a class="txU <% if (ob.createMode) print('hide') %>" data-type="web" href="http://openbazaar.com/store/<%= ob.peerID %>/<%= ob.slug %>"><%= ob.polyT('editListing.viewListingOnWebLink') %></a>
-                  </a>
+                  <div class="gutterH">
+                    <a class="txU js-viewListing clrTEmph1 <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
+                    <a class="txU clrTEmph1 <% if (ob.createMode) print('hide') %>" href="http://openbazaar.com/store/<%= ob.peerID %>/<%= ob.slug %>"><%= ob.polyT('editListing.viewListingOnWebLink') %><i class="ion-android-open padSm clrTEmph1"></i></a>
+                    <span class="toolTip toolTipChatOpen txCtr" data-tip="<%= ob.polyT('editListing.viewOnWebDisclaimerTooltip') %>"><i class="ion-information-circled clrT2"></i></span>
+                    </a>
+                  </div>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">

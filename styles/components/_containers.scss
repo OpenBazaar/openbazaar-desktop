@@ -473,6 +473,18 @@
       -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
     }
   }
+
+  &.toolTipChatOpen {
+
+    body.chatOpen &{
+      
+      &::before {
+        // top: -26px;
+        transform: translate(-94%, 0%);
+      }
+
+    }
+  }
 }
 
 // Use for single line variable width tooltips. Factor in translations and
