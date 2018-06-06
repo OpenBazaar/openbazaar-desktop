@@ -54,12 +54,12 @@ export default class extends baseView {
     }
   }
 
-  extractValidOptions() {
-    // Any time the address is selected, the options valid for that address need to be extracted.
+  extractValidOptions(countryCode) {
+    // Any time the country is changed, the options valid for that country need to be extracted.
     this.validOptions = [];
 
     const extractedOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
-      option.regions.includes(this.countryCode) || option.regions.includes('ALL'));
+      option.regions.includes(countryCode) || option.regions.includes('ALL'));
 
     if (extractedOptions.length) {
       extractedOptions.forEach(option => {
@@ -87,7 +87,7 @@ export default class extends baseView {
     if (this._selectedAddress === address) return;
 
     // if the selected address has a new country, extract the valid shipping options.
-    if (address.get('country') !== this.country) this.extractValidOptions();
+    if (address.get('country') !== this.country) this.extractValidOptions(address.get('country'));
 
     this._selectedAddress = address;
 
