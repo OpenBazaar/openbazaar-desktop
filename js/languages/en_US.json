@@ -1127,7 +1127,8 @@
         "btnTermsAndConditions": "Add Terms and Conditions",
         "btnAddCoupon": "Add Coupon",
         "primaryPhoto": "PRIMARY PHOTO",
-        "viewListingLink": "View Listing",
+        "viewListingInClientLink": "View in client",
+        "viewListingOnWebLink": "View on web",
         "unsupportedCurrencyDialog": {
             "title": "Unrecognized currency",
             "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",

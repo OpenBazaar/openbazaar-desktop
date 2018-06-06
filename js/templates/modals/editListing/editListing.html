@@ -71,7 +71,9 @@
               <div class="col12">
                 <div class="flexRow">
                   <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <a class="txU js-viewListing <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
+                  <a class="txU js-viewListing <% if (ob.createMode) print('hide') %>" data-type="client"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
+                  <a class="txU <% if (ob.createMode) print('hide') %>" data-type="web" href="http://openbazaar.com/store/<%= ob.peerID %>/<%= ob.slug %>"><%= ob.polyT('editListing.viewListingOnWebLink') %></a>
+                  </a>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
@@ -268,7 +270,7 @@
 
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexHRight flexVCent gutterH">
-          <a class="txU js-viewListing js-viewListingWrap <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
+          <a class="txU js-viewListing js-viewListingWrap <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
           <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
       </div>
