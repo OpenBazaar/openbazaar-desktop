@@ -1,6 +1,6 @@
-<% if (ob.services.length) { %>
+<% if (ob.validOptions.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
-    <% ob.services.forEach((service, i) => {
+    <% ob.validOptions.forEach((service, i) => {
          const selected = ob.selectedOption && ob.selectedOption.name === service.name && ob.selectedOption.service === service.service;
     %>
       <div>
