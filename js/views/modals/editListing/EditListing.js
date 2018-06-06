@@ -197,21 +197,12 @@ export default class extends BaseModal {
   }
 
   onClickViewListing(e) {
-    const $target = $(e.target);
-    const viewType = $target.attr('data-type');
-    const d = app.profile.id;
-
     if (this.options.onClickViewListing) {
       this.options.onClickViewListing.call(this);
     } else {
       const slug = this.model.get('slug');
       if (slug) {
-        if (viewType.isEqual('client')) { 
-          console.log("its client");
-          // app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
-        } else {
-          console.log("its web");
-        }
+          app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
       }
     }
   }
