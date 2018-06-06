@@ -238,11 +238,30 @@ export function formatCurrency(amount, currency, options) {
         `${cur.slice(0, 8)}…` : cur,
     });
   } else {
+    let maximumFractionDigits = opts.maxDisplayDecimals || 2;
+
+    // Account for prices that are too low relative to the maxDisplay decimals,
+    // for example a price of .003 will show as $0.00 if the max is 2.
+    // (thanks Dogecoin!)
+    if (amount < 0.0000005) {
+      maximumFractionDigits = 8;
+    } else if (amount < 0.000005) {
+      maximumFractionDigits = 7;
+    } else if (amount < 0.00005) {
+      maximumFractionDigits = 6;
+    } else if (amount < 0.0005) {
+      maximumFractionDigits = 5;
+    } else if (amount < 0.005) {
+      maximumFractionDigits = 4;
+    } else if (amount < 0.05) {
+      maximumFractionDigits = 3;
+    }
+
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
       minimumFractionDigits: opts.minDisplayDecimals || 2,
-      maximumFractionDigits: opts.maxDisplayDecimals || 2,
+      maximumFractionDigits,
     }).format(amount);
   }
 
