@@ -87,7 +87,10 @@
     <% } %>
     <div class="rowSm">
       <%
-        if (ob.contractType !== 'CRYPTOCURRENCY') {
+        // The accepted currencies check is in case that data is not provided (e.g. a search provider omits),
+        // we'll fall back to displaying the title field, since otherwise we're unable to determine one of
+        // the trading pairs.
+        if (ob.contractType !== 'CRYPTOCURRENCY' || (!(ob.acceptedCurrencies && ob.acceptedCurrencies.length))) {
           const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap'
       %>
         <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
@@ -96,10 +99,13 @@
       <% } else { %>
         <div>
           <a class="listingTitle">
+            <%
+              const fromCur = ob.acceptedCurrencies && ob.acceptedCurrencies[0];
+            %>
             <%= ob.crypto.tradingPair({
               className: 'cryptoTradingPairSm',
-              fromCur: ob.serverCurCode.length > 6 ?
-                `${ob.serverCurCode.slice(0, 6)}…` : ob.serverCurCode,
+              fromCur: fromCur.length > 6 ?
+                `${fromCur.slice(0, 6)}…` : fromCur,
               toCur: ob.coinType.length > 6 ?
                 `${ob.coinType.slice(0, 6)}…` : ob.coinType,                
             }) %>

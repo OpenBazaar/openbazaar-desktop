@@ -45,7 +45,7 @@ export function renderCryptoTradingPair(options = {}) {
   }
 
   if (typeof options.toCur !== 'string') {
-    throw new Error('Please provide a fromCur as a string.');
+    throw new Error('Please provide a toCur as a string.');
   }
 
   const opts = {

@@ -191,7 +191,6 @@
       }
 
       .reviews {
-
         .loadMore {
           padding-top:$padLg;
           margin-top: $padLg;
@@ -201,7 +200,6 @@
       }
 
       #shippingSection {
-
         .shippingTable {
           width: 100%;
           margin-top: $pad;
@@ -233,6 +231,18 @@
           }
         }
       }
+
+      .cryptoTitle {
+        // tx6 txUnb inline 
+        .exchangeRateLine {
+          font-weight: normal;
+          display: inline;
+          font-size: 1.3rem;
+          position: relative;
+          top: -2px;
+          margin-left: 3px;
+        }
+      }      
     }
   }
 }

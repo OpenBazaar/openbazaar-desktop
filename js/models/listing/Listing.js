@@ -487,6 +487,11 @@ export default class extends BaseModel {
         });
         // END - convert price fields
       }
+
+      if (parsedResponse.metadata) {
+        parsedResponse.metadata.acceptedCurrencies =
+          parsedResponse.metadata.acceptedCurrencies || [];
+      }
     }
 
     return parsedResponse;

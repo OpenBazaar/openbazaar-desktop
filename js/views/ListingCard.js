@@ -4,7 +4,6 @@ import loadTemplate from '../utils/loadTemplate';
 import { abbrNum } from '../utils';
 import { launchEditListingModal } from '../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
-import { getServerCurrency } from '../data/cryptoCurrencies';
 import { isHiRez } from '../utils/responsive';
 import { startEvent, endEvent } from '../utils/metrics';
 import Listing from '../models/listing/Listing';
@@ -90,7 +89,6 @@ export default class extends baseVw {
     // This should be initialized as null, so we could determine whether the user
     // never set this (null), or explicitly clicked to show / hide nsfw (true / false)
     this._userClickedShowNsfw = null;
-    this.serverCur = getServerCurrency();
     $(document).on('click', this.boundDocClick);
 
     this.listenTo(blockEvents, 'blocked unblocked', data => {
@@ -455,7 +453,6 @@ export default class extends baseVw {
         vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
           this.avatarImage.src || '',
         abbrNum,
-        serverCurCode: this.serverCur && this.serverCur.code || '',
       }));
     });
 

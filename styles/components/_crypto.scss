@@ -1,7 +1,7 @@
 .cryptoTradingPair {
   @extend .flexInline;
   align-items: center;
-  
+
   .fromCur, .toCur {
     font-weight: bold;
     line-height: 1;
@@ -14,13 +14,39 @@
   }  
 }
 
-.cryptoTradingPairLg {
+.cryptoTradingPairXL {
   @extend .cryptoTradingPair;
-  
+
   .cryptoIcon {
     margin-right: $padSm;
+  }  
+  
+  .fromCur, .toCur {
+    font-size: 2.1rem;
+    position: relative;
+    top: 1px;
   }
 
+  .cryptoIcon {
+    height: 20px;
+    width: 20px;
+  }
+
+  .pairingSeparator {
+    margin: 0 10px;
+    font-size: $tx3;
+    position: relative;
+    top: 1px;    
+  }
+}
+
+.cryptoTradingPairLg {
+  @extend .cryptoTradingPair;
+
+  .cryptoIcon {
+    margin-right: $padSm;
+  }  
+  
   .fromCur, .toCur {
     font-size: $tx3;
     position: relative;
@@ -31,7 +57,7 @@
     margin: 0 10px;
     font-size: $tx3;
     position: relative;
-    top: 1px;    
+    top: 1px;
   }
 }
 

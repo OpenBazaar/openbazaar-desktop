@@ -28,6 +28,7 @@ import { events as listingEvents } from '../../../models/listing/';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
 import NsfwWarning from '../NsfwWarning';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -668,18 +669,32 @@ export default class extends BaseModal {
       this.adjustPriceBySku();
 
       if (this.model.isCrypto) {
+        const metadata = this.model.get('metadata');
+
         if (this.cryptoInventory) this.cryptoInventory.remove();
         this.cryptoInventory = this.createChild(QuantityDisplay, {
           peerId: this.vendor.peerID,
           slug: this.model.get('slug'),
           initialState: {
-            coinType: this.model.get('metadata')
-              .get('coinType'),
+            coinType: metadata.get('coinType'),
             amount: this._inventory,
           },
         });
         this.getCachedEl('.js-cryptoInventory')
           .html(this.cryptoInventory.render().el);
+
+        if (this.cryptoTitle) this.cryptoTitle.remove();
+        this.cryptoTitle = this.createChild(CryptoTradingPair, {
+          clas2sName: 'cryptoTradingPairWrap row',
+          initialState: {
+            tradingPairClass: 'cryptoTradingPairXL rowSm',
+            exchangeRateClass: 'clrT2 exchangeRateLine',
+            fromCur: metadata.get('acceptedCurrencies')[0],
+            toCur: metadata.get('coinType'),
+          },
+        });
+        this.getCachedEl('.js-cryptoTitle')
+          .html(this.cryptoTitle.render().el);
       }
 
       if (nsfwWarning) {
