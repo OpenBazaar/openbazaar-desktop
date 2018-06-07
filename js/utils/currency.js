@@ -166,11 +166,11 @@ export function formatPrice(price, currency) {
  */
 function getSmartMaxDisplayDigits(amount, desiredMax) {
   if (typeof amount !== 'number') {
-     throw new Error('Please provide the amount as a number.');
+    throw new Error('Please provide the amount as a number.');
   }
 
   if (typeof desiredMax !== 'number') {
-     throw new Error('Please provide the desiredMax as a number.');
+    throw new Error('Please provide the desiredMax as a number.');
   }
 
   let max = desiredMax;
@@ -304,13 +304,11 @@ export function formatCurrency(amount, currency, options) {
       });
     }
   } else {
-    let maximumFractionDigits = getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals);
-
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits,
+      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
     }).format(amount);
   }
 
