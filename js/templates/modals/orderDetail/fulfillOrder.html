@@ -51,7 +51,7 @@
     </div>
     <div class="col7">
       <% if (ob.errors['cryptocurrencyDelivery.transactionID']) print(ob.formErrorTmpl({ errors: ob.errors['cryptocurrencyDelivery.transactionID'] })) %>
-      <input type="text" class="clrBr clrSh2" name="cryptocurrencyDelivery.transactionID" id="fulfillOrderTransactionId" value="<%= ob.cryptocurrencyDelivery.transactionID %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.transactionIdPlaceholder`) %>" maxLength="<%= ob.max.transactionIDLength %>" />
+      <input type="text" class="clrBr clrSh2" name="cryptocurrencyDelivery.transactionID" id="fulfillOrderTransactionId" value="<%= ob.cryptocurrencyDelivery.transactionID %>" placeholder="<%= ob.polyT(`orderDetail.fulfillOrderTab.transactionIdPlaceholder`) %>" maxLength="<%= ob.constraints.transactionIDLength %>" />
     </div>
   </div>  
   <% } %>

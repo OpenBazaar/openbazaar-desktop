@@ -8,7 +8,7 @@ export default class extends BaseModel {
     };
   }
 
-  get max() {
+  get constraints() {
     return {
       transactionIDLength: 512,
     };
@@ -24,12 +24,10 @@ export default class extends BaseModel {
     if (!attrs.transactionID ||
       (typeof attrs.transactionID === 'string' && !attrs.transactionID.trim())) {
       addError('transactionID', app.polyglot.t('orderFulfillmentModelErrors.provideTransactionId'));
-    }
-
-    if (attrs.transactionID.length > this.max.transactionIDLength) {
+    } else if (attrs.transactionID.length > this.constraints.transactionIDLength) {
       addError('transactionID',
         app.polyglot.t('orderFulfillmentModelErrors.transactionIDTooLong',
-        { maxLength: this.max.transactionIDLength }));
+        { maxLength: this.constraints.transactionIDLength }));
     }
 
     if (Object.keys(errObj).length) return errObj;
