@@ -74,7 +74,7 @@
                   <a class="txU js-viewListing <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingLink') %></a>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
-                <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
+                <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxlength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
                 <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
               </div>
             </div>
