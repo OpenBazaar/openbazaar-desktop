@@ -213,7 +213,7 @@ export function formatCurrency(amount, currency, options) {
     // module, it will be displayed in liu of the currency code.
     useCryptoSymbol: true,
     // If you just want to format a number representing a crypto currency amount
-    // but don't want any code or symbol uses, set to false.
+    // but don't want any code or symbol used, set to false.
     includeCryptoCurIdentifier: true,
     ...options,
   };

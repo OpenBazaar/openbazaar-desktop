@@ -217,6 +217,21 @@ export function getInventory(peerId, options = {}) {
         }
       });
 
+    setTimeout(() => {
+      console.log('howdy big papi');
+      deferred.reject({
+        errCode: 'SERVER_ERROR',
+        error: 'the flam spiggot has no remorse',
+        statusCode: 500,
+      });
+
+      events.trigger('inventory-fetch-fail', {
+        peerId,
+        slug: opts.slug,
+        xhr,
+      });
+    }, 3000);
+
     const curCache = inventoryCache.get(peerId) || {};
     const requestors = [];
 

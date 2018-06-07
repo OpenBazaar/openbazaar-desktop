@@ -4,11 +4,11 @@
       minimumFractionDigits: 0,
       maximumFractionDigits: 4,
     }).format(ob.amount);
+    
     formattedAmount = ob.coinType ?
-      ob.polyT('cryptoCurrencyFormat.curCodeAmount', {
-        amount: formattedAmount,
-        code: ob.coinType.length > 8 ?
-          `${ob.coinType.slice(0, 8)}…` : ob.coinType,
+      ob.polyT('cryptoAmountIconPairing', {
+        amount: `<span>${formattedAmount}</span>`,
+        icon: ob.crypto.cryptoIcon({ code: ob.coinType }),
       }) :
       formattedAmount;
 %>
@@ -16,9 +16,12 @@
 <% } else if (ob.isFetching) {
   print(ob.spinner({ className: `${ob.spinnerClass}` }))
 } else if (ob.fetchFailed) { %>
-  <div class="content">
+  <div class="content <%= ob.contentFailedClass %>">
     <div class="arrowBoxTipWrap <%= ob.tipClass %>">
-      <i class="ion-alert-circled margRSm clrTAlert"></i>
+      <div class="flexVCent gutterHSm">
+        <i class="clrT2">Unknown</i>
+        <i class="ion-help-circled"></i>
+      </div>
       <% if (ob.fetchError) { %>
         <%
           const retryLink = `<a class="js-retry">${ob.polyT('inventoryDisplay.retryLink')}</a>`;
