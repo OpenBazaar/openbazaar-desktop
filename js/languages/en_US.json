@@ -955,7 +955,8 @@
     "inventoryDisplay": {
         "retryLink": "Retry",
         "fetchError": "There was an error obtaining the inventory. %{retryLink}",
-        "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
+        "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}",
+        "unknownInventory": "Unknown"
     },
     "listingDetail": {
         "edit": "Edit",
@@ -1256,11 +1257,12 @@
             "myPage": "My Page"
         },
         "cryptoListViewHeader": {
-            "colTitle": "Title",
-            "colVendor": "Vendor",
-            "colPrice": "Price (1 unit)",
+            "colTradeFrom": "Trade",
+            "colTradeTo": "For",
+            "colVendor": "Trader",
+            "colPriceSubText": "(market price)",
+            "colPrice": "Price %{subText}",
             "colInventory": "Inventory",
-            "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
             "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
         },
         "errors": {
@@ -2012,6 +2014,8 @@
         "curSymbolAmount": "%{symbol}%{amount}",
         "curCodeAmount": "%{amount} %{code}"
     },
+    "cryptoCodeIconPairing": "%{icon} %{code}",
+    "cryptoAmountIconPairing": "%{amount} %{icon}",
     "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
     "cryptoTradingPair": {
       "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",

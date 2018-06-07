@@ -499,3 +499,9 @@ input[type=range][class~="clrS"] {
     @include textColor($text2, $text3, $text);
   }
 }
+
+.listingsGridCryptoListView {
+  .verifiedMod {
+    @include textColor($text, $text2, $text);
+  }
+}

@@ -123,6 +123,9 @@ export default class extends baseVw {
   }
 
   render() {
+    console.log(`the view total is ${this.model.get('total')}`);
+    console.log('moo');
+    window.moo = this;
     loadTemplate('transactions/table/row.html', (t) => {
       this.$el.html(t({
         type: this.type,

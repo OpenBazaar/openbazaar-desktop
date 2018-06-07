@@ -98,11 +98,13 @@ export function integerToDecimal(amount, currency, options = {}) {
     }
   } else {
     if (getCryptoCurByCode(currency)) {
-      returnVal = Number(
-        (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
-      );
+      // returnVal = Number(
+      //   (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
+      // );
+      returnVal = Number(amount / curData.baseUnit);
     } else {
-      returnVal = Number((amount / 100).toFixed(2));
+      // returnVal = Number((amount / 100).toFixed(2));
+      returnVal = Number(amount / 100);
     }
   }
 
@@ -150,6 +152,51 @@ export function formatPrice(price, currency) {
 }
 
 /**
+ * Will increase the desired number of decimal places to display if the
+ * desired amount would render a poorly represented price. For example,
+ * having a USD amount of 0.001, would result in a price of $0.00 with
+ * the desired max being 2 decimal places for fiat currency. This function
+ * would have returned 3, which would leave the price represented as $0.001.
+ *
+ * It also helps with crypto currencies so in most places we could display
+ * them with 4 decimal places and it will increase that number if the
+ * resulting price would be zero or the rounded number would be too significant
+ * of a divergence from the unrounded (e.g a 15% difference);
+ *
+ */
+function getSmartMaxDisplayDigits(amount, desiredMax) {
+  if (typeof amount !== 'number') {
+     throw new Error('Please provide the amount as a number.');
+  }
+
+  if (typeof desiredMax !== 'number') {
+     throw new Error('Please provide the desiredMax as a number.');
+  }
+
+  let max = desiredMax;
+
+  if (amount < 0.000000005) {
+    max = 10;
+  } else if (amount < 0.00000005) {
+    max = 9;
+  } else if (amount < 0.0000005) {
+    max = 8;
+  } else if (amount < 0.000005) {
+    max = 7;
+  } else if (amount < 0.00005) {
+    max = 6;
+  } else if (amount < 0.0005) {
+    max = 5;
+  } else if (amount < 0.005) {
+    max = 4;
+  } else if (amount < 0.05) {
+    max = 3;
+  }
+
+  return max > desiredMax ? max : desiredMax;
+}
+
+/**
  * Will format an amount in the given currency into the format appropriate for the given locale.
  * In many cases, instead of using this method directly, you may want to use
  * renderFormattedCurrency() from this module or its corresponding template helper,
@@ -162,9 +209,12 @@ export function formatCurrency(amount, currency, options) {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
-    useCryptoSymbol: true, // For crypto currencies, if a symbol is specified in the
-                           // cryptoCurrencies data module, it will be displayed in liu
-                           // of the currency code.
+    // For crypto currencies, if a symbol is specified in the cryptoCurrencies data
+    // module, it will be displayed in liu of the currency code.
+    useCryptoSymbol: true,
+    // If you just want to format a number representing a crypto currency amount
+    // but don't want any code or symbol uses, set to false.
+    includeCryptoCurIdentifier: true,
     ...options,
   };
 
@@ -191,6 +241,18 @@ export function formatCurrency(amount, currency, options) {
   const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
     (!cryptoCur && !curData);
 
+  if (cryptoCur || isCryptoListingCur) {
+    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
+      opts.minDisplayDecimals : 0;
+    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
+      opts.maxDisplayDecimals : 8;
+  } else {
+    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
+      opts.minDisplayDecimals : 2;
+    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
+      opts.maxDisplayDecimals : 2;
+  }
+
   if (cryptoCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
     let bitcoinConvertUnit;
@@ -215,52 +277,39 @@ export function formatCurrency(amount, currency, options) {
       amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
     }
 
-    const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: opts.minDisplayDecimals || curData.minDisplayDecimals,
-      maximumFractionDigits: opts.maxDisplayDecimals || curData.maxDisplayDecimals,
+    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+      minimumFractionDigits: opts.minDisplayDecimals,
+      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
     }).format(amt);
 
-    const translationSubKey = curSymbol === curData.symbol ?
-      'curSymbolAmount' : 'curCodeAmount';
-    formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
-      amount: formattedAmount,
-      [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
-    });
+    if (opts.includeCryptoCurIdentifier) {
+      const translationSubKey = curSymbol === curData.symbol ?
+        'curSymbolAmount' : 'curCodeAmount';
+      formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
+        amount: formattedAmount,
+        [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
+      });
+    }
   } else if (isCryptoListingCur) {
-    const formattedAmount = new Intl.NumberFormat(opts.locale, {
-      minimumFractionDigits: opts.minDisplayDecimals || 0,
-      maximumFractionDigits: opts.maxDisplayDecimals || 8,
+    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+      minimumFractionDigits: opts.minDisplayDecimals,
+      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
     }).format(amount);
 
-    formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
-      amount: formattedAmount,
-      code: cur.length > 8 ?
-        `${cur.slice(0, 8)}…` : cur,
-    });
-  } else {
-    let maximumFractionDigits = opts.maxDisplayDecimals || 2;
-
-    // Account for prices that are too low relative to the maxDisplay decimals,
-    // for example a price of .003 will show as $0.00 if the max is 2.
-    // (thanks Dogecoin!)
-    if (amount < 0.0000005) {
-      maximumFractionDigits = 8;
-    } else if (amount < 0.000005) {
-      maximumFractionDigits = 7;
-    } else if (amount < 0.00005) {
-      maximumFractionDigits = 6;
-    } else if (amount < 0.0005) {
-      maximumFractionDigits = 5;
-    } else if (amount < 0.005) {
-      maximumFractionDigits = 4;
-    } else if (amount < 0.05) {
-      maximumFractionDigits = 3;
+    if (opts.includeCryptoCurIdentifier) {
+      formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
+        amount: formattedAmount,
+        code: cur.length > 8 ?
+          `${cur.slice(0, 8)}…` : cur,
+      });
     }
+  } else {
+    let maximumFractionDigits = getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals);
 
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: 'currency',
       currency,
-      minimumFractionDigits: opts.minDisplayDecimals || 2,
+      minimumFractionDigits: opts.minDisplayDecimals,
       maximumFractionDigits,
     }).format(amount);
   }

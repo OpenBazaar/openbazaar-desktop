@@ -1,21 +1,22 @@
 import $ from 'jquery';
 import app from '../app';
 import loadTemplate from '../utils/loadTemplate';
-import { openSimpleMessage } from '../views/modals/SimpleMessage';
+import { abbrNum } from '../utils';
 import { launchEditListingModal } from '../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
 import { isHiRez } from '../utils/responsive';
+import { startEvent, endEvent } from '../utils/metrics';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
 import baseVw from './baseVw';
+import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import ListingDetail from './modals/listingDetail/Listing';
-import ReportBtn from './components/ReportBtn';
 import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
+import ReportBtn from './components/ReportBtn';
 import BlockBtn from './components/BlockBtn';
 import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
-import { startEvent, endEvent } from '../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -451,6 +452,7 @@ export default class extends baseVw {
           this.listingImage.src || '',
         vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
           this.avatarImage.src || '',
+        abbrNum,
       }));
     });
 

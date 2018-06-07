@@ -254,24 +254,16 @@
     height: 65px;
 
     .verifiedModWrapper {
-      position: relative;
-      align-self: flex-start;
-      text-align: center;
-      left: -3px;
-      width: 28px;
-      margin-right: 0;
-      top: 2px;
-
       .badge {
-        width: 21px;
-        height: 21px;
+        position: relative;
+        top: 0px;
+        width: 16px;
+        height: 16px;
       }
 
-      .verifiedMod {
-        position: relative;
-        top: 0;
-        left: 0;
-      }      
+      .unverified .warning {
+        font-size: 1.4rem;
+      }
     }
 
     .vendorCol {
@@ -287,6 +279,21 @@
 
     .inventoryCol {
       text-align: right;
+    }
+
+    .tradeArrowCol {
+      text-align: center;
+
+      .pairingSeparator {
+        position: relative;
+        top: 2px;
+        left: -4px;
+        font-weight: bold;
+        
+        &::before {
+          font-size: 18px;
+        }        
+      }
     }
   }
 
