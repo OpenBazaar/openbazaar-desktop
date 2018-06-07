@@ -236,7 +236,6 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
-    recordEvent('Discover_AddQueryProvider');
   }
 
   callSearchProvider(searchUrl) {
@@ -375,6 +374,7 @@ export default class extends baseVw {
 
     recordEvent('Discover_SearchError', {
       error: msg || 'unknown error',
+      provider: this.sProvider,
     });
   }
 
