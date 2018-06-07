@@ -34,3 +34,26 @@
     top: 1px;    
   }
 }
+
+.cryptoTradingPairSm {
+  @extend .cryptoTradingPair;
+  
+  .cryptoIcon {
+    margin-right: $padSm;
+  }
+
+  .fromCur, .toCur {
+    font-size: $tx5;
+    position: relative;
+    top: 1px;
+    font-weight: normal;
+  }
+
+  .pairingSeparator {
+    margin: 0 10px;
+    font-size: $tx5;
+    position: relative;
+    top: 1px;
+    font-weight: normal;
+  }
+}

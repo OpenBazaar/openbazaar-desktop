@@ -86,10 +86,26 @@
       </div>
     <% } %>
     <div class="rowSm">
-      <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-      <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
-        <a class="clrT clamp listingTitle"><%= ob.title %></a>
-      </div>
+      <%
+        if (ob.contractType !== 'CRYPTOCURRENCY') {
+          const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap'
+      %>
+        <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
+          <a class="clrT clamp listingTitle"><%= ob.title %></a>
+        </div>
+      <% } else { %>
+        <div>
+          <a class="listingTitle">
+            <%= ob.crypto.tradingPair({
+              className: 'cryptoTradingPairSm',
+              fromCur: ob.serverCurCode.length > 6 ?
+                `${ob.serverCurCode.slice(0, 6)}…` : ob.serverCurCode,
+              toCur: ob.coinType.length > 6 ?
+                `${ob.coinType.slice(0, 6)}…` : ob.coinType,                
+            }) %>
+          </a>
+        </div>
+      <% } %>
     </div>
     <div class="flex">
       <div class="flexExpand tx5b">
