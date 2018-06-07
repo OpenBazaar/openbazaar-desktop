@@ -48,7 +48,7 @@
           <% if (ob.errors.localCurrency) print(ob.formErrorTmpl({ errors: ob.errors.localCurrency })) %>
           <select id="settingsCurrencySelect"  name="localCurrency" class="clrSh2">
             <% ob.currencyList.forEach((currency) => { %>
-            <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name %></option>
+            <option value="<%= currency.code %>" <% if (currency.code == ob.localCurrency) print('selected') %>><%= currency.name + " (" + currency.code + ")" %></option>
             <% }); %>
           </select>
         </div>
