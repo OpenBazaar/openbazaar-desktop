@@ -14,6 +14,7 @@ import {
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 import PageNavServersMenu from './PageNavServersMenu';
+import AddressBarIndicators from './AddressBarIndicators';
 import { getNotifDisplayData } from '../collections/Notifications';
 import Notifications from './notifications/Notificiations';
 
@@ -415,6 +416,8 @@ export default class extends BaseVw {
       this.addressBarText = text;
       this.$addressBar.val(text);
     }
+
+    if (this.addressBarIndicators) this.addressBarIndicators.updateVisibilityBasedOn(text);
   }
 
   navSettingsClick() {
@@ -485,11 +488,16 @@ export default class extends BaseVw {
     });
     this.$('.js-connManagementContainer').append(this.pageNavServersMenu.render().el);
 
+    if (this.addressBarIndicators) this.addressBarIndicators.remove();
+    this.addressBarIndicators = new AddressBarIndicators();
+    this.$('.js-addressBarIndicatorsContainer').append(this.addressBarIndicators.render().el);
+
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');
     this.$navOverlay = this.$('.js-navOverlay');
     this.$connectedServerName = this.$('.js-connectedServerName');
     this.$connManagementContainer = this.$('.js-connManagementContainer');
+    this.$addressBarIndicatorsContainer = this.$('.js-addressBarIndicatorsContainer');
 
     this.renderUnreadNotifCount();
 
