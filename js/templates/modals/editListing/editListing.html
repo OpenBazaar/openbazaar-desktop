@@ -71,7 +71,7 @@
               <div class="col12">
                 <div class="flexRow">
                   <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <%= ob.viewListingsT({ createMode: ob.createMode }) %>
+                  <%= ob.viewListingsT({ createMode: ob.createMode, peerID: ob.peerID, slug: ob.slug }) %>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
@@ -115,7 +115,7 @@
                       <% }); %>
                     </select>
                   </div>
-                  <div class="clrT2 txSm helper"><%= 
+                  <div class="clrT2 txSm helper"><%=
                   ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
                 </div>
                 <div class="col6 simpleFlexCol conditionWrap">
@@ -214,7 +214,7 @@
         <% if (ob.errors['item.tags']) print(ob.formErrorTmpl({ errors: ob.errors['item.tags'] })) %>
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
         <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
-        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTags') %></div>        
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTags') %></div>
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
