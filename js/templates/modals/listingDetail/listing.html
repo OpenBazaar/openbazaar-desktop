@@ -93,6 +93,9 @@
             <%
               let tip;
               let buyNowClass = 'disabled';
+              let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
+                'listingDetail.buyNow' :
+                'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
               const serverCur = ob.currencyMod.getServerCurrency();
               const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
@@ -119,7 +122,7 @@
               let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
-              <%= ob.polyT('listingDetail.buyNow') %>
+              <%= ob.polyT(buyNowTranslationKey) %>
             </button>
             <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
