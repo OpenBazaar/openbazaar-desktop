@@ -71,12 +71,7 @@
               <div class="col12">
                 <div class="flexRow">
                   <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <div class="gutterH">
-                    <a class="txU js-viewListing clrTEmph1 <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
-                    <a class="txU clrTEmph1 <% if (ob.createMode) print('hide') %>" href="http://openbazaar.com/store/<%= ob.peerID %>/<%= ob.slug %>"><%= ob.polyT('editListing.viewListingOnWebLink') %><i class="ion-android-open padSm clrTEmph1"></i></a>
-                    <span class="toolTip toolTipChatOpen txCtr" data-tip="<%= ob.polyT('editListing.viewOnWebDisclaimerTooltip') %>"><i class="ion-information-circled clrT2"></i></span>
-                    </a>
-                  </div>
+                  <%= ob.viewListingsT({ createMode: ob.createMode }) %>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
@@ -273,7 +268,7 @@
 
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexHRight flexVCent gutterH">
-          <a class="txU js-viewListing js-viewListingWrap <% if (ob.createMode) print('hide') %>"><%= ob.polyT('editListing.viewListingInClientLink') %></a>
+          <%= ob.viewListingsT({ createMode: ob.createMode }) %>
           <a class="btn clrP clrBAttGrad clrBrDec1 clrTOnEmph js-save"><%= ob.polyT('settings.btnSave') %></a>
         </div>
       </div>
