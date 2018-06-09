@@ -79,7 +79,9 @@ export default class extends BaseModel {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
         } else if (typeof inventory === 'number' &&
           attrs.quantity > inventory) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory'));
+          addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory', {
+            smart_count: inventory,
+          }));
         }
       }
 

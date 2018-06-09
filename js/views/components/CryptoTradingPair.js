@@ -4,6 +4,7 @@ import {
   getExchangeRate,
   events as currencyEvents,
 } from '../../utils/currency';
+import { ensureMainnetCode } from '../../utils/crypto';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -71,11 +72,11 @@ export default class extends BaseVw {
 
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
-        newState.fromCur = state.fromCur.toUpperCase();
+        newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
       }
 
       if (typeof state.toCur === 'string') {
-        newState.toCur = state.toCur.toUpperCase();
+        newState.toCur = ensureMainnetCode(state.toCur.toUpperCase());
       }
 
       if (newState.fromCur !== prevState.fromCur ||

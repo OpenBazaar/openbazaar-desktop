@@ -1,5 +1,24 @@
 import loadTemplate from './loadTemplate';
-import { getServerCurrency } from '../data/cryptoCurrencies';
+import {
+  getServerCurrency,
+  getCurrencyByCode,
+} from '../data/cryptoCurrencies';
+
+/**
+ * Since many of our crypto related mapping (e.g. icons) are done based off of
+ * a mainnet code, this function will attempt to obtain the mainnet code if a testnet
+ * one is passed in. This only works for crypto coins that we have registered as
+ * accepted currencies (i.e. are enumerated in data/cryptoCurrencies), but those are
+ * the only ones that should ever come as testnet codes.
+ */
+export function ensureMainnetCode(cur) {
+  if (typeof cur !== 'string' || !cur.length) {
+    throw new Error('Please provide a non-empty string.');
+  }
+
+  const curObj = getCurrencyByCode(cur);
+  return curObj ? curObj.code : cur;
+}
 
 /**
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
@@ -16,6 +35,8 @@ export function renderCryptoIcon(options = {}) {
   if (!code) {
     const serverCur = getServerCurrency();
     code = serverCur && serverCur.code || '';
+  } else {
+    code = ensureMainnetCode(code);
   }
 
   const opts = {
@@ -52,8 +73,8 @@ export function renderCryptoTradingPair(options = {}) {
     className: 'cryptoTradingPairLg',
     arrowIconClass: '',
     ...options,
-    fromCur: options.fromCur.toUpperCase(),
-    toCur: options.toCur.toUpperCase(),
+    fromCur: ensureMainnetCode(options.fromCur.toUpperCase()),
+    toCur: ensureMainnetCode(options.toCur.toUpperCase()),
   };
 
   let rendered = '';

@@ -1951,7 +1951,7 @@
         "quantityMustBeNumeric": "The quantity must be numeric.",
         "quantityMustBePositive": "The quantity must be greater than zero.",
         "missingShippingOption": "Please choose a valid shipping option.",
-        "insufficientInventory": "The quantity exceeds the remaining inventory.",
+        "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
         "providePaymentAddress": "Please provide a payment address.",
         "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
     },

@@ -685,7 +685,6 @@ export default class extends BaseModal {
 
         if (this.cryptoTitle) this.cryptoTitle.remove();
         this.cryptoTitle = this.createChild(CryptoTradingPair, {
-          clas2sName: 'cryptoTradingPairWrap row',
           initialState: {
             tradingPairClass: 'cryptoTradingPairXL rowSm',
             exchangeRateClass: 'clrT2 exchangeRateLine',

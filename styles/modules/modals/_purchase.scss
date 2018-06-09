@@ -100,4 +100,14 @@
   .moderatorsList .moderatorsWrapper.fauxModeratorsWrapper {
     min-height: 0;
   }
+
+  #cryptoAmountCurrency + .select2-container {
+    .select2-selection__rendered {
+      font-size: $tx6;
+    }
+
+    .select2-selection__arrow {
+      top: 3px;
+    }
+  }  
 }

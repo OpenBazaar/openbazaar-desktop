@@ -9,13 +9,15 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
+import { startEvent, endEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
+import { getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../SimpleMessage';
-import BaseModal from '../BaseModal';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
+import BaseModal from '../BaseModal';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import Moderators from '../../components/Moderators';
 import Shipping from './Shipping';
@@ -25,8 +27,7 @@ import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
 import FeeChange from '../../components/FeeChange';
-import QuantityDisplay from '../../components/QuantityDisplay';
-import { startEvent, endEvent } from '../../../utils/metrics';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -71,7 +72,8 @@ export default class extends BaseModal {
         moderated: this.moderatorIDs.length && app.verifiedMods.matched(this.moderatorIDs).length,
       });
 
-    /* to support multiple items in a purchase in the future, pass in listings in the options,
+    /* 
+       to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
     */
     const item = new Item(
@@ -199,6 +201,8 @@ export default class extends BaseModal {
       'blur #emailAddress': 'blurEmailAddress',
       'blur #memo': 'blurMemo',
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
+      'change #cryptoAmountCurrency': 'changeCryptoAmountCurrency',
+      'keyup [name="quantity"]': 'keyupQuantity',
       ...super.events(),
     };
   }
@@ -208,15 +212,7 @@ export default class extends BaseModal {
   }
 
   set inventory(inventory) {
-    if (inventory !== this._inventory) {
-      this._inventory = inventory;
-
-      if (this.cryptoInventory) {
-        this.cryptoInventory.setState({
-          amount: inventory,
-        });
-      }
-    }
+    this._inventory = inventory;
   }
 
   showDataChangedMessage() {
@@ -287,14 +283,52 @@ export default class extends BaseModal {
     this.render(); // always render even if the state didn't change
   }
 
-  changeQuantityInput(e) {
-    this.order.get('items').at(0).set(this.getFormData($(e.target)));
-  }
-
   changeCryptoAddress(e) {
     this.order.get('items')
       .at(0)
       .set('paymentAddress', e.target.value);
+  }
+
+  changeCryptoAmountCurrency(e) {
+    this._cryptoAmountCurrency = e.target.value;
+    const quantity = this.getFormData(
+      this.getCachedEl('#cryptoAmount')
+    ).quantity;
+    this.setModelQuantity(quantity);
+  }
+
+  setModelQuantity(quantity, cur = this.cryptoAmountCurrency) {
+    if (typeof cur !== 'string') {
+      throw new Error('Please provide the currency code as a string.');
+    }
+
+    let mdQuantity = quantity;
+    const numericQuantity = parseFloat(quantity);
+
+    if (this.listing.isCrypto &&
+      cur !== this.listing.get('metadata')
+        .get('coinType') &&
+      !isNaN(numericQuantity)) {
+      mdQuantity = (numericQuantity / getExchangeRate(cur)) *
+        getExchangeRate(this.listing.get('metadata').get('coinType'));
+      // round to 4 decimal place
+      mdQuantity = Math.round(mdQuantity * 10000) / 10000;
+    }
+
+    this.order.get('items')
+      .at(0)
+      .set({ quantity: mdQuantity });
+  }
+
+  keyupQuantity(e) {
+    // wait until they stop typing
+    if (this.searchKeyUpTimer) {
+      clearTimeout(this.searchKeyUpTimer);
+    }
+
+    this.searchKeyUpTimer = setTimeout(() => {
+      this.setModelQuantity(this.getFormData($(e.target)).quantity);
+    }, 150);
   }
 
   clickNewAddress() {
@@ -538,6 +572,12 @@ export default class extends BaseModal {
       (this._$couponField = this.$('#couponCode'));
   }
 
+  get cryptoAmountCurrency() {
+    return this._cryptoAmountCurrency ||
+      this.listing.get('metadata')
+        .get('coinType');
+  }
+
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
@@ -550,6 +590,7 @@ export default class extends BaseModal {
     const item = this.order.get('items')
       .at(0);
     const quantity = item.get('quantity');
+    const metadata = this.listing.get('metadata');
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
@@ -567,6 +608,8 @@ export default class extends BaseModal {
         moderated: this.order.moderated,
         quantity: this.listing.isCrypto && typeof quantity === 'number' ?
           toStandardNotation(quantity) : quantity,
+        cryptoAmountCurrency: this.cryptoAmountCurrency,
+        isCrypto: this.listing.isCrypto,
       }));
 
       super.render();
@@ -605,27 +648,19 @@ export default class extends BaseModal {
       this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
 
       if (this.listing.isCrypto) {
-        let cryptoInventoryState = {};
-
-        if (this.cryptoInventory) {
-          cryptoInventoryState = this.cryptoInventory.getState();
-          this.cryptoInventory.remove();
-        }
-
-        this.cryptoInventory = this.createChild(QuantityDisplay, {
-          peerId: this.listing.get('vendorID').peerID,
-          slug: this.listing.get('slug'),
+        if (this.cryptoTitle) this.cryptoTitle.remove();
+        this.cryptoTitle = this.createChild(CryptoTradingPair, {
           initialState: {
-            amount: this.inventory,
-            contentClass: 'clrT2',
-            coinDivisibility: this.listing.get('metadata')
-              .get('coinDivisibility'),
-            ...cryptoInventoryState,
+            tradingPairClass: 'cryptoTradingPairXL',
+            exchangeRateClass: 'clrT2 tx6',
+            fromCur: metadata.get('acceptedCurrencies')[0],
+            toCur: metadata.get('coinType'),
           },
         });
+        this.getCachedEl('.js-cryptoTitle')
+          .html(this.cryptoTitle.render().el);      
 
-        this.getCachedEl('.js-cryptoInventory')
-          .html(this.cryptoInventory.render().el);
+        this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
       }
     });
 
