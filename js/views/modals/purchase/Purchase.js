@@ -72,7 +72,7 @@ export default class extends BaseModal {
         moderated: this.moderatorIDs.length && app.verifiedMods.matched(this.moderatorIDs).length,
       });
 
-    /* 
+    /*
        to support multiple items in a purchase in the future, pass in listings in the options,
        and add them to the order as items here.
     */
@@ -658,7 +658,7 @@ export default class extends BaseModal {
           },
         });
         this.getCachedEl('.js-cryptoTitle')
-          .html(this.cryptoTitle.render().el);      
+          .html(this.cryptoTitle.render().el);
 
         this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
       }
