@@ -117,7 +117,11 @@
             <label class="h4 flexExpand required" for="purchaseCryptoAddress"><%= heading %></label>
           </div>
           <div class="js-items-paymentAddress-errors"></div>
-          <input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP rowSm" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
+          <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
+            <input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP rowSm" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
+          <% } else { %>
+            <p class="cryptoPaymentAddress"><%= ob.items[0].paymentAddress %></p>
+          <% } %>
           <div class="txSm clrT2"><%= helper %></div>
         <% } %>
       </section>
