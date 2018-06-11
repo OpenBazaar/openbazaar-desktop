@@ -72,10 +72,18 @@ export function renderCryptoTradingPair(options = {}) {
   const opts = {
     className: 'cryptoTradingPairLg',
     arrowIconClass: '',
+    truncateCurAfter: 8,
     ...options,
     fromCur: ensureMainnetCode(options.fromCur.toUpperCase()),
     toCur: ensureMainnetCode(options.toCur.toUpperCase()),
   };
+
+  if (typeof opts.truncateCurAfter === 'number') {
+    opts.fromCur = opts.fromCur.length > opts.truncateCurAfter ?
+      `${opts.fromCur.slice(0, opts.truncateCurAfter)}…` : opts.fromCur;
+    opts.toCur = opts.toCur.length > opts.truncateCurAfter ?
+      `${opts.toCur.slice(0, opts.truncateCurAfter)}…` : opts.toCur;
+  }
 
   let rendered = '';
 

@@ -11,8 +11,6 @@ export default class extends BaseModel {
   parse(response = {}) {
     let returnVal = { ...response };
 
-    console.log(`the total iiiiiiiiiisssss ${returnVal.total}`);
-
     returnVal = {
       ...returnVal,
       // Convert from base units

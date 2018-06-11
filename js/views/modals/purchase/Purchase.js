@@ -12,6 +12,7 @@ import {
 import { startEvent, endEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import { getExchangeRate } from '../../../utils/currency';
+import { capitalize } from '../../../utils/string';
 import { openSimpleMessage } from '../SimpleMessage';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
@@ -289,14 +290,6 @@ export default class extends BaseModal {
       .set('paymentAddress', e.target.value);
   }
 
-  changeCryptoAmountCurrency(e) {
-    this._cryptoAmountCurrency = e.target.value;
-    const quantity = this.getFormData(
-      this.getCachedEl('#cryptoAmount')
-    ).quantity;
-    this.setModelQuantity(quantity);
-  }
-
   setModelQuantity(quantity, cur = this.cryptoAmountCurrency) {
     if (typeof cur !== 'string') {
       throw new Error('Please provide the currency code as a string.');
@@ -320,6 +313,14 @@ export default class extends BaseModal {
       .set({ quantity: mdQuantity });
   }
 
+  changeCryptoAmountCurrency(e) {
+    this._cryptoAmountCurrency = e.target.value;
+    const quantity = this.getFormData(
+      this.getCachedEl('#cryptoAmount')
+    ).quantity;
+    this.setModelQuantity(quantity);
+  }
+
   keyupQuantity(e) {
     // wait until they stop typing
     if (this.searchKeyUpTimer) {
@@ -327,7 +328,9 @@ export default class extends BaseModal {
     }
 
     this.searchKeyUpTimer = setTimeout(() => {
-      this.setModelQuantity(this.getFormData($(e.target)).quantity);
+      const quantity = this.getFormData($(e.target)).quantity;
+      if (this.listing.isCrypto) this._cryptoQuantity = quantity;
+      this.setModelQuantity(quantity);
     }, 150);
   }
 
@@ -544,24 +547,24 @@ export default class extends BaseModal {
     });
   }
 
-  get total() {
-    const prices = this.prices;
-    let priceTotal = 0;
-    prices.forEach((priceObj) => {
-      let itemPrice = priceObj.price + priceObj.vPrice;
-      this.couponObj.forEach(coupon => {
-        if (coupon.percentDiscount) {
-          itemPrice -= itemPrice * 0.01 * coupon.percentDiscount;
-        } else if (coupon.priceDiscount) {
-          itemPrice -= coupon.priceDiscount;
-        }
-      });
-      priceTotal = itemPrice * priceObj.quantity;
-      priceTotal += priceObj.sPrice + priceObj.aPrice * (priceObj.quantity - 1);
-    });
+  // get total() {
+  //   const prices = this.prices;
+  //   let priceTotal = 0;
+  //   prices.forEach((priceObj) => {
+  //     let itemPrice = priceObj.price + priceObj.vPrice;
+  //     this.couponObj.forEach(coupon => {
+  //       if (coupon.percentDiscount) {
+  //         itemPrice -= itemPrice * 0.01 * coupon.percentDiscount;
+  //       } else if (coupon.priceDiscount) {
+  //         itemPrice -= coupon.priceDiscount;
+  //       }
+  //     });
+  //     priceTotal = itemPrice * priceObj.quantity;
+  //     priceTotal += priceObj.sPrice + priceObj.aPrice * (priceObj.quantity - 1);
+  //   });
 
-    return priceTotal;
-  }
+  //   return priceTotal;
+  // }
 
   refreshPrices() {
     this.receipt.updatePrices(this.prices);
@@ -592,6 +595,13 @@ export default class extends BaseModal {
     const quantity = item.get('quantity');
     const metadata = this.listing.get('metadata');
 
+    let uiQuantity = quantity;
+
+    if (this.listing.isCrypto && this._cryptoQuantity !== undefined) {
+      uiQuantity = typeof quantity === 'number' ?
+        toStandardNotation(this._cryptoQuantity) : this._cryptoQuantity;
+    }
+
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
         ...this.order.toJSON(),
@@ -606,10 +616,10 @@ export default class extends BaseModal {
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
         moderated: this.order.moderated,
-        quantity: this.listing.isCrypto && typeof quantity === 'number' ?
-          toStandardNotation(quantity) : quantity,
+        quantity: uiQuantity,
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
+        phaseClass: `phase${capitalize(state.phase)}`,
       }));
 
       super.render();

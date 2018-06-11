@@ -83,6 +83,21 @@
           text-align: left;
         }
       }
+
+      .cryptoTradingPair {
+        .fromCur, .toCur {
+          display: none;
+        }
+
+        .pairingSeparator {
+          margin: 0 5px 0 0;
+        }
+      }
+
+      .cryptoQuantity {
+        position: relative;
+        top: -3px;
+      }
     }
   }
 
@@ -101,13 +116,25 @@
     min-height: 0;
   }
 
-  #cryptoAmountCurrency + .select2-container {
-    .select2-selection__rendered {
-      font-size: $tx6;
-    }
+  .cryptoTitleWrap {
+    #cryptoAmountCurrency + .select2-container {
+      .select2-selection__rendered {
+        font-size: $tx6;
+      }
 
-    .select2-selection__arrow {
-      top: 3px;
+      .select2-selection__arrow {
+        top: 3px;
+      }
     }
-  }  
+  }
+
+  .mainSection {
+    &.phasePay, &.phaseProcessing {
+      .cryptoTitleWrap {
+        .cryptoTradingPairWrap {
+          width: 250px;
+        }
+      }
+    }
+  }
 }

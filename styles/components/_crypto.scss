@@ -19,17 +19,14 @@
 
   .cryptoIcon {
     margin-right: $padSm;
+    height: 20px;
+    width: 20px;
   }  
   
   .fromCur, .toCur {
     font-size: 2.1rem;
     position: relative;
     top: 1px;
-  }
-
-  .cryptoIcon {
-    height: 20px;
-    width: 20px;
   }
 
   .pairingSeparator {
@@ -66,6 +63,8 @@
   
   .cryptoIcon {
     margin-right: $padSm;
+    height: 16px;
+    width: 16px;    
   }
 
   .fromCur, .toCur {

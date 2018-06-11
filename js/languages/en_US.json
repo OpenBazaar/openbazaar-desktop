@@ -1346,10 +1346,10 @@
         "closeNote": "Your payment has been sent to the vendor.",
         "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
         "quantity": "Quantity",
-        "inventory": "Max: %{inventory}",
+        "cryptoAmount": "Amount",
         "cryptoAddressHeading": "Your %{coinType} address",
         "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
-        "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+        "cryptoAddressHelper": "%{name} will send %{coinType} to this address. %{warning}",
         "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",
         "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
         "directPayment": "Direct Payment",
@@ -1411,7 +1411,9 @@
             "options": "Options",
             "subtotal": "Subtotal (%{quantity})",
             "shippingTotal": "Total Shipping",
-            "total": "Total"
+            "total": "Total",
+            "cryptoIconsAmount": "(%{amount})",
+            "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
         },
         "errors": {
             "moderatorsTitle": "Moderator Data Failted to Load",

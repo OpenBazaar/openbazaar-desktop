@@ -104,10 +104,9 @@
             %>
             <%= ob.crypto.tradingPair({
               className: 'cryptoTradingPairSm',
-              fromCur: fromCur.length > 6 ?
-                `${fromCur.slice(0, 6)}…` : fromCur,
-              toCur: ob.coinType.length > 6 ?
-                `${ob.coinType.slice(0, 6)}…` : ob.coinType,                
+              fromCur,
+              toCur: ob.coinType,
+              truncateCurAfter: 5,
             }) %>
           </a>
         </div>
