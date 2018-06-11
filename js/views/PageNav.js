@@ -490,7 +490,7 @@ export default class extends BaseVw {
 
     if (this.addressBarIndicators) this.addressBarIndicators.remove();
     this.addressBarIndicators = new AddressBarIndicators();
-    this.$('.js-addressBarIndicatorsContainer').append(this.addressBarIndicators.render().el);
+    this.$('.js-addressBarIndicatorsContainer').replaceWith(this.addressBarIndicators.render().el);
 
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');

@@ -19,53 +19,57 @@ export default class extends baseVw {
       throw new Error('Please provide a valid address bar as string.');
     }
 
-    const obDotCom = 'http://openbazaar.com';
-
-    // Reset the state
-    let viewOnWebState = {
+    const viewOnWebState = {
       hide: true,
       url: '',
     };
 
-    // TODO: Break this out into the AddressBarIndicator.js
-    const firstTerm = addressBarText.startsWith('ob://') ?
-    addressBarText.slice(5)
-      .split(' ')[0]
-      .split('/')[0] :
-      addressBarText.split(' ')[0]
-      .split('/')[0];
+    const urlParts = this.getUrlParts(addressBarText);
 
-    if (isMultihash(firstTerm)) {
-      const peerID = firstTerm;
-      const parts = addressBarText.slice(5).split('/');
+    if (urlParts.length > 1 && isMultihash(urlParts[0])) {
+      const supportedPages = ['store', 'home', 'followers', 'following'];
+      const currentPage = urlParts[1];
 
-      const pages = ['store', 'home', 'followers', 'following'];
-      const page = parts[1];
+      if (supportedPages.includes(currentPage)) {
+        const obDotCom = 'http://openbazaar.com';
+        const peerID = urlParts[0];
 
-      if (pages.includes(page)) {
-        let url = `${obDotCom}/${peerID}/${page}`;
+        if (currentPage === 'store') {
+          // app: '/peerID/store/' => web: '/store/peerID/'
+          viewOnWebState.url = `${obDotCom}/store/${peerID}`;
 
-        if (page === 'store' && parts.length === 3) {
-          const slug = parts[2];
-          url += `/${slug}`;
+          if (urlParts.length === 3) {
+            // app: '/peerID/store/slug' => web: '/store/peerID/slug'
+            const slug = urlParts[2];
+            viewOnWebState.url = `${viewOnWebState.url}/${slug}`;
+          }
+        } else {
+          // app: '/peerID/(home|followers|following)' =>
+          // web: '/store/(home|followers|following)/peerID'
+          viewOnWebState.url = `${obDotCom}/store/${currentPage}/${peerID}`;
         }
-        viewOnWebState = {
-          hide: false,
-          url,
-        };
-      } else {
-        viewOnWebState = {
-          hide: true,
-          url: '',
-        };
       }
     }
 
+    viewOnWebState.hide = viewOnWebState.url.length === 0;
     this.setState(viewOnWebState);
   }
 
+  getUrlParts(url) {
+    if (typeof url !== 'string') {
+      throw new Error('Please provide a valid url as a string.');
+    }
+
+    const urlParts = url.startsWith('ob://') ?
+      url.slice(5)
+      .split(' ')[0] :
+      url.split(' ')[0];
+
+    return urlParts.split('/');
+  }
+
   className() {
-    return '.addressBarIndicators';
+    return 'addressBarIndicators';
   }
 
   getState() {

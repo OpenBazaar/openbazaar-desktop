@@ -115,11 +115,17 @@
       height: 22px;
       padding-left: 5px;
 
+        .torIndicator {
+          background-image: url(../../imgs/icon-tor.png);
+          background-repeat: no-repeat;
+          background-size: 13px auto;
+          background-position: center;
+          position: absolute;
+          width: 16px;
+          height: 100%;
+        }
     }
-  }
 
-  .addressBar:focus ~ .webLink {
-      display:none;
   }
 
   &.torIndicatorOn {
@@ -130,25 +136,8 @@
     }
   }
 
-  .searchWrapper {
-    .torIndicator {
-      display: none;
-      background-image: url(../../imgs/icon-tor.png); // Fallback
-      background-repeat: no-repeat;
-      background-size: 13px auto;
-      background-position: center;
-      position: absolute;
-      width: 16px;
-      height: 100%;
-    }
-  }
-
-  &.torIndicatorOn {
-    .searchWrapper {
-      .torIndicator {
-        display: block;
-      }
-    }
+  .addressBar:focus ~ .addressBarIndicators {
+    display:none;
   }
 
   .searchWrapper {
