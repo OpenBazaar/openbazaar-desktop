@@ -547,25 +547,6 @@ export default class extends BaseModal {
     });
   }
 
-  // get total() {
-  //   const prices = this.prices;
-  //   let priceTotal = 0;
-  //   prices.forEach((priceObj) => {
-  //     let itemPrice = priceObj.price + priceObj.vPrice;
-  //     this.couponObj.forEach(coupon => {
-  //       if (coupon.percentDiscount) {
-  //         itemPrice -= itemPrice * 0.01 * coupon.percentDiscount;
-  //       } else if (coupon.priceDiscount) {
-  //         itemPrice -= coupon.priceDiscount;
-  //       }
-  //     });
-  //     priceTotal = itemPrice * priceObj.quantity;
-  //     priceTotal += priceObj.sPrice + priceObj.aPrice * (priceObj.quantity - 1);
-  //   });
-
-  //   return priceTotal;
-  // }
-
   refreshPrices() {
     this.receipt.updatePrices(this.prices);
   }

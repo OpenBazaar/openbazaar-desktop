@@ -98,12 +98,8 @@ export function integerToDecimal(amount, currency, options = {}) {
     }
   } else {
     if (getCryptoCurByCode(currency)) {
-      // returnVal = Number(
-      //   (amount / curData.baseUnit).toFixed(curData.maxDisplayDecimals)
-      // );
       returnVal = Number(amount / curData.baseUnit);
     } else {
-      // returnVal = Number((amount / 100).toFixed(2));
       returnVal = Number(amount / 100);
     }
   }
