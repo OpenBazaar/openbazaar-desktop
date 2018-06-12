@@ -9,7 +9,6 @@ export default class extends baseVw {
 
     this._state = {
       hide: true,
-      url: '',
       ...options.initialState || {},
     };
   }
@@ -50,7 +49,7 @@ export default class extends baseVw {
       }
     }
 
-    viewOnWebState.hide = !!viewOnWebState.url;
+    viewOnWebState.hide = !!!viewOnWebState.url;
     this.setState(viewOnWebState);
   }
 
