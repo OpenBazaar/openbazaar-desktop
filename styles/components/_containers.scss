@@ -355,7 +355,7 @@
 
   &::after {
     left: 50%;
-    transform: translateX(-50%);    
+    transform: translateX(-50%);
   }
 }
 
@@ -405,7 +405,7 @@
     .arrowBoxCenteredTop,
     .arrowBoxRightTop {
       min-width: 0;
-    }    
+    }
   }
 }
 
@@ -477,10 +477,10 @@
   &.toolTipChatOpen {
 
     body.chatOpen &{
-      
+
       &::before {
         // top: -26px;
-        transform: translate(-94%, 0%);
+        transform: translate(-77%, 0%);
       }
 
     }
