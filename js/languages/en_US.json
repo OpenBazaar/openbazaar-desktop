@@ -1127,7 +1127,7 @@
         "btnTermsAndConditions": "Add Terms and Conditions",
         "btnAddCoupon": "Add Coupon",
         "primaryPhoto": "PRIMARY PHOTO",
-        "viewListingInClientLink": "View in client",
+        "viewListingInAppLink": "View in app",
         "viewListingOnWebLink": "View on web",
         "viewOnWebDisclaimerTooltip": "Your listing may take a bit of time to display or update on the web.",
         "unsupportedCurrencyDialog": {
