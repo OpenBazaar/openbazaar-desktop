@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import loadTemplate from '../utils/loadTemplate';
 import baseVw from './baseVw';
 import { isMultihash } from '../utils';
