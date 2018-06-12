@@ -108,46 +108,6 @@ export function integerToDecimal(amount, currency, options = {}) {
 }
 
 /**
- * Will take a number and return a string version of the number with the appropriate number of
- * decimal places based on whether the number represents a crypto or fiat price.
- *
- * This differs from formatCurrency in that this does not localize the number at all. It simply
- * returns the value with the appropriate number of decimal place, e.g:
- *
- * formatPrice(123.456, 'USD') // "123.46"
- * formatPrice(123.456, 'BTC')  // "123.45600000"
- *
- * It is more useful for <input>'s because we are not localizing the numbers in them.
- *
- */
-export function formatPrice(price, currency) {
-  if (typeof price !== 'number') {
-    throw new Error('Please provide a price as a number');
-  }
-
-  if (isNaN(price)) {
-    throw new Error('Please provide a price that is not NaN');
-  }
-
-  if (typeof currency !== 'string') {
-    throw new Error('Please provide a currency as a string');
-  }
-
-  let convertedPrice;
-  const cryptoCur = getCryptoCurByCode(currency);
-
-  if (cryptoCur) {
-    // Format crypto price so it has up to the max decimal places (as specified in the crypto
-    // config), but without any trailing zeros
-    convertedPrice = upToFixed(price, cryptoCur.maxDisplayDecimals);
-  } else {
-    convertedPrice = price.toFixed(2);
-  }
-
-  return convertedPrice;
-}
-
-/**
  * Will increase the desired number of decimal places to display if the
  * desired amount would render a poorly represented price. For example,
  * having a USD amount of 0.001, would result in a price of $0.00 with
@@ -157,7 +117,7 @@ export function formatPrice(price, currency) {
  * It also helps with crypto currencies so in most places we could display
  * them with 4 decimal places and it will increase that number if the
  * resulting price would be zero or the rounded number would be too significant
- * of a divergence from the unrounded (e.g a 15% difference);
+ * of a divergence from the unrounded (e.g a 15% difference).
  *
  */
 function getSmartMaxDisplayDigits(amount, desiredMax) {
@@ -190,6 +150,48 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
   }
 
   return max > desiredMax ? max : desiredMax;
+}
+
+/**
+ * Will take a number and return a string version of the number with the appropriate number of
+ * decimal places based on whether the number represents a crypto or fiat price.
+ *
+ * This differs from formatCurrency in that this does not localize the number at all. It simply
+ * returns the value with the appropriate number of decimal place, e.g:
+ *
+ * formatPrice(123.456, 'USD') // "123.46"
+ * formatPrice(123.456, 'BTC')  // "123.45600000"
+ *
+ * It is more useful for <input>'s because we are not localizing the numbers in them.
+ *
+ */
+export function formatPrice(price, currency) {
+  if (typeof price !== 'number') {
+    throw new Error('Please provide a price as a number');
+  }
+
+  if (isNaN(price)) {
+    throw new Error('Please provide a price that is not NaN');
+  }
+
+  if (typeof currency !== 'string') {
+    throw new Error('Please provide a currency as a string');
+  }
+
+  let convertedPrice;
+  // todo: this needs to take into account crypto listing curs which using the
+  // method below, would have most of them being considered as fiat.
+  const cryptoCur = getCryptoCurByCode(currency);
+
+  if (cryptoCur) {
+    // Format crypto price so it has up to the max decimal places (as specified in the crypto
+    // config), but without any trailing zeros
+    convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+  } else {
+    convertedPrice = price.toFixed(2);
+  }
+
+  return convertedPrice;
 }
 
 /**
