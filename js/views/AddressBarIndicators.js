@@ -21,7 +21,6 @@ export default class extends baseVw {
 
     const viewOnWebState = {
       hide: true,
-      url: '',
     };
 
     const urlParts = this.getUrlParts(addressBarText);
@@ -51,7 +50,7 @@ export default class extends baseVw {
       }
     }
 
-    viewOnWebState.hide = viewOnWebState.url.length === 0;
+    viewOnWebState.hide = !!viewOnWebState.url;
     this.setState(viewOnWebState);
   }
 
