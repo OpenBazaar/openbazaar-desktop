@@ -107,8 +107,13 @@ export default class extends BaseModel {
     // Embed the payment type into each payment transaction.
     // TODO: when multi wallet payment support is implemented, this will need to come
     // from the server.
-    [...response.paymentAddressTransactions, response.refundAddressTransaction]
-      .forEach(pmt => (pmt.paymentCoin = serverCur.code));
+    const payments = [...response.paymentAddressTransactions];
+
+    if (response.refundAddressTransaction) {
+      payments.push(response.refundAddressTransaction);
+    }
+
+    payments.forEach(pmt => (pmt.paymentCoin = serverCur.code));
 
     return response;
   }
