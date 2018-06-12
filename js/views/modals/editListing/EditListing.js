@@ -1420,7 +1420,6 @@ export default class extends BaseModal {
         }
       });
     });
-
     return this;
   }
 }
