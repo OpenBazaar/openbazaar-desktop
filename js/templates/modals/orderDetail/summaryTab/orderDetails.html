@@ -88,10 +88,16 @@
                 const cointTypeNameKey = `cryptoCurrencies.${coinType}`;
                 const coinTypeName = ob.polyT(cointTypeNameKey);
               %>
-              <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.paymentAddressHeading', {
-              coinType: coinTypeName === cointTypeNameKey ?
-                coinType : coinTypeName,
-              }) %></div>
+              <div class="txB cryptoAddress">
+                <% console.log('patt');window.patt = ob %>
+                <%= ob.polyT('orderDetail.summaryTab.orderDetails.paymentAddressHeading', {
+                  coinType: coinTypeName === cointTypeNameKey ?
+                    coinType : coinTypeName,
+                  icon: ob.crypto.cryptoIcon({
+                    code: ob.listing.metadata.coinType,
+                  }),
+                }) %>
+              </div>
               <div class="flex gutterHSm">
                 <div class="clamp cryptoPaymentAddress"><%= item.paymentAddress %></div>
                 <div>

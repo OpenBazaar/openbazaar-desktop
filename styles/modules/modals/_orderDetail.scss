@@ -359,6 +359,13 @@
       .memo {
         white-space: pre-wrap;
       }
+
+      .cryptoAddress {
+        .cryptoIcon {
+          position: relative;
+          top: 3px;
+        }
+      }
     }
 
     .acceptedEvent {

@@ -106,7 +106,9 @@
             const placeholder = ob.polyT('purchase.cryptoAddressPlaceholder', {
               coinType: coinName,
             });
-            const warning = `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>`;
+            const warning = ob.phase === 'pay' || ob.phase === 'processing' ?
+              `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>` :
+              `<b>${ob.polyT('purchase.cryptoAddressHelperWarning2')}</b>`;
             const helper = ob.polyT('purchase.cryptoAddressHelper', {
               name: ob.vendor.name,
               coinType: coinName,
