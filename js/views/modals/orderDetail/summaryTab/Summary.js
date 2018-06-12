@@ -517,7 +517,12 @@ export default class extends BaseVw {
     }
 
     if (this.refunded) this.refunded.remove();
-    this.refunded = this.createChild(Refunded, { model: refundMd });
+    this.refunded = this.createChild(Refunded, {
+      model: refundMd,
+      initialState: {
+        isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+      },
+    });
     this.buyer.getProfile()
       .done(profile => this.refunded.setState({ buyerName: profile.get('name') }));
     this.$subSections.prepend(this.refunded.render().el);
@@ -887,6 +892,7 @@ export default class extends BaseVw {
           collection: this.paymentsCollection,
           orderPrice: this.orderPriceBtc,
           vendor: this.vendor,
+          isCrypto: this.contract.type === 'CRYPTOCURRENCY',
           isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),

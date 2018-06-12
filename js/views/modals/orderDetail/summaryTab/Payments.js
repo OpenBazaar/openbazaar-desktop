@@ -16,6 +16,7 @@ import Payment from './Payment';
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
+      isCrypto: false,
       ...options,
     };
 
@@ -177,6 +178,7 @@ export default class extends baseVw {
           cancelInProgress: cancelingOrder(this.orderId),
           acceptInProgress: acceptingOrder(this.orderId),
           rejectInProgress: rejectingOrder(this.orderId),
+          isCrypto: this.options.isCrypto,
         },
       });
 
