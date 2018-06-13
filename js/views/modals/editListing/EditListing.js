@@ -1166,7 +1166,6 @@ export default class extends BaseModal {
             tags: item.max.tags,
             photos: this.MAX_PHOTOS,
           },
-          peerID: app.profile.id,
           slug: item.slug,
           shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
           viewListingsT,

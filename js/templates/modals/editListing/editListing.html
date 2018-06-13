@@ -71,7 +71,7 @@
               <div class="col12">
                 <div class="flexRow">
                   <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <%= ob.viewListingsT({ createMode: ob.createMode, peerID: ob.peerID, slug: ob.slug }) %>
+                  <%= ob.viewListingsT({ createMode: ob.createMode, peerID: ob.vendorID.peerID, slug: ob.slug }) %>
                 </div>
                 <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
                 <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
