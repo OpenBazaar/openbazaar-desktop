@@ -12,7 +12,11 @@ export default class extends baseVw {
     };
   }
 
-  updateVisibilityBasedOn(addressBarText) {
+  className() {
+    return 'addressBarIndicators';
+  }
+
+  updateVisibility(addressBarText) {
     if (typeof addressBarText !== 'string') {
       throw new Error('Please provide a valid address bar as string.');
     }
@@ -48,7 +52,7 @@ export default class extends baseVw {
       }
     }
 
-    viewOnWebState.hide = !!!viewOnWebState.url;
+    viewOnWebState.hide = !viewOnWebState.url;
     this.setState(viewOnWebState);
   }
 
@@ -63,10 +67,6 @@ export default class extends baseVw {
       url.split(' ')[0];
 
     return urlParts.split('/');
-  }
-
-  className() {
-    return 'addressBarIndicators';
   }
 
   render() {

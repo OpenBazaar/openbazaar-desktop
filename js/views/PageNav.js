@@ -417,7 +417,7 @@ export default class extends BaseVw {
       this.$addressBar.val(text);
     }
 
-    if (this.addressBarIndicators) this.addressBarIndicators.updateVisibilityBasedOn(text);
+    if (this.addressBarIndicators) this.addressBarIndicators.updateVisibility(text);
   }
 
   navSettingsClick() {
@@ -488,16 +488,23 @@ export default class extends BaseVw {
     });
     this.$('.js-connManagementContainer').append(this.pageNavServersMenu.render().el);
 
-    if (this.addressBarIndicators) this.addressBarIndicators.remove();
-    this.addressBarIndicators = new AddressBarIndicators();
-    this.$('.js-addressBarIndicatorsContainer').replaceWith(this.addressBarIndicators.render().el);
+    let initialAddressBarState = {};
+    if (this.addressBarIndicators) {
+      this.addressBarIndicators.remove();
+      initialAddressBarState = this.addressBarIndicators.getState();
+    }
+
+    this.addressBarIndicators = this.createChild(AddressBarIndicators, {
+      initialState: initialAddressBarState,
+    });
+    this.$('.js-addressBarIndicatorsContainer').html(this.addressBarIndicators.render().el);
 
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');
     this.$navOverlay = this.$('.js-navOverlay');
     this.$connectedServerName = this.$('.js-connectedServerName');
     this.$connManagementContainer = this.$('.js-connManagementContainer');
-    this.$addressBarIndicatorsContainer = this.$('.js-addressBarIndicatorsContainer');
+    this.$addressBarIndicatorsContainer = this.getCachedEl('.js-addressBarIndicatorsContainer');
 
     this.renderUnreadNotifCount();
 
