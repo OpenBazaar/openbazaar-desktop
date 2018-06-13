@@ -475,14 +475,10 @@
   }
 
   &.toolTipChatOpen {
-
-    body.chatOpen &{
-
+    body.chatOpen & {
       &::before {
-        // top: -26px;
         transform: translate(-77%, 0%);
       }
-
     }
   }
 }
