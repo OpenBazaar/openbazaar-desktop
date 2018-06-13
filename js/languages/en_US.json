@@ -194,9 +194,12 @@
       "follow": "%{name} has followed you.",
       "moderatorAdd": "%{name} has added you as a moderator.",
       "moderatorRemove": "%{name} has removed you as a moderator.",
-      "vendorDisputeTimeout": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
-      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}",
-      "buyerDisputeTimeoutOrderExpired": "Order %{orderLink} has expired. The vendor may claim payment."
+      "vendorDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
+      "vendorDisputeTimeoutExpired": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
+      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
+      "buyerDisputeTimeoutExpired": "Order %{orderLink} has expired. The vendor may claim payment.",
+      "buyerDisputeExpiry": "The moderator has %{timeRemaining} left to make a decision on order %{orderLink}.",
+      "buyerDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment."
     },
     "errorHeading": "There was an error fetching the notifications.",
     "btnRetry": "Retry",

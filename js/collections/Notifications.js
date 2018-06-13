@@ -202,21 +202,34 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t(`notifications.text.${attrs.type}`, {
       name,
     });
-  } else if (attrs.type === 'vendorDisputeTimeout') {
-    // This currently only comes when the timeout has expired (expiresIn = 0). If that
-    // changes and warnings come before expiration, we'll need to update the notification
-    // to handle the case similar to how the buyerDisputeTimeout is handled below.
-    const orderIdShort = `#${attrs.purchaseOrderId.slice(0, 4)}…`;
-    route = `#transactions/sales?orderId=${attrs.purchaseOrderId}`;
-    text = app.polyglot.t('notifications.text.vendorDisputeTimeout', {
-      orderLink: opts.native ?
-        orderIdShort :
-        `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
-    });
-  } else if (attrs.type === 'buyerDisputeTimeout') {
-    const orderIdShort = `#${attrs.orderId.slice(0, 4)}…`;
+  } else if ([
+    'vendorDisputeTimeout',
+    'buyerDisputeTimeout',
+    'buyerDisputeExpiry',
+  ].includes(attrs.type)) {
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
+    let orderIdKey = 'orderId';
 
+    if (attrs.type === 'vendorDisputeTimeout') {
+      orderIdKey = 'purchaseOrderId';
+    } else if (attrs.type === 'moderatorDisputeExpiry') {
+      orderIdKey = 'caseId';
+    }
+
+    const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
+    let transactionTab = 'sales';
+
+    if ([
+      'buyerDisputeTimeout',
+      'buyerDisputeExpiry'
+    ].includes(attrs.type)) {
+      transactionTab = 'purchases';
+    } else if (attrs.type === 'moderatorDisputeExpiry') {
+      transactionTab = 'cases';
+    }
+
+    route = `#transactions/sales?orderId=${orderIdKey}`;
+    route = `#transactions/sales?orderId=${attrs.orderId}`;
     route = `#transactions/sales?orderId=${attrs.orderId}`;
 
     if (attrs.expiresIn > 0) {
@@ -227,17 +240,19 @@ export function getNotifDisplayData(attrs, options = {}) {
       const timeRemaining = moment(Date.now())
         .from(Date.now() - (attrs.expiresIn * 1000), true);
 
-      text = app.polyglot.t('notifications.text.buyerDisputeTimeout', {
+      text = app.polyglot.t(`notifications.text.${attrs.type}`, {
         orderLink: opts.native ?
           orderIdShort :
           `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
-        timeRemaining: capitalize(timeRemaining),
+        timeRemaining,
       });
 
+      text = text.startsWith(timeRemaining) ? capitalize(text) : text;
+
       // restore the days timeout threshold
-      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);      
     } else {
-      text = app.polyglot.t('notifications.text.buyerDisputeTimeoutOrderExpired', {
+      text = app.polyglot.t(`notifications.text.${attrs.type}Expired`, {
         orderLink: opts.native ?
           orderIdShort :
           `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
