@@ -1,4 +1,4 @@
-import app from '../../../../app';
+import app from '../../app';
 import moment from 'moment';
 import BaseModel from '../BaseModel';
 import Listings from '../../collections/order/Listings';
@@ -54,14 +54,14 @@ export default class extends BaseModel {
 
     const str = moment(Date.now())
       .from(
-        moment(Date.now() + (this.escrowTimeoutHours * 60 * 60 * 1000)), true
+        moment(Date.now() + (secs * 60 * 60 * 1000)), true
       );
 
     // restore the days timeout threshold
     moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
 
     return str;
-  }  
+  }
 
   /**
    * Returns the escrowTimeoutHours field. It will throw an exception if the field
