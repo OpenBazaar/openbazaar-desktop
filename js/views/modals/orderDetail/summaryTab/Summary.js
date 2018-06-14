@@ -462,7 +462,7 @@ export default class extends BaseVw {
       }
 
       if (
-        !escrowTimeoutHours ||
+        (orderState !== 'DISPUTED' && !escrowTimeoutHours) ||
         (orderState === 'DISPUTED' && !Date.parse(disputeStartTime))
       ) {
         // contract probably forged
@@ -473,8 +473,10 @@ export default class extends BaseVw {
           showResolveDisputeBtn: isCase,
         };
       } else {
+        const timeoutHours = orderState === 'DISPUTED' ?
+          this.contract.disputeExpiry : escrowTimeoutHours;
         let hasDisputeEscrowExpired;
-        const totalMs = escrowTimeoutHours * 60 * 60 * 1000;
+        const totalMs = timeoutHours * 60 * 60 * 1000;
         state.totalTime =
           moment(Date.now()).from(moment(Date.now() + totalMs), true);
 
@@ -525,7 +527,7 @@ export default class extends BaseVw {
           };
         } else {
           const fundedHeight = this.model.fundedBlockHeight;
-          const blocksPerTimeout = (escrowTimeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
+          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
           const blocksRemaining = fundedHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
             blocksPerTimeout;

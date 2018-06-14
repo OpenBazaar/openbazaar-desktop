@@ -438,7 +438,7 @@ export default class extends BaseModal {
       getServerCurrency().supportsEscrowTimeout ?
         app.polyglot.t(
           `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
-          { timeoutAmount: contract.escrowTimeoutHoursVerbose }
+          { timeoutAmount: contract.disputeExpiryVerbose }
         ) :
         '';
 
