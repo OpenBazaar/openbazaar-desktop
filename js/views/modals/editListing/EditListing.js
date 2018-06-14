@@ -8,7 +8,7 @@ import path from 'path';
 import '../../../utils/lib/velocityUiPack.js';
 import Backbone from 'backbone';
 import app from '../../../app';
-import { isScrolledIntoView } from '../../../utils/dom';
+import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
@@ -183,6 +183,7 @@ export default class extends BaseModal {
       'keyup .js-variantNameInput': 'onKeyUpVariantName',
       'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
       'click .js-viewListing': 'onClickViewListing',
+      'click .js-viewListingOnWeb': 'onClickViewListingOnWeb',
       ...super.events(),
     };
   }
@@ -218,6 +219,13 @@ export default class extends BaseModal {
       if (slug) {
         app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
       }
+    }
+  }
+
+  onClickViewListingOnWeb() {
+    const slug = this.model.get('slug');
+    if (slug) {
+      openExternal(`http://openbazaar.com/store/${app.profile.id}/${slug}`);
     }
   }
 
@@ -1138,6 +1146,9 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
+    console.log(`item: ${item}`);
+    console.log(`slug: ${item.slug}`);
+    console.log(this.model.get('slug'));
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {
         this.$el.html(t({
@@ -1166,8 +1177,6 @@ export default class extends BaseModal {
             tags: item.max.tags,
             photos: this.MAX_PHOTOS,
           },
-          slug: item.slug,
-          peerID: app.profile.id,
           shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
           viewListingsT,
           ...this.model.toJSON(),

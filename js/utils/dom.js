@@ -123,3 +123,27 @@ export function handleLinks(el) {
     e.preventDefault();
   });
 }
+
+export function openExternal(href) {
+  if (typeof href !== 'string' || !href) {
+    throw new Error('Please provide an href as a string.');
+  }
+  const activeServer = app.serverConfigs.activeServer;
+  const localSettings = app.localSettings;
+  const warningOptedOut = app.localSettings &&
+    localSettings.get('dontShowTorExternalLinkWarning');
+
+  if (activeServer && activeServer.get('useTor') && !warningOptedOut) {
+    const warningModal = new TorExternalLinkWarning({ url: href })
+      .render()
+      .open();
+
+    warningModal.on('cancelClick', () => warningModal.close());
+    warningModal.on('confirmClick', () => {
+      shell.openExternal(href);
+      warningModal.close();
+    });
+  } else {
+    shell.openExternal(href);
+  }
+}
