@@ -30,9 +30,9 @@
         </div>
         <div class="row">
           <% if (ob.valid) { %>
-            <div class="rowSm clamp2"><%=ob.moderatorInfo.description %></div>
+            <div class="rowTn clamp2"><%=ob.moderatorInfo.description %></div>
             <% if (ob.modLanguages && ob.modLanguages.length) { %>
-              <div class="txSm">
+              <div class="txSm rowTn">
                 <% if (ob.modLanguages.length > 1) {
                      print(ob.polyT('moderatorCard.languages', { lang: ob.modLanguages[0], smart_count: ob.modLanguages.length -1 }));
                    } else { %>
@@ -40,23 +40,27 @@
                 <% } %>
               </div>
             <% } %>
-          </div>
-          <div class="flex snipKids gutterH tx5 detailsRow">
-            <div class="flexNoShrink TODO">
-              <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+            <div class="flex snipKids gutterH tx5 detailsRow">
+              <% if (ob.hasValidCurrency) { %>
+                <div class="flexNoShrink TODO">
+                  <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
+                </div>
+                <div class="flexNoShrink">
+                  <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+                  <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
+                </div>
+                <div>
+                  <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
+                </div>
+                <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
+              <% } else { %>
+                <span class="clrTErr"><%= ob.polyT('moderatorCard.invalidCurrency', { currency: ob.userCurrency }) %></span>
+              <% } %>
             </div>
-            <div class="flexNoShrink">
-              <% var amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
-              <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount: amount, percentage: ob.moderatorInfo.fee.percentage }) %>
-            </div>
-            <div>
-              <%= ob.parseEmojis('📍') %><%= ob.location || ob.polyT('userPage.noLocation') %>
-            </div>
-            <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
-            <% } else { %>
-              <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
-            <% } %>
-          </div>
+          <% } else { %>
+            <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
+          <% } %>
+        </div>
       <% } else { %>
         <div class="flexCol gutterVSm clrTErr">
           <strong class="txt5 noOverflow"><%= ob.peerID %></strong>
