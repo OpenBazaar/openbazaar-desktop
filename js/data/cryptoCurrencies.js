@@ -64,7 +64,7 @@ const currencies = [
 
       const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
       prefixedAddress = address.startsWith(prefix) ?
-      prefixedAddress : `${prefix}:${address}`;
+        prefixedAddress : `${prefix}:${address}`;
 
       return prefixedAddress;
     },
