@@ -1167,6 +1167,7 @@ export default class extends BaseModal {
             photos: this.MAX_PHOTOS,
           },
           slug: item.slug,
+          peerID: app.profile.id,
           shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
           viewListingsT,
           ...this.model.toJSON(),
