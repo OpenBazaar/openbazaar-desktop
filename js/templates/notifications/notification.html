@@ -2,7 +2,8 @@
   <div class="unreadBorder clrBAtt1"></div>
   <div class="flexVCent gutterHSm pad">
     <%
-      const isOrderNotif = !!ob.notification.orderId || !!ob.notification.purchaseOrderId;
+      const isOrderNotif = !!ob.notification.orderId || !!ob.notification.purchaseOrderId
+       || !!ob.notification.disputeCaseId;
       const imageFunc = isOrderNotif ?
         'getListingBgImage' : 'getAvatarBgImage';
     %>

@@ -206,6 +206,7 @@ export function getNotifDisplayData(attrs, options = {}) {
     'vendorDisputeTimeout',
     'buyerDisputeTimeout',
     'buyerDisputeExpiry',
+    'moderatorDisputeExpiry'
   ].includes(attrs.type)) {
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     let orderIdKey = 'orderId';
@@ -213,11 +214,12 @@ export function getNotifDisplayData(attrs, options = {}) {
     if (attrs.type === 'vendorDisputeTimeout') {
       orderIdKey = 'purchaseOrderId';
     } else if (attrs.type === 'moderatorDisputeExpiry') {
-      orderIdKey = 'caseId';
+      orderIdKey = 'disputeCaseId';
     }
 
     const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
     let transactionTab = 'sales';
+    let orderApiFilter = 'orderId';    
 
     if ([
       'buyerDisputeTimeout',
@@ -226,11 +228,10 @@ export function getNotifDisplayData(attrs, options = {}) {
       transactionTab = 'purchases';
     } else if (attrs.type === 'moderatorDisputeExpiry') {
       transactionTab = 'cases';
+      orderApiFilter = 'caseId';
     }
 
-    route = `#transactions/sales?orderId=${orderIdKey}`;
-    route = `#transactions/sales?orderId=${attrs.orderId}`;
-    route = `#transactions/sales?orderId=${attrs.orderId}`;
+    route = `#transactions/${transactionTab}?${orderApiFilter}=${attrs[orderIdKey]}`;
 
     if (attrs.expiresIn > 0) {
       // temporarily upping the moment threshold of number of days before month is used,
