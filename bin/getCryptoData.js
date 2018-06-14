@@ -136,7 +136,7 @@ getCoinList()
         });
         const jsonConfig = {
           type: 'space',
-          size: 4,
+          size: 2,
         };
         fs.writeFile(translationFile, jsonformat(parsed, jsonConfig), writeErr => {
           if (err) {
