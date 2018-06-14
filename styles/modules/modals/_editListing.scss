@@ -357,4 +357,14 @@
       }
     }
   }
+
+  .viewListingLinks {
+    display: none;
+  }
+
+  &.editMode {
+    .viewListingLinks {
+      display: block;
+    }    
+  }  
 }

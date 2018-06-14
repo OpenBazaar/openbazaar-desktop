@@ -32,7 +32,6 @@ deploy:
     - "dist/win32/RELEASES"
     - "dist/win64/*.exe"
     - "dist/win64/*.nupkg"
-    - "dist/win64/RELEASES-x64"
     - "dist/osx/*.dmg"
     - "dist/osx/*.zip"
     - "dist/linux32/*.deb"
