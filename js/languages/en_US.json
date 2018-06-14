@@ -1434,7 +1434,6 @@
     "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
     "showUnverified": "Show Unverified Moderators",
     "browseMoreModerators": "Load More"
-
   },
   "transactions": {
     "sales": {
@@ -1960,7 +1959,8 @@
     "provideShipper": "Please provide a shipping carrier.",
     "provideUrl": "Please provide a file url.",
     "invalidUrl": "Please provide a valid url.",
-    "provideTransactionId": "Please provide a transaction ID."
+    "provideTransactionId": "Please provide a transaction ID.",
+    "transactionIDTooLong": "Transaction ID exceeds the maximum length of %{maxLength} characters."
   },
   "errorPage": {
     "userNotFoundTitle": "This User Could Not Be Found",
@@ -2475,7 +2475,7 @@
     "XLM": "Stellar",
     "XMR": "Monero",
     "XRP": "Ripple",
-    "XVC": "VCash",
+    "XVC": "Vcash",
     "XVG": "Verge",
     "ZCL": "ZClassic",
     "ZEC": "Zcash",
