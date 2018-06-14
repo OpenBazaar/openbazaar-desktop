@@ -388,7 +388,7 @@
         "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
         "failed": "The information for this moderator failed to load.",
         "invalid": "This user is not currently a moderator.",
-    "invalidCurrency": "This moderator does not support %{currency}.",
+        "invalidCurrency": "This moderator does not support %{currency}.",
         "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
     },
     "moderatorDetails": {
