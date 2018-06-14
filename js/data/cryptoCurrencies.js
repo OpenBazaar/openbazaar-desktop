@@ -55,7 +55,15 @@ const currencies = [
     baseUnit: 100000000,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
-    qrCodeText: address => address,
+    qrCodeText: address => {
+      let prefixedAddress = address;
+
+      const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
+      prefixedAddress = address.startsWith(prefix) ?
+        prefixedAddress : `${prefix}:${address}`;
+
+      return prefixedAddress;
+    },
     icon: 'imgs/cryptoIcons/BCH.png',
     url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
