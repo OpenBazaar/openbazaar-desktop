@@ -62,10 +62,9 @@ const currencies = [
     qrCodeText: address => {
       let prefixedAddress = address;
 
-      if (address.split(':').length === 1) {
-        const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
-        prefixedAddress = `${prefix}:${address}`;
-      }
+      const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
+      prefixedAddress = address.startsWith(prefix) ?
+      prefixedAddress : `${prefix}:${address}`;
 
       return prefixedAddress;
     },
