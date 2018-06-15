@@ -12,8 +12,9 @@ import Listings from '../../collections/order/Listings';
  * once the dispute is opened. It is maintained as a constant on the server which
  * we are mirroring here.
  */
-export const DISPUTE_EXPIRY = app.serverConfig.testnet ?
-  60 * 60 * 1 : 60 * 60 * 24 * 45;
+export function getDisputeExpiry() {
+  return app.serverConfig.testnet ? 1 : 24 * 45;
+};
 
 export default class extends BaseModel {
   get nested() {
@@ -89,7 +90,7 @@ export default class extends BaseModel {
   }
 
   get disputeExpiry() {
-    return DISPUTE_EXPIRY;
+    return getDisputeExpiry();
   }
 
   get disputeExpiryVerbose() {
