@@ -6,6 +6,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import baseView from '../../baseVw';
 import Listing from '../../../models/listing/Listing';
 import ShippingOptions from './ShippingOptions';
+import ShippingAddress from '../../../models/settings/ShippingAddress';
 
 export default class extends baseView {
   constructor(options = {}) {
@@ -18,6 +19,9 @@ export default class extends baseView {
 
     this.validOptions = [];
 
+    const userAddresses = app.settings.get('shippingAddresses');
+    this.selectedAddress = this.selectedAddress || userAddresses.length ? userAddresses.at(0) : '';
+
     this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
       // If all the addresses were deleted, set the selection to blank.
       if (!col.models.length) {
@@ -25,7 +29,6 @@ export default class extends baseView {
       } else {
         // If the old selected address doesn't exist any more, select the first address and set the
         // selection to the first valid value.
-        const userAddresses = app.settings.get('shippingAddresses');
         this.selectedAddress = userAddresses.get(this.selectedAddress) ?
           this.selectedAddress : userAddresses.at(0);
       }
@@ -54,9 +57,14 @@ export default class extends baseView {
     }
   }
 
-  extractValidOptions(countryCode) {
+  extractValidOptions(address) {
     // Any time the country is changed, the options valid for that country need to be extracted.
-    this.validOptions = [];
+    if (address !== '' && !address instanceof ShippingAddress) {
+      throw new Error('The address must be blank or an instance of the ShippingAddress model.');
+    }
+
+    const validOptions = [];
+    const countryCode = address ? address.get('country') : '';
 
     const extractedOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
       option.regions.includes(countryCode) || option.regions.includes('ALL'));
@@ -69,7 +77,7 @@ export default class extends baseView {
         }
         option.services = _.sortBy(option.services, 'price');
         option.services.forEach(optionService => {
-          this.validOptions.push({
+          validOptions.push({
             ...optionService,
             name: option.name,
             service: optionService.name,
@@ -77,6 +85,8 @@ export default class extends baseView {
         });
       });
     }
+
+    return validOptions;
   }
 
   get selectedAddress() {
@@ -84,25 +94,29 @@ export default class extends baseView {
   }
 
   set selectedAddress(address) {
-    if (this._selectedAddress === address) return;
+    if (this._selectedAddress && _.isEqual(this._selectedAddress, address)) return;
+
+    let validOptions = [];
 
     // if the selected address has a new country, extract the valid shipping options.
-    if (address.get('country') !== this.country) this.extractValidOptions(address.get('country'));
+    if (address && address.get('country') !== this.country) {
+      validOptions = this.extractValidOptions(address);
+    }
 
     this._selectedAddress = address;
 
-    if (this.validOptions.length) {
+    if (validOptions.length) {
       // If the previously selected shipping option is no longer valid, select the first valid
       // shipping option. this.selectionOption only has a name and service, as that's the expected
       // data for the server, the validOptions have additional data in them.
       const isSelectedValid = this.selectedOption && this.selectedOption.name &&
-        !!this.validOptions.filter(option => option.name === this.selectedOption.name &&
+        !!validOptions.filter(option => option.name === this.selectedOption.name &&
           option.service === this.selectedOption.service).length;
 
       if (!isSelectedValid) {
         this.selectedOption = {
-          name: this.validOptions[0].name,
-          service: this.validOptions[0].service,
+          name: validOptions[0].name,
+          service: validOptions[0].service,
         };
       }
     } else {
@@ -110,10 +124,12 @@ export default class extends baseView {
     }
 
     if (this.shippingOptions) {
-      this.shippingOptions.validOptions = this.validOptions;
+      this.shippingOptions.validOptions = validOptions;
       this.shippingOptions.selectedOption = this.selectedOption;
       this.shippingOptions.render();
     }
+
+    this.validOptions = validOptions;
   }
 
   changeShippingAddress(e) {
@@ -122,10 +138,7 @@ export default class extends baseView {
   }
 
   render() {
-    // If no address is selected, set the first address before adding anything to the DOM, so the
-    // correct shipping options are extracted, if one is available.
     const userAddresses = app.settings.get('shippingAddresses');
-    this.selectedAddress = this.selectedAddress || userAddresses.length ? userAddresses.at(0) : '';
 
     const selectedAddressIndex = this.selectedAddress && userAddresses.length ?
       userAddresses.indexOf(this.selectedAddress) : '';
