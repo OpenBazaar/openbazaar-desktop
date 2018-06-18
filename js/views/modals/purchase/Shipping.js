@@ -20,7 +20,7 @@ export default class extends baseView {
     this.validOptions = [];
 
     const userAddresses = app.settings.get('shippingAddresses');
-    this.selectedAddress = this.selectedAddress || userAddresses.length ? userAddresses.at(0) : '';
+    this.selectedAddress = userAddresses.at(0) || '';
 
     this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
       // If all the addresses were deleted, set the selection to blank.
