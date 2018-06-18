@@ -92,25 +92,7 @@ export function handleLinks(el) {
       if (link.protocol === 'ob:' && !openExternally) {
         Backbone.history.navigate(href.slice(5), true);
       } else {
-        // external link
-        const activeServer = app.serverConfigs.activeServer;
-        const localSettings = app.localSettings;
-        const warningOptedOut = app.localSettings &&
-          localSettings.get('dontShowTorExternalLinkWarning');
-
-        if (activeServer && activeServer.get('useTor') && !warningOptedOut) {
-          const warningModal = new TorExternalLinkWarning({ url: href })
-            .render()
-            .open();
-
-          warningModal.on('cancelClick', () => warningModal.close());
-          warningModal.on('confirmClick', () => {
-            shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
-            warningModal.close();
-          });
-        } else {
-          shell.openExternal(link.protocol === 'file:' ? `http://${href}` : href);
-        }
+        this.openExternal(link);
       }
     } else {
       if (!href.startsWith('#')) {
@@ -124,26 +106,27 @@ export function handleLinks(el) {
   });
 }
 
-export function openExternal(href) {
-  if (typeof href !== 'string' || !href) {
-    throw new Error('Please provide an href as a string.');
+export function openExternal(link) {
+  if (!link || !link.href || typeof link.href !== 'string') {
+    throw new Error('Please provide a valid link as anchor element with valid href as string.');
   }
+
   const activeServer = app.serverConfigs.activeServer;
   const localSettings = app.localSettings;
   const warningOptedOut = app.localSettings &&
     localSettings.get('dontShowTorExternalLinkWarning');
 
   if (activeServer && activeServer.get('useTor') && !warningOptedOut) {
-    const warningModal = new TorExternalLinkWarning({ url: href })
+    const warningModal = new TorExternalLinkWarning({ url: link.href })
       .render()
       .open();
 
     warningModal.on('cancelClick', () => warningModal.close());
     warningModal.on('confirmClick', () => {
-      shell.openExternal(href);
+      shell.openExternal(link.protocol === 'file:' ? `http://${link.href}` : link.href);
       warningModal.close();
     });
   } else {
-    shell.openExternal(href);
+    shell.openExternal(link.protocol === 'file:' ? `http://${link.href}` : link.href);
   }
 }

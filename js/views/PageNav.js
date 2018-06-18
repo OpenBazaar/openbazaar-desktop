@@ -490,8 +490,8 @@ export default class extends BaseVw {
 
     let initialAddressBarState = {};
     if (this.addressBarIndicators) {
-      this.addressBarIndicators.remove();
       initialAddressBarState = this.addressBarIndicators.getState();
+      this.addressBarIndicators.remove();
     }
 
     this.addressBarIndicators = this.createChild(AddressBarIndicators, {
@@ -504,7 +504,6 @@ export default class extends BaseVw {
     this.$navOverlay = this.$('.js-navOverlay');
     this.$connectedServerName = this.$('.js-connectedServerName');
     this.$connManagementContainer = this.$('.js-connManagementContainer');
-    this.$addressBarIndicatorsContainer = this.getCachedEl('.js-addressBarIndicatorsContainer');
 
     this.renderUnreadNotifCount();
 
