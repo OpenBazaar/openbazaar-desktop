@@ -218,6 +218,8 @@ export default class extends BaseModal {
       const slug = this.model.get('slug');
       if (slug) {
         app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
+      } else {
+        throw new Error('There is no slug for this listing in order to navigate!');
       }
     }
   }
@@ -225,7 +227,9 @@ export default class extends BaseModal {
   onClickViewListingOnWeb() {
     const slug = this.model.get('slug');
     if (slug) {
-      openExternal(`http://openbazaar.com/store/${app.profile.id}/${slug}`);
+      const link = document.createElement('a');
+      link.setAttribute('href', `http://openbazaar.com/store/${app.profile.id}/${slug}`);
+      openExternal(link);
     }
   }
 
@@ -1146,9 +1150,6 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    console.log(`item: ${item}`);
-    console.log(`slug: ${item.slug}`);
-    console.log(this.model.get('slug'));
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {
         this.$el.html(t({
