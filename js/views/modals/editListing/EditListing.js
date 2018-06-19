@@ -227,9 +227,7 @@ export default class extends BaseModal {
   onClickViewListingOnWeb() {
     const slug = this.model.get('slug');
     if (slug) {
-      const link = document.createElement('a');
-      link.setAttribute('href', `http://openbazaar.com/store/${app.profile.id}/${slug}`);
-      openExternal(link);
+      openExternal(`http://openbazaar.com/store/${app.profile.id}/${slug}`);
     }
   }
 
