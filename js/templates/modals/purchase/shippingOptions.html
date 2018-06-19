@@ -1,30 +1,29 @@
-<% if (ob.validShippingOptions.length) { %>
+<% if (ob.validOptions.length) { %>
   <div class="flexColRows boxList border borderStacked clrP clrBr">
-    <% ob.validShippingOptions.forEach((option, i) => {
-      option.services.forEach((service, j) => { %>
-        <div>
-          <div class="btnRadio width100">
-            <input type="radio"
-                   class="js-shippingOption"
-                   id="<%= `${i}${j}` %>"
-                   <% if (i===0 && j === 0) print('checked') %>
-                   data-name="<%= option.name %>"
-                   data-type="<%= option.type %>"
-                   data-service="<%= service.name %>"
-                   name="shippingOption">
-            <label for="<%= `${i}${j}` %>" class="flex gutterH pad">
-              <div>
-                <div class="tx5 rowSm txB"><%= option.name %>: <%= service.name %></div>
-                <div class="tx5b clrT2 txUnb">
-                  <% const price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
-                  <% if (service.estimatedDelivery) print(ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery })) %>
-                </div>
+    <% ob.validOptions.forEach((service, i) => {
+         const selected = ob.selectedOption && ob.selectedOption.name === service.name && ob.selectedOption.service === service.service;
+    %>
+      <div>
+        <div class="btnRadio width100">
+          <input type="radio"
+                 class="js-shippingOption"
+                 id="<%= `option${i}` %>"
+                 <% if (selected) print('checked') %>
+                 data-name="<%= service.name %>"
+                 data-service="<%= service.service%>"
+                 name="shippingOption">
+          <label for="<%= `option${i}` %>" class="flex gutterH pad">
+            <div>
+              <div class="tx5 rowSm txB"><%= service.name %>: <%= service.service %></div>
+              <div class="tx5b clrT2 txUnb">
+                <% const price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+                <% if (service.estimatedDelivery) print(ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery })) %>
               </div>
-            </label>
-          </div>
+            </div>
+          </label>
         </div>
-      <% }); %>
-     <% }); %>
+      </div>
+    <% }); %>
   </div>
 <% } else { %>
   <div class="padGi flexCent">
