@@ -14,7 +14,7 @@ import Listings from '../../collections/order/Listings';
  */
 export function getDisputeExpiry() {
   return app.serverConfig.testnet ? 1 : 24 * 45;
-};
+}
 
 export default class extends BaseModel {
   get nested() {

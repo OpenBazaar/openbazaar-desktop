@@ -219,11 +219,11 @@ export function getNotifDisplayData(attrs, options = {}) {
 
     const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
     let transactionTab = 'sales';
-    let orderApiFilter = 'orderId';    
+    let orderApiFilter = 'orderId';
 
     if ([
       'buyerDisputeTimeout',
-      'buyerDisputeExpiry'
+      'buyerDisputeExpiry',
     ].includes(attrs.type)) {
       transactionTab = 'purchases';
     } else if (attrs.type === 'moderatorDisputeExpiry') {
@@ -251,7 +251,7 @@ export function getNotifDisplayData(attrs, options = {}) {
       text = text.startsWith(timeRemaining) ? capitalize(text) : text;
 
       // restore the days timeout threshold
-      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);      
+      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
     } else {
       text = app.polyglot.t(`notifications.text.${attrs.type}Expired`, {
         orderLink: opts.native ?
