@@ -18,7 +18,7 @@ const currencies = [
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
-    icon: 'imgs/cryptoIcons/btcIcon128.png',
+    icon: 'imgs/cryptoIcons/BTC.png',
     url: 'https://bitcoin.org/',
     needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
@@ -61,8 +61,16 @@ const currencies = [
     maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
-    qrCodeText: address => address,
-    icon: 'imgs/cryptoIcons/bchIcon128.png',
+    qrCodeText: address => {
+      let prefixedAddress = address;
+
+      const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
+      prefixedAddress = address.startsWith(prefix) ?
+        prefixedAddress : `${prefix}:${address}`;
+
+      return prefixedAddress;
+    },
+    icon: 'imgs/cryptoIcons/BCH.png',
     url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
@@ -88,7 +96,7 @@ const currencies = [
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
-    icon: 'imgs/cryptoIcons/zecIcon128.png',
+    icon: 'imgs/cryptoIcons/ZEC.png',
     url: 'https://z.cash',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?

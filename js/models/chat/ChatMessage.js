@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import moment from 'moment';
 import is from 'is_js';
 import { getEmojiByName } from '../../data/emojis';
 import sanitizeHtml from 'sanitize-html';
@@ -211,7 +210,7 @@ export default class ChatMessage extends BaseModel {
     options.attrs = options.attrs || model.toJSON(options);
 
     if (method === 'create') {
-      const timestamp = moment(Date.now()).format();
+      const timestamp = new Date().toISOString();
       options.attrs.timestamp = timestamp;
       this.set('timestamp', timestamp);
     }

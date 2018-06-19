@@ -356,6 +356,7 @@ export default class extends BaseModel {
           ...eventOpts,
           created: method === 'create',
           slug: this.get('slug'),
+          prev: attrsBeforeSync,
           hasChanged,
         });
       });
