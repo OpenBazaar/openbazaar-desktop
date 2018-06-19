@@ -86,10 +86,31 @@
       </div>
     <% } %>
     <div class="rowSm">
-      <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-      <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
-        <a class="clrT clamp listingTitle"><%= ob.title %></a>
-      </div>
+      <%
+        // The accepted currencies check is in case that data is not provided (e.g. a search provider omits),
+        // we'll fall back to displaying the title field, since otherwise we're unable to determine one of
+        // the trading pairs.
+        if (ob.contractType !== 'CRYPTOCURRENCY' || (!(ob.acceptedCurrencies && ob.acceptedCurrencies.length))) {
+          const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap'
+      %>
+        <div class="<%= tooltipClass %> toolTipTop inlineBlock <% if (ob.vendor) print('trimWidth') %>" data-tip="<%= ob.title %>">
+          <a class="clrT clamp listingTitle"><%= ob.title %></a>
+        </div>
+      <% } else { %>
+        <div>
+          <a class="listingTitle">
+            <%
+              const fromCur = ob.acceptedCurrencies && ob.acceptedCurrencies[0];
+            %>
+            <%= ob.crypto.tradingPair({
+              className: 'cryptoTradingPairSm',
+              fromCur,
+              toCur: ob.coinType,
+              truncateCurAfter: 5,
+            }) %>
+          </a>
+        </div>
+      <% } %>
     </div>
     <div class="flex">
       <div class="flexExpand tx5b">
@@ -162,18 +183,27 @@
   // cryptoList
 %>
   <div class="flexVCent gutterH">
-    <div class="titleCol">
-      <div class="flex gutterH">
-        <div class="verifiedModWrapper">
-          <div class="js-verifiedMod"></div>
-        </div>    
-        <div class="flexCol gutterVTn">
-          <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-          <div class="<%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
-            <a class="clrT clamp listingTitle"><%= ob.title %></a>
-          </div>
-          <div class="clrT2 tx6"><%= ob.formatRating(ob.averageRating, ob.ratingCount) %></div>
-        </div>
+    <div class="tradeFromCol">
+      <div class="flexVCent gutterHSm">
+        <% const fromCur = ob.acceptedCurrencies && ob.acceptedCurrencies[0] || ''; %>
+        <%= ob.polyT('cryptoCodeIconPairing', {
+              code: `<span class="txB clamp">${fromCur}</span>`,
+              icon: ob.crypto.cryptoIcon({
+                code: fromCur,
+                className: 'flexNoShrink',
+              }),
+        }) %>
+      </div>
+    </div>
+    <div class="tradeArrowCol">
+      <span class="pairingSeparator clrT2 ion-android-arrow-forward"></span>
+    </div>
+    <div class="tradeToCol">
+      <div class="flexVCent gutterHSm">
+        <%= ob.polyT('cryptoCodeIconPairing', {
+              code: `<span class="txB clamp">${ob.coinType}</span>`,
+              icon: ob.crypto.cryptoIcon({ code: ob.coinType }),
+        }) %>
       </div>
     </div>
     <div class="vendorCol">
@@ -194,17 +224,35 @@
               totalStoreRatings = ob.vendor.stats.ratingCount;
             }
           %>
-          <div class="clamp clrT2 tx6"><%= ob.formatRating(averageStoreRating, totalStoreRatings) %>&nbsp;&nbsp;<%= ob.vendor.location %></div>
+          <div class="cl2amp clrT2 tx6 flex gutterHSm">
+            <div><%= ob.formatRating(averageStoreRating, totalStoreRatings) %></div>
+            <div class="verifiedModWrapper">
+              <div class="js-verifiedMod"></div>
+            </div>              
+          </div>
         </div>
       </div>
     </div>
     <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
     <%
-      let inventory = '<i class="ion-alert-circled margRSm clrTAlert"></i>';
+      let inventory = ob.polyT('cryptoAmountIconPairing', {
+        amount: `<i class="clrT2">${ob.polyT('inventoryDisplay.unknownInventory')}</i>`,
+        icon: ob.crypto.cryptoIcon({ code: ob.coinType }),
+      });
       let inventoryTxClass = '';
 
       if (ob.totalInventoryQuantity >= 0) {
-        inventory = ob.currencyMod.formatCurrency(ob.totalInventoryQuantity, ob.coinType);
+        let formattedAmount = ob.currencyMod.formatCurrency(ob.totalInventoryQuantity, ob.coinType,
+            { includeCryptoCurIdentifier: false, maxDisplayDecimals: 4 });
+
+        if (formattedAmount.length >= 18) {
+          formattedAmount = ob.abbrNum(ob.totalInventoryQuantity, 2);
+        }
+
+        inventory = ob.polyT('cryptoAmountIconPairing', {
+          amount: `<span>${formattedAmount}</span>`,
+          icon: ob.crypto.cryptoIcon({ code: ob.coinType }),
+        });
       }
 
       if (inventory.length > 14) {
@@ -213,7 +261,7 @@
         inventoryTxClass = 'tx5b';
       }
     %>
-    <div class="inventoryCol flexExpand <%= inventoryTxClass %>"><%= inventory %></div>
+    <div class="inventoryCol flexExpand flexVCent flexHRight gutterHSm <%= inventoryTxClass %>"><%= inventory %></div>
   </div>
 <% } %>
 

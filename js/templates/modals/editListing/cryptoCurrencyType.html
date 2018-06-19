@@ -1,3 +1,14 @@
+<div class="flexRow titleWrap">
+  <div class="col12">
+    <div class="flexRow">
+      <div class="flexExpand">
+        <label for="editListingTitle"><%= ob.polyT('editListing.title') %></label>
+        <div class="js-cryptoTradingPairContainer"></div>
+      </div>
+      <%= ob.viewListingsT({ createMode: ob.createMode }) %>
+    </div>
+  </div>
+</div>
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoContractType" class="required"><%= ob.polyT('editListing.type') %></label>
@@ -7,7 +18,7 @@
       <option value="<%= contractType.code %>" <% if (contractType.code === ob.metadata.contractType) print('selected') %>><%= contractType.name %></option>
       <% }); %>
     </select>
-    <div class="clrT2 txSm helper"><%= ob.helperType %></div>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperType') %></div>
   </div>
   <div class="col6 simpleFlexCol">
     <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.coinType') %></label>
@@ -17,7 +28,7 @@
       <option value="<%= coin.code %>" <% if (coin.code === ob.metadata.coinType) print('selected') %>><%= coin.name %></option>
       <% }) %>
     </select>
-    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperCoinType') %></div>    
+    <div class="clrT2 txSm helper js-helperCoinType"><%= ob.helperCoinType %></div>    
   </div>
 </div>
 <div class="flexRow gutterH">
@@ -30,11 +41,5 @@
       <div class="cryptoQuantityCoinType clrT2 tx5 js-quantityCoinType"><%= selectedCoinType %></div>
     </div>
     <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperQuantity') %></div>
-  </div>
-  <div class="col6 simpleFlexCol">
-    <label for="editListingCryptoMarketValue">
-    <%= ob.polyT('editListing.cryptoCurrencyType.marketValueLabel') %></label>
-    <div class="js-marketValueWrap clrT2 tx5"><%= ob.marketVal %></div>
-    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperMarketValue') %></div>
   </div>
 </div>

@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -39,7 +40,7 @@ export default class extends BaseView {
   }
 
   updatePrices(prices) {
-    if (prices !== this.prices) {
+    if (!_.isEqual(prices, this.prices)) {
       this.prices = prices;
       this.render();
     }

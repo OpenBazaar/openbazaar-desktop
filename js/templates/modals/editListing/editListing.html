@@ -67,18 +67,18 @@
 
         <div class="tabFormWrapper">
           <form class="box padSmKids padStack">
-            <div class="flexRow">
-              <div class="col12">
-                <div class="flexRow">
-                  <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
-                  <%= ob.viewListingsT({ createMode: ob.createMode }) %>
-                </div>
-                <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
-                <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxlength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
-                <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
-              </div>
-            </div>
             <div class="standardTypeWrap js-standardTypeWrap pad0 padSmKids padStackAll">
+              <div class="flexRow">
+                <div class="col12">
+                  <div class="flexRow">
+                    <label for="editListingTitle" class="required flexExpand"><%= ob.polyT('editListing.title') %></label>
+                    <%= ob.viewListingsT({ createMode: ob.createMode }) %>
+                  </div>
+                  <% if (ob.errors['item.title']) print(ob.formErrorTmpl({ errors: ob.errors['item.title'] })) %>
+                  <input type="text" class="clrBr clrP clrSh2" name="item.title" id="editListingTitle" value="<%= ob.item.title %>" maxLength="<%= ob.max.title %>" placeholder="<%= ob.polyT('editListing.placeholderTitle') %>">
+                  <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTitle') %></div>
+                </div>
+              </div>
               <div class="flexRow gutterH">
                 <div class="col6 simpleFlexCol">
                   <label for="editContractType" class="required"><%= ob.polyT('editListing.type') %></label>

@@ -1,0 +1,54 @@
+<%
+  // when multiple listings are supported, the prices array will have one price object for each
+  const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+  const pricingCurrency = ob.listingPrice.currencyCode;
+%>
+
+<div class="flexVCent gutterHLg row">
+  <div class="js-cryptoTitle"></div>
+  <div class="flexExpand">
+    <div class="flexVCent gutterHLg">
+      <label for="cryptoAmount" class="clrT txB required"><%= ob.polyT('purchase.cryptoAmount') %></label>
+      <div class="inputSelect">
+        <input type="text" class="clrBr clrP clrSh2" name="quantity" id="cryptoAmount" value="<%= ob.quantity %>" data-var-type="number" placeholder="0.0000" size="8">
+        <% if (ob.displayCurrency !== ob.listing.metadata.coinType) { %>
+          <select id="cryptoAmountCurrency" class="clrBr clrP nestInputRight">
+            <% [ob.listing.metadata.coinType, ob.displayCurrency].forEach((cur) => {%>
+              <option value="<%= cur %>" <% if (cur === ob.cryptoAmountCurrency) print('selected'); %>><%= cur %></option>
+            <% }); %>
+          </select>
+        <% } %>
+      </div>                
+    </div>
+  </div>
+  <div class="pad flexNoShrink">
+    <b>
+       <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
+    </b>
+  </div>
+</div>
+<hr class="clrBr rowLg" />
+<%
+  const coinType = ob.listing.metadata.coinType;
+  const coinTranslationKey = `cryptoCurrencies.${coinType}`;
+  const coinName = ob.polyT(coinTranslationKey) === coinTranslationKey ?
+    coinType : ob.polyT(coinTranslationKey);
+  const heading = ob.polyT('purchase.cryptoAddressHeading', {
+    coinType: coinName,
+  });
+  const placeholder = ob.polyT('purchase.cryptoAddressPlaceholder', {
+    coinType: coinName,
+  });
+  const warning = `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>`;
+  const helper = ob.polyT('purchase.cryptoAddressHelper', {
+    name: ob.vendor.name,
+    coinType: coinName,
+    warning,
+  });
+%>
+<div class="rowSm">
+  <label class="h4 flexExpand required" for="purchaseCryptoAddress"><%= heading %></label>
+</div>
+<div class="js-items-paymentAddress-errors"></div>
+<input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP rowSm" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
+<div class="txSm clrT2"><%= helper %></div>
