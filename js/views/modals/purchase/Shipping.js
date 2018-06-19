@@ -22,7 +22,7 @@ export default class extends baseView {
     const userAddresses = app.settings.get('shippingAddresses');
     this.selectedAddress = userAddresses.at(0) || '';
 
-    this.listenTo(app.settings.get('shippingAddresses'), 'update', col => {
+    this.listenTo(userAddresses, 'update', col => {
       // If all the addresses were deleted, set the selection to blank.
       if (!col.models.length) {
         this.selectedAddress = '';
@@ -59,7 +59,7 @@ export default class extends baseView {
 
   extractValidOptions(address) {
     // Any time the country is changed, the options valid for that country need to be extracted.
-    if (address !== '' && !address instanceof ShippingAddress) {
+    if (address !== '' && !(address instanceof ShippingAddress)) {
       throw new Error('The address must be blank or an instance of the ShippingAddress model.');
     }
 
@@ -69,22 +69,20 @@ export default class extends baseView {
     const extractedOptions = this.model.get('shippingOptions').toJSON().filter(option =>
       option.regions.includes(countryCode) || option.regions.includes('ALL'));
 
-    if (extractedOptions.length) {
-      extractedOptions.forEach(option => {
-        if (option.type === 'LOCAL_PICKUP') {
-          // local pickup options need a service with a name and price
-          option.services[0] = { name: app.polyglot.t('purchase.localPickup'), price: 0 };
-        }
-        option.services = _.sortBy(option.services, 'price');
-        option.services.forEach(optionService => {
-          validOptions.push({
-            ...optionService,
-            name: option.name,
-            service: optionService.name,
-          });
+    extractedOptions.forEach(option => {
+      if (option.type === 'LOCAL_PICKUP') {
+        // local pickup options need a service with a name and price
+        option.services[0] = { name: app.polyglot.t('purchase.localPickup'), price: 0 };
+      }
+      option.services = _.sortBy(option.services, 'price');
+      option.services.forEach(optionService => {
+        validOptions.push({
+          ...optionService,
+          name: option.name,
+          service: optionService.name,
         });
       });
-    }
+    });
 
     return validOptions;
   }
