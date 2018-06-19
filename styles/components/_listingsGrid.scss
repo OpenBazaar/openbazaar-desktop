@@ -2,10 +2,12 @@
    the store and search results views. Make sure to check both when making changes to this file.
  */
 
-$crytoListViewTitleWidth: 218px;
-$crytoListViewVendorWidth: 205px;
-$crytoListViewPriceWidth: 120px;
-$crytoListViewInventoryMaxWidth: 108px;
+$crytoListViewTradeFromWidth: 57px;
+$crytoListViewTradeToWidth: 104px;
+$crytoListViewTradeArrowWidth: 48px;
+$crytoListViewVendorWidth: 185px;
+$crytoListViewPriceWidth: 125px;
+$crytoListViewInventoryMaxWidth: 138px;
 
 .listingsGrid {
   flex-wrap: wrap;
@@ -107,8 +109,18 @@ $crytoListViewInventoryMaxWidth: 108px;
   }
 
   &.listingsGridCryptoListView {
-    .titleCol {
-      width: $crytoListViewTitleWidth;
+    .tradeFromCol {
+      width: $crytoListViewTradeFromWidth;
+      margin-right: 0;
+    }
+
+    .tradeToCol {
+      width: $crytoListViewTradeToWidth;
+    }
+
+    .tradeArrowCol {
+      width: $crytoListViewTradeArrowWidth;
+      margin-right: 0;
     }
 
     .vendorCol {
@@ -137,12 +149,23 @@ $crytoListViewInventoryMaxWidth: 108px;
   border-style: solid;
   border-bottom-width: 0;
   margin-bottom: 0;
-  font-size: $tx5;
+  font-size: $tx6;
+  text-transform: uppercase;
   word-break: break-word;
   hyphens: auto;
 
-  .titleCol {
-    width: $crytoListViewTitleWidth;
+  .tradeFromCol {
+    width: $crytoListViewTradeFromWidth;
+    margin-right: 0;
+  }
+
+  .tradeToCol {
+    width: $crytoListViewTradeToWidth;
+  }
+
+  .tradeArrowCol {
+    width: $crytoListViewTradeArrowWidth;
+    margin-right: 0;
   }
 
   .vendorCol {
@@ -152,10 +175,18 @@ $crytoListViewInventoryMaxWidth: 108px;
   .priceCol {
     width: $crytoListViewPriceWidth;
     text-align: right;
+
+    .subText {
+      text-transform: none;
+    }
   }
 
   .inventoryCol {
     text-align: right;
     max-width: $crytoListViewInventoryMaxWidth;
+  }
+
+  .toolTip {
+    text-transform: none;
   }
 }

@@ -41,7 +41,15 @@
 <div class="listingContent flexColRow gutterVMd2">
   <div class="contentBox padLg clrP clrBr clrSh3">
     <div class="flex gutterHLg">
-      <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+      <%
+        if (ob.metadata.contractType !== 'CRYPTOCURRENCY') {
+      %>
+        <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+      <%
+        } else {
+      %>
+        <h2 class="flexExpand js-cryptoTitle cryptoTitle"></h2>
+      <% } %>
       <h2 class="txUnb flexNoShrink js-price">
         <%=
           ob.currencyMod.formattedCurrency(
@@ -85,6 +93,9 @@
             <%
               let tip;
               let buyNowClass = 'disabled';
+              let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
+                'listingDetail.buyNow' :
+                'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
               const serverCur = ob.currencyMod.getServerCurrency();
               const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
@@ -111,7 +122,7 @@
               let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
-              <%= ob.polyT('listingDetail.buyNow') %>
+              <%= ob.polyT(buyNowTranslationKey) %>
             </button>
             <%= unpurchaseable ? unpurchasableMarkup : '' %>
             <div class="flexHCent gutterH">
@@ -155,7 +166,7 @@
             if (curData) { %>
               <li class="flexVCent gutterHSm clrBr">
                 <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
-                <%= ob.currencyMod.cryptoIcon({ code: curData.code }) %>
+                <%= ob.crypto.cryptoIcon({ code: curData.code }) %>
                 <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
               </li>
             <% }

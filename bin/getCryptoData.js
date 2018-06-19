@@ -64,7 +64,8 @@ function getIcon(coin) {
 
   fetch(getIconUrl(coin.id))
     .then(res => {
-      const writeStream = fs.createWriteStream(`${iconOutputPath}${path.sep}${coin.symbol}.png`);
+      const writeStream =
+        fs.createWriteStream(`${iconOutputPath}${path.sep}${coin.symbol}-icon.png`);
       writeStream.on('error', err => {
         logError(`There was an error writing the icon for symbol ${coin.symbol},` +
           ` with an id of ${coin.id}: ${err}`);
@@ -136,7 +137,7 @@ getCoinList()
         });
         const jsonConfig = {
           type: 'space',
-          size: 4,
+          size: 2,
         };
         fs.writeFile(translationFile, jsonformat(parsed, jsonConfig), writeErr => {
           if (err) {

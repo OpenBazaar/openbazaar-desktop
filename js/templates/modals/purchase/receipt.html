@@ -43,12 +43,33 @@
 %>
   <div class="flexRow gutterHSm">
     <span class="flexExpand">
-      <%= ob.polyT('purchase.receipt.listing') %>
+      <% if (!ob.isCrypto) { %>
+        <%= ob.polyT('purchase.receipt.listing') %>
+      <% } else { %>
+        <%= ob.polyT('purchase.receipt.cryptoIconsAmountCombo', {
+          icons: ob.crypto.tradingPair({
+            className: 'cryptoTradingPairSm cryptoTradingPair',
+            fromCur: ob.listing.metadata.acceptedCurrencies[0],
+            toCur: ob.listing.metadata.coinType,
+            truncateCurAfter: 5,
+          }),
+          cryptoIconsAmount:
+            `<span class="cryptoQuantity">${ob.polyT('purchase.receipt.cryptoIconsAmount',
+              { amount: formattedQuantity })}</span>`,
+        }) %>
+
+      <% } %>
     </span>
     <div class="constrainedWidth">
       <div class="flexHRight">
         <b>
-          <%= ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency) %>
+          <%
+            if (!ob.isCrypto) {
+              print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
+            } else {
+              print(ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency));
+            }
+          %>
         </b>
       </div>
     </div>
@@ -118,18 +139,20 @@
   <% } %>
   <hr class="clrBr">
   <% if (quantity) { %>
-    <div class="flexRow gutterHSm">
-      <span class="flexExpand">
-        <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
-      </span>
-      <div class="constrainedWidth">
-        <div class="flexHRight">      
-          <b>
-            <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
-          </b>
+    <% if (!ob.isCrypto) { %>
+      <div class="flexRow gutterHSm">
+        <span class="flexExpand">
+          <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
+        </span>
+        <div class="constrainedWidth">
+          <div class="flexHRight">      
+            <b>
+              <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
+            </b>
+          </div>
         </div>
       </div>
-    </div>
+    <% } %>
     <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingTotal) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">

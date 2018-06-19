@@ -4,7 +4,16 @@
 <% } %>
 <div class="border clrBr padMd">
   <div class="flexVCent gutterH clrT">
-    <div class="statusIconCol clrT"><span class="clrBr ion-ios-rewind"></span></div>
+    <div class="statusIconCol clrT">
+      <% if (!ob.isCrypto) { %>
+        <span class="clrBr ion-ios-rewind"></span>
+      <% } else { %>
+        <%= ob.crypto.cryptoIcon({
+          code: ob.paymentCoin,
+          className: 'clrBr',
+        }) %>      
+      <% } %>
+    </div>
     <div class="flexExpand tx5">
       <%
         const priceFrag = ob.currencyMod.pairedCurrency(

@@ -12,8 +12,6 @@ const currencies = [
     testnetCode: 'TBTC',
     symbol: '₿',
     baseUnit: 100000000,
-    minDisplayDecimals: 0,
-    maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,
@@ -55,11 +53,17 @@ const currencies = [
     code: 'BCH',
     testnetCode: 'TBCH',
     baseUnit: 100000000,
-    minDisplayDecimals: 0,
-    maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
-    qrCodeText: address => address,
+    qrCodeText: address => {
+      let prefixedAddress = address;
+
+      const prefix = app.serverConfig.testnet ? 'bchtest' : 'bitcoincash';
+      prefixedAddress = address.startsWith(prefix) ?
+        prefixedAddress : `${prefix}:${address}`;
+
+      return prefixedAddress;
+    },
     icon: 'imgs/cryptoIcons/BCH.png',
     url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
@@ -79,8 +83,6 @@ const currencies = [
     code: 'ZEC',
     testnetCode: 'TZEC',
     baseUnit: 100000000,
-    minDisplayDecimals: 0,
-    maxDisplayDecimals: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
@@ -182,40 +184,6 @@ export function getServerCurrency() {
   };
 
   return curData;
-}
-
-/**
- * Will render the icon for the crypto currency provided in options.code. If not provided, it will
- * attempt to use the server currency. If the currency ends up not having an icon, a blank string
- * will be returned.
- */
-export function renderCryptoIcon(options = {}) {
-  let code = options.code;
-
-  if (!code) {
-    const serverCur = getServerCurrency();
-    code = serverCur && serverCur.code || '';
-  }
-
-  const opts = {
-    code,
-    className: '',
-    attrs: {},
-    ...options,
-  };
-
-  const curData = getCurrencyByCode(opts.code);
-
-  if (curData && curData.icon) {
-    const attrs = Object.keys(opts.attrs).reduce(
-      (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
-    );
-
-    const style = `style="background-image: url(../${curData.icon})"`;
-    return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
-  }
-
-  return '';
 }
 
 export function getBlockChainTxUrl(txid, isTestnet) {
