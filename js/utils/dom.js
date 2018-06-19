@@ -70,7 +70,7 @@ export function stripHtml(text) {
   return el.textContent || el.innerText || '';
 }
 
-export function openExternal(href, isFile = false) {
+export function openExternal(href) {
   if (typeof href !== 'string') {
     throw new Error('Please provide a valid href as string.');
   }
@@ -87,11 +87,11 @@ export function openExternal(href, isFile = false) {
 
     warningModal.on('cancelClick', () => warningModal.close());
     warningModal.on('confirmClick', () => {
-      shell.openExternal(isFile ? `http://${href}` : href);
+      shell.openExternal(href);
       warningModal.close();
     });
   } else {
-    shell.openExternal(isFile ? `http://${href}` : href);
+    shell.openExternal(href);
   }
 }
 
@@ -117,7 +117,7 @@ export function handleLinks(el) {
       if (link.protocol === 'ob:' && !openExternally) {
         Backbone.history.navigate(href.slice(5), true);
       } else {
-        openExternal(link.href, link.protocol === 'file:');
+        openExternal(link.protocol === 'file:' ? `http://${link.href}` : link.href);
       }
     } else {
       if (!href.startsWith('#')) {
