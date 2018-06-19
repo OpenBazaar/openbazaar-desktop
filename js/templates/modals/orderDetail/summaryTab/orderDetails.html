@@ -47,8 +47,6 @@
                 toCur: coinType,
               });
             }
-
-            ob.description = 'It was the best of times. It was the worst of times.';
           %>
           <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="txB clrT inlineBlock <% if (ob.description || isCrypto) print('rowTn') %>"><%= title %></a>
           <% if (ob.sku) { %>

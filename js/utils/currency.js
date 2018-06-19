@@ -179,8 +179,9 @@ export function formatPrice(price, currency) {
   }
 
   let convertedPrice;
-  // todo: this needs to take into account crypto listing curs which using the
-  // method below, would have most of them being considered as fiat.
+  // todo: this needs to take into account crypto listing currency codes,
+  // which using the method below, would result in most of them being
+  // considered as fiat.
   const cryptoCur = getCryptoCurByCode(currency);
 
   if (cryptoCur) {

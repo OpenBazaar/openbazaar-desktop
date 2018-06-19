@@ -94,7 +94,7 @@ export default class extends BaseVw {
 
   getConversionState(fromCur, toCur, fromCurAmount) {
     const exchangeRate = getExchangeRate(toCur);
-    const toCurAmount = fromCurAmount * getExchangeRate(toCur);
+    const toCurAmount = fromCurAmount * exchangeRate;
 
     return {
       toCurAmount,
