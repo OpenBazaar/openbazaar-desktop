@@ -8,7 +8,7 @@
   <% if (ob.userAddresses.length) { %>
   <select id="shippingAddress">
     <% ob.userAddresses.forEach((a, i) => { %>
-    <option value="<%= i %>">
+    <option value="<%= i %>" <% if (ob.selectedAddressIndex === i) print('selected') %>>
       <% const addr = [];
          addr.push(a.name);
          if (a.company) addr.push(a.company);

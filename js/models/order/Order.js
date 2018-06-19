@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { integerToDecimal } from '../../utils/currency';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
 import app from '../../app';
@@ -147,6 +148,8 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
+    const serverCur = getServerCurrency();
+
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
@@ -198,6 +201,17 @@ export default class extends BaseOrder {
     }
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];
+
+    // Embed the payment type into each payment transaction.
+    // TODO: when multi wallet payment support is implemented, this will need to come
+    // from the server.
+    const payments = [...response.paymentAddressTransactions];
+
+    if (response.refundAddressTransaction) {
+      payments.push(response.refundAddressTransaction);
+    }
+
+    payments.forEach(pmt => (pmt.paymentCoin = serverCur.code));
 
     return response;
   }

@@ -964,7 +964,8 @@
   "inventoryDisplay": {
     "retryLink": "Retry",
     "fetchError": "There was an error obtaining the inventory. %{retryLink}",
-    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}"
+    "fetchErrorWithMsg": "There was an error obtaining the inventory: %{msg}",
+    "unknownInventory": "Unknown"
   },
   "listingDetail": {
     "edit": "Edit",
@@ -981,6 +982,7 @@
     "paymentsAccepted": "Payments Accepted",
     "noTags": "No tags entered",
     "buyNow": "BUY NOW",
+    "buyCryptoNow": "TRADE NOW",
     "description": "Description",
     "noDescription": "No description entered",
     "reviews": "Reviews",
@@ -1143,16 +1145,14 @@
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperType": "Sell a cryptocurrency and receive payment in %{curCode}",
-      "helperCoinType": "Choose the coin you’d like to sell",
+      "helperType": "Trade cryptocurrencies for free",
+      "helperCoinType": "Receive %{toCur} in exchange for %{fromCur}",
       "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
       "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
       "marketValueLabel": "Current Market Value",
       "marketValuePerCoin": "(%{amount} per %{curCode})",
-      "coinType": "Coin Type",
-      "quantity": "Quantity",
-      "tipMissingCryptoExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable.",
-      "tipMissingLocalExchangeRate": "Unable to display in your local currency because exchange rate data is not available for ${coinType}."
+      "coinType": "Trade",
+      "quantity": "Inventory"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1267,9 +1267,11 @@
       "myPage": "My Page"
     },
     "cryptoListViewHeader": {
-      "colTitle": "Title",
-      "colVendor": "Vendor",
-      "colPrice": "Price (1 unit)",
+      "colTradeFrom": "Trade",
+      "colTradeTo": "For",
+      "colVendor": "Trader",
+      "colPriceSubText": "(market price)",
+      "colPrice": "Price %{subText}",
       "colInventory": "Inventory",
       "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
       "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
@@ -1354,11 +1356,12 @@
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
-    "inventory": "Max: %{inventory}",
+    "cryptoAmount": "Amount",
     "cryptoAddressHeading": "Your %{coinType} address",
     "cryptoAddressPlaceholder": "Paste your %{coinType} address here",
-    "cryptoAddressHelper": "The vendor will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelper": "%{name} will send %{coinType} to this address. %{warning}",
     "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",
+    "cryptoAddressHelperWarning2": "This address cannot be changed.",
     "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
     "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
@@ -1419,7 +1422,9 @@
       "options": "Options",
       "subtotal": "Subtotal (%{quantity})",
       "shippingTotal": "Total Shipping",
-      "total": "Total"
+      "total": "Total",
+      "cryptoIconsAmount": "(%{amount})",
+      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1698,8 +1703,8 @@
         "quantityHeading": "Quantity",
         "totalHeading": "Total",
         "moderatorHeading": "Moderator",
-        "paymentAddressHeading": "%{coinType} Address",
-        "copyAddress": "Copy",
+        "paymentAddressHeading": "%{icon} %{coinType} Address",
+        "copyLink": "Copy",
         "viewOnMap": "View on map",
         "shippingOption": "Shipping Option",
         "shippingService": "Shipping Service",
@@ -1992,7 +1997,7 @@
     "quantityMustBeNumeric": "The quantity must be numeric.",
     "quantityMustBePositive": "The quantity must be greater than zero.",
     "missingShippingOption": "Please choose a valid shipping option.",
-    "insufficientInventory": "The quantity exceeds the remaining inventory.",
+    "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
     "providePaymentAddress": "Please provide a payment address.",
     "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
   },
@@ -2056,6 +2061,13 @@
   "cryptoCurrencyFormat": {
     "curSymbolAmount": "%{symbol}%{amount}",
     "curCodeAmount": "%{amount} %{code}"
+  },
+  "cryptoCodeIconPairing": "%{icon} %{code}",
+  "cryptoAmountIconPairing": "%{amount} %{icon}",
+  "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
+  "cryptoTradingPair": {
+    "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
+    "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
   "countries": {
     "AFGHANISTAN": "Afghanistan",

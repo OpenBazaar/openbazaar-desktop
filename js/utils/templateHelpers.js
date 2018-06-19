@@ -12,11 +12,14 @@ import {
 } from './currency';
 import {
   getServerCurrency,
-  renderCryptoIcon,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
   getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
+import {
+  renderCryptoIcon,
+  renderCryptoTradingPair,
+} from '../utils/crypto';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -79,13 +82,18 @@ const currencyExport = {
   getExchangeRate,
   formattedCurrency: renderFormattedCurrency,
   pairedCurrency: renderPairedCurrency,
-  cryptoIcon: renderCryptoIcon,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
 };
 
+const crypto = {
+  cryptoIcon: renderCryptoIcon,
+  tradingPair: renderCryptoTradingPair,
+};
+
 export {
   currencyExport as currencyMod,
+  crypto,
   isHiRez,
   isLargeWidth,
   isSmallHeight,

@@ -489,3 +489,19 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.cryptoTradingPair {
+  .fromCur, .toCur {
+    @include textColor($text, $text2, $text);
+  }
+
+  .pairingSeparator {
+    @include textColor($text2, $text3, $text);
+  }
+}
+
+.listingsGridCryptoListView {
+  .verifiedMod {
+    @include textColor($text, $text2, $text);
+  }
+}

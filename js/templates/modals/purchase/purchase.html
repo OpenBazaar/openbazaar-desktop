@@ -1,5 +1,4 @@
 <%
-  const isCrypto = ob.listing.metadata.contractType === 'CRYPTOCURRENCY';
   // when multiple listings are supported, the prices array will have one price object for each
   const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
   const pricingCurrency = ob.listingPrice.currencyCode;
@@ -19,91 +18,117 @@
   <% } %>
 </div>
 
-<div class="flexRow gutterH mainSection">
+<div class="flexRow gutterH mainSection <%= ob.phaseClass %>">
   <div class="col9">
     <div class="flexColRow gutterV">
       <% // to support multiple items in a purchase, loop this section %>
       <section class="contentBox pad clrP clrBr clrSh3">
         <div class="js-errors"></div>
         <div class="js-items-quantity-errors"></div>
-        <div class="flexVCent gutterH">
-          <div class="thumb" style="<%= ob.getListingBgImage(ob.listing.item.images[0]) %>"></div>
-          <div class="flexExpand">
-            <div class="flexCol gutterVTn">
-              <div class="width100 noOverflow">
-                <b><%= ob.listing.item.title %></b>
-              </div>
-              <% ob.variants.forEach(variant => { %>
+        <% if (!ob.isCrypto) { %>
+          <div class="flexVCent gutterH">
+            <div class="thumb" style="<%= ob.getListingBgImage(ob.listing.item.images[0]) %>"></div>
+            <div class="flexExpand">
+              <div class="flexCol gutterVTn">
                 <div class="width100 noOverflow">
-                  <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
+                  <b><%= ob.listing.item.title %></b>
                 </div>
-              <% }); %>
+                <% ob.variants.forEach(variant => { %>
+                  <div class="width100 noOverflow">
+                    <span class="clrT2"><%= variant.name %>: <%= variant.value %></span>
+                  </div>
+                <% }); %>
+              </div>
+            </div>
+            <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
+            <div class="flexNoShrink">
+              <div class="flexVCent gutterH">
+                <div class="flexCol">
+                  <label class="flexHRight" for="purchaseQuantity">
+                    <span class="required txB margR"><%= ob.polyT('purchase.quantity') %></span>
+                  </label>
+                </div>
+                <div class="flexNoShrink">
+                  <input
+                      class="clrBr clrP"
+                      type="text"
+                      id="purchaseQuantity"
+                      size="3"
+                      name="quantity"
+                      value="<%= ob.quantity %>"
+                      data-var-type="number"
+                      placeholder="0">
+                </div>
+              </div>
+            </div>
+            <% } %>
+            <div class="pad flexNoShrink">
+              <b>
+                 <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
+              </b>
             </div>
           </div>
+        <% } else { %>
+          <div class="flexVCent gutterHLg row cryptoTitleWrap">
+            <div class="js-cryptoTitle <% if (ob.phase !== 'pay' && ob.phase !== 'processing') print('flexExpand') %>"></div>
+            <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
+              <div class="flexExpand">
+                <div class="flexVCent gutterHLg">
+                  <label for="cryptoAmount" class="clrT txB required"><%= ob.polyT('purchase.cryptoAmount') %></label>
+                  <div class="inputSelect">
+                    <input type="text" class="clrBr clrP clrSh2" name="quantity" id="cryptoAmount" value="<%= ob.quantity %>" data-var-type="number" placeholder="0.0000" size="8">
+                    <% if (ob.displayCurrency !== ob.listing.metadata.coinType) { %>
+                      <select id="cryptoAmountCurrency" class="clrBr clrP nestInputRight">
+                        <% [ob.listing.metadata.coinType, ob.displayCurrency].forEach((cur) => {%>
+                          <option value="<%= cur %>" <% if (cur === ob.cryptoAmountCurrency) print('selected'); %>><%= cur %></option>
+                        <% }); %>
+                      </select>
+                    <% } %>
+                  </div>                
+                </div>
+              </div>
+            <% } %>
+            <div class="pad flexNoShrink">
+              <b>
+                 <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
+              </b>
+            </div>
+          </div>
+          <hr class="clrBr rowLg" />
+          <%
+            const coinType = ob.listing.metadata.coinType;
+            const coinTranslationKey = `cryptoCurrencies.${coinType}`;
+            const coinName = ob.polyT(coinTranslationKey) === coinTranslationKey ?
+              coinType : ob.polyT(coinTranslationKey);
+            const heading = ob.polyT('purchase.cryptoAddressHeading', {
+              coinType: coinName,
+            });
+            const placeholder = ob.polyT('purchase.cryptoAddressPlaceholder', {
+              coinType: coinName,
+            });
+            const warning = ob.phase === 'pay' || ob.phase === 'processing' ?
+              `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>` :
+              `<b>${ob.polyT('purchase.cryptoAddressHelperWarning2')}</b>`;
+            const helper = ob.polyT('purchase.cryptoAddressHelper', {
+              name: ob.vendor.name,
+              coinType: coinName,
+              warning,
+            });
+          %>
+          <div class="rowSm">
+            <label class="h4 flexExpand required" for="purchaseCryptoAddress"><%= heading %></label>
+          </div>
+          <div class="js-items-paymentAddress-errors"></div>
           <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
-          <div class="flexNoShrink">
-            <div class="flexVCent gutterH">
-              <div class="flexCol">
-                <label class="flexHRight" for="purchaseQuantity">
-                  <%= ob.polyT('purchase.quantity') %>
-                </label>
-                <div class="clrT2 tx6 flexHRight">
-                  <% if (isCrypto) { %>
-                    <div>
-                      <%= ob.polyT('purchase.inventory', {
-                        inventory: '<span class="js-cryptoInventory"></span>'
-                      }) %>
-                    </div>
-                  <% } %>
-                </div>
-              </div>
-              <div class="flexNoShrink">
-                <input
-                    class="clrBr clrP"
-                    type="text"
-                    id="purchaseQuantity"
-                    size="<%= isCrypto ? 8 : 3 %>"
-                    name="quantity"
-                    value="<%= ob.quantity %>"
-                    data-var-type="number"
-                    placeholder="<%= isCrypto ? '0.0000' : '0' %>">
-              </div>
-            </div>
-          </div>
+            <input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP rowSm" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
+          <% } else { %>
+            <p class="cryptoPaymentAddress"><%= ob.items[0].paymentAddress %></p>
           <% } %>
-          <div class="pad flexNoShrink">
-            <b>
-               <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
-            </b>
-          </div>
-        </div>
+          <div class="txSm clrT2"><%= helper %></div>
+        <% } %>
       </section>
       <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
-        <% if (isCrypto) { %>
-          <section class="contentBox padMd clrP clrBr clrSh3 gutterVSm">
-            <%
-              const coinType = ob.listing.metadata.coinType;
-              const coinTranslationKey = `cryptoCurrencies.${coinType}`;
-              const coinName = ob.polyT(coinTranslationKey) === coinTranslationKey ?
-                coinType : ob.polyT(coinTranslationKey);
-              const heading = ob.polyT('purchase.cryptoAddressHeading', {
-                coinType: coinName,
-              });
-              const placeholder = ob.polyT('purchase.cryptoAddressPlaceholder', {
-                coinType: coinName,
-              });
-              const warning = `<b>${ob.polyT('purchase.cryptoAddressHelperWarning')}</b>`;
-              const helper = ob.polyT('purchase.cryptoAddressHelper', {
-                coinType: coinName,
-                warning,
-              });
-            %>
-            <div><label class="h4 flexExpand required" for="purchaseCryptoAddress"><%= heading %></div>
-            <div class="js-items-paymentAddress-errors"></div>
-            <input type="text" id="purchaseCryptoAddress" value="<%= ob.items[0].paymentAddress %>" placeholder="<%= placeholder %>" class="clrBr clrP" maxlength=<%= ob.itemConstraints.maxPaymentAddressLength %> />
-            <div class="txSm clrT2"><%= helper %></div>
-          </section>
-        <% } else if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
+        <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length) { %>
           <section class="contentBox padMd clrP clrBr clrSh3 js-shipping">
             <div class="js-shipping-errors js-items-shipping-errors"></div>
             <div class="js-shippingWrapper"></div>

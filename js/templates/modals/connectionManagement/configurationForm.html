@@ -77,7 +77,7 @@
                          <% if (ob.walletCurrency === cur.code) { %>checked<% } %>>
                   <label class="flexVCent" for="walletSetupCurrency<%= cur.code %>">
                     <div class="gutterHSm flexExpand flexVCent coinInfo">
-                      <%= ob.currencyMod.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
+                      <%= ob.crypto.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
                       <% if (cur.code === 'ZEC') print('<strong class="clrTErr">BETA</strong>') %>
                     </div>
                     <% if (inUse) { %>

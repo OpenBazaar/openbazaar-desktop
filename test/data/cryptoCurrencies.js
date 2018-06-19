@@ -32,27 +32,6 @@ describe('the crypto currencies data module', () => {
       });
     });
 
-    it('that requires the minDisplayDecimals to be a number >= 0', () => {
-      currencies.forEach(cur => {
-        expect(typeof cur.minDisplayDecimals === 'number' && cur.minDisplayDecimals >= 0)
-          .to.equal(true);
-      });
-    });
-
-    it('that requires the maxDisplayDecimals to be a number > 0', () => {
-      currencies.forEach(cur => {
-        expect(typeof cur.maxDisplayDecimals === 'number' && cur.maxDisplayDecimals > 0)
-          .to.equal(true);
-      });
-    });
-
-    it('that requires the maxDisplayDecimals to be greater than or equal to the minDisplayDecimals',
-      () => {
-        currencies.forEach(cur => {
-          expect(cur.maxDisplayDecimals >= cur.minDisplayDecimals).to.equal(true);
-        });
-      });
-
     it('that requires the averageModeratedTransactionSize to be a number > 0', () => {
       currencies.forEach(cur => {
         expect(typeof cur.averageModeratedTransactionSize === 'number' &&
