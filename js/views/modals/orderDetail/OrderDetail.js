@@ -213,6 +213,9 @@ export default class extends BaseModal {
       'disputeAccepted',
       // Socket received by buyer when the vendor has an error processing an offline order.
       'processingError',
+      // Socket received by buyer then the vendor has released funds from escrow after the order
+      // and/or dispute timed-out.
+      'vendorFinalizedPayment',
     ];
 
     if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {

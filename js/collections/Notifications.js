@@ -206,7 +206,7 @@ export function getNotifDisplayData(attrs, options = {}) {
     'vendorDisputeTimeout',
     'buyerDisputeTimeout',
     'buyerDisputeExpiry',
-    'moderatorDisputeExpiry'
+    'moderatorDisputeExpiry',
   ].includes(attrs.type)) {
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     let orderIdKey = 'orderId';
