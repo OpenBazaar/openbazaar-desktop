@@ -22,7 +22,7 @@ export default class extends baseView {
     const userAddresses = app.settings.get('shippingAddresses');
     this.selectedAddress = userAddresses.at(0) || '';
 
-    this.listenTo(app.settings.get('shippingAddresses'), 'update', (col) => {
+    this.listenTo(app.settings.get('shippingAddresses'), 'update', col => {
       // If all the addresses were deleted, set the selection to blank.
       if (!col.models.length) {
         this.selectedAddress = '';
@@ -66,7 +66,7 @@ export default class extends baseView {
     const validOptions = [];
     const countryCode = address ? address.get('country') : '';
 
-    const extractedOptions = this.model.get('shippingOptions').toJSON().filter((option) =>
+    const extractedOptions = this.model.get('shippingOptions').toJSON().filter(option =>
       option.regions.includes(countryCode) || option.regions.includes('ALL'));
 
     if (extractedOptions.length) {
@@ -160,9 +160,8 @@ export default class extends baseView {
       validOptions: this.validOptions,
       selectedOption: this.selectedOption,
     });
-    this.listenTo(this.shippingOptions, 'shippingOptionSelected', ((opts) => {
-      this.selectedOption = opts;
-    }));
+    this.listenTo(this.shippingOptions, 'shippingOptionSelected',
+        opts => (this.selectedOption = opts));
 
     this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
 
