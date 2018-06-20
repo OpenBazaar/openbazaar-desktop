@@ -1030,7 +1030,6 @@ export default class extends BaseVw {
           vendor: this.vendor,
           isOrderCancelable: () => this.model.isOrderCancelable,
           isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-          isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });

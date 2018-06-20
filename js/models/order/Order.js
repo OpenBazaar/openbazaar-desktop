@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { integerToDecimal } from '../../utils/currency';
 import { getServerCurrency } from '../../data/cryptoCurrencies';
 import app from '../../app';
