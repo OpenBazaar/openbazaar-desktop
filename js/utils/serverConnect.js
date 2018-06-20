@@ -34,7 +34,7 @@ const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
 
 const serverCurStartArgMap = {
   BCH: '--bitcoincash',
-  ZEC: '--zcash',
+  ZEC: '--zcash-light',
 };
 
 const defaultLocalServerStartArgs = () => {
@@ -334,26 +334,12 @@ export default function connect(server, options = {}) {
   }
 
   const curLocalServerCoin = serverStartArgsToCoin();
-  let curLocalServerZecBinaryPath = null;
-
-  if (localServer) {
-    if (curLocalServerCoin === 'ZEC') {
-      const zecIndex = localServer.lastStartCommandLineArgs
-        .indexOf(serverCurStartArgMap.ZEC);
-
-      if (zecIndex !== -1 &&
-        typeof localServer.lastStartCommandLineArgs[zecIndex + 1] === 'string') {
-        curLocalServerZecBinaryPath = localServer.lastStartCommandLineArgs[zecIndex + 1];
-      }
-    }
-  }
 
   // If we're not connecting to the local bundled server or it's running with incompatible
   // command line arguments, let's ensure it's stopped.
   if (localServer && localServer.isRunning &&
     (
-      !server.get('builtIn') || serverCurrency !== serverStartArgsToCoin() ||
-      (serverCurrency === 'ZEC' && server.get('zcashBinaryPath') !== curLocalServerZecBinaryPath)
+      !server.get('builtIn') || serverCurrency !== serverStartArgsToCoin()
     )) {
     deferred.notify({ status: 'stopping-local-server' });
     localServer.stop();
@@ -460,10 +446,6 @@ export default function connect(server, options = {}) {
 
               if (serverCoinArg) {
                 commandLineArgs.push(serverCoinArg);
-
-                if (serverCurrency === 'ZEC') {
-                  commandLineArgs.push(server.get('zcashBinaryPath'));
-                }
               }
             }
 

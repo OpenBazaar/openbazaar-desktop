@@ -53,10 +53,6 @@
     "currencyHelper": "Scegli una valuta per il tuo Portafoglio",
     "currencyHelper2": "Accetta e invia pagamenti nella valuta selezionata qui sopra. Per piacere sceglila saggiamente, al momento non è possibile cambiare la tua valuta una volta che hai fatto la tua scelta.",
     "curInUseTip": "Tu possiedi già un server locale con questa valuta del portafoglio.",
-    "zcashBinaryLabel": "Binario Zcash",
-    "fullNodeLink": "qui",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Cerca",
     "btnNext": "Prossimo"
   },
   "unsupportedCryptoCurDialog": {
@@ -169,8 +165,7 @@
     },
     "connectMessaging": {
       "cancelLink": "cancella",
-      "connectAttemptMsg": "Connessione a %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Inizializzazione del binario zcash. Questo potrebbe richiedere alcuni minuti %{cancelLink}"
+      "connectAttemptMsg": "Connessione a %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
@@ -1842,9 +1837,7 @@
     "providePortAsNumber": "Si prega di fornire un numero per la porta.",
     "provideValidPortRange": "Per favore fornisci un numero tra 0 e 65535.",
     "invalidTorProxy": "Il valore non sembra avere il formato corretto. Dovrebbe essere indirizzo-ip:porta, e. 127.0.0.1:9150. La porta deve essere compresa tra 0 e 65535.",
-    "provideWalletCurrency": "Si prega di selezionare una valuta del portafogli.",
-    "provideZcashBinaryPath": "Inserisci un valore.",
-    "invalidZcashBinaryPath": "Il percorso fornito deve essere verso un file nel tuo computer."
+    "provideWalletCurrency": "Si prega di selezionare una valuta del portafogli."
   },
   "shippingAddressModelErrors": {
     "provideName": "Per favore fornisci un nome.",

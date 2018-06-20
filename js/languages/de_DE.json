@@ -53,10 +53,6 @@
     "currencyHelper": "Wählen Sie eine Währung für Ihre Brieftasche (Wallet)",
     "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
     "curInUseTip": "Sie haben schon einen eingebauten Server mit dieser Währung als Brieftasche (Wallet).",
-    "zcashBinaryLabel": "Zcash Programm",
-    "fullNodeLink": "hier",
-    "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
-    "btnBrowse": "Durchblättern",
     "btnNext": "Weiter"
   },
   "unsupportedCryptoCurDialog": {
@@ -169,8 +165,7 @@
     },
     "connectMessaging": {
       "cancelLink": "Abbrechen",
-      "connectAttemptMsg": "Verbinde zu %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initialisiere das Programm zcash. Das kann ein paar Minuten dauern. %{cancelLink}"
+      "connectAttemptMsg": "Verbinde zu %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
@@ -1842,9 +1837,7 @@
     "providePortAsNumber": "Bitte geben Sie eine Portnummer an.",
     "provideValidPortRange": "Bitte geben Sie eine Portnummer zwischen 0 und 65535 an.",
     "invalidTorProxy": "Der Wert scheint nicht das richtige Format aufzuweisen. Das richtige Format wäre IP-Adresse:Port, z.B. 127.0.0.1:9150. Der Port muss eine Nummer zwischen 0 und 65535 sein.",
-    "provideWalletCurrency": "Bitte w&auml;hlen Sie eine W&auml;hrung für die Brieftasche (Wallet)",
-    "provideZcashBinaryPath": "Bitte geben Sie einen Wert an.",
-    "invalidZcashBinaryPath": "Der angegebene Pfad muss zu einer Datei auf Ihrem System führen."
+    "provideWalletCurrency": "Bitte w&auml;hlen Sie eine W&auml;hrung für die Brieftasche (Wallet)"
   },
   "shippingAddressModelErrors": {
     "provideName": "Bitte geben Sie einen Namen an.",

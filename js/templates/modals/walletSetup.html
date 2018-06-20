@@ -32,19 +32,6 @@
           <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
         </div>
       </div>
-      <div class="flexRow rowLg js-zcashSection <% if (ob.walletCurrency !== 'ZEC') print('hide') %>">
-        <div class="col3">
-          <label class="required"><%= ob.polyT('walletSetup.zcashBinaryLabel') %></label>
-        </div>
-        <div class="col9">
-          <% if (ob.errors.zcashBinaryPath) print(ob.formErrorTmpl({ errors: ob.errors.zcashBinaryPath })) %>
-          <div class="flex gutterH rowSm">
-            <input class="clrBr clrP js-inputZcashBinaryPath" type="text" name="zcashBinaryPath" placeholder="<%= ob.polyT('walletSetup.zcashBinaryPlaceholder') %>" value="<%= ob.zcashBinaryPath %>" />
-            <button class="btn clrP clrBr form js-browseZcashBinary"><%= ob.polyT('walletSetup.btnBrowse') %></button>
-          </div>
-          <div class="clrT2 tx6"><%= ob.polyT('walletSetup.zcashBinaryHelper') %></div>
-        </div>
-      </div>
     </form>
   </div>
   <hr class="clrBr row" />

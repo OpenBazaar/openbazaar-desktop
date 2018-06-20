@@ -537,15 +537,6 @@ function start() {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
 
       const serverCur = getServerCurrency();
-
-      if (serverCur.code === 'ZEC') {
-        startupConnectMessaging.setState({
-          msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
-            cancelLink: '<a class="js-cancel">' +
-              `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
-          }),
-        });
-      }
     }
 
     app.ownFollowing = new Followers([], {
