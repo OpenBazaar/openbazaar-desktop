@@ -98,7 +98,7 @@ export default class extends BaseModal {
           const prev = e.prev;
           delete prev.item.cryptoQuantity;
 
-          const cur = this.model.toJSON();
+          const cur = md.toJSON();
           delete cur.item.cryptoQuantity;
 
           if (!(_.isEqual(prev, cur))) {

@@ -89,9 +89,14 @@
               </div>
             <% } %>
             <div class="pad flexNoShrink">
-              <b>
-                 <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
-              </b>
+              <%=
+                ob.cryptoPriceT({
+                  priceAmount: totalPrice,
+                  priceCurrencyCode: pricingCurrency,
+                  displayCurrency: ob.displayCurrency,
+                  priceModifier: ob.listing.metadata.priceModifier,
+                })
+              %>
             </div>
           </div>
           <hr class="clrBr rowLg" />

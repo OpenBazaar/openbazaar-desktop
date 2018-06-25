@@ -29,7 +29,7 @@
       ` (<span class="icon ion-arrow-down-c"></span>)`; 
   }  
 %>
-<<%= wrappingTag %> class="<%= ob.wrappingClass %> <%= colorClass %>">
+<<%= wrappingTag %> class="<%= wrappingClass %> <%= colorClass %>">
   <span>
     <%=
       ob.currencyMod.formattedCurrency(
@@ -44,7 +44,7 @@
       <%=
         ob.priceModifier > 0 ?
           ob.polyT('cryptoPriceAboveMarket', { amount: ob.priceModifier }) :
-          ob.polyT('cryptoPriceBelowMarket', { amount: ob.priceModifier })
+          ob.polyT('cryptoPriceBelowMarket', { amount: Math.abs(ob.priceModifier) })
       %>
     </span>
   <% } %>
