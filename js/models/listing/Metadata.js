@@ -13,6 +13,7 @@ export default class extends BaseModel {
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
       coinDivisibility: defaultQuantityBaseUnit,
+      priceModifier: 0,
     };
   }
 

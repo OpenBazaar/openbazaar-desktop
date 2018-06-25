@@ -603,106 +603,110 @@ export default class extends BaseModal {
     }
 
     loadTemplate('modals/listingDetail/listing.html', t => {
-      const flatModel = this.model.toJSON();
+      loadTemplate('components/cryptoPrice.html', cryptoPriceT => {
+        const flatModel = this.model.toJSON();
 
-      this.$el.html(t({
-        ...flatModel,
-        shipsFreeToMe: this.shipsFreeToMe,
-        ownListing: this.model.isOwnListing,
-        price: this.model.price,
-        displayCurrency: app.settings.get('localCurrency'),
-        // the ships from data doesn't exist yet
-        // shipsFromCountry: this.model.get('shipsFrom');
-        countryData: this.countryData,
-        defaultCountry: this.defaultCountry,
-        vendor: this.vendor,
-        openedFromStore: this.options.openedFromStore,
-        currencyValidity: getCurrencyValidity(
-          this.model.get('metadata').get('pricingCurrency') || 'USD'
-        ),
-        hasVerifiedMods: this.hasVerifiedMods,
-        verifiedModsData: app.verifiedMods.data,
-        defaultBadge,
-        isCrypto: this.model.isCrypto,
-      }));
+        this.$el.html(t({
+          ...flatModel,
+          shipsFreeToMe: this.shipsFreeToMe,
+          ownListing: this.model.isOwnListing,
+          price: this.model.price,
+          displayCurrency: app.settings.get('localCurrency'),
+          // the ships from data doesn't exist yet
+          // shipsFromCountry: this.model.get('shipsFrom');
+          countryData: this.countryData,
+          defaultCountry: this.defaultCountry,
+          vendor: this.vendor,
+          openedFromStore: this.options.openedFromStore,
+          currencyValidity: getCurrencyValidity(
+            this.model.get('metadata').get('pricingCurrency') || 'USD'
+          ),
+          hasVerifiedMods: this.hasVerifiedMods,
+          verifiedModsData: app.verifiedMods.data,
+          defaultBadge,
+          isCrypto: this.model.isCrypto,
+          cryptoPriceT,
+        }));
 
-      if (nsfwWarning) this.$el.addClass('hide');
-      super.render();
+        if (nsfwWarning) this.$el.addClass('hide');
+        super.render();
 
-      this.$('.js-rating').append(this.rating.render().$el);
-      this.$reviews = this.$('.js-reviews');
-      this.$reviews.append(this.reviews.render().$el);
+        this.$('.js-rating').append(this.rating.render().$el);
+        this.$reviews = this.$('.js-reviews');
+        this.$reviews.append(this.reviews.render().$el);
 
-      if (!this.model.isOwnListing) {
-        if (this.socialBtns) this.socialBtns.remove();
-        this.socialBtns = this.createChild(SocialBtns, {
-          targetID: this.vendor.peerID,
+        if (!this.model.isOwnListing) {
+          if (this.socialBtns) this.socialBtns.remove();
+          this.socialBtns = this.createChild(SocialBtns, {
+            targetID: this.vendor.peerID,
+          });
+          this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+        }
+
+        this.$photoSelectedInner = this.$('.js-photoSelectedInner');
+        this._$deleteListing = null;
+        this._$shipsFreeBanner = null;
+        this._$popInMessages = null;
+        this._$photoSection = null;
+        this._$photoSelected = null;
+        this._$shippingOptions = null;
+        this._$photoRadioBtns = null;
+        this._$shippingSection = null;
+        this._$storeOwnerAvatar = null;
+        this._$deleteConfirmedBox = null;
+
+        this.$photoSelectedInner.on('load', () => this.activateZoom());
+
+        this.variantSelects = this.$('.js-variantSelect');
+
+        this.variantSelects.select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
         });
-        this.$('.js-socialBtns').append(this.socialBtns.render().$el);
-      }
 
-      this.$photoSelectedInner = this.$('.js-photoSelectedInner');
-      this._$deleteListing = null;
-      this._$shipsFreeBanner = null;
-      this._$popInMessages = null;
-      this._$photoSection = null;
-      this._$photoSelected = null;
-      this._$shippingOptions = null;
-      this._$photoRadioBtns = null;
-      this._$shippingSection = null;
-      this._$storeOwnerAvatar = null;
-      this._$deleteConfirmedBox = null;
+        this.$('#shippingDestinations').select2();
+        this.renderShippingDestinations(this.defaultCountry);
+        this.setSelectedPhoto(this.activePhotoIndex);
+        this.setActivePhotoThumbnail(this.activePhotoIndex);
 
-      this.$photoSelectedInner.on('load', () => this.activateZoom());
+        if (this.model.isCrypto) {
+          const metadata = this.model.get('metadata');
 
-      this.variantSelects = this.$('.js-variantSelect');
+          if (this.cryptoInventory) this.cryptoInventory.remove();
+          this.cryptoInventory = this.createChild(QuantityDisplay, {
+            peerId: this.vendor.peerID,
+            slug: this.model.get('slug'),
+            initialState: {
+              coinType: metadata.get('coinType'),
+              amount: this._inventory,
+            },
+          });
+          this.getCachedEl('.js-cryptoInventory')
+            .html(this.cryptoInventory.render().el);
 
-      this.variantSelects.select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
+          if (this.cryptoTitle) this.cryptoTitle.remove();
+          this.cryptoTitle = this.createChild(CryptoTradingPair, {
+            initialState: {
+              tradingPairClass: 'cryptoTradingPairXL rowSm',
+              exchangeRateClass: 'clrT2 exchangeRateLine',
+              fromCur: metadata.get('acceptedCurrencies')[0],
+              toCur: metadata.get('coinType'),
+            },
+          });
+          this.getCachedEl('.js-cryptoTitle')
+            .html(this.cryptoTitle.render().el);
+        } else {
+          this.adjustPriceBySku();
+        }
+
+        if (nsfwWarning) {
+          setTimeout(() => {
+            nsfwWarning.bringToTop();
+            this.$el.removeClass('hide');
+          });
+        }
       });
-
-      this.$('#shippingDestinations').select2();
-      this.renderShippingDestinations(this.defaultCountry);
-      this.setSelectedPhoto(this.activePhotoIndex);
-      this.setActivePhotoThumbnail(this.activePhotoIndex);
-      this.adjustPriceBySku();
-
-      if (this.model.isCrypto) {
-        const metadata = this.model.get('metadata');
-
-        if (this.cryptoInventory) this.cryptoInventory.remove();
-        this.cryptoInventory = this.createChild(QuantityDisplay, {
-          peerId: this.vendor.peerID,
-          slug: this.model.get('slug'),
-          initialState: {
-            coinType: metadata.get('coinType'),
-            amount: this._inventory,
-          },
-        });
-        this.getCachedEl('.js-cryptoInventory')
-          .html(this.cryptoInventory.render().el);
-
-        if (this.cryptoTitle) this.cryptoTitle.remove();
-        this.cryptoTitle = this.createChild(CryptoTradingPair, {
-          initialState: {
-            tradingPairClass: 'cryptoTradingPairXL rowSm',
-            exchangeRateClass: 'clrT2 exchangeRateLine',
-            fromCur: metadata.get('acceptedCurrencies')[0],
-            toCur: metadata.get('coinType'),
-          },
-        });
-        this.getCachedEl('.js-cryptoTitle')
-          .html(this.cryptoTitle.render().el);
-      }
-
-      if (nsfwWarning) {
-        setTimeout(() => {
-          nsfwWarning.bringToTop();
-          this.$el.removeClass('hide');
-        });
-      }
-    });
+    }); // howdy sailor
 
     this.rendered = true;
 

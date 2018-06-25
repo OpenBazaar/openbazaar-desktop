@@ -2035,6 +2035,8 @@
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
     "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
+  "cryptoPriceBelowMarket": "%{amount}% under market",
+  "cryptoPriceAboveMarket": "%{amount}% above market",
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

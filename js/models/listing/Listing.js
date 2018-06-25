@@ -75,19 +75,20 @@ export default class extends BaseModel {
   }
 
   get price() {
+    const metadata = this.get('metadata');
+
     if (this.isCrypto) {
+      const priceModifier = metadata.priceModifier || 0;
       return {
-        amount: 1,
-        currencyCode: this.get('metadata')
-          .get('coinType'),
+        amount: 1 + (priceModifier / 100),
+        currencyCode: metadata.get('coinType'),
       };
     }
 
     return {
       amount: this.get('item')
         .get('price'),
-      currencyCode: this.get('metadata')
-        .get('pricingCurrency'),
+      currencyCode: metadata.get('pricingCurrency'),
     };
   }
 

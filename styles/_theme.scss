@@ -130,6 +130,14 @@ input[type=range][class~="clrS"] {
   @include textColor($emphasis2);
 }
 
+.clrTPriceAboveMarket {
+  @include textColor(#e4072b);
+}
+
+.clrTPriceBelowMarket {
+  @include textColor(#2bad23);
+}
+
 .clrBr {
   @include borderColor($border, $border3);
 }
