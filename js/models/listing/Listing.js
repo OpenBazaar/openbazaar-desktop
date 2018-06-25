@@ -348,6 +348,10 @@ export default class extends BaseModel {
           if (method === 'create') {
             options.attrs.slug = `${fromCur}-${coinType}`;
           }
+        } else {
+          // Don't send over crypto currency specific fields if it's not a
+          // crypto listing.
+          delete options.attrs.metadata.priceModifier;
         }
       } else {
         options.url = options.url ||

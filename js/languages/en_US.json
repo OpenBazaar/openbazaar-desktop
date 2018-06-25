@@ -1144,7 +1144,9 @@
       "marketValueLabel": "Current Market Value",
       "marketValuePerCoin": "(%{amount} per %{curCode})",
       "coinType": "Trade",
-      "quantity": "Inventory"
+      "quantity": "Inventory",
+      "priceModifier": "Price Modifier (+/-)",
+      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1880,6 +1882,11 @@
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "quantityMustBePositive": "The quantity must be more than zero.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+  },
+  "metadataModelErrors": {
+    "providePriceModifier": "Please provide a price modifier.",
+    "numericPriceModifier": "Please provide the price modifier as a number.",
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
