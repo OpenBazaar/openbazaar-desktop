@@ -655,7 +655,7 @@ export default class extends BaseModal {
 
           this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
         }
-      });        
+      });
     });
 
     return this;

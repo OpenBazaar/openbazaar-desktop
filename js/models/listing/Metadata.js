@@ -47,7 +47,7 @@ export default class extends BaseModel {
     return {
       minPriceModifier: -99.99,
       maxPriceModifier: 1000,
-    }
+    };
   }
 
   set(key, val, options = {}) {
