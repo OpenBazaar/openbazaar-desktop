@@ -135,7 +135,7 @@ input[type=range][class~="clrS"] {
 }
 
 .clrTPriceBelowMarket {
-  @include textColor(#2bad23);
+  @include textColor($emphasis1);
 }
 
 .clrBr {

@@ -1,35 +1,16 @@
 <%
-  if (typeof ob.priceAmount !== 'number') {
-    throw new Error('Please provide a price amount as a number.');
-  }
-
-  if (typeof ob.priceCurrencyCode !== 'string') {
-    throw new Error('Please provide a price currency code as a string.');
-  }
-
-  if (typeof ob.displayCurrency !== 'string') {
-    throw new Error('Please provide a display currency code as a string.');
-  }
-
-  if (typeof ob.priceModifier !== 'number') {
-    throw new Error('Please provide a price modifier as a number.');
-  }
-
-  const wrappingClass = ob.wrappingClass || 'txRgt tx3 txB';
-  const wrappingTag = ob.wrappingTag || 'div';
-  const marketRelativityClass = ob.verboseMarketRelativityClass || 'block tx6 txUnb';
   let colorClass = '';
-  let priceSymbol = '';
+  let priceSymbol = '(<span class="ion-checkmark clrTEm"></span>)';
 
   if (ob.priceModifier !== 0) {
     colorClass = ob.priceModifier > 0 ?
-      'clrTPriceAboveMarket' : 'clrTPriceBelowMarket';
+      'clrTPriceAboveMarket' : 'clrTPriceBelowMarket txB';
     priceSymbol = ob.priceModifier > 0 ?
-      ` (<span class="icon ion-arrow-up-c"></span>)` :
-      ` (<span class="icon ion-arrow-down-c"></span>)`; 
+      `(<span class="icon ion-arrow-up-c"></span>)` :
+      `(<span class="icon ion-arrow-down-c"></span>)`; 
   }  
 %>
-<<%= wrappingTag %> class="<%= wrappingClass %> <%= colorClass %>">
+<<%= ob.wrappingTag %> class="<%= ob.wrappingClass %> <%= colorClass %>">
   <span>
     <%=
       ob.currencyMod.formattedCurrency(
@@ -37,10 +18,10 @@
         ob.priceCurrencyCode,
         ob.displayCurrency
       )
-    %><span class="priceSymbol"><%= priceSymbol %></span>
+    %>&nbsp;<span class="priceSymbol"><%= priceSymbol %></span>
   </span>
   <% if (ob.priceModifier !== 0) { %>
-    <span class="marketRelativityClass <%= marketRelativityClass %>">
+    <span class="marketRelativity <%= ob.marketRelativityClass %>">
       <%=
         ob.priceModifier > 0 ?
           ob.polyT('cryptoPriceAboveMarket', { amount: ob.priceModifier }) :
@@ -48,4 +29,4 @@
       %>
     </span>
   <% } %>
-</<%= wrappingTag %>>
+</<%= ob.wrappingTag %>>

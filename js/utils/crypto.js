@@ -93,3 +93,36 @@ export function renderCryptoTradingPair(options = {}) {
 
   return rendered;
 }
+
+export function renderCryptoPrice(options = {}) {
+  if (typeof options.priceAmount !== 'number') {
+    throw new Error('Please provide a price amount as a number.');
+  }
+
+  if (typeof options.priceCurrencyCode !== 'string') {
+    throw new Error('Please provide a price currency code as a string.');
+  }
+
+  if (typeof options.displayCurrency !== 'string') {
+    throw new Error('Please provide a display currency code as a string.');
+  }
+
+  if (typeof options.priceModifier !== 'number') {
+    throw new Error('Please provide a price modifier as a number.');
+  }
+
+  const opts = {
+    wrappingClass: 'txRgt tx3',
+    wrappingTag: 'div',
+    marketRelativityClass: 'tx6 txUnb clamp2',
+    ...options,
+  }
+
+  let rendered = '';
+
+  loadTemplate('components/cryptoPrice.html', t => {
+    rendered = t(opts);
+  });
+
+  return rendered;
+}

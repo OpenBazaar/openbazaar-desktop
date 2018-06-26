@@ -584,78 +584,75 @@ export default class extends BaseModal {
     }
 
     loadTemplate('modals/purchase/purchase.html', t => {
-      loadTemplate('components/cryptoPrice.html', cryptoPriceT => {
-        this.$el.html(t({
-          ...this.order.toJSON(),
-          ...state,
-          listing: this.listing.toJSON(),
-          listingPrice: this.listing.price,
-          itemConstraints: this.order.get('items')
-            .at(0)
-            .constraints,
-          vendor: this.vendor,
-          variants: this.variants,
-          prices: this.prices,
-          displayCurrency: app.settings.get('localCurrency'),
-          moderated: this.order.moderated,
-          quantity: uiQuantity,
-          cryptoAmountCurrency: this.cryptoAmountCurrency,
-          isCrypto: this.listing.isCrypto,
-          phaseClass: `phase${capitalize(state.phase)}`,
-          cryptoPriceT,
-        }));
+      this.$el.html(t({
+        ...this.order.toJSON(),
+        ...state,
+        listing: this.listing.toJSON(),
+        listingPrice: this.listing.price,
+        itemConstraints: this.order.get('items')
+          .at(0)
+          .constraints,
+        vendor: this.vendor,
+        variants: this.variants,
+        prices: this.prices,
+        displayCurrency: app.settings.get('localCurrency'),
+        moderated: this.order.moderated,
+        quantity: uiQuantity,
+        cryptoAmountCurrency: this.cryptoAmountCurrency,
+        isCrypto: this.listing.isCrypto,
+        phaseClass: `phase${capitalize(state.phase)}`,
+      }));
 
-        super.render();
+      super.render();
 
-        this._$couponField = null;
+      this._$couponField = null;
 
-        this.actionBtn.delegateEvents();
-        this.actionBtn.setState({ phase: state.phase });
-        this.$('.js-actionBtn').append(this.actionBtn.render().el);
+      this.actionBtn.delegateEvents();
+      this.actionBtn.setState({ phase: state.phase });
+      this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
-        this.receipt.delegateEvents();
-        this.$('.js-receipt').append(this.receipt.render().el);
+      this.receipt.delegateEvents();
+      this.$('.js-receipt').append(this.receipt.render().el);
 
-        this.coupons.delegateEvents();
-        this.$('.js-couponsWrapper').html(this.coupons.render().el);
+      this.coupons.delegateEvents();
+      this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
-        this.moderators.delegateEvents();
-        this.$('.js-moderatorsWrapper').append(this.moderators.el);
+      this.moderators.delegateEvents();
+      this.$('.js-moderatorsWrapper').append(this.moderators.el);
 
-        if (this.shipping) {
-          this.shipping.delegateEvents();
-          this.$('.js-shippingWrapper').append(this.shipping.render().el);
-        }
+      if (this.shipping) {
+        this.shipping.delegateEvents();
+        this.$('.js-shippingWrapper').append(this.shipping.render().el);
+      }
 
-        // if this is a re-render, and the payment exists, render it
-        if (this.payment) {
-          this.payment.delegateEvents();
-          this.$('.js-pending').append(this.payment.render().el);
-        }
+      // if this is a re-render, and the payment exists, render it
+      if (this.payment) {
+        this.payment.delegateEvents();
+        this.$('.js-pending').append(this.payment.render().el);
+      }
 
-        this.complete.delegateEvents();
-        this.$('.js-complete').append(this.complete.render().el);
+      this.complete.delegateEvents();
+      this.$('.js-complete').append(this.complete.render().el);
 
-        if (this.feeChange) this.feeChange.remove();
-        this.feeChange = this.createChild(FeeChange);
-        this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
+      if (this.feeChange) this.feeChange.remove();
+      this.feeChange = this.createChild(FeeChange);
+      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
 
-        if (this.listing.isCrypto) {
-          if (this.cryptoTitle) this.cryptoTitle.remove();
-          this.cryptoTitle = this.createChild(CryptoTradingPair, {
-            initialState: {
-              tradingPairClass: 'cryptoTradingPairXL',
-              exchangeRateClass: 'clrT2 tx6',
-              fromCur: metadata.get('acceptedCurrencies')[0],
-              toCur: metadata.get('coinType'),
-            },
-          });
-          this.getCachedEl('.js-cryptoTitle')
-            .html(this.cryptoTitle.render().el);
+      if (this.listing.isCrypto) {
+        if (this.cryptoTitle) this.cryptoTitle.remove();
+        this.cryptoTitle = this.createChild(CryptoTradingPair, {
+          initialState: {
+            tradingPairClass: 'cryptoTradingPairXL',
+            exchangeRateClass: 'clrT2 tx6',
+            fromCur: metadata.get('acceptedCurrencies')[0],
+            toCur: metadata.get('coinType'),
+          },
+        });
+        this.getCachedEl('.js-cryptoTitle')
+          .html(this.cryptoTitle.render().el);
 
-          this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
-        }
-      });
+        this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
+      }
     });
 
     return this;
