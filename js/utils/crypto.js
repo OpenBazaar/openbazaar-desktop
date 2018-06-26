@@ -116,7 +116,7 @@ export function renderCryptoPrice(options = {}) {
     wrappingTag: 'div',
     marketRelativityClass: 'tx6 txUnb clamp2',
     ...options,
-  }
+  };
 
   let rendered = '';
 

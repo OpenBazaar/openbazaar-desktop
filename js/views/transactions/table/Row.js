@@ -141,9 +141,8 @@ export default class extends baseVw {
 
     if (coinType) {
       const paymentCoin = this.model.get('paymentCoin');
-      const combinedCurChars = paymentCoin.length + coinType.length;
       let tradingPairClass = 'cryptoTradingPairSm';
-      
+
       if (paymentCoin.length > 5 && coinType.length > 5) {
         tradingPairClass += ' longCurCodes';
       }

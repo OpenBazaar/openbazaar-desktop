@@ -74,7 +74,7 @@ export default class extends BaseVw {
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
         newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
-        
+
         if (newState.fromCur > state.truncateCurAfter) {
           newState.fromCur = `${newState.fromCur.slice(0, state.truncateCurAfter)}…`;
         }
