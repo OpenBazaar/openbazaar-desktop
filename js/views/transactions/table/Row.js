@@ -5,9 +5,10 @@
 import app from '../../../app';
 import _ from 'underscore';
 import moment from 'moment';
-import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { recordEvent } from '../../../utils/metrics';
+import baseVw from '../../baseVw';
+import CryptoTradingPair from '../../../views/components/CryptoTradingPair';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -123,6 +124,8 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+
     loadTemplate('transactions/table/row.html', (t) => {
       this.$el.html(t({
         type: this.type,
@@ -133,6 +136,31 @@ export default class extends baseVw {
         vendorId: this.type === 'sales' ? app.profile.id : this.model.get('vendorId'),
       }));
     });
+
+    const coinType = this.model.get('coinType');
+
+    if (coinType) {
+      const paymentCoin = this.model.get('paymentCoin');
+      const combinedCurChars = paymentCoin.length + coinType.length;
+      let tradingPairClass = 'cryptoTradingPairSm';
+      
+      if (paymentCoin.length > 5 && coinType.length > 5) {
+        tradingPairClass += ' longCurCodes';
+      }
+
+      if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
+      this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
+        initialState: {
+          tradingPairClass,
+          exchangeRateClass: 'hide',
+          fromCur: paymentCoin,
+          toCur: coinType,
+          truncateCurAfter: 5,
+        },
+      });
+      this.getCachedEl('.js-cryptoTradingPairWrap')
+        .html(this.cryptoTradingPair.render().el);
+    }
 
     return this;
   }

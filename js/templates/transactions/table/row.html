@@ -1,5 +1,9 @@
 <%
   // Pass in a type of 'sales', 'purchases' or 'cases'
+
+  console.log('spoon');
+  window.spoon = window.spoon || [];
+  window.spoon.push(ob);
 %>
 
 <% var type = ob.type || 'sales' %>
@@ -28,13 +32,19 @@
   <span class="ulOnHover"><%= ob.moment(ob.timestamp).format('l LT') %></span>
 </td>
 <% if (ob.type !== 'cases') { %>
-<td class="clrBr listingCol js-listingCol">
-  <div class="flexVCent gutterHSm">
-    <% const imageHashes = { small: ob.thumbnail, tiny: ob.thumbnail } %>
-    <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></a>
-    <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="noOverflow clrT"><%= ob.title %></a>
-  </div>
-</td>
+  <td class="clrBr listingCol js-listingCol">
+    <% if (!ob.coinType) { %>
+      <div class="flexVCent gutterHSm">
+        <% const imageHashes = { small: ob.thumbnail, tiny: ob.thumbnail } %>
+        <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="thumb" style="<%= ob.getListingBgImage(imageHashes) %>"></a>
+        <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="noOverflow clrT"><%= ob.title %></a>
+      </div>
+    <% } else { %>
+      <div class="flexVCent gutterHSm">
+        <a href="<%= `#${ob.vendorId}/store/${ob.slug}` %>" class="clrT flexNoShrink js-cryptoTradingPairWrap"></a>
+      </div>
+    <% } %>
+  </td>
 <% } %>
 <%
   const userCols = [];
@@ -68,12 +78,12 @@
   </div>
 </td>  
 <% }) %>
-<td class="clrBr priceCol">
+<td class="clrBr priceCol txRgt">
   <span class="ulOnHover">
     <%=
-      ob.currencyMod.pairedCurrency(
+      ob.currencyMod.convertAndFormatCurrency(
         ob.total,
-        ob.currencyMod.getServerCurrency().code,
+        ob.paymentCoin,
         ob.userCurrency
       )
     %>
