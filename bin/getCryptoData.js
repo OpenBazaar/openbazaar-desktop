@@ -172,7 +172,8 @@ getWhitelist()
           } else {
             logError(err);
           }
-        });      
+        });
     },
-    err => logError(`There was an error fetching the coin list: ${err}`),
+    err => logError(`There was an error fetching the coin list: ${err}`)
   );
+
