@@ -1130,7 +1130,9 @@
     "btnTermsAndConditions": "Add Terms and Conditions",
     "btnAddCoupon": "Add Coupon",
     "primaryPhoto": "PRIMARY PHOTO",
-    "viewListingLink": "View Listing",
+    "viewListingInAppLink": "View in app",
+    "viewListingOnWebLink": "View on web",
+    "viewOnWebDisclaimerTooltip": "Your listing may take a bit of time to display or update on the web.",
     "unsupportedCurrencyDialog": {
       "title": "Unrecognized currency",
       "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",

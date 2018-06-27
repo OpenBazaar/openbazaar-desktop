@@ -14,6 +14,7 @@ import {
 import Listing from '../models/listing/Listing';
 import { getAvatarBgImage } from '../utils/responsive';
 import PageNavServersMenu from './PageNavServersMenu';
+import AddressBarIndicators from './AddressBarIndicators';
 import { getNotifDisplayData } from '../collections/Notifications';
 import Notifications from './notifications/Notificiations';
 
@@ -415,6 +416,8 @@ export default class extends BaseVw {
       this.addressBarText = text;
       this.$addressBar.val(text);
     }
+
+    if (this.addressBarIndicators) this.addressBarIndicators.updateVisibility(text);
   }
 
   navSettingsClick() {
@@ -484,6 +487,17 @@ export default class extends BaseVw {
       collection: app.serverConfigs,
     });
     this.$('.js-connManagementContainer').append(this.pageNavServersMenu.render().el);
+
+    let initialAddressBarState = {};
+    if (this.addressBarIndicators) {
+      initialAddressBarState = this.addressBarIndicators.getState();
+      this.addressBarIndicators.remove();
+    }
+
+    this.addressBarIndicators = this.createChild(AddressBarIndicators, {
+      initialState: initialAddressBarState,
+    });
+    this.$('.js-addressBarIndicatorsContainer').html(this.addressBarIndicators.render().el);
 
     this.$addressBar = this.$('.js-addressBar');
     this.$navList = this.$('.js-navList');
