@@ -53,7 +53,16 @@ export default class extends baseVw {
     }
 
     viewOnWebState.hide = !viewOnWebState.url;
+
     this.setState(viewOnWebState);
+  }
+
+  updatePointerVisibility() {
+    if (this.getState().hide) {
+      this.$el.addClass('hidePointer');
+    } else {
+      this.$el.removeClass('hidePointer');
+    }
   }
 
   getUrlParts(url) {
@@ -70,6 +79,10 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+
+    this.updatePointerVisibility();
+
     loadTemplate('addressBarIndicators.html', (t) => {
       this.$el.html(t({
         ...this._state,
