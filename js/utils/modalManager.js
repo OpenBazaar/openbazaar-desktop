@@ -1,8 +1,10 @@
 import app from '../app';
 import { getOpenModals } from '../views/modals/BaseModal';
 import Listing from '../models/listing/Listing';
+import Post from '../models/post/Post';
 import About from '../views/modals/about/About';
 import EditListing from '../views/modals/editListing/EditListing';
+import CreatePost from '../views/modals/createPost/CreatePost';
 import DebugLog from '../views/modals/DebugLog';
 import ModeratorDetails from '../views/modals/moderatorDetails';
 import Wallet from '../views/modals/wallet/Wallet';
@@ -37,6 +39,31 @@ export function launchEditListingModal(modalOptions = {}) {
     .open();
 
   return editListingModal;
+}
+
+export function launchCreatePostModal(modalOptions = {}) {
+  const model = modalOptions.model;
+  const openModals = getOpenModals();
+
+  if (!(model instanceof Post)) {
+    throw new Error('In the modalOptions, please provide an instance of ' +
+      'a Post model.');
+  }
+
+  if (model.isNew()) {
+    const createModal = openModals
+      .find(modal => modal instanceof CreatePost && modal.model.isNew());
+    if (createModal) {
+      createModal.bringToTop();
+      return createModal;
+    }
+  }
+
+  const createPostModal = new CreatePost(modalOptions)
+    .render()
+    .open();
+
+  return createPostModal;
 }
 
 export function launchAboutModal(modalOptions = {}) {
