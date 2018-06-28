@@ -326,6 +326,7 @@ export default class ObRouter extends Router {
   get userStates() {
     return [
       'home',
+      'posts',
       'store',
       'following',
       'followers',
