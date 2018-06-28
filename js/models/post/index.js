@@ -1,7 +1,7 @@
-import _ from 'underscore';
-import app from '../../app';
+// import _ from 'underscore';
+// import app from '../../app';
 import { Events } from 'backbone';
-import Post from './Post';
+// import Post from './Post';
 
 // This is an event emitter that we will trigger post events through.
 // In many cases it is preferable to binding directly to a Post model

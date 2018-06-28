@@ -1,47 +1,63 @@
 import $ from 'jquery';
-import _ from 'underscore';
-import loadTemplate from '../../utils/loadTemplate';
-import { clipboard } from 'electron';
 import BaseVw from '../baseVw';
+import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
-import UserCard from '../UserCard';
-import { launchModeratorDetailsModal } from '../../utils/modalManager';
+import Posts from '../posts/Posts';
 import { openSimpleMessage } from '../modals/SimpleMessage';
+import Profile from '../../models/profile/Profile';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
-    this.ownPage = options.ownPage;
+    if (!options.model || !(options.model instanceof Profile)) {
+      throw new Error('Please provide a valid profile model.');
+    }
+    const opts = {
+      ...options,
+    };
+    super(opts);
+    this.options = opts;
 
-    this.settings = app.settings.clone();
+    // create the posts here, so they're available for the fetch
+    this.posts = this.createChild(Posts, {});
 
-    this.listenTo(this.settings, 'sync', () => {
-      app.settings.set(this.settings.toJSON());
-    });
-
+    $.get(app.getServerUrl(`ob/posts/${this.options.model.get('peerID')}`))
+      .done(data => this.onPosts(data))
+      .fail((jqXhr) => {
+        if (jqXhr.statusText === 'abort') return;
+        const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('listingDetail.errors.fetchPosts'),
+          failReason);
+      });
   }
 
   className() {
     return 'userPagePosts';
   }
 
-  events() {
-    return {
-      // 'click .js-guid': 'guidClick',
-      // 'mouseleave .js-guid': 'guidLeave',
-    };
+  onPosts(data) {
+    const pData = data || {};
+    pData.reverse();
+    this.posts.posts = pData;
+    this.getCachedEl('.js-posts').append(this.posts.render().$el);
+  }
+
+  remove() {
+    if (this.ratingsFetch) this.ratingsFetch.abort();
+    super.remove();
   }
 
   render() {
+    super.render();
     loadTemplate('userPage/posts.html', (t) => {
       this.$el.html(t({
-        ...this.model.toJSON(),
+        ...this.getState()
       }));
 
     });
 
+    this.getCachedEl('.js-posts').append(this.posts.render().$el);
+
     return this;
   }
 }
-

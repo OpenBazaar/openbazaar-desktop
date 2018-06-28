@@ -1,11 +1,7 @@
 import _ from 'underscore';
-import is from 'is_js';
+// import is from 'is_js';
 import app from '../../app';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
-import { getIndexedCountries } from '../../data/countries';
 import { events as postEvents } from './';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import PostBody from './PostBody';
 import BaseModel from '../BaseModel';
 
@@ -33,7 +29,7 @@ export default class extends BaseModel {
 
   get nested() {
     return {
-      postBody: PostBody
+      postBody: PostBody,
     };
   }
 
@@ -56,10 +52,12 @@ export default class extends BaseModel {
 
   validate(attrs) {
     let errObj = {};
-    const addError = (fieldName, error) => {
-      errObj[fieldName] = errObj[fieldName] || [];
-      errObj[fieldName].push(error);
-    };
+    // const addError = (fieldName, error) => {
+    //   errObj[fieldName] = errObj[fieldName] || [];
+    //   errObj[fieldName].push(error);
+    // };
+
+    console.log(attrs);
 
     errObj = this.mergeInNestedErrors(errObj);
 
@@ -97,7 +95,6 @@ export default class extends BaseModel {
 
         // remove the hash
         delete options.attrs.hash;
-
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/post/${this.get('slug')}`);
@@ -142,7 +139,6 @@ export default class extends BaseModel {
         });
       });
     }
-
     return returnSync;
   }
 
@@ -151,13 +147,9 @@ export default class extends BaseModel {
     const parsedResponse = response.post;
 
     if (parsedResponse) {
-
       // set the hash
       parsedResponse.hash = response.hash;
-
-
     }
-
     return parsedResponse;
   }
 }

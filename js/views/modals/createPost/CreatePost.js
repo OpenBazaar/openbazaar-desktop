@@ -1,7 +1,6 @@
 import $ from 'jquery';
 import '../../../utils/lib/velocity';
 import '../../../lib/select2';
-import { tagsDelimiter } from '../../../utils/lib/selectize';
 import Sortable from 'sortablejs';
 import _ from 'underscore';
 import path from 'path';
@@ -10,7 +9,6 @@ import Backbone from 'backbone';
 import app from '../../../app';
 import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
-import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -46,7 +44,7 @@ export default class extends BaseModal {
       setTimeout(() => {
         if (this.createMode && !this.model.isNew()) {
           this.createMode = false;
-          //this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
+          // this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
         }
 
         const updatedData = this.model.toJSON();
@@ -81,7 +79,6 @@ export default class extends BaseModal {
         this.$el.removeClass('fixedNav');
       }
     });
-
   }
 
   className() {
@@ -175,55 +172,6 @@ export default class extends BaseModal {
     this.inProgressPhotoUploads.forEach(photoUpload => photoUpload.abort());
   }
 
-  onChangePrice(e) {
-    const trimmedVal = $(e.target).val().trim();
-    const numericVal = Number(trimmedVal);
-
-    if (!isNaN(numericVal) && trimmedVal) {
-      $(e.target).val(
-        formatPrice(numericVal, this.$currencySelect.val())
-      );
-    } else {
-      $(e.target).val(trimmedVal);
-    }
-
-    this.variantInventory.render();
-  }
-
-  setContractTypeClass(contractType) {
-    const removeClasses = this.model.get('metadata')
-      .contractTypes
-      .reduce(
-        (classes, type) => (`${classes} TYPE_${type}`), ''
-      );
-
-    this.$el.removeClass(removeClasses)
-      .addClass(`TYPE_${contractType}`);
-  }
-
-  onChangeContractType(e, data = {}) {
-    this.setContractTypeClass(e.target.value);
-
-    if (!data.fromCryptoTypeChange) {
-      if (e.target.value === 'CRYPTOCURRENCY') {
-        this.getCachedEl('#editListingCryptoContractType')
-          .val('CRYPTOCURRENCY');
-        this.getCachedEl('#editListingCryptoContractType')
-          .trigger('change')
-          .focus();
-      }
-    }
-  }
-
-  onChangeCryptoContractType(e) {
-    if (e.target.value === 'CRYPTOCURRENCY') return;
-
-    this.getCachedEl('#editContractType')
-      .val(e.target.value);
-    this.getCachedEl('#editContractType')
-      .trigger('change', { fromCryptoTypeChange: true })
-      .focus();
-  }
 
   getOrientation(file, callback) {
     const reader = new FileReader();
@@ -394,120 +342,6 @@ export default class extends BaseModal {
         }
       };
     });
-  }
-
-  onClickAddReturnPolicy(e) {
-    $(e.target).addClass('hide');
-    this.$editListingReturnPolicy.removeClass('hide')
-      .focus();
-    this.expandedReturnPolicy = true;
-  }
-
-  onClickAddTermsAndConditions(e) {
-    $(e.target).addClass('hide');
-    this.$editListingTermsAndConditions.removeClass('hide')
-      .focus();
-    this.expandedTermsAndConditions = true;
-  }
-
-  onClickAddShippingOption() {
-    this.shippingOptions
-      .push(new ShippingOptionMd({
-        services: [
-          new Service(),
-        ],
-      }));
-  }
-
-  onClickAddCoupon() {
-    this.coupons.add(new Coupon());
-
-    if (this.coupons.length === 1) {
-      this.$couponsSection.find('.coupon input[name=title]')
-        .focus();
-    }
-  }
-
-  onClickAddFirstVariant() {
-    this.variantOptionsCl.add(new VariantOption());
-
-    if (this.variantOptionsCl.length === 1) {
-      this.$variantsSection.find('.variant input[name=name]')
-        .focus();
-    }
-  }
-
-  onKeyUpVariantName(e) {
-    // wait until they stop typing
-    if (this.variantNameKeyUpTimer) {
-      clearTimeout(this.variantNameKeyUpTimer);
-    }
-
-    this.variantNameKeyUpTimer = setTimeout(() => {
-      const index = $(e.target).closest('.variant')
-        .index();
-
-      this.variantsView.setModelData(index);
-    }, 150);
-  }
-
-  onVariantChoiceChange(e) {
-    const index = this.variantsView.views
-      .indexOf(e.view);
-
-    this.variantsView.setModelData(index);
-  }
-
-  onUpdateVariantOptions() {
-    if (this.variantOptionsCl.length) {
-      this.$variantsSection.addClass('expandedVariantsView');
-      this.skuField.setState({ variantsPresent: true });
-
-      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
-        this.inventoryManagement.setState({
-          trackBy: 'TRACK_BY_VARIANT',
-        });
-      }
-    } else {
-      this.$variantsSection.removeClass('expandedVariantsView');
-      this.skuField.setState({ variantsPresent: false });
-
-      if (this.inventoryManagement.getState().trackBy !== 'DO_NOT_TRACK') {
-        this.inventoryManagement.setState({
-          trackBy: 'TRACK_BY_FIXED',
-        });
-      }
-    }
-
-    this.$variantInventorySection.toggleClass('hide',
-      !this.shouldShowVariantInventorySection);
-  }
-
-  onClickScrollToVariantInventory() {
-    this.scrollTo(this.$variantInventorySection);
-  }
-
-  get shouldShowVariantInventorySection() {
-    return !!this.variantOptionsCl.length;
-  }
-
-  /**
-   * Will return true if we have at least one variant option with at least
-   * one choice.
-   */
-  get haveVariantOptionsWithChoice() {
-    if (this.variantOptionsCl.length) {
-      const atLeastOneHasChoice = this.variantOptionsCl.find(variantOption => {
-        const choices = variantOption.get('variants');
-        return choices && choices.length;
-      });
-
-      if (atLeastOneHasChoice) {
-        return true;
-      }
-    }
-
-    return false;
   }
 
   confirmClose() {
@@ -730,8 +564,8 @@ export default class extends BaseModal {
    * and collections which are managed by nested views.
    */
   setModelData() {
-    let formData = this.getFormData(this.$formFields);
-    const postBody = this.model.get('postBody');
+    const formData = this.getFormData(this.$formFields);
+    // const postBody = this.model.get('postBody');
 
     this.model.set({
       ...formData,
@@ -741,7 +575,6 @@ export default class extends BaseModal {
       },
 
     });
-
   }
 
   open() {
@@ -749,28 +582,6 @@ export default class extends BaseModal {
 
     if (!this.openedBefore) {
       this.openedBefore = true;
-      let cur;
-
-      try {
-        cur = this._origModel.unparsedResponse.listing.metadata.pricingCurrency;
-      } catch (e) {
-        return this;
-      }
-
-      if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
-        const unsupportedCurrencyDialog = new UnsupportedCurrency({
-          unsupportedCurrency: cur,
-        }).render().open();
-
-        this.listenTo(unsupportedCurrencyDialog, 'close', () => {
-          const response = JSON.parse(JSON.stringify(this._origModel.unparsedResponse));
-          const newCur = unsupportedCurrencyDialog.getCurrency();
-          setDeepValue(response, 'listing.metadata.pricingCurrency', newCur);
-          this.model.set(this.model.parse(response));
-          this.$currencySelect.val(newCur);
-          this.render();
-        });
-      }
     }
     return this;
   }
@@ -836,25 +647,6 @@ export default class extends BaseModal {
       (this._$photoUploadingLabel = this.$('.js-photoUploadingLabel'));
   }
 
-  get $sectionShipping() {
-    return this._$sectionShipping ||
-      (this._$sectionShipping = this.$('.js-sectionShipping'));
-  }
-
-  get $maxCatsWarning() {
-    return this._$maxCatsWarning ||
-      (this._$maxCatsWarning = this.$('.js-maxCatsWarning'));
-  }
-
-  get $maxTagsWarning() {
-    return this._$maxTagsWarning ||
-      (this._$maxTagsWarning = this.$('.js-maxTagsWarning'));
-  }
-
-  get maxTagsWarning() {
-    return `<div class="clrT2 tx5 row">${app.polyglot.t('editListing.maxTagsWarning')}</div>`;
-  }
-
   remove() {
     this.inProgressPhotoUploads.forEach(upload => upload.abort());
     $(window).off('resize', this.throttledResizeWin);
@@ -862,7 +654,7 @@ export default class extends BaseModal {
   }
 
   render(restoreScrollPos = true) {
-    let prevScrollPos = 0;
+    const prevScrollPos = 0;
 
     const postBody = this.model.get('postBody');
 

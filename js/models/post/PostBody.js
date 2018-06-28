@@ -1,5 +1,5 @@
 import { guid } from '../../utils';
-import is from 'is_js';
+// import is from 'is_js';
 import app from '../../app';
 import { Collection } from 'backbone';
 import BaseModel from '../BaseModel';
