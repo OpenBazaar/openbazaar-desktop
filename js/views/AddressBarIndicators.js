@@ -53,6 +53,7 @@ export default class extends baseVw {
     }
 
     viewOnWebState.hide = !viewOnWebState.url;
+
     this.setState(viewOnWebState);
   }
 
@@ -70,6 +71,8 @@ export default class extends baseVw {
   }
 
   render() {
+    this.$el.toggleClass('hidePointer', this.getState().hide);
+
     loadTemplate('addressBarIndicators.html', (t) => {
       this.$el.html(t({
         ...this._state,
