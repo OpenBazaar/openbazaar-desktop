@@ -7,15 +7,17 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import { recordEvent } from '../../utils/metrics';
-import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
+import { launchEditListingModal, launchSettingsModal, launchCreatePostModal } from '../../utils/modalManager';
 import { isBlocked, events as blockEvents } from '../../utils/block';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import Post from '../../models/post/Post';
 import Listing from '../../models/listing/Listing';
 import Listings from '../../collections/Listings';
 import Followers from '../../collections/Followers';
 import MiniProfile from '../MiniProfile';
 import SocialBtns from '../components/SocialBtns';
 import Home from './Home';
+import Posts from './Posts';
 import Store from './Store';
 import Follow from './Follow';
 import Reputation from './Reputation';
@@ -32,7 +34,7 @@ export default class extends baseVw {
     this.ownPage = this.model.id === app.profile.id;
     this.state = options.state || 'store';
     this.tabViewCache = {};
-    this.tabViews = { Home, Store, Follow, Reputation };
+    this.tabViews = { Home, Post, Store, Follow, Reputation };
 
     const stats = this.model.get('stats');
     this._followingCount = stats.get('followingCount');
@@ -83,6 +85,7 @@ export default class extends baseVw {
       'click .js-moreBtn': 'clickMore',
       'click .js-customize': 'clickCustomize',
       'click .js-createListing': 'clickCreateListing',
+      'click .js-createPost': 'clickCreatePost',
       'click .js-closeStoreWelcomeCallout': 'clickCloseStoreWelcomeCallout',
     };
   }
@@ -122,6 +125,14 @@ export default class extends baseVw {
 
     launchEditListingModal({
       model: listingModel,
+    });
+  }
+
+  clickCreatePost() {
+    const postModel = new Post({}, { guid: app.profile.id });
+
+    launchCreatePostModal({
+      model: postModel,
     });
   }
 
