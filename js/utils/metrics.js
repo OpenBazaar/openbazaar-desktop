@@ -127,10 +127,14 @@ export function startEvent(key) {
 
 export function endEvent(key, segmentation) {
   if (window.Countly) {
+    const seg = {
+      errors: 'none',
+      ...segmentation,
+    };
     window.Countly.q.push(['end_event',
       {
         key,
-        segmentation,
+        segmentation: seg,
       }]);
   }
 }

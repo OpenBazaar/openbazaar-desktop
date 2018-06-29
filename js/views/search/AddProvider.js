@@ -55,7 +55,7 @@ export default class extends BaseView {
       if (save) {
         // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {
-          recordEvent('Discover_AddProviderSaved', { error: 'none' });
+          recordEvent('Discover_AddProviderSaved', { errors: 'none' });
           app.searchProviders.add(this.model);
           this.trigger('newProviderSaved', this.model);
         })
@@ -65,7 +65,7 @@ export default class extends BaseView {
           });
       }
     } else {
-      recordEvent('Discover_AddProviderSaved', { error: 'Invalid' });
+      recordEvent('Discover_AddProviderSaved', { errors: 'Invalid' });
       this.render();
     }
   }

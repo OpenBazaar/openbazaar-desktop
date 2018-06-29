@@ -157,7 +157,6 @@ export default class extends BaseModal {
           this._inventory = e.inventory;
           endEvent('Listing_InventoryFetch', {
             ownListing: !!this.ownListing,
-            errors: 'none',
           });
         })
         .fail(e => {

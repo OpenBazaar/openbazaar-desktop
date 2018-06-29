@@ -416,7 +416,6 @@ export default class extends BaseModal {
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
             endEvent('Purchase', {
-              errors: 'none',
             });
           })
           .fail(jqXHR => {

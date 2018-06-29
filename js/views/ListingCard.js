@@ -254,7 +254,6 @@ export default class extends baseVw {
         listingFetch.done(jqXhr => {
           endEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
-            errors: 'none',
           });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
