@@ -3,6 +3,7 @@
   ensure they are compatible with both the Purchase and Order Detail flows.
 */
 
+import Backbone from 'backbone';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
@@ -42,6 +43,7 @@ export default class extends BaseVw {
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
+    this.page = Backbone.history.getFragment().split(/[//?]/)[1];
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -103,11 +105,13 @@ export default class extends BaseVw {
       recordEvent('Purchase_PayFromWallet', {
         currency: getServerCurrency().code,
         sufficientFunds: false,
+        page: this.page,
       });
     } else {
       recordEvent('Purchase_PayFromWallet', {
         currency: getServerCurrency().code,
         sufficientFunds: true,
+        page: this.page,
       });
       this.spendConfirmBox.setState({ show: true });
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
@@ -134,6 +138,7 @@ export default class extends BaseVw {
         .done(() => {
           recordEvent('Purchase_SpendFromWallet', {
             currency,
+            page: this.page,
             errors: 'none',
           });
         })
@@ -142,6 +147,7 @@ export default class extends BaseVw {
           this.showSpendError(err);
           recordEvent('Purchase_SpendFromWallet', {
             currency,
+            page: this.page,
             errors: err || 'unknown error',
           });
           if (this.isRemoved()) return;
