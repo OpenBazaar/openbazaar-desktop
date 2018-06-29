@@ -51,9 +51,8 @@ export default class extends BaseVw {
     super.render();
     loadTemplate('userPage/posts.html', (t) => {
       this.$el.html(t({
-        ...this.getState()
+        ...this.getState(),
       }));
-
     });
 
     this.getCachedEl('.js-posts').append(this.posts.render().$el);

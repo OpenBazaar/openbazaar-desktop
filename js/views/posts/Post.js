@@ -2,18 +2,14 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
-import RatingsStrip from '../RatingsStrip';
-import moment from 'moment';
 import 'trunk8';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
-
     this.title = '';
-    this.images = new Array();
-
+    this.images = [];
   }
 
   className() {
@@ -40,36 +36,11 @@ export default class extends baseVw {
 
   render() {
     loadTemplate('posts/post.html', (t) => {
-
-        console.log(this.images);
-
       this.$el.html(t({
         title: this.title,
-        images: this.images
+        images: this.images,
       }));
-
-
-
-      // this.$('.ratingsContainer').each((index, element) => {
-      //   const $el = $(element);
-      //   const type = $el.data('ratingType');
-      //
-      //   if (!type) {
-      //     throw new Error('Unable to render the ratings strips because it\'s container does not ' +
-      //       'specify a type.');
-      //   }
-      //
-      //   if (this.ratingStrips[type]) this.ratingStrips[type].remove();
-      //   this.ratingStrips[type] = this.createChild(RatingsStrip, {
-      //     initialState: {
-      //       curRating: this.model.get(type) || 0,
-      //     },
-      //   });
-      //
-      //   $el.append(this.ratingStrips[type].render().el);
-      // });
     });
-
     return this;
   }
 }
