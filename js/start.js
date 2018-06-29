@@ -38,6 +38,7 @@ import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
+import initMouseForwardBack from './startup/mouseForwardBack';
 import { fixLinuxZoomIssue, handleServerShutdownRequests } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
@@ -961,6 +962,8 @@ ipcRenderer.on('close-attempt', (e) => {
 
 // initialize our listing delete handler
 listingDeleteHandler();
+
+initMouseForwardBack();
 
 if (remote.getGlobal('isBundledApp')) {
   console.log(`%c${app.polyglot.t('consoleWarning.heading')}`,
