@@ -121,11 +121,11 @@ export function recordEvent(key, segmentation) {
   }
 }
 
-export function startEvent(key) {
+export function startAjaxEvent(key) {
   if (window.Countly) window.Countly.q.push(['start_event', key]);
 }
 
-export function endEvent(key, segmentation) {
+export function endAjaxEvent(key, segmentation) {
   if (window.Countly) {
     const seg = {
       errors: 'none',

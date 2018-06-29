@@ -15,7 +15,7 @@ import Report from './modals/Report';
 import BlockedWarning from './modals/BlockedWarning';
 import BlockBtn from './components/BlockBtn';
 import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
-import { startEvent, endEvent } from '../utils/metrics';
+import { startAjaxEvent, endAjaxEvent } from '../utils/metrics';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -246,13 +246,13 @@ export default class extends baseVw {
       app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
         this.ownerGuid);
 
-      startEvent('Listing_LoadFromCard');
+      startAjaxEvent('Listing_LoadFromCard');
 
       const listingFetch = this.fetchFullListing();
       const loadListing = () => {
         app.loadingModal.open();
         listingFetch.done(jqXhr => {
-          endEvent('Listing_LoadFromCard', {
+          endAjaxEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
           });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
@@ -279,7 +279,7 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail(xhr => {
-          endEvent('Listing_LoadFromCard', {
+          endAjaxEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
             errors: xhr.responseJSON.reason || xhr.statusText || 'unknown error',
           });

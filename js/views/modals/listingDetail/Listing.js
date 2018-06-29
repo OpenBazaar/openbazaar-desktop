@@ -16,7 +16,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
-import { endEvent, recordEvent, startEvent } from '../../../utils/metrics';
+import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -147,7 +147,7 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startEvent('Listing_InventoryFetch');
+      startAjaxEvent('Listing_InventoryFetch');
       this.inventoryFetch = getInventory(this.vendor.peerID, {
         slug: this.model.get('slug'),
         coinDivisibility: this.model.get('metadata')
@@ -155,12 +155,12 @@ export default class extends BaseModal {
       })
         .done(e => {
           this._inventory = e.inventory;
-          endEvent('Listing_InventoryFetch', {
+          endAjaxEvent('Listing_InventoryFetch', {
             ownListing: !!this.ownListing,
           });
         })
         .fail(e => {
-          endEvent('Listing_InventoryFetch', {
+          endAjaxEvent('Listing_InventoryFetch', {
             ownListing: !!this.ownListing,
             errors: e.error || e.errCode || 'unknown error',
           });
