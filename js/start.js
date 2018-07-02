@@ -29,7 +29,7 @@ import StartupConnectMessaging from './views/StartupConnectMessaging';
 import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
-import { getTranslationLangByCode } from './data/languages';
+import { getTranslationLangByCode, getTrumboLangFileNameByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
@@ -68,9 +68,22 @@ moment.locale(initialLang);
 app.polyglot = new Polyglot();
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
+let trumboLang = getTrumboLangFileNameByCode(initialLang);
+if (trumboLang) {
+  // eslint-disable-next-line global-require
+  app.polyglot.extend(require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
+}
+
 app.localSettings.on('change:language', (localSettings, lang) => {
+
   app.polyglot.extend(
     require(`./languages/${lang}.json`)); // eslint-disable-line global-require
+
+  trumboLang = getTrumboLangFileNameByCode(lang);
+  if (trumboLang) {
+    app.polyglot.extend( // eslint-disable-next-line global-require
+      require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
+  }
 
   moment.locale(lang);
 
