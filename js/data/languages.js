@@ -1068,6 +1068,7 @@ export const translationLangs = [
   {
     name: 'Arabic',
     code: 'ar',
+    trumbowyg: 'ar',
   },
   // {
   //   name: '中文 (Chinese, S)',
@@ -1084,14 +1085,17 @@ export const translationLangs = [
   {
     name: 'Dansk (Danish)',
     code: 'da',
+    trumbowyg: 'da',
   },
   {
     name: 'Deutsch (German, Germany)',
     code: 'de_DE',
+    trumbowyg: 'de',
   },
   {
     name: 'Dutch (Dutch, Netherlands)',
     code: 'nl_NL',
+    trumbowyg: 'nl',
   },
   {
     name: 'English (English, Australia)',
@@ -1100,6 +1104,7 @@ export const translationLangs = [
   {
     name: 'Espa&ntilde;ol (Spanish)',
     code: 'es',
+    trumbowyg: 'es',
   },
   // {
   //   name: 'Esperanto',
@@ -1108,10 +1113,12 @@ export const translationLangs = [
   {
     name: 'Français (French, Canada)',
     code: 'fr_CA',
+    trumbowyg: 'fr',
   },
   {
     name: 'Français (French)',
     code: 'fr',
+    trumbowyg: 'fr',
   },
   // {
   //   name: 'Greek (Greek)',
@@ -1120,6 +1127,7 @@ export const translationLangs = [
   {
     name: 'Italiano (Italian, Italy)',
     code: 'it_IT',
+    trumbowyg: 'it',
   },
   // {
   //   name: '日本語 (Japanese, Japan)',
@@ -1128,6 +1136,7 @@ export const translationLangs = [
   {
     name: 'Norwegian (Bokmål)',
     code: 'nb',
+    trumbowyg: 'no_nb',
   },
   // {
   //   name: '한국어 (Korean)',
@@ -1136,10 +1145,12 @@ export const translationLangs = [
   {
     name: 'Polski (Polish)',
     code: 'pl',
+    trumbowyg: 'pl',
   },
   {
     name: 'Português (Portuguese, Brazil)',
     code: 'pt_BR',
+    trumbowyg: 'pt_br',
   },
   // {
   //   name: 'Română (Romanian)',
@@ -1148,6 +1159,7 @@ export const translationLangs = [
   {
     name: 'Russian (Russian)',
     code: 'ru',
+    trumbowyg: 'ru',
   },
   // {
   //   name: 'Slovenský jazyk (Slovak)',
@@ -1160,6 +1172,7 @@ export const translationLangs = [
   {
     name: 'Українська (Ukrainian)',
     code: 'uk',
+    trumbowyg: 'ua',
   },
   // {
   //   name: 'Uzbek (Uzbek)',
@@ -1186,4 +1199,14 @@ export function getTranslationLangByCode(code) {
   }
 
   return getIndexedTranslationLang()[code];
+}
+
+export function getTrumboLangFileNameByCode(code) {
+  if (!code) {
+    throw new Error('Please provide a language code.');
+  }
+
+  const lang = translationLangs.find((x) => x.code === code);
+
+  return lang.trumbowyg || null;
 }
