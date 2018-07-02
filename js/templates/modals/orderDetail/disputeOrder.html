@@ -20,14 +20,17 @@
     </div>
     <div class="col7">
       <% if (ob.errors['claim']) print(ob.formErrorTmpl({ errors: ob.errors['claim'] })) %>
-    <textarea rows="6" name="claim" class="clrBr clrP clrSh2" id="fulfillOrderNote" placeholder="<%= ob.polyT(`orderDetail.disputeOrderTab.reasonPlaceholder`) %>"><%= ob.claim %></textarea>
-    <div class="clrT2 txSm"><%= ob.polyT(`orderDetail.disputeOrderTab.reasonHelperText`) %></div>
+    <textarea rows="6" name="claim" class="clrBr clrP clrSh2 row" id="fulfillOrderNote" placeholder="<%= ob.polyT(`orderDetail.disputeOrderTab.reasonPlaceholder`) %>"><%= ob.claim %></textarea>
+    <p class="clrT2 txSm"><%= ob.polyT(`orderDetail.disputeOrderTab.reasonHelperText`) %></p>
+    <% if (ob.timeoutMessage) { %>
+      <p class="clrT2 txSm"><%= ob.timeoutMessage %></p>
+    <% } %>
     </div>
   </div>
 </form>
 <hr class="clrBr" />
 <div class="buttonBar flexHRight flexVCent gutterHLg">
-  <a class="js-cancel <% if (ob.openingDispute) print('disabled') %>"><%= ob.polyT(`orderDetail.fulfillOrderTab.btnCancel`) %></a>
+  <a class="js-cancel <% if (ob.openingDispute) print('disabled') %>"><%= ob.polyT('orderDetail.disputeOrderTab.btnCancel') %></a>
   <%= ob.processingButton({
     className: `btn clrBAttGrad clrBrDec1 clrTOnEmph js-submit ${ob.openingDispute ? 'processing' : ''}`,
     btnText: ob.polyT(`orderDetail.fulfillOrderTab.btnSubmit`),
