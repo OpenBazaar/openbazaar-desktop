@@ -1,14 +1,10 @@
 import app from '../../../app';
 import '../../../lib/select2';
-import {
-  getExchangeRate,
-  convertAndFormatCurrency,
-  events as currencyEvents,
-} from '../../../utils/currency';
 import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -22,16 +18,6 @@ export default class extends BaseView {
       this.getCachedEl('.js-marketValueWrap')
         .html(this.tmplMarketValue({ getDataFromUi: true }));
     });
-
-    this.listenTo(currencyEvents, 'exchange-rate-change', e => {
-      if (
-        e.changed.includes(app.settings.get('localCurrency')) ||
-        e.changed.includes(this.getCachedEl('#editListingCoinType').val())
-      ) {
-        this.getCachedEl('.js-marketValueWrap')
-          .html(this.tmplMarketValue({ getDataFromUi: true }));
-      }
-    });
   }
 
   className() {
@@ -41,23 +27,17 @@ export default class extends BaseView {
   events() {
     return {
       'change #editListingCoinType': 'onChangeCoinType',
-      'keyup #editListingCryptoQuantity': 'onKeyupQuantity',
     };
   }
 
   onChangeCoinType(e) {
     this.getCachedEl('.js-quantityCoinType')
       .text(e.target.value);
-    this.getCachedEl('.js-marketValueWrap')
-      .html(this.tmplMarketValue({ getDataFromUi: true }));
-  }
-
-  onKeyupQuantity() {
-    clearTimeout(this.quantityKeyUpTimeout);
-    this.quantityKeyUpTimeout = setTimeout(() => {
-      this.getCachedEl('.js-marketValueWrap')
-        .html(this.tmplMarketValue({ getDataFromUi: true }));
-    }, 200);
+    this.getCachedEl('.js-helperCoinType')
+      .html(this.tmplCoinTypeHelper(e.target.value));
+    this.cryptoTradingPair.setState({
+      toCur: this.getCachedEl('#editListingCoinType').val(),
+    });
   }
 
   get currencies() {
@@ -93,105 +73,72 @@ export default class extends BaseView {
     return coinTypes;
   }
 
-  get defaultCoinType() {
+  get defaultFromCur() {
     return this.model.get('metadata').get('coinType') ||
       this.currencies[0].code;
   }
 
-  tmplTypeHelper() {
-    return app.polyglot.t('editListing.cryptoCurrencyType.helperType',
-      { curCode: getServerCurrency().code });
-  }
-
-  tmplMarketValue(options = {}) {
-    const opts = {
-      getDataFromUi: false,
-      coinType: options.getDataFromUi ?
-        this.getCachedEl('#editListingCoinType').val() :
-        this.defaultCoinType,
-      quantity: options.getDataFromUi ?
-        this.getCachedEl('#editListingCryptoQuantity').val() :
-        this.model.get('item').get('cryptoQuantity'),
-      displayCur: app.settings.get('localCurrency'),
-      ...options,
-    };
-
-    const { displayCur, coinType } = opts;
-    let quantity = Number(opts.quantity);
-
-    if (isNaN(quantity)) quantity = 0;
-
-    const cryptoExchangeRate = getExchangeRate(coinType);
-    const displayCurExchangeRate = getExchangeRate(displayCur);
-    const cryptoFormattedPrice = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount',
-      { amount: quantity, code: coinType });
-
-    if (typeof cryptoExchangeRate !== 'number') {
-      const tip = app.polyglot.t('editListing.cryptoCurrencyType.tipMissingCryptoExchangeRate',
-        { coinType });
-      return `<span class="toolTip" data-tip="${tip}">` +
-        `<span class="clrTErr tx4 txB">${cryptoFormattedPrice}</span>&nbsp;` +
-        '<span class="ion-alert-circled clrTErr"></span></span>';
-    }
-
-    if (coinType !== displayCur) {
-      if (typeof displayCurExchangeRate === 'number') {
-        const total = convertAndFormatCurrency(quantity, coinType, displayCur);
-        const perCoin = convertAndFormatCurrency(1, coinType, displayCur);
-        const perCoinText = app.polyglot.t('editListing.cryptoCurrencyType.marketValuePerCoin',
-            { amount: perCoin, curCode: coinType });
-        return `<span class="clrTEm tx4 txB">${total}</span> ${perCoinText}`;
-      }
-
-      const tip = app.polyglot.t('editListing.cryptoCurrencyType.tipMissingLocalExchangeRate',
-        { coinType });
-      return `<span class="toolTip" data-tip="${tip}">` +
-        `<span class="clrTEm tx4 txB">${quantity} ${coinType}</span>&nbsp;` +
-        '<span class="ion-alert-circled clrTAlert"></span></span>';
-    }
-
-    return `<span class="clrTEm tx4 txB">${cryptoFormattedPrice}</span>`;
+  tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
+    return app.polyglot.t('editListing.cryptoCurrencyType.helperCoinType', {
+      toCur: getServerCurrency().code,
+      fromCur,
+    });
   }
 
   render() {
     super.render();
 
-    loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
-      this.$el.html(t({
-        contractTypes: this.model.get('metadata').contractTypesVerbose,
-        coinTypes: this.currencies,
-        helperType: this.tmplTypeHelper(),
-        marketVal: this.tmplMarketValue(),
-        errors: this.model.validationError || {},
-        ...this.model.toJSON(),
-      }));
+    loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
+      loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
+        this.$el.html(t({
+          contractTypes: this.model.get('metadata').contractTypesVerbose,
+          coinTypes: this.currencies,
+          helperCoinType: this.tmplCoinTypeHelper(),
+          errors: this.model.validationError || {},
+          viewListingsT,
+          ...this.model.toJSON(),
+        }));
 
-      this.$('#editListingCryptoContractType').select2({
-        minimumResultsForSearch: Infinity,
-      });
+        this.getCachedEl('#editListingCryptoContractType').select2({
+          minimumResultsForSearch: Infinity,
+        });
 
-      this.$('#editListingCoinType').select2({
-        minimumResultsForSearch: 5,
-        matcher: (params, data) => {
-          if (!params.term || params.term.trim() === '') {
-            return data;
-          }
+        this.getCachedEl('#editListingCoinType').select2({
+          minimumResultsForSearch: 5,
+          matcher: (params, data) => {
+            if (!params.term || params.term.trim() === '') {
+              return data;
+            }
 
-          const term = params.term
-            .toUpperCase()
-            .trim();
-
-          if (
-            data.text
+            const term = params.term
               .toUpperCase()
-              .includes(term) ||
-            data.id.includes(term)
-          ) {
-            return data;
-          }
+              .trim();
 
-          return null;
-        },
+            if (
+              data.text
+                .toUpperCase()
+                .includes(term) ||
+              data.id.includes(term)
+            ) {
+              return data;
+            }
+
+            return null;
+          },
+        });
+
+        if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
+        this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
+          className: 'cryptoTradingPairWrap row',
+          initialState: {
+            tradingPairClass: 'cryptoTradingPairLg rowSm',
+            exchangeRateClass: 'clrT2 tx6',
+            toCur: this.getCachedEl('#editListingCoinType').val(),
+          },
+        });
+        this.getCachedEl('.js-cryptoTradingPairContainer').html(
+          this.cryptoTradingPair.render().el
+        );
       });
     });
 

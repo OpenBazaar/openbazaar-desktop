@@ -35,13 +35,47 @@
   <div class="flex gutterH clrT">
     <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="listingThumbCol flexNoShrink" style="<%= ob.getAvatarBgImage(ob.listing.item.images[0]) %>"></a>
     <div class="flexExpand tx5">
-      <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="txB clrT <% if (ob.description) print('rowTn') %>"><%= ob.listing.item.title %></a>
-      <% if (ob.sku) { %>
-        <div><%= ob.polyT('orderDetail.summaryTab.orderDetails.skuLabel') %>: <%= ob.sku %></div>
-      <% } %>
-      <% if (item.options && item.options.length) { %>
-        <div><%= item.options.map(option => `${option.name}:&nbsp;${option.value}`).join(',&nbsp;') %></div>
-      <% } %>
+      <div class="flex gutterH">
+        <div class="flexExpand">
+          <%
+            let title = ob.listing.item.title;
+
+            if (isCrypto) {
+              title = ob.crypto.tradingPair({
+                className: 'cryptoTradingPairSm',
+                fromCur: ob.listing.metadata.acceptedCurrencies[0],
+                toCur: coinType,
+              });
+            }
+          %>
+          <a href="#<%= `${ob.listing.vendorID.peerID}/store/${ob.listing.slug}` %>" class="txB clrT inlineBlock <% if (ob.description || isCrypto) print('rowTn') %>"><%= title %></a>
+          <% if (ob.sku) { %>
+            <div><%= ob.polyT('orderDetail.summaryTab.orderDetails.skuLabel') %>: <%= ob.sku %></div>
+          <% } %>
+          <% if (item.options && item.options.length) { %>
+            <div><%= item.options.map(option => `${option.name}:&nbsp;${option.value}`).join(',&nbsp;') %></div>
+          <% } %>
+          <% if (isCrypto) { %>
+            <div class="rowTn">
+              <span class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %>:</span> <%= ob.currencyMod.formattedCurrency(item.quantity, coinType) %> <a class="js-copyCryptoQuantity clrTEm" data-quantity="<%= item.quantity %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
+            </div>
+            <div class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoQuantityCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></div>
+          <% } %>          
+        </div>
+        <% if (isCrypto) { %>
+          <div>
+            <div class="flexHRight txB">
+              <%=
+                ob.currencyMod.pairedCurrency(
+                  ob.order.payment.amount,
+                  ob.currencyMod.getServerCurrency().code,
+                  ob.userCurrency
+                )
+              %>
+            </div>
+          </div>
+        <% } %>
+      </div>
       <hr class="clrBr" />
       <div class="flexRow gutterH">
         <div class="col4">
@@ -64,7 +98,7 @@
                 clipboardAddress = clipboardAddress.join('\n');
               %>
               <div class="gutterH">
-                <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
+                <a class="js-copyAddress clrTEm" data-address="<%= clipboardAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
                 <a class="clrTEm" href="<%= mapUrl %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.viewOnMap') %></a>
               </div>
               <% if (ob.order.shipping.addressNotes) { %>
@@ -88,24 +122,29 @@
                 const cointTypeNameKey = `cryptoCurrencies.${coinType}`;
                 const coinTypeName = ob.polyT(cointTypeNameKey);
               %>
-              <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.paymentAddressHeading', {
-              coinType: coinTypeName === cointTypeNameKey ?
-                coinType : coinTypeName,
-              }) %></div>
+              <div class="txB cryptoAddress">
+                <%= ob.polyT('orderDetail.summaryTab.orderDetails.paymentAddressHeading', {
+                  coinType: coinTypeName === cointTypeNameKey ?
+                    coinType : coinTypeName,
+                  icon: ob.crypto.cryptoIcon({
+                    code: ob.listing.metadata.coinType,
+                  }),
+                }) %>
+              </div>
               <div class="flex gutterHSm">
                 <div class="clamp cryptoPaymentAddress"><%= item.paymentAddress %></div>
                 <div>
-                  <a class="js-copyCryptoAddress clrTEm" data-address="<%= item.paymentAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyAddress') %></a>
+                  <a class="js-copyCryptoAddress clrTEm" data-address="<%= item.paymentAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
                 </div>
               </div>
-              <span class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoAddressCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>              
+              <span class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoAddressCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></span>
             </div>
           <% } %>
         </div>
         <div class="col8">
           <div class="row">
             <div class="flexRow gutterH row">
-              <div class="col6">
+              <div class="<%= print(isCrypto ? 'col12' : 'col6') %>">
                 <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.couponHeading') %></div>
                 <% if (item.couponCodes && item.couponCodes.length) { %>
                   <div><%= item.couponCodes.join(', ') %></div>
@@ -113,20 +152,15 @@
                   <div><%= ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
                 <% } %>
               </div>
-              <div class="col6">
-                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
-                <%
-                  let quantity = item.quantity;
-
-                  if (isCrypto) {
-                    quantity = ob.currencyMod.formattedCurrency(quantity, coinType);
-                  }
-                %>
-                <div><%= quantity %></div>
-              </div>
+              <% if (!isCrypto) { %>
+                <div class="col6">
+                  <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
+                  <div><%= item.quantity %></div>
+                </div>
+              <% } %>
             </div>
             <div class="flexRow gutterH row">
-              <div class="col6">
+              <div class="<%= print(isCrypto ? 'col12' : 'col6') %>">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
                 <% if (ob.isModerated) { %>
                   <div class="js-moderatorContainer"></div>
@@ -134,18 +168,20 @@
                   <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
                 <% } %>
               </div>
-              <div class="col6">
-                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
-                <div>
-                  <%=
-                    ob.currencyMod.pairedCurrency(
-                      ob.order.payment.amount,
-                      ob.currencyMod.getServerCurrency().code,
-                      ob.userCurrency
-                    )
-                  %>
+              <% if (!isCrypto) { %>
+                <div class="col6">
+                  <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
+                  <div>
+                    <%=
+                      ob.currencyMod.pairedCurrency(
+                        ob.order.payment.amount,
+                        ob.currencyMod.getServerCurrency().code,
+                        ob.userCurrency
+                      )
+                    %>
+                  </div>
                 </div>
-              </div>
+              <% } %>
             </div>
           </div>
         </div>

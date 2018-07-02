@@ -1,0 +1,13 @@
+<span class="<%= ob.className %>">
+  <%= ob.polyT('cryptoCodeIconPairing', {
+        code: `<span class="fromCur ${ob.fromCurClass || ''}">${ob.fromCur}</span>`,
+        icon: ob.crypto.cryptoIcon({ code: ob.fromCur }),
+  }) %>
+  <span class="pairingSeparator ion-android-arrow-forward <%= ob.arrowIconClass || '' %>"></span>
+  <% if (ob.toCur) { %>
+    <%= ob.polyT('cryptoCodeIconPairing', {
+          code: `<span class="fromCur ${ob.toCurClass || ''}">${ob.toCur}</span>`,
+          icon: ob.crypto.cryptoIcon({ code: ob.toCur }),
+    }) %>    
+  <% } %>  
+</span>

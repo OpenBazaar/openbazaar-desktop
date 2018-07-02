@@ -42,6 +42,7 @@ export default class extends BaseVw {
     return {
       'click .js-copyAddress': 'onClickCopyAddress',
       'click .js-copyCryptoAddress': 'onClickCopyCryptoAddress',
+      'click .js-copyCryptoQuantity': 'onClickCopyCryptoQuantity',
     };
   }
 
@@ -64,6 +65,18 @@ export default class extends BaseVw {
       .velocity('fadeIn', {
         complete: () => {
           this.getCachedEl('.js-cryptoAddressCopiedToClipboard')
+            .velocity('fadeOut', { delay: 1000 });
+        },
+      });
+  }
+
+  onClickCopyCryptoQuantity(e) {
+    clipboard.writeText($(e.target).data('quantity').toString());
+    this.getCachedEl('.js-cryptoQuantityCopiedToClipboard')
+      .velocity('stop')
+      .velocity('fadeIn', {
+        complete: () => {
+          this.getCachedEl('.js-cryptoQuantityCopiedToClipboard')
             .velocity('fadeOut', { delay: 1000 });
         },
       });

@@ -8,7 +8,7 @@ import path from 'path';
 import '../../../utils/lib/velocityUiPack.js';
 import Backbone from 'backbone';
 import app from '../../../app';
-import { isScrolledIntoView } from '../../../utils/dom';
+import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
@@ -61,7 +61,6 @@ export default class extends BaseModal {
         if (this.createMode && !this.model.isNew()) {
           this.createMode = false;
           this.$('.js-listingHeading').text(app.polyglot.t('editListing.editListingLabel'));
-          this.getCachedEl('.js-viewListing').removeClass('hide');
         }
 
         const updatedData = this.model.toJSON();
@@ -184,12 +183,28 @@ export default class extends BaseModal {
       'keyup .js-variantNameInput': 'onKeyUpVariantName',
       'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
       'click .js-viewListing': 'onClickViewListing',
+      'click .js-viewListingOnWeb': 'onClickViewListingOnWeb',
       ...super.events(),
     };
   }
 
   get MAX_PHOTOS() {
     return this.model.get('item').max.images;
+  }
+
+  get createMode() {
+    return this._createMode;
+  }
+
+  set createMode(bool) {
+    if (typeof bool !== 'boolean') {
+      throw new Error('Please provide bool as a boolean.');
+    }
+
+    if (bool !== this._createMode) {
+      this._createMode = bool;
+      this.$el.toggleClass('editMode', !this._createMode);
+    }
   }
 
   onClickReturn() {
@@ -203,7 +218,18 @@ export default class extends BaseModal {
       const slug = this.model.get('slug');
       if (slug) {
         app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
+      } else {
+        throw new Error('There is no slug for this listing in order to navigate!');
       }
+    }
+  }
+
+  onClickViewListingOnWeb() {
+    const slug = this.model.get('slug');
+    if (slug) {
+      openExternal(`http://openbazaar.com/store/${app.profile.id}/${slug}`);
+    } else {
+      throw new Error('There is no slug for this listing in order to navigate!');
     }
   }
 
@@ -1124,285 +1150,288 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    loadTemplate('modals/editListing/editListing.html', t => {
-      this.$el.html(t({
-        createMode: this.createMode,
-        selectedNavTabIndex: this.selectedNavTabIndex,
-        returnText: this.options.returnText,
-        listingCurrency: this.currency,
-        currencies: this.currencies,
-        contractTypes: metadata.contractTypesVerbose,
-        conditionTypes: this.model.get('item')
-          .conditionTypes
-          .map((conditionType) => ({ code: conditionType,
-            name: app.polyglot.t(`conditionTypes.${conditionType}`) })),
-        errors: this.model.validationError || {},
-        photoUploadInprogress: !!this.inProgressPhotoUploads.length,
-        uploadPhotoT: this.uploadPhotoT,
-        expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
-        expandedTermsAndConditions: this.expandedTermsAndConditions ||
-          !!this.model.get('termsAndConditions'),
-        formatPrice,
-        maxCatsWarning: this.maxCatsWarning,
-        maxTagsWarning: this.maxTagsWarning,
-        max: {
-          title: item.max.titleLength,
-          cats: item.max.cats,
-          tags: item.max.tags,
-          photos: this.MAX_PHOTOS,
-        },
-        shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
-        ...this.model.toJSON(),
-      }));
+    loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
+      loadTemplate('modals/editListing/editListing.html', t => {
+        this.$el.html(t({
+          createMode: this.createMode,
+          selectedNavTabIndex: this.selectedNavTabIndex,
+          returnText: this.options.returnText,
+          listingCurrency: this.currency,
+          currencies: this.currencies,
+          contractTypes: metadata.contractTypesVerbose,
+          conditionTypes: this.model.get('item')
+            .conditionTypes
+            .map((conditionType) => ({ code: conditionType,
+              name: app.polyglot.t(`conditionTypes.${conditionType}`) })),
+          errors: this.model.validationError || {},
+          photoUploadInprogress: !!this.inProgressPhotoUploads.length,
+          uploadPhotoT: this.uploadPhotoT,
+          expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
+          expandedTermsAndConditions: this.expandedTermsAndConditions ||
+            !!this.model.get('termsAndConditions'),
+          formatPrice,
+          maxCatsWarning: this.maxCatsWarning,
+          maxTagsWarning: this.maxTagsWarning,
+          max: {
+            title: item.max.titleLength,
+            cats: item.max.cats,
+            tags: item.max.tags,
+            photos: this.MAX_PHOTOS,
+          },
+          shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
+          viewListingsT,
+          ...this.model.toJSON(),
+        }));
 
-      this.setContractTypeClass(metadata.get('contractType'));
-      super.render();
+        this.setContractTypeClass(metadata.get('contractType'));
+        super.render();
 
-      this._$scrollLinks = null;
-      this._$scrollToSections = null;
-      this._$currencySelect = null;
-      this._$priceInput = null;
-      this._$buttonSave = null;
-      this._$inputPhotoUpload = null;
-      this._$photoUploadingLabel = null;
-      this._$editListingReturnPolicy = null;
-      this._$editListingTermsAndConditions = null;
-      this._$sectionShipping = null;
-      this._$maxCatsWarning = null;
-      this._$maxTagsWarning = null;
-      this._$addShipOptSectionHeading = null;
-      this._$variantInventorySection = null;
-      this._$itemPrice = null;
-      this.$photoUploadItems = this.$('.js-photoUploadItems');
-      this.$modalContent = this.$('.modalContent');
-      this.$tabControls = this.$('.tabControls');
-      this.$titleInput = this.$('#editListingTitle');
-      this.$editListingTags = this.$('#editListingTags');
-      this.$editListingCategories = this.$('#editListingCategories');
-      this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
-      this.$couponsSection = this.$('.js-couponsSection');
-      this.$variantsSection = this.$('.js-variantsSection');
+        this._$scrollLinks = null;
+        this._$scrollToSections = null;
+        this._$currencySelect = null;
+        this._$priceInput = null;
+        this._$buttonSave = null;
+        this._$inputPhotoUpload = null;
+        this._$photoUploadingLabel = null;
+        this._$editListingReturnPolicy = null;
+        this._$editListingTermsAndConditions = null;
+        this._$sectionShipping = null;
+        this._$maxCatsWarning = null;
+        this._$maxTagsWarning = null;
+        this._$addShipOptSectionHeading = null;
+        this._$variantInventorySection = null;
+        this._$itemPrice = null;
+        this.$photoUploadItems = this.$('.js-photoUploadItems');
+        this.$modalContent = this.$('.modalContent');
+        this.$tabControls = this.$('.tabControls');
+        this.$titleInput = this.$('#editListingTitle');
+        this.$editListingTags = this.$('#editListingTags');
+        this.$editListingCategories = this.$('#editListingCategories');
+        this.$shippingOptionsWrap = this.$('.js-shippingOptionsWrap');
+        this.$couponsSection = this.$('.js-couponsSection');
+        this.$variantsSection = this.$('.js-variantsSection');
 
-      this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
-      });
-
-      this.$('#editListingCurrency').select2()
-        .on('change', () => this.variantInventory.render());
-
-      this.$editListingTags.selectize({
-        persist: false,
-        maxItems: item.max.tags,
-        create: input => {
-          // we'll make the tag all lowercase and
-          // replace spaces with dashes.
-          const term = input.toLowerCase()
-            .replace(/\s/g, '-')
-            .replace('#', '')
-            // replace consecutive dashes with one
-            .replace(/-{2,}/g, '-');
-          return {
-            value: term,
-            text: term,
-          };
-        },
-        onChange: value => {
-          const tags = value.length ? value.split(',') : [];
-          if (tags.length >= item.max.tags) {
-            this.showMaxTagsWarning();
-          } else {
-            this.hideMaxTagsWarning();
-          }
-        },
-      });
-
-      this.$editListingCategories.selectize({
-        persist: false,
-        maxItems: item.max.cats,
-        create: input => ({
-          value: input,
-          text: input,
-        }),
-        onChange: value => {
-          const cats = value.length ? value.split(',') : [];
-          if (cats.length >= item.max.cats) {
-            this.showMaxCatsWarning();
-          } else {
-            this.hideMaxCatsWarning();
-          }
-        },
-      });
-
-      // render shipping options
-      this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
-      this.shippingOptionViews = [];
-      const shipOptsFrag = document.createDocumentFragment();
-
-      this.model.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
-        const shipOptVw = this.createShippingOptionView({
-          model: shipOpt,
-          listPosition: shipOptIndex + 1,
+        this.$('#editContractType, #editListingVisibility, #editListingCondition').select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
         });
 
-        this.shippingOptionViews.push(shipOptVw);
-        shipOptVw.render().$el.appendTo(shipOptsFrag);
-      });
+        this.$('#editListingCurrency').select2()
+          .on('change', () => this.variantInventory.render());
 
-      this.$shippingOptionsWrap.append(shipOptsFrag);
+        this.$editListingTags.selectize({
+          persist: false,
+          maxItems: item.max.tags,
+          create: input => {
+            // we'll make the tag all lowercase and
+            // replace spaces with dashes.
+            const term = input.toLowerCase()
+              .replace(/\s/g, '-')
+              .replace('#', '')
+              // replace consecutive dashes with one
+              .replace(/-{2,}/g, '-');
+            return {
+              value: term,
+              text: term,
+            };
+          },
+          onChange: value => {
+            const tags = value.length ? value.split(',') : [];
+            if (tags.length >= item.max.tags) {
+              this.showMaxTagsWarning();
+            } else {
+              this.hideMaxTagsWarning();
+            }
+          },
+        });
 
-      // render sku field
-      if (this.skuField) this.skuField.remove();
+        this.$editListingCategories.selectize({
+          persist: false,
+          maxItems: item.max.cats,
+          create: input => ({
+            value: input,
+            text: input,
+          }),
+          onChange: value => {
+            const cats = value.length ? value.split(',') : [];
+            if (cats.length >= item.max.cats) {
+              this.showMaxCatsWarning();
+            } else {
+              this.hideMaxCatsWarning();
+            }
+          },
+        });
 
-      this.skuField = this.createChild(SkuField, {
-        model: item,
-        initialState: {
-          variantsPresent: !!item.get('options').length,
-        },
-      });
+        // render shipping options
+        this.shippingOptionViews.forEach((shipOptVw) => shipOptVw.remove());
+        this.shippingOptionViews = [];
+        const shipOptsFrag = document.createDocumentFragment();
 
-      this.$('.js-skuFieldContainer').html(this.skuField.render().el);
+        this.model.get('shippingOptions').forEach((shipOpt, shipOptIndex) => {
+          const shipOptVw = this.createShippingOptionView({
+            model: shipOpt,
+            listPosition: shipOptIndex + 1,
+          });
 
-      // render variants
-      if (this.variantsView) this.variantsView.remove();
+          this.shippingOptionViews.push(shipOptVw);
+          shipOptVw.render().$el.appendTo(shipOptsFrag);
+        });
 
-      const variantErrors = {};
+        this.$shippingOptionsWrap.append(shipOptsFrag);
 
-      Object.keys(item.validationError || {})
-        .forEach(errKey => {
-          if (errKey.startsWith('options[')) {
-            variantErrors[errKey] =
-              item.validationError[errKey];
+        // render sku field
+        if (this.skuField) this.skuField.remove();
+
+        this.skuField = this.createChild(SkuField, {
+          model: item,
+          initialState: {
+            variantsPresent: !!item.get('options').length,
+          },
+        });
+
+        this.$('.js-skuFieldContainer').html(this.skuField.render().el);
+
+        // render variants
+        if (this.variantsView) this.variantsView.remove();
+
+        const variantErrors = {};
+
+        Object.keys(item.validationError || {})
+          .forEach(errKey => {
+            if (errKey.startsWith('options[')) {
+              variantErrors[errKey] =
+                item.validationError[errKey];
+            }
+          });
+
+        this.variantsView = this.createChild(Variants, {
+          collection: this.variantOptionsCl,
+          maxVariantCount: item.max.optionCount,
+          errors: variantErrors,
+        });
+
+        this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
+          this.onVariantChoiceChange.bind(this));
+
+        this.$variantsSection.find('.js-variantsContainer').append(
+          this.variantsView.render().el
+        );
+
+        // render inventory management section
+        if (this.inventoryManagement) this.inventoryManagement.remove();
+        const inventoryManagementErrors = {};
+
+        if (this.model.validationError &&
+          this.model.validationError['item.quantity']) {
+          inventoryManagementErrors.quantity = this.model.validationError['item.quantity'];
+        }
+
+        this.inventoryManagement = this.createChild(InventoryManagement, {
+          initialState: {
+            trackBy: this.trackInventoryBy,
+            quantity: item.get('quantity'),
+            errors: inventoryManagementErrors,
+          },
+        });
+
+        this.$('.js-inventoryManagementSection').html(this.inventoryManagement.render().el);
+        this.listenTo(this.inventoryManagement, 'changeManagementType',
+          this.onChangeManagementType);
+
+        // render variant inventory
+        if (this.variantInventory) this.variantInventory.remove();
+
+        this.variantInventory = this.createChild(VariantInventory, {
+          collection: item.get('skus'),
+          optionsCl: item.get('options'),
+          getPrice: () => this.getFormData(this.$itemPrice).item.price,
+          getCurrency: () => this.currency,
+        });
+
+        this.$('.js-variantInventoryTableContainer')
+          .html(this.variantInventory.render().el);
+
+        // render coupons
+        if (this.couponsView) this.couponsView.remove();
+
+        const couponErrors = {};
+
+        Object.keys(this.model.validationError || {})
+          .forEach(errKey => {
+            if (errKey.startsWith('coupons[')) {
+              couponErrors[errKey] =
+                this.model.validationError[errKey];
+            }
+          });
+
+        this.couponsView = this.createChild(Coupons, {
+          collection: this.coupons,
+          maxCouponCount: this.model.max.couponCount,
+          couponErrors,
+        });
+
+        this.$couponsSection.find('.js-couponsContainer').append(
+          this.couponsView.render().el
+        );
+
+        installRichEditor(this.$('#editListingDescription'), {
+          topLevelClass: 'clrBr',
+        });
+
+        if (this.sortablePhotos) this.sortablePhotos.destroy();
+        this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
+          filter: '.js-addPhotoWrap',
+          onUpdate: (e) => {
+            const imageModels = this.model
+              .get('item')
+              .get('images')
+              .models;
+
+            const movingModel = imageModels[e.oldIndex - 1];
+            imageModels.splice(e.oldIndex - 1, 1);
+            imageModels.splice(e.newIndex - 1, 0, movingModel);
+          },
+          onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
+        });
+
+        if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
+        this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
+          model: this.model,
+        });
+        this.getCachedEl('.js-cryptoTypeWrap')
+          .html(this.cryptoCurrencyType.render().el);
+
+        setTimeout(() => {
+          if (!this.rendered) {
+            this.rendered = true;
+            this.$titleInput.focus();
           }
         });
 
-      this.variantsView = this.createChild(Variants, {
-        collection: this.variantOptionsCl,
-        maxVariantCount: item.max.optionCount,
-        errors: variantErrors,
-      });
-
-      this.variantsView.listenTo(this.variantsView, 'variantChoiceChange',
-        this.onVariantChoiceChange.bind(this));
-
-      this.$variantsSection.find('.js-variantsContainer').append(
-        this.variantsView.render().el
-      );
-
-      // render inventory management section
-      if (this.inventoryManagement) this.inventoryManagement.remove();
-      const inventoryManagementErrors = {};
-
-      if (this.model.validationError &&
-        this.model.validationError['item.quantity']) {
-        inventoryManagementErrors.quantity = this.model.validationError['item.quantity'];
-      }
-
-      this.inventoryManagement = this.createChild(InventoryManagement, {
-        initialState: {
-          trackBy: this.trackInventoryBy,
-          quantity: item.get('quantity'),
-          errors: inventoryManagementErrors,
-        },
-      });
-
-      this.$('.js-inventoryManagementSection').html(this.inventoryManagement.render().el);
-      this.listenTo(this.inventoryManagement, 'changeManagementType', this.onChangeManagementType);
-
-      // render variant inventory
-      if (this.variantInventory) this.variantInventory.remove();
-
-      this.variantInventory = this.createChild(VariantInventory, {
-        collection: item.get('skus'),
-        optionsCl: item.get('options'),
-        getPrice: () => this.getFormData(this.$itemPrice).item.price,
-        getCurrency: () => this.currency,
-      });
-
-      this.$('.js-variantInventoryTableContainer')
-        .html(this.variantInventory.render().el);
-
-      // render coupons
-      if (this.couponsView) this.couponsView.remove();
-
-      const couponErrors = {};
-
-      Object.keys(this.model.validationError || {})
-        .forEach(errKey => {
-          if (errKey.startsWith('coupons[')) {
-            couponErrors[errKey] =
-              this.model.validationError[errKey];
+        setTimeout(() => {
+          // restore the scroll position
+          if (restoreScrollPos) {
+            this.el.scrollTop = prevScrollPos;
           }
+
+          this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
+          setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
         });
 
-      this.couponsView = this.createChild(Coupons, {
-        collection: this.coupons,
-        maxCouponCount: this.model.max.couponCount,
-        couponErrors,
-      });
-
-      this.$couponsSection.find('.js-couponsContainer').append(
-        this.couponsView.render().el
-      );
-
-      installRichEditor(this.$('#editListingDescription'), {
-        topLevelClass: 'clrBr',
-      });
-
-      if (this.sortablePhotos) this.sortablePhotos.destroy();
-      this.sortablePhotos = Sortable.create(this.$photoUploadItems[0], {
-        filter: '.js-addPhotoWrap',
-        onUpdate: (e) => {
-          const imageModels = this.model
-            .get('item')
-            .get('images')
-            .models;
-
-          const movingModel = imageModels[e.oldIndex - 1];
-          imageModels.splice(e.oldIndex - 1, 1);
-          imageModels.splice(e.newIndex - 1, 0, movingModel);
-        },
-        onMove: (e) => ($(e.related).hasClass('js-addPhotoWrap') ? false : undefined),
-      });
-
-      if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
-      this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
-        model: this.model,
-      });
-      this.getCachedEl('.js-cryptoTypeWrap')
-        .html(this.cryptoCurrencyType.render().el);
-
-      setTimeout(() => {
-        if (!this.rendered) {
-          this.rendered = true;
-          this.$titleInput.focus();
+        // This block should be after any dom manipulation in render.
+        if (this.createMode) {
+          if (!this.attrsAtCreate) {
+            this.setModelData();
+            this.attrsAtCreate = this.model.toJSON();
+          }
+        } else {
+          if (!this.attrsAtLastSave) {
+            this.setModelData();
+            this.attrsAtLastSave = this.model.toJSON();
+          }
         }
       });
-
-      setTimeout(() => {
-        // restore the scroll position
-        if (restoreScrollPos) {
-          this.el.scrollTop = prevScrollPos;
-        }
-
-        this.throttledOnScroll = _.bind(_.throttle(this.onScroll, 100), this);
-        setTimeout(() => this.$el.on('scroll', this.throttledOnScroll), 100);
-      });
-
-      // This block should be after any dom manipulation in render.
-      if (this.createMode) {
-        if (!this.attrsAtCreate) {
-          this.setModelData();
-          this.attrsAtCreate = this.model.toJSON();
-        }
-      } else {
-        if (!this.attrsAtLastSave) {
-          this.setModelData();
-          this.attrsAtLastSave = this.model.toJSON();
-        }
-      }
     });
-
     return this;
   }
 }

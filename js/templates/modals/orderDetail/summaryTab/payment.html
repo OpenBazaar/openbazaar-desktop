@@ -24,7 +24,16 @@
         statusIcon = 'ion-ios-close-empty';
       }
     %>
-    <div class="statusIconCol <%= statusIconClass %>"><span class="clrBr <%= statusIcon %>"></span></div>
+    <div class="statusIconCol <%= statusIconClass %>">
+      <% if (!ob.isCrypto) { %>
+        <span class="clrBr <%= statusIcon %>"></span>
+      <% } else { %>
+        <%= ob.crypto.cryptoIcon({
+          code: ob.paymentCoin,
+          className: 'clrBr',
+        }) %>
+      <% } %>
+    </div>
     <div class="flexExpand tx5">
       <%
         const priceFrag = ob.currencyMod.pairedCurrency(

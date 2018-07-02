@@ -54,7 +54,12 @@
     </div>
   <% } else if (ob.contractType === 'CRYPTOCURRENCY') { %>
     <div class="flex gutterH clrT">
-      <div class="statusIconCol"><span class="clrBr ion-cash"></span></div>
+      <div class="statusIconCol">
+        <%= ob.crypto.cryptoIcon({
+          code: ob.coinType,
+          className: 'clrBr',
+        }) %>
+      </div>
       <div class="flexExpand tx5 posR">
         <%
           const coinTypeTranslationKey = `cryptoCurrencies.${ob.coinType}`;

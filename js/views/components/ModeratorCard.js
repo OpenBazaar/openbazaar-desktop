@@ -37,6 +37,11 @@ export default class extends BaseVw {
       throw new Error('Please provide a Profile model.');
     }
 
+    const modInfo = this.model.get('moderatorInfo');
+    const modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
+    this.userCurrency = app.serverConfig.cryptoCurrency;
+    this.hasValidCurrency = modCurs.includes(this.userCurrency);
+
     handleLinks(this.el);
   }
 
@@ -71,9 +76,10 @@ export default class extends BaseVw {
   rotateSelectState() {
     if (this.cardState === 'selected' && !this.options.radioStyle) {
       this.changeSelectState(this.notSelected);
-    } else if (this.model.isModerator) {
-      /* Only change to selected if this is a valid moderator. Moderators that have become invalid
-         may be displayed, and can be de-selected to remove them. */
+    } else if (this.model.isModerator && this.hasValidCurrency) {
+      /* Only change to selected if this is a valid moderator and the user's currency is supported.
+      Moderators that have become invalid may be displayed, and can be de-selected to remove them.
+      */
       this.changeSelectState('selected');
     }
   }
@@ -109,6 +115,8 @@ export default class extends BaseVw {
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
+        userCurrency: this.userCurrency,
+        hasValidCurrency: this.hasValidCurrency,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,
         verified: !!verifiedMod,
