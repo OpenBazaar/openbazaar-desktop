@@ -22,7 +22,7 @@ export default class extends BaseOrder {
   /**
    * Returns the contract of the party that opened the dispute, which is the only
    * contract you're guaranteed to have. If you need the specific contract of either
-   * the buyer or sell, grab it directly via model.get('buyerContract') /
+   * the buyer or seller, grab it directly via model.get('buyerContract') /
    * model.get('vendorContract').
    */
   get contract() {
