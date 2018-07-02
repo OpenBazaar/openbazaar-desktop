@@ -1,9 +1,10 @@
 import $ from 'jquery';
 import 'trumbowyg';
+import app from '../../app';
 
 $.trumbowyg.svgPath = '../node_modules/trumbowyg/dist/ui/icons.svg';
 
-export const editorOptions = {
+export const defaultEditorOptions = {
   btns: [
     ['formatting'],
     ['bold', 'italic'],
@@ -12,26 +13,28 @@ export const editorOptions = {
     'btnGrp-lists',
     ['horizontalRule'],
   ],
+
 };
 
 export function installRichEditor(attachPoint, options = {}) {
-  const opts = {
-    editorOptions: {
-      ...editorOptions,
-      ...options.editorOptions || {},
-    },
-    ...options,
+  const language = app.localSettings.get('language');
+
+  options.editorOptions = {
+    ...defaultEditorOptions,
+    lang: language,
+    ...options.editorOptions || {},
   };
 
+  console.log(`trumboOptions: ${JSON.stringify(options.editorOptions)}`);
   // accept a selector, element, or jQuery object
   const attach = $(attachPoint);
 
   // create editor
-  attach.trumbowyg(opts.editorOptions);
+  attach.trumbowyg(options.editorOptions);
 
-  if (opts.topLevelClass) {
+  if (options.topLevelClass) {
     attach.closest('.trumbowyg')
-      .addClass(opts.topLevelClass);
+      .addClass(options.topLevelClass);
   }
 
   return attach;
