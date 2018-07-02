@@ -62,27 +62,25 @@ function getValidLanguage(lang) {
   return 'en_US';
 }
 
+// Imports specific JSON and Trumbowyg language files for localization.
+function importLanguageFiles(lang) {
+  app.polyglot.extend(require(`./languages/${lang}.json`)); // eslint-disable-line global-require
+
+  const trumboLang = getTrumboLangFileNameByCode(lang);
+  if (trumboLang) {
+    // eslint-disable-next-line global-require
+    app.polyglot.extend(require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
+  }
+}
+
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
 moment.locale(initialLang);
 app.polyglot = new Polyglot();
-app.polyglot.extend(require(`./languages/${initialLang}.json`));
-
-let trumboLang = getTrumboLangFileNameByCode(initialLang);
-if (trumboLang) {
-  // eslint-disable-next-line global-require
-  app.polyglot.extend(require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
-}
+importLanguageFiles(initialLang);
 
 app.localSettings.on('change:language', (localSettings, lang) => {
-  app.polyglot.extend(
-    require(`./languages/${lang}.json`)); // eslint-disable-line global-require
-
-  trumboLang = getTrumboLangFileNameByCode(lang);
-  if (trumboLang) {
-    app.polyglot.extend( // eslint-disable-next-line global-require
-      require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
-  }
+  importLanguageFiles(lang);
 
   moment.locale(lang);
 
