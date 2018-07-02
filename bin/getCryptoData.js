@@ -106,7 +106,7 @@ getWhitelist()
           // remove duplicates from the data set using our whitelist
           const newList = [];
           const indexedNewList = {};
-          results.data.forEach((c, i) => {
+          results.data.forEach(c => {
             if (
               !(whitelist[c.symbol] && whitelist[c.symbol] !== c.id) &&
               !indexedNewList[c.symbol]
