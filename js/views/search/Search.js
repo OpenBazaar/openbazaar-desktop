@@ -57,7 +57,10 @@ export default class extends baseVw {
       // use the first default temporarily to construct the tempUrl below
       this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
       this.mustSelectDefault = true;
+      recordEvent('Discover_InvalidDefaultProvider');
     }
+
+    if (options.query) recordEvent('Discover_SearchFromAddressBar');
 
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
