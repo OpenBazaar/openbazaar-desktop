@@ -105,13 +105,14 @@ getWhitelist()
         .then(results => {
           // remove duplicates from the data set using our whitelist
           const newList = [];
+          const indexedNewList = {};
           results.data.forEach((c, i) => {
-            const furtherResults = results.data.slice(i + 1);
             if (
               !(whitelist[c.symbol] && whitelist[c.symbol] !== c.id) &&
-              !furtherResults.find(coin => coin.symbol === c.symbol)
+              !indexedNewList[c.symbol]
             ) {
               newList.push(c);
+              indexedNewList[c.symbol] = c;
             }
           });
           totalCoins = newList.length;
@@ -136,9 +137,9 @@ getWhitelist()
               setTimeout(() => callGetIcon(index + 1), 50);
             }
           };
-          callGetIcon();
 
           if (results.data.length) {
+            callGetIcon();
             console.log('Updating the en_US.json translation file...');
             fs.readFile(translationFile, (err, data) => {
               if (err) {
