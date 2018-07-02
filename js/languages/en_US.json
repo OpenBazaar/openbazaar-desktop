@@ -57,7 +57,8 @@
     "fullNodeLink": "here",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
     "btnBrowse": "Browse",
-    "btnNext": "Next"
+    "btnNext": "Next",
+    "alreadyInUse": "Already in use"
   },
   "unsupportedCryptoCurDialog": {
     "title": "Unsupported Currency",
