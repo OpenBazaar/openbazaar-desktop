@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
-import { recordEvent } from '../../../utils/metrics';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../../utils/metrics';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -83,6 +83,8 @@ export default class extends baseVw {
       fetchFailed: false,
     });
 
+    startAjaxEvent('Purchase_ConfirmBoxEstimateFee');
+
     estimateFee(feeLevel, amount)
       .done(fee => {
         let state = {
@@ -99,7 +101,11 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          recordEvent('Purchase_ConfirmBoxInsufficientFunds');
+          endAjaxEvent('Purchase_ConfirmBoxEstimateFee', {
+            errors: 'ERROR_INSUFFICIENT_FUNDS',
+          });
+        } else {
+          endAjaxEvent('Purchase_ConfirmBoxEstimateFee');
         }
 
         this.setState(state);
@@ -110,8 +116,9 @@ export default class extends baseVw {
           fetchFailed: true,
           fetchError,
         });
-        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', {
-          errror: fetchError || 'unknown error',
+
+        endAjaxEvent('Purchase_ConfirmBoxEstimateFee', {
+          errors: fetchError || 'unknown error',
         });
       });
   }
