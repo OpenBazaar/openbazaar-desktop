@@ -23,11 +23,12 @@ export default class extends BaseVw {
     $.get(app.getServerUrl(`ob/posts/${this.options.model.get('peerID')}`))
       .done(data => this.onPosts(data))
       .fail((jqXhr) => {
-        if (jqXhr.statusText === 'abort') return;
-        const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('listingDetail.errors.fetchPosts'),
-          failReason);
+        // if (jqXhr.statusText === 'abort') return;
+        // const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+        // openSimpleMessage(
+        //   app.polyglot.t('listingDetail.errors.fetchPosts'),
+        //   failReason);
+        this.onPosts({});
       });
   }
 
@@ -39,6 +40,7 @@ export default class extends BaseVw {
     const pData = data || {};
     pData.reverse();
     this.posts.posts = pData;
+    console.log(pData);
     this.getCachedEl('.js-posts').append(this.posts.render().$el);
   }
 
