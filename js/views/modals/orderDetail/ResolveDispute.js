@@ -5,6 +5,7 @@ import {
   resolveDispute,
   events as orderEvents,
 } from '../../../utils/order';
+import { recordEvent } from '../../../utils/metrics';
 import { checkValidParticipantObject } from './OrderDetail.js';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
@@ -78,6 +79,7 @@ export default class extends BaseVw {
   }
 
   onClickCancelConfirm() {
+    recordEvent('OrderDetails_DisputeResolveConfirmCancel');
     this.getCachedEl('.js-resolveConfirm').addClass('hide');
   }
 
@@ -96,10 +98,12 @@ export default class extends BaseVw {
     this.model.set({ orderId: id });
     this.render();
     this.trigger('clickCancel');
+    recordEvent('OrderDetails_DisputeResolveCancel');
   }
 
   onClickSubmit() {
     this.getCachedEl('.js-resolveConfirm').removeClass('hide');
+    recordEvent('OrderDetails_DisputeResolveSubmit');
     return false;
   }
 
@@ -114,6 +118,7 @@ export default class extends BaseVw {
     }, { validate: true });
 
     if (!this.model.validationError) {
+      recordEvent('OrderDetails_DisputeResolveConfirm');
       resolveDispute(this.model);
     }
 

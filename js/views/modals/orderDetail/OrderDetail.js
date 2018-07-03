@@ -63,10 +63,6 @@ export default class extends BaseModal {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
-      recordEvent('OrderDetails_LiveStateChange', {
-        state: md.get('state'),
-        moderated: !!this.moderatorId, // collect only a boolean
-      });
     });
 
     this.listenTo(orderEvents, 'openDisputeComplete', () => {
@@ -628,7 +624,14 @@ export default class extends BaseModal {
           initialState: this.actionBarButtonState,
         });
         this.$('.js-actionBarContainer').html(this.actionBar.render().el);
-        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
+        this.listenTo(this.actionBar, 'clickOpenDispute', () => {
+          recordEvent('OrderDetails_DisputeStart', {
+            type: this.type,
+            // this will record the state before it changes to DISPUTED
+            state: this.model.get('state'),
+          });
+          this.selectTab('disputeOrder');
+        });
 
         if (this.contractMenuItem) this.contractMenuItem.remove();
         this.contractMenuItem = this.createChild(ContractMenuItem, {

@@ -88,17 +88,23 @@ export default class extends baseVw {
 
   onClickUserColLink(e) {
     e.stopPropagation();
-    recordEvent('Transactions_ClickUser');
+    recordEvent('Transactions_ClickUser', {
+      type: this.type,
+    });
   }
 
   onClickListingColLink(e) {
     e.stopPropagation();
-    recordEvent('Transactions_ClickListing');
+    recordEvent('Transactions_ClickListing', {
+      type: this.type,
+    });
   }
 
   onRowClick() {
     this.trigger('clickRow', { view: this });
-    recordEvent('Transactions_ClickOrder');
+    recordEvent('Transactions_ClickOrder', {
+      type: this.type,
+    });
   }
 
   getState() {

@@ -7,6 +7,7 @@ import {
   acceptPayout,
   events as orderEvents,
 } from '../../../../utils/order';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -67,6 +68,7 @@ export default class extends BaseVw {
   }
 
   onClickAcceptPayout() {
+    recordEvent('OrderDetails_DisputeAcceptClick');
     this.setState({ acceptConfirmOn: true });
     return false;
   }
@@ -78,10 +80,12 @@ export default class extends BaseVw {
   }
 
   onClickAcceptPayoutConfirmCancel() {
+    recordEvent('OrderDetails_DisputeAcceptCancel');
     this.setState({ acceptConfirmOn: false });
   }
 
   onClickAcceptPayoutConfirmed() {
+    recordEvent('OrderDetails_DisputeAcceptConfirm');
     this.setState({ acceptConfirmOn: false });
     acceptPayout(this.orderId);
   }

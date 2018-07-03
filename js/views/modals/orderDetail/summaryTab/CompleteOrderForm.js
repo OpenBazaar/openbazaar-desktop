@@ -4,6 +4,7 @@ import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import Rating from '../../../../models/order/orderCompletion/Rating';
 import BaseVw from '../../../baseVw';
@@ -74,6 +75,7 @@ export default class extends BaseVw {
 
     if (!this.rating.validationError) {
       completeOrder(this.model.id, this.model.toJSON());
+      recordEvent('OrderDetails_CompleteOrder');
     }
 
     this.render();

@@ -3,6 +3,7 @@ import moment from 'moment';
 import {
   events as orderEvents,
 } from '../../../../utils/order';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -35,6 +36,7 @@ export default class extends BaseVw {
   }
 
   onClickResolveDispute() {
+    recordEvent('OrderDetails_DisputeResolveStart');
     this.trigger('clickResolveDispute');
   }
 
