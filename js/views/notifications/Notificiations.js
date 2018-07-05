@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../../app';
 import { capitalize } from '../../utils/string';
+import { recordEvent } from '../../utils/metrics';
 import loadTemplate from '../../utils/loadTemplate';
 import Notifications from '../../collections/Notifications';
 import BaseVw from '../baseVw';
@@ -35,10 +36,12 @@ export default class extends BaseVw {
   }
 
   onClickTab(e) {
+    const tab = e.target.getAttribute('data-tab');
+    recordEvent('Notifications_Tab', { tab });
     // Timeout needed so event can bubble to a page nav handler before the view is re-rendered
     // and the target element is ripped out of the dom.
     setTimeout(() => {
-      this.setState({ tab: e.target.getAttribute('data-tab') });
+      this.setState({ tab });
     });
   }
 
