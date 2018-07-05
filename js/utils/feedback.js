@@ -1,6 +1,6 @@
 import app from '../app';
 import { version } from '../../package.json';
-import { userStats } from './metrics';
+import { recordEvent, userStats } from './metrics';
 
 
 /*
@@ -16,6 +16,8 @@ function setFeedbackOptions() {
   window.doorbellOptions = {
     appKey: 'lscnduocsmcCDtvh4DCZ4iQhGuCXZy4iexy7bIRa6wa5MFocLkSSutFU3zOii5k8',
     name: profile.name || 'profile data missing',
+    onShow: () => recordEvent('Feedback_Show'),
+    onError: (code, message) => recordEvent('Feedback_Error', { code, message }),
     properties: {
       settingsReadable: !!app.settings,
       profileReadable: !!app.profile,
