@@ -128,6 +128,8 @@ export function startAjaxEvent(key) {
 }
 
 export function endAjaxEvent(key, segmentation) {
+  console.log(key)
+  if (segmentation) console.log(segmentation)
   if (window.Countly) {
     const seg = {
       errors: 'none',

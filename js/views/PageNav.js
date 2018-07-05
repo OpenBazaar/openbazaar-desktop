@@ -2,6 +2,7 @@ import { remote } from 'electron';
 import { isMultihash } from '../utils';
 import { events as serverConnectEvents, getCurrentConnection } from '../utils/serverConnect';
 import { setUnreadNotifCount, launchNativeNotification } from '../utils/notification';
+import { recordEvent } from '../utils/metrics';
 import Backbone from 'backbone';
 import BaseVw from './baseVw';
 import loadTemplate from '../utils/loadTemplate';
@@ -439,6 +440,7 @@ export default class extends BaseVw {
   }
 
   navCreateListingClick() {
+    recordEvent('Listing_NewFromPageNav');
     const listingModel = new Listing({}, { guid: app.profile.id });
 
     launchEditListingModal({

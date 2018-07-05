@@ -5,7 +5,7 @@ import { abbrNum } from '../utils';
 import { launchEditListingModal } from '../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
 import { isHiRez } from '../utils/responsive';
-import { startAjaxEvent, endAjaxEvent } from '../utils/metrics';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from '../utils/metrics';
 import Listing from '../models/listing/Listing';
 import ListingShort from '../models/listing/ListingShort';
 import { events as listingEvents } from '../models/listing/';
@@ -177,6 +177,7 @@ export default class extends baseVw {
   }
 
   onClickEdit(e) {
+    recordEvent('Lisitng_EditFromCard');
     app.loadingModal.open();
 
     this.fetchFullListing()
@@ -196,12 +197,14 @@ export default class extends baseVw {
   }
 
   onClickDelete(e) {
+    recordEvent('Lisitng_DeleteFromCard');
     this.getCachedEl('.js-deleteConfirmedBox').removeClass('hide');
     this.deleteConfirmOn = true;
     e.stopPropagation();
   }
 
   onClickClone(e) {
+    recordEvent('Lisitng_CloneFromCard');
     app.loadingModal.open();
 
     this.fetchFullListing()
@@ -220,12 +223,14 @@ export default class extends baseVw {
   }
 
   onClickConfirmedDelete(e) {
+    recordEvent('Lisitng_DeleteFromCardConfirm');
     e.stopPropagation();
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
     this.destroyRequest = this.model.destroy({ wait: true });
   }
 
   onClickConfirmCancel() {
+    recordEvent('Lisitng_DeleteFromCardCancel');
     this.getCachedEl('.js-deleteConfirmedBox').addClass('hide');
     this.deleteConfirmOn = false;
   }
