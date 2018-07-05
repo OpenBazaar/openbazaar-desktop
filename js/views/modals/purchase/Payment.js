@@ -230,6 +230,7 @@ export default class extends BaseVw {
       });
 
       this.spendConfirmBox = this.createChild(SpendConfirmBox, {
+        metricsOrigin: 'Purchase',
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
         },

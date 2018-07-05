@@ -21,6 +21,7 @@ export default class extends baseVw {
     };
 
     this.lastFetchFeeEstimateArgs = {};
+    this.metricsOrigin = options.metricsOrigin;
     this.boundDocumentClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocumentClick);
   }
@@ -49,13 +50,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxSend');
+    recordEvent(`${this.metricsOrigin}_ConfirmBoxSend`);
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxCancel');
+    recordEvent(`${this.metricsOrigin}_ConfirmBoxCancel`);
   }
 
   onClickRetry(e) {
@@ -64,7 +65,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxRetry');
+    recordEvent(`${this.metricsOrigin}_ConfirmBoxRetry`);
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -83,7 +84,7 @@ export default class extends baseVw {
       fetchFailed: false,
     });
 
-    startAjaxEvent('Purchase_ConfirmBoxEstimateFee');
+    startAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`);
 
     estimateFee(feeLevel, amount)
       .done(fee => {
@@ -101,11 +102,11 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          endAjaxEvent('Purchase_ConfirmBoxEstimateFee', {
+          endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`, {
             errors: 'ERROR_INSUFFICIENT_FUNDS',
           });
         } else {
-          endAjaxEvent('Purchase_ConfirmBoxEstimateFee');
+          endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`);
         }
 
         this.setState(state);
@@ -117,7 +118,7 @@ export default class extends baseVw {
           fetchError,
         });
 
-        endAjaxEvent('Purchase_ConfirmBoxEstimateFee', {
+        endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`, {
           errors: fetchError || 'unknown error',
         });
       });
