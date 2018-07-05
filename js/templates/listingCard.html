@@ -160,10 +160,23 @@
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
-        <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-        <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
-          <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
-        </div>
+        <%
+          if (ob.contractType !== 'CRYPTOCURRENCY' ||
+            !Array.isArray(ob.acceptedCurrencies) ||
+            !ob.acceptedCurrencies.length) {
+        %>
+          <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+          <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+            <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
+          </div>
+        <% } else { %>
+          <%= ob.crypto.tradingPair({
+            className: 'cryptoTradingPairSm',
+            fromCur: ob.acceptedCurrencies[0],
+            toCur: ob.coinType,
+            truncateCurAfter: 5,
+          }) %>
+        <% } %>
         <div class="flexVCent gutterHSm tx5b">
           <div class="flexNoShrink">
             <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
