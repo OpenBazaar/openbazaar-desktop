@@ -422,6 +422,7 @@ export default class extends BaseVw {
   }
 
   navSettingsClick() {
+    recordEvent('Settings_OpenFromPageNav');
     launchSettingsModal();
   }
 

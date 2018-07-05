@@ -3,6 +3,7 @@ import resyncBlockchain, {
   isResyncingBlockchain,
   events as resyncEvents,
 } from '../../../../utils/resyncBlockchain';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -46,6 +47,7 @@ export default class extends BaseVw {
   }
 
   onClickResync() {
+    recordEvent('Settings_Advanced_Resync');
     resyncBlockchain();
   }
 

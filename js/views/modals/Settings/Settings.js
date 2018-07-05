@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
+import { recordEvent } from '../../../utils/metrics';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import General from './General';
@@ -55,6 +56,7 @@ export default class extends BaseModal {
   tabClick(e) {
     const targ = $(e.target).closest('.js-tab');
 
+    recordEvent('Settings_TabOpen', { tab: targ.data('tab') });
     this.selectTab(targ);
   }
 

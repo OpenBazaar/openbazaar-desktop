@@ -10,7 +10,7 @@ import Backbone from 'backbone';
 import app from '../../../app';
 import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
-import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../../utils/metrics';
+import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';

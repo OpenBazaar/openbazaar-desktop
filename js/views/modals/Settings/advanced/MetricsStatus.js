@@ -1,6 +1,6 @@
 import app from '../../../../app';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { showMetricsModal, isMetricRestartNeeded } from '../../../../utils/metrics';
+import { showMetricsModal, isMetricRestartNeeded, recordEvent } from '../../../../utils/metrics';
 import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
@@ -21,6 +21,7 @@ export default class extends BaseVw {
   }
 
   onClickChangeSharing() {
+    recordEvent('Settings_Advanced_ChangeSharing');
     showMetricsModal();
   }
 
