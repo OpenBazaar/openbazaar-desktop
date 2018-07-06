@@ -1,8 +1,17 @@
 <div class="contentBox padLg clrP clrBr clrSh3 dialogScrollMsg">
-  <h1><%= ob.polyT('metrics.title') %></h1>
+  <div class="flexRow">
+    <h1 class="flexExpand flexNoShrink"><%= ob.polyT('metrics.title') %></h1>
+    <span class="flexHRight tx5b clrT2">v<%= ob.mVersion %></span>
+  </div>
   <div class="rowMd innerMessage">
     <div class="rowHg">
-      <p><%= ob.polyT('metrics.msg1') %></p>
+      <% if(ob.showNewMessage) { %>
+        <p class="clrTEm">
+          <b><%= ob.polyT('metrics.newVersion') %></b>
+        </p>
+      <% } else {%>
+        <p><%= ob.polyT('metrics.msg1') %></p>
+      <% } %>
       <p><i><%= ob.polyT('metrics.msg2') %></i></p>
     </div>
     <h4><%= ob.polyT('metrics.listTitle') %></h4>
@@ -12,6 +21,7 @@
       <li><%= ob.polyT('metrics.list.errors') %></li>
       <li><%= ob.polyT('metrics.list.user') %></li>
       <li><%= ob.polyT('metrics.list.node') %></li>
+      <li><%= ob.polyT('metrics.list.listings') %></li>
       <li><%= ob.polyT('metrics.list.orders') %></li>
       <li><%= ob.polyT('metrics.list.app') %></li>
       <li><%= ob.polyT('metrics.list.system') %></li>

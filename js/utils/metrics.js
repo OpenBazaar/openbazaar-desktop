@@ -8,6 +8,15 @@ import { remote } from 'electron';
 
 let metricsRestartNeeded = false;
 
+/** Set the returned string to a higher number any time there are changes to the analytics that
+ * require a new opt in. This will cause the opt in modal to appear again to users that have
+ * perviously opted in. It will not show it to users that have opted out.
+ * @returns {string}
+ */
+export function mVersion() {
+  return '1.0';
+}
+
 export function prettyRAM(bytes) {
   // from https://gist.github.com/lanqy/5193417
   const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
@@ -99,7 +108,10 @@ export function changeMetrics(bool) {
     metricsRestartNeeded = false;
     window.Countly.q.push(['opt_out']);
   }
-  return app.localSettings.save({ shareMetrics: bool });
+  return app.localSettings.save({
+    shareMetrics: bool,
+    mVersion: mVersion(),
+  });
 }
 
 export function showMetricsModal(opts) {

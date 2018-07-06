@@ -1813,6 +1813,7 @@
   },
   "metrics": {
     "title": "Optional Anonymous Metrics",
+    "newVersion": "We've updated the data being collected. Please review the information below and continue to help us improve OpenBazaar.",
     "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
     "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and cannot be accessed by anyone else.",
     "listTitle": "The following data will be shared:",
@@ -1824,7 +1825,8 @@
       "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
       "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
       "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
-      "orders": "Whether your orders are progressing while you are using the app. This helps us identify problems in the order process.",
+      "orders": "Basic information on actions you take with orders, such as its state when disputed, or if the order was moderated. This helps us identify problems in the order process.",
+      "listings": "Basic information about on actions taken when creating and editing listings. This includes the type of listing, but no other information about it.",
       "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation folder, which may include your root and/or user folder."
     },
     "acceptBtn": "Accept",
