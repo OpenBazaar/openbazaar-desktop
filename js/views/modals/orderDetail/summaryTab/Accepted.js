@@ -72,8 +72,8 @@ export default class extends BaseVw {
   }
 
   onClickRefundOrder() {
-    this.setState({ refundConfirmOn: true });
     recordEvent('OrderDetails_Refund');
+    this.setState({ refundConfirmOn: true });
     return false;
   }
 

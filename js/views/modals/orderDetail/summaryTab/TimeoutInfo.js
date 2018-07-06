@@ -3,6 +3,7 @@ import {
   releaseEscrow,
   events as orderEvents,
 } from '../../../../utils/order';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -69,6 +70,7 @@ export default class extends BaseVw {
   }
 
   onClickClaimPayment() {
+    recordEvent('OrderDetails_TimeoutClaimPayment');
     releaseEscrow(this.orderId);
   }
 
