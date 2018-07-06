@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import moment from 'moment';
+import { getServerCurrency } from '../../../../data/cryptoCurrencies';
 import {
   events as orderEvents,
 } from '../../../../utils/order';
@@ -9,20 +10,23 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    const serverCur = getServerCurrency();
     super(options);
 
     this._state = {
       disputerName: '',
       claim: '',
-      showResolveButton: true,
+      showResolveButton: !serverCur.supportsEscrowTimeout,
       ...options.initialState || {},
     };
 
-    this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
-      this.setState({
-        showResolveButton: false,
+    if (!serverCur.supportsEscrowTimeout) {
+      this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
+        this.setState({
+          showResolveButton: false,
+        });
       });
-    });
+    }
   }
 
   className() {
@@ -38,10 +42,6 @@ export default class extends BaseVw {
   onClickResolveDispute() {
     recordEvent('OrderDetails_DisputeResolveStart');
     this.trigger('clickResolveDispute');
-  }
-
-  getState() {
-    return this._state;
   }
 
   setState(state, replace = false, renderOnChange = true) {

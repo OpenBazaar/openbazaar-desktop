@@ -3,6 +3,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
+import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import {
   resolvingDispute,
   events as orderEvents,
@@ -43,7 +44,7 @@ export default class extends BaseModal {
     this.tabViewCache = {};
 
     if (!this.model) {
-      throw new Error('Please provide an Order model.');
+      throw new Error('Please provide an Order or Case model.');
     }
 
     this._state = {
@@ -59,18 +60,23 @@ export default class extends BaseModal {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', () => {
-      if (this.actionBar) {
-        this.actionBar.setState(this.actionBarButtonState);
-      }
-    });
-
     this.listenTo(orderEvents, 'openDisputeComplete', () => {
       if (this.activeTab === 'disputeOrder') this.selectTab('summary');
     });
 
     this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
+    });
+
+    this.listenTo(this.model, 'change:state', (md, state) => {
+      if (this.actionBar) {
+        this.actionBar.setState(this.actionBarButtonState);
+      }
+
+      recordEvent('OrderDetails_LiveStateChange', {
+        state,
+        moderated: !!this.moderatorId, // collect only a boolean
+      });
     });
 
     this.listenTo(this.model, 'otherContractArrived', () => {
@@ -139,17 +145,17 @@ export default class extends BaseModal {
     if (this.type === 'case') {
       if (this.model.get('buyerOpened')) {
         featuredProfileFetch = this.getBuyerProfile();
-        this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.model.buyerId;
       } else {
         featuredProfileFetch = this.getVendorProfile();
-        this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
+        this.featuredProfilePeerId = featuredProfileState.peerID = this.model.vendorId;
       }
     } else if (this.type === 'sale') {
       featuredProfileFetch = this.getBuyerProfile();
-      this.featuredProfilePeerId = featuredProfileState.peerID = this.buyerId;
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.model.buyerId;
     } else {
       featuredProfileFetch = this.getVendorProfile();
-      this.featuredProfilePeerId = featuredProfileState.peerID = this.vendorId;
+      this.featuredProfilePeerId = featuredProfileState.peerID = this.model.vendorId;
     }
 
     featuredProfileFetch.done(profile => {
@@ -207,6 +213,9 @@ export default class extends BaseModal {
       'disputeAccepted',
       // Socket received by buyer when the vendor has an error processing an offline order.
       'processingError',
+      // Socket received by buyer then the vendor has released funds from escrow after the order
+      // and/or dispute timed-out.
+      'vendorFinalizedPayment',
     ];
 
     if (e.jsonData.notification && e.jsonData.notification.orderId === this.model.id) {
@@ -227,56 +236,17 @@ export default class extends BaseModal {
     return this.model instanceof Case ? 'case' : this.model.type;
   }
 
-  get participantIds() {
-    if (!this._participantIds) {
-      let contract = this.model.get('contract');
-
-      if (this.type === 'case') {
-        contract = this.model.get('buyerOpened') ?
-          this.model.get('buyerContract') :
-          this.model.get('vendorContract');
-      }
-
-      if (!contract) {
-        throw new Error('Unable to determine the participant IDs. The contract is not ' +
-          'available. The order model has likely not been synced yet.');
-      }
-
-      const contractJSON = contract.toJSON();
-
-      this._participantIds = {
-        buyer: contractJSON.buyerOrder.buyerID.peerID,
-        vendor: contractJSON.vendorListings[0].vendorID.peerID,
-        moderator: contractJSON.buyerOrder.payment.moderator,
-      };
-    }
-
-    return this._participantIds;
-  }
-
-  get buyerId() {
-    return this.participantIds.buyer;
-  }
-
-  get vendorId() {
-    return this.participantIds.vendor;
-  }
-
-  get moderatorId() {
-    return this.participantIds.moderator;
-  }
-
   _getParticipantProfile(participantType) {
-    const idKey = `${participantType}Id`;
+    const peerId = this.model[`${participantType}Id`];
     const profileKey = `_${participantType}Profile`;
 
     if (!this[profileKey]) {
-      if (this[idKey] === app.profile.id) {
+      if (peerId === app.profile.id) {
         const deferred = $.Deferred();
         deferred.resolve(app.profile);
         this[profileKey] = deferred.promise();
       } else {
-        this[profileKey] = getCachedProfiles([this[idKey]])[0];
+        this[profileKey] = getCachedProfiles([peerId])[0];
       }
     }
 
@@ -367,18 +337,18 @@ export default class extends BaseModal {
     const viewData = {
       model: this.model,
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
     };
 
-    if (this.moderatorId) {
+    if (this.model.moderatorId) {
       viewData.moderator = {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       };
     }
@@ -388,6 +358,10 @@ export default class extends BaseModal {
       () => this.selectTab('fulfillOrder'));
     this.listenTo(view, 'clickResolveDispute',
       () => this.selectTab('resolveDispute'));
+    this.listenTo(view, 'clickDisputeOrder',
+      () => this.selectTab('disputeOrder'));
+    this.listenTo(view, 'clickDiscussOrder',
+      () => this.selectTab('discussion'));
 
     return view;
   }
@@ -397,20 +371,20 @@ export default class extends BaseModal {
     const viewData = {
       orderId: this.model.id,
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       model: this.model,
       amActiveTab: amActiveTab.bind(this),
     };
 
-    if (this.moderatorId) {
+    if (this.model.moderatorId) {
       viewData.moderator = {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       };
     }
@@ -455,17 +429,30 @@ export default class extends BaseModal {
   }
 
   createDisputeOrderTabView() {
-    const contractType = this.model.get('contract').type;
+    if (this.model.isCase) {
+      throw new Error('This view should not be created on Cases.');
+    }
 
+    const contract = this.model.get('contract');
     const model = new OrderDispute({ orderId: this.model.id });
+    const translationKeySuffix = app.profile.id === this.model.buyerId ?
+      'Buyer' : 'Vendor';
+    const timeoutMessage =
+      getServerCurrency().supportsEscrowTimeout ?
+        app.polyglot.t(
+          `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
+          { timeoutAmount: contract.disputeExpiryVerbose }
+        ) :
+        '';
 
     const view = this.createChild(DisputeOrder, {
       model,
-      contractType,
+      contractType: contract.type,
       moderator: {
-        id: this.moderatorId,
+        id: this.model.moderatorId,
         getProfile: this.getModeratorProfile.bind(this),
       },
+      timeoutMessage,
     });
 
     this.listenTo(view, 'clickBackToSummary clickCancel', () => this.selectTab('summary'));
@@ -496,11 +483,11 @@ export default class extends BaseModal {
       model,
       case: this.model,
       vendor: {
-        id: this.vendorId,
+        id: this.model.vendorId,
         getProfile: this.getVendorProfile.bind(this),
       },
       buyer: {
-        id: this.buyerId,
+        id: this.model.buyerId,
         getProfile: this.getBuyerProfile.bind(this),
       },
     });
@@ -526,31 +513,16 @@ export default class extends BaseModal {
    * based upon the order state.
    */
   get actionBarButtonState() {
-    const orderState = this.model.get('state');
-    let showDisputeOrderButton = false;
-
-    if (this.buyerId === app.profile.id) {
-      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
-      // todo: when escrow timeout code is ready, include this in the timeoutInfoView
-      // also ensure order is funded if processing error
-      showDisputeOrderButton = this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED',
-          'PROCESSING_ERROR'].indexOf(orderState) > -1;
-    } else if (this.vendorId === app.profile.id) {
-      showDisputeOrderButton = this.moderatorId &&
-        ['AWAITING_FULFILLMENT', 'FULFILLED'].indexOf(orderState) > -1;
-    }
-
     return {
-      showDisputeOrderButton,
+      showDisputeOrderButton: !getServerCurrency().supportsEscrowTimeout &&
+        this.model.isOrderDisputable,
     };
   }
 
   get contractMenuItemState() {
-    const isCase = typeof this.model.get('buyerOpened') !== 'undefined';
     let tip = '';
 
-    if (isCase && !this.model.bothContractsValid) {
+    if (this.model.isCase && !this.model.bothContractsValid) {
       const buyerContractAvailableAndInvalid =
         this.model.get('buyerContract') && !this.model.isBuyerContractValid;
       const vendorContractAvailableAndInvalid =

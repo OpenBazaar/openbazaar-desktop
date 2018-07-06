@@ -14,7 +14,7 @@ export default class extends BaseVw {
     super(options);
 
     if (!this.model) {
-      throw new Error('Please provide an DisputeOrder model.');
+      throw new Error('Please provide a DisputeOrder model.');
     }
 
     checkValidParticipantObject(options.moderator, 'moderator');
@@ -98,6 +98,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         errors: this.model.validationError || {},
         openingDispute: !!openingDispute(this.model.id),
+        timeoutMessage: this.options.timeoutMessage,
       }));
 
       const moderatorState = {

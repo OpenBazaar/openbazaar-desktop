@@ -57,7 +57,8 @@
     "fullNodeLink": "here",
     "zcashBinaryHelper": "A Zcash full node is required. Download a Zcash full node %{fullNodeLink}. Once installed, enter the path to your zcashd binary above.",
     "btnBrowse": "Browse",
-    "btnNext": "Next"
+    "btnNext": "Next",
+    "alreadyInUse": "Already in use"
   },
   "unsupportedCryptoCurDialog": {
     "title": "Unsupported Currency",
@@ -179,8 +180,8 @@
     "text": {
       "order": "%{buyerName} has purchased %{listingTitle}.",
       "payment": "Your payment has been delivered.",
-      "orderConfirmation": "%{vendorName} has accepted your order.",
       "declined": "%{vendorName} has declined your order.",
+      "orderConfirmation": "%{vendorName} has accepted your order.",
       "canceled": "%{buyerName} has canceled their order.",
       "refunded": "%{vendorName} has refunded your order.",
       "fulfillment": "%{vendorName} has fulfilled your order.",
@@ -193,7 +194,15 @@
       "disputeAccepted": "The dispute with %{otherPartyName} has been finalized.",
       "follow": "%{name} has followed you.",
       "moderatorAdd": "%{name} has added you as a moderator.",
-      "moderatorRemove": "%{name} has removed you as a moderator."
+      "moderatorRemove": "%{name} has removed you as a moderator.",
+      "vendorDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
+      "vendorDisputeTimeoutExpired": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
+      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
+      "buyerDisputeTimeoutExpired": "Order %{orderLink} has expired. The vendor may claim payment.",
+      "buyerDisputeExpiry": "The moderator has %{timeRemaining} left to make a decision on order %{orderLink}.",
+      "buyerDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
+      "moderatorDisputeExpiry": "You have %{timeRemaining} left to make a decision on order %{orderLink}.",
+      "moderatorDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment."
     },
     "errorHeading": "There was an error fetching the notifications.",
     "btnRetry": "Retry",
@@ -1572,7 +1581,8 @@
       "orderNumber": "Order #: %{orderId}",
       "copyLink": "Copy",
       "notApplicable": "n/a",
-      "vendorFinalizedPayment": "You have manually finalized the order.",
+      "vendorFinalizedPayment": "You have claimed the payment.",
+      "vendorFinalizedPaymentBuyerView": "The vendor has claimed the payment.",
       "payment": {
         "firstPaymentHeading": "Payment Details",
         "paymentHeading": "Payment Details #%{paymentNumber}",
@@ -1706,6 +1716,35 @@
         "alternateContact": "Additional Contact Information",
         "skuLabel": "SKU"
       },
+      "timeoutInfo": {
+        "modInvalidContractData": "The contract contains invalid data. The time remaining for you to make a decision on the dispute cannot be determined.",
+        "invalidContractData": "The contract contains invalid data. The time remaining to open a dispute cannot be determined.",
+        "disputedInvalidContractData": "The contract contains invalid data. The time remaining for the moderator to make a decision on the dispute cannot be determined.",
+        "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
+        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfilled you can claim payment and finalize the order without support from the moderator.",
+        "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
+        "disputedTipBuyer": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.",
+        "disputedTipVendor": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.",
+        "disputedTimeUpBuyer": "Time is up! The moderator failed to make a decision in time. The vendor can now claim the funds.",
+        "disputedTimeUpVendor": "Time is up! The moderator failed to make a decision in time. You can now claim the funds.",
+        "paymentFinalizedBuyer": "The vendor has claimed the payment. Please complete the order below whenever you’re ready.",
+        "paymentFinalizedVendor": "You have claimed the payment.",
+        "blocksRemaining": "%{blocksRemaining} blocks",
+        "unconfirmedFunding": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}. The clock will start when the funding payment is confirmed.",
+        "escrowExpired": "Time is up! A dispute can no longer be opened on this order.",
+        "tipEscrowExpiredBuyer": "You and the vendor were given approximately %{totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.",
+        "escrowExpiredVendorClaim": "Time is up! Claim payment for this order whenever you’re ready.",
+        "tipEscrowExpiredVendorClaim": "You and the buyer are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.",
+        "escrowExpiredBuyerComplete": "Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.",
+        "escrowTimeRemaining": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}.",
+        "modDisputeEscrowExpiredBuyerOpened": "The buyer is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
+        "modDisputeEscrowExpiredVendorOpened": "The vendor is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
+        "modDisputeEscrowExpired": "Time is up! You failed to make a decision in time. The vendor can now claim the funds.",
+        "btnClaimPayment": "Claim Payment",
+        "btnResolveDispute": "Resolve Dispute",
+        "btnDiscussOrder": "Discuss Order",
+        "btnDisputeOrder": "Dispute Order"
+      },
       "processingError": {
         "cancelLink": "cancel",
         "disputeLink": "open a dispute",
@@ -1764,7 +1803,9 @@
       "reasonPlaceholder": "Please explain your reason for opening a dispute…",
       "reasonHelperText": "Opening a dispute will notify and invite the moderator into the order to help resolve any conflicts",
       "btnCancel": "Cancel",
-      "btnSubmit": "Submit"
+      "btnSubmit": "Submit",
+      "timeoutMessageBuyer": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and the vendor will be able to claim the funds.",
+      "timeoutMessageVendor": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and you will be able to claim the funds."
     },
     "actionBar": {
       "disputeOrderBtn": "Dispute Order"
@@ -1803,7 +1844,8 @@
     "failedCompleteHeading": "There was an error completing the order.",
     "failedOpenDisputeHeading": "There was an error completing the order.",
     "failedResolveHeading": "There was an error resolving the order.",
-    "failedAcceptPayoutHeading": "There was an error accepting the payout."
+    "failedAcceptPayoutHeading": "There was an error accepting the payout.",
+    "failedReleaseEscrowHeading": "There was an error claiming the payment."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Fetching exchange rates…",
