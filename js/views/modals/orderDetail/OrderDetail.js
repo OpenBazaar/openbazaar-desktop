@@ -59,7 +59,7 @@ export default class extends BaseModal {
       if (this.activeTab === 'fulfillOrder') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', (md) => {
+    this.listenTo(this.model, 'change:state', () => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
