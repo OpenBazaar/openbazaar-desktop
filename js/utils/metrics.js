@@ -112,8 +112,6 @@ export function showMetricsModal(opts) {
 }
 
 export function recordEvent(key, segmentation) {
-  console.log(key)
-  if (segmentation) console.log(segmentation)
   if (window.Countly) {
     window.Countly.q.push(['add_event',
       {
@@ -128,8 +126,6 @@ export function startAjaxEvent(key) {
 }
 
 export function endAjaxEvent(key, segmentation) {
-  console.log(key)
-  if (segmentation) console.log(segmentation)
   if (window.Countly) {
     const seg = {
       errors: 'none',
