@@ -135,8 +135,7 @@
             priceAmount: ob.price.amount,
             priceCurrencyCode: ob.price.currencyCode,
             displayCurrency: ob.displayCurrency,
-            priceModifier: 0, // need server to provide this
-            priceModifier,
+            priceModifier: ob.priceModifier,
             wrappingClass: '',
             marketRelativityClass: 'hide',
           })
@@ -191,7 +190,8 @@
       <% } %>
       <div class="priceCol flexNoShrink clamp4">
         <span>
-          <% if (ob.contractType !== 'CRYPTOCURRENCY' || ob.priceModifier === undefined) { %>
+          <%
+            if (ob.contractType !== 'CRYPTOCURRENCY' || ob.priceModifier === undefined) { %>
             <%=
               ob.currencyMod.formattedCurrency(
                 ob.price.amount,
@@ -208,7 +208,7 @@
                 priceAmount: ob.price.amount,
                 priceCurrencyCode: ob.price.currencyCode,
                 displayCurrency: ob.displayCurrency,
-                priceModifier: 0, // need server to provide this
+                priceModifier: ob.priceModifier,
                 wrappingClass: '',
               })
             %>
@@ -281,8 +281,8 @@
             priceAmount: ob.price.amount,
             priceCurrencyCode: ob.price.currencyCode,
             displayCurrency: ob.displayCurrency,
-            priceModifier: 0, // need server to provide this
-            wrappingClass: '',
+            priceModifier: ob.priceModifier,
+            wrappingClass: 'txB',
           })
         %>      
       <% } %>

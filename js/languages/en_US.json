@@ -2037,6 +2037,7 @@
   },
   "cryptoPriceBelowMarket": "%{amount}% under market",
   "cryptoPriceAboveMarket": "%{amount}% above market",
+  "cryptoPriceAtMarket": "market price",
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

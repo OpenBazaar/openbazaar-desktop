@@ -4,7 +4,7 @@
 
   if (ob.priceModifier !== 0) {
     colorClass = ob.priceModifier > 0 ?
-      'clrTPriceAboveMarket' : 'clrTPriceBelowMarket txB';
+      'clrTPriceAboveMarket' : 'clrTPriceBelowMarket';
     priceSymbol = ob.priceModifier > 0 ?
       `(<span class="icon ion-arrow-up-c"></span>)` :
       `(<span class="icon ion-arrow-down-c"></span>)`; 
@@ -20,13 +20,17 @@
       )
     %>&nbsp;<span class="priceSymbol"><%= priceSymbol %></span>
   </span>
-  <% if (ob.priceModifier !== 0) { %>
-    <span class="marketRelativity <%= ob.marketRelativityClass %>">
-      <%=
-        ob.priceModifier > 0 ?
-          ob.polyT('cryptoPriceAboveMarket', { amount: ob.priceModifier }) :
-          ob.polyT('cryptoPriceBelowMarket', { amount: Math.abs(ob.priceModifier) })
-      %>
-    </span>
-  <% } %>
+  <span class="marketRelativity <%= ob.marketRelativityClass %> <% if (ob.priceModifier === 0) print('clrT2') %>">
+    <%
+      let marketPriceLine = ob.polyT('cryptoPriceAtMarket');
+
+      if (ob.priceModifier > 0) {
+        marketPriceLine = ob.polyT('cryptoPriceAboveMarket', { amount: ob.priceModifier });
+      } else if (ob.priceModifier < 0) {
+        marketPriceLine = ob.polyT('cryptoPriceBelowMarket', { amount: ob.priceModifier });
+      }
+
+      print(marketPriceLine);
+    %>
+  </span>
 </<%= ob.wrappingTag %>>

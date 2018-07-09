@@ -112,7 +112,7 @@ export function renderCryptoPrice(options = {}) {
   }
 
   const opts = {
-    wrappingClass: 'txRgt tx3',
+    wrappingClass: 'txRgt tx3 txB',
     wrappingTag: 'div',
     marketRelativityClass: 'tx6 txUnb clamp2',
     ...options,
