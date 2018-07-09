@@ -57,7 +57,7 @@ export default class extends baseVw {
       // use the first default temporarily to construct the tempUrl below
       this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
       this.mustSelectDefault = true;
-      recordEvent('Discover_InvalidDefaultProvider');
+      recordEvent('Discover_InvalidDefaultProvider', { url: this.providerUrl });
     }
 
     if (options.query) recordEvent('Discover_SearchFromAddressBar');
@@ -377,7 +377,8 @@ export default class extends baseVw {
 
     recordEvent('Discover_SearchError', {
       error: msg || 'unknown error',
-      provider: this.sProvider,
+      provider: this.sProvider.get('name'),
+      searchURL: this.sProvider.get('listings'),
     });
   }
 
