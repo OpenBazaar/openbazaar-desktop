@@ -23,7 +23,7 @@ export function installRichEditor(attachPoint, options = {}) {
 
   if (lang && !window.jQuery.trumbowyg.langs[lang]) {
     // eslint-disable-next-line global-require
-    require(`../node_modules/trumbowyg/dist/langs/${lang}.min.js`);
+    require(`../../../node_modules/trumbowyg/dist/langs/${lang}.min.js`);
   }
 
   options.editorOptions = {
