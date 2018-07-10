@@ -29,7 +29,7 @@ import StartupConnectMessaging from './views/StartupConnectMessaging';
 import { openSimpleMessage } from './views/modals/SimpleMessage';
 import Dialog from './views/modals/Dialog';
 import StatusBar from './views/StatusBar';
-import { getTranslationLangByCode, getTrumboLangFileNameByCode } from './data/languages';
+import { getTranslationLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
 import WalletBalance from './models/wallet/WalletBalance';
@@ -62,25 +62,15 @@ function getValidLanguage(lang) {
   return 'en_US';
 }
 
-// Imports specific JSON and Trumbowyg language files for localization.
-function importLanguageFiles(lang) {
-  app.polyglot.extend(require(`./languages/${lang}.json`)); // eslint-disable-line global-require
-
-  const trumboLang = getTrumboLangFileNameByCode(lang);
-  if (trumboLang) {
-    // eslint-disable-next-line global-require
-    app.polyglot.extend(require(`../node_modules/trumbowyg/dist/langs/${trumboLang}.min.js`));
-  }
-}
-
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
 moment.locale(initialLang);
 app.polyglot = new Polyglot();
-importLanguageFiles(initialLang);
+app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
-  importLanguageFiles(lang);
+  app.polyglot.extend(
+    require(`./languages/${lang}.json`)); // eslint-disable-line global-require
 
   moment.locale(lang);
 
@@ -636,6 +626,7 @@ function start() {
                 const parsedData = app.walletBalance.parse({
                   confirmed: e.jsonData.walletUpdate.confirmed,
                   unconfirmed: e.jsonData.walletUpdate.unconfirmed,
+                  height: e.jsonData.walletUpdate.height,
                 });
 
                 app.walletBalance.set(parsedData);
