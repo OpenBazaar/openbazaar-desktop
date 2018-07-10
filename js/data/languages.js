@@ -1206,7 +1206,6 @@ export function getTrumboLangFileNameByCode(code) {
     throw new Error('Please provide a language code.');
   }
 
-  const lang = translationLangs.find((x) => x.code === code);
-
-  return lang.trumbowyg || null;
+  const lang = getIndexedTranslationLang()[code];
+  return lang ? lang.trumbowyg : null;
 }
