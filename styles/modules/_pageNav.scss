@@ -106,11 +106,6 @@
 
   .searchWrapper {
     .addressBarIndicators {
-      top: 0px;
-      right: 0px;
-      position: absolute;
-      width: 110px;
-      height: 100%;
 
       &.hidePointer {
         pointer-events: none;
@@ -153,21 +148,47 @@
   }
 
   .searchWrapper {
-    .webLink {
+    .viewOnWebContainer {
       position: absolute;
-      top: 3px;
+      top: 1px; // to account for being inside input border
       right: 1px;
-      width: 80px;
-      padding: 5px 0 5px 20px;
+      padding-left: 15px; // gradient fills this padding
       background: white;
       background: linear-gradient(to right, rgba(255,0,0,0), white 15%);
 
-      a.lgHtBx {
+      a {
         display: inline-block;
         position: relative;
         z-index: 1;
         padding: 0.5em;
-        margin: -0.5em;
+        display: inline-flex;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        height: 14px;
+        padding-top: 7px;
+
+        i {
+          padding-right: 5px;
+          padding-left: 5px;
+        }
+      }
+
+      .masker {
+        border: 1px solid transparent;
+        top: 0px;
+        right: 0px;
+        position: absolute;
+        width: 100%;
+        height: 100%;
+      }
+
+      .viewOnWebText {
+        padding-left: 5px;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        max-width: 120px;
       }
     }
   }
