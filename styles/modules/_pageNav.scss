@@ -115,15 +115,22 @@
       padding: 1px 5px 1px 0;
       box-sizing: border-box;
 
+      &:before {
+        content: '';
+        width: 15px;
+        height: 100%;
+        background: linear-gradient(to right, transparent, $primary 50%);
+      }
+
       &.hidePointer {
         pointer-events: none;
       }
 
       .torIndicatorContainer {
         display: none;
-        background: linear-gradient(to right, rgba(255,0,0,0), white 25%);
         height: 100%;
         pointer-events: all;
+        background: $primary;
 
           .torIndicator {
             background-image: url(../../imgs/icon-tor.png);
@@ -140,9 +147,7 @@
         height: 100%;
         display: flex;
         align-items: center;
-        padding-left: 15px; // gradient fills this padding
-        background: white;
-        background: linear-gradient(to right, rgba(255, 0, 0, 0), white 15%);
+        background: $primary;
 
         a {
           display: inline-flex;
