@@ -106,6 +106,14 @@
 
   .searchWrapper {
     .addressBarIndicators {
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      padding: 1px 5px 1px 0;
+      box-sizing: border-box;
 
       &.hidePointer {
         pointer-events: none;
@@ -114,23 +122,53 @@
       .torIndicatorContainer {
         display: none;
         background: linear-gradient(to right, rgba(255,0,0,0), white 25%);
-        position: absolute;
-        top: 1px;
-        right: 7px;
-        width: 15px;
-        height: 22px;
-        padding-left: 5px;
+        height: 100%;
         pointer-events: all;
 
           .torIndicator {
             background-image: url(../../imgs/icon-tor.png);
             background-repeat: no-repeat;
             background-size: 13px auto;
-            background-position: center;
-            position: absolute;
+            background-position: center 3px; // visually center vertically
             width: 16px;
+            padding-left: 5px;
             height: 100%;
           }
+      }
+
+      .viewOnWebContainer {
+        height: 100%;
+        display: flex;
+        align-items: center;
+        padding-left: 15px; // gradient fills this padding
+        background: white;
+        background: linear-gradient(to right, rgba(255, 0, 0, 0), white 15%);
+
+        a {
+          display: inline-flex;
+          align-items: center;
+          height: 100%;
+          z-index: 1;
+          padding: 0.5em 0 0.5em 0.5em;
+          box-sizing: border-box;
+
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+
+          i {
+            padding-right: 5px;
+            padding-left: 5px;
+          }
+        }
+
+        .viewOnWebText {
+          padding-left: 5px;
+          overflow: hidden;
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          max-width: 120px;
+        }
       }
     }
   }
@@ -145,52 +183,6 @@
 
   .addressBar:focus ~ .addressBarIndicators {
     display:none;
-  }
-
-  .searchWrapper {
-    .viewOnWebContainer {
-      position: absolute;
-      top: 1px; // to account for being inside input border
-      right: 1px;
-      padding-left: 15px; // gradient fills this padding
-      background: white;
-      background: linear-gradient(to right, rgba(255,0,0,0), white 15%);
-
-      a {
-        display: inline-block;
-        position: relative;
-        z-index: 1;
-        padding: 0.5em;
-        display: inline-flex;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        height: 14px;
-        padding-top: 7px;
-
-        i {
-          padding-right: 5px;
-          padding-left: 5px;
-        }
-      }
-
-      .masker {
-        border: 1px solid transparent;
-        top: 0px;
-        right: 0px;
-        position: absolute;
-        width: 100%;
-        height: 100%;
-      }
-
-      .viewOnWebText {
-        padding-left: 5px;
-        overflow: hidden;
-        white-space: nowrap;
-        text-overflow: ellipsis;
-        max-width: 120px;
-      }
-    }
   }
 
   &.torIndicatorOn {
