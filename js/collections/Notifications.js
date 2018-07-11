@@ -1,4 +1,6 @@
 import _ from 'underscore';
+import moment from 'moment';
+import { capitalize } from '../utils/string';
 import { Collection } from 'backbone';
 import app from '../app';
 
@@ -200,6 +202,63 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t(`notifications.text.${attrs.type}`, {
       name,
     });
+  } else if ([
+    'vendorDisputeTimeout',
+    'buyerDisputeTimeout',
+    'buyerDisputeExpiry',
+    'moderatorDisputeExpiry',
+  ].includes(attrs.type)) {
+    const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
+    let orderIdKey = 'orderId';
+
+    if (attrs.type === 'vendorDisputeTimeout') {
+      orderIdKey = 'purchaseOrderId';
+    } else if (attrs.type === 'moderatorDisputeExpiry') {
+      orderIdKey = 'disputeCaseId';
+    }
+
+    const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
+    let transactionTab = 'sales';
+    let orderApiFilter = 'orderId';
+
+    if ([
+      'buyerDisputeTimeout',
+      'buyerDisputeExpiry',
+    ].includes(attrs.type)) {
+      transactionTab = 'purchases';
+    } else if (attrs.type === 'moderatorDisputeExpiry') {
+      transactionTab = 'cases';
+      orderApiFilter = 'caseId';
+    }
+
+    route = `#transactions/${transactionTab}?${orderApiFilter}=${attrs[orderIdKey]}`;
+
+    if (attrs.expiresIn > 0) {
+      // temporarily upping the moment threshold of number of days before month is used,
+      // so e,g. 45 is represented as '45 days' instead of '1 month'.
+      moment.relativeTimeThreshold('d', 364);
+
+      const timeRemaining = moment(Date.now())
+        .from(Date.now() - (attrs.expiresIn * 1000), true);
+
+      text = app.polyglot.t(`notifications.text.${attrs.type}`, {
+        orderLink: opts.native ?
+          orderIdShort :
+          `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+        timeRemaining,
+      });
+
+      text = text.startsWith(timeRemaining) ? capitalize(text) : text;
+
+      // restore the days timeout threshold
+      moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+    } else {
+      text = app.polyglot.t(`notifications.text.${attrs.type}Expired`, {
+        orderLink: opts.native ?
+          orderIdShort :
+          `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+      });
+    }
   }
 
   return {

@@ -1,9 +1,9 @@
 import { integerToDecimal } from '../../utils/currency';
-import BaseModel from '../BaseModel';
+import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
 
-export default class extends BaseModel {
+export default class extends BaseOrder {
   url() {
     return app.getServerUrl(`ob/case/${this.id}`);
   }
@@ -17,6 +17,17 @@ export default class extends BaseModel {
       vendorContract: Contract,
       buyerContract: Contract,
     };
+  }
+
+  /**
+   * Returns the contract of the party that opened the dispute, which is the only
+   * contract you're guaranteed to have. If you need the specific contract of either
+   * the buyer or seller, grab it directly via model.get('buyerContract') /
+   * model.get('vendorContract').
+   */
+  get contract() {
+    return this.get('buyerOpened') ?
+      this.get('buyerContract') : this.get('vendorContract');
   }
 
   /**
@@ -67,6 +78,14 @@ export default class extends BaseModel {
 
   get bothContractsValid() {
     return this.isBuyerContractValid && this.isVendorContractValid;
+  }
+
+  get isOrderCancelable() {
+    return false;
+  }
+
+  get isOrderDisputable() {
+    return false;
   }
 
   convertCryptoQuantity(contract = {}) {

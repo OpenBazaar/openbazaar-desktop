@@ -1,0 +1,123 @@
+<%
+  const isCase = ob.ownPeerId !== ob.buyer && ob.ownPeerId !== ob.vendor;
+%>
+
+<div class="headerIconWrap discSm clrP clrBr">
+  <i class="ion-android-alarm-clock"></i>
+</div>
+<div class="innerContent border clrBr padMd">
+<%
+  let message;
+  let messageClass = 'txCtr';
+  let tip;
+  let tipClass = '';
+
+  if (ob.invalidContractData) {
+    if (ob.moderator) {
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modInvalidContractData');
+    } else {
+      message = ob.isDisputed ?
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedInvalidContractData') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.invalidContractData');
+    }
+
+    messageClass = 'txCtr clrTErr';
+    tipClass = 'hide';    
+  } else if (!isCase) {
+    tip = ob.ownPeerId === ob.buyer ?
+      ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutBuyer') :
+      ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutVendor');
+
+    if (ob.isDisputed) {
+      if (!ob.hasDisputeEscrowExpired) {
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedModOnClock', { timeRemaining: `<b>${ob.timeRemaining}</b>` });
+        tip = ob.ownPeerId === ob.buyer ?
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTipBuyer', { totalTime: ob.totalTime }) :
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTipVendor', { totalTime: ob.totalTime });
+      } else {
+        message = ob.ownPeerId === ob.buyer ?
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTimeUpBuyer') :
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedTimeUpVendor');
+        tipClass = 'hide';
+      }
+    } else if (ob.isPaymentFinalized) {
+      message = ob.ownPeerId === ob.buyer ?
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyer') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');
+      tipClass = 'hide';
+    } else if (!ob.isFundingConfirmed) {
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.unconfirmedFunding', {
+        blocksRemaining: `<b>${ob.polyT('orderDetail.summaryTab.timeoutInfo.blocksRemaining',
+          { blocksRemaining: ob.blocksRemaining })}</b>`,
+        timeRemaining: `<b>${ob.timeRemaining}</b>`,
+      });
+    } else if (ob.blocksRemaining <= 0) {
+      if (ob.ownPeerId === ob.buyer) {
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpired');
+        tip = ob.polyT('orderDetail.summaryTab.timeoutInfo.tipEscrowExpiredBuyer', { totalTime: ob.totalTime });
+      } else {
+        // it's the vendor
+        if (ob.isPaymentClaimable) {
+          message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredVendorClaim');
+          tip = ob.polyT('orderDetail.summaryTab.timeoutInfo.tipEscrowExpiredVendorClaim', { totalTime: ob.totalTime });
+        } else {
+          message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpired');
+          tipClass = 'hide';
+        }
+      }
+
+      if (ob.ownPeerId === ob.buyer && ob.isCompletable) {
+        message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredBuyerComplete');
+      }
+    } else {
+      // time is left to open a dispute
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowTimeRemaining', {
+        blocksRemaining: `<b>${ob.polyT('orderDetail.summaryTab.timeoutInfo.blocksRemaining',
+          { blocksRemaining: ob.blocksRemaining })}</b>`,
+        timeRemaining: `<b>${ob.timeRemaining}</b>`,
+      });
+    }
+  } else {
+    // mod looking at case
+    if (!ob.hasDisputeEscrowExpired) {
+      message = ob.buyerOpened ?
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpiredBuyerOpened',
+          { timeRemaining: `<b>${ob.timeRemaining}</b>` }) :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpiredVendorOpened',
+          { timeRemaining: `<b>${ob.timeRemaining}</b>` });
+    } else {
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modDisputeEscrowExpired');
+    }
+
+    tipClass = 'hide';
+  }
+%>
+
+  <% if (ob.awaitingBlockHeight) { %>
+  <div class="txCtr">Obtaining current block height...</div>
+  <% } else { %>
+    <div class="flexCol flexCent gutterVSm">
+      <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
+      <div class="flexCent gutterH">
+        <% if (ob.showDisputeBtn) { %>
+          <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDisputeOrder') %></button>
+        <% } %>
+        <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
+            btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnClaimPayment')
+          }) %>
+        <% } %>
+        <% if (ob.showDiscussBtn) { %>
+          <button class="btn tx5b clrP clrBr js-discussOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDiscussOrder') %></button>
+        <% } %>
+        <% if (ob.showResolveDisputeBtn) { %>
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.isResolvingDispute ? 'processing' : ''}`,
+            btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnResolveDispute')
+          }) %>
+        <% } %>
+      </div>
+    </div>
+  <% } %>
+</div>
