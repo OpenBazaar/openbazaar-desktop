@@ -18,8 +18,7 @@ export const defaultEditorOptions = {
 };
 
 export function installRichEditor(attachPoint, options = {}) {
-  const thing = app.localSettings.get('language');
-  const lang = getTrumboLangFileNameByCode(thing);
+  const lang = getTrumboLangFileNameByCode(app.localSettings.get('language'));
 
   if (lang && !window.jQuery.trumbowyg.langs[lang]) {
     // eslint-disable-next-line global-require
