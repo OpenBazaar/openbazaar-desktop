@@ -337,6 +337,16 @@ input[type=range][class~="clrS"] {
   }
 }
 
+@mixin selectizeControlShadow($baseClass, $number) {
+  &.#{$baseClass}#{$number} {
+      box-shadow: none;
+
+      .selectize-input {
+        @extend .#{$baseClass}#{$number};
+      }
+  }  
+}
+
 #appFrame {
   .selectize-control {
     .items {
@@ -345,6 +355,10 @@ input[type=range][class~="clrS"] {
         background-color: $primary;
       }
     }
+
+    @include selectizeControlShadow(clrSh, 1);
+    @include selectizeControlShadow(clrSh, 2);
+    @include selectizeControlShadow(clrSh, 3);
   }
 
   .selectize-dropdown-content {
