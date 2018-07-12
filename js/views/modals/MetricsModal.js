@@ -1,7 +1,11 @@
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
-import { changeMetrics, isMetricRestartNeeded, mVersion } from '../../utils/metrics';
+import {
+  changeMetrics,
+  isMetricRestartNeeded,
+  mVersion,
+  isNewerVersion } from '../../utils/metrics';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -52,8 +56,8 @@ export default class extends BaseModal {
         showUndecided: this.options.showUndecided,
         shareMetrics: app.localSettings.get('shareMetrics'),
         restartRequired: isMetricRestartNeeded(),
-        mVersion: mVersion(),
-        showNewMessage: app.localSettings.get('mVersion') !== mVersion(),
+        mVersion,
+        showNewMessage: isNewerVersion(),
       }));
       super.render();
     });

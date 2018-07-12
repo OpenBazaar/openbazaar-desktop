@@ -18,7 +18,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { addFeedback } from './utils/feedback';
-import { addMetrics, showMetricsModal, mVersion } from './utils/metrics';
+import { addMetrics, showMetricsModal, isNewerVersion } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
 import Chat from './views/chat/Chat.js';
@@ -583,9 +583,8 @@ function start() {
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
 
           const metricsOn = app.localSettings.get('shareMetrics');
-          const metricsNewV = app.localSettings.get('mVersion') !== mVersion();
 
-          if (metricsOn === undefined || metricsOn && metricsNewV) {
+          if (metricsOn === undefined || metricsOn && isNewerVersion) {
             showMetricsModal({
               showCloseButton: false,
               dismissOnEscPress: false,
