@@ -13,7 +13,7 @@ export default class extends BaseVw {
 
     this.options = options || {};
 
-    if (this.isCase &&
+    if (this.model.isCase &&
       (!this.model.get('vendorContract') ||
         !this.model.get('buyerContract'))) {
       this.listenTo(this.model, 'otherContractArrived', (md, data) => {
@@ -48,15 +48,11 @@ export default class extends BaseVw {
     return false;
   }
 
-  get isCase() {
-    return this.model.get('buyerOpened') !== undefined;
-  }
-
   renderStatus() {
     const iconBaseClass = 'margRSm flexNoShrink';
     let msg = '';
 
-    if (this.isCase) {
+    if (this.model.isCase) {
       // Cut a corner with some html embedded here. If the html get more elaborate than this,
       // we should probably break this out into its own template.
       if (this.model.bothContractsValid) {
@@ -121,7 +117,7 @@ export default class extends BaseVw {
       this.$el.html(t());
       this.renderStatus();
 
-      if (!this.isCase) {
+      if (!this.model.isCase) {
         this.contractVw = this.createChild(Contract, {
           contract: this.model.get('rawContract'),
         });

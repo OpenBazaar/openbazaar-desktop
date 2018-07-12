@@ -81,7 +81,7 @@
                       <% if (cur.code === 'ZEC') print('<strong class="clrTErr">BETA</strong>') %>
                     </div>
                     <% if (inUse) { %>
-                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span>Already in use</span><span class="toolTip" data-tip="<%= ob.polyT('walletSetup.curInUseTip') %>"><i class="ion-help-circled"></i></span></div>
+                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span><%= ob.polyT('walletSetup.alreadyInUse') %></span><span class="toolTip" data-tip="<%= ob.polyT('walletSetup.curInUseTip') %>"><i class="ion-help-circled"></i></span></div>
                     <% } %>
                   </label>
                 </div>

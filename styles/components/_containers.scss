@@ -355,7 +355,7 @@
 
   &::after {
     left: 50%;
-    transform: translateX(-50%);    
+    transform: translateX(-50%);
   }
 }
 
@@ -405,7 +405,7 @@
     .arrowBoxCenteredTop,
     .arrowBoxRightTop {
       min-width: 0;
-    }    
+    }
   }
 }
 
@@ -471,6 +471,14 @@
       left: 50%;
       transform: translate(-50%, -100%) rotate(-135deg);
       -webkit-clip-path: polygon(0 0, 0 100%, 100% 0);
+    }
+  }
+
+  &.toolTipChatOpen {
+    body.chatOpen & {
+      &::before {
+        transform: translate(-77%, 0%);
+      }
     }
   }
 }

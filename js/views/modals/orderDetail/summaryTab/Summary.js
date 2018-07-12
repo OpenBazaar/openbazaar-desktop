@@ -1,5 +1,6 @@
 import app from '../../../../app';
 import { clipboard } from 'electron';
+import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import { getServerCurrency } from '../../../../data/cryptoCurrencies';
@@ -7,7 +8,6 @@ import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
-import Transactions from '../../../../collections/Transactions';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
@@ -22,6 +22,7 @@ import OrderComplete from './OrderComplete';
 import DisputeStarted from './DisputeStarted';
 import DisputePayout from './DisputePayout';
 import DisputeAcceptance from './DisputeAcceptance';
+import TimeoutInfo from './TimeoutInfo';
 import PayForOrder from '../../../modals/purchase/Payment';
 import ProcessingError from './ProcessingError';
 
@@ -33,18 +34,13 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    let contract;
+    this.contract = this.model.get('contract');
 
-    if (!this.isCase()) {
-      contract = this.model.get('contract');
-    } else {
-      contract = this.model.get('buyerOpened') ?
+    if (this.model.isCase) {
+      this.contract = this.model.get('buyerOpened') ?
         this.model.get('buyerContract') :
         this.model.get('vendorContract');
     }
-
-    this.contract = contract;
-    this._totalPaid = null;
 
     checkValidParticipantObject(options.buyer, 'buyer');
     checkValidParticipantObject(options.vendor, 'vendor');
@@ -85,10 +81,6 @@ export default class extends BaseVw {
         this.completeOrderForm = null;
       }
 
-      if (['PAYMENT_FINALIZED', 'COMPLETED'].indexOf(state) !== -1) {
-        this.renderPaymentFinalized();
-      }
-
       if (state === 'PROCESSING_ERROR') {
         if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
           this.payForOrder.remove();
@@ -97,19 +89,18 @@ export default class extends BaseVw {
       }
 
       this.renderProcessingError();
+      this.renderTimeoutInfoView();
     });
 
-    if (!this.isCase()) {
+    if (!this.model.isCase) {
       this.listenTo(this.model.get('paymentAddressTransactions'), 'update', () => {
-        this._totalPaid = null;
-
         if (this.payForOrder && !this.shouldShowPayForOrderSection()) {
           this.payForOrder.remove();
           this.payForOrder = null;
         }
 
         if (this.payments) {
-          this.payments.collection.set(this.paymentsCollection.models);
+          this.payments.collection.set(this.model.paymentsIn.models);
         }
       });
 
@@ -181,12 +172,20 @@ export default class extends BaseVw {
 
     this.listenTo(orderEvents, 'openDisputeComplete', e => {
       if (e.id === this.model.id) {
-        this.model.set('state', 'DISPUTED');
+        // The timeoutInfoView is expecting a dispute start time when
+        // the order state is DISPUTED. Since we're setting the order state
+        // now, but the server won't provide the dispute start time until
+        // the fetch completes, we'll use a local dispute start time for
+        // that brief gap.
+        this.localDisputeStartTime = (new Date()).toISOString();
+        this.listenToOnce(this.model, 'sync',
+          () => (this.localDisputeStartTime = null));
         this.model.fetch();
+        this.model.set('state', 'DISPUTED');
       }
     });
 
-    if (!this.isCase()) {
+    if (!this.model.isCase) {
       this.listenTo(this.contract, 'change:dispute',
         () => this.renderDisputeStartedView());
 
@@ -226,6 +225,20 @@ export default class extends BaseVw {
       this.listenTo(this.model, 'change:resolution',
         () => this.renderDisputePayoutView());
     }
+
+    this.listenTo(orderEvents, 'releaseEscrowComplete', e => {
+      if (e.id === this.model.id) {
+        this.model.set('state', 'PAYMENT_FINALIZED');
+        this.model.fetch();
+      }
+    });
+
+    this.listenTo(app.walletBalance, 'change:height',
+      () => {
+        if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
+          this.renderTimeoutInfoView();
+        }
+      });
   }
 
   className() {
@@ -251,10 +264,6 @@ export default class extends BaseVw {
       });
   }
 
-  isCase() {
-    return typeof this.model.get('buyerOpened') !== 'undefined';
-  }
-
   get $copiedToClipboard() {
     return this._$copiedToClipboard ||
       (this._$copiedToClipboard = this.$('.js-copiedToClipboard'));
@@ -273,9 +282,9 @@ export default class extends BaseVw {
 
     if (orderState === 'DISPUTED' || orderState === 'DECIDED' ||
       orderState === 'RESOLVED' ||
-      (orderState === 'COMPLETED' && this.contract.get('dispute') !== undefined) ||
-      (orderState === 'PAYMENT_FINALIZED' && this.contract.get('dispute') !== undefined)) {
-      if (!this.isCase()) {
+      (['COMPLETED', 'PAYMENT_FINALIZED'].includes(orderState) &&
+        this.contract.get('dispute') !== undefined)) {
+      if (!this.model.isCase) {
         state.states = [
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.disputed'),
           app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.decided'),
@@ -303,10 +312,6 @@ export default class extends BaseVw {
             state.currentState = 4;
             state.disputeState = 0;
             break;
-          case 'PAYMENT_FINALIZED':
-            state.currentState = 1;
-            state.disputeState = 0;
-            break;
           default:
             state.currentState = 1;
             state.disputeState = 1;
@@ -325,8 +330,7 @@ export default class extends BaseVw {
             state.currentState = 1;
         }
       }
-    } else if (orderState === 'DECLINED' || orderState === 'CANCELED' ||
-      orderState === 'REFUNDED') {
+    } else if (['DECLINED', 'CANCELED', 'REFUNDED'].includes(orderState)) {
       state.states = [
         app.polyglot.t('orderDetail.summaryTab.orderDetails.progressBarStates.paid'),
         app.polyglot.t(
@@ -352,6 +356,15 @@ export default class extends BaseVw {
           break;
         case 'PAYMENT_FINALIZED':
           state.currentState = 1;
+
+          if (this.contract.get('vendorOrderConfirmation')) {
+            state.currentState = 2;
+          }
+
+          if (this.contract.get('vendorOrderFulfillment')) {
+            state.currentState = 3;
+          }
+
           break;
         default:
           state.currentState = 0;
@@ -361,44 +374,6 @@ export default class extends BaseVw {
     return state;
   }
 
-  get orderPriceBtc() {
-    return this.contract.get('buyerOrder').payment.amount;
-  }
-
-  get totalPaid() {
-    if (this._totalPaid === null) {
-      this._totalPaid = this.paymentsCollection
-      .reduce((total, transaction) => total + transaction.get('value'), 0);
-    }
-
-    return this._totalPaid;
-  }
-
-  get isPartiallyFunded() {
-    const balanceRemaining = this.getBalanceRemaining();
-    return balanceRemaining > 0 && balanceRemaining < this.orderPriceBtc;
-  }
-
-  /**
-   * Returns a boolean indicating whether the order has been partially or fully
-   * funded.
-   */
-  get isFunded() {
-    return this.isPartiallyFunded || this.getBalanceRemaining() === 0;
-  }
-
-  getBalanceRemaining() {
-    if (this.isCase()) {
-      throw new Error('Cases do not have any transaction data.');
-    }
-
-    const balanceRemaining = this.orderPriceBtc - this.totalPaid;
-
-    // round based on the coins base units
-    const cryptoBaseUnit = getServerCurrency().baseUnit;
-    return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
-  }
-
   get paymentAddress() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
 
@@ -406,31 +381,203 @@ export default class extends BaseVw {
       this.contract.get('buyerOrder').payment.address;
   }
 
-  /**
-   * Returns a modified version of the transactions from the Order model by filtering out
-   * any negative payments (money moving from the multisig to the vendor).
-   */
-  get paymentsCollection() {
-    if (this.isCase()) {
-      throw new Error('Transaction data is not available for cases.');
-    }
-
-    return new Transactions(
-      this.model.get('paymentAddressTransactions')
-        .filter(payment => (payment.get('value') > 0))
-      );
+  setDisputeCountdownTimeout(...args) {
+    clearTimeout(this.disputeCountdownTimeout);
+    this.disputeCountdownTimeout = setTimeout(...args);
   }
 
-  get isOrderCancelable() {
-    return this.buyer.id === app.profile.id &&
-      !this.moderator &&
-      ['PROCESSING_ERROR', 'PENDING'].includes(this.model.get('state')) &&
-      this.isFunded;
+  get shouldShowTimeoutInfoView() {
+    return (
+      getServerCurrency().supportsEscrowTimeout &&
+      (
+        this.model.isOrderDisputable ||
+        ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))
+      )
+    );
+  }
+
+  renderTimeoutInfoView() {
+    const cryptoCur = getServerCurrency();
+    const orderState = this.model.get('state');
+    const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
+    const isCase = this.model.isCase;
+
+    if (!this.shouldShowTimeoutInfoView) {
+      if (this.timeoutInfo) this.timeoutInfo.remove();
+      this.timeoutInfo = null;
+      clearTimeout(this.disputeCountdownTimeout);
+      return;
+    }
+
+    // temporarily upping the moment threshold of number of days before month is used,
+    // so in the escrow timeouts 45 is represented as '45 days' instead of '1 month'.
+    moment.relativeTimeThreshold('d', 364);
+
+    const height = app.walletBalance.get('height');
+    let state = {
+      ownPeerId: app.profile.id,
+      buyer: this.buyer.id,
+      vendor: this.vendor.id,
+      moderator: this.moderator && this.moderator.id || undefined,
+      awaitingBlockHeight: false,
+      isFundingConfirmed: false,
+      blockTime: cryptoCur.blockTime,
+      isCompletable: orderState === 'FULFILLED',
+      isDisputed: orderState === 'DISPUTED',
+      hasDisputeEscrowExpired: false,
+      isPaymentClaimable: false,
+      isPaymentFinalized: false,
+      showDisputeBtn: false,
+      showDiscussBtn: orderState === 'DISPUTED',
+      showResolveDisputeBtn: false,
+    };
+
+    if (!height) {
+      // temporary, this will not be needed once this server issue is completed:
+      // https://github.com/OpenBazaar/openbazaar-go/issues/843
+      state.awaitingBlockHeight = true;
+    } else if (orderState === 'PAYMENT_FINALIZED') {
+      state.isPaymentFinalized = true;
+    } else {
+      let disputeStartTime;
+      let escrowTimeoutHours;
+
+      try {
+        escrowTimeoutHours = this.contract.escrowTimeoutHours;
+      } catch (e) {
+        // pass - will be handled below
+      }
+
+      if (orderState === 'DISPUTED' || isCase) {
+        try {
+          if (isCase) {
+            disputeStartTime = this.model.get('timestamp');
+          } else {
+            disputeStartTime = this.localDisputeStartTime ||
+              this.contract.get('dispute').timestamp;
+          }
+        } catch (e) {
+          // pass - will be handled below
+        }
+      }
+
+      if (
+        (orderState !== 'DISPUTED' && !escrowTimeoutHours) ||
+        (orderState === 'DISPUTED' && !Date.parse(disputeStartTime))
+      ) {
+        // contract probably forged
+        state = {
+          ...state,
+          invalidContractData: true,
+          showDisputeBtn: this.model.isOrderStateDisputable,
+          showResolveDisputeBtn: isCase,
+        };
+      } else {
+        const timeoutHours = orderState === 'DISPUTED' ?
+          this.contract.disputeExpiry : escrowTimeoutHours;
+        let hasDisputeEscrowExpired;
+        const totalMs = timeoutHours * 60 * 60 * 1000;
+        state.totalTime =
+          moment(Date.now()).from(moment(Date.now() + totalMs), true);
+
+        if (isCase || orderState === 'DISPUTED') {
+          const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
+          const msRemaining = totalMs - msSinceDisputeStart;
+          hasDisputeEscrowExpired = msRemaining <= 0;
+
+          state = {
+            ...state,
+            hasDisputeEscrowExpired,
+            timeRemaining: hasDisputeEscrowExpired ? 0 :
+              moment(Date.now()).from(moment(Date.now() + msRemaining), true),
+            showDiscussBtn: !hasDisputeEscrowExpired,
+          };
+
+          if (!hasDisputeEscrowExpired) {
+            let checkBackInMs = 1000; // every second
+
+            if (msRemaining > 1000 * 60 * 60 * 24) {
+              // greater than a day
+              checkBackInMs = 1000 * 60 * 60 * 20;
+            } else if (msRemaining > 1000 * 60 * 60) {
+              // greater than a hour
+              checkBackInMs = 1000 * 60 * 55;
+            } else if (msRemaining > 1000 * 60) {
+              // greater than 1 minute
+              checkBackInMs = 5000;
+            }
+
+            this.setDisputeCountdownTimeout(
+              () => this.renderTimeoutInfoView(),
+              checkBackInMs
+            );
+          }
+        }
+
+        if (isCase) {
+          state = {
+            ...state,
+            buyerOpened: this.model.get('buyerOpened'),
+            showResolveDisputeBtn: !hasDisputeEscrowExpired,
+          };
+        } else if (orderState === 'DISPUTED') {
+          state = {
+            ...state,
+            isPaymentClaimable: hasDisputeEscrowExpired,
+          };
+        } else {
+          const fundedHeight = this.model.fundedBlockHeight;
+          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
+          const blocksRemaining = fundedHeight ?
+            blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
+            blocksPerTimeout;
+          const msRemaining = blocksRemaining * cryptoCur.blockTime;
+
+          const timeRemaining =
+            moment(Date.now()).from(moment(Date.now() + msRemaining), true);
+
+          state = {
+            ...state,
+            isFundingConfirmed: !!fundedHeight,
+            blocksRemaining,
+            timeRemaining,
+            showDisputeBtn: this.model.isOrderDisputable && blocksRemaining > 0,
+            isPaymentClaimable: orderState === 'FULFILLED' && blocksRemaining <= 0,
+          };
+        }
+      }
+    }
+
+    // restore the days timeout threshold
+    moment.relativeTimeThreshold('d', prevMomentDaysThreshold);
+
+    if (this.timeoutInfo) {
+      this.timeoutInfo.setState(state);
+    } else {
+      this.timeoutInfo = this.createChild(TimeoutInfo, {
+        orderId: this.model.id,
+        initialState: state,
+      });
+
+      this.getCachedEl('.js-timeoutInfoContainer')
+        .html(this.timeoutInfo.render().el);
+
+      this.listenTo(this.timeoutInfo, 'clickDisputeOrder', () => {
+        this.trigger('clickDisputeOrder');
+      });
+
+      this.listenTo(this.timeoutInfo, 'clickDiscussOrder', () => {
+        this.trigger('clickDiscussOrder');
+      });
+
+      this.listenTo(this.timeoutInfo, 'clickResolveDispute',
+        () => this.trigger('clickResolveDispute'));
+    }
   }
 
   shouldShowPayForOrderSection() {
     return this.buyer.id === app.profile.id &&
-      this.getBalanceRemaining() > 0 &&
+      this.model.getBalanceRemaining() > 0 &&
       !this.model.vendorProcessingError;
   }
 
@@ -439,7 +586,7 @@ export default class extends BaseVw {
 
     // Show the accepted section if the order has been accepted and its fully funded.
     if (this.contract.get('vendorOrderConfirmation')
-      && (this.isCase() || this.getBalanceRemaining() <= 0)) {
+      && (this.model.isCase || this.model.getBalanceRemaining() <= 0)) {
       bool = true;
     }
 
@@ -469,7 +616,7 @@ export default class extends BaseVw {
       showFulfillButton: canFulfill,
     };
 
-    if (!this.isCase()) {
+    if (!this.model.isCase) {
       if (isVendor) {
         // vendor looking at the order
         if (canFulfill) {
@@ -608,7 +755,7 @@ export default class extends BaseVw {
   }
 
   renderDisputeStartedView() {
-    const data = this.isCase() ? {
+    const data = this.model.isCase ? {
       timestamp: this.model.get('timestamp'),
       claim: this.model.get('claim'),
     } : this.contract.get('dispute');
@@ -636,14 +783,11 @@ export default class extends BaseVw {
           this.disputeStarted.setState({ disputerName: profile.get('name') }));
     }
 
-    this.listenTo(this.disputeStarted, 'clickResolveDispute',
-      () => this.trigger('clickResolveDispute'));
-
     this.$subSections.prepend(this.disputeStarted.render().el);
   }
 
   renderDisputePayoutView() {
-    const data = this.isCase() ? this.model.get('resolution') :
+    const data = this.model.isCase ? this.model.get('resolution') :
       this.contract.get('disputeResolution');
 
     if (!data) {
@@ -656,7 +800,7 @@ export default class extends BaseVw {
       orderId: this.model.id,
       initialState: {
         ...data,
-        showAcceptButton: !this.isCase() && this.model.get('state') === 'DECIDED',
+        showAcceptButton: !this.model.isCase && this.model.get('state') === 'DECIDED',
       },
     });
 
@@ -679,7 +823,7 @@ export default class extends BaseVw {
     if (this.payForOrder) this.payForOrder.remove();
 
     this.payForOrder = this.createChild(PayForOrder, {
-      balanceRemaining: this.getBalanceRemaining(),
+      balanceRemaining: this.model.getBalanceRemaining(),
       paymentAddress: this.paymentAddress,
       orderId: this.model.id,
       isModerated: !!this.moderator,
@@ -732,6 +876,7 @@ export default class extends BaseVw {
    */
   renderSubSections() {
     const sections = [];
+    const isCase = this.model.isCase;
 
     if (this.model.get('refundAddressTransaction')) {
       sections.push({
@@ -757,8 +902,8 @@ export default class extends BaseVw {
       });
     }
 
-    if (this.contract.get('dispute') || this.isCase()) {
-      const timestamp = this.isCase() ?
+    if (this.contract.get('dispute') || isCase) {
+      const timestamp = isCase ?
         this.model.get('timestamp') :
         this.contract.get('dispute').timestamp;
 
@@ -770,8 +915,8 @@ export default class extends BaseVw {
     }
 
     if (this.contract.get('disputeResolution') ||
-      (this.isCase() && this.model.get('resolution'))) {
-      const timestamp = this.isCase() ?
+      (isCase && this.model.get('resolution'))) {
+      const timestamp = isCase ?
         this.model.get('resolution').timestamp :
         this.contract.get('disputeResolution').timestamp;
 
@@ -800,11 +945,6 @@ export default class extends BaseVw {
       });
   }
 
-  renderPaymentFinalized() {
-    this.getCachedEl('.js-paymentFinalizedMsg')
-      .toggleClass('hide', this.model.get('state') !== 'PAYMENT_FINALIZED');
-  }
-
   renderProcessingError() {
     if (!this.model.vendorProcessingError) {
       if (this.processingError) {
@@ -819,17 +959,12 @@ export default class extends BaseVw {
     const state = {
       isBuyer,
       isModerator: !!(this.moderator && this.moderator.id),
-      isOrderCancelable: this.isOrderCancelable,
+      isOrderCancelable: this.model.isOrderCancelable,
       isModerated: !!this.moderator,
-      isCase: this.isCase,
-      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
-      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
-      // TODO todo ToDo !!! TODO todo ToDo !!! TODO todo ToDo !!!
-      // TODO: factor in escrow timeout
+      isCase: this.model.isCase,
       isDisputable: isBuyer &&
-        this.moderator &&
-        this.model.get('state') === 'PROCESSING_ERROR' &&
-        this.isFunded,
+        this.model.isOrderDisputable &&
+        this.model.get('state') === 'PROCESSING_ERROR',
       errors: this.contract.get('errors') || [],
     };
 
@@ -851,6 +986,7 @@ export default class extends BaseVw {
   }
 
   remove() {
+    clearTimeout(this.disputeCountdownTimeout);
     super.remove();
   }
 
@@ -859,7 +995,7 @@ export default class extends BaseVw {
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
       this.$el.html(t({
         id: this.model.id,
-        isCase: this.isCase(),
+        isCase: this.model.isCase,
         isTestnet: app.serverConfig.testnet,
         paymentAddress: this.paymentAddress,
         ...this.model.toJSON(),
@@ -872,8 +1008,6 @@ export default class extends BaseVw {
       });
       this.$('.js-statusProgressBarContainer').html(this.stateProgressBar.render().el);
 
-      this.renderPaymentFinalized();
-
       if (this.orderDetails) this.orderDetails.remove();
       this.orderDetails = this.createChild(OrderDetails, {
         model: this.contract,
@@ -885,15 +1019,17 @@ export default class extends BaseVw {
         this.renderPayForOrder();
       }
 
-      if (!this.isCase()) {
+      this.renderTimeoutInfoView();
+
+      if (!this.model.isCase) {
         if (this.payments) this.payments.remove();
         this.payments = this.createChild(Payments, {
           orderId: this.model.id,
-          collection: this.paymentsCollection,
-          orderPrice: this.orderPriceBtc,
+          collection: this.model.paymentsIn,
+          orderPrice: this.model.orderPrice,
           vendor: this.vendor,
+          isOrderCancelable: () => this.model.isOrderCancelable,
           isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-          isOrderCancelable: () => this.isOrderCancelable,
           isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
             this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
         });

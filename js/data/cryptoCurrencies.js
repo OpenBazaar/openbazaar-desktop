@@ -48,6 +48,8 @@ const currencies = [
         }
       }
     },
+    supportsEscrowTimeout: true,
+    blockTime: 1000 * 60 * 10,
   },
   {
     code: 'BCH',
@@ -78,6 +80,8 @@ const currencies = [
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
+    supportsEscrowTimeout: true,
+    blockTime: 1000 * 60 * 10,
   },
   {
     code: 'ZEC',
@@ -100,6 +104,8 @@ const currencies = [
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,
+    supportsEscrowTimeout: false,
+    blockTime: 1000 * 60 * 2.5,
   },
 ];
 

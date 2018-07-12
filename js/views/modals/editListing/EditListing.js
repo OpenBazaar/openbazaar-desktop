@@ -8,7 +8,7 @@ import path from 'path';
 import '../../../utils/lib/velocityUiPack.js';
 import Backbone from 'backbone';
 import app from '../../../app';
-import { isScrolledIntoView } from '../../../utils/dom';
+import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
@@ -183,6 +183,7 @@ export default class extends BaseModal {
       'keyup .js-variantNameInput': 'onKeyUpVariantName',
       'click .js-scrollToVariantInventory': 'onClickScrollToVariantInventory',
       'click .js-viewListing': 'onClickViewListing',
+      'click .js-viewListingOnWeb': 'onClickViewListingOnWeb',
       ...super.events(),
     };
   }
@@ -217,7 +218,18 @@ export default class extends BaseModal {
       const slug = this.model.get('slug');
       if (slug) {
         app.router.navigate(`${app.profile.id}/store/${slug}`, { trigger: true });
+      } else {
+        throw new Error('There is no slug for this listing in order to navigate!');
       }
+    }
+  }
+
+  onClickViewListingOnWeb() {
+    const slug = this.model.get('slug');
+    if (slug) {
+      openExternal(`http://openbazaar.com/store/${app.profile.id}/${slug}`);
+    } else {
+      throw new Error('There is no slug for this listing in order to navigate!');
     }
   }
 
