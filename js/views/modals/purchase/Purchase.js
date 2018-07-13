@@ -448,6 +448,7 @@ export default class extends BaseModal {
               paymentAddress: this.purchase.get('paymentAddress'),
               orderId: this.purchase.get('orderId'),
               isModerated: !!this.order.get('moderator'),
+              metricsOrigin: 'Purchase',
             });
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));

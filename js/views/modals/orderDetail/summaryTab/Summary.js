@@ -827,6 +827,7 @@ export default class extends BaseVw {
       paymentAddress: this.paymentAddress,
       orderId: this.model.id,
       isModerated: !!this.moderator,
+      metricsOrigin: 'Transactions',
     });
 
     this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);

@@ -3,7 +3,6 @@
   ensure they are compatible with both the Purchase and Order Detail flows.
 */
 
-import Backbone from 'backbone';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
@@ -16,7 +15,11 @@ import { clipboard, remote } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';
-import { recordEvent } from '../../../utils/metrics';
+import {
+  startPrefixedAjaxEvent,
+  endPrefixedAjaxEvent,
+  recordPrefixedEvent,
+} from '../../../utils/metrics';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -43,7 +46,7 @@ export default class extends BaseVw {
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
-    this.page = Backbone.history.getFragment().split(/[//?]/)[1];
+    this.metricsOrigin = options.metricsOrigin;
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -102,16 +105,22 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
-      recordEvent('Purchase_PayFromWallet', {
-        currency: getServerCurrency().code,
-        sufficientFunds: false,
-        page: this.page,
+      recordPrefixedEvent({
+        prefix: this.metricsOrigin,
+        eventName: 'PayFromWallet',
+        segmentation: {
+          currency: getServerCurrency().code,
+          sufficientFunds: false,
+        },
       });
     } else {
-      recordEvent('Purchase_PayFromWallet', {
-        currency: getServerCurrency().code,
-        sufficientFunds: true,
-        page: this.page,
+      recordPrefixedEvent({
+        prefix: this.metricsOrigin,
+        eventName: 'PayFromWallet',
+        segmentation: {
+          currency: getServerCurrency().code,
+          sufficientFunds: true,
+        },
       });
       this.spendConfirmBox.setState({ show: true });
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
@@ -129,6 +138,8 @@ export default class extends BaseVw {
     this.spendConfirmBox.setState({ show: false });
     const currency = getServerCurrency().code;
 
+    startPrefixedAjaxEvent({ prefix: this.metricsOrigin, eventName: 'SpendFromWallet' });
+
     try {
       spend({
         address: this.paymentAddress,
@@ -136,19 +147,24 @@ export default class extends BaseVw {
         currency,
       })
         .done(() => {
-          recordEvent('Purchase_SpendFromWallet', {
-            currency,
-            page: this.page,
-            errors: 'none',
+          endPrefixedAjaxEvent({
+            prefix: this.metricsOrigin,
+            eventName: 'SpendFromWallet',
+            segmentation: {
+              currency,
+            },
           });
         })
         .fail(jqXhr => {
           const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           this.showSpendError(err);
-          recordEvent('Purchase_SpendFromWallet', {
-            currency,
-            page: this.page,
-            errors: err || 'unknown error',
+          endPrefixedAjaxEvent({
+            prefix: this.metricsOrigin,
+            eventName: 'SpendFromWallet',
+            segmentation: {
+              currency,
+              errors: err || 'unknown error',
+            },
           });
           if (this.isRemoved()) return;
           this.getCachedEl('.js-payFromWallet').removeClass('processing');
@@ -230,7 +246,7 @@ export default class extends BaseVw {
       });
 
       this.spendConfirmBox = this.createChild(SpendConfirmBox, {
-        metricsOrigin: 'Purchase',
+        metricsOrigin: this.metricsOrigin,
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
         },

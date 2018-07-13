@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
 import { version } from '../../package.json';
@@ -10,8 +11,7 @@ let metricsRestartNeeded = false;
 
 /** Set the returned string to a higher number any time there are changes to the analytics that
  * require a new opt in. This will cause the opt in modal to appear again to users that have
- * perviously opted in. It will not show it to users that have opted out.
- * @returns {number}
+ * previously opted in. It will not show it to users that have opted out.
  */
 export const mVersion = 1.0;
 
@@ -126,6 +126,11 @@ export function showMetricsModal(opts) {
 }
 
 export function recordEvent(key, segmentation) {
+  if (!key) throw new Error('Please provide a key');
+  if (segmentation && !_.isObject(segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+
   if (window.Countly) {
     window.Countly.q.push(['add_event',
       {
@@ -140,6 +145,11 @@ export function startAjaxEvent(key) {
 }
 
 export function endAjaxEvent(key, segmentation) {
+  if (!key) throw new Error('Please provide a key');
+  if (segmentation && !_.isObject(segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+
   if (window.Countly) {
     const seg = {
       errors: 'none',
@@ -151,4 +161,50 @@ export function endAjaxEvent(key, segmentation) {
         segmentation: seg,
       }]);
   }
+}
+
+/** Use when a component needs to pass a different prefix for a recorded event, usually passed in by
+ * the parent. If no prefix is passed in, the event will be named with just the eventName.
+ * @param opts.prefix(string)
+ * @param opts.eventName(string)
+ * @paren opts.segmentation(object)
+ */
+export function recordPrefixedEvent(opts) {
+  if (!opts.eventName) throw new Error('Please provide an eventName');
+  if (opts.segmentation && !_.isObject(opts.segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+  const prefix = opts.prefix ? `${opts.prefix}_` : '';
+  const segmentation = opts.segmentation || '';
+  recordEvent(`${prefix}${opts.eventName}`, segmentation);
+}
+
+/** Use when a component needs to pass a different prefix for the start of an ajax event, usually
+ * passed in by the parent. If no prefix is passed in, the event will be named with just the
+ * eventName. The start ajax event can be prefixed manually.
+ * @param opts.prefix(string)
+ * @param opts.eventName(string)
+ * @paren opts.segmentation(object)
+ */
+export function startPrefixedAjaxEvent(opts) {
+  if (!opts.eventName) throw new Error('Please provide an eventName');
+  const prefix = opts.prefix ? `${opts.prefix}_` : '';
+  startAjaxEvent(`${prefix}${opts.eventName}`);
+}
+
+/** Use when a component needs to pass a different prefix for the end of an ajax event, usually
+ * passed in by the parent. If no prefix is passed in, the event will be named with just the
+ * eventName. The start ajax event can be prefixed manually.
+ * @param opts.prefix(string)
+ * @param opts.eventName(string)
+ * @paren opts.segmentation(object)
+ */
+export function endPrefixedAjaxEvent(opts) {
+  if (!opts.eventName) throw new Error('Please provide an eventName');
+  if (opts.segmentation && !_.isObject(opts.segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+  const prefix = opts.prefix ? `${opts.prefix}_` : '';
+  const segmentation = opts.segmentation || '';
+  endAjaxEvent(`${prefix}${opts.eventName}`, segmentation);
 }
