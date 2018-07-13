@@ -47,16 +47,32 @@ export default class extends baseVw {
     }
   }
 
+  /** Records the event. If no origin was passed in nothing will be recorded.
+   * @param eventName(string)
+   * @paren opts(object)
+   */
+  recordInternalEvent(eventName, opts) {
+    if (this.metricsOrigin) recordEvent(`${this.metricsOrigin}_${eventName}`, { ...opts });
+  }
+
+  /** Ends an AJAX event. If no origin was passed in nothing will be recorded.
+   * @param eventName(string)
+   * @paren opts(object)
+   */
+  endInternalAjaxEvent(eventName, opts) {
+    if (this.metricsOrigin) endAjaxEvent(`${this.metricsOrigin}_${eventName}`, { ...opts });
+  }
+
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
-    recordEvent(`${this.metricsOrigin}_ConfirmBoxSend`);
+    this.recordInternalEvent('ConfirmBoxSend');
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
-    recordEvent(`${this.metricsOrigin}_ConfirmBoxCancel`);
+    this.recordInternalEvent('ConfirmBoxCancel');
   }
 
   onClickRetry(e) {
@@ -65,7 +81,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
-    recordEvent(`${this.metricsOrigin}_ConfirmBoxRetry`);
+    this.recordInternalEvent('ConfirmBoxRetry');
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -84,7 +100,7 @@ export default class extends baseVw {
       fetchFailed: false,
     });
 
-    startAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`);
+    if (this.metricsOrigin) startAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`);
 
     estimateFee(feeLevel, amount)
       .done(fee => {
@@ -102,11 +118,11 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`, {
+          this.endInternalAjaxEvent('ConfirmBoxEstimateFee', {
             errors: 'ERROR_INSUFFICIENT_FUNDS',
           });
         } else {
-          endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`);
+          this.endInternalAjaxEvent('ConfirmBoxEstimateFee');
         }
 
         this.setState(state);
@@ -118,7 +134,7 @@ export default class extends baseVw {
           fetchError,
         });
 
-        endAjaxEvent(`${this.metricsOrigin}_ConfirmBoxEstimateFee`, {
+        this.endInternalAjaxEvent('ConfirmBoxEstimateFee', {
           errors: fetchError || 'unknown error',
         });
       });
