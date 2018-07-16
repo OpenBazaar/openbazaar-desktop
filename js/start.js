@@ -584,7 +584,7 @@ function start() {
 
           const metricsOn = app.localSettings.get('shareMetrics');
 
-          if (metricsOn === undefined || metricsOn && isNewerVersion) {
+          if (metricsOn === undefined || metricsOn && isNewerVersion()) {
             showMetricsModal({
               showCloseButton: false,
               dismissOnEscPress: false,
