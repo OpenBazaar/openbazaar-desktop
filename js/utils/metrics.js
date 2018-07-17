@@ -165,46 +165,42 @@ export function endAjaxEvent(key, segmentation) {
 
 /** Use when a component needs to pass a different prefix for a recorded event, usually passed in by
  * the parent. If no prefix is passed in, the event will be named with just the eventName.
- * @param opts.prefix(string)
- * @param opts.eventName(string)
- * @paren opts.segmentation(object)
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
+ * @param {object} segmentation - optional segmentation object.
  */
-export function recordPrefixedEvent(opts) {
-  if (!opts.eventName) throw new Error('Please provide an eventName');
-  if (opts.segmentation && !_.isObject(opts.segmentation)) {
+export function recordPrefixedEvent(eventName, prefix = '', segmentation = {}) {
+  if (!eventName) throw new Error('Please provide an eventName');
+  if (segmentation && (!(typeof segmentation === 'object') || segmentation === null)) {
     throw new Error('please provide the segmentation as an object');
   }
-  const prefix = opts.prefix ? `${opts.prefix}_` : '';
-  const segmentation = opts.segmentation || '';
-  recordEvent(`${prefix}${opts.eventName}`, segmentation);
+  const prefixed = prefix ? `${prefix}_` : '';
+  recordEvent(`${prefixed}${eventName}`, segmentation);
 }
 
 /** Use when a component needs to pass a different prefix for the start of an ajax event, usually
  * passed in by the parent. If no prefix is passed in, the event will be named with just the
  * eventName. The start ajax event can be prefixed manually.
- * @param opts.prefix(string)
- * @param opts.eventName(string)
- * @paren opts.segmentation(object)
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
  */
-export function startPrefixedAjaxEvent(opts) {
-  if (!opts.eventName) throw new Error('Please provide an eventName');
-  const prefix = opts.prefix ? `${opts.prefix}_` : '';
-  startAjaxEvent(`${prefix}${opts.eventName}`);
+export function startPrefixedAjaxEvent(eventName, prefix = '') {
+  if (!eventName) throw new Error('Please provide an eventName');
+  startAjaxEvent(`${prefix}${eventName}`);
 }
 
 /** Use when a component needs to pass a different prefix for the end of an ajax event, usually
  * passed in by the parent. If no prefix is passed in, the event will be named with just the
  * eventName. The start ajax event can be prefixed manually.
- * @param opts.prefix(string)
- * @param opts.eventName(string)
- * @paren opts.segmentation(object)
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
+ * @param {object} segmentation - optional segmentation object.
  */
-export function endPrefixedAjaxEvent(opts) {
-  if (!opts.eventName) throw new Error('Please provide an eventName');
-  if (opts.segmentation && !_.isObject(opts.segmentation)) {
+export function endPrefixedAjaxEvent(eventName, prefix = '', segmentation = {}) {
+  if (!eventName) throw new Error('Please provide an eventName');
+  if (segmentation && (!(typeof segmentation === 'object') || segmentation === null)) {
     throw new Error('please provide the segmentation as an object');
   }
-  const prefix = opts.prefix ? `${opts.prefix}_` : '';
-  const segmentation = opts.segmentation || '';
-  endAjaxEvent(`${prefix}${opts.eventName}`, segmentation);
+  const prefixed = prefix ? `${prefix}_` : '';
+  endAjaxEvent(`${prefixed}${eventName}`, segmentation);
 }

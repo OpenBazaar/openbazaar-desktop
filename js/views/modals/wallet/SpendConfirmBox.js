@@ -54,19 +54,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
-    recordPrefixedEvent({
-      prefix: this.metricsOrigin,
-      eventName: 'ConfirmBoxSend',
-    });
+    recordPrefixedEvent('ConfirmBoxSend', this.metricsOrigin);
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
-    recordPrefixedEvent({
-      prefix: this.metricsOrigin,
-      eventName: 'ConfirmBoxCancel',
-    });
+    recordPrefixedEvent('ConfirmBoxCancel', this.metricsOrigin);
   }
 
   onClickRetry(e) {
@@ -75,10 +69,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
-    recordPrefixedEvent({
-      prefix: this.metricsOrigin,
-      eventName: 'ConfirmBoxRetry',
-    });
+    recordPrefixedEvent('ConfirmBoxRetry', this.metricsOrigin);
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -97,7 +88,7 @@ export default class extends baseVw {
       fetchFailed: false,
     });
 
-    startPrefixedAjaxEvent({ prefix: this.metricsOrigin, eventName: 'ConfirmBoxEstimateFee' });
+    startPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
 
     estimateFee(feeLevel, amount)
       .done(fee => {
@@ -115,18 +106,11 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          endPrefixedAjaxEvent({
-            prefix: this.metricsOrigin,
-            eventName: 'ConfirmBoxEstimateFee',
-            segmentation: {
-              errors: 'ERROR_INSUFFICIENT_FUNDS',
-            },
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+            errors: 'ERROR_INSUFFICIENT_FUNDS',
           });
         } else {
-          endPrefixedAjaxEvent({
-            prefix: this.metricsOrigin,
-            eventName: 'ConfirmBoxEstimateFee',
-          });
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
         }
 
         this.setState(state);
@@ -138,12 +122,8 @@ export default class extends baseVw {
           fetchError,
         });
 
-        endPrefixedAjaxEvent({
-          prefix: this.metricsOrigin,
-          eventName: 'ConfirmBoxEstimateFee',
-          segmentation: {
-            errors: fetchError || 'unknown error',
-          },
+        endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+          errors: fetchError || 'unknown error',
         });
       });
   }

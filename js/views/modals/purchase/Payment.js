@@ -105,22 +105,14 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
-      recordPrefixedEvent({
-        prefix: this.metricsOrigin,
-        eventName: 'PayFromWallet',
-        segmentation: {
-          currency: getServerCurrency().code,
-          sufficientFunds: false,
-        },
+      recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
+        currency: getServerCurrency().code,
+        sufficientFunds: false,
       });
     } else {
-      recordPrefixedEvent({
-        prefix: this.metricsOrigin,
-        eventName: 'PayFromWallet',
-        segmentation: {
-          currency: getServerCurrency().code,
-          sufficientFunds: true,
-        },
+      recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
+        currency: getServerCurrency().code,
+        sufficientFunds: true,
       });
       this.spendConfirmBox.setState({ show: true });
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
@@ -138,7 +130,7 @@ export default class extends BaseVw {
     this.spendConfirmBox.setState({ show: false });
     const currency = getServerCurrency().code;
 
-    startPrefixedAjaxEvent({ prefix: this.metricsOrigin, eventName: 'SpendFromWallet' });
+    startPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin);
 
     try {
       spend({
@@ -147,24 +139,14 @@ export default class extends BaseVw {
         currency,
       })
         .done(() => {
-          endPrefixedAjaxEvent({
-            prefix: this.metricsOrigin,
-            eventName: 'SpendFromWallet',
-            segmentation: {
-              currency,
-            },
-          });
+          endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, { currency });
         })
         .fail(jqXhr => {
           const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           this.showSpendError(err);
-          endPrefixedAjaxEvent({
-            prefix: this.metricsOrigin,
-            eventName: 'SpendFromWallet',
-            segmentation: {
-              currency,
-              errors: err || 'unknown error',
-            },
+          endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, {
+            currency,
+            errors: err || 'unknown error',
           });
           if (this.isRemoved()) return;
           this.getCachedEl('.js-payFromWallet').removeClass('processing');
