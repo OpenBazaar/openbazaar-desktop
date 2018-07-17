@@ -53,7 +53,7 @@ export default class extends baseView {
   set selectedOption(opts) {
     if (!_.isEqual(this._selectedOption, opts)) {
       this._selectedOption = opts;
-      this.trigger('shippingOptionSelected', opts);
+      this.trigger('shippingOptionSelected');
     }
   }
 

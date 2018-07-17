@@ -140,10 +140,10 @@ export default class extends BaseModal {
       this.shipping = this.createChild(Shipping, {
         model: this.listing,
       });
-      this.listenTo(this.shipping, 'shippingOptionSelected', ((sOpts) => {
-        this.updateShippingOption(sOpts);
-      }));
+      this.listenTo(this.shipping, 'shippingOptionSelected', () => this.updateShippingOption());
     }
+    // set the initial shipping option
+    this.updateShippingOption(this.shipping.selectedOption);
 
     this.complete = this.createChild(Complete, {
       listing: this.listing,
@@ -373,10 +373,10 @@ export default class extends BaseModal {
     this.order.get('items').at(0).set('coupons', codes);
   }
 
-  updateShippingOption(opts) {
+  updateShippingOption() {
     // set the shipping option
     this.order.get('items').at(0).get('shipping')
-      .set(opts);
+      .set(this.shipping.selectedOption);
   }
 
   purchaseListing() {
