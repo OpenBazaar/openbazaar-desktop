@@ -18,7 +18,7 @@ import LocalSettings from './models/LocalSettings';
 import ObRouter from './router';
 import { getChatContainer, getBody } from './utils/selectors';
 import { addFeedback } from './utils/feedback';
-import { addMetrics, showMetricsModal } from './utils/metrics';
+import { addMetrics, showMetricsModal, isNewerVersion } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
 import Chat from './views/chat/Chat.js';
@@ -566,8 +566,6 @@ function start() {
           // add the default search providers
           app.searchProviders.add(defaultSearchProviders, { at: 0 });
 
-          if (app.localSettings.get('shareMetrics')) addMetrics();
-
           if (externalRoute) {
             // handle opening the app from an an external ob link
             location.hash = `#${externalRoute}`;
@@ -584,7 +582,9 @@ function start() {
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
 
-          if (app.localSettings.get('shareMetrics') === undefined) {
+          const metricsOn = app.localSettings.get('shareMetrics');
+
+          if (metricsOn === undefined || metricsOn && isNewerVersion()) {
             showMetricsModal({
               showCloseButton: false,
               dismissOnEscPress: false,
@@ -592,6 +592,7 @@ function start() {
             })
               .on('close', () => Backbone.history.start());
           } else {
+            if (metricsOn) addMetrics();
             Backbone.history.start();
           }
 

@@ -6,6 +6,7 @@ import { followsYou } from '../../utils/follow';
 import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
+import { recordEvent } from '../../utils/metrics';
 import { launchEditListingModal, launchSettingsModal } from '../../utils/modalManager';
 import { isBlocked, events as blockEvents } from '../../utils/block';
 import { getCurrentConnection } from '../../utils/serverConnect';
@@ -116,6 +117,7 @@ export default class extends baseVw {
   }
 
   clickCreateListing() {
+    recordEvent('Listing_NewFromUserPage');
     const listingModel = new Listing({}, { guid: app.profile.id });
 
     launchEditListingModal({

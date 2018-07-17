@@ -16,7 +16,7 @@ import TemplateOnly from './views/TemplateOnly';
 import Profile from './models/profile/Profile';
 import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
-import { startEvent, endEvent, recordEvent } from './utils/metrics';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from './utils/metrics';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -413,7 +413,7 @@ export default class ObRouter extends Router {
     let listingFetch;
     let userPageFetchError = '';
 
-    startEvent('UserPageLoad');
+    startAjaxEvent('UserPageLoad');
 
     if (guid === app.profile.id) {
       // don't fetch our own profile, since we have it already
@@ -500,7 +500,7 @@ export default class ObRouter extends Router {
     })
       .always(() => {
         this.off(null, onWillRoute);
-        endEvent('UserPageLoad', {
+        endAjaxEvent('UserPageLoad', {
           ownPage: guid === app.profile.id,
           tab: pageState,
           listing: !!listingFetch,

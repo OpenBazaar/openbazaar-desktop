@@ -68,15 +68,10 @@ export default class extends BaseModal {
       if (this.activeTab === 'resolveDispute') this.selectTab('summary');
     });
 
-    this.listenTo(this.model, 'change:state', (md, state) => {
+    this.listenTo(this.model, 'change:state', () => {
       if (this.actionBar) {
         this.actionBar.setState(this.actionBarButtonState);
       }
-
-      recordEvent('OrderDetails_LiveStateChange', {
-        state,
-        moderated: !!this.moderatorId, // collect only a boolean
-      });
     });
 
     this.listenTo(this.model, 'otherContractArrived', () => {
@@ -333,6 +328,13 @@ export default class extends BaseModal {
     }
   }
 
+  recordDisputeStart() {
+    recordEvent('OrderDetails_DisputeStart', {
+      type: this.type,
+      state: this.model.get('state'),
+    });
+  }
+
   createSummaryTabView() {
     const viewData = {
       model: this.model,
@@ -356,10 +358,14 @@ export default class extends BaseModal {
     const view = this.createChild(Summary, viewData);
     this.listenTo(view, 'clickFulfillOrder',
       () => this.selectTab('fulfillOrder'));
-    this.listenTo(view, 'clickResolveDispute',
-      () => this.selectTab('resolveDispute'));
-    this.listenTo(view, 'clickDisputeOrder',
-      () => this.selectTab('disputeOrder'));
+    this.listenTo(view, 'clickResolveDispute', () => {
+      recordEvent('OrderDetails_DisputeResolveStart');
+      this.selectTab('resolveDispute');
+    });
+    this.listenTo(view, 'clickDisputeOrder', () => {
+      this.recordDisputeStart();
+      this.selectTab('disputeOrder');
+    });
     this.listenTo(view, 'clickDiscussOrder',
       () => this.selectTab('discussion'));
 
@@ -596,7 +602,10 @@ export default class extends BaseModal {
           initialState: this.actionBarButtonState,
         });
         this.$('.js-actionBarContainer').html(this.actionBar.render().el);
-        this.listenTo(this.actionBar, 'clickOpenDispute', () => this.selectTab('disputeOrder'));
+        this.listenTo(this.actionBar, 'clickOpenDispute', () => {
+          this.recordDisputeStart();
+          this.selectTab('disputeOrder');
+        });
 
         if (this.contractMenuItem) this.contractMenuItem.remove();
         this.contractMenuItem = this.createChild(ContractMenuItem, {

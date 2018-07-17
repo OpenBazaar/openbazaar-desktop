@@ -1,3 +1,4 @@
+import { recordEvent } from '../../utils/metrics';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
@@ -24,6 +25,7 @@ export default class extends baseVw {
   }
 
   onClick() {
+    recordEvent('Chat_ConversationOpen');
     this.trigger('click', { view: this });
   }
 

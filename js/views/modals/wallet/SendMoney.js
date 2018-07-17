@@ -2,6 +2,7 @@ import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { convertCurrency, getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
@@ -35,6 +36,8 @@ export default class extends baseVw {
     // POSTing payment to the server
     this.saveInProgress = true;
 
+    startAjaxEvent('Wallet_SendConfirm');
+
     spend({
       ...this.model.toJSON(),
       feeLevel: app.localSettings.get('defaultTransactionFee'),
@@ -46,10 +49,16 @@ export default class extends baseVw {
       }
 
       openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'), reason);
+      endAjaxEvent('Wallet_SendConfirm', {
+        errors: reason,
+      });
     }).always(() => {
       this.saveInProgress = false;
     })
-      .done(() => this.clearForm());
+      .done(() => {
+        endAjaxEvent('Wallet_SendConfirm');
+        this.clearForm();
+      });
   }
 
   onClickSend(e) {
@@ -61,6 +70,7 @@ export default class extends baseVw {
     this.render();
 
     if (!this.model.validationError) {
+      recordEvent('Wallet_Send');
       this.sendConfirmBox.setState({ show: true });
       this.fetchFeeEstimate();
     }
@@ -170,6 +180,7 @@ export default class extends baseVw {
       if (this.sendConfirmBox) this.sendConfirmBox.remove();
 
       this.sendConfirmBox = this.createChild(SendConfirmBox, {
+        metricsOrigin: 'Wallet',
         initialState: { ...sendConfirmBoxState || {} },
       });
       this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);

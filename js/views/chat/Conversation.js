@@ -8,6 +8,7 @@ import { openSimpleMessage } from '../modals/SimpleMessage';
 import { insertAtCursor } from '../../utils/dom';
 import { block, isBlocking, events as blockEvents } from '../../utils/block';
 import emojis from '../../data/emojis';
+import { recordEvent } from '../../utils/metrics';
 import loadTemplate from '../../utils/loadTemplate';
 import ChatMessages from '../../collections/ChatMessages';
 import ChatMessage from '../../models/chat/ChatMessage';
@@ -155,6 +156,7 @@ export default class extends baseVw {
   }
 
   onClickBlockUser() {
+    recordEvent('Chat_BlockUser');
     block(this.guid);
   }
 
@@ -287,6 +289,8 @@ export default class extends baseVw {
       subject: this.subject,
       message: msg,
     }, { parse: true });
+
+    recordEvent('Chat_MessageSent');
 
     const save = chatMessage.save();
 

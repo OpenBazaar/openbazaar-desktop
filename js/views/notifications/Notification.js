@@ -2,6 +2,7 @@ import moment from 'moment';
 import app from '../../app';
 import { getNotifDisplayData } from '../../collections/Notifications';
 import { setTimeagoInterval } from '../../utils/';
+import { recordEvent } from '../../utils/metrics';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -39,6 +40,10 @@ export default class extends BaseVw {
   }
 
   onClick() {
+    recordEvent('Notifications_NotificationClick', {
+      type: this.model.get('type'),
+      read: this.model.get('read'),
+    });
     const route = this.getNotifDisplayData().route;
     if (route) {
       location.hash = route;

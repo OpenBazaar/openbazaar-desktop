@@ -2,7 +2,11 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
-import { recordEvent } from '../../../utils/metrics';
+import {
+  startPrefixedAjaxEvent,
+  endPrefixedAjaxEvent,
+  recordPrefixedEvent,
+} from '../../../utils/metrics';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -21,6 +25,7 @@ export default class extends baseVw {
     };
 
     this.lastFetchFeeEstimateArgs = {};
+    this.metricsOrigin = options.metricsOrigin;
     this.boundDocumentClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocumentClick);
   }
@@ -49,13 +54,13 @@ export default class extends baseVw {
   onClickSend(e) {
     this.trigger('clickSend');
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxSend');
+    recordPrefixedEvent('ConfirmBoxSend', this.metricsOrigin);
   }
 
   onClickCancel(e) {
     this.setState({ show: false });
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxCancel');
+    recordPrefixedEvent('ConfirmBoxCancel', this.metricsOrigin);
   }
 
   onClickRetry(e) {
@@ -64,7 +69,7 @@ export default class extends baseVw {
       this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
     }
     e.stopPropagation();
-    recordEvent('Purchase_ConfirmBoxRetry');
+    recordPrefixedEvent('ConfirmBoxRetry', this.metricsOrigin);
   }
 
   fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
@@ -83,6 +88,8 @@ export default class extends baseVw {
       fetchFailed: false,
     });
 
+    startPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
+
     estimateFee(feeLevel, amount)
       .done(fee => {
         let state = {
@@ -99,7 +106,11 @@ export default class extends baseVw {
             fetchError: 'ERROR_INSUFFICIENT_FUNDS',
             ...state,
           };
-          recordEvent('Purchase_ConfirmBoxInsufficientFunds');
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+            errors: 'ERROR_INSUFFICIENT_FUNDS',
+          });
+        } else {
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
         }
 
         this.setState(state);
@@ -110,8 +121,9 @@ export default class extends baseVw {
           fetchFailed: true,
           fetchError,
         });
-        recordEvent('Purchase_ConfirmBoxEstimateFeeFailed', {
-          errror: fetchError || 'unknown error',
+
+        endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+          errors: fetchError || 'unknown error',
         });
       });
   }

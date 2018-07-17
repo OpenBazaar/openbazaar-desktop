@@ -9,6 +9,7 @@ import { getSocket } from '../../utils/serverConnect';
 import { setUnreadChatMsgCount, launchNativeNotification } from '../../utils/notification';
 import { events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
+import { recordEvent } from '../../utils/metrics';
 import loadTemplate from '../../utils/loadTemplate';
 import Profile, { getCachedProfiles } from '../../models/profile/Profile';
 import baseVw from '../baseVw';
@@ -207,6 +208,8 @@ export default class extends baseVw {
 
           // Remove any existing chat head so we could put it back in at the top.
           this.collection.remove(chatHead);
+
+          recordEvent('Chat_MessageReceived', { chatOpen: !!isConvoOpen });
         } else {
           chatHeadData.unread = chatHead.get('unread');
         }

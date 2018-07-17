@@ -7,6 +7,7 @@ import {
   refundOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { recordEvent } from '../../../../utils/metrics';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 
@@ -71,6 +72,7 @@ export default class extends BaseVw {
   }
 
   onClickRefundOrder() {
+    recordEvent('OrderDetails_Refund');
     this.setState({ refundConfirmOn: true });
     return false;
   }
@@ -82,6 +84,7 @@ export default class extends BaseVw {
   }
 
   onClickRefundConfirmCancel() {
+    recordEvent('OrderDetails_RefundCancel');
     this.setState({ refundConfirmOn: false });
   }
 
@@ -90,11 +93,13 @@ export default class extends BaseVw {
   }
 
   onClickRefundConfirmed() {
+    recordEvent('OrderDetails_RefundConfirm');
     this.setState({ refundConfirmOn: false });
     refundOrder(this.orderId);
   }
 
   onClickFulfillOrder() {
+    recordEvent('OrderDetails_Fulfill');
     this.trigger('clickFulfillOrder');
   }
 

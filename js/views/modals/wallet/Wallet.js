@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
+import { recordEvent } from '../../../utils/metrics';
 import loadTemplate from '../../../utils/loadTemplate';
 import Transaction from '../../../models/wallet/Transaction';
 import Transactions from '../../../collections/WalletTransactions';
@@ -83,6 +84,7 @@ export default class extends BaseModal {
   }
 
   onClickToggleSendReceive() {
+    recordEvent(this.sendModeOn ? 'Wallet_ReceiveShow' : 'Wallet_SendShow');
     this.sendModeOn = !this.sendModeOn;
   }
 

@@ -10,6 +10,7 @@ import Backbone from 'backbone';
 import app from '../../../app';
 import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
+import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
@@ -745,6 +746,14 @@ export default class extends BaseModal {
       _.omit(sku, 'mappingId', 'choices')
     ));
 
+    const segmentation = {
+      type: serverData.metadata.contractType,
+      currency: serverData.metadata.pricingCurrency,
+      moderated: serverData.moderators && !!serverData.moderators.length,
+    };
+
+    startAjaxEvent('Listing_Save');
+
     const save = this.model.save({}, {
       attrs: serverData,
     });
@@ -776,18 +785,25 @@ export default class extends BaseModal {
 
           setTimeout(() => savingStatusMsg.remove(), 3000);
 
+          const message = args[0] && args[0].responseJSON && args[0].responseJSON.reason || '';
+
           new SimpleMessage({
             title: app.polyglot.t('editListing.errors.saveErrorTitle'),
-            message: args[0] && args[0].responseJSON && args[0].responseJSON.reason || '',
+            message,
           })
           .render()
           .open();
+          endAjaxEvent('Listing_Save', {
+            ...segmentation,
+            errors: message || 'unknown',
+          });
         }).done(() => {
           savingStatusMsg.update(`Listing ${this.model.toJSON().item.title}` +
             ' saved. <a class="js-viewListing">view</a>');
           this.attrsAtLastSave = this.model.toJSON();
 
           setTimeout(() => savingStatusMsg.remove(), 6000);
+          endAjaxEvent('Listing_Save', segmentation);
         });
     } else {
       // client side validation failed

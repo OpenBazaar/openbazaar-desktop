@@ -15,7 +15,11 @@ import { clipboard, remote } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';
-import { recordEvent } from '../../../utils/metrics';
+import {
+  startPrefixedAjaxEvent,
+  endPrefixedAjaxEvent,
+  recordPrefixedEvent,
+} from '../../../utils/metrics';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -42,6 +46,7 @@ export default class extends BaseVw {
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
+    this.metricsOrigin = options.metricsOrigin;
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -100,12 +105,12 @@ export default class extends BaseVw {
         fetchFailed: true,
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
-      recordEvent('Purchase_PayFromWallet', {
+      recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
         currency: getServerCurrency().code,
         sufficientFunds: false,
       });
     } else {
-      recordEvent('Purchase_PayFromWallet', {
+      recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
         currency: getServerCurrency().code,
         sufficientFunds: true,
       });
@@ -125,6 +130,8 @@ export default class extends BaseVw {
     this.spendConfirmBox.setState({ show: false });
     const currency = getServerCurrency().code;
 
+    startPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin);
+
     try {
       spend({
         address: this.paymentAddress,
@@ -132,15 +139,12 @@ export default class extends BaseVw {
         currency,
       })
         .done(() => {
-          recordEvent('Purchase_SpendFromWallet', {
-            currency,
-            errors: 'none',
-          });
+          endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, { currency });
         })
         .fail(jqXhr => {
           const err = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
           this.showSpendError(err);
-          recordEvent('Purchase_SpendFromWallet', {
+          endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, {
             currency,
             errors: err || 'unknown error',
           });
@@ -224,6 +228,7 @@ export default class extends BaseVw {
       });
 
       this.spendConfirmBox = this.createChild(SpendConfirmBox, {
+        metricsOrigin: this.metricsOrigin,
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
         },

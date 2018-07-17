@@ -16,7 +16,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
-import { endEvent, recordEvent, startEvent } from '../../../utils/metrics';
+import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -149,7 +149,7 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startEvent('Listing_InventoryFetch');
+      startAjaxEvent('Listing_InventoryFetch');
       this.inventoryFetch = getInventory(this.vendor.peerID, {
         slug: this.model.get('slug'),
         coinDivisibility: this.model.get('metadata')
@@ -157,13 +157,12 @@ export default class extends BaseModal {
       })
         .done(e => {
           this._inventory = e.inventory;
-          endEvent('Listing_InventoryFetch', {
+          endAjaxEvent('Listing_InventoryFetch', {
             ownListing: !!this.ownListing,
-            errors: 'none',
           });
         })
         .fail(e => {
-          endEvent('Listing_InventoryFetch', {
+          endAjaxEvent('Listing_InventoryFetch', {
             ownListing: !!this.ownListing,
             errors: e.error || e.errCode || 'unknown error',
           });
@@ -219,6 +218,7 @@ export default class extends BaseModal {
   }
 
   onClickEditListing() {
+    recordEvent('Listing_EditFromListing');
     const onCloseEditModal = () => {
       this.close();
 
@@ -248,12 +248,14 @@ export default class extends BaseModal {
   }
 
   onClickCloneListing() {
+    recordEvent('Listing_CloneFromListing');
     launchEditListingModal({
       model: this.model.cloneListing(),
     });
   }
 
   onClickDeleteListing() {
+    recordEvent('Listing_DeleteFromListing');
     this.$deleteConfirmedBox.removeClass('hide');
     // don't bubble to the document click handler
     return false;
@@ -265,6 +267,7 @@ export default class extends BaseModal {
   }
 
   onClickConfirmedDelete() {
+    recordEvent('Listing_DeleteFromListingConfirm');
     if (this.destroyRequest && this.destroyRequest.state === 'pending') return;
     this.destroyRequest = this.model.destroy({ wait: true });
 
@@ -285,23 +288,28 @@ export default class extends BaseModal {
   }
 
   onClickConfirmCancel() {
+    recordEvent('Listing_DeleteFromListingCancel');
     this.$deleteConfirmedBox.addClass('hide');
   }
 
   onClickGotoPhotos() {
+    recordEvent('Listing_GoToPhotos');
     this.gotoPhotos();
   }
 
   onClickGoToStore() {
     if (this.options.openedFromStore) {
+      recordEvent('Listing_GoToStore', { OpenedFromStore: true });
       this.close();
     } else {
+      recordEvent('Listing_GoToStore', { OpenedFromStore: false });
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
   }
 
   gotoPhotos() {
+    recordEvent('Listing_GoToPhotos');
     this.$photoSection.velocity(
       'scroll',
       {
@@ -312,6 +320,7 @@ export default class extends BaseModal {
   }
 
   clickRating() {
+    recordEvent('Listing_ClickOnRatings');
     this.gotoReviews();
   }
 
@@ -326,6 +335,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
+    recordEvent('Listing_ClickOnPhoto');
     this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
@@ -376,6 +386,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
+    recordEvent('Listing_ClickOnPhotoPrev');
     let targetIndex = this.activePhotoIndex - 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -385,6 +396,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoNext() {
+    recordEvent('Listing_ClickOnPhotoNext');
     let targetIndex = this.activePhotoIndex + 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -394,6 +406,7 @@ export default class extends BaseModal {
   }
 
   onClickFreeShippingLabel() {
+    recordEvent('Listing_ClickFreeShippingLabel');
     this.gotoShippingOptions();
   }
 

@@ -9,7 +9,7 @@ import {
   getInventory,
   events as inventoryEvents,
 } from '../../../utils/inventory';
-import { startEvent, endEvent } from '../../../utils/metrics';
+import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import { getExchangeRate } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
@@ -408,7 +408,7 @@ export default class extends BaseModal {
 
     this.setState({ phase: 'processing' });
 
-    startEvent('Purchase');
+    startAjaxEvent('Purchase');
 
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
@@ -417,7 +417,7 @@ export default class extends BaseModal {
         const errTitle = app.polyglot.t('purchase.errors.ownIDTitle');
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
-        endEvent('Purchase', {
+        endAjaxEvent('Purchase', {
           errors: 'own listing',
         });
       } else {
@@ -448,12 +448,12 @@ export default class extends BaseModal {
               paymentAddress: this.purchase.get('paymentAddress'),
               orderId: this.purchase.get('orderId'),
               isModerated: !!this.order.get('moderator'),
+              metricsOrigin: 'Purchase',
             });
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            endEvent('Purchase', {
-              errors: 'none',
+            endAjaxEvent('Purchase', {
             });
           })
           .fail(jqXHR => {
@@ -480,7 +480,7 @@ export default class extends BaseModal {
             }
 
             openSimpleMessage(errTitle, errMsg);
-            endEvent('Purchase', {
+            endAjaxEvent('Purchase', {
               errors: errMsg || 'unknown error',
             });
           });
@@ -496,7 +496,7 @@ export default class extends BaseModal {
         container = container.length ? container : this.getCachedEl('.js-errors');
         this.insertErrors(container, this.order.validationError[errKey]);
       });
-      endEvent('Purchase', {
+      endAjaxEvent('Purchase', {
         errors: `Client errors ${purchaseErrs.join()}`,
       });
     }

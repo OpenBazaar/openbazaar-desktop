@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import MetricsModal from '../views/modals/MetricsModal';
 import app from '../app';
 import { version } from '../../package.json';
@@ -7,6 +8,16 @@ import { remote } from 'electron';
 
 
 let metricsRestartNeeded = false;
+
+/** Set the returned string to a higher number any time there are changes to the analytics that
+ * require a new opt in. This will cause the opt in modal to appear again to users that have
+ * previously opted in. It will not show it to users that have opted out.
+ */
+export const mVersion = 1.0;
+
+export function isNewerVersion() {
+  return app.localSettings.get('mVersion') < mVersion;
+}
 
 export function prettyRAM(bytes) {
   // from https://gist.github.com/lanqy/5193417
@@ -99,7 +110,10 @@ export function changeMetrics(bool) {
     metricsRestartNeeded = false;
     window.Countly.q.push(['opt_out']);
   }
-  return app.localSettings.save({ shareMetrics: bool });
+  return app.localSettings.save({
+    shareMetrics: bool,
+    mVersion,
+  });
 }
 
 export function showMetricsModal(opts) {
@@ -112,6 +126,11 @@ export function showMetricsModal(opts) {
 }
 
 export function recordEvent(key, segmentation) {
+  if (!key) throw new Error('Please provide a key');
+  if (segmentation && !_.isObject(segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+
   if (window.Countly) {
     window.Countly.q.push(['add_event',
       {
@@ -121,16 +140,67 @@ export function recordEvent(key, segmentation) {
   }
 }
 
-export function startEvent(key) {
+export function startAjaxEvent(key) {
   if (window.Countly) window.Countly.q.push(['start_event', key]);
 }
 
-export function endEvent(key, segmentation) {
+export function endAjaxEvent(key, segmentation) {
+  if (!key) throw new Error('Please provide a key');
+  if (segmentation && !_.isObject(segmentation)) {
+    throw new Error('please provide the segmentation as an object');
+  }
+
   if (window.Countly) {
+    const seg = {
+      errors: 'none',
+      ...segmentation,
+    };
     window.Countly.q.push(['end_event',
       {
         key,
-        segmentation,
+        segmentation: seg,
       }]);
   }
+}
+
+/** Use when a component needs to pass a different prefix for a recorded event, usually passed in by
+ * the parent. If no prefix is passed in, the event will be named with just the eventName.
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
+ * @param {object} segmentation - optional segmentation object.
+ */
+export function recordPrefixedEvent(eventName, prefix = '', segmentation = {}) {
+  if (!eventName) throw new Error('Please provide an eventName');
+  if (segmentation && !(typeof segmentation === 'object')) {
+    throw new Error('please provide the segmentation as an object');
+  }
+  const prefixed = prefix ? `${prefix}_` : '';
+  recordEvent(`${prefixed}${eventName}`, segmentation);
+}
+
+/** Use when a component needs to pass a different prefix for the start of an ajax event, usually
+ * passed in by the parent. If no prefix is passed in, the event will be named with just the
+ * eventName. The start ajax event can be prefixed manually.
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
+ */
+export function startPrefixedAjaxEvent(eventName, prefix = '') {
+  if (!eventName) throw new Error('Please provide an eventName');
+  startAjaxEvent(`${prefix}${eventName}`);
+}
+
+/** Use when a component needs to pass a different prefix for the end of an ajax event, usually
+ * passed in by the parent. If no prefix is passed in, the event will be named with just the
+ * eventName. The start ajax event can be prefixed manually.
+ * @param {string} eventName - The name of the event to record.
+ * @param {string} prefix - optional prefix.
+ * @param {object} segmentation - optional segmentation object.
+ */
+export function endPrefixedAjaxEvent(eventName, prefix = '', segmentation = {}) {
+  if (!eventName) throw new Error('Please provide an eventName');
+  if (segmentation && !(typeof segmentation === 'object')) {
+    throw new Error('please provide the segmentation as an object');
+  }
+  const prefixed = prefix ? `${prefix}_` : '';
+  endAjaxEvent(`${prefixed}${eventName}`, segmentation);
 }
