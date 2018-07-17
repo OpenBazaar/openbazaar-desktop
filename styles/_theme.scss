@@ -505,3 +505,11 @@ input[type=range][class~="clrS"] {
     @include textColor($text, $text2, $text);
   }
 }
+
+.searchWrapper {
+  .addressBarIndicators {
+    &:before {
+      background: linear-gradient(to right, transparent, $primary 50%);
+    }
+  }
+}

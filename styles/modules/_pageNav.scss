@@ -119,7 +119,6 @@
         content: '';
         width: 15px;
         height: 100%;
-        background: linear-gradient(to right, transparent, $primary 50%);
       }
 
       &.hidePointer {
@@ -130,7 +129,6 @@
         display: none;
         height: 100%;
         pointer-events: all;
-        background: $primary;
 
           .torIndicator {
             background-image: url(../../imgs/icon-tor.png);
@@ -147,7 +145,6 @@
         height: 100%;
         display: flex;
         align-items: center;
-        background: $primary;
 
         a {
           display: inline-flex;
