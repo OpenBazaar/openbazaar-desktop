@@ -40,7 +40,7 @@ export default class extends BaseOrder {
   get vendorProcessingError() {
     const contract = this.get('buyerContract');
     const contractErrors = this.get('buyerContractValidationErrors');
-    return contract &&
+    return !!contract &&
       Array.isArray(contract.get('errors')) &&
       (
         !contractErrors ||
