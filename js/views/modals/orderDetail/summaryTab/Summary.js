@@ -484,7 +484,6 @@ export default class extends BaseVw {
           const msSinceDisputeStart = Date.now() - (new Date(disputeStartTime)).getTime();
           const msRemaining = totalMs - msSinceDisputeStart;
           hasDisputeEscrowExpired = msRemaining <= 0;
-          hasDisputeEscrowExpired = false;
 
           state = {
             ...state,
