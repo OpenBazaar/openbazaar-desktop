@@ -141,9 +141,9 @@ export default class extends BaseModal {
         model: this.listing,
       });
       this.listenTo(this.shipping, 'shippingOptionSelected', () => this.updateShippingOption());
+      // set the initial shipping option
+      this.updateShippingOption(this.shipping.selectedOption);
     }
-    // set the initial shipping option
-    this.updateShippingOption(this.shipping.selectedOption);
 
     this.complete = this.createChild(Complete, {
       listing: this.listing,
