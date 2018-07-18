@@ -1,6 +1,9 @@
-<div class="torIndicatorContainer">
-  <div class="torIndicator toolTipNoWrap txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
+<div class="viewOnWebContainer clrP <% if (ob.hide) print('hide') %>">
+  <a class="txU clrTEmph1 lgHtBx" href="<%= ob.url %>">
+    <div class="viewOnWebText"><%= ob.polyT('editListing.viewListingOnWebLink') %></div>
+    <i class="ion-android-open clrTEmph1"></i>
+  </a>
 </div>
-<div class="webLink <% if (ob.hide) print('hide') %>">
-  <a class="txU clrTEmph1 lgHtBx" href="<%= ob.url %>"><%= ob.polyT('editListing.viewListingOnWebLink') %><i class="ion-android-open padSm clrTEmph1"></i></a>
+<div class="torIndicatorContainer clrP">
+  <div class="torIndicator toolTipNoWrap txCtr" data-tip="<%= ob.polyT('pageNav.torOnTooltip') %>"></div>
 </div>
