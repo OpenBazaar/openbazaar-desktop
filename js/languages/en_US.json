@@ -1813,7 +1813,7 @@
   },
   "metrics": {
     "title": "Optional Anonymous Metrics",
-    "newVersion": "We've updated the data being collected. Please review the information below and continue to help us improve OpenBazaar.",
+    "newVersion": "Please review the update to the analytics data agreement below and click “Activate.”",
     "msg1": "Please help improve OpenBazaar by agreeing to share analytics data about your experience with the development team.",
     "msg2": "By clicking “Activate,” you agree to share the data listed below with OB1 Company and its processors for the purposes described, and consent to the transfer of this data to servers located in the United States. You may stop the sharing of this data at any time by opening your settings, and clicking the Change Sharing Settings button in the Advanced section. If you are located in the European Economic Area, you may have certain rights with respect to this data, including the right of access, rectification, erasure, restriction of processing, objection to processing, and portability. You may contact us about these, or simply request us to stop using and delete the data we’ve collected, at any time by contacting data@ob1.io.",
     "listTitle": "The following data will be collected by OB1 Company as you use OpenBazaar:",
