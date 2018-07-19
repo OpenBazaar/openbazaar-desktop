@@ -1155,7 +1155,9 @@
       "marketValueLabel": "Current Market Value",
       "marketValuePerCoin": "(%{amount} per %{curCode})",
       "coinType": "Trade",
-      "quantity": "Inventory"
+      "quantity": "Inventory",
+      "priceModifier": "Price Modifier (+/-)",
+      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1927,6 +1929,11 @@
     "quantityMustBePositive": "The quantity must be more than zero.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
+  "metadataModelErrors": {
+    "providePriceModifier": "Please provide a price modifier.",
+    "numericPriceModifier": "Please provide the price modifier as a number.",
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
+  },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
     "provideDiscountAmount": "Please provide a discount value.",
@@ -2074,6 +2081,9 @@
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
     "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
+  "cryptoPriceBelowMarket": "%{amount}% under market",
+  "cryptoPriceAboveMarket": "%{amount}% above market",
+  "cryptoPriceAtMarket": "market price",
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

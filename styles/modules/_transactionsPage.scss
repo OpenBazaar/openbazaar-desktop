@@ -40,6 +40,8 @@
         
         th {
           text-align: left;
+          font-size: $tx6;
+          text-transform: uppercase;
 
           .dateHeader {
             text-decoration: none;
@@ -71,6 +73,10 @@
               }
             }          
           }
+
+          &.priceHeader {
+            text-align: right;
+          }
         }
 
         td, th {
@@ -85,13 +91,25 @@
           }
 
           &.listingCol {
-            max-width: 142px;
-            min-width: 142px;
+            max-width: 162px;
+            min-width: 162px;
 
             .thumb {
               width: 33px;
               height: 33px;
               flex-shrink: 0;
+            }
+
+            .longCurCodes {
+              .fromCur, .toCur, .pairingSeparator {
+                font-size: 1.2rem;
+              }
+
+              .pairingSeparator {
+                margin-left: 6px;
+                margin-right: 6px;
+
+              }
             }
           }
 
@@ -122,13 +140,13 @@
           }
 
           &.priceCol {
-            max-width: 165px;
-            min-width: 165px;
+            max-width: 140px;
+            min-width: 140px;
           }
 
           &.statusCol {
-            min-width: 130px;
-            max-width: 130px;
+            min-width: 135px;
+            max-width: 135px;
 
             .btnAcceptOrder {
               padding: 0 10px;

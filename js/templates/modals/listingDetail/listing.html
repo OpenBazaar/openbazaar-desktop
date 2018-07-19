@@ -40,25 +40,40 @@
 
 <div class="listingContent flexColRow gutterVMd2">
   <div class="contentBox padLg clrP clrBr clrSh3">
-    <div class="flex gutterHLg">
+    <%
+      const titleRowFlexClass =
+        ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
+          'flex' : 'flexVCent';
+    %>
+    <div class="<%= titleRowFlexClass %> gutterHLg">
       <%
         if (ob.metadata.contractType !== 'CRYPTOCURRENCY') {
       %>
         <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
+        <h2 class="txUnb flexNoShrink js-price">
+          <%=
+            ob.currencyMod.formattedCurrency(
+              ob.price.amount,
+              ob.price.currencyCode,
+              ob.displayCurrency
+            )
+          %>
+        </h2>
       <%
         } else {
       %>
         <h2 class="flexExpand js-cryptoTitle cryptoTitle"></h2>
-      <% } %>
-      <h2 class="txUnb flexNoShrink js-price">
         <%=
-          ob.currencyMod.formattedCurrency(
-            ob.price.amount,
-            ob.price.currencyCode,
-            ob.displayCurrency
-          )
+          ob.crypto.cryptoPrice({
+            priceAmount: ob.price.amount,
+            priceCurrencyCode: ob.price.currencyCode,
+            displayCurrency: ob.displayCurrency,
+            priceModifier: ob.metadata.priceModifier,
+            wrappingTag: 'h2',
+            wrappingClass: 'flexNoShrink txRgt tx3',
+          })
         %>
-      </h2>
+      <% } %>
     </div>
     <div class="flex gutterHLg">
       <div class="mainImageWrapper">

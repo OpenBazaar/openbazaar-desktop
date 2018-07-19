@@ -116,18 +116,31 @@
       <div class="flexExpand tx5b">
         <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
       </div>
-      <div class="txB">
+      <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
+        <div>
+          <%=
+            ob.currencyMod.formattedCurrency(
+              ob.price.amount,
+              ob.price.currencyCode,
+              ob.displayCurrency,
+              {
+                toolTipClass: 'toolTipTop',
+              }
+            )
+          %>
+        </div>
+      <% } else { %>
         <%=
-          ob.currencyMod.formattedCurrency(
-            ob.price.amount,
-            ob.price.currencyCode,
-            ob.displayCurrency,
-            {
-              toolTipClass: 'toolTipTop',
-            }
-          )
+          ob.crypto.cryptoPrice({
+            priceAmount: ob.price.amount,
+            priceCurrencyCode: ob.price.currencyCode,
+            displayCurrency: ob.displayCurrency,
+            priceModifier: ob.price.modifier,
+            wrappingClass: '',
+            marketRelativityClass: 'hide',
+          })
         %>
-      </div>
+      <% } %>
     </div>
   </div>
   <div class="listingIcons">
@@ -146,10 +159,23 @@
         <div class="center tx2 nsfwAvatarOverlay"><%= ob.parseEmojis('😲') %></div>
       </div>
       <div class="flexExpand">
-        <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
-        <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
-          <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
-        </div>
+        <%
+          if (ob.contractType !== 'CRYPTOCURRENCY' ||
+            !Array.isArray(ob.acceptedCurrencies) ||
+            !ob.acceptedCurrencies.length) {
+        %>
+          <% const tooltipClass = ob.title.length > 60 ? 'toolTip' : 'toolTipNoWrap' %>
+          <div class="rowTn inlineBlock <%= tooltipClass %> toolTipTop" data-tip="<%= ob.title %>">
+            <a class="clrT clamp3 listingTitle"><%= ob.title %></a>
+          </div>
+        <% } else { %>
+          <%= ob.crypto.tradingPair({
+            className: 'cryptoTradingPairSm',
+            fromCur: ob.acceptedCurrencies[0],
+            toCur: ob.coinType,
+            truncateCurAfter: 5,
+          }) %>
+        <% } %>
         <div class="flexVCent gutterHSm tx5b">
           <div class="flexNoShrink">
             <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
@@ -163,17 +189,30 @@
       </div>
       <% } %>
       <div class="priceCol flexNoShrink clamp4">
-        <span class="txB">
-          <%=
-            ob.currencyMod.formattedCurrency(
-              ob.price.amount,
-              ob.price.currencyCode,
-              ob.displayCurrency,
-              {
-                toolTipClass: 'toolTipTop',
-              }
-            )
-          %>
+        <span>
+          <%
+            if (ob.contractType !== 'CRYPTOCURRENCY') { %>
+            <%=
+              ob.currencyMod.formattedCurrency(
+                ob.price.amount,
+                ob.price.currencyCode,
+                ob.displayCurrency,
+                {
+                  toolTipClass: 'toolTipTop',
+                }
+              )
+            %>
+          <% } else { %>
+            <%=
+              ob.crypto.cryptoPrice({
+                priceAmount: ob.price.amount,
+                priceCurrencyCode: ob.price.currencyCode,
+                displayCurrency: ob.displayCurrency,
+                priceModifier: ob.price.modifier,
+                wrappingClass: '',
+              })
+            %>
+          <% } %>
         </span>
       </div>
     </div>
@@ -233,7 +272,17 @@
         </div>
       </div>
     </div>
-    <div class="priceCol clrTEm txB"><%= ob.currencyMod.formattedCurrency(1, ob.coinType, ob.displayCurrency) %></div>
+    <div class="priceCol">
+      <%=
+        ob.crypto.cryptoPrice({
+          priceAmount: ob.price.amount,
+          priceCurrencyCode: ob.price.currencyCode,
+          displayCurrency: ob.displayCurrency,
+          priceModifier: ob.price.modifier,
+          wrappingClass: 'txB',
+        })
+      %>
+    </div>
     <%
       let inventory = ob.polyT('cryptoAmountIconPairing', {
         amount: `<i class="clrT2">${ob.polyT('inventoryDisplay.unknownInventory')}</i>`,

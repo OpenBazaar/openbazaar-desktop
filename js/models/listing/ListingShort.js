@@ -39,10 +39,13 @@ export default class extends BaseModel {
       parsedResponse.categories : [];
 
     if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
+      const modifier = parsedResponse.price.modifier || 0;
+
       parsedResponse.price = {
         ...parsedResponse.price,
-        amount: 1,
+        amount: 1 + (modifier / 100),
         currencyCode: parsedResponse.coinType,
+        modifier,
       };
 
       if (parsedResponse.totalInventoryQuantity >= 0 &&
