@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../app';
+import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
@@ -251,6 +252,7 @@ export function getCachedProfiles(peerIds = []) {
 
   const promises = [];
   const profilesToFetch = [];
+  const profilesReceived = [];
   let socket;
 
   if (!profileCacheExpiredInterval) {
@@ -306,47 +308,57 @@ export function getCachedProfiles(peerIds = []) {
   });
 
   if (profilesToFetch.length) {
+    const fetchId = guid();
+    socket = getSocket();
+
+    if (!socket) {
+      promises.forEach(promise => {
+        promise.reject({
+          errCode: 'NO_SERVER_CONNECTION',
+          error: 'There is no server connection.',
+        });
+      });
+
+      return;
+    }
+
+    const onSocketMessage = e => {
+      if (!(e.jsonData.peerId && (e.jsonData.profile || e.jsonData.error))) return;
+      if (e.jsonData.id !== fetchId) return;
+
+      if (profileCache.get(e.jsonData.peerId)) {
+        if (e.jsonData.error) {
+          profileCache.get(e.jsonData.peerId)
+            .deferred
+            .reject({
+              errCode: 'SERVER_ERROR',
+              error: e.jsonData.error,
+            });
+        } else {
+          profileCache.get(e.jsonData.peerId)
+            .deferred
+            .resolve(new Profile(e.jsonData.profile, { parse: true }));
+        }
+
+        if (profilesReceived.indexOf(e.jsonData.peerId) === -1) {
+          profilesReceived.push(e.jsonData.peerId);
+        }
+
+        if (profilesReceived.length === profilesToFetch.length) {
+          socket.off('message', onSocketMessage);
+        }
+      }
+    };
+
+    socket.on('message', onSocketMessage);
+
     $.post({
-      url: app.getServerUrl('ob/fetchprofiles?async=true&usecache=true'),
+      url: app.getServerUrl(`ob/fetchprofiles?async=true&usecache=true&asyncID=${fetchId}`),
       data: JSON.stringify(profilesToFetch),
       dataType: 'json',
       contentType: 'application/json',
-    }).done(() => {
-      socket = getSocket();
-
-      if (!socket) {
-        promises.forEach(promise => {
-          promise.reject({
-            errCode: 'NO_SERVER_CONNECTION',
-            error: 'There is no server connection.',
-          });
-        });
-
-        return;
-      }
-
-      const onSocketMessage = e => {
-        if (!(e.jsonData.peerId && (e.jsonData.profile || e.jsonData.error))) return;
-
-        if (profileCache.get(e.jsonData.peerId)) {
-          if (e.jsonData.error) {
-            profileCache.get(e.jsonData.peerId)
-              .deferred
-              .reject({
-                errCode: 'SERVER_ERROR',
-                error: e.jsonData.error,
-              });
-          } else {
-            profileCache.get(e.jsonData.peerId)
-              .deferred
-              .resolve(new Profile(e.jsonData.profile, { parse: true }));
-          }
-        }
-      };
-
-      socket.on('message', onSocketMessage);
-    })
-      .fail(jqXhr => {
+    }).fail(jqXhr => {
+        socket.off('message', onSocketMessage);
         promises.forEach(promise => {
           promise.reject({
             errCode: 'SERVER_ERROR',

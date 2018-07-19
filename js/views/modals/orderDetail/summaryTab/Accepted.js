@@ -103,27 +103,6 @@ export default class extends BaseVw {
     this.trigger('clickFulfillOrder');
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   remove() {
     $(document).off('click', this.boundOnDocClick);
     super.remove();
