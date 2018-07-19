@@ -171,7 +171,7 @@ export function endAjaxEvent(key, segmentation) {
  */
 export function recordPrefixedEvent(eventName, prefix = '', segmentation = {}) {
   if (!eventName) throw new Error('Please provide an eventName');
-  if (segmentation && typeof segmentation !== 'object') {
+  if (typeof segmentation !== 'object' || segmentation === null) {
     throw new Error('please provide the segmentation as an object');
   }
   const prefixed = prefix ? `${prefix}_` : '';
@@ -198,7 +198,7 @@ export function startPrefixedAjaxEvent(eventName, prefix = '') {
  */
 export function endPrefixedAjaxEvent(eventName, prefix = '', segmentation = {}) {
   if (!eventName) throw new Error('Please provide an eventName');
-  if (segmentation && typeof segmentation !== 'object') {
+  if (typeof segmentation !== 'object' || segmentation === null) {
     throw new Error('please provide the segmentation as an object');
   }
   const prefixed = prefix ? `${prefix}_` : '';
