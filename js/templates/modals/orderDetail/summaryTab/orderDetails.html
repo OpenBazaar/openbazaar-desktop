@@ -62,19 +62,6 @@
             <div class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoQuantityCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></div>
           <% } %>          
         </div>
-        <% if (isCrypto) { %>
-          <div>
-            <div class="flexHRight txB">
-              <%=
-                ob.currencyMod.pairedCurrency(
-                  ob.order.payment.amount,
-                  ob.currencyMod.getServerCurrency().code,
-                  ob.userCurrency
-                )
-              %>
-            </div>
-          </div>
-        <% } %>
       </div>
       <hr class="clrBr" />
       <div class="flexRow gutterH">
@@ -132,7 +119,7 @@
                 }) %>
               </div>
               <div class="flex gutterHSm">
-                <div class="clamp cryptoPaymentAddress"><%= item.paymentAddress %></div>
+                <div class="clamp2 cryptoPaymentAddress"><%= item.paymentAddress %></div>
                 <div>
                   <a class="js-copyCryptoAddress clrTEm" data-address="<%= item.paymentAddress %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
                 </div>
@@ -144,7 +131,7 @@
         <div class="col8">
           <div class="row">
             <div class="flexRow gutterH row">
-              <div class="<%= print(isCrypto ? 'col12' : 'col6') %>">
+              <div class="col6">
                 <div class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.couponHeading') %></div>
                 <% if (item.couponCodes && item.couponCodes.length) { %>
                   <div><%= item.couponCodes.join(', ') %></div>
@@ -160,7 +147,7 @@
               <% } %>
             </div>
             <div class="flexRow gutterH row">
-              <div class="<%= print(isCrypto ? 'col12' : 'col6') %>">
+              <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.moderatorHeading') %></div>
                 <% if (ob.isModerated) { %>
                   <div class="js-moderatorContainer"></div>
@@ -168,20 +155,18 @@
                   <%= ob.polyT('orderDetail.summaryTab.notApplicable') %>
                 <% } %>
               </div>
-              <% if (!isCrypto) { %>
-                <div class="col6">
-                  <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
-                  <div>
-                    <%=
-                      ob.currencyMod.pairedCurrency(
-                        ob.order.payment.amount,
-                        ob.currencyMod.getServerCurrency().code,
-                        ob.userCurrency
-                      )
-                    %>
-                  </div>
+              <div class="col6">
+                <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
+                <div>
+                  <%=
+                    ob.currencyMod.pairedCurrency(
+                      ob.order.payment.amount,
+                      ob.currencyMod.getServerCurrency().code,
+                      ob.userCurrency
+                    )
+                  %>
                 </div>
-              <% } %>
+              </div>
             </div>
           </div>
         </div>

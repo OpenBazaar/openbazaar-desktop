@@ -240,7 +240,7 @@
     // The price column is a set width and the free shipping column is a maximum of 200px and 4 lines.
     // This leaves the title/description/rating to flex to take up the remaining space.
     .priceCol {
-      width: 100px;
+      width: 130px;
       text-align: right;
     }
 
@@ -275,6 +275,10 @@
 
     .priceCol {
       text-align: right;
+
+      .marketRelativity {
+        font-size: 1.1rem;
+      }
     }
 
     .inventoryCol {

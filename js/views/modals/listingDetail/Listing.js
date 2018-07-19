@@ -98,7 +98,7 @@ export default class extends BaseModal {
           const prev = e.prev;
           delete prev.item.cryptoQuantity;
 
-          const cur = this.model.toJSON();
+          const cur = md.toJSON();
           delete cur.item.cryptoQuantity;
 
           if (!(_.isEqual(prev, cur))) {
@@ -679,7 +679,6 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
-      this.adjustPriceBySku();
 
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');
@@ -707,6 +706,8 @@ export default class extends BaseModal {
         });
         this.getCachedEl('.js-cryptoTitle')
           .html(this.cryptoTitle.render().el);
+      } else {
+        this.adjustPriceBySku();
       }
 
       if (nsfwWarning) {

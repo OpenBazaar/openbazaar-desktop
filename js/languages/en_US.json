@@ -1155,7 +1155,9 @@
       "marketValueLabel": "Current Market Value",
       "marketValuePerCoin": "(%{amount} per %{curCode})",
       "coinType": "Trade",
-      "quantity": "Inventory"
+      "quantity": "Inventory",
+      "priceModifier": "Price Modifier (+/-)",
+      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1813,22 +1815,25 @@
   },
   "metrics": {
     "title": "Optional Anonymous Metrics",
-    "newVersion": "We've updated the data being collected. Please review the information below and continue to help us improve OpenBazaar.",
-    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
-    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and cannot be accessed by anyone else.",
-    "listTitle": "The following data will be shared:",
+    "newVersion": "Please review the update to the analytics data agreement below and click “Activate.”",
+    "msg1": "Please help improve OpenBazaar by agreeing to share analytics data about your experience with the development team.",
+    "msg2": "By clicking “Activate,” you agree to share the data listed below with OB1 Company and its processors for the purposes described, and consent to the transfer of this data to servers located in the United States. You may stop the sharing of this data at any time by opening your settings, and clicking the Change Sharing Settings button in the Advanced section. If you are located in the European Economic Area, you may have certain rights with respect to this data, including the right of access, rectification, erasure, restriction of processing, objection to processing, and portability. You may contact us about these, or simply request us to stop using and delete the data we’ve collected, at any time by contacting data@ob1.io.",
+    "listTitle": "The following data will be collected by OB1 Company as you use OpenBazaar:",
     "list": {
-      "pages": "Which pages you load, such as the search page or the store page.",
-      "clicks": "Clicks on elements. This records only what was clicked on.",
-      "errors": "Performance data like errors and how long content takes to load.",
+      "device": "Your IP address and device information, for the purposes listed below.",
+      "pages": "Which pages you load, such as the search page or store page. This lets us know which parts of the app are being used the most, and how users navigate through the app.",
+      "clicks": "Clicks on elements. This records only what you clicked on. This gives us data on how often elements are clicked on, so we can focus our effort on the most used parts of the app and improve or remove rarely used elements.",
+      "errors": "Performance data like errors and how long content takes to load. This makes it easier for us to fix problems users are experiencing without waiting for a specific request to fix something.",
       "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
-      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have.",
+      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have. This gives us a better understanding of the state of the network, so we can focus on areas that need improvement.",
       "node": "Information about your node including display currency, cryptocurrency, language, and if you are using Tor. This helps us prioritize development.",
-      "app": "Details about your app, which include its version and whether it is installed from a downloadable package or from source.",
+      "app": "Details about your app, which include its version and whether it is installed from a downloadable package from source. This lets us understand the context of the other data collected, so it can be applied correctly.",
       "orders": "Basic information on actions you take with orders, such as its state when disputed, or if the order was moderated. This helps us identify problems in the order process.",
-      "listings": "Basic information about on actions taken when creating and editing listings. This includes the type of listing, but no other information about it.",
-      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation folder, which may include your root and/or user folder."
+      "listings": "Basic information about on actions taken when creating and editing listings. This includes the type of listing, but no other information about it. This gives us data on potential problems with creating and editing listings.",
+      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation folder, which may include your root and/or user folder. This is a side effect of the data collection process, and is not used by the OB1 team."
     },
+    "disclaimer1": "No information that can be used to identify your orders or any of your transactions is shared with us. This data is always stored on your own computer, and cannot be accessed by anyone else.",
+    "disclaimer2": "As stated above, your sharing of this data is completely optional. You are not required to share this data in order to use OpenBazaar.",
     "acceptBtn": "Accept",
     "declineBtn": "Decline",
     "activateBtn": "Activate",
@@ -1926,6 +1931,11 @@
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "quantityMustBePositive": "The quantity must be more than zero.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+  },
+  "metadataModelErrors": {
+    "providePriceModifier": "Please provide a price modifier.",
+    "numericPriceModifier": "Please provide the price modifier as a number.",
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
@@ -2074,6 +2084,9 @@
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
     "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
+  "cryptoPriceBelowMarket": "%{amount}% under market",
+  "cryptoPriceAboveMarket": "%{amount}% above market",
+  "cryptoPriceAtMarket": "market price",
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

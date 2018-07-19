@@ -1,0 +1,36 @@
+<%
+  let colorClass = '';
+  let priceSymbol = '(<span class="ion-checkmark clrTEm"></span>)';
+
+  if (ob.priceModifier !== 0) {
+    colorClass = ob.priceModifier > 0 ?
+      'clrTPriceAboveMarket' : 'clrTPriceBelowMarket';
+    priceSymbol = ob.priceModifier > 0 ?
+      `(<span class="icon ion-arrow-up-c"></span>)` :
+      `(<span class="icon ion-arrow-down-c"></span>)`; 
+  }  
+%>
+<<%= ob.wrappingTag %> class="<%= ob.wrappingClass %> <%= colorClass %>">
+  <span>
+    <%=
+      ob.currencyMod.formattedCurrency(
+        ob.priceAmount,
+        ob.priceCurrencyCode,
+        ob.displayCurrency
+      )
+    %>&nbsp;<span class="priceSymbol"><%= priceSymbol %></span>
+  </span>
+  <span class="marketRelativity <%= ob.marketRelativityClass %> <% if (ob.priceModifier === 0) print('clrT2') %>">
+    <%
+      let marketPriceLine = ob.polyT('cryptoPriceAtMarket');
+
+      if (ob.priceModifier > 0) {
+        marketPriceLine = ob.polyT('cryptoPriceAboveMarket', { amount: ob.priceModifier });
+      } else if (ob.priceModifier < 0) {
+        marketPriceLine = ob.polyT('cryptoPriceBelowMarket', { amount: ob.priceModifier });
+      }
+
+      print(marketPriceLine);
+    %>
+  </span>
+</<%= ob.wrappingTag %>>

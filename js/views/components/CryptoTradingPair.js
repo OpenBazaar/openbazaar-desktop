@@ -27,6 +27,7 @@ export default class extends BaseVw {
               { coinType }),
         exchangeRateUnavailable: false,
         iconClass: 'ion-alert-circled clrTAlert',
+        truncateCurAfter: 8,
         ...options.initialState || {},
       },
     };
@@ -73,10 +74,18 @@ export default class extends BaseVw {
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
         newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
+
+        if (newState.fromCur > state.truncateCurAfter) {
+          newState.fromCur = `${newState.fromCur.slice(0, state.truncateCurAfter)}…`;
+        }
       }
 
       if (typeof state.toCur === 'string') {
         newState.toCur = ensureMainnetCode(state.toCur.toUpperCase());
+
+        if (newState.toCur > state.truncateCurAfter) {
+          newState.toCur = `${newState.toCur.slice(0, state.truncateCurAfter)}…`;
+        }
       }
 
       if (newState.fromCur !== prevState.fromCur ||

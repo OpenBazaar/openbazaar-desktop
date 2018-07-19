@@ -1,6 +1,7 @@
 import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
+import { upToFixed } from '../../utils/number';
 import { getCurrencyByCode } from '../../data/currencies';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 
@@ -12,6 +13,7 @@ export default class extends BaseModel {
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
       coinDivisibility: defaultQuantityBaseUnit,
+      priceModifier: 0,
     };
   }
 
@@ -41,6 +43,34 @@ export default class extends BaseModel {
     ];
   }
 
+  get constraints() {
+    return {
+      minPriceModifier: -99.99,
+      maxPriceModifier: 1000,
+    };
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    if (attrs.contractType === 'CRYPTOCURRENCY' &&
+      typeof attrs.priceModifier === 'number') {
+      // round to two decimal places
+      attrs.priceModifier = parseFloat(upToFixed(attrs.priceModifier, 2));
+    }
+
+    return super.set(attrs, opts);
+  }
+
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
@@ -66,6 +96,20 @@ export default class extends BaseModel {
 
     if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
       addError('pricingCurrency', 'The currency is not one of the available ones.');
+    }
+
+    if (attrs.contractType === 'CRYPTOCURRENCY') {
+      if (attrs.priceModifier === '') {
+        addError('priceModifier', app.polyglot.t('metadataModelErrors.providePriceModifier'));
+      } else if (typeof attrs.priceModifier !== 'number') {
+        addError('priceModifier', app.polyglot.t('metadataModelErrors.numericPriceModifier'));
+      } else if (attrs.priceModifier < this.constraints.minPriceModifier ||
+        attrs.priceModifier > this.constraints.maxPriceModifier) {
+        addError('priceModifier', app.polyglot.t('metadataModelErrors.priceModifierRange', {
+          min: this.constraints.minPriceModifier,
+          max: this.constraints.maxPriceModifier,
+        }));
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;

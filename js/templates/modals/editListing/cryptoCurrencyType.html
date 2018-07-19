@@ -33,6 +33,15 @@
 </div>
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
+    <label for="editListingCryptoPriceModifier" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.priceModifier') %></label>
+    <% if (ob.errors['metadata.priceModifier']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.priceModifier'] })) %>
+    <div class="posR">
+      <input type="text" class="clrBr clrP clrSh2" name="metadata.priceModifier" id="editListingCryptoPriceModifier" value="<%= ob.metadata.priceModifier %>" placeholder="0.00" data-var-type="number">
+      <div class="cryptoPriceModifierPercentSymbol clrT2 tx5">%</div>
+    </div>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperPriceModifier') %></div>
+  </div>
+  <div class="col6 simpleFlexCol">
     <label for="editListingCryptoQuantity" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.quantity') %></label>
     <% if (ob.errors['item.cryptoQuantity']) print(ob.formErrorTmpl({ errors: ob.errors['item.cryptoQuantity'] })) %>
     <div class="posR">
