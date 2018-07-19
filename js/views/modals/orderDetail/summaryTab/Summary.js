@@ -647,10 +647,6 @@ export default class extends BaseVw {
 
     this.vendor.getProfile()
       .done(profile => {
-        console.log('got that vendors pro to the file yo');
-        console.dir(
-          profile.get('avatarHashes').toJSON()          
-        );
         this.accepted.setState({
           avatarHashes: profile.get('avatarHashes').toJSON(),
         });
