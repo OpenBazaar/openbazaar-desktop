@@ -55,7 +55,7 @@
     "curInUseTip": "Vous avez déjà un serveur intégré avec cette monnaie de portefeuille.",
     "zcashBinaryLabel": "Zcash Binary",
     "fullNodeLink": "ici",
-    "zcashBinaryHelper": "Un full node Zcash est requis. Téléchargez un full node Zcash %{fullNodeLink}. Une fois installé, entrez le chemin de votre binaire zcashd au dessus.",
+    "zcashBinaryHelper": "Un full node Zcash est requis. Téléchargez un full node Zcash %{fullNodeLink}. Une fois installé, entrez le chemin de votre binaire zcashd ci-dessus.",
     "btnBrowse": "Parcourir",
     "btnNext": "Suivant"
   },
@@ -796,7 +796,7 @@
     "statusBar": {
       "errorPreface": "Erreur :",
       "needHelpLink": "Besoin d'aide ?",
-      "viewLocalServerDebugLogLink": "Log de débuggage",
+      "viewLocalServerDebugLogLink": "Log de débogage",
       "errorConnectionLost": "%{errorPreface} La connexion à %{serverName} a été perdue. %{links}",
       "errorUnableToReachServer": "%{errorPreface} Échec de la connexion à %{serverName}. Le serveur ne peut être atteint. %{links}",
       "errorAuthFailed": "%{errorPreface} Échec de la connexion à %{serverName}. Le nom d'utilisateur et / ou le mot de passe est incorrect. %{links}",
@@ -928,7 +928,7 @@
           "btnRetry": "Réessayer"
         },
         "retryFailDialogTitle": "Impossible de réessayer le paiement",
-        "retryFailInsufficientFunds": "Vous n'avez pas les fonds suffisants pour compléter cette transaction.",
+        "retryFailInsufficientFunds": "Vous n'avez pas les fonds suffisants pour terminer cette transaction.",
         "feeBumpOf": "Augmentation des frais de %{adresse}"
       },
       "noTransactionsPlaceholder": "Vous n'avez pas de transactions",
@@ -1063,7 +1063,7 @@
     "submit": "Envoyer",
     "errorTitle": "Votre signalement n'a pas pu être envoyé en raison d'une erreur.",
     "error404": "L'URL du signalement a renvoyé une erreur 404, elle n'a pas pu être atteinte.",
-    "postSubmitMsg": "Votre signalement a été soumis. Chaque fournisseur de recherche a des règles différentes pour traiter les signalements, vous pouvez toujours voir l'annonce dans les résultats de recherche jusqu'à ce qu'ils décident de l'enlever.",
+    "postSubmitMsg": "Votre signalement a été soumis. Chaque fournisseur de recherche a des règles différentes pour traiter les signalements. Vous pourrez toujours voir l'annonce dans les résultats de recherche jusqu'à ce que le fournisseur décide de l'enlever.",
     "closeBtn": "Fermer"
   },
   "editListing": {
@@ -1106,7 +1106,7 @@
     "helperCategories": "L’imbrication de catégorie n'est pas prise en charge (par exemple, Chaussures > Bottes ne fonctionne pas actuellement). Entrez un nom de catégorie, appuyez sur Entrée, répétez.",
     "helperReturnPolicy": "Si laissé vide, l'annonce affichera \"Aucune condition de retour spécifiée\"",
     "helperTerms": "Si laissé vide, l'annonce affichera \"Aucune condition spécifiée\"",
-    "helperPrice": "Définissez votre prix en euros, dollars, %{cur}, n'importe quoi",
+    "helperPrice": "Définissez votre prix en euros, dollars, %{cur}, ou autre chose.",
     "createListingLabel": "Ajouter une annonce",
     "editListingLabel": "Modifier l'annonce",
     "title": "Titre",
@@ -1211,7 +1211,7 @@
       "unlimitedQuantityLabel": "illimité",
       "placeholderNeedMoreData": "Le tableau d'inventaire des variantes apparaîtra lorsque vous aurez déclaré au moins une variante avec au moins un choix.",
       "unableToCalcTotalPrice": "Impossible de calculer",
-      "unableToCalcTotalPriceTip": "Le prix de l'annonce et le supplément doivent tous deux être des nombres. Si vous incluez une décimale, un point doit être utilisé comme séparateur, par exemple \"0.00\"."
+      "unableToCalcTotalPriceTip": "Le prix de l'annonce et le supplément doivent tous les deux être des nombres. Si vous incluez une décimale, un point doit être utilisé comme séparateur, par exemple \"0.00\"."
     },
     "confirmCloseDialog": {
       "title": "Vous avez des modifications non enregistrées",
@@ -1679,7 +1679,7 @@
           "declined": "Refusé(e)",
           "refunded": "Remboursé(e)",
           "decided": "Décidé(e)",
-          "resolved": "Résolue",
+          "resolved": "Résolu(e)",
           "disputed": "Litigieux"
         },
         "heading": "Détails de la commande",
