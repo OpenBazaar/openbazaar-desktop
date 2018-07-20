@@ -34,7 +34,7 @@
   },
   "blockedWarning": {
     "heading": "Du hast diesen Benutzer blockiert",
-    "paragraph1": "This user is currently in your list of blocked users. You can’t view their page or listings while they’re blocked. Blocked users also cannot message you or place orders on your store.",
+    "paragraph1": "Dieser User ist zur Zeit in deiner Liste der blockierten User. Du kannst ihre Seite oder ihre Listen solange nicht anschauen. Blockierte User können dich nicht benachrichtigen oder einen Auftrag an deinen Laden senden.",
     "paragraph2": "Möchten Sie sie entblockieren und dann die Seite ansehen?",
     "btnCancel": "Abbrechen",
     "btnUnblock": "Ja, nicht mehr blockieren"

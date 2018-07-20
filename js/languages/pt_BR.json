@@ -257,7 +257,7 @@
     "createListing": "Criar Anúncio",
     "block": "Bloquear",
     "about": "Sobre",
-    "aboutEmpty": "\"Sobre\" está vazio…",
+    "aboutEmpty": "Nenhuma informação disponível",
     "follow": "Seguir",
     "unfollow": "Deixar de seguir",
     "searchStore": "Busca",
@@ -467,8 +467,8 @@
     "helpTab": {
       "linkText": "Ajuda",
       "sectionHeader": "Ajuda",
-      "supportLink": "Página de ajuda em OpenBazaar.org",
-      "text": "Precisa de ajuda com o software OpenBazaar? Por favor visite %{supportLink}. Lá você encontrará diversos guias para auxiliá-lo a resolver seus problemas."
+      "supportLink": "página de ajuda em OpenBazaar.org",
+      "text": "Precisa de ajuda com o software OpenBazaar? Por favor visite a %{supportLink}. Lá você encontrará diversos guias para auxiliá-lo a resolver seus problemas."
     }
   },
   "settings": {
@@ -496,7 +496,7 @@
       "statusSaveFailed": "Não foi possível salvar as configurações gerais.",
       "saveErrorAlertTitle": "Não foi possível salvar as configurações gerais",
       "verifiedMods": "Moderadores Verificados",
-      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "verifiedModsHelper": "Arrisque-se menos ao usar uma lista de moderadores verificados. Os moderadores com identidades verificadas e os anúncios que possuem moderadores verificados disponíveis serão marcados com um símbolo.",
       "restoreDefault": "Restaurar padrão"
     },
     "pageTab": {
@@ -701,7 +701,7 @@
       "moderatoryByIDSubmit": "Procurar",
       "availableModerators": "Moderadores Disponíveis",
       "browseModerators": "Ver Moderadores",
-      "verifiedOnly": "Apenas moderados verificados",
+      "verifiedOnly": "Apenas moderadores verificados",
       "disclaimer": "* O serviço de moderação só é cobrado quando há uma disputa em um pedido.",
       "loading": "Carregando",
       "status": {
@@ -712,7 +712,7 @@
       },
       "errors": {
         "modNotFoundTitle": "Moderador Não Encontrado",
-        "modsNotFound": "%{guids} could not be found on the network. It may not be a valid peer ID. |||| %{guids} could not be found on the network. They may not be valid peer IDs.",
+        "modsNotFound": "%{guids} não pode ser encontrado na rede. Talvez ele não seja um ID de peer válido. |||| %{guids} não puderam ser encotrados na rede. Talvez eles não sejam IDs de peer válidos.",
         "selectedModsTitle": "Seus Moderadores Atuais Não Puderam Ser Carregados.",
         "availableModsTitle": "Os Moderadores Disponíveis Não Puderam Ser Carregados",
         "modIsBlank": "Insira um @apelido ou ID de um moderador",
@@ -976,17 +976,17 @@
     "reviews": "Qualificações",
     "attachments": "Anexos",
     "refundPolicy": "Política de Reembolso",
-    "noRefundPolicy": "Não foi inserida uma política de devolução",
+    "noRefundPolicy": "Sem política de devolução",
     "termsAndConditions": "Termos do Serviço",
-    "noTermsAndConditions": "Sem termos e condições inseridos",
+    "noTermsAndConditions": "Sem termos e condições",
     "shipping": "Frete",
     "shipsFrom": "País de origem: %{country}",
     "shipTo": "Envia para:",
     "noShippingFound": "Esse item não é enviado para o país selecionado",
     "localPickup": "Esta opção é apenas para retirada local.",
     "deliveryTime": "Tempo de Entrega",
-    "priceFirst": "Preço (primeiro item)",
-    "priceSecond": "Preço (item adicional)",
+    "priceFirst": "Custo (1º item)",
+    "priceSecond": "Custo (item adicional)",
     "allCountries": "Qualquer País",
     "returnToStore": "Voltar à loja",
     "goToStore": "Ir para a loja",
@@ -994,7 +994,7 @@
       "incompatibleCrypto": "O anúncio aceita %{acceptedCurrencies}, enquanto a sua carteira suporta apenas transações em %{serverCur}.",
       "unrecognizedCur": "Esse item tem um preço em uma moeda não reconhecida.",
       "noExchangeRateInfo": "O preço deste item está em uma moeda cuja cotação não está disponível atualmente.",
-      "unpurchaseable": "Esse anúncio não pode ser comprado."
+      "unpurchaseable": "Esse anúncio não pode ser comprado"
     },
     "confirmDelete": {
       "title": "Você tem certeza?",
@@ -1078,14 +1078,14 @@
       "tags": "Tags",
       "tagsDetailed": "Tags (Para que seu anúncio seja descoberto)",
       "category": "Categoria",
-      "categoryDetailed": "Categoria (Para organizar a sua loja)",
+      "categoryDetailed": "Categorias (para organizar a sua loja)",
       "variants": "Variações",
-      "variantsDetailed": "Variantes (Insira tamanhos, cores, materiais, etc)",
+      "variantsDetailed": "Variantes (tamanhos, cores, materiais, etc.)",
       "inventory": "Inventário",
       "returnPolicy": "Política de Devolução",
       "termsAndConditions": "Termos e Condições",
       "coupons": "Cupons",
-      "inventoryManagement": "Gerenciamento do Inventário",
+      "inventoryManagement": "Gerenciamento do Inventário (estoque)",
       "variantInventory": "Inventário de Variantes"
     },
     "placeholderTitle": "Insira o seu título…",
@@ -1093,7 +1093,7 @@
     "placeholderDescription": "Descreva o seu anúncio da melhor maneira que você puder… Insira fotos, vídeos no YouTube, etc.",
     "placeholderReturnPolicy": "Qual é a sua política de devolução? Você aceita devoluções dentro de quantos dias no máximo? Quem é que deve pagar pelo frete da devolução (se necessário)? etc.",
     "placeholderTerms": "Quais são os termos e condições da listagem? Você que é o responsável por ser o fornecedor? Existe uma garantia? Quando é a transação final? etc.",
-    "helperTitle": "Alguma descrição que explique claramente o que você está vendendo",
+    "helperTitle": "Descreva de maneira clara o que você está vendendo",
     "helperType": "Escolha %{smart_count} tipo |||| Escolha %{smart_count} tipos",
     "helperShipping": "Entregue onde você quiser!",
     "helperPhotos": "Inclua no máximo %{maxPhotos} fotos",
@@ -1104,8 +1104,8 @@
     "helperNSFW": "Clique em sim se o anúncio tiver conteúdo adulto/ofensivo",
     "helperTags": "Você pode acrescentar várias tags. Pressione Enter após inserir cada tag.",
     "helperCategories": "Não há suporte para subcategorias (ex: Sapatos > Botas não funciona). Insira um nome de uma categoria, tecle Enter, e escreva o nome da próxima.",
-    "helperReturnPolicy": "Se deixado em branco, o anúncio irá exibir \"Nenhuma política de devoluções\"",
-    "helperTerms": "Se deixado em branco, o anúncio irá exibir \"Sem Termos e Condições\"",
+    "helperReturnPolicy": "Se deixado em branco, o anúncio irá exibir o texto \"Sem política de devolução\"",
+    "helperTerms": "Se deixado em branco, o anúncio irá exibir o texto \"Sem termos e condições\"",
     "helperPrice": "Defina o seu preço em Reais, Dólares, %{cur}, etc.",
     "createListingLabel": "Criar Anúncio",
     "editListingLabel": "Editar Anúncio",
@@ -1129,7 +1129,7 @@
     "viewListingLink": "Ver Anúncio",
     "unsupportedCurrencyDialog": {
       "title": "Moeda não reconhecida",
-      "body": "This listing is priced in a currency (%{cur}) that this client does not support. Please select a new currency below and click OK. Afterwards, be sure to double-check the prices to ensure they are appropriate for the new currency.",
+      "body": "O anúncio possui um preço em uma moeda (%{cur}) não suportada por este cliente. Por favor, selecione uma nova moeda abaixo e clique em OK. A seguir, verifique se o preço está apropriado para a nova moeda.",
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
@@ -1161,7 +1161,7 @@
       "services": {
         "nameLabel": "Serviço",
         "namePlaceholder": "ex: PAC, SEDEX, etc.",
-        "estimatedDeliveryLabel": "Tempo Estimado de Entrega",
+        "estimatedDeliveryLabel": "Tempo de Entrega",
         "estimatedDeliveryPlaceholder": "ex: 5-7 dias",
         "priceLabel": "Preço (primeiro item)",
         "additionalItemPriceLabel": "Preço (item adicional)",
@@ -1261,8 +1261,8 @@
       "colVendor": "Vendedor",
       "colPrice": "Preço unitário",
       "colInventory": "Inventário",
-      "tipPrice": "The price represents 1 whole unit of the currency. Fractions of a unit can be purchased. The price will be calculated during checkout.",
-      "tipInventory": "The inventory is estimated based on when the search provider last crawled the listing and since the vendor has last been online."
+      "tipPrice": "O preço representa uma (1) unidade cheia da moeda. Frações de uma unidade podem ser compradas. O preço será calculado durante o checkout.",
+      "tipInventory": "O estoque é estimado de acordo com a última vez em que o anúncio foi rastreado pelo servidor e busca e a partir da última vez em que o vendedor esteve online."
     },
     "errors": {
       "searchFailTitle": "Houve uma falha ao pesquisar em %{provider}. Escolha outro provedor de busca acima.",
@@ -1299,7 +1299,7 @@
     },
     "tosScreen": {
       "heading": "Termos do Serviço",
-      "tos": "OpenBazaar is a network for trading goods and services directly between people - using crypto currencies - without any central organization controlling the platform. This means you are responsible for your own activity on the network.\n\nOpenBazaar users are not anonymous by default. Most communications between parties are encrypted, but IP addresses are public and can be associated with activity on the network. Malicious parties could use this information against you; protecting your privacy is your own responsibility.\n\nOpenBazaar users must adhere to the laws in their own legal jurisdiction as well as their conscience. The OpenBazaar developers do not condone - and are not responsible for - any use of the platform for illegal activity.\n\nThe OpenBazaar community of developers has worked hard to deliver a free platform for trade to the world. But as with any software, bugs will be found. The developers are not responsible for any monetary loss associated with problems in the software.\n\nBy using OpenBazaar you're responsible for your own actions on the OpenBazaar network."
+      "tos": "O OpenBazaar é uma rede que possibilita a comercialização de bens e serviços diretamente entre as pessoas - usando criptomoedas - sem nenhuma organização central controlando a plataforma. Isso significa que você mesmo é a pessoa responsável pelas suas próprias atividades na rede.\n\nOs usuários do OpenBazaar não são anônimos por padrão. A maioria das comunicações entre os usuários são criptografadas, mas os endereços IP são públicos e podem ser associados com a atividade na rede. Tenha em mente que pessoas mal-intencionadas podem usar essas informações contra você. A proteção da sua privacidade é de sua própria responsabilidade.\n\nOs usuários do OpenBazaar devem respeitar as leis das regiões onde residem, assim como as suas próprias consciências. Os desenvolvedores do OpenBazaar não incentivam - e não são responsáveis por - qualquer uso da plataforma para atividades ilegais.\n\nA comunidade de desenvolvedores do OpenBazaar trabalhou duro para criar uma plataforma gratuita de comércio mundial. No entanto, como em qualquer outro tipo de software, bugs serão descobertos. Os desenvolvedores não são responsáveis por qualquer perda financeira relacionada a problemas no software.\n\nAo usar o OpenBazaar, você é responsável pelas suas próprias ações na rede OpenBazaar."
     }
   },
   "pageControls": {
@@ -1349,9 +1349,9 @@
     "cryptoAddressPlaceholder": "Cole o seu endereço %{coinType} aqui",
     "cryptoAddressHelper": "O vendedor irá enviar %{coinType} para esse endereço. %{warning}",
     "cryptoAddressHelperWarning": "O endereço não pode ser modificado após a realização do pedido.",    
-    "moderatorsDisclaimer": "Your payment will be held securly in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderatorsDisclaimer": "Um moderador se encarregará de proteger o seu dinheiro até que você receba a sua compra. Se surgir qualquer problema com o seu pedido, você poderá fazer uma disputa / reclamação com o moderador. *O serviço de moderação só será cobrado se uma reclamação for realizada.",
     "directPayment": "Pagamento Direto",
-    "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
+    "directPaymentDetails": "Envia o dinheiro diretamente ao vendedor, sem utilizar um moderador. Você só deve usar essa opção com vendedores que você confia. Caso algo dê errado no pedido, você não será capaz de abrir uma disputa para solicitar seu dinheiro de volta.",
     "chooseModerator": "Escolher Esse Moderador",
     "confirmPayment": {
       "title": "Está tudo em ordem?",
@@ -1420,7 +1420,7 @@
       "paymentFailed": "O Pagamento Não Pode ser Completado",
       "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero.",
       "insufficientInventoryTitle": "Estoque Insuficiente",
-      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
+      "insufficientInventoryBody": "O vendedor não tem estoque suficiente para completar o pedido. Resta apenas %{remainingInventory} unidade. |||| O vendedor não tem estoque suficiente para completar o pedido. Restam apenas %{remainingInventory} unidades."
     }
   },
   "moderators": {
@@ -1465,19 +1465,19 @@
       "returnToFromOrder": "Voltar às disputas"
     },
     "filters": {
-      "pending": "Pendente",
+      "pending": "Pendentes",
       "unfunded": "Não-pagos",
-      "ready": "Pronto para Processar",
-      "fulfilled": "Enviado",
-      "refunded": "Reembolsado",
-      "disputes": "Disputas",
+      "ready": "Prontos para Processar",
+      "fulfilled": "Enviados",
+      "refunded": "Reembolsados",
+      "disputes": "Disputados",
       "disputeOpen": "Disputa Aberta",
       "disputeClosed": "Disputa Encerrada",
-      "completed": "Finalizada",
-      "error": "Erros"
+      "completed": "Finalizados",
+      "error": "Com Erros"
     },
     "sort": {
-      "label": "Ordernar por",
+      "label": "Ordenar por",
       "unread": "Não lidas",
       "dateAsc": "Mais recentes",
       "dateDesc": "Mais antigas"
@@ -1544,12 +1544,12 @@
       "heading": "Contrato (JSON)",
       "buyerContractHeading": "Contrato do Comprador:",
       "vendorContractHeading": "Contrato do Vendedor:",
-      "contractErrorHeading": "The contract has the following validation errors. It may have been forged.",
+      "contractErrorHeading": "O contrato possui os seguintes erros de validação. Ele pode ter sido forjado.",
       "bothContractsValid": "Os contratos do comprador e do vendedor foram verificados como autênticos.",
-      "validBuyerVendorProcessingError": "The buyer's contract has been verified as authentic. The vendor's contract is not available because the vendor had an error processing the order.",
+      "validBuyerVendorProcessingError": "O contrato do comprador foi verificado como autêntico. O contrato do vendedor não está disponível, pois o vendedor teve um erro ao processar o pedido.",
       "vendorContractNotArrived": "O contrato do vendedor ainda não chegou. Ele será enviado na próxima vez em que ele ficar online.",
       "buyerContractNotArrived": "O contrato do vendedor ainda não chegou. Ele será enviado na próxima vez em que ele ficar online.",
-      "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
+      "vendorContractNotArrivedPotentialProcErr": "O contrato do vendedor ainda não chegou. O contrato do comprador indica que o vendedor teve um erro de processamento, mas isso não pode ser validado, pois o contrato do comprador possui erros de validação. Por favor, entre em contato com o vendedor para confirmar.",
       "contractHeadingVendor": "Contrato do vendedor:",
       "contractHeadingBuyer": "Contrato do comprador:"
     },
@@ -1596,12 +1596,12 @@
       "accepted": {
         "heading": "Aceito",
         "orderAccepted": "Pedido Aceito",
-        "vendorCanFulfill": "Você recebeu o pagamento. Envie o pedido para o comprador o mais breve possível.",
+        "vendorCanFulfill": "Você aceitou o pedido. Envie o produto para o comprador o mais breve possível.",
         "vendorReceived": "Você recebeu o pedido.",
         "buyerOrderAccepted": "Obrigado pela sua compra!",
         "modOrderAccepted": "O vendedor aceitou o pedido.",
         "refundBtn": "Reembolsar",
-        "fulfillBtn": "Enviar Pedido",
+        "fulfillBtn": "Confirmar Envio",
         "refundConfirm": {
           "title": "Você tem certeza?",
           "body": "O valor original em %{cur} será devolvido ao comprador",
@@ -1705,7 +1705,7 @@
         "procErrBuyerNoMsgCancelable": "O vendedor não foi capaz de processar o pedido. Você pode cancelá-lo para recuperar o seu pagamento.",
         "procErrBuyerNoMsgDisputable": "O vendedor não conseguiu processar o pedido. Você pode iniciar uma disputa para solicitar um reembolso a um moderador.",
         "youMayCancel": "Você pode cancelar o pedido para reembolsar o seu pagamento.",
-        "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
+        "youMayDispute": "Você pode abrir uma disputa pedindo para que o moderador devolva o seu dinheiro.",
         "procErrBuyer": "O vendedor não conseguiu processar o pedido devido aos seguintes erros:",
         "procErrVendorNoMsg": "Houve um erro ao processar o pedido.",
         "procErrVendor": "Você não conseguiu processar o pedido devido ao seguintes erros:"
@@ -1734,9 +1734,9 @@
       "buyerAmountLabel": "Quantia do Comprador",
       "vendorAmountLabel": "Quantia do Vendedor",
       "vendorContractUnavailable": "Você não pode enviar dinheiro ao vendedor pois o contrato ainda não chegou.",
-      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
-      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
-      "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
+      "vendorContractUnavailableTip": "O vendedor não forneceu o seu contrato. Ele será enviado na próxima vez em que ele ficar online.",
+      "vendorContractUnavailableProcErr": "Você não pode enviar dinheiro ao vendedor, pois o pedido não pode ser processado devido a um erro de processamento.",
+      "buyerContractUnavailable": "Você não pode enviar dinheiro ao comprador porque o contrato ainda não chegou.",
       "buyerContractUnavailableTip": "O comprador não forneceu o seu contrato. Ele será enviado na próxima vez em que ele ficar online.",
       "commentLabel": "Comentário",
       "commentPlaceholder": "Explique a sua decisão...",
@@ -1764,14 +1764,14 @@
   },
   "metrics": {
     "title": "Métricas Anônimas Opcionais",
-    "msg1": "Please help improve OpenBazaar by agreeing to share anonymous data about your experience with the development team.",
-    "msg2": "No information that can be used to identify you, your orders, or any of your transactions is shared with us. Your private data is always stored on your own computer, and is not accessible by anyone else.",
+    "msg1": "Ajude a melhorar o OpenBazaar compartilhando com os desenvolvedores  dados anônimos sobre a sua experiência.",
+    "msg2": "Não será compartilhada nenhuma informação que pode ser usada para identificar você, seus pedidos ou qualquer uma de suas transações. Os seus dados privados sempre são armazenados em seu próprio computador e ninguém pode acessá-los.",
     "listTitle": "Os seguintes dados serão compartilhados:",
     "list": {
       "pages": "Quais páginas você carrega, como a página de busca ou a página de loja",
       "clicks": "Clique em elementos. Será registrado apenas o que foi clicado.",
       "errors": "Dados de desemprenho como erros e o tempo necessário para carregar.",
-      "system": "Basic system data such as OS, CPU, RAM, and screen resolution. This helps us track whether problems are tied to certain kinds of computers.",
+      "system": "Dados básicos sobre o seu computador, como sistema operacional, CPU, RAM e resolução da tela. Isso nos ajuda a verificar se os problemas estão relacionados a alguns tipos de computadores.",
       "user": "Informações públicas, incluindo se você é um vendedor ou moderador, e quantos anúncios e avaliações você tem.",
       "node": "Informações sobre o seu nodo, incluindo moeda de exibição, criptomoeda, idioma e se você está usando o Tor. Isso nos ajuda a priorizar o desenvolvimento.",
       "app": "Detalhes sobre o seu app, incluindo a sua versão e se ele foi instalado a partir de um pacote de download ou a partir do código-fonte.",
@@ -1935,7 +1935,7 @@
     "provideAmountNumber": "Por favor, forneça a quantia em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "amountGreaterThanZero": "A quantia deve ser maior do que zero.",
     "insufficientFunds": "Você não tem saldo suficiente para enviar essa quantia. Certifique-se de que você está considerando a taxa da transação.",
-    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available for that currency. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "missingExchangeRateData": "Não foi possível pagar em %{cur}, pois não há nenhuma cotação disponível para essa moeda. Por favor, selecione outra moeda. Se não houver cotação disponível para nenhuma moeda, você sempre pode selecionar %{serverCur}.",
     "invalidAddress": "O endereço fornecido não parece ser um endereço %{cur} válido."
   },
   "orderModelErrors": {

@@ -642,7 +642,7 @@
         "windowsOS": "Windows (верх справа)"
       },
       "integrations": {
-        "sectionName": "Integrations",
+        "sectionName": "Интеграция",
         "sharing": "Data Sharing",
         "sharingHelper": "Anonymous data is shared with the development team.",
         "changeBtn": "Change Sharing Settings"
