@@ -66,7 +66,9 @@
           <nav class="navListWrapper foldDown js-navList">
             <div class="navList clrBr listBox clrP clrSh1">
               <div class="listGroup clrP clrBr">
-                <div class="listItem"><span class="txB tx4 noOverflow"><%= ob.name %></span></div>
+                <a class="listItem js-navListItem" href="#<%= ob.peerID %>/home">
+				          <span class="txB tx4 noOverflow"><%= ob.name %></span>
+			        	</a>
               </div>
               <div class="listGroup clrP clrBr">
                 <a class="listItem connectedServerListItem js-connectedServerListItem">
