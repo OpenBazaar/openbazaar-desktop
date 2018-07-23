@@ -202,7 +202,8 @@
       "buyerDisputeExpiry": "The moderator has %{timeRemaining} left to make a decision on order %{orderLink}.",
       "buyerDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
       "moderatorDisputeExpiry": "You have %{timeRemaining} left to make a decision on order %{orderLink}.",
-      "moderatorDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment."
+      "moderatorDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
+      "vendorFinalizedPayment": "The vendor has claimed the payment for order %{orderLink}."
     },
     "errorHeading": "There was an error fetching the notifications.",
     "btnRetry": "Retry",

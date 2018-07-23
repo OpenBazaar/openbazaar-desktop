@@ -259,6 +259,14 @@ export function getNotifDisplayData(attrs, options = {}) {
           `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
       });
     }
+  } else if (attrs.type === 'vendorFinalizedPayment') {
+    const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
+    route = `#transactions/purchases?orderId=${attrs.orderId}`;
+    text = app.polyglot.t('notifications.text.vendorFinalizedPayment', {
+      orderLink: opts.native ?
+        orderIdShort :
+        `<a href="${route}" class="clrTEm">${orderIdShort}</a>`,
+    });
   }
 
   return {
