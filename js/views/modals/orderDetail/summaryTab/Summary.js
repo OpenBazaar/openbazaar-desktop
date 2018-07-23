@@ -425,6 +425,7 @@ export default class extends BaseVw {
       isCompletable: orderState === 'FULFILLED',
       isDisputed: orderState === 'DISPUTED',
       hasDisputeEscrowExpired: false,
+      isCompletable: orderState === 'FULFILLED' && this.buyer.id === app.profile.id,
       isPaymentClaimable: false,
       isPaymentFinalized: false,
       showDisputeBtn: false,
