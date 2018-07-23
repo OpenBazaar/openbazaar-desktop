@@ -646,11 +646,11 @@ export default class extends BaseVw {
       () => this.trigger('clickFulfillOrder'));
 
     this.vendor.getProfile()
-        .done(profile => {
-          this.accepted.setState({
-            avatarHashes: profile.get('avatarHashes').toJSON(),
-          });
+      .done(profile => {
+        this.accepted.setState({
+          avatarHashes: profile.get('avatarHashes').toJSON(),
         });
+      });
 
     this.$subSections.prepend(this.accepted.render().el);
   }

@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 
@@ -27,30 +26,11 @@ export default class extends BaseVw {
   }
 
   setModel(md) {
+    if (this.model === md) return;
     if (this.model) this.stopListening(this.model);
     this.listenTo(md, 'change', () => this.render());
     this.model = md;
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
+    this.render();
   }
 
   render() {
