@@ -32,7 +32,7 @@ export default class extends BaseModel {
         this.get('vendorContract');
     }
 
-    return contract;    
+    return contract;
   }
 
   get participantIds() {
@@ -59,10 +59,8 @@ export default class extends BaseModel {
 
   get canBuyerComplete() {
     const orderState = this.get('state');
-    let contract = this.get('contract');
 
-    return
-      this.contract.get('vendorOrderFulfillment') &&
-        ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
+    return this.contract.get('vendorOrderFulfillment') &&
+      ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
   }
 }

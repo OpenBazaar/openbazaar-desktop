@@ -739,10 +739,6 @@ export default class extends BaseVw {
     }
 
     this.$subSections.prepend(this.fulfilled.render().el);
-
-    if (this.model.get('state') === 'FULFILLED' && this.buyer.id === app.profile.id) {
-      this.renderCompleteOrderForm();
-    }
   }
 
   renderOrderCompleteView() {
