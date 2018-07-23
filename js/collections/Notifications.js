@@ -260,7 +260,7 @@ export function getNotifDisplayData(attrs, options = {}) {
       });
     }
   } else if (attrs.type === 'vendorFinalizedPayment') {
-    const orderIdShort = `#${attrs[orderIdKey].slice(0, 4)}…`;
+    const orderIdShort = `#${attrs.orderId.slice(0, 4)}…`;
     route = `#transactions/purchases?orderId=${attrs.orderId}`;
     text = app.polyglot.t('notifications.text.vendorFinalizedPayment', {
       orderLink: opts.native ?
