@@ -422,7 +422,6 @@ export default class extends BaseVw {
       awaitingBlockHeight: false,
       isFundingConfirmed: false,
       blockTime: cryptoCur.blockTime,
-      isCompletable: orderState === 'FULFILLED',
       isDisputed: orderState === 'DISPUTED',
       hasDisputeEscrowExpired: false,
       isCompletable: orderState === 'FULFILLED' && this.buyer.id === app.profile.id,
