@@ -71,7 +71,7 @@
         }
       }
 
-      if (ob.ownPeerId === ob.buyer && ob.isCompletable) {
+      if (ob.ownPeerId === ob.buyer && ob.canBuyerComplete) {
         message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredBuyerComplete');
       }
     } else {
