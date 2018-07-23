@@ -20,17 +20,6 @@ export default class extends BaseOrder {
   }
 
   /**
-   * Returns the contract of the party that opened the dispute, which is the only
-   * contract you're guaranteed to have. If you need the specific contract of either
-   * the buyer or seller, grab it directly via model.get('buyerContract') /
-   * model.get('vendorContract').
-   */
-  get contract() {
-    return this.get('buyerOpened') ?
-      this.get('buyerContract') : this.get('vendorContract');
-  }
-
-  /**
    * Returns a boolean indicating whether the vendor had an error when processing
    * the order. Since this relies on data from the buyers contract, if the contract is
    * not verified as authentic, false will be returned even if the data suggests

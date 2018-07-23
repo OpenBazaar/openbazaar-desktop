@@ -17,7 +17,13 @@ export default class extends BaseModel {
     return typeof this.get('buyerOpened') !== 'undefined';
   }
 
-  get participantIds() {
+  /**
+   * Returns the contract. If this is a case, it will return the contract of the
+   * party that opened the dispute, which is the only contract you're guaranteed
+   * to have. If you need the specific contract of either the buyer or seller,
+   * grab it directly via model.get('buyerContract') / model.get('vendorContract').
+   */
+  get contract() {
     let contract = this.get('contract');
 
     if (this.isCase) {
@@ -26,7 +32,11 @@ export default class extends BaseModel {
         this.get('vendorContract');
     }
 
-    const contractJSON = contract.toJSON();
+    return contract;    
+  }
+
+  get participantIds() {
+    const contractJSON = this.contract.toJSON();
 
     return {
       buyer: contractJSON.buyerOrder.buyerID.peerID,
@@ -45,5 +55,14 @@ export default class extends BaseModel {
 
   get moderatorId() {
     return this.participantIds.moderator;
+  }
+
+  get canBuyerComplete() {
+    const orderState = this.get('state');
+    let contract = this.get('contract');
+
+    return
+      this.contract.get('vendorOrderFulfillment') &&
+        ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
   }
 }

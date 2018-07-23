@@ -45,7 +45,7 @@
         ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');        
 
       if (ob.ownPeerId === ob.buyer) {
-        message = ob.isCompletable ?
+        message = ob.canBuyerComplete ?
           ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyerCompletable') :
           ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyer');
       }
