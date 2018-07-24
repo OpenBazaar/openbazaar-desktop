@@ -88,6 +88,10 @@ export default class extends BaseVw {
         }
       }
 
+      if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
+        this.renderCompleteOrderForm();
+      }
+
       this.renderProcessingError();
       this.renderTimeoutInfoView();
     });
@@ -422,9 +426,9 @@ export default class extends BaseVw {
       awaitingBlockHeight: false,
       isFundingConfirmed: false,
       blockTime: cryptoCur.blockTime,
-      isCompletable: orderState === 'FULFILLED',
       isDisputed: orderState === 'DISPUTED',
       hasDisputeEscrowExpired: false,
+      canBuyerComplete: this.model.canBuyerComplete,
       isPaymentClaimable: false,
       isPaymentFinalized: false,
       showDisputeBtn: false,
@@ -675,6 +679,11 @@ export default class extends BaseVw {
     this.$subSections.prepend(this.refunded.render().el);
   }
 
+  shouldShowCompleteOrderForm() {
+    return this.buyer.id === app.profile.id &&
+      this.model.canBuyerComplete;
+  }
+
   renderCompleteOrderForm() {
     const completingObject = completingOrder(this.model.id);
     const model = new OrderCompletion(
@@ -730,7 +739,7 @@ export default class extends BaseVw {
 
     this.$subSections.prepend(this.fulfilled.render().el);
 
-    if (this.model.get('state') === 'FULFILLED' && this.buyer.id === app.profile.id) {
+    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
       this.renderCompleteOrderForm();
     }
   }
@@ -863,9 +872,7 @@ export default class extends BaseVw {
 
     this.$subSections.prepend(this.disputeAcceptance.render().el);
 
-    if (this.model.get('state') === 'RESOLVED' &&
-      this.buyer.id === app.profile.id &&
-      !this.model.vendorProcessingError) {
+    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
       this.renderCompleteOrderForm();
     }
   }
