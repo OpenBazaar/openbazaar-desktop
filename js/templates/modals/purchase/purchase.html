@@ -84,7 +84,7 @@
                         <% }); %>
                       </select>
                     <% } %>
-                  </div>                
+                  </div>
                 </div>
               </div>
             <% } %>
@@ -241,7 +241,7 @@
             name="memo"
             maxlength="5000"
             rows="6"
-            placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.memo %></textarea>
+            placeholder="<%= ob.polyT('purchase.memoPlaceholder') %>"><%= ob.items[0].memo %></textarea>
       </section>
       <% } %>
       <% if (ob.phase === 'pending') { %>
