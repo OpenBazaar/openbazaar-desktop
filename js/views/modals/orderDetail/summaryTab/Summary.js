@@ -680,7 +680,7 @@ export default class extends BaseVw {
   }
 
   shouldShowCompleteOrderForm() {
-    return this.buyer.is === app.profile.id &&
+    return this.buyer.id === app.profile.id &&
       this.model.canBuyerComplete;
   }
 
@@ -738,6 +738,10 @@ export default class extends BaseVw {
     }
 
     this.$subSections.prepend(this.fulfilled.render().el);
+
+    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
+      this.renderCompleteOrderForm();
+    }
   }
 
   renderOrderCompleteView() {
@@ -867,6 +871,10 @@ export default class extends BaseVw {
         }));
 
     this.$subSections.prepend(this.disputeAcceptance.render().el);
+
+    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
+      this.renderCompleteOrderForm();
+    }
   }
 
   /**
@@ -933,10 +941,6 @@ export default class extends BaseVw {
         timestamp:
           (new Date(this.contract.get('disputeAcceptance').timestamp)),
       });
-    }
-
-    if (this.shouldShowCompleteOrderForm()) {
-      this.renderCompleteOrderForm();
     }
 
     sections.sort((a, b) => (a.timestamp - b.timestamp))
