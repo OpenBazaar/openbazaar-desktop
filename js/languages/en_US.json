@@ -1358,7 +1358,7 @@
     "scamWarning": "WARNING: Protect against scams",
     "pending": "Pending…",
     "pendingNote": "Please fund the order to complete your transaction.",
-    "close": "close",
+    "close": "Close",
     "closeNote": "Your payment has been sent to the vendor.",
     "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
