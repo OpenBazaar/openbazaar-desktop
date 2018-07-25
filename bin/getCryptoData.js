@@ -148,14 +148,23 @@ getWhitelist()
               }
 
               const parsed = JSON.parse(data);
+
               results.data.forEach(c => {
                 if (whitelist[c.symbol] && whitelist[c.symbol] !== c.id) return;
                 parsed.cryptoCurrencies[c.symbol] = c.name;
               });
+
+              const sortedCryptoCurs = {};
+              Object.keys(parsed.cryptoCurrencies)
+                .sort()
+                .forEach(key => sortedCryptoCurs[key] = parsed.cryptoCurrencies[key]);
+              parsed.cryptoCurrencies = sortedCryptoCurs;
+
               const jsonConfig = {
                 type: 'space',
                 size: 2,
               };
+
               fs.writeFile(translationFile, jsonformat(parsed, jsonConfig), writeErr => {
                 if (err) {
                   logError(`There was an error writing the translation file: ${writeErr}`);
