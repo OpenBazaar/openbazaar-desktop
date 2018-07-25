@@ -157,7 +157,7 @@ getWhitelist()
               const sortedCryptoCurs = {};
               Object.keys(parsed.cryptoCurrencies)
                 .sort()
-                .forEach(key => sortedCryptoCurs[key] = parsed.cryptoCurrencies[key]);
+                .forEach(key => (sortedCryptoCurs[key] = parsed.cryptoCurrencies[key]));
               parsed.cryptoCurrencies = sortedCryptoCurs;
 
               const jsonConfig = {
