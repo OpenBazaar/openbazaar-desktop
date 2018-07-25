@@ -20,9 +20,9 @@ export default class extends BaseVw {
     this._state = {
       awaitingBlockHeight: false,
       isFundingConfirmed: false,
-      isCompletable: false,
       isDisputed: false,
       hasDisputeEscrowExpired: false,
+      canBuyerComplete: false,
       isPaymentClaimable: false,
       isPaymentFinalized: false,
       showDisputeBtn: false,

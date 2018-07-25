@@ -41,9 +41,14 @@
         tipClass = 'hide';
       }
     } else if (ob.isPaymentFinalized) {
-      message = ob.ownPeerId === ob.buyer ?
-        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyer') :
-        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');
+      message =
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedVendor');        
+
+      if (ob.ownPeerId === ob.buyer) {
+        message = ob.canBuyerComplete ?
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyerCompletable') :
+          ob.polyT('orderDetail.summaryTab.timeoutInfo.paymentFinalizedBuyer');
+      }
       tipClass = 'hide';
     } else if (!ob.isFundingConfirmed) {
       message = ob.polyT('orderDetail.summaryTab.timeoutInfo.unconfirmedFunding', {
@@ -66,7 +71,7 @@
         }
       }
 
-      if (ob.ownPeerId === ob.buyer && ob.isCompletable) {
+      if (ob.ownPeerId === ob.buyer && ob.canBuyerComplete) {
         message = ob.polyT('orderDetail.summaryTab.timeoutInfo.escrowExpiredBuyerComplete');
       }
     } else {

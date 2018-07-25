@@ -40,10 +40,6 @@ export default class extends BaseOrder {
     };
   }
 
-  get contract() {
-    return this.get('contract');
-  }
-
   /**
    * Returns a boolean indicating whether the vendor had an error when processing
    * the order. This is different from just checking for the PROCESSING_ERROR state,
