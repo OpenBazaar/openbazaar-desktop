@@ -7,6 +7,7 @@ import Image from './Image';
 import Moderator from './Moderator';
 import Colors from './Colors';
 import Contact from './Contact';
+import Stats from './Stats';
 
 export default class Profile extends BaseModel {
   defaults() {
@@ -23,7 +24,7 @@ export default class Profile extends BaseModel {
       vendor: true,
       colors: new Colors(),
       contactInfo: new Contact(),
-      stats: new BaseModel(),
+      stats: new Stats(),
     };
   }
 
