@@ -259,7 +259,8 @@ export default class extends BaseModal {
 
     this.order.moderated = false;
     this.moderators.deselectOthers();
-    this.render();
+    this.setState({ unverifedSelected: false }, { renderOnChange: false });
+    this.render(); // always render even if the state didn't change
   }
 
   onNoValidModerators() {
