@@ -5,6 +5,7 @@ import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
+import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
 import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
@@ -633,6 +634,16 @@ function start() {
                 app.walletBalance.set(parsedData);
               }
             });
+          }
+
+          // Make sure the client is running on a compatible version of the server.
+          if (app.settings.prettyServerVer !== serverVersionRequired) {
+            openSimpleMessage(
+              'show wrong server version warning here',
+              {
+
+              }
+            ).$el.css('z-index', '9999999'); // always on tippity-top
           }
         });
       });
