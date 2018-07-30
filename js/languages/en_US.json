@@ -1267,7 +1267,7 @@
     "makeDefaultBtnHelper": "The default search provider is used for searches in the address bar.",
     "addQueryProviderBtn": "Add search provider",
     "chooseDefaultTitle": "Select a default search provider",
-    "chooseDefaultMsg": "This provider will be used as the default for future seaches until you set a new one.",
+    "chooseDefaultMsg": "The search provider you select will be used as the default for your future searches until you set a new one.",
     "providers": {
       "transactions": "Transactions",
       "myPage": "My Page"
