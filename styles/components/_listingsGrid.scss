@@ -31,27 +31,30 @@ $crytoListViewInventoryMaxWidth: 138px;
 
   .userCard {
     // user cards can be shown in test results, style them to look like listing cards
-    // TODO: design a better look for these when they're actually used
     width: 225px;
     height: 283px;
+    margin-bottom: $padMd;
+    font-size: $tx5b;
 
     .shortHeader {
       width: 223px;
       height: 225px;
       margin-bottom: 0;
 
-      .userIcon {
+      .userIconWrap {
         top: 201px;
         right: 8px;
         left: auto;
-        border: none;
       }
+
+
 
       .userControls {
         bottom: auto;
-        right: auto;
+        right: $pad;
         left: $pad;
         top: $pad;
+        width: auto;
       }
     }
 
@@ -66,6 +69,10 @@ $crytoListViewInventoryMaxWidth: 138px;
         .userDescription {
           font-size: $tx5b;
           -webkit-line-clamp: 1;
+        }
+
+        .userName {
+          width: calc(100% - 42px);
         }
       }
       .contentBottom {
