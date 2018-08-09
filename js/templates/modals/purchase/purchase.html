@@ -144,7 +144,7 @@
             <div class="flexVCentClearMarg">
               <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <% if (ob.showModerators) { %>
-                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if(ob.showOnlyVerified && !ob.unverifedSelected) print('checked') %>>
+                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if(ob.showOnlyVerified) print('checked') %>>
                 <label class="tx5b <% if (ob.unverifedSelected) print('disabled') %>" for="purchaseVerifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
               <% } %>
             </div>

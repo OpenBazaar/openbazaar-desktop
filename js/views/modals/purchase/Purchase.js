@@ -269,8 +269,11 @@ export default class extends BaseModal {
   }
 
   togVerifiedModerators(bool) {
-    this.moderators.togVerifiedShown(bool);
-    this.setState({ showOnlyVerified: bool });
+    // If an unverified moderator is selected, don't set showOnlyVerified to
+    // true, otherwise you will hide the selected moderator.
+    const modBool = bool && this.getState().unverifiedSelected ? false : bool;
+    this.moderators.togVerifiedShown(modBool);
+    this.setState({ showOnlyVerified: modBool });
   }
 
   onClickVerifiedOnly(e) {
