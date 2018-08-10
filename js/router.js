@@ -1,22 +1,23 @@
 import $ from 'jquery';
 import { ipcRenderer } from 'electron';
 import { Router } from 'backbone';
+import app from './app';
 import { getGuid, isMultihash } from './utils';
 import { getPageContainer } from './utils/selectors';
 import { isPromise } from './utils/object';
-import './lib/whenAll.jquery';
-import app from './app';
-import { getOpenModals } from './views/modals/BaseModal';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from './utils/metrics';
 import { isBlocked, isUnblocking, events as blockEvents } from './utils/block';
+import './lib/whenAll.jquery';
+import Profile from './models/profile/Profile';
+import Listing from './models/listing/Listing';
+import { getOpenModals } from './views/modals/BaseModal';
 import UserPage from './views/userPage/UserPage';
 import Search from './views/search/Search';
 import Transactions from './views/transactions/Transactions';
 import ConnectedPeersPage from './views/ConnectedPeersPage';
 import TemplateOnly from './views/TemplateOnly';
-import Profile from './models/profile/Profile';
-import Listing from './models/listing/Listing';
 import BlockedWarning from './views/modals/BlockedWarning';
-import { startAjaxEvent, endAjaxEvent, recordEvent } from './utils/metrics';
+import UserLoadingModal from './views/userPage/Loading';
 
 export default class ObRouter extends Router {
   constructor(options = {}) {
@@ -413,6 +414,10 @@ export default class ObRouter extends Router {
     let listingFetch;
     let userPageFetchError = '';
 
+    if (this.userLoadingModal) {
+      this.userLoadingModal.remove();
+    }
+
     startAjaxEvent('UserPageLoad');
 
     if (guid === app.profile.id) {
@@ -434,11 +439,49 @@ export default class ObRouter extends Router {
       }
     }
 
+    app.loadingModal.close();
+
+    this.userLoadingModal = new UserLoadingModal({
+      initialState: {
+        userName: 'Flip Flee Willeeeooohh',
+        userAvatarHashes: {
+          tiny: 'zb2rhcLbHqq139K9r2DT1BPaqTdTVTSnmQnNzdb1BZpdbK4Zk',
+          small: 'zb2rhWnoRXwekSNsrRDvFJHxTEzY5AHsdgXYh5bPCpVGAD1o9',
+        },
+        contentText: 'Just a minute, loading <b>Ski Shop</b> from somewhere on this global, peer-to-peer network for you...',
+        isProcessing: true,
+      },
+    })
+      // .listenTo('clickCancel', () => window.history.back())
+      // .listenTo('clickRetry', () => this.user(guid, state, ...args));
+      .on('clickCancel', () => {
+        console.log('Lets go back jack.');
+
+        const standardizedHash = hash =>
+            hash.endsWith('/') ? hash.slice(0, hash.length - 1) : hash;
+        const curHash = standardizedHash(location.hash);
+        const prevHash = standardizedHash(this.prevHash);
+
+        if (curHash === prevHash) {
+          location.hash = app.profile.id;
+        } else {
+          window.history.back();
+        }
+      })
+      .on('clickRetry', () => {
+        console.log('lets retry roy');
+        this.user(guid, state, ...args);
+      });
+
+    this.userLoadingModal.render()
+      .open();
+
     const onWillRoute = () => {
       // The app has been routed to a new route, let's
       // clean up by aborting all fetches
       if (profileFetch.abort) profileFetch.abort();
       if (listingFetch) listingFetch.abort();
+      this.userLoadingModal.remove();
     };
 
     this.once('will-route', onWillRoute);
@@ -484,6 +527,8 @@ export default class ObRouter extends Router {
       );
     }).fail((...failArgs) => {
       const jqXhr = failArgs[0];
+      const reason = jqXhr.responseJSON && jqXhr.responseJSON.reason ||
+        jqXhr.responseText || '';
 
       if (jqXhr === profileFetch && profileFetch.statusText === 'abort') return;
       if (jqXhr === listingFetch && listingFetch.statusText === 'abort') return;
@@ -497,6 +542,10 @@ export default class ObRouter extends Router {
         this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
         userPageFetchError = 'Listing Not Found';
       }
+
+      userPageFetchError = userPageFetchError ?
+        `${userPageFetchError} - ${reason || 'none'}` :
+        reason || 'none';
     })
       .always(() => {
         this.off(null, onWillRoute);
@@ -504,7 +553,7 @@ export default class ObRouter extends Router {
           ownPage: guid === app.profile.id,
           tab: pageState,
           listing: !!listingFetch,
-          errors: userPageFetchError || 'none',
+          errors: userPageFetchError,
         });
       });
   }

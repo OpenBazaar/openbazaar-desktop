@@ -1,0 +1,62 @@
+<section class="contentBox padMd clrP clrBr clrSh3">
+  <header>
+    <% if (ob.userAvatarHashes || ob.userName) { %>
+      <div class="titleRow flexVCent gutterHSm">
+        <% if (ob.userAvatarHashes) { %>
+          <div class=" discTn clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+        <% } %>
+        <% if (ob.userName) { %>
+          <h2 class="h4 txUnl lineHeight1 clrT"><%= ob.userName %></h2>
+        <% } %>
+      </div>
+    <% } %>
+  </header>
+  <div class="txCtr">
+    <div class="flexVCent flexInline gutterH row">
+      <div class="discSm clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.ownAvatarHashes) %>"></div>
+      <i class="ion-android-arrow-forward clrT2 lineHeight1 tx3"></i>
+      <div class="discSm clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+    </div>
+    <h1 class="h3 clrT">Connecting…</h1>
+    <div class="rowGi">
+      <% if (ob.contentHtml) { %>
+        print(ob.contentHtml);
+      <% } else if (ob.contentText) { %>
+        <p class="clrT2 tx5"><%= ob.contentText %></p>
+      <% } %>
+    </div>
+    <p class="clrT2 tx6 rowSm">OpenBazaar News & Discussions:</p>
+    <div class="flexVCent flexInline gutterHSm socialIcons">
+      <a href="" data-open-external>
+        <i class="ion-social-twitter twitterColor"></i>
+      </a>
+      <a href="" data-open-external>
+        <i class="ion-social-facebook facebookColor"></i>
+      </a>
+      <a href="" data-open-external>  
+        <i class="ion-social-reddit githubColor"></i>
+      </a>
+      <a href="" data-open-external>   
+        <i class="ion-social-github redditColor"></i>
+      </a>
+      <a href="" data-open-external>   
+        <i class="thumb non-ionic-icon" style="background-image: url(../imgs/slack-icon.png)"></i>
+      </a>      
+    </div>
+  </div>
+  <div class="buttonBar flex clrBr clrP">
+    <div class="col6 flexCent clrBr">
+      <div class="txCtr btn js-btnCancel">
+        Cancel
+      </div>
+    </div>
+    <div class="col6 flexCent">
+      <div>
+        <%= ob.processingButton({
+          className: `txCtr js-btnRetry ${ob.isProcessing ? 'processing' : ''}`,
+          btnText: 'Try Again',
+        }) %>
+      </div>
+    </div>
+  </div>
+</section>
