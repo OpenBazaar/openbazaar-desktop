@@ -357,7 +357,8 @@ export default class extends baseVw {
     this.fullListingFetch = this.fullListing.fetch()
       .fail(xhr => {
         if (!opts.showErrorOnFetchFail) return;
-        let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+        let failReason = xhr.responseJSON && xhr.responseJSON &&
+          xhr.responseJSON.reason || '';
 
         if (xhr.status === 404) {
           failReason = app.polyglot.t('listingCard.editFetchErrorDialog.bodyNotFound');
