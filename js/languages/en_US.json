@@ -124,7 +124,7 @@
   },
   "connectedPeersPage": {
     "heading": "Connected Peers",
-    "totalPeers": "%{totalPeers} Found",
+    "totalPeers": "%{smart_count} Found",
     "noResults": "No connected peers",
     "loadMore": "Load More"
   },
@@ -314,7 +314,7 @@
       "shipsToFilterAny": "(Any country)",
       "sortBy": "Sort By",
       "countListings": "%{smart_count} listing |||| %{smart_count} listings",
-      "countListingsFound": "%{countListings} found",
+      "countListingsFound": "%{smart_count} found",
       "inactive": "Your store is currently inactive and hidden from the public. %{link}",
       "inactiveLink": "Change",
       "listingDataChangedPopin": "Listing data has changed.",
@@ -1458,7 +1458,7 @@
     "sales": {
       "heading": "Sales",
       "countTransactions": "%{smart_count} sale |||| %{smart_count} sales",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "%{smart_count} found",
       "unableToFetch": "Unable to obtain your sales.",
       "noResults": "No sales found",
       "returnToFromOrder": "Return to sales",
@@ -1472,7 +1472,7 @@
     "purchases": {
       "heading": "Purchases",
       "countTransactions": "%{smart_count} purchase |||| %{smart_count} purchases",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "%{smart_count} found",
       "unableToFetch": "Unable to obtain your purchases.",
       "noResults": "No purchases found",
       "returnToFromOrder": "Return to purchases"
@@ -1480,7 +1480,7 @@
     "cases": {
       "heading": "Cases",
       "countTransactions": "%{smart_count} case |||| %{smart_count} cases",
-      "countTransactionsFound": "%{countTransactions} found",
+      "countTransactionsFound": "%{smart_count} found",
       "noResults": "No cases found",
       "returnToFromOrder": "Return to cases"
     },

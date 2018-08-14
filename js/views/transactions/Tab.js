@@ -61,7 +61,7 @@ export default class extends baseVw {
             this.$queryTotalWrapper.find('.js-queryTotalLine')
               .html(
                 app.polyglot.t(`transactions.${this.type}.countTransactionsFound`,
-                  { countTransactions: count })
+                  { smart_count: count })
               );
             this.$queryTotalWrapper.removeClass('hide');
           });
