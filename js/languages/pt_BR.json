@@ -35,8 +35,8 @@
   "blockedWarning": {
     "heading": "Você bloqueou esse usuário",
     "paragraph1": "Este usuário está em sua lista de usuários bloqueados. Você não poderá visualizar suas páginas ou anúncios enquanto estes estiverem bloqueados. Além disso, usuários bloqueados não poderão lhe enviar mensagens ou fazer pedidos em sua loja.",
-    "paragraph2": "Você gostaria de desbloquear e ver a página?",
-    "btnCancel": "Cancelado",
+    "paragraph2": "Você gostaria de desbloqueá-lo?",
+    "btnCancel": "Cancelar",
     "btnUnblock": "Sim, desbloquear"
   },
   "nsfwWarning": {
@@ -44,7 +44,7 @@
     "paragraph1": "Este anúncio foi categorizado como contendo material sensível. Assim sendo, seu conteúdo poderá ser considerado ofensivo para algumas pessoas. Caso você não queira visualizá-lo, clique em cancelar para retornar para a página anterior.",
     "paragraph2": "Você tem certeza que quer continuar?",
     "nsfwOffLabel": "Sempre exibir conteúdo adulto/ofensivo",
-    "btnCancel": "Cancelado",
+    "btnCancel": "Cancelar",
     "btnProceed": "Sim, continuar"
   },
   "walletSetup": {
@@ -72,7 +72,7 @@
   },
   "consoleWarning": {
     "heading": "Pare!",
-    "line1": "Este é um console feito para programadores. Se algum estranho pediu para você abrir essa janela, provavelmente ele está tentando comprometer a sua conta e/ou roubar o dinheiro da sua carteira.",
+    "line1": "Este console é feito para programadores. Se alguma pessoa desconhecida pediu para você abrir essa janela, provavelmente ela está tentando comprometer a sua conta e/ou roubar o dinheiro da sua carteira.",
     "line2": "Por favor, feche esta janela."
   },
   "block": {
@@ -95,7 +95,7 @@
     "error": "Houve um erro ao procurar as atualizações. Erro: %{error}",
     "available": "Uma atualização está sendo baixada. Você poderá instalá-la após a conclusão do download.",
     "notAvailable": "Nenhuma atualização está disponível.",
-    "cancel": "Cancelado",
+    "cancel": "Cancelar",
     "ready": {
       "title": "A Atualização está Pronta",
       "msg": "A sua atualização terminou de ser baixada. Clique abaixo para instalá-la."
@@ -124,7 +124,7 @@
   },
   "connectedPeersPage": {
     "heading": "Peers Conectados",
-    "totalPeers": "%{totalPeers} Encontrados",
+    "totalPeers": "%{totalPeers} Peers Encontrados",
     "noResults": "Nenhum peer conectado",
     "loadMore": "Carregar Mais"
   },
@@ -179,7 +179,7 @@
     "noResults": "Nenhuma notificação encontrada.",
     "text": {
       "order": "%{buyerName} comprou %{listingTitle}.",
-      "payment": "O seu pagamento foi entregue.",
+      "payment": "O seu pagamento foi realizado com sucesso.",
       "declined": "%{vendorName} rejeitou o seu pedido.",
       "orderConfirmation": "%{vendorName} aceitou o seu pedido.",
       "canceled": "%{buyerName} cancelou o pedido.",
@@ -206,7 +206,7 @@
     },
     "errorHeading": "Houve um erro ao buscar as notificações.",
     "btnRetry": "Tentar novamente",
-    "tabAll": "Todos",
+    "tabAll": "Todas",
     "tabOrders": "Pedidos",
     "tabFollowers": "Seguidores"
   },
@@ -279,7 +279,7 @@
     "addModerator": "Ver Detalhes",
     "removeModerator": "Remover Moderador",
     "information": "Informações",
-    "website": "Website",
+    "website": "Site",
     "email": "E-mail",
     "noLocation": "Localização não informada",
     "tabTitles": {
@@ -331,9 +331,9 @@
       },
       "categoryFilter": {
         "heading": "Categorias",
-        "showMore": "%{smart_count} mais… |||| %{smart_count} mais…",
+        "showMore": "mais %{smart_count} categoria… |||| mais %{smart_count} categorias…",
         "showLess": "menos",
-        "all": "Todos"
+        "all": "Todas"
       },
       "toolTip": {
         "contentView": "Mudar visualização"
@@ -367,7 +367,7 @@
     "modVerified": {
       "titleShort": "Verificado",
       "titleLong": "Moderador Verificado",
-      "link": "Descubra Mais",
+      "link": "Mais informações",
       "tipBody": "Este moderador é verificado por %{name}. %{link}"
     },
     "modUnverified": {
@@ -378,14 +378,14 @@
       "tipBodyOrderDetail": "Este moderado %{not} é verificado por %{name}."
     },
     "listingVerified": {
-      "link": "Descubra Mais",
+      "link": "Mais informações",
       "tipBody": "Você pode comprar esse anúncio com um moderador verificado por %{name}. %{link}"
     },
     "listingUnverified": {
       "not": "NÃO",
       "tipBody": "Este anúncio %{not} possui um moderador verificado. Continue com cautela."
     },
-    "link": "Descubra Mais",
+    "link": "Mais informações",
     "type": "Tipo:",
     "typeCombined": "%{type}%{name}",
     "genericDescription": "Você pode comprar esse anúncio com um moderador verificado por %{name}. %{link}"
@@ -414,7 +414,7 @@
     "addAsModeratorButton": "Adicionar como Moderador",
     "disclaimer": "*O serviço de moderação só será cobrado se uma disputa for aberta.",
     "languages": "Idiomas",
-    "currenciesSupported": "Moedas Suportadas",
+    "currenciesSupported": "Formas de Pagamento",
     "noCoinSupport": "Esse moderador não suporta %{coin}."
   },
   "about": {
@@ -463,14 +463,14 @@
       "linkText": "A História",
       "sectionHeader": "A História do OpenBazaar",
       "paragraphs": {
-        "taakisDarkMarket": "Em abril de 2014, em um hackathon secreto de Toronto, um projeto chamado \"Dark Market\" foi criado. Amir Taaki liderou uma pequena equipe de desenvolvedores para construir uma prova de conceito para um mercado descentralizado. O software era completamente peer to peer, sem uma organização central que o controlasse. O projeto do Dark Market ganhou o hackathon, mas Amir e sua equipe decidiram não continuar a trabalhar no projeto.",
-        "briansOpenBazaar": "Brian Hoffman falou com Amir sobre o Dark Market e soube que não iriam continuar o desenvolvimento. Ele gostou da idéia de um mercado descentralizado, mas não gostou do foco do Dark Market em produtos da darknet, então ele bifurcou o projeto e passou a chamá-lo de OpenBazaar",
-        "alphaTeamalphaRelease": "A idéia de um mercado em que qualquer um pode participar sem pedir permissão foi muito bem aceita, e diversas pessoas ao redor do mundo se juntaram a Brian para ajudar a construir este software de código aberto. Em setembro, essa equipe lançou a primeira versão de testes do software.",
-        "momentOfTruth": "Com o passar dos meses, a equipe continuou melhorando o software e obteve uma resposta encorajadora da comunidade Bitcoin. Eles visitaram o FOSSDEM (Free Open Source Software Developers European Meeting) em Bruxelas no início de 2015 e apresentaram o projeto a uma multidão entusiasmada. Brian e alguns dos membros da equipe decidiram que estava na hora de fazer com que o projeto deixasse de ser um trabalho voluntário realizado nas horas livres para se tornar uma mobilização séria para trazer o livre comércio ao mundo.",
-        "foundedAndFunded": "Com US$ 1 milhão recebidos de investimento da Union Square Ventures e Andreessen Horowitz, eles fundaram uma companhia, a OB1, e passaram a contratar desenvolvedores para construir do zero uma versão melhorada do software.",
-        "marketOpening": "Em abril de 2016, o primeiro lançamento oficial do software foi publicado, e dezenas de milhares de pessoas em todo o mundo baixaram o OpenBazaar e começaram a comprar e vender uns com os outros diretamente, usando o Bitcoin.",
-        "toInfinityAndBeyond": "O trabalho da equipe inicial garantiu-lhes uma segunda rodada de investimento no outono de 2016 de US$ 3 milhões. Com base neste trabalho pioneiro construído na versão 1, o OB1 expandiu-se para construção do OpenBazaar 2, com o objetivo de trazer o livre comércio para um maior número de pessoas ao redor do mundo.",
-        "cashCTA": "Doar agora",
+        "taakisDarkMarket": "Em abril de 2014, em um hackathon secreto de Toronto, um projeto chamado \"Dark Market\" foi criado. Amir Taaki liderou uma pequena equipe de desenvolvedores para construir uma prova de conceito para um mercado descentralizado. O software era completamente peer to peer, sem uma organização central que o controlasse. O projeto Dark Market ganhou o hackathon, mas Amir e sua equipe decidiram não continuar a trabalhar no projeto.",
+        "briansOpenBazaar": "Brian Hoffman conversou com Amir sobre o Dark Market e ficou sabendo que eles não iriam continuar o desenvolvimento. Brian havia gostado da idéia de um mercado descentralizado, mas não do fato de o Dark Market ser focado em produtos da darknet. Em função disso, ele resolveu bifurcar o projeto e passou a chamá-lo de OpenBazaar.",
+        "alphaTeamalphaRelease": "A idéia de um mercado em que qualquer pessoa pode participar sem pedir permissão foi muito bem aceita, e diversas pessoas ao redor do mundo se juntaram a Brian para ajudá-lo a construir este software de código aberto. Em setembro de 2014, essa equipe lançou a primeira versão de testes do software.",
+        "momentOfTruth": "Com o passar dos meses, a equipe continuou melhorando o software e obteve uma resposta encorajadora da comunidade Bitcoin. Eles visitaram o FOSSDEM (Free Open Source Software Developers European Meeting) em Bruxelas no início de 2015 e apresentaram o projeto a uma multidão entusiasmada. Brian e alguns dos membros da equipe decidiram que estava na hora de fazer com que o projeto deixasse de ser um trabalho voluntário, realizado somente nas horas livres, para se tornar um empreendimento sério, com o objetivo de trazer o livre comércio ao mundo.",
+        "foundedAndFunded": "Após receberem um investimento de US$ 1 milhão da Union Square Ventures e de Andreessen Horowitz, eles fundaram uma companhia, a OB1, e passaram a contratar desenvolvedores para construir uma versão melhorada do software, a partir do zero.",
+        "marketOpening": "Em abril de 2016, o primeiro lançamento oficial do software foi publicado, e dezenas de milhares de pessoas em todo o mundo baixaram o OpenBazaar e começaram a comprar e vender uns com os outros diretamente, usando Bitcoin.",
+        "toInfinityAndBeyond": "O trabalho da equipe inicial garantiu-lhes uma segunda rodada de investimentos no outono de 2016, onde receberam mais US$ 3 milhões. Com base no trabalho pioneiro desenvolvido na versão 1, o OB1 expandiu-se para desenvolver a segunda versão do OpenBazaar, com o objetivo de trazer o livre comércio para um número ainda maior de pessoas ao redor do mundo.",
+        "cashCTA": "Faça uma doação",
         "or": "ou",
         "codeCTA": "participe."
       }
@@ -479,7 +479,7 @@
       "linkText": "Ajuda",
       "sectionHeader": "Ajuda",
       "supportLink": "página de ajuda em OpenBazaar.org",
-      "text": "Precisa de ajuda com o software OpenBazaar? Por favor visite a %{supportLink}. Lá você encontrará diversos guias para auxiliá-lo a resolver seus problemas."
+      "text": "Está com dificuldades com o software OpenBazaar? Por favor, visite a %{supportLink}. Lá você encontrará diversos guias para auxiliá-lo a resolver seus problemas."
     }
   },
   "settings": {
@@ -588,13 +588,13 @@
         "helperNewEmail": "Crie um endereço de e-mail em %{helperGmailLink}",
         "helperUsername": "Usuário do SMTP",
         "helperPassword": "Salvo com privacidade em seu banco de dados",
-        "helperSendFrom": "O endereço de e-mail que enviará as mensagens. Certifique-se que você tirou esse endereço da sua lista de spam.",
+        "helperSendFrom": "O endereço de e-mail que enviará as mensagens. Certifique-se de que você tirou esse endereço da sua lista de spam.",
         "helperSendTo": "Endereço de e-mail que receberá as mensagens. Verifique a sua caixa de spam, caso não esteja recebendo as mensagens.",
         "helperGmailLink": "Gmail",
         "testSmtpSuccess": "O teste da integração foi bem sucedido. Não se esqueça de salvar as suas configurações.",
         "testSmtpFail": "O teste da integração falhou.",
         "testSmtpFailWithError": "O teste da integração falou: %{err}",
-        "testSmtpCancel": "Cancelado"
+        "testSmtpCancel": "Cancelar"
       },
       "server": {
         "sectionName": "Servidor",
@@ -614,11 +614,11 @@
         "purge": "Apagar Arquivos Compartilhados",
         "purgeHelper": "Apaga os arquivos de cache que você está compartilhando com outros usuários",
         "purgeBtn": "Apagar Arquivos",
-        "purgeToolTip": "O OpenBazaar armazena as imagens e os textos dos anúncios que você visualizou em um cache, e compartilha essas imagens e textos com outros usuários. Se você visualizou em anúncio(s) textos ou imagens que você não gostaria de compartilhar, use esse botão para excluí-los. Isso não afetará quaisquer arquivos, textos ou imagens da sua loja ou do seu perfil.",
+        "purgeToolTip": "O OpenBazaar armazena as imagens e os textos dos anúncios que você visualizou em um cache, e compartilha essas imagens e textos com outros usuários. Se você visualizou em algum anúncio textos ou imagens que você não gostaria de compartilhar, use esse botão para excluí-los. Isso não afetará quaisquer arquivos, textos ou imagens da sua loja ou do seu perfil.",
         "purgeError": "Houve um erro e seus arquivos de cache podem não ter sido deletados.",
         "purgeComplete": "Os seus arquivos de cache foram excluídos.",
         "blockData": "Dados de Bloco",
-        "blockDataHelper": "Exibir dados úteis para debugging.",
+        "blockDataHelper": "Exibir dados úteis para debugging",
         "blockDataBtn": "Exibir Dados de Bloco",
         "blockDataError": "Houve um erro e os seus dados de bloco não puderam ser adquiridos.",
         "blockDataTitle": "Seus Dados de Bloco",
@@ -655,7 +655,7 @@
       "integrations": {
         "sectionName": "Integrações",
         "sharing": "Compartilhamento de Dados",
-        "sharingHelper": "Dados anônimos são compartilhados com a equipe de desenvolvedores.",
+        "sharingHelper": "Compartilhamento de dados anônimos com a equipe de desenvolvedores",
         "changeBtn": "Modificar Configurações de Compartilhamento"
       },
       "statusSaving": "Salvando configurações avançadas…",
@@ -722,7 +722,7 @@
         "error": "Houve um erro ao salvar as configurações da loja."
       },
       "errors": {
-        "modNotFoundTitle": "Moderador Não Encontrado",
+        "modNotFoundTitle": "Moderador não encontrado",
         "modsNotFound": "%{guids} não pode ser encontrado na rede. Talvez ele não seja um ID de peer válido. |||| %{guids} não puderam ser encotrados na rede. Talvez eles não sejam IDs de peer válidos.",
         "selectedModsTitle": "Seus Moderadores Atuais Não Puderam Ser Carregados.",
         "availableModsTitle": "Os Moderadores Disponíveis Não Puderam Ser Carregados",
@@ -758,7 +758,7 @@
     "loadHeader": "Escolher Foto",
     "loadHeaderHelp": "Recomenda-se %{minWidth} x %{minHeight}px ou maior",
     "socialSection": "Social",
-    "website": "Website",
+    "website": "Site",
     "email": "E-mail",
     "socialAccounts": {
       "accountLabel": "Conta em Rede Social",
@@ -854,7 +854,7 @@
       "torLabel": "Tor",
       "useTor": "Usar Tor",
       "configureTorMessage": "O Tor foi detectado. Se você desejar usar o Tor, por favor selecione a opção \"Usar Tor\" abaixo e especifique a sua configuração \"Proxy SOCKS5 do Tor\". Clique em Salvar para confirmar.",
-      "torNotAvailableMessage": "O Tor não foi detectado. Se você gostaria de prosseguir sem o Tor, desmaque a opção \"Usar Tor\" abaixo e clique em Salvar. Caso contrário, inicie o Tor e tente conectar novamente.",
+      "torNotAvailableMessage": "O Tor não foi detectado. Se você gostaria de prosseguir sem o Tor, desmarque a opção \"Usar Tor\" abaixo e clique em Salvar. Caso contrário, inicie o Tor e tente conectar novamente.",
       "torProxyLabel": "Proxy SOCKS5 do Tor",
       "torProxyPlaceholder": "127.0.0.1:9150",
       "torPwLabel": "Senha do Tor",
@@ -901,7 +901,7 @@
       "toLabel": "Para",
       "toPlaceholder": "Insira um Endereço %{cur}",
       "amountLabel": "Quantia",
-      "noteLabel": "Nota",
+      "noteLabel": "Observações",
       "notePlaceholder": "Visível apenas para você",
       "sendBtn": "Enviar",
       "clear": "Limpar",
@@ -916,7 +916,7 @@
       "bodyDustAmount": "A quantia da transação é muito pequena e fica abaixo do valor que é necessário para realizá-la.",
       "bodyGenericError": "Houve um erro ao estimar a taxa: %{err}",
       "btnRetry": "Tentar novamente",
-      "btnCancel": "Cancelado",
+      "btnCancel": "Cancelar",
       "btnConfirmSend": "Sim, Enviar",
       "btnClose": "Fechar"
     },
@@ -980,10 +980,10 @@
     "condition": "Condição: %{condition}",
     "inventory": "Estoque: %{inventory}",
     "tags": "Tags",
-    "paymentsAccepted": "Formas de Pagamento Aceitas",
+    "paymentsAccepted": "Formas de Pagamento",
     "noTags": "Nenhuma tag",
     "buyNow": "COMPRAR",
-    "buyCryptoNow": "NEGOCIAR",
+    "buyCryptoNow": "COMPRAR",
     "description": "Descrição",
     "noDescription": "Sem descrição",
     "reviews": "Qualificações",
@@ -1154,10 +1154,10 @@
       "helperMarketValue": "Os compradores pagam o valor de mercado. O preço do anúncio irá refletir automaticamente o valor de mercado.",
       "marketValueLabel": "Valor de Mercado Atual",
       "marketValuePerCoin": "(%{amount} por %{curCode})",
-      "coinType": "Negociar",
+      "coinType": "Trocar",
       "quantity": "Inventário",
       "priceModifier": "Modificador de Preço (+/-)",
-      "helperPriceModifier": "Negocie a preço de mercado ou especifique um modificador de preço (+/-)"
+      "helperPriceModifier": "Deixe em branco para negociar a preço de mercado, ou especifique um desconto (ex:-10%) ou acréscimo (ex:+5%)"
     },
     "shippingOptions": {
       "optionHeading": "Opção de Frete #%{listPosition}",
@@ -1178,8 +1178,8 @@
         "namePlaceholder": "ex: PAC, SEDEX, etc.",
         "estimatedDeliveryLabel": "Tempo de Entrega",
         "estimatedDeliveryPlaceholder": "ex: 5-7 dias",
-        "priceLabel": "Preço (primeiro item)",
-        "additionalItemPriceLabel": "Preço (item adicional)",
+        "priceLabel": "Custo (1º item)",
+        "additionalItemPriceLabel": "Custo (item adicional)",
         "pricePlaceholder": "0.00",
         "addService": "+ Inserir Serviço"
       },
@@ -1253,14 +1253,14 @@
     "resultsFound": "<b>%{totalResults} anúncio</b> encontrado para <b>\"%{term}\"</b> |||| <b>%{totalResults} anúncios</b> encontrados para <b>\"%{term}\"</b>",
     "resultsTotal": "%{totalResults} anúncios",
     "sortBy": "Ordenar por",
-    "changeProvider": "Fechar e Escolher um Novo Provedor de Busca",
+    "changeProvider": "Fechar",
     "useDefault": "Buscar por \"%{term}\" usando %{defaultProvider}",
     "noResults": "Nenhum anúncio corresponde aos seus critérios de busca",
     "addTitle": "Adicionar um provedor de busca",
     "addPlaceholder": "URL do provedor de busca",
     "addTorPlaceholder": "URL Tor do provedor de busca (opcional)",
     "addBtn": "Adicionar",
-    "cancel": "Cancelado",
+    "cancel": "Cancelar",
     "deleteProviderBtn": "Remover provedor de busca",
     "makeDefaultBtn": "Definir como padrão",
     "makeDefaultBtnHelper": "O provedor de busca padrão é usado nas pesquisas feitas com a barra de endereços.",
@@ -1272,17 +1272,17 @@
       "myPage": "Minha Página"
     },
     "cryptoListViewHeader": {
-      "colTradeFrom": "Negociar",
+      "colTradeFrom": "Trocar",
       "colTradeTo": "Por",
       "colVendor": "Negociante",
       "colPriceSubText": "(preço de mercado)",
       "colPrice": "Preço %{subText}",
-      "colInventory": "Inventário",
+      "colInventory": "Quantidade",
       "tipPrice": "O preço representa uma (1) unidade cheia da moeda. Frações de uma unidade podem ser compradas. O preço será calculado durante o checkout.",
-      "tipInventory": "O estoque é estimado de acordo com a última vez em que o anúncio foi rastreado pelo servidor e busca e a partir da última vez em que o vendedor esteve online."
+      "tipInventory": "A quantidade é estimada de acordo com a última vez em que o anúncio foi rastreado pelo provedor de busca e a última vez em que o vendedor esteve online."
     },
     "errors": {
-      "searchFailTitle": "Houve uma falha ao pesquisar em %{provider}. Escolha outro provedor de busca acima.",
+      "searchFailTitle": "Erro ao pesquisar em %{provider}. Escolha outro provedor de busca.",
       "searchFailReason": "O provedor de busca retornou a seguinte mensagem: %{error}",
       "connection": "Você não está mais conectado ao seu nodo. Reconecte-se para continuar a busca",
       "addError": "Esse provedor não pode ser adicionado. Verifique seus dados e tente novamente.",
@@ -1357,7 +1357,7 @@
     "scamWarning": "AVISO: Proteja-se de fraudes",
     "pending": "Pendente…",
     "pendingNote": "Por favor, realize o pagamento para finalizar o seu pedido.",
-    "close": "close",
+    "close": "Fechar",
     "closeNote": "O seu pagamento foi enviado para o vendedor.",
     "moderatorNote": "*A taxa do serviço de moderação só será cobrada se uma disputa for aberta.",
     "quantity": "Quantidade",
@@ -1365,11 +1365,11 @@
     "cryptoAddressHeading": "Seu endereço %{coinType}",
     "cryptoAddressPlaceholder": "Cole o seu endereço %{coinType} aqui",
     "cryptoAddressHelper": "%{name} irá enviar %{coinType} para esse endereço. %{warning}",
-    "cryptoAddressHelperWarning": "O endereço não pode ser modificado após a realização do pedido.",
+    "cryptoAddressHelperWarning": "O endereço não poderá ser modificado após a realização do pedido.",
     "cryptoAddressHelperWarning2": "Este endereço não pode ser modificado.",
     "moderatorsDisclaimer": "O seu dinheiro será enviado temporariamente para um intermediário (o moderador). O moderador só irá entregar o seu dinheiro ao vendedor após você confirmar que recebeu a compra com sucesso. Caso surja qualquer problema com o seu pedido, você poderá fazer uma reclamação com o moderador, abrindo uma disputa. O moderador analisará o problema e decidirá quanto será o seu reembolso. *O serviço de moderação só será cobrado se uma reclamação for realizada.",
     "directPayment": "Pagamento Direto",
-    "directPaymentDetails": "O dinheiro será enviado diretamente ao vendedor, sem utilizar um moderador como intermediário. Você só deve usar essa opção ao comprar de vendedores que você confia. Caso algo dê errado no pedido, você terá que pedir para o vendedor devolver o seu dinheiro. Ou seja, o vendedor é quem irá decidir se o seu dinheiro será devolvido ou não.",
+    "directPaymentDetails": "O seu dinheiro será enviado diretamente ao vendedor, sem utilizar um moderador como intermediário. Você só deve usar essa opção ao comprar de vendedores que você confia. Caso algo dê errado no pedido, você terá que pedir para o vendedor devolver o seu dinheiro. Ou seja, o vendedor é quem irá decidir se o seu dinheiro será devolvido ou não.",
     "chooseModerator": "Escolher Esse Moderador",
     "confirmPayment": {
       "title": "Está tudo em ordem?",
@@ -1397,7 +1397,7 @@
       "feeNote": "<b>Lembre-se de contabilizar as taxas</b> quando você enviar fundos para a sua carteira do OpenBazaar."
     },
     "completeSection": {
-      "paymentSent": "Pagamento Enviado!",
+      "paymentSent": "Pagamento efetuado!",
       "purchases": "Compras",
       "progressMessage": "Obrigado(a) pela sua compra! Se você desejar verificar o status do seu pedido, veja a sua %{link} página.",
       "estimatedProcessing": "Tempo de Processamento Estimado: %{time}",
@@ -1436,7 +1436,7 @@
       "moderatorsMsg": "Esse anúncio possui moderadores disponíveis, mas eles não puderam ser carregados.",
       "orderError": "O seu pedido não pode ser processado devido ao seguintes erros.",
       "ownIDTitle": "Você Não Pode Comprar os Seus Próprios Anúncios",
-      "ownIDMsg": "Você pode pré-visualizar o processo de compra de seus anúncios, mas você não pode comprá-los.",
+      "ownIDMsg": "Você pode simular o processo de compra de seus anúncios, mas você não pode comprá-los.",
       "paymentFailed": "O Pagamento Não Pode ser Completado",
       "zeroPrice": "Você não pode comprar um anúncio com o preço total de zero.",
       "insufficientInventoryTitle": "Estoque Insuficiente",
@@ -1493,7 +1493,7 @@
       "disputeOpen": "Disputas Abertas",
       "disputeClosed": "Disputas Encerradas",
       "completed": "Finalizados",
-      "error": "Com Erros"
+      "error": "Com Erro"
     },
     "sort": {
       "label": "Ordenar por",
@@ -1534,7 +1534,7 @@
       },
       "btnReject": "Recusar",
       "btnAccept": "Aceitar",
-      "btnCancel": "Cancelado",
+      "btnCancel": "Cancelar",
       "btnRetryFetch": "Tentar novamente"
     }
   },
@@ -1636,9 +1636,9 @@
         "coinTypeVerbose": "%{coinName} (%{coinCode})",
         "cryptoSentLabel": "%{coinTypeVerbose} enviado",
         "transactionIdLabel": "ID da transação:",
-        "yourNoteLabel": "Sua nota:",
-        "noteFromVendorLabel": "Nota do vendedor:",
-        "noteFromStoreLabel": "Nota de %{store}:",
+        "yourNoteLabel": "Observações:",
+        "noteFromVendorLabel": "Observações do vendedor:",
+        "noteFromStoreLabel": "Observações de %{store}:",
         "copyLink": "Copiar",
         "digitalReadyForDlHeading": "Os arquivos digitais estão prontos para serem baixados!",
         "digitalReadyForDlText": "Os arquivos foram entregues. Baixe-os quando você estiver pronto.",
@@ -1671,8 +1671,8 @@
         "vendorHeadingWithName": "%{name} (vendedor)",
         "moderatorHeading": "Moderador",
         "moderatorHeadingWithName": "%{name} (moderador)",
-        "noteFromHeading": "Nota do moderador:",
-        "noteFromHeadingWithName": "Nota de %{name}:",
+        "noteFromHeading": "Observações do moderador:",
+        "noteFromHeadingWithName": "Observações de %{name}:",
         "btnAcceptPayout": "Aceitar Pagamento",
         "acceptPayoutConfirm": {
           "title": "Você tem certeza?",
@@ -1772,7 +1772,7 @@
       "passwordPlaceholder": "Senha para o arquivo (opcional)",
       "transactionIdLabel": "ID da transação",
       "transactionIdPlaceholder": "Colar o ID da transação",
-      "noteLabel": "Nota",
+      "noteLabel": "Observações",
       "notePlaceholder": "opcional",
       "noteHelperTextDigital": "O comprador irá receber uma notificação contendo as informações do arquivo",
       "btnCancel": "Cancelar",
@@ -1814,7 +1814,7 @@
     }
   },
   "metrics": {
-    "title": "Métricas Anônimas Opcionais",
+    "title": "Compartilhamento Opcional de Dados",
     "newVersion": "Por favor, revise as atualizações ao acordo de análise de dados abaixo e clique em \"Ativar\".",
     "msg1": "Por favor, ajude a melhorar o OpenBazaar aceitando compartilhar com a equipe de desenvolvedores alguns dados sobre a sua experiência de uso.",
     "msg2": "Ao clicar em \"Ativar\", você concorda em compartilhar os dados abaixo listados com a OB1 Company e seus processadores para as propostas descritas, assim como consente com a transferência destes dados para servidores localizados nos Estados Unidos. Você pode interromper a transmissão destes dados a qualquer momento entrando em Configurações, na seção Avançado e clicando no botão Modificar Configurações de Compartilhamento. Se você estiver na Área Econômica Européia, você pode ter certos direitos em relação a estes dados, incluindo o direito de acesso, retificação, exclusão, restrição de processamento, objeção de processamento e portabilidade. Para fazer isso ou para simplesmente solicitar a interrupção de uso e o apagamento dos dados que coletamos, você pode nos contatar a qualquer momento em data@ob1.io. ",
@@ -2012,7 +2012,7 @@
     "quantityMustBeNumeric": "A quantia precisa ser um número.",
     "quantityMustBePositive": "A quantia deve ser maior do que zero.",
     "missingShippingOption": "Por favor, escolha uma opção de frete válida.",
-    "insufficientInventory": "A quantidade é maior do que o inventário disponível. Resta apenas %{smart_count}. |||| A quantidade é maior do que o inventário disponível. Restam apenas %{smart_count}.",
+    "insufficientInventory": "A quantia desejada é maior do que a disponível para venda. Resta apenas %{smart_count} unidade. |||| A quantia desejada é maior do que a disponível para venda. Restam apenas %{smart_count} unidades.",
     "providePaymentAddress": "Por favor, forneça um endereço de pagamento.",
     "paymentAddressLength": "O endereço de pagamento deve ter entre %{min} e %{max} caracteres."
   },
@@ -2024,9 +2024,9 @@
     "transactionIDTooLong": "A ID da Transação excede o comprimento máximo de %{maxLength} caracteres."
   },
   "errorPage": {
-    "userNotFoundTitle": "Esse Usuário Não Pode ser Encontrado",
-    "userNotFoundMsg": "%{user} não foi encontrado na rede. Certifique-se que você digitou corretamente o apelido ou o ID do usuário.",
-    "listingNotFoundTitle": "Esse Anúncio Não Pode Ser Encontrado",
+    "userNotFoundTitle": "Usuário não encontrado",
+    "userNotFoundMsg": "%{user} não foi encontrado na rede. Certifique-se de que você digitou corretamente o apelido ou o ID do usuário.",
+    "listingNotFoundTitle": "Anúncio não encontrado",
     "listingNotFoundLink": "Clique aqui para ver os outros anúncios dessa loja.",
     "listingNotFoundMsg": "%{listing} não pode ser encontrada.",
     "pageNotFoundTitle": "Essa Página Não Pode ser Encontrada",
@@ -2336,7 +2336,7 @@
     "ZIMBABWE": "Zimbábue"
   },
   "regions": {
-    "ALL": "Todos",
+    "ALL": "Todos os países",
     "EUROPEAN_UNION": "União Europeia",
     "EUROPEAN_ECONOMIC_AREA": "Espaço Econômico Europeu"
   },

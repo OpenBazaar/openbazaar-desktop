@@ -58,7 +58,7 @@
     "zcashBinaryHelper": "Un full node Zcash est requis. Téléchargez un full node Zcash %{fullNodeLink}. Une fois installé, entrez le chemin de votre binaire zcashd ci-dessus.",
     "btnBrowse": "Parcourir",
     "btnNext": "Suivant",
-    "alreadyInUse": "Already in use"
+    "alreadyInUse": "Déjà utilisé"
   },
   "unsupportedCryptoCurDialog": {
     "title": "Monnaie non prise en charge",
@@ -195,14 +195,14 @@
       "follow": "%{name} vous a suivi.",
       "moderatorAdd": "%{name} vous a ajouté comme modérateur.",
       "moderatorRemove": "%{name} vous a supprimé comme modérateur.",
-      "vendorDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
-      "vendorDisputeTimeoutExpired": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
-      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
-      "buyerDisputeTimeoutExpired": "Order %{orderLink} has expired. The vendor may claim payment.",
-      "buyerDisputeExpiry": "The moderator has %{timeRemaining} left to make a decision on order %{orderLink}.",
-      "buyerDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
-      "moderatorDisputeExpiry": "You have %{timeRemaining} left to make a decision on order %{orderLink}.",
-      "moderatorDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment."
+      "vendorDisputeTimeout": "%{timeRemaining} restantes pour contester la commande %{orderLink}.",
+      "vendorDisputeTimeoutExpired": "La commande %{orderLink} a expiré. Une fois réalisée, vous pouvez réclamer votre paiement.",
+      "buyerDisputeTimeout": "%{timeRemaining} restantes pour contester la commande %{orderLink}.",
+      "buyerDisputeTimeoutExpired": "La commande %{orderLink} a expiré. Le vendeur peut réclamer le paiement.",
+      "buyerDisputeExpiry": "Le modérateur dispose de %{timeRemaining} pour prendre une décision sur la commande %{orderLink}.",
+      "buyerDisputeExpiryExpired": "Le litige portant sur la commande %{orderLink} a expiré. Le vendeur peut réclamer le paiement.",
+      "moderatorDisputeExpiry": "Vous avez %{timeRemaining} pour prendre une décision sur la commande %{orderLink}.",
+      "moderatorDisputeExpiryExpired": "Le litige portant sur la commande %{orderLink} a expiré. Le vendeur peut réclamer le paiement."
     },
     "errorHeading": "Une erreur s'est produite lors de la récupération des notifications.",
     "btnRetry": "Réessayer",
@@ -397,7 +397,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "L'information pour ce modérateur n'a pas pu être chargée.",
     "invalid": "Cet utilisateur n'est pas actuellement modérateur.",
-    "invalidCurrency": "This moderator does not support %{currency}.",
+    "invalidCurrency": "Ce modérateur ne prend pas en charge %{currency}.",
     "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, et %{smart_count} autres langues."
   },
   "moderatorDetails": {
@@ -966,7 +966,7 @@
     "retryLink": "Réessayer",
     "fetchError": "Une erreur s'est produite lors de l'obtention de l'inventaire. %{retryLink}",
     "fetchErrorWithMsg": "Une erreur s'est produite lors de l'obtention de l'inventaire : %{msg}",
-    "unknownInventory": "Unknown"
+    "unknownInventory": "Inconnu"
   },
   "listingDetail": {
     "edit": "Modifier",
@@ -983,7 +983,7 @@
     "paymentsAccepted": "Paiements acceptés",
     "noTags": "Aucun mot-clé entré",
     "buyNow": "ACHETER MAINTENANT",
-    "buyCryptoNow": "TRADE NOW",
+    "buyCryptoNow": "ÉCHANGER MAINTENANT",
     "description": "Description",
     "noDescription": "Aucune description entrée",
     "reviews": "Évaluations",
@@ -1139,25 +1139,25 @@
     "btnTermsAndConditions": "Ajouter des conditions",
     "btnAddCoupon": "Ajouter un code promotionnel",
     "primaryPhoto": "Photo principale",
-    "viewListingInAppLink": "View in app",
-    "viewListingOnWebLink": "View on web",
-    "viewOnWebDisclaimerTooltip": "Your listing may take a bit of time to display or update on the web.",
+    "viewListingInAppLink": "Voir dans l'appli",
+    "viewListingOnWebLink": "Voir sur le web",
+    "viewOnWebDisclaimerTooltip": "Votre annonce peut prendre un peu de temps pour s'afficher ou pour se mettre à jour sur le web.",
     "unsupportedCurrencyDialog": {
       "title": "Devise non reconnue",
       "body": "Cette annonce est facturée dans une devise (%{cur}) que ce client ne prend pas en charge. Veuillez sélectionner une nouvelle devise ci-dessous et cliquez sur OK. Ensuite, assurez-vous de revérifier les prix pour s'assurer qu'ils sont appropriés pour la nouvelle monnaie.",
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperType": "Trade cryptocurrencies for free",
-      "helperCoinType": "Receive %{toCur} in exchange for %{fromCur}",
+      "helperType": "Échangez gratuitement des crypto-monnaies",
+      "helperCoinType": "Recevoir %{toCur} en échange de %{fromCur}",
       "helperQuantity": "Les acheteurs peuvent acheter une fraction ou le montant total",
       "helperMarketValue": "Les acheteurs payent le prix du marché. Le prix de l'annonce reflétera automatiquement le prix du marché.",
       "marketValueLabel": "Prix du marché actuel",
       "marketValuePerCoin": "(%{amount} par %{curCode})",
-      "coinType": "Trade",
+      "coinType": "Échanger",
       "quantity": "Inventaire",
-      "priceModifier": "Price Modifier (+/-)",
-      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
+      "priceModifier": "Modificateur de prix (+/-)",
+      "helperPriceModifier": "Échangez au prix du marché, ou spécifiez une variation."
     },
     "shippingOptions": {
       "optionHeading": "Option d'expédition #%{listPosition}",
@@ -1272,11 +1272,11 @@
       "myPage": "Ma page"
     },
     "cryptoListViewHeader": {
-      "colTradeFrom": "Trade",
-      "colTradeTo": "For",
+      "colTradeFrom": "Échanger",
+      "colTradeTo": "Pour",
       "colVendor": "Trader",
-      "colPriceSubText": "(market price)",
-      "colPrice": "Price %{subText}",
+      "colPriceSubText": "(prix du marché)",
+      "colPrice": "Prix %{subText}",
       "colInventory": "Inventaire",
       "tipPrice": "Le prix représente 1 unité entière de la monnaie. Des fractions d'une unité peuvent être achetées. Le prix sera calculé lors de la commande.",
       "tipInventory": "L'inventaire est estimé en fonction du moment où le fournisseur de recherche a exploré l'annonce pour la dernière fois et depuis le moment où le fournisseur a été mis en ligne pour la dernière fois."
@@ -1364,9 +1364,9 @@
     "cryptoAmount": "Montant",
     "cryptoAddressHeading": "Votre adresse %{coinType}",
     "cryptoAddressPlaceholder": "Collez ici votre adresse %{coinType}",
-    "cryptoAddressHelper": "%{name} will send %{coinType} to this address. %{warning}",
+    "cryptoAddressHelper": "%{name} enverra %{coinType} à cette adresse. %{warning}",
     "cryptoAddressHelperWarning": "L'adresse ne peut pas être modifiée une fois la commande passée.",
-    "cryptoAddressHelperWarning2": "This address cannot be changed.",
+    "cryptoAddressHelperWarning2": "Cette adresse ne peut pas être changée.",
     "moderatorsDisclaimer": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige avec un modérateur de votre choix. *Les frais de service de modération ne s'appliquent qu'après un litige.",
     "directPayment": "Paiement direct",
     "directPaymentDetails": "L'envoi des fonds se fait directement au vendeur sans modérateur. Vous ne devez utiliser cette option qu'avec des vendeurs de confiance. Vous ne pourrez pas contester la commande si quelque chose se passe mal.",
@@ -1485,7 +1485,7 @@
     },
     "filters": {
       "pending": "En attente",
-      "unfunded": "Non provisionné",
+      "unfunded": "Non provisionné(e)",
       "ready": "Prêt(e) à traiter",
       "fulfilled": "Réalisé(e)",
       "refunded": "Remboursé(e)",
@@ -1528,7 +1528,7 @@
         "REFUNDED": "Remboursé(e)",
         "DISPUTED": "Litige(s)",
         "DECIDED": "Décidé(e)",
-        "RESOLVED": "Résolu",
+        "RESOLVED": "Résolu(e)",
         "PAYMENT_FINALIZED": "Paiement finalisé",
         "PROCESSING_ERROR": "Erreur"
       },
@@ -1567,7 +1567,7 @@
       "bothContractsValid": "Les contrats de l'acheteur et du vendeur ont été vérifiés comme authentiques.",
       "validBuyerVendorProcessingError": "Le contrat de l'acheteur a été vérifié comme étant authentique. Le contrat du vendeur n'est pas disponible car le vendeur a eu une erreur lors du traitement de la commande.",
       "vendorContractNotArrived": "Le contrat du vendeur n'est pas encore arrivé. Il sera envoyé la prochaine fois qu'ils seront en ligne.",
-      "buyerContractNotArrived": "The buyer's contract has not yet arrived. It will be sent over the next time they come online.",
+      "buyerContractNotArrived": "Le contrat de l'acheteur n'est pas encore arrivé. Il sera envoyé la prochaine fois qu'ils seront en ligne.",
       "vendorContractNotArrivedPotentialProcErr": "Le contrat du vendeur n'est pas encore arrivé. Le contrat de l'acheteur indique que le vendeur a eu une erreur de traitement, mais cela ne peut être validé, car le contrat de l'acheteur comporte des erreurs de validation. Veuillez contacter le vendeur pour confirmer.",
       "contractHeadingVendor": "Contrat du vendeur :",
       "contractHeadingBuyer": "Contrat de l'acheteur :"
@@ -1583,8 +1583,8 @@
       "orderNumber": "Commande # : %{orderId}",
       "copyLink": "Copier",
       "notApplicable": "n/a",
-      "vendorFinalizedPayment": "You have claimed the payment.",
-      "vendorFinalizedPaymentBuyerView": "The vendor has claimed the payment.",
+      "vendorFinalizedPayment": "Vous avez demandé le paiement.",
+      "vendorFinalizedPaymentBuyerView": "Le vendeur a réclamé le paiement.",
       "payment": {
         "firstPaymentHeading": "Détails du paiement",
         "paymentHeading": "Détails du paiement #%{paymentNumber}",
@@ -1708,7 +1708,7 @@
         "quantityHeading": "Quantité",
         "totalHeading": "Total",
         "moderatorHeading": "Modérateur",
-        "paymentAddressHeading": "%{icon} %{coinType} Address",
+        "paymentAddressHeading": "Adresse %{icon} %{coinType}",
         "copyLink": "Copier",
         "viewOnMap": "Voir sur la carte",
         "shippingOption": "Option d'expédition",
@@ -1719,32 +1719,32 @@
         "skuLabel": "SKU"
       },
       "timeoutInfo": {
-        "modInvalidContractData": "The contract contains invalid data. The time remaining for you to make a decision on the dispute cannot be determined.",
-        "invalidContractData": "The contract contains invalid data. The time remaining to open a dispute cannot be determined.",
-        "disputedInvalidContractData": "The contract contains invalid data. The time remaining for the moderator to make a decision on the dispute cannot be determined.",
-        "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
-        "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfilled you can claim payment and finalize the order without support from the moderator.",
-        "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
-        "disputedTipBuyer": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, the vendor can claim payment and finalize the order.",
-        "disputedTipVendor": "Once a dispute is opened, the moderator has approximately %{totalTime} to make a decision. If the clock expires, you can claim payment and finalize the order.",
-        "disputedTimeUpBuyer": "Time is up! The moderator failed to make a decision in time. The vendor can now claim the funds.",
-        "disputedTimeUpVendor": "Time is up! The moderator failed to make a decision in time. You can now claim the funds.",
-        "paymentFinalizedBuyer": "The vendor has claimed the payment. Please complete the order below whenever you’re ready.",
-        "paymentFinalizedVendor": "You have claimed the payment.",
+        "modInvalidContractData": "Le contrat contient des données non valides. Le temps restant pour que vous puissiez prendre une décision sur le litige ne peut pas être déterminé.",
+        "invalidContractData": "Le contrat contient des données non valides. Le temps restant pour ouvrir un litige ne peut pas être déterminé.",
+        "disputedInvalidContractData": "Le contrat contient des données non valides. Le temps restant pour que le modérateur puisse prendre une décision sur le litige ne peut pas être déterminé.",
+        "tipClaimAfterTimeoutBuyer": "Une fois que le temps imparti expire, le vendeur peut réclamer le paiement et finaliser la commande sans l'assistance du modérateur.",
+        "tipClaimAfterTimeoutVendor": "Une fois que le temps imparti expire, tant que la commande est réalisée, vous pouvez demander le paiement et finaliser la commande sans l'assistance du modérateur.",
+        "disputedModOnClock": "La commande est contestée. Le modérateur a approximativement %{timeRemaining} pour traiter le litige et prendre une décision.",
+        "disputedTipBuyer": "Une fois qu'un litige est ouvert, le modérateur a environ % {totalTime} pour prendre une décision. Si le délai expire, le vendeur peut réclamer le paiement et finaliser la commande.",
+        "disputedTipVendor": "Une fois qu'un litige est ouvert, le modérateur a environ % {totalTime} pour prendre une décision. Si le délai expire, vous pouvez réclamer le paiement et finaliser la commande.",
+        "disputedTimeUpBuyer": "Le temps est écoulé ! Le modérateur n'a pas pris de décision à temps. Le vendeur peut maintenant réclamer les fonds.",
+        "disputedTimeUpVendor": "Le temps est écoulé ! Le modérateur n'a pas pris de décision à temps. Vous pouvez maintenant réclamer les fonds.",
+        "paymentFinalizedBuyer": "Le vendeur a réclamé le paiement. Veuillez compléter la commande ci-dessous quand vous êtes prêt.",
+        "paymentFinalizedVendor": "Vous avez demandé le paiement.",
         "blocksRemaining": "%{blocksRemaining} blocs",
-        "unconfirmedFunding": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}. The clock will start when the funding payment is confirmed.",
-        "escrowExpired": "Time is up! A dispute can no longer be opened on this order.",
-        "tipEscrowExpiredBuyer": "You and the vendor were given approximately %{totalTime} to open a dispute. Since a dispute was not opened, the funds can now be claimed by the vendor.",
-        "escrowExpiredVendorClaim": "Time is up! Claim payment for this order whenever you’re ready.",
-        "tipEscrowExpiredVendorClaim": "You and the buyer are given approximately %{totalTime} to open a dispute. Since a dispute was not opened, you can now claim the payment.",
-        "escrowExpiredBuyerComplete": "Time is up! A dispute can no longer be opened on this order. Please complete the order below whenever you’re ready.",
-        "escrowTimeRemaining": "This order can be disputed for %{blocksRemaining} or approximately %{timeRemaining}.",
-        "modDisputeEscrowExpiredBuyerOpened": "The buyer is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
-        "modDisputeEscrowExpiredVendorOpened": "The vendor is disputing this order. You have %{timeRemaining} to process the dispute and make a decision.",
-        "modDisputeEscrowExpired": "Time is up! You failed to make a decision in time. The vendor can now claim the funds.",
-        "btnClaimPayment": "Claim Payment",
+        "unconfirmedFunding": "Cette commande peut être contestée pour %{blocksRemaining} ou approximativement %{timeRemaining}. La minuterie commencera à la confirmation du paiement.",
+        "escrowExpired": "Le temps est écoulé ! Un litige ne peut plus être ouvert sur cette commande.",
+        "tipEscrowExpiredBuyer": "Vous et le vendeur aviez environ %{totalTime} pour ouvrir un litige. Puisqu'un litige n'a pas été ouvert, les fonds peuvent maintenant être réclamés par le vendeur.",
+        "escrowExpiredVendorClaim": "Le temps est écoulé ! Réclamez le paiement pour cette commande quand vous êtes prêt.",
+        "tipEscrowExpiredVendorClaim": "Vous et l'acheteur aviez environ %{totalTime} pour ouvrir un litige. Puisqu'un litige n'a pas été ouvert, vous pouvez maintenant réclamer le paiement.",
+        "escrowExpiredBuyerComplete": "Le temps est écoulé ! Un litige ne peut plus être ouvert sur cette commande. Veuillez compléter la commande ci-dessous quand vous êtes prêt.",
+        "escrowTimeRemaining": "Cette commande peut être contestée pour %{blocksRemaining} ou approximativement %{timeRemaining}.",
+        "modDisputeEscrowExpiredBuyerOpened": "L'acheteur conteste cette commande. Vous avez %{timeRemaining} pour traiter le litige et prendre une décision.",
+        "modDisputeEscrowExpiredVendorOpened": "Le vendeur conteste cette commande. Vous avez %{timeRemaining} pour traiter le litige et prendre une décision.",
+        "modDisputeEscrowExpired": "Le temps est écoulé ! Vous n'avez pas pris de décision à temps. Le vendeur peut maintenant réclamer les fonds.",
+        "btnClaimPayment": "Réclamer le paiement",
         "btnResolveDispute": "Résoudre le litige",
-        "btnDiscussOrder": "Discuss Order",
+        "btnDiscussOrder": "Examiner la commande",
         "btnDisputeOrder": "Contester la commande"
       },
       "processingError": {
@@ -1806,8 +1806,8 @@
       "reasonHelperText": "L'ouverture d'un litige notifiera et invitera le modérateur à examiner la commande afin de résoudre tous les conflits",
       "btnCancel": "Annuler",
       "btnSubmit": "Envoyer",
-      "timeoutMessageBuyer": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and the vendor will be able to claim the funds.",
-      "timeoutMessageVendor": "The moderator will have approximately %{timeoutAmount} to make a decision on the dispute. If the clock runs out prior to the the moderator making a decision, the dispute will end and you will be able to claim the funds."
+      "timeoutMessageBuyer": "Le modérateur aura environ %{timeoutAmount} pour prendre une décision sur le litige. Si le temps imparti s'est écoulé avant que le modérateur ne prenne une décision, le litige prendra fin et le vendeur pourra réclamer les fonds.",
+      "timeoutMessageVendor": "Le modérateur aura environ %{timeoutAmount} pour prendre une décision sur le litige. Si le temps imparti s'est écoulé avant que le modérateur ne prenne une décision, le litige prendra fin et vous pourrez réclamer les fonds."
     },
     "actionBar": {
       "disputeOrderBtn": "Contester la commande"
@@ -1815,25 +1815,25 @@
   },
   "metrics": {
     "title": "Métriques anonymes facultatives",
-    "newVersion": "Please review the update to the analytics data agreement below and click “Activate.”",
-    "msg1": "Please help improve OpenBazaar by agreeing to share analytics data about your experience with the development team.",
-    "msg2": "By clicking “Activate,” you agree to share the data listed below with OB1 Company and its processors for the purposes described, and consent to the transfer of this data to servers located in the United States. You may stop the sharing of this data at any time by opening your settings, and clicking the Change Sharing Settings button in the Advanced section. If you are located in the European Economic Area, you may have certain rights with respect to this data, including the right of access, rectification, erasure, restriction of processing, objection to processing, and portability. You may contact us about these, or simply request us to stop using and delete the data we’ve collected, at any time by contacting data@ob1.io.",
-    "listTitle": "The following data will be collected by OB1 Company as you use OpenBazaar:",
+    "newVersion": "Veuillez consulter ci-dessous la mise à jour de l'accord de données analytiques et cliquez sur \"Activer\".",
+    "msg1": "Vous pouvez aider à améliorer OpenBazaar en acceptant de partager des données analytiques de votre expérience avec l'équipe de développement.",
+    "msg2": "En cliquant sur \"Activer\", vous acceptez de partager les données répertoriées ci-dessous avec OB1 Company et ses processeurs aux fins décrites, et consentez au transfert de ces données vers des serveurs situés aux États-Unis. Vous pouvez arrêter le partage de ces données à tout moment en ouvrant vos paramètres et en cliquant sur le bouton \"Désactiver\" des paramètres de partage dans la section \"Avancé\". Si vous vous trouvez dans l'Espace économique européen, vous pouvez disposer de certains droits sur ces données, notamment le droit d'accès, de rectification, d'effacement, de restriction de traitement, d'objection au traitement et de portabilité. Vous pouvez nous contacter à tout moment sur ce sujet ou simplement nous demander de cesser d'utiliser et de supprimer les données que nous avons collectées en contactant data@ob1.io.",
+    "listTitle": "Les données suivantes seront partagées avec OB1 Company sur l'utilisation d'OpenBazaar :",
     "list": {
-      "device": "Your IP address and device information, for the purposes listed below.",
-      "pages": "Which pages you load, such as the search page or store page. This lets us know which parts of the app are being used the most, and how users navigate through the app.",
-      "clicks": "Clicks on elements. This records only what you clicked on. This gives us data on how often elements are clicked on, so we can focus our effort on the most used parts of the app and improve or remove rarely used elements.",
-      "errors": "Performance data like errors and how long content takes to load. This makes it easier for us to fix problems users are experiencing without waiting for a specific request to fix something.",
-      "system": "Les données système de base tels que l'OS, le CPU, la RAM et la résolution d'écran. Cela nous aide à savoir si les problèmes sont liés à certains types d'ordinateurs.",
-      "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have. This gives us a better understanding of the state of the network, so we can focus on areas that need improvement.",
+      "device": "Votre adresse IP et les informations de votre appareil, aux fins énumérées ci-dessous.",
+      "pages": "Les pages que vous chargez, telle que la page de recherche ou la page d'une boutique. Cela nous permet de savoir quelles parties de l'application sont les plus utilisées et comment les utilisateurs naviguent dans l'application.",
+      "clicks": "Les clics sur les éléments. Cela enregistre uniquement ce que vous avez cliqué. Cela nous donne des données sur la fréquence à laquelle les éléments sont cliqués, ce qui nous permet de concentrer nos efforts sur les parties les plus utilisées de l'application et d'améliorer ou de supprimer des éléments rarement utilisés.",
+      "errors": "Les données de performance, telles que les erreurs et la durée de chargement du contenu. Cela nous permet de résoudre plus facilement les problèmes rencontrés par les utilisateurs sans attendre une demande spécifique pour résoudre un problème.",
+      "system": "Les données système de base tels que l'OS, le CPU, la RAM et la définition d'écran. Cela nous aide à savoir si les problèmes sont liés à certains types d'ordinateurs.",
+      "user": "Les informations publiques, y compris si vous êtes un vendeur ou un modérateur, et combien d’annonces et de critiques vous avez. Cela nous permet de mieux comprendre l’état du réseau et de nous concentrer sur les domaines à améliorer.",
       "node": "Les informations sur votre nœud, y compris la devise d'affichage, la crypto-monnaie, la langue et si vous utilisez Tor. Cela nous aide à prioriser le développement.",
-      "app": "Details about your app, which include its version and whether it is installed from a downloadable package from source. This lets us understand the context of the other data collected, so it can be applied correctly.",
-      "orders": "Basic information on actions you take with orders, such as its state when disputed, or if the order was moderated. This helps us identify problems in the order process.",
-      "listings": "Basic information about on actions taken when creating and editing listings. This includes the type of listing, but no other information about it. This gives us data on potential problems with creating and editing listings.",
-      "path": "The path to your installation of OpenBazaar. This will share the name of any folders in the path to the installation folder, which may include your root and/or user folder. This is a side effect of the data collection process, and is not used by the OB1 team."
+      "app": "Les détails de votre application, sa version et si elle est installée à partir d'un package téléchargeable du code source. Cela nous permet de comprendre le contexte des autres données collectées afin de pouvoir les appliquer correctement.",
+      "orders": "Les informations de base sur les actions que vous effectuez avec les commandes, tel que l'état de la commande lors d'une contestation, ou si la commande a été modérée. Cela nous aide à identifier les problèmes dans le processus de commande.",
+      "listings": "Les informations de base sur les actions prises lors de la création et de la modification des annonces. Cela inclut le type d'annonce, mais aucune autre information à ce sujet. Cela nous donne des données sur les problèmes potentiels liés à la création et à la modification des annonces.",
+      "path": "Le chemin de votre installation d'OpenBazaar. Cela partagera le nom de tous les dossiers du chemin d'installation, ce qui peut inclure votre dossier racine et / ou utilisateur. C'est est un élément secondaire du processus de collecte de données et n'est pas utilisé par l'équipe OB1."
     },
-    "disclaimer1": "No information that can be used to identify your orders or any of your transactions is shared with us. This data is always stored on your own computer, and cannot be accessed by anyone else.",
-    "disclaimer2": "As stated above, your sharing of this data is completely optional. You are not required to share this data in order to use OpenBazaar.",
+    "disclaimer1": "Aucune information n'est utilisée pour identifier vos commandes et aucune de vos transactions n'est partagée avec nous. Ces données sont toujours stockées sur votre propre ordinateur et ne sont accessibles à personne d'autre.",
+    "disclaimer2": "Comme indiqué ci-dessus, votre partage de ces données est entièrement facultatif. Vous n'êtes pas obligé de partager ces données pour utiliser OpenBazaar.",
     "acceptBtn": "Accepter",
     "declineBtn": "Refuser",
     "activateBtn": "Activer",
@@ -1852,7 +1852,7 @@
     "failedOpenDisputeHeading": "Une erreur s'est produite lors de l'accomplissement de la commande.",
     "failedResolveHeading": "Une erreur s'est produite lors de la résolution de la commande.",
     "failedAcceptPayoutHeading": "Une erreur s'est produite lors de l'acceptation du paiement.",
-    "failedReleaseEscrowHeading": "There was an error claiming the payment."
+    "failedReleaseEscrowHeading": "Une erreur s'est produite lors de la réclamation du paiement."
   },
   "exchangeRatesSyncer": {
     "fetchingRatesStatusMsg": "Récupération des taux de change...",
@@ -1933,9 +1933,9 @@
     "duplicateVariantName": "Vous avez plusieurs choix \"%{name}\". Les noms des choix doivent être uniques."
   },
   "metadataModelErrors": {
-    "providePriceModifier": "Please provide a price modifier.",
-    "numericPriceModifier": "Please provide the price modifier as a number.",
-    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
+    "providePriceModifier": "Veuillez fournir un modificateur de prix.",
+    "numericPriceModifier": "Merci d'entrer le modificateur de prix sous la forme d'un nombre.",
+    "priceModifierRange": "Le modificateur de prix doit être entre %{min} et %{max}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Merci de saisir un code promotionnel.",
@@ -2012,7 +2012,7 @@
     "quantityMustBeNumeric": "La quantité doit être au format numérique.",
     "quantityMustBePositive": "La quantité doit être supérieure à zéro.",
     "missingShippingOption": "Vous devez choisir un mode d'envoi valide.",
-    "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
+    "insufficientInventory": "La quantité dépasse le stock restant. Il n'en reste qu'%{smart_count} . |||| La quantité dépasse le stock restant. Il n'en reste que %{smart_count}.",
     "providePaymentAddress": "Merci d'entrer une adresse de paiement.",
     "paymentAddressLength": "La longueur de l'adresse de paiement doit être comprise entre %{min} et %{max} caractères."
   },
@@ -2021,7 +2021,7 @@
     "provideUrl": "Merci d'entrer l'URL d'un fichier.",
     "invalidUrl": "Merci d'entrer une URL valide.",
     "provideTransactionId": "Merci d'enter un ID de transaction.",
-    "transactionIDTooLong": "Transaction ID exceeds the maximum length of %{maxLength} characters."
+    "transactionIDTooLong": "l'ID de transaction excède la longueur maximale de %{maxLength} caractères."
   },
   "errorPage": {
     "userNotFoundTitle": "L'utilisateur n'a pas été trouvé",
@@ -2084,9 +2084,9 @@
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
     "tipMissingExchangeRate": "Il n'y a pas de données de taux de change disponibles pour %{coinType}. Si les données ne sont pas disponibles au moment de l'achat, l'annonce ne sera pas achetable."
   },
-  "cryptoPriceBelowMarket": "%{amount}% under market",
-  "cryptoPriceAboveMarket": "%{amount}% above market",
-  "cryptoPriceAtMarket": "market price",
+  "cryptoPriceBelowMarket": "%{amount}% en dessous du marché",
+  "cryptoPriceAboveMarket": "%{amount}% au dessus du marché",
+  "cryptoPriceAtMarket": "prix du marché",
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Åland",
