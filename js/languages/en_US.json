@@ -110,6 +110,7 @@
   "testnetTooltip": "Test Mode uses testnet coins, which are intended for testing purposes only.",
   "tabMenuHeading": "MENU",
   "currencyPairing": "%{convertedCurValue} (%{baseCurValue})",
+  "currencyWithCode": "%{name} (%{code})",
   "copiedToClipboard": "Copied to clipboard",
   "copiedToClipboardShort": "Copied",
   "refreshAlertPopInMessage": {
