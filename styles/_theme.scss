@@ -535,3 +535,13 @@ input[type=range][class~="clrS"] {
     }
   }
 }
+
+.btnFlx {
+  // @include borderColor(transparent, transparent);
+  border: none;
+  border-top: 1px solid $border;
+
+  &:hover, &::focus {
+    @include borderColor($border, $border3);
+  }
+}

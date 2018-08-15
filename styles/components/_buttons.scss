@@ -325,6 +325,30 @@
   }
 }
 
+.btnFlx {
+  // see styleSheet.html for example usage.
+  // use for buttons in the new 'flex' style with more padding and use css flex.
+  @extend .btn;
+  padding: 25px;
+
+  border-radius: 0px;
+  border-top: 1px solid;
+
+  & + a {
+    border-left: 1px solid #dbdbdb; // Move this color into themes.
+  }
+
+  + a:hover {
+    margin-right: -1px;
+  }
+
+  &:hover, &:focus {
+    z-index: 0;
+    border: 1px solid;
+    margin: 0px -2px -1px -1px;
+  }
+}
+
 .searchWrapper {
   //div around a search input
   position: relative;
