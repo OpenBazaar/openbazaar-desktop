@@ -7,7 +7,8 @@ import { abbrNum } from '../../utils';
 import { capitalize } from '../../utils/string';
 import { isHiRez } from '../../utils/responsive';
 import { recordEvent } from '../../utils/metrics';
-import { launchEditListingModal, launchSettingsModal, launchCreatePostModal } from '../../utils/modalManager';
+import { launchEditListingModal, launchSettingsModal,
+  launchCreatePostModal } from '../../utils/modalManager';
 import { isBlocked, events as blockEvents } from '../../utils/block';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import Post from '../../models/post/Post';

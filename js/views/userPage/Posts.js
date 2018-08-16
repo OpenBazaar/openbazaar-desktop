@@ -3,7 +3,6 @@ import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
 import Posts from '../posts/Posts';
-import { openSimpleMessage } from '../modals/SimpleMessage';
 import Profile from '../../models/profile/Profile';
 
 export default class extends BaseVw {
@@ -23,11 +22,7 @@ export default class extends BaseVw {
     $.get(app.getServerUrl(`ob/posts/${this.options.model.get('peerID')}`))
       .done(data => this.onPosts(data))
       .fail((jqXhr) => {
-        // if (jqXhr.statusText === 'abort') return;
-        // const failReason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
-        // openSimpleMessage(
-        //   app.polyglot.t('listingDetail.errors.fetchPosts'),
-        //   failReason);
+        if (jqXhr.statusText === 'abort') return;
         this.onPosts({});
       });
   }
