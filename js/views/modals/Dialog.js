@@ -46,7 +46,7 @@ export default class extends BaseModal {
       buttons: [],
       removeOnClose: true,
       // defaultBtnClass: 'btn clrP clrBr clrSh2',
-      defaultBtnClass: 'flexColRows btnFlx clrP',
+      defaultBtnClass: 'flexExpand btnFlx clrP',
       ...options,
     };
 
