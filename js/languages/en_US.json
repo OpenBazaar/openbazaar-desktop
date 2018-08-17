@@ -1253,7 +1253,7 @@
     "searchPlaceholder": "Enter a search term or #tag.",
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{smart_count} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{smart_count} listings</b> found for <b>\"%{term}\"</b>",
-    "resultsTotal": "%{smart_count} listings",
+    "resultsTotal": "%{smart_count} listing |||| %{smart_count} listings",
     "sortBy": "Sort by",
     "changeProvider": "Close and Choose a New Search Provider",
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
