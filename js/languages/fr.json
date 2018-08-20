@@ -125,7 +125,7 @@
   },
   "connectedPeersPage": {
     "heading": "Pairs connectés",
-    "totalPeers": "%{smart_count} Found",
+    "totalPeers": "%{smart_count} trouvés",
     "noResults": "Aucun pair connecté",
     "loadMore": "Charger plus"
   },
@@ -204,7 +204,7 @@
       "buyerDisputeExpiryExpired": "Le litige portant sur la commande %{orderLink} a expiré. Le vendeur peut réclamer le paiement.",
       "moderatorDisputeExpiry": "Vous avez %{timeRemaining} pour prendre une décision sur la commande %{orderLink}.",
       "moderatorDisputeExpiryExpired": "Le litige portant sur la commande %{orderLink} a expiré. Le vendeur peut réclamer le paiement.",
-      "vendorFinalizedPayment": "The vendor has claimed the payment for order %{orderLink}."
+      "vendorFinalizedPayment": "Le vendeur a réclamé le paiement pour la commande %{orderLink}."
     },
     "errorHeading": "Une erreur s'est produite lors de la récupération des notifications.",
     "btnRetry": "Réessayer",
@@ -315,7 +315,7 @@
       "shipsToFilterAny": "(Tout pays)",
       "sortBy": "Trier par",
       "countListings": "%{smart_count} annonce |||| %{smart_count} annonces",
-      "countListingsFound": "%{smart_count} found",
+      "countListingsFound": "%{countListings} trouvées",
       "inactive": "Votre boutique est actuellement inactif et caché au public. %{link}",
       "inactiveLink": "Modifier",
       "listingDataChangedPopin": "Les données de l'annonce ont changé.",
@@ -1252,8 +1252,8 @@
     "searchBtn": "Rechercher",
     "searchPlaceholder": "Entrez un élément à rechercher ou un #mot-clé",
     "suggestions": "Suggestions",
-    "resultsFound": "<b>%{totalResults} annonce</b> trouvée pour <b>\"%{term}\"</b> |||| <b>%{totalResults} annonces</b> trouvées pour <b>\"%{term}\"</b>",
-    "resultsTotal": "%{totalResults} annonces",
+    "resultsFound": "<b>%{smart_count} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{smart_count} listings</b> found for <b>\"%{term}\"</b>",
+    "resultsTotal": "%{smart_count} annonce |||| %{smart_count} annonces",
     "sortBy": "Trier par",
     "changeProvider": "Fermer et choisir un nouveau fournisseur de recherche",
     "useDefault": "Recherche pour \"%{term}\" en utilisant %{defaultProvider}",
@@ -1268,7 +1268,7 @@
     "makeDefaultBtnHelper": "Le fournisseur de recherche par défaut est utilisé pour les recherches dans la barre d'adresse.",
     "addQueryProviderBtn": "Ajouter un fournisseur de recherche",
     "chooseDefaultTitle": "Sélectionnez un fournisseur de recherche par défaut",
-    "chooseDefaultMsg": "The search provider you select will be used as the default for your future searches until you set a new one.",
+    "chooseDefaultMsg": "Le fournisseur de recherche que vous sélectionnez sera utilisé par défaut pour vos recherches futures jusqu'à ce que vous en définissez un nouveau.",
     "providers": {
       "transactions": "Transactions",
       "myPage": "Ma page"
@@ -1369,7 +1369,7 @@
     "cryptoAddressHelper": "%{name} enverra %{coinType} à cette adresse. %{warning}",
     "cryptoAddressHelperWarning": "L'adresse ne peut pas être modifiée une fois la commande passée.",
     "cryptoAddressHelperWarning2": "Cette adresse ne peut pas être changée.",
-    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderatorsDisclaimer": "Votre paiement sera effectué en toute sécurité dans un compte sous séquestre. En cas de problème, vous pourrez ouvrir un litige avec un modérateur de votre choix. *Les frais de service de modération ne s'appliquent qu'après un litige.",
     "directPayment": "Paiement direct",
     "directPaymentDetails": "L'envoi des fonds se fait directement au vendeur sans modérateur. Vous ne devez utiliser cette option qu'avec des vendeurs de confiance. Vous ne pourrez pas contester la commande si quelque chose se passe mal.",
     "chooseModerator": "Choisir ce modérateur",
@@ -1459,7 +1459,7 @@
     "sales": {
       "heading": "Ventes",
       "countTransactions": "%{smart_count} vente |||| %{smart_count} ventes",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} trouvées",
       "unableToFetch": "Impossible d'obtenir vos ventes.",
       "noResults": "Aucune vente trouvée",
       "returnToFromOrder": "Revenir aux ventes",
@@ -1473,7 +1473,7 @@
     "purchases": {
       "heading": "Achats",
       "countTransactions": "%{smart_count} achat |||| %{smart_count} achats",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} trouvés",
       "unableToFetch": "Impossible d'obtenir vos achats.",
       "noResults": "Aucun achat n'a été trouvé",
       "returnToFromOrder": "Revenir aux achats"
@@ -1481,7 +1481,7 @@
     "cases": {
       "heading": "Litiges",
       "countTransactions": "%{smart_count} litige |||| %{smart_count} litiges",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} trouvés",
       "noResults": "Aucun litige trouvé",
       "returnToFromOrder": "Revenir aux litiges"
     },
