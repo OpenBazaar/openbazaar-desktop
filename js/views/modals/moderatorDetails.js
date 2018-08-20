@@ -72,14 +72,17 @@ export default class extends BaseModal {
       this.$unFollowBtn = this.$('.js-unFollow');
 
       if (this.socialBtns) this.socialBtns.remove();
-      this.socialBtns = this.createChild(SocialBtns, {
-        targetID: this.model.id,
-        initialState: {
-          stripClasses: 'flexHCent gutterH',
-          btnClasses: 'clrP clrBr clrSh2',
-        },
-      });
-      this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+      // Don't include the social buttons if this is the viewer's own moderator details
+      if (this.model.get('peerID') !== app.profile.id) {
+        this.socialBtns = this.createChild(SocialBtns, {
+          targetID: this.model.id,
+          initialState: {
+            stripClasses: 'flexHCent gutterH',
+            btnClasses: 'clrP clrBr clrSh2',
+          },
+        });
+        this.$('.js-socialBtns').append(this.socialBtns.render().$el);
+      }
 
       if (this.verifiedMod) this.verifiedMod.remove();
       this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({

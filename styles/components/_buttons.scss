@@ -325,6 +325,33 @@
   }
 }
 
+.flexBtnWrapper {
+  .btnFlx {
+    // see styleSheet.html for example usage.
+    // use for buttons in the new 'flex' style with more padding and use css flex.
+    @extend .btn;
+    padding: 25px;
+    border-radius: 0px;
+    border: none;
+    border-width: 1px;
+    border-style: solid;
+    flex-grow: 1;
+    margin: 0 -1px -1px -1px;
+
+    & + .btnFlx {
+      margin-left: 0;
+    }
+  }
+
+  .contentBox & .btnFlx:first-child {
+    border-bottom-left-radius: 2px;
+  }
+
+  .contentBox & .btnFlx:last-child {
+    border-bottom-right-radius: 2px;
+  }
+}
+
 .searchWrapper {
   //div around a search input
   position: relative;

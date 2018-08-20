@@ -72,7 +72,7 @@ export default class extends BaseModal {
 
     if (splitLog.length > this.maxDebugLines) {
       this._debugLog = '< Previous content has been truncated >\n\n' +
-        `${log.slice(log.length - this.maxDebugLines).join('\n')}`;
+        `${splitLog.slice(splitLog.length - this.maxDebugLines).join('\n')}`;
     } else {
       this._debugLog = log;
     }

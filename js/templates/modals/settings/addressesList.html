@@ -10,7 +10,7 @@
     %>
       <div class="col6">
         <div class="addressBox border clrP clrBr">
-          <%= `${address.name}${address.company ? '<br />' : ''}` %>
+          <span class="txB"><%= `${address.name}${address.company ? '<br />' : ''}` %></span>
           <%= `${address.company}${address.addressLineOne ? '<br />' : ''}` %>
           <%= `${address.addressLineOne}${address.addressLineTwo ? ` ${address.addressLineTwo}` : ''}${address.city ? '<br />' : ''}` %>
           <%= `${address.city}${address.state ? `, ${address.state}` : ''}${address.postalCode ? ` ${address.postalCode}` : ''}${address.country ? '<br />' : ''}` %>
