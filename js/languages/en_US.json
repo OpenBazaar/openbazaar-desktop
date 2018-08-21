@@ -346,7 +346,14 @@
       "following": "Following",
       "followers": "Followers"
     },
-    "blockedUserOverlayText": "You blocked this user"
+    "blockedUserOverlayText": "You blocked this user",
+    "loading": {
+      "connecting": "Connecting…",
+      "failedToConnect": "Failed to connect",
+      "loadingText": "Just a minute, loading %{name} from somewhere on this global, peer-to-peer network for you…",
+      "failTextStore": "There was an issue connecting to %{store}. Please try again.",
+      "failTextListing": "There was an issue retrieving %{listing}. Please try again."
+    }
   },
   "reputation": {
     "averageRating": "overall rating",

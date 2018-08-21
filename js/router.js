@@ -318,7 +318,7 @@ export default class ObRouter extends Router {
 
   userViaHandle(handle, ...args) {
     getGuid(handle).done((guid) => {
-      this.user(guid, ...args);
+      this.user(guid, { handle }, ...args);
     }).fail(() => {
       this.userNotFound(handle);
     });
@@ -357,13 +357,29 @@ export default class ObRouter extends Router {
   }
 
   user(guid, state, ...args) {
+    let functionArgs = [...args];
+
+    // Hack to pass the handle into this function, which should really only
+    // happen when called from userViaHandle(). If a handle is being passed in,
+    // it will be passed in as { handle: 'charlie' } as the first element of the
+    // ...args argument.
+    let handle;
+
+    if (args.length && args[0] && args[0].hasOwnProperty('handle')) {
+      functionArgs = functionArgs.slice(1);
+      handle = args[0].handle;
+    }
+
     const pageState = state || 'store';
-    const deepRouteParts = args.filter(arg => arg !== null);
+    const deepRouteParts = functionArgs.filter(arg => arg !== null);
 
     if (!this.isValidUserRoute(guid, pageState, ...deepRouteParts)) {
       this.pageNotFound();
       return;
     }
+
+    const standardizedHash = hash =>
+      (hash.endsWith('/') ? hash.slice(0, hash.length - 1) : hash);
 
     if (isBlocked(guid) && !isUnblocking(guid)) {
       app.loadingModal.close();
@@ -372,10 +388,8 @@ export default class ObRouter extends Router {
         .open();
 
       const onBlockWarningCanceled = () => {
-        const prevHash = this.prevHash.endsWith('/') ?
-          this.prevHash.slice(0, this.prevHash.length - 1) : this.prevHash;
-        const locationHash = location.hash.endsWith('/') ?
-          location.hash.slice(0, location.hash.length - 1) : location.hash;
+        const prevHash = standardizedHash(this.prevHash);
+        const locationHash = standardizedHash(location.hash);
 
         if (prevHash === locationHash) {
           // means there is no previous page - will go to our own node page
@@ -414,10 +428,6 @@ export default class ObRouter extends Router {
     let listingFetch;
     let userPageFetchError = '';
 
-    if (this.userLoadingModal) {
-      this.userLoadingModal.remove();
-    }
-
     startAjaxEvent('UserPageLoad');
 
     if (guid === app.profile.id) {
@@ -431,8 +441,9 @@ export default class ObRouter extends Router {
 
     if (state === 'store') {
       if (deepRouteParts[0]) {
+        const slug = deepRouteParts[0];
         listing = new Listing({
-          slug: deepRouteParts[0],
+          slug,
         }, { guid });
 
         listingFetch = listing.fetch();
@@ -441,37 +452,40 @@ export default class ObRouter extends Router {
 
     app.loadingModal.close();
 
+    if (this.userLoadingModal) {
+      this.userLoadingModal.remove();
+    }
+
     this.userLoadingModal = new UserLoadingModal({
       initialState: {
-        userName: 'Flip Flee Willeeeooohh',
-        userAvatarHashes: {
-          tiny: 'zb2rhcLbHqq139K9r2DT1BPaqTdTVTSnmQnNzdb1BZpdbK4Zk',
-          small: 'zb2rhWnoRXwekSNsrRDvFJHxTEzY5AHsdgXYh5bPCpVGAD1o9',
-        },
-        contentText: 'Just a minute, loading <b>Ski Shop</b> from somewhere on this global, peer-to-peer network for you...',
+        // userName: 'Flip Flee Willeeeooohh',
+        // userAvatarHashes: {
+        //   tiny: 'zb2rhedegZXnGsbXLjB3WgKa6M2SquEdcxZ9jKXX7CBvw6BTB',
+        //   small: 'zb2rhX9dB3XnzMXcbTkzCHVerz1g1tTDu8veMTod3gKBv98RB',
+        // },
+        contentText: app.polyglot.t('userPage.loading.loadingText', {
+          name: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
+        }),
         isProcessing: true,
       },
     })
-      // .listenTo('clickCancel', () => window.history.back())
-      // .listenTo('clickRetry', () => this.user(guid, state, ...args));
       .on('clickCancel', () => {
-        console.log('Lets go back jack.');
-
-        const standardizedHash = hash =>
-            hash.endsWith('/') ? hash.slice(0, hash.length - 1) : hash;
-        const curHash = standardizedHash(location.hash);
         const prevHash = standardizedHash(this.prevHash);
+        const locationHash = standardizedHash(location.hash);
 
-        if (curHash === prevHash) {
-          location.hash = app.profile.id;
+        if (prevHash === locationHash) {
+          // there is no previous page, let's navigate to our home page
+          this.navigate(`${app.profile.id}`, {
+            trigger: true,
+          });
         } else {
-          window.history.back();
+          // go back to previous page
+          this.navigate(`${this.prevHash.slice(1)}`, {
+            trigger: true,
+          });
         }
       })
-      .on('clickRetry', () => {
-        console.log('lets retry roy');
-        this.user(guid, state, ...args);
-      });
+      .on('clickRetry', () => this.user(guid, state, ...args));
 
     this.userLoadingModal.render()
       .open();
@@ -487,8 +501,9 @@ export default class ObRouter extends Router {
     this.once('will-route', onWillRoute);
 
     $.whenAll(profileFetch, listingFetch).done(() => {
-      const handle = profile.get('handle');
+      handle = profile.get('handle');
       this.cacheGuidHandle(guid, handle);
+      this.userLoadingModal.remove();
 
       // Setting the address bar which will ensure the most up to date handle (or none) is
       // shown in the address bar.
@@ -533,8 +548,6 @@ export default class ObRouter extends Router {
       if (jqXhr === profileFetch && profileFetch.statusText === 'abort') return;
       if (jqXhr === listingFetch && listingFetch.statusText === 'abort') return;
 
-      // todo: If really not found (404), route to
-      // not found page, otherwise display error.
       if (profileFetch.state() === 'rejected') {
         this.userNotFound(guid);
         userPageFetchError = 'User Not Found';
@@ -546,6 +559,13 @@ export default class ObRouter extends Router {
       userPageFetchError = userPageFetchError ?
         `${userPageFetchError} - ${reason || 'none'}` :
         reason || 'none';
+
+      this.userLoadingModal.setState({
+        contentText: app.polyglot.t('userPage.loading.failTextStore', {
+          store: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
+        }),
+        isProcessing: false,
+      });
     })
       .always(() => {
         this.off(null, onWillRoute);

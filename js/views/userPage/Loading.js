@@ -1,5 +1,5 @@
 // import $ from 'jquery';
-// import app from '../../../../app';
+import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from '../modals/BaseModal';
 
@@ -13,10 +13,12 @@ export default class extends BaseModal {
       removeOnClose: false,
       removeOnRoute: true,
       initialState: {
-        ...options.initialState,
         userName: '',
         contentText: '',
         isProcessing: false,
+        ownAvatarHashes: app.profile && app.profile.get('avatarHashes').toJSON() ||
+          undefined,
+        ...options.initialState,
       },
     };
 
