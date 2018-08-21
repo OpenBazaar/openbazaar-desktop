@@ -4,6 +4,7 @@ import baseVw from '../../baseVw';
 const names = [
   'Jenn Cloud',
   'Chris Pacia',
+  'Mike Greenberg',
   'Dr Washington Sanchez',
   'Sam Patterson',
   'Juan Benet',
@@ -39,6 +40,7 @@ const names = [
   'Brian Hoffman',
   'Josh Jeffryes',
   'Robert Misiorowski',
+  'Jason Hotelling',
   'Mike Wolf',
   'Kirvx',
   'Squirrel2020',
