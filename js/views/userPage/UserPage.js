@@ -147,7 +147,7 @@ export default class extends baseVw {
 
     if (count !== this._followingCount) {
       this._followingCount = count;
-      this.getCachedEl('.js-followingCount').text(count);
+      this.getCachedEl('.js-followingCount').text(abbrNum(count));
     }
   }
 
@@ -162,7 +162,7 @@ export default class extends baseVw {
 
     if (count !== this._followerCount) {
       this._followerCount = count;
-      this.getCachedEl('.js-followerCount').text(count);
+      this.getCachedEl('.js-followerCount').text(abbrNum(count));
     }
   }
 
@@ -176,7 +176,7 @@ export default class extends baseVw {
 
     if (headerHash) {
       this.$('.js-header').attr('style',
-        `background-image: url(${app.getServerUrl(`ob/images/${headerHash}`)}), 
+        `background-image: url(${app.getServerUrl(`ob/images/${headerHash}`)}),
       url('../imgs/defaultHeader.png')`);
     }
   }
@@ -322,8 +322,8 @@ export default class extends baseVw {
         ...this.model.toJSON(),
         ownPage: this.ownPage,
         showStoreWelcomeCallout: this.showStoreWelcomeCallout,
-        followingCount: this.followingCount,
-        followerCount: this.followerCount,
+        followingCount: abbrNum(this.followingCount),
+        followerCount: abbrNum(this.followerCount),
       }));
 
       this.$tabContent = this.$('.js-tabContent');
