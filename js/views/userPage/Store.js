@@ -455,11 +455,11 @@ export default class extends BaseVw {
     col.sort();
 
     this.$listingsContainer.empty();
-    const listingCount =
-      `<span class="txB">${app.polyglot.t('userPage.store.countListings', col.length)}</span>`;
+    const countPhrase = app.polyglot.t('userPage.store.countListings',
+      { smart_count: col.length });
     const fullListingCount =
         app.polyglot.t('userPage.store.countListingsFound',
-          { smart_count: listingCount });
+          { countListings: `<span class="txB">${countPhrase}</span>` });
     this.$listingCount.html(fullListingCount);
 
     if (col.length) {
