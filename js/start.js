@@ -638,12 +638,16 @@ function start() {
 
           // Make sure the client is running on a compatible version of the server.
           if (app.settings.prettyServerVer !== serverVersionRequired) {
+            const cLink = `<a href="https://github.com/OpenBazaar/openbazaar-desktop/releases">${app.polyglot.t('serverVersionWarning.clientLink')}</a>`;
+            const sLink = `<a href="https://github.com/OpenBazaar/openbazaar-go/releases">${app.polyglot.t('serverVersionWarning.serverLink')}</a>`;
+            const message = app.polyglot.t('serverVersionWarning.message', {
+              serverVersion: app.settings.prettyServerVer,
+              expectedVersion: serverVersionRequired,
+            });
+            const body = `<p>${message}</p><p>${cLink}</p><p>${sLink}</p>`;
             openSimpleMessage(
-              'show wrong server version warning here',
-              {
-
-              }
-            ).$el.css('z-index', '9999999'); // always on tippity-top
+              app.polyglot.t('serverVersionWarning.title'), body
+            ).$el.css('z-index', '9999999');
           }
         });
       });

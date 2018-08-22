@@ -75,6 +75,12 @@
     "line1": "This is a console for developers. If someone has asked you to open this window, they are likely trying to compromise your account and/or funds.",
     "line2": "Please close this window now."
   },
+  "serverVersionWarning": {
+    "title": "Warning: Incompatible Server Version",
+    "message": "You are connected to a server using version %{serverVersion} of the server software. This client requires version %{expectedVersion}. You should update your server to the correct version.",
+    "clientLink": "Download a new bundled version of the app, with the correct server version.",
+    "serverLink": "Download only the server (use this if you are using a remote server)."
+  },
   "block": {
     "errorModal": {
       "titleUnableToBlock": "Unable to block",
