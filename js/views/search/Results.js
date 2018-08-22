@@ -1,4 +1,3 @@
-import $ from 'jquery';
 import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
