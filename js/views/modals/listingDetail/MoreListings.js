@@ -39,7 +39,6 @@ export default class extends BaseVw {
   }
 
   createListingCardView(model) {
-    console.log(model.toJSON())
     const options = {
       listingBaseUrl: `${this.options.vendor.peerID}/store/`,
       viewType: 'grid',
@@ -66,13 +65,12 @@ export default class extends BaseVw {
       }
     });
 
-    console.log(listingsFrag)
     this.getCachedEl('.js-cardWrapper').append(listingsFrag);
   }
+
   render() {
     // Don't show anything if there are no listings to show, or if the only
     // listing is the same as the parent listing.
-    console.log(this.collection.length)
     if (this.collection.length < 1 ||
       this.collection.length === 1 &&
       this.isParent(this.collection.at(0).get('hash'))) return this;
@@ -87,33 +85,6 @@ export default class extends BaseVw {
       this.renderListingCards(this.collection);
     });
 
-    console.log('foo')
-
     return this;
   }
-/*
-  render() {
-    // Don't show anything if there are no listings to show
-    console.log(this.collection.length)
-    if (this.collection.length < 1) return this;
-
-    super.render();
-
-    loadTemplate('modals/listingDetail/rating.html', t => {
-      this.$el.html(t({
-        name: this.options.ownerName,
-      }));
-
-      console.log('foo')
-
-      this.listingCardViews.forEach(vw => vw.remove());
-      this.listingCardViews = [];
-      this.$el.empty();
-      // Render only the first 8 cards maximum
-      this.renderListingCards(this.collection.first(8));
-    });
-
-    return this;
-  }
-  */
 }
