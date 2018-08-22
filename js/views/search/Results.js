@@ -36,6 +36,16 @@ export default class extends baseVw {
     return 'searchResults flexColRow gutterV';
   }
 
+  events() {
+    return {
+      'click .js-reset': 'clickResetBtn',
+    };
+  }
+
+  clickResetBtn() {
+    this.trigger('resetSearch');
+  }
+
   createCardView(model) {
     // models can be listings or nodes
     if (model instanceof ListingCardModel) {
@@ -65,8 +75,6 @@ export default class extends baseVw {
     const total = models.total;
     let start = 0;
     if (total) start = this.pageSize * Number(this.serverPage) + 1;
-    const noResults =
-      $(`<h2 class='width100 padLg txCtr'>${app.polyglot.t('search.noResults')}</h2>`);
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -77,8 +85,6 @@ export default class extends baseVw {
       }
     });
 
-    // if there are no models, add the no models message instead
-    if (total < 1) noResults.appendTo(resultsFrag);
     this.$el.toggleClass('noResults', total < 1);
 
     this.$resultsGrid.html(resultsFrag);

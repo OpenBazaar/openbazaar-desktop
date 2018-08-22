@@ -216,8 +216,21 @@
       }
     }
 
+    .noResultsMessage {
+      display: none;
+    }
+
     &.noResults {
       .cryptoListViewHeader {
+        display: none;
+      }
+
+      .noResultsMessage {
+        display:block;
+      }
+
+      .pageControls,
+      .listingGrid {
         display: none;
       }
     }

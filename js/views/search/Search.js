@@ -213,6 +213,12 @@ export default class extends baseVw {
     }
   }
 
+  resetSearch() {
+    this.serverPage = 0;
+    this.filterParams = '';
+    this.processTerm('');
+  }
+
   clickDeleteProvider() {
     this.deleteProvider();
     recordEvent('Discover_DeleteProvider');
@@ -413,6 +419,7 @@ export default class extends baseVw {
 
     this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
     this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
+    this.listenTo(resultsView, 'resetSearch', () => this.resetSearch());
   }
 
   clickSearchBtn() {
