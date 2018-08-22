@@ -51,10 +51,10 @@
     </div>
   </div>
   <div class="flexRow flexBtnWrapper">
-    <a class="txCtr btnFlx flexExpand js-btnCancel">Cancel</a>
+    <a class="txCtr btnFlx flexExpand js-btnCancel"><%= ob.polyT('userPage.loading.btnCancel') %></a>
     <%= ob.processingButton({
       className: `btnFlx flexExpand clrP js-btnRetry ${ob.isProcessing ? 'processing' : ''}`,
-      btnText: 'Try Again',
+      btnText: ob.polyT('userPage.loading.btnTryAgain'),
     }) %>
   </div>
 </section>

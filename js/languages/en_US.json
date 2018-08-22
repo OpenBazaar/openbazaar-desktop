@@ -352,7 +352,9 @@
       "failedToConnect": "Failed to connect",
       "loadingText": "Just a minute, loading %{name} from somewhere on this global, peer-to-peer network for you…",
       "failTextStore": "There was an issue connecting to %{store}. Please try again.",
-      "failTextListing": "There was an issue retrieving %{listing}. Please try again."
+      "failTextListing": "There was an issue retrieving %{listing}. Please try again.",
+      "btnCancel": "Cancel",
+      "btnTryAgain": "Try Again"
     }
   },
   "reputation": {
