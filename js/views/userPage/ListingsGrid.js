@@ -96,6 +96,7 @@ export default class extends BaseVw {
       viewType: this.viewType,
       model,
     };
+    console.log(model.toJSON())
 
     if (this.options.storeOwnerProfile) {
       options.profile = this.options.storeOwnerProfile;
