@@ -23,14 +23,14 @@
       <% } else { %>
         <h1 class="h3 clrTErr"><%= ob.polyT('userPage.loading.failedToConnect') %></h1>
       <% } %>
-      <div class="rowGi">
+      <div class="rowHg contentWrap">
         <% if (ob.contentHtml) { %>
           print(ob.contentHtml);
         <% } else if (ob.contentText) { %>
           <p class="clrT2 tx5"><%= ob.contentText %></p>
         <% } %>
       </div>
-      <p class="clrT2 tx6 rowSm">OpenBazaar News & Discussions:</p>
+      <p class="clrT2 tx6 rowSm"><%= ob.polyT('userPage.loading.socialHeading') %></p>
       <div class="flexVCent flexInline gutterHSm socialIcons">
         <a href="https://twitter.com/openbazaar" data-open-external>
           <i class="ion-social-twitter twitterColor"></i>

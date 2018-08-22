@@ -266,8 +266,15 @@
     font-size: 1.8rem;
   }
 
+  .contentWrap {
+    // minimize the size of the form jumping as we transition from loading to
+    // error states
+    // min-height: calc(($tx4 * 2) + 5);
+    min-height: 45px;
+  }
+
   .socialIcons {
-    margin-bottom: 90px;
+    margin-bottom: 55px;
 
     .non-ionic-icon {
       width: 15px;

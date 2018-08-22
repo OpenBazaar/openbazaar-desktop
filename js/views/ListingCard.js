@@ -265,8 +265,8 @@ export default class extends baseVw {
           title;
 
         if (this.options.profile) {
-          storeName = this.profile.get('name');
-          avatarHashes = this.profile.get('avatarHashes')
+          storeName = this.options.profile.get('name');
+          avatarHashes = this.options.profile.get('avatarHashes')
             .toJSON();
         } else if (this.options.vendor) {
           storeName = this.options.vendor.name;
@@ -296,7 +296,10 @@ export default class extends baseVw {
           });
 
         this.listenTo(this.userLoadingModal, 'clickRetry',
-          () => this.onClick(e));
+          () => {
+            app.router.navigate(routeOnOpen);
+            this.onClick(e);
+          });
 
         this.userLoadingModal.render()
           .open();
@@ -336,7 +339,6 @@ export default class extends baseVw {
               xhr.statusText || 'unknown error',
           });
           if (xhr.statusText === 'abort') return;
-          // app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
           this.userLoadingModal.setState({
             contentText: app.polyglot.t('userPage.loading.failTextListing', {
               listing: `<b>${title}</b>`,
