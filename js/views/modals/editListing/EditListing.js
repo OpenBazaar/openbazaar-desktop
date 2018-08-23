@@ -52,7 +52,7 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
-    // So the passed in modal does not get any un-saved data,
+    // So the passed in model does not get any un-saved data,
     // we'll clone and update it on sync
     this._origModel = this.model;
     this.model = this._origModel.clone();
@@ -87,7 +87,7 @@ export default class extends BaseModal {
       // A change event won't fire on a parent model if only nested attributes change.
       // The nested models would need to have change events manually bound to them
       // which is cumbersome with a model like this with so many levels of nesting.
-      // If you are interested in any change on the model (as opposed to a sepcific
+      // If you are interested in any change on the model (as opposed to a specific
       // attribute), the simplest thing to do is use the 'saved' event from the
       // event emitter in models/listing/index.js.
     });
@@ -750,6 +750,7 @@ export default class extends BaseModal {
       type: serverData.metadata.contractType,
       currency: serverData.metadata.pricingCurrency,
       moderated: serverData.moderators && !!serverData.moderators.length,
+      isNew: this.model.isNew(),
     };
 
     startAjaxEvent('Listing_Save');

@@ -48,7 +48,6 @@ export function userStats() {
     displayLanguage: app.localSettings.get('language'),
     bundled: remote.getGlobal('isBundledApp'),
     Tor: getCurrentConnection() ? getCurrentConnection().server.get('useTor') : torErr,
-    Testnet: !!app.serverConfig.testnet,
     systemLanguage: navigator.language,
     numberOfCPUs: cpus().length, // how many cores?
     CPU: cpus()[0].model, // how modern/powerful is this computer?
@@ -62,6 +61,9 @@ export function isMetricRestartNeeded() {
 }
 
 export function addMetrics() {
+  // Never record metrics on testnet
+  if (app.serverConfig.testnet) return;
+
   function loadMetrics() {
     // Reverse the countly opt out in local storage. This is required or nothing will be tracked.
     window.localStorage.setItem('cly_ignore', 'false');
