@@ -458,11 +458,6 @@ export default class ObRouter extends Router {
 
     this.userLoadingModal = new UserLoadingModal({
       initialState: {
-        // userName: 'Flip Flee Willeeeooohh',
-        // userAvatarHashes: {
-        //   tiny: 'zb2rhedegZXnGsbXLjB3WgKa6M2SquEdcxZ9jKXX7CBvw6BTB',
-        //   small: 'zb2rhX9dB3XnzMXcbTkzCHVerz1g1tTDu8veMTod3gKBv98RB',
-        // },
         contentText: app.polyglot.t('userPage.loading.loadingText', {
           name: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
         }),
@@ -480,9 +475,7 @@ export default class ObRouter extends Router {
           });
         } else {
           // go back to previous page
-          this.navigate(`${this.prevHash.slice(1)}`, {
-            trigger: true,
-          });
+          window.history.back();
         }
       })
       .on('clickRetry', () => this.user(guid, state, ...args));
@@ -542,8 +535,8 @@ export default class ObRouter extends Router {
       );
     }).fail((...failArgs) => {
       const jqXhr = failArgs[0];
-      const reason = jqXhr.responseJSON && jqXhr.responseJSON.reason ||
-        jqXhr.responseText || '';
+      const reason = jqXhr && jqXhr.responseJSON && jqXhr.responseJSON.reason ||
+        jqXhr && jqXhr.responseText || '';
 
       if (jqXhr === profileFetch && profileFetch.statusText === 'abort') return;
       if (jqXhr === listingFetch && listingFetch.statusText === 'abort') return;
