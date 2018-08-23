@@ -318,7 +318,8 @@ export default class ObRouter extends Router {
 
   userViaHandle(handle, ...args) {
     getGuid(handle).done((guid) => {
-      this.user(guid, { handle }, ...args);
+      // hack to pass in the handle to this.user - forgive me code gods
+      this.user(guid, ...[args[0], { handle }, ...args.slice(1)]);
     }).fail(() => {
       this.userNotFound(handle);
     });
