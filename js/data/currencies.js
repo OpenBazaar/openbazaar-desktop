@@ -683,10 +683,17 @@ function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslated
       ' should be returned in.');
   }
 
-  let translated = currencies.map((currency) => ({
-    ...currency,
-    name: app.polyglot.t(`currencies.${currency.code}`),
-  }));
+  let translated = currencies.map(currency => {
+    const name = app.polyglot.t(`currencies.${currency.code}`);
+    return {
+      ...currency,
+      name,
+      nameWithCode: app.polyglot.t('currencyWithCode', {
+        name,
+        code: currency.code,
+      }),
+    };
+  });
 
   if (opts.includeServerCur && app && app.serverConfig && app.serverConfig.cryptoCurrency) {
     const serverCur = getCryptoCurByCode(app.serverConfig.cryptoCurrency);
