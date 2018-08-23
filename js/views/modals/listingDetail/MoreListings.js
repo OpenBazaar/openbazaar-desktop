@@ -48,7 +48,10 @@ export default class extends BaseVw {
       ownerGuid: this.options.vendor.peerID,
     };
 
-    return this.createChild(ListingCard, options);
+    const card = this.createChild(ListingCard, options);
+    this.listenTo(card, 'cardOpened', () => this.trigger('cardOpened'));
+
+    return card;
   }
 
   renderListingCards(models = []) {

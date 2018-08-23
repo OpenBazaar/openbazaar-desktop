@@ -665,6 +665,10 @@ export default class extends BaseModal {
         vendor: this.vendor,
         parentListingHash: this.model.get('hash'),
       });
+      // If a card is opened, close this modal so you don't get a stack of modals.
+      this.listenTo(this.moreListings, 'cardOpened', () => {
+        this.close();
+      });
       this.getCachedEl('.js-moreListings')
         .append(this.moreListings.render().$el);
 

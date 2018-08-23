@@ -283,6 +283,7 @@ export default class extends baseVw {
         .always(() => {
           if (this.isRemoved()) return;
           app.loadingModal.close();
+          this.trigger('cardOpened');
         })
         .fail(xhr => {
           endAjaxEvent('Listing_LoadFromCard', {
