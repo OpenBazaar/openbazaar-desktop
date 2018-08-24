@@ -15,6 +15,7 @@ import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
 import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
+import TypeFilter from './TypeFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
 
 export default class extends BaseVw {
@@ -34,6 +35,7 @@ export default class extends BaseVw {
 
     this.defaultFilter = {
       category: 'all',
+      type: 'all',
       shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
@@ -329,9 +331,19 @@ export default class extends BaseVw {
       (this._$listingsContainer = this.$('.js-listingsContainer'));
   }
 
+  get $shippingFilterContainer() {
+    return this._$shippingFilterContainer ||
+      (this._$shippingFilterContainer = this.$('.js-shippingFilterContainer'));
+  }
+
   get $catFilterContainer() {
     return this._$catFilterContainer ||
       (this._$catFilterContainer = this.$('.js-catFilterContainer'));
+  }
+
+  get $typeFilterContainer() {
+    return this._$typeFilterContainer ||
+      (this._$typeFilterContainer = this.$('.js-typeFilterContainer'));
   }
 
   get $listingCount() {
@@ -354,6 +366,11 @@ export default class extends BaseVw {
 
       if (this.filter.category !== 'all' &&
         md.get('categories').indexOf(this.filter.category) === -1) {
+        passesFilter = false;
+      }
+
+      if (this.filter.type !== 'all' &&
+        md.get('contractType') !== this.filter.type) {
         passesFilter = false;
       }
 
@@ -522,6 +539,46 @@ export default class extends BaseVw {
     }
   }
 
+  renderTypes(types = this.collection.types) {
+    if (!this.typeFilter) {
+      this.typeFilter = new TypeFilter({
+        initialState: {
+          types: types,
+          selected: this.filter.type,
+        },
+      });
+
+      this.typeFilter.render();
+
+      this.listenTo(this.typeFilter, 'type-change', (e) => {
+        this.filter.type = e.value;
+
+        if (this.filter.type !== 'PHYSICAL_GOOD' && this.filter.type !== 'all') {
+          this.$shippingFilterContainer.addClass('disabled');
+        } else {
+          this.$shippingFilterContainer.removeClass('disabled');
+        }
+
+        this.renderListings(this.filteredCollection());
+      });
+    } else {
+      if (types.indexOf(this.filter.type) === -1) {
+        this.filter.type = 'all';
+      }
+
+      this.typeFilter.setState({
+        types: cats,
+        selected: this.filter.type,
+      });
+    }
+
+    if (!this.$typeFilterContainer[0].contains(this.typeFilter.el)) {
+      this.typeFilter.delegateEvents();
+      this.$typeFilterContainer.empty()
+        .append(this.typeFilter.el);
+    }
+  }
+
   get $popInMessages() {
     return this._$popInMessages ||
       (this._$popInMessages = this.$('.js-popInMessages'));
@@ -564,6 +621,7 @@ export default class extends BaseVw {
     this._$btnRetry = null;
     this._$listingsContainer = null;
     this._$catFilterContainer = null;
+    this._$typeFilterContainer = null;
     this._$listingCount = null;
     this._$popInMessages = null;
     this._$inactiveWarning = null;
@@ -590,6 +648,7 @@ export default class extends BaseVw {
 
     if (!isFetching && !fetchFailed) {
       this.renderCategories(this.collection.categories);
+      this.renderTypes(this.collection.types);
 
       if (this.collection.length) {
         this.renderListings(this.filteredCollection());
