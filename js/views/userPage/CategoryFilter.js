@@ -1,3 +1,7 @@
+/* categoryFilter.js and typeFilter.js share quite a bit. Ensure that when one is updated,
+the other is also maintained.
+*/
+
 import $ from 'jquery';
 import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
@@ -23,7 +27,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryFilter';
+    return `clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryOrTypeFilter`;
   }
 
   events() {
@@ -70,6 +74,10 @@ export default class extends BaseVw {
   }
 
   render() {
+    if (this.getState().categories.length === 1) {
+      this.$el.addClass('disabled');
+    }
+
     loadTemplate('userPage/categoryFilter.html', (t) => {
       this.$el.html(t({
         ...this._state,
