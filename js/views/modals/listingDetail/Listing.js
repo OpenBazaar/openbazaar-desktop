@@ -179,12 +179,14 @@ export default class extends BaseModal {
     if (!this.options.listings) {
       this.moreListingsFetch = this.moreListingsCol.fetch()
         .done(() => {
-          if (this.moreListings) {
-            this.moreListings.setState({
-              listings:
-                this.randomizeMoreListings(this.moreListingsCol),
-            });
-          }
+          setTimeout(() => {
+            if (this.moreListings) {
+              this.moreListings.setState({
+                listings:
+                  this.randomizeMoreListings(this.moreListingsCol),
+              });
+            }
+          });
         });
     }
 
@@ -326,9 +328,14 @@ export default class extends BaseModal {
   }
 
   randomizeMoreListings(cl) {
+    if (!cl.length) {
+      return [];
+    }
+
     const listings = [...cl.models];
     const tot = cl.length < 8 ? cl.length : 8;
     const results = [];
+
     for (let i = 0; i < 8; i++) {
       let model;
       do {
@@ -697,6 +704,7 @@ export default class extends BaseModal {
           listings: this.randomizeMoreListings(this.moreListingsCol),
         },
       });
+      this.listenTo(this.moreListings, 'listingDetailOpened', () => this.remove());
       this.getCachedEl('.js-moreListings')
         .append(this.moreListings.render().$el);
 

@@ -44,6 +44,8 @@ export default class extends BaseVw {
       const listingCardVw = this.createListingCardView(listing);
       this.listingCardViews.push(listingCardVw);
       listingCardVw.render().$el.appendTo(listingsFrag);
+      this.listenTo(listingCardVw, 'listingDetailOpened',
+        () => this.trigger('listingDetailOpened'));
     });
 
     this.getCachedEl('.js-cardWrapper').append(listingsFrag);

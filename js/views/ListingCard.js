@@ -279,9 +279,7 @@ export default class extends baseVw {
           this.listenTo(listingDetail, 'close', onListingDetailClose);
           this.listenTo(listingDetail, 'modal-will-remove',
             () => this.stopListening(null, null, onListingDetailClose));
-        })
-        .always(() => {
-          if (this.isRemoved()) return;
+          this.trigger('listingDetailOpened');
           app.loadingModal.close();
         })
         .fail(xhr => {
@@ -291,6 +289,7 @@ export default class extends baseVw {
             xhr.statusText || 'unknown error',
           });
           if (xhr.statusText === 'abort') return;
+          app.loadingModal.close();
           app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
         });
       };
