@@ -173,8 +173,9 @@ export default class extends BaseModal {
         e => (this._inventory = e.inventory));
     }
 
-    this.moreListingsCol = new Listings([], { guid: this.vendor.peerID });
-    this.moreListingsCol.fetch();
+    // If a listings collection wasn't passed in, fetch it now.
+    this.moreListingsCol = this.options.listings || new Listings([], { guid: this.vendor.peerID });
+    if (!this.options.listings) this.moreListingsCol.fetch();
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);

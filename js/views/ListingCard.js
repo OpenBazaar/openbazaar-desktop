@@ -271,6 +271,7 @@ export default class extends baseVw {
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
             checkNsfw: !this._userClickedShowNsfw,
+            listings: this.options.listings,
           }).render()
             .open();
 

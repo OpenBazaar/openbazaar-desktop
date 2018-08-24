@@ -46,6 +46,7 @@ export default class extends BaseVw {
       vendor: this.options.vendor,
       onStore: true,
       ownerGuid: this.options.vendor.peerID,
+      listings: this.collection,
     };
 
     const card = this.createChild(ListingCard, options);
