@@ -21,8 +21,8 @@ export default class extends Collection {
   }
 
   /**
-   * Returns a list of the aggregate categories from all
-   * the listing in the collection.
+   * Returns a list of the aggregate categories from all of
+   * the listings in the collection.
    */
   get categories() {
     const cats = [];
