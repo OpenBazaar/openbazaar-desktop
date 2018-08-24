@@ -543,7 +543,7 @@ export default class extends BaseVw {
     if (!this.typeFilter) {
       this.typeFilter = new TypeFilter({
         initialState: {
-          types: types,
+          types,
           selected: this.filter.type,
         },
       });
@@ -567,7 +567,7 @@ export default class extends BaseVw {
       }
 
       this.typeFilter.setState({
-        types: cats,
+        types,
         selected: this.filter.type,
       });
     }

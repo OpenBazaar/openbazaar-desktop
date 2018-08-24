@@ -27,7 +27,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return `clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryOrTypeFilter`;
+    return 'clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryOrTypeFilter';
   }
 
   events() {
