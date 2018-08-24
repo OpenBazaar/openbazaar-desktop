@@ -41,4 +41,19 @@ export default class extends Collection {
     // https://github.com/OpenBazaar/openbazaar-go/issues/143
     return cats.sort();
   }
+
+  /**
+   * Returns a list of the aggregate listing types from all of
+   * the listings in the collection.
+   */
+  get types() {
+    const types = [];
+
+    this.models.forEach(listing => {
+      const type = listing.get('contractType');
+      if (types.indexOf(type) === -1) types.push(type);
+    });
+
+    return types.sort();
+  }
 }
