@@ -9,6 +9,8 @@ const names = [
   'Daniel Zheng',
   'Jiting Song',
   'Austin Williams',
+  'Ashwin Mangale',
+  'Sameep Singhania',
   'Sam Patterson',
   'Juan Benet',
   'Jeromy Johnson',
