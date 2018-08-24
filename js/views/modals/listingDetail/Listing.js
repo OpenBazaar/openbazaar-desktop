@@ -17,6 +17,7 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
+import { randomInt } from '../../../utils/number';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -175,7 +176,17 @@ export default class extends BaseModal {
 
     // If a listings collection wasn't passed in, fetch it now.
     this.moreListingsCol = this.options.listings || new Listings([], { guid: this.vendor.peerID });
-    if (!this.options.listings) this.moreListingsCol.fetch();
+    if (!this.options.listings) {
+      this.moreListingsFetch = this.moreListingsCol.fetch()
+        .done(() => {
+          if (this.moreListings) {
+            this.moreListings.setState({
+              listings:
+                this.randomizeMoreListings(this.moreListingsCol),
+            });
+          }
+        });
+    }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -312,6 +323,24 @@ export default class extends BaseModal {
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
+  }
+
+  randomizeMoreListings(cl) {
+    const listings = [...cl.models];
+    const tot = cl.length < 8 ? cl.length : 8;
+    const results = [];
+    for (let i = 0; i < 8; i++) {
+      let model;
+      do {
+        const index = randomInt(0, tot - 1);
+        model = results.includes(listings[index]) ?
+          false : listings[index];
+      }
+      while (!model);
+      results.push(model);
+    }
+
+    return results.map(md => md.toJSON());
   }
 
   gotoPhotos() {
@@ -601,6 +630,7 @@ export default class extends BaseModal {
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
+    if (this.moreListingsFetch) this.moreListingsFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
   }
@@ -662,13 +692,10 @@ export default class extends BaseModal {
 
       if (this.moreListings) this.moreListings.remove();
       this.moreListings = this.createChild(MoreListings, {
-        collection: this.moreListingsCol,
-        vendor: this.vendor,
-        parentListingHash: this.model.get('hash'),
-      });
-      // If a card is opened, close this modal so you don't get a stack of modals.
-      this.listenTo(this.moreListings, 'cardOpened', () => {
-        this.close();
+        initialState: {
+          vendor: this.vendor,
+          listings: this.randomizeMoreListings(this.moreListingsCol),
+        },
       });
       this.getCachedEl('.js-moreListings')
         .append(this.moreListings.render().$el);

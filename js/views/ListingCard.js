@@ -271,7 +271,6 @@ export default class extends baseVw {
             modelContentClass: 'modalContent',
             openedFromStore: !!this.options.onStore,
             checkNsfw: !this._userClickedShowNsfw,
-            listings: this.options.listings,
           }).render()
             .open();
 
@@ -284,7 +283,6 @@ export default class extends baseVw {
         .always(() => {
           if (this.isRemoved()) return;
           app.loadingModal.close();
-          this.trigger('cardOpened');
         })
         .fail(xhr => {
           endAjaxEvent('Listing_LoadFromCard', {
