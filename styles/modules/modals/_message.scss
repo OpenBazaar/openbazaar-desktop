@@ -11,6 +11,10 @@
     font-size: 1.4rem;
   }
 
+  .buttonWrap {
+    text-align: center;
+  }
+
   &.dialog {
     // specific to dialog styling
 
@@ -21,10 +25,6 @@
         margin-right: -15px;
         padding-right: 15px;
       }
-    }
-
-    .buttonWrap {
-      text-align: center;
     }
 
     h1 {
