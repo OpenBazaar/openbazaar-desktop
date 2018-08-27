@@ -17,6 +17,7 @@ import BlockedWarning from './modals/BlockedWarning';
 import ReportBtn from './components/ReportBtn';
 import BlockBtn from './components/BlockBtn';
 import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
+import UserLoadingModal from '../views/userPage/Loading';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -254,9 +255,55 @@ export default class extends baseVw {
 
       startAjaxEvent('Listing_LoadFromCard');
 
-      const listingFetch = this.fetchFullListing();
+      const listingFetch = this.fetchFullListing({ showErrorOnFetchFail: false });
       const loadListing = () => {
-        app.loadingModal.open();
+        let storeName = `${this.ownerGuid.slice(0, 8)}…`;
+        let avatarHashes;
+        let title = this.model.get('title');
+        title = title.length > 25 ?
+          `${title.slice(0, 25)}…` : title;
+
+        if (this.options.profile) {
+          storeName = this.options.profile.get('name');
+          avatarHashes = this.options.profile.get('avatarHashes')
+            .toJSON();
+        } else if (this.options.vendor) {
+          storeName = this.options.vendor.name;
+          avatarHashes = this.options.vendor.avatarHashes;
+        }
+
+        if (storeName.length > 40) {
+          storeName = `${storeName.slice(0, 40)}…`;
+        }
+
+        if (this.userLoadingModal) this.userLoadingModal.remove();
+        this.userLoadingModal = new UserLoadingModal({
+          initialState: {
+            userName: avatarHashes ? storeName : undefined,
+            userAvatarHashes: avatarHashes,
+            contentText: app.polyglot.t('userPage.loading.loadingText', {
+              name: `<b>${title}</b>`,
+            }),
+            isProcessing: true,
+          },
+        });
+
+        this.listenTo(this.userLoadingModal, 'clickCancel',
+          () => {
+            listingFetch.abort();
+            this.userLoadingModal.remove();
+            app.router.navigate(routeOnOpen);
+          });
+
+        this.listenTo(this.userLoadingModal, 'clickRetry',
+          () => {
+            app.router.navigate(routeOnOpen);
+            this.onClick(e);
+          });
+
+        this.userLoadingModal.render()
+          .open();
+
         listingFetch.done(jqXhr => {
           endAjaxEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
@@ -279,19 +326,25 @@ export default class extends baseVw {
           this.listenTo(listingDetail, 'close', onListingDetailClose);
           this.listenTo(listingDetail, 'modal-will-remove',
             () => this.stopListening(null, null, onListingDetailClose));
+
+          this.userLoadingModal.remove();
         })
         .always(() => {
           if (this.isRemoved()) return;
-          app.loadingModal.close();
         })
         .fail(xhr => {
           endAjaxEvent('Listing_LoadFromCard', {
             ownListing: !!this.ownListing,
             errors: xhr.responseJSON && xhr.responseJSON.reason ||
-            xhr.statusText || 'unknown error',
+              xhr.statusText || 'unknown error',
           });
           if (xhr.statusText === 'abort') return;
-          app.router.listingError(xhr, this.model.get('slug'), `#${this.ownerGuid}/store`);
+          this.userLoadingModal.setState({
+            contentText: app.polyglot.t('userPage.loading.failTextListing', {
+              listing: `<b>${title}</b>`,
+            }),
+            isProcessing: false,
+          });
         });
       };
 
@@ -357,7 +410,8 @@ export default class extends baseVw {
 
     this.fullListingFetch = this.fullListing.fetch()
       .fail(xhr => {
-        if (!opts.showErrorOnFetchFail) return;
+        if (!opts.showErrorOnFetchFail || xhr.statusText === 'abort' ||
+          this.isRemoved()) return;
         let failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
 
         if (xhr.status === 404) {
@@ -438,6 +492,7 @@ export default class extends baseVw {
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off('click', this.boundDocClick);
+    if (this.userLoadingModal) this.userLoadingModal.remove();
     super.remove();
   }
 
