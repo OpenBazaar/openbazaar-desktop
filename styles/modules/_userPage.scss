@@ -256,10 +256,6 @@
 
   header {
     height: 80px;
-
-    .titleRow {
-      height: $thumb;
-    }
   }
 
   h1 {
@@ -274,6 +270,7 @@
 
   .socialIcons {
     margin-bottom: 55px;
+    font-size: $tx3;
 
     .non-ionic-icon {
       width: 15px;

@@ -2,21 +2,25 @@
   <div class="padMd">
     <header>
       <% if (ob.userAvatarHashes || ob.userName) { %>
-        <div class="titleRow flexVCent gutterHSm">
-          <% if (ob.userAvatarHashes) { %>
-            <div class=" discTn clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
-          <% } %>
-          <% if (ob.userName) { %>
-            <h2 class="h4 txUnl lineHeight1 clrT"><%= ob.userName %></h2>
-          <% } %>
+        <div>
+          <div class="titleRow flexVCent gutterHSm">
+            <% if (ob.userAvatarHashes) { %>
+              <div class=" discTn clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+            <% } %>
+            <% if (ob.userName) { %>
+              <h2 class="h4 txUnl lineHeight1 clrT"><%= ob.userName %></h2>
+            <% } %>
+          </div>
         </div>
       <% } %>
     </header>
     <div class="txCtr">
       <div class="flexVCent flexInline gutterH row">
         <div class="discSm clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.ownAvatarHashes) %>"></div>
-        <i class="ion-android-arrow-forward clrT2 lineHeight1 tx3"></i>
-        <div class="discSm clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+        <% const colorClass = !ob.isProcessing ? 'clrTErr' : '' %>
+        <% const disabledToAvatar = !ob.isProcessing ? 'disabled' : '' %>
+        <i class="ion-android-arrow-forward clrT2 lineHeight1 tx3 <%= colorClass %>"></i>
+        <div class="discSm clrBr2 clrSh1 flexNoShrink  <%= disabledToAvatar %>" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
       </div>
       <% if (ob.isProcessing) { %>
         <h1 class="h3 clrT"><%= ob.polyT('userPage.loading.connecting') %></h1>
