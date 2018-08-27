@@ -332,7 +332,8 @@ export default class extends BaseModal {
       return [];
     }
 
-    const listings = [...cl.models];
+    const listings = cl.models.filter(md =>
+      md.get('slug') !== this.model.get('slug'));
     const tot = cl.length < 8 ? cl.length : 8;
     const results = [];
 
