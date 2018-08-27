@@ -428,6 +428,7 @@ export default class ObRouter extends Router {
     let listing;
     let listingFetch;
     let userPageFetchError = '';
+    let slug;
 
     startAjaxEvent('UserPageLoad');
 
@@ -442,7 +443,7 @@ export default class ObRouter extends Router {
 
     if (state === 'store') {
       if (deepRouteParts[0]) {
-        const slug = deepRouteParts[0];
+        slug = deepRouteParts[0];
         listing = new Listing({
           slug,
         }, { guid });
@@ -543,10 +544,8 @@ export default class ObRouter extends Router {
       if (jqXhr === listingFetch && listingFetch.statusText === 'abort') return;
 
       if (profileFetch.state() === 'rejected') {
-        this.userNotFound(guid);
         userPageFetchError = 'User Not Found';
       } else if (listingFetch.state() === 'rejected') {
-        this.listingNotFound(deepRouteParts[0], `${guid}/${pageState}`);
         userPageFetchError = 'Listing Not Found';
       }
 
@@ -554,10 +553,22 @@ export default class ObRouter extends Router {
         `${userPageFetchError} - ${reason || 'none'}` :
         reason || 'none';
 
+      let contentText = app.polyglot.t('userPage.loading.failTextStore', {
+        store: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
+      });
+
+      if (profileFetch.state() === 'resolved' && listingFetch.state() === 'rejected') {
+        const linkText = app.polyglot.t('userPage.loading.failTextListingLink');
+        const listingSlug = slug.length > 25 ?
+          `${slug.slice(0, 25)}…` : slug;
+        contentText = app.polyglot.t('userPage.loading.failTextListingWithLink', {
+          listing: `<b>${listingSlug}</b>`,
+          link: `<a href="#${guid}/store">${linkText}</a>`,
+        });
+      }
+
       this.userLoadingModal.setState({
-        contentText: app.polyglot.t('userPage.loading.failTextStore', {
-          store: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
-        }),
+        contentText,
         isProcessing: false,
       });
     })
@@ -632,39 +643,6 @@ export default class ObRouter extends Router {
         template: 'error-pages/pageNotFound.html',
       }).render()
     );
-  }
-
-  listingNotFound(listing, link) {
-    this.loadPage(
-      new TemplateOnly({ template: 'error-pages/listingNotFound.html' }).render({ listing, link })
-    );
-  }
-
-  listingError(failedXhr, listing, storeUrl) {
-    if (!failedXhr) {
-      throw new Error('Please provide the failed Xhr request');
-    }
-
-    if (failedXhr.status === 404) {
-      this.listingNotFound(listing, storeUrl);
-    } else {
-      let failErr = '';
-
-      if (failedXhr.responseText) {
-        const reason = failedXhr.responseJSON && failedXhr.responseJSON.reason ||
-          failedXhr.responseText;
-        failErr += `\n\n${reason}`;
-      }
-
-      this.loadPage(
-        new TemplateOnly({ template: 'error-pages/listingError.html' })
-          .render({
-            listing,
-            storeUrl,
-            failErr,
-          })
-      );
-    }
   }
 
   genericError(context = {}) {

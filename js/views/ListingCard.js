@@ -261,8 +261,7 @@ export default class extends baseVw {
         let avatarHashes;
         let title = this.model.get('title');
         title = title.length > 25 ?
-          `${title.slice(0, 25)}…` :
-          title;
+          `${title.slice(0, 25)}…` : title;
 
         if (this.options.profile) {
           storeName = this.options.profile.get('name');
@@ -277,6 +276,7 @@ export default class extends baseVw {
           storeName = `${storeName.slice(0, 40)}…`;
         }
 
+        if (this.userLoadingModal) this.userLoadingModal.remove();
         this.userLoadingModal = new UserLoadingModal({
           initialState: {
             userName: avatarHashes ? storeName : undefined,

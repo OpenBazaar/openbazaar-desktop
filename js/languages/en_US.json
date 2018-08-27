@@ -354,6 +354,8 @@
       "loadingText": "Just a minute, loading %{name} from somewhere on this global, peer-to-peer network for you…",
       "failTextStore": "There was an issue connecting to %{store}. Please try again.",
       "failTextListing": "There was an issue retrieving %{listing}. Please try again.",
+      "failTextListingLink": "store",
+      "failTextListingWithLink": "There was an issue retrieving %{listing}. Please try again or browse other listings in the %{link}.",
       "socialHeading": "OpenBazaar News & Discussions:",
       "btnCancel": "Cancel",
       "btnTryAgain": "Try Again"
@@ -2039,14 +2041,9 @@
   "errorPage": {
     "userNotFoundTitle": "This User Could Not Be Found",
     "userNotFoundMsg": "%{user} was not found on the network. Make sure you have the correct handle or peerID.",
-    "listingNotFoundTitle": "This Listing Could Not Be Found",
-    "listingNotFoundLink": "Click here to browse the other listings in this store.",
-    "listingNotFoundMsg": "%{listing} could not be found.",
     "pageNotFoundTitle": "This Page Could Not Be Found",
     "pageNotFoundMsg": "Check the address bar to make sure the URL is correct.",
-    "genericErrorTitle": "There Was An Error",
-    "listingErrorTitle": "Unable To Fetch Listing",
-    "listingErrorMsg": "There was an error fetching listing %{listing}"
+    "genericErrorTitle": "There Was An Error"
   },
   "orderCompletionModelErrors": {
     "provideReview": "Please provide a review.",
