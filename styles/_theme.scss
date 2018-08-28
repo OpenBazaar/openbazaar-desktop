@@ -344,7 +344,7 @@ input[type=range][class~="clrS"] {
       .selectize-input {
         @extend .#{$baseClass}#{$number};
       }
-  }  
+  }
 }
 
 #appFrame {
@@ -389,7 +389,7 @@ input[type=range][class~="clrS"] {
 
 .arrowBoxTipWrap {
   .arrowBox {
-    box-shadow: 0 1px 2px rgba(0,0,0,0.4);  
+    box-shadow: 0 1px 2px rgba(0,0,0,0.4);
   }
 }
 
@@ -533,5 +533,14 @@ input[type=range][class~="clrS"] {
     &:before {
       background: linear-gradient(to right, transparent, $primary 50%);
     }
+  }
+}
+
+.flexBtnWrapper .btnFlx {
+  border-color: $border;
+
+  &:hover, &:focus {
+    @include borderColor($border, $border3);
+    z-index: 1;
   }
 }

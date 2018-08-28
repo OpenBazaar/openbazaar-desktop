@@ -1,21 +1,24 @@
-<div class="contentBox padMd clrP clrBr clrSh3">
-  <div class="<%= ob.titleClass %>">
-    <h1><%= ob.title %></h1>
-  </div>
-  <div class="<%= ob.messageClass %>">
-    <div class="rowMd innerMessage">
-      <%= ob.message %>
+<div class="contentBox clrP clrBr clrSh3">
+  <div class="padMd">
+    <div class="<%= ob.titleClass %>">
+      <h1><%= ob.title %></h1>
     </div>
-    <% if (ob.buttons.length) { %>
-    <div class="buttonWrap gutterH">
+    <div class="<%= ob.messageClass %>">
+      <div class="rowMd innerMessage">
+        <%= ob.message %>
+      </div>
+    </div>
+  </div>
+  <% if (ob.buttons.length) { %>
+    <div class="flexRow flexBtnWrapper">
       <% ob.buttons.forEach((btn, i) => { %>
       <%
         // pending designs, may need to give certain buttons special classes depending
         // on what position they are in (e.g. first, last...)
       %>
-        <a class="<%= btn.className %> js-<%= btn.fragment %>" data-event-name="<%= btn.fragment %>"><%= btn.text %></a>
+      <a class="<%= btn.className %> js-<%= btn.fragment %>" data-event-name="<%= btn.fragment %>"><%= btn.text %></a>
       <% }) %>
     </div>
     <% } %>
-  </div>
 </div>
+
