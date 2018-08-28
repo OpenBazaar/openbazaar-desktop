@@ -174,21 +174,27 @@ export default class extends BaseModal {
         e => (this._inventory = e.inventory));
     }
 
-    // If a listings collection wasn't passed in, fetch it now.
-    this.moreListingsCol = this.options.listings || new Listings([], { guid: this.vendor.peerID });
-    if (!this.options.listings) {
-      this.moreListingsFetch = this.moreListingsCol.fetch()
-        .done(() => {
-          setTimeout(() => {
-            if (this.moreListings) {
-              this.moreListings.setState({
-                listings:
-                  this.randomizeMoreListings(this.moreListingsCol),
-              });
-            }
-          });
+    this.moreListingsCol = new Listings([], { guid: this.vendor.peerID });
+
+    const fetchOpts =
+      this.vendor.peerID === app.profile.id ? {} :
+      {
+        data: $.param({
+          'max-age': 60 * 60, // 1 hour
+        }),
+      };
+
+    this.moreListingsFetch = this.moreListingsCol.fetch(fetchOpts)
+      .done(() => {
+        this.moreListingsData = this.randomizeMoreListings(this.moreListingsCol);
+        setTimeout(() => {
+          if (this.moreListings) {
+            this.moreListings.setState({
+              listings: this.moreListingsData,
+            });
+          }
         });
-    }
+      });
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -334,10 +340,10 @@ export default class extends BaseModal {
 
     const listings = cl.models.filter(md =>
       md.get('slug') !== this.model.get('slug'));
-    const tot = cl.length < 8 ? cl.length : 8;
+    const tot = listings.length < 8 ? listings.length : 8;
     const results = [];
 
-    for (let i = 0; i < 8; i++) {
+    for (let i = 0; i < tot; i++) {
       let model;
       do {
         const index = randomInt(0, tot - 1);
@@ -702,7 +708,7 @@ export default class extends BaseModal {
       this.moreListings = this.createChild(MoreListings, {
         initialState: {
           vendor: this.vendor,
-          listings: this.randomizeMoreListings(this.moreListingsCol),
+          listings: this.moreListingsData,
         },
       });
       this.listenTo(this.moreListings, 'listingDetailOpened', () => this.remove());
