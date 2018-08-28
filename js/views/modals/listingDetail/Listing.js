@@ -29,6 +29,8 @@ import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMe
 import { openSimpleMessage } from '../SimpleMessage';
 import NsfwWarning from '../NsfwWarning';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
+import Listings from '../../../collections/Listings';
+import MoreListings from './MoreListings';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -170,6 +172,10 @@ export default class extends BaseModal {
       this.listenTo(inventoryEvents, 'inventory-change',
         e => (this._inventory = e.inventory));
     }
+
+    // If a listings collection wasn't passed in, fetch it now.
+    this.moreListingsCol = this.options.listings || new Listings([], { guid: this.vendor.peerID });
+    if (!this.options.listings) this.moreListingsCol.fetch();
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -653,6 +659,19 @@ export default class extends BaseModal {
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);
       }
+
+      if (this.moreListings) this.moreListings.remove();
+      this.moreListings = this.createChild(MoreListings, {
+        collection: this.moreListingsCol,
+        vendor: this.vendor,
+        parentListingHash: this.model.get('hash'),
+      });
+      // If a card is opened, close this modal so you don't get a stack of modals.
+      this.listenTo(this.moreListings, 'cardOpened', () => {
+        this.close();
+      });
+      this.getCachedEl('.js-moreListings')
+        .append(this.moreListings.render().$el);
 
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;

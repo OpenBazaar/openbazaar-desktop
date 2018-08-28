@@ -94,6 +94,7 @@ export default class extends BaseVw {
     const options = {
       listingBaseUrl,
       viewType: this.viewType,
+      listings: this.collection,
       model,
     };
 

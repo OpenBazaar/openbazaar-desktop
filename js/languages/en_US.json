@@ -1000,6 +1000,7 @@
     "noRefundPolicy": "No return policy entered",
     "termsAndConditions": "Terms Of Service",
     "noTermsAndConditions": "No terms and conditions entered",
+    "moreBy": "More by %{name}",
     "shipping": "Shipping",
     "shipsFrom": "Ships from %{country}",
     "shipTo": "Ship to:",
