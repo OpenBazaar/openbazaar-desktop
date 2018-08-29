@@ -45,7 +45,6 @@ export default class extends BaseVw {
   }
 
   render() {
-
     loadTemplate('userPage/typeFilter.html', (t) => {
       this.$el.html(t({
         ...this._state,
