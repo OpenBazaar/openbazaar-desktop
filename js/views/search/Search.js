@@ -34,16 +34,17 @@ export default class extends baseVw {
 
     this.defaultSuggestions = this.options.defaultSuggestions ||
       [
-        'books',
-        'clothing',
-        'electronics',
-        'food',
-        'games',
-        'health',
-        'movies',
-        'music',
-        'sports',
-        'toys',
+        'Books',
+        'Art',
+        'Clothing',
+        'Bitcoin',
+        'Crypto',
+        'Handmade',
+        'Health',
+        'Toys',
+        'Electronics',
+        'Games',
+        'Music',
       ];
 
     // in the future there may be more possible types
@@ -99,7 +100,7 @@ export default class extends baseVw {
 
     // use the parameters from the query unless they were overridden in the options
     this.serverPage = options.serverPage || params.p || 0;
-    this.pageSize = options.pageSize || params.ps || 24;
+    this.pageSize = options.pageSize || params.ps || 66;
     this.term = options.term || params.q || '';
     this.sortBySelected = options.sortBySelected || params.sortBy || '';
 
