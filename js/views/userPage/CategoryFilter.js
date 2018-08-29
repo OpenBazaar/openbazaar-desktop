@@ -3,7 +3,6 @@ the other is also maintained.
 */
 
 import $ from 'jquery';
-import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 

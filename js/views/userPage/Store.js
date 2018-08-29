@@ -579,16 +579,6 @@ export default class extends BaseVw {
     }
   }
 
-  get $popInMessages() {
-    return this._$popInMessages ||
-      (this._$popInMessages = this.$('.js-popInMessages'));
-  }
-
-  get $inactiveWarning() {
-    return this._$inactiveWarning ||
-      (this._$inactiveWarning = this.$('.js-inactiveWarning'));
-  }
-
   remove() {
     getContentFrame().off('scroll', this.storeListingsScrollHandler);
     super.remove();
