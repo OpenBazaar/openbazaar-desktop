@@ -23,7 +23,6 @@ export default class extends BaseVw {
 
     super(opts);
     this.options = opts;
-    this._state = opts.initialState;
   }
 
   className() {
@@ -48,29 +47,6 @@ export default class extends BaseVw {
 
   get selectedCat() {
     return this._selected;
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state = {}) {
-    const newState = {
-      ...this._state,
-      ...state,
-    };
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      if (this.rendered) this.render();
-    }
-  }
-
-  replaceState(state = {}) {
-    if (!_.isEqual(this._state, state)) {
-      this._state = state;
-      if (this.rendered) this.render();
-    }
   }
 
   render() {

@@ -25,21 +25,12 @@ export default class extends Collection {
    * the listings in the collection.
    */
   get categories() {
-    const cats = [];
-
-    this.models.forEach(listing => {
-      listing.get('categories')
-        .forEach(cat => {
-          if (cats.indexOf(cat) === -1) cats.push(cat);
-        });
-    });
-
     // todo: For now sort will only be accurate for standard ascii
     // characters. In order to properly sort categories with
     // foreign characters, we will need to know what language
     // the listing is in and pass that into localeCompare().
     // https://github.com/OpenBazaar/openbazaar-go/issues/143
-    return cats.sort();
+    return [...new Set([].concat(...this.pluck('categories')).sort())];
   }
 
   /**
@@ -47,13 +38,6 @@ export default class extends Collection {
    * the listings in the collection.
    */
   get types() {
-    const types = [];
-
-    this.models.forEach(listing => {
-      const type = listing.get('contractType');
-      if (types.indexOf(type) === -1) types.push(type);
-    });
-
-    return types.sort();
+    return [...new Set([].concat(...this.pluck('contractType')).sort())];
   }
 }

@@ -322,38 +322,38 @@ export default class extends BaseVw {
   }
 
   get $btnRetry() {
-    return this._$btnRetry ||
-      (this._$btnRetry = this.$('.js-retryFetch'));
+    return this.getCachedEl('.js-retryFetch');
   }
 
   get $listingsContainer() {
-    return this._$listingsContainer ||
-      (this._$listingsContainer = this.$('.js-listingsContainer'));
+    return this.getCachedEl('.js-listingsContainer');
   }
-
   get $shippingFilterContainer() {
-    return this._$shippingFilterContainer ||
-      (this._$shippingFilterContainer = this.$('.js-shippingFilterContainer'));
+    return this.getCachedEl('.js-shippingFilterContainer');
   }
 
   get $catFilterContainer() {
-    return this._$catFilterContainer ||
-      (this._$catFilterContainer = this.$('.js-catFilterContainer'));
+    return this.getCachedEl('.js-catFilterContainer');
   }
 
   get $typeFilterContainer() {
-    return this._$typeFilterContainer ||
-      (this._$typeFilterContainer = this.$('.js-typeFilterContainer'));
+    return this.getCachedEl('.js-typeFilterContainer');
   }
 
   get $listingCount() {
-    return this._$listingCount ||
-      (this._$listingCount = this.$('.js-listingCount'));
+    return this.getCachedEl('.js-listingCount');
   }
 
   get $noResults() {
-    return this._$noResults ||
-      (this._$noResults = this.$('.js-noResults'));
+    return this.getCachedEl('.js-noResults') || null;
+  }
+
+  get $popInMessages() {
+    return this.getCachedEl('.js-popInMessages');
+  }
+
+  get $inactiveWarning() {
+    return this.getCachedEl('.js-inactiveWarning');
   }
 
   filteredCollection(filter = this.filter, collection = this.collection) {
@@ -618,14 +618,6 @@ export default class extends BaseVw {
 
     this.$sortBy = this.$('.js-sortBySelect');
     this.$shipsToSelect = this.$('.js-shipsToSelect');
-    this._$btnRetry = null;
-    this._$listingsContainer = null;
-    this._$catFilterContainer = null;
-    this._$typeFilterContainer = null;
-    this._$listingCount = null;
-    this._$popInMessages = null;
-    this._$inactiveWarning = null;
-    this._$noResults = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
