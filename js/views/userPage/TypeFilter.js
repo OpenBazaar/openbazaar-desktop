@@ -54,7 +54,7 @@ export default class extends BaseVw {
         ...this._state,
       }));
     });
-    
+
     return this;
   }
 }
