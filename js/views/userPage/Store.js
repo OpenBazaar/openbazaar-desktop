@@ -585,6 +585,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
 
