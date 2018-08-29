@@ -1,0 +1,7 @@
+<%
+  const amount = ob.active ? '>' : ob.formattedCurrency(ob.balance, ob.code, ob.displayCur);
+%>
+
+<div><%= ob.crypto.cryptoIcon({ code: ob.code }) %></div>
+<div><%= ob.polyTFallback(`cryptoCurrencies.${ob.code}`, ob.code) %></div>
+<div class="flexExpand flexHRight <%= ob.balance > 0 && 'clrTEm' %>"><%= amount %></div>

@@ -83,6 +83,33 @@ const currencies = [
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
+  // todo: does LTC have the right values?
+  // TODO
+  // TODO
+  {
+    code: 'LTC',
+    testnetCode: 'TLTC',
+    baseUnit: 100000000,
+    averageModeratedTransactionSize: 184,
+    feeBumpTransactionSize: 154,
+    qrCodeText: address => `litecoin:${address}`,
+    icon: 'imgs/cryptoIcons/LTC.png',
+    url: 'https://litecoin.org/',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://www.blocktrail.com/tLTC/address/${address}` :
+        `https://blockchair.com/litecoin/address/${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://www.blocktrail.com/tLTC/tx/${txid}` :
+        `https://blockchair.com/litecoin/transaction/${txid}`
+    ),
+    canShapeShiftIntoWallet: true,
+    canShapeShiftIntoPurchase: false,
+    supportsEscrowTimeout: true,
+    blockTime: 1000 * 60 * 2.5,
+  },
   {
     code: 'ZEC',
     testnetCode: 'TZEC',

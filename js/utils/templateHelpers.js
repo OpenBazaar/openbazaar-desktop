@@ -30,8 +30,30 @@ import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
 import is from 'is_js';
 
-export function polyT(...args) {
-  return app.polyglot.t(...args);
+export function polyT(key, options) {
+  return app.polyglot.t(key, options);
+}
+
+/**
+ * At times you may be making a translation based off user / server data and
+ * a translation may not be available. Polyglot handlees that by just returning the
+ * key. For example, app.polyglot.t('howdy') would return 'howdy' if the key was not
+ * present in the translation file. This function will allow you to return a different
+ * string in that case, e.g. app.polyglot.t('howdy', 'no soup for you') would return
+ * 'no soup for you' if the 'howdy' key is not presetn.
+ */
+// TODO
+// TODO
+// Apply this to places this functionality was manually done prior to this function creation!
+export function polyTFallback(key, fallback, options) {
+  const translated = polyT(key, options);
+
+  if (translated === key) {
+    // no translation is present for the given key
+    return fallback;
+  }
+
+  return translated;
 }
 
 export function parseEmojis(text, className = '', attrs = {}) {
