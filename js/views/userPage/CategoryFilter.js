@@ -44,10 +44,6 @@ export default class extends BaseVw {
     this.trigger('category-change', { value: $(e.target).val() });
   }
 
-  get selectedCat() {
-    return this._selected;
-  }
-
   render() {
     if (this.getState().categories.length === 1) {
       this.$el.addClass('disabled');
@@ -58,8 +54,6 @@ export default class extends BaseVw {
         ...this._state,
       }));
     });
-
-    this.rendered = true;
 
     return this;
   }

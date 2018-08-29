@@ -39,7 +39,6 @@
                   value="<%= type %>"
                   id="<%= `filterListingType${flatType}` %>"
                   <% if (ob.selected === type) print('checked') %>>
-           <!-- <label for="<%= `filterListingType${flatType}` %>"><%= type %></label> -->
            <label for="<%= `filterListingType${flatType}` %>">${ob.polyT(`formats.${type}`)}</label>
          </div>
          <% }) %>

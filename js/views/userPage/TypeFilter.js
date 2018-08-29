@@ -44,10 +44,6 @@ export default class extends BaseVw {
     this.trigger('type-change', { value: $(e.target).val() });
   }
 
-  get selectedType() {
-    return this._selected;
-  }
-
   render() {
     if (this.getState().types && this.getState().types.length === 1) {
       this.$el.addClass('disabled');
@@ -58,9 +54,7 @@ export default class extends BaseVw {
         ...this._state,
       }));
     });
-
-    this.rendered = true;
-
+    
     return this;
   }
 }
