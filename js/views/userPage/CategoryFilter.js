@@ -45,9 +45,6 @@ export default class extends BaseVw {
   }
 
   render() {
-    if (this.getState().categories.length === 1) {
-      this.$el.addClass('disabled');
-    }
 
     loadTemplate('userPage/categoryFilter.html', (t) => {
       this.$el.html(t({
