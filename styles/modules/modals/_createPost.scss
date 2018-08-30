@@ -1,0 +1,120 @@
+.createPost {
+  form {
+    label {
+      line-height: 1.5;
+      margin-bottom: 5px;
+    }
+
+    .helper {
+      padding: $padSm;
+      padding-left: 0;
+    }
+  }
+
+  .modalContent {
+    overflow: hidden;
+    min-height: 0;
+
+    .topControls {
+      z-index: 1;
+    }
+
+    .tile {
+      width: 100px;
+      height: 100px;
+      border: 1px solid;
+      border-color: inherit;
+      border-radius: $corner;
+      float: left;
+      margin-right: $pad;
+      margin-bottom: $pad;
+      position: relative;
+
+      .closeIcon {
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      .btn {
+        width: 61px;
+        height: 28px;
+        position: absolute;
+        bottom: 10px;
+        padding: 0;
+        line-height: 1;
+        @include center(true, false)
+      }
+    }
+
+
+
+    .photoUploadSection {
+        h2 {
+          display: inline-block;
+        }
+
+        .uploadingLabel {
+          float: right;
+        }
+
+        .uploadItems {
+          display: table; // clear the floats
+
+          li {
+            background-repeat: no-repeat;
+            background-position: center center;
+            background-size: cover;
+            cursor: move;
+
+            &:nth-last-child(-n + 6):nth-child(6n + 1), // first element of the last row
+            &:nth-last-child(-n + 6):nth-child(6n + 1) ~ li { // all its following elements
+              margin-bottom: 0;
+            }
+
+            &.addElement {
+              cursor: default;
+
+              .imagesIcon {
+                font-size: 50px;
+                @include center;
+                top: 35%;
+              }
+            }
+
+            .primaryIndicatorWrap {
+              display: none;
+            }
+
+            &:nth-child(2) {
+              .primaryIndicatorWrap {
+                position: absolute;
+                bottom: 5px;
+                left: 0;
+                right: 0;
+                display: block;
+                text-align: center;
+
+                .phraseBox {
+                  display: inline-block;
+                }
+              }
+            }
+          }
+        }
+      }
+
+  }
+
+  .createPostLinks {
+    display: none;
+  }
+
+  &.editMode {
+    .createPostLinks {
+      display: block;
+    }    
+  }
+}

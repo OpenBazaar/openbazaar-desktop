@@ -225,6 +225,7 @@
     "discoverCalloutBody": "Browse and shop hundreds of stores on OpenBazaar",
     "myPage": "My Page",
     "customizePage": "Customize Page",
+    "createPost": "New Post",
     "createListing": "Create Listing",
     "purchases": "Purchases",
     "sales": "Sales",
@@ -273,6 +274,7 @@
     "message": "Message",
     "customize": "Customize",
     "createListing": "Create Listing",
+    "createPost": "New Post",
     "block": "Block",
     "about": "About",
     "aboutEmpty": "About is empty…",
@@ -292,6 +294,7 @@
     "noLocation": "No Location",
     "tabTitles": {
       "home": "Home",
+      "posts": "Posts",
       "store": "Store",
       "following": "Following",
       "followers": "Followers",
@@ -355,6 +358,7 @@
     },
     "mainNav": {
       "home": "Home",
+      "posts": "Posts",
       "store": "Store",
       "following": "Following",
       "followers": "Followers"
@@ -1105,6 +1109,17 @@
     "error404": "The report url returned a 404 error, it could not be reached.",
     "postSubmitMsg": "Your report has been submitted. Each search provider has different rules for dealing with reports, you may still see the listing in search results until they decide to remove it.",
     "closeBtn": "Close"
+  },
+  "createPost": {
+    "createPostLabel": "Create Post",
+    "placeholderTitle": "Enter a title for your post",
+    "confirmCloseDialog": {
+      "title": "You have unsaved changes",
+      "bodyCreate": "You have unsaved changes while creating a post. Are you sure you want to close?",
+      "bodyEdit": "You have unsaved changes while editing a post. Are you sure you want to close?",
+      "btnYes": "Yes",
+      "btnNo": "No"
+    }
   },
   "editListing": {
     "nsfwYes": "Yes",

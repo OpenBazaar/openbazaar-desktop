@@ -1,0 +1,12 @@
+<% if (ob.error) { %>
+  <p class="clrTErr txCtr"><i class="ion-alert-circled"></i> <%= ob.polyT('listingDetail.errors.loadReview', { id: ob.ratingId, error: ob.error }) %></p>
+<% } else { %>
+
+<h3><%= ob.title %></h3>
+
+<% for(var i = 0; i < ob.images.length; ++i) {  %>
+  <img src="<%= ob.getServerUrl(`ob/images/${ob.images[i].small}`) %>"/>
+<% } %>
+
+<% } %>
+
