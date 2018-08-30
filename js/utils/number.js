@@ -1,4 +1,8 @@
 import app from '../app';
+
+const defaultLang = app && app.localSettings && app.localSettings.standardizedTranslatedLang()
+ || 'en-US';
+
 /*
  * Will return a string representation of a number ensuring that standard
  * notation is used (as opposed to the default JS representation which uses
@@ -60,15 +64,9 @@ export function randomInt(min = 0, range = 0) {
  * ex: number='30000.05', lang='ru' => 30 000,05
  * ex: number='30000.05', lang='es' => 30.000,05
 */
-export function localizeNumber(number, optionalLang) {
+export function localizeNumber(number, lang = defaultLang) {
   if (typeof number !== 'number') {
     throw new Error('Please provide a number.');
-  }
-
-  let lang = optionalLang;
-
-  if (optionalLang === undefined) {
-    lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US';
   }
 
   return new Intl.NumberFormat(lang).format(number);
