@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import { Collection } from 'backbone';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -334,27 +335,14 @@ export default class extends BaseModal {
   }
 
   randomizeMoreListings(cl) {
-    if (!cl.length) {
-      return [];
+    if (!(cl instanceof Collection)) {
+      throw new Error('Please provide a Collection instance.');
     }
 
-    const listings = cl.models.filter(md =>
-      md.get('slug') !== this.model.get('slug'));
-    const tot = listings.length < 8 ? listings.length : 8;
-    const results = [];
-
-    for (let i = 0; i < tot; i++) {
-      let model;
-      do {
-        const index = randomInt(0, tot - 1);
-        model = results.includes(listings[index]) ?
-          false : listings[index];
-      }
-      while (!model);
-      results.push(model);
-    }
-
-    return results.map(md => md.toJSON());
+    return _.shuffle(cl.models)
+      .filter(md => md.get('slug') !== this.model.get('slug'))
+      .map(md => md.toJSON())
+      .slice(0, 8);
   }
 
   gotoPhotos() {
