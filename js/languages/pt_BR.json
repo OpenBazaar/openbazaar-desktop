@@ -125,7 +125,7 @@
   },
   "connectedPeersPage": {
     "heading": "Peers Conectados",
-    "totalPeers": "%{smart_count} Found",
+    "totalPeers": "%{smart_count} Peer Encontrado |||| %{smart_count} Peers Encontrados",
     "noResults": "Nenhum peer conectado",
     "loadMore": "Carregar Mais"
   },
@@ -204,7 +204,7 @@
       "buyerDisputeExpiryExpired": "A disputa sobre o pedido %{orderLink} expirou. O vendedor pode solicitar o pagamento.",
       "moderatorDisputeExpiry": "Você tem %{timeRemaining} para tomar uma decisão sobre o pedido %{orderLink}.",
       "moderatorDisputeExpiryExpired": "A disputa sobre o pedido %{orderLink} expirou. O vendedor pode solicitar o pagamento.",
-      "vendorFinalizedPayment": "The vendor has claimed the payment for order %{orderLink}."
+      "vendorFinalizedPayment": "O vendedor solicitou o pagamento para o pedido %{orderLink}."
     },
     "errorHeading": "Houve um erro ao buscar as notificações.",
     "btnRetry": "Tentar novamente",
@@ -315,7 +315,7 @@
       "shipsToFilterAny": "(Qualquer país)",
       "sortBy": "Ordenar por",
       "countListings": "%{smart_count} anúncio |||| %{smart_count} anúncios",
-      "countListingsFound": "%{smart_count} found",
+      "countListingsFound": "%{countListings} encontrado(s)",
       "inactive": "A sua loja está atualmente inativa e escondida do público. %{link}",
       "inactiveLink": "Modificar",
       "listingDataChangedPopin": "Os dados do anúncio foram modificados.",
@@ -449,7 +449,7 @@
       "sectionHeader": "Licença MIT do OpenBazaar",
       "licensePreface": "OpenBazaar é um software de código aberto sob a licença do MIT. Esta licença é permissiva e projetada para permitir que as pessoas reutilizem completamente o código para outros projetos de código aberto ou para software proprietário. O texto completo da licença está incluído abaixo.",
       "header": "A Licença MIT (MIT)",
-      "copyright": "Copyright &copy; 2016 OpenBazaar Developers",
+      "copyright": "Copyright &copy; 2016 Desenvolvedores do OpenBazaar",
       "paragraphs": {
         "permission": "A permissão é concedida, gratuitamente, para qualquer pessoa que obtenha uma cópia deste software e dos arquivos de documentação associados (o \"Software\"), para lidar com o Software sem restrição, incluindo, sem limitações os direitos de usar, copiar, modificar, mesclar, publicar, distribuir, sublicenciar e/ou vender cópias do Software, e para permitir que as pessoas às quais o Software é fornecido a fazê-lo, mediante as seguintes condições:",
         "inclusion": "O aviso de direito autoral acima e este aviso de permissão devem ser incluídos em todas as cópias ou partes substanciais do Software.",
@@ -1252,8 +1252,8 @@
     "searchBtn": "Busca",
     "searchPlaceholder": "Insira um termo de busca ou uma #tag.",
     "suggestions": "Sugestões",
-    "resultsFound": "<b>%{totalResults} anúncio</b> encontrado para <b>\"%{term}\"</b> |||| <b>%{totalResults} anúncios</b> encontrados para <b>\"%{term}\"</b>",
-    "resultsTotal": "%{totalResults} anúncios",
+    "resultsFound": "<b>%{smart_count} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{smart_count} listings</b> found for <b>\"%{term}\"</b>",
+    "resultsTotal": "%{smart_count} anúncio |||| %{smart_count} anúncios",
     "sortBy": "Ordenar por",
     "changeProvider": "Fechar",
     "useDefault": "Buscar por \"%{term}\" usando %{defaultProvider}",
@@ -1268,7 +1268,7 @@
     "makeDefaultBtnHelper": "O provedor de busca padrão é usado nas pesquisas feitas com a barra de endereços.",
     "addQueryProviderBtn": "Adicionar um provedor de busca",
     "chooseDefaultTitle": "Escolher um provedor de busca padrão",
-    "chooseDefaultMsg": "The search provider you select will be used as the default for your future searches until you set a new one.",
+    "chooseDefaultMsg": "O provedor de busca que você escolher será usado como padrão para suas buscas futuras, até que você escolha um novo.",
     "providers": {
       "transactions": "Transações",
       "myPage": "Minha Página"
@@ -1369,7 +1369,7 @@
     "cryptoAddressHelper": "%{name} irá enviar %{coinType} para esse endereço. %{warning}",
     "cryptoAddressHelperWarning": "O endereço não poderá ser modificado após a realização do pedido.",
     "cryptoAddressHelperWarning2": "Este endereço não pode ser modificado.",
-    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
+    "moderatorsDisclaimer": "O seu dinheiro será enviado temporariamente para um intermediário (o moderador). O moderador só irá entregar o seu dinheiro ao vendedor após você confirmar que recebeu a compra com sucesso. Caso surja qualquer problema com o seu pedido, você poderá fazer uma reclamação com o moderador, abrindo uma disputa. O moderador analisará o problema e decidirá quanto será o seu reembolso. *O serviço de moderação só será cobrado se uma reclamação for realizada.",
     "directPayment": "Pagamento Direto",
     "directPaymentDetails": "O seu dinheiro será enviado diretamente ao vendedor, sem utilizar um moderador como intermediário. Você só deve usar essa opção ao comprar de vendedores que você confia. Caso algo dê errado no pedido, você terá que pedir para o vendedor devolver o seu dinheiro. Ou seja, o vendedor é quem irá decidir se o seu dinheiro será devolvido ou não.",
     "chooseModerator": "Escolher Esse Moderador",
@@ -1459,7 +1459,7 @@
     "sales": {
       "heading": "Vendas",
       "countTransactions": "%{smart_count} venda |||| %{smart_count} vendas",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} encontrada |||| %{smart_count} encontradas",
       "unableToFetch": "Não foi possível obter as suas vendas.",
       "noResults": "Nenhuma venda encontrada",
       "returnToFromOrder": "Voltar às vendas",
@@ -1473,7 +1473,7 @@
     "purchases": {
       "heading": "Compras",
       "countTransactions": "%{smart_count} compra |||| %{smart_count} compras",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} encontrada |||| %{smart_count} encontradas",
       "unableToFetch": "Não foi possível obter as suas compras.",
       "noResults": "Nenhuma compra encontrada",
       "returnToFromOrder": "Voltar às compras"
@@ -1481,7 +1481,7 @@
     "cases": {
       "heading": "Disputas",
       "countTransactions": "%{smart_count} disputa |||| %{smart_count} disputas",
-      "countTransactionsFound": "%{smart_count} found",
+      "countTransactionsFound": "%{smart_count} encontrada |||| %{smart_count} encontradas",
       "noResults": "Nenhuma disputa encontrada",
       "returnToFromOrder": "Voltar às disputas"
     },
@@ -1806,7 +1806,7 @@
       "moderatorLabel": "Moderador",
       "reasonLabel": "Motivo",
       "reasonPlaceholder": "Por favor, explique o motivo de você estar iniciando uma disputa…",
-      "reasonHelperText": "Abrir uma disputa irá notificar e convidar um moderador para ajudar a resolver quaisquer conflitos sobre esse pedido",
+      "reasonHelperText": "A abertura de uma disputa irá notificar um moderador para ajudar a resolver quaisquer conflitos sobre esse pedido.",
       "btnCancel": "Cancelar",
       "btnSubmit": "Enviar",
       "timeoutMessageBuyer": "O moderador terá aproximadamente %{timeoutAmount} para tomar uma decisão sobre a disputa. Se o contador expirar antes de o moderador tomar uma decisão, a disputa irá terminar e o vendedor poderá solicitar o dinheiro.",

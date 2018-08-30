@@ -232,7 +232,7 @@ export default class extends baseVw {
 
     return this.createChild(this.tabViews.Store, {
       ...opts,
-      initialFetch: this.listings.fetch(),
+      initialFetch: Store.fetchListings(this.listings),
       collection: this.listings,
       model: this.model,
     });

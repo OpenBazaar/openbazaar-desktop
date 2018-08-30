@@ -156,7 +156,7 @@
           }
         }
 
-        .categoryFilter {
+        .categoryOrTypeFilter {
           max-height: 250px;
           overflow: auto;
 
@@ -247,6 +247,36 @@
           border-top-width: 1px;
         }
       }
+    }
+  }
+}
+
+.userLoadingModal {
+  padding-bottom: 0;
+
+  header {
+    height: 80px;
+  }
+
+  h1 {
+    font-size: 1.8rem;
+  }
+
+  .contentWrap {
+    // minimize the size of the form jumping as we transition from loading to
+    // error states
+    min-height: 45px;
+  }
+
+  .socialIcons {
+    margin-bottom: 55px;
+    font-size: $tx3;
+
+    .non-ionic-icon {
+      width: 15px;
+      height: 15px;
+      position: relative;
+      top: -2px;
     }
   }
 }

@@ -11,6 +11,10 @@
     font-size: 1.4rem;
   }
 
+  .buttonWrap {
+    text-align: center;
+  }
+
   &.dialog {
     // specific to dialog styling
 
@@ -23,8 +27,8 @@
       }
     }
 
-    .buttonWrap {
-      text-align: center;
+    h1 {
+      font-size: 2.0rem;
     }
   }
 

@@ -21,24 +21,23 @@ export default class extends Collection {
   }
 
   /**
-   * Returns a list of the aggregate categories from all
-   * the listing in the collection.
+   * Returns a list of the aggregate categories from all of
+   * the listings in the collection.
    */
   get categories() {
-    const cats = [];
-
-    this.models.forEach(listing => {
-      listing.get('categories')
-        .forEach(cat => {
-          if (cats.indexOf(cat) === -1) cats.push(cat);
-        });
-    });
-
     // todo: For now sort will only be accurate for standard ascii
     // characters. In order to properly sort categories with
     // foreign characters, we will need to know what language
     // the listing is in and pass that into localeCompare().
     // https://github.com/OpenBazaar/openbazaar-go/issues/143
-    return cats.sort();
+    return [...new Set([].concat(...this.pluck('categories')).sort())];
+  }
+
+  /**
+   * Returns a list of the aggregate listing types from all of
+   * the listings in the collection.
+   */
+  get types() {
+    return [...new Set([].concat(...this.pluck('contractType')).sort())];
   }
 }

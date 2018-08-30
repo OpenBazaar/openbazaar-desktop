@@ -45,7 +45,7 @@ export default class extends BaseModal {
       messageClass: '',
       buttons: [],
       removeOnClose: true,
-      defaultBtnClass: 'btn clrP clrBr clrSh2',
+      defaultBtnClass: 'flexExpand btnFlx clrP',
       ...options,
     };
 

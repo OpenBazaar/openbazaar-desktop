@@ -1,0 +1,49 @@
+<!-- categoryFilter.html and typeFilter.html share quite a bit. Ensure that when one is updated,
+     the other is also maintained. -->
+     <div class="txB rowSm"><%= ob.polyT('userPage.store.typeFilter.heading') %></div>
+     <div class="btnRadio">
+       <input type="radio"
+              name="filterListingType"
+              value="all"
+              id="filterListingTypeAll"
+              data-var-type="boolean"
+              <% if (ob.selected === 'all') print('checked') %>>
+       <label for="filterListingTypeAll"><%= ob.polyT('userPage.store.typeFilter.all') %></label>
+     </div>
+
+     <%
+       ob.types.slice(0, ob.maxInitiallyVisibleTypes - 1).forEach((type, index) => {
+         var flatType = type.replace(/\s/g, '-'); // remove spaces
+     %>
+     <div class="btnRadio">
+       <input type="radio"
+              name="filterListingType"
+              value="<%= type %>"
+              id="<%= `filterListingType${flatType}` %>"
+              <% if (ob.selected === type) print('checked') %>>
+        <label for="<%= `filterListingType${flatType}` %>"><%= ob.polyT(`formats.${type}`) %></label>
+     </div>
+     <% }) %>
+
+     <% // adding 1 to the length to account for the All type we hard-code %>
+     <% if ((ob.types.length + 1) > ob.maxInitiallyVisibleTypes) { %>
+     <div class="js-moreTypesWrap moreTypesWrap <% if (ob.expanded) print('expanded') %>">
+       <div class="moreTypes">
+         <%
+           ob.types.slice(ob.maxInitiallyVisibleTypes - 1).forEach((type, index) => {
+             var flatType = type.replace(/\s/g, '-'); // remove spaces
+         %>
+         <div class="btnRadio">
+           <input type="radio"
+                  name="filterListingType"
+                  value="<%= type %>"
+                  id="<%= `filterListingType${flatType}` %>"
+                  <% if (ob.selected === type) print('checked') %>>
+           <label for="<%= `filterListingType${flatType}` %>">${ob.polyT(`formats.${type}`)}</label>
+         </div>
+         <% }) %>
+       </div>
+       <a class="js-showMoreLess clrT tx6 txU showMore"><%= ob.polyT('userPage.store.typeFilter.showMore', (ob.types.length + 1) - ob.maxInitiallyVisibleTypes) %></a>
+       <a class="js-showMoreLess clrT tx6 txU showLess"><%= ob.polyT('userPage.store.typeFilter.showLess') %></a>
+     </div>
+     <% } %>

@@ -1,0 +1,64 @@
+<section class="contentBox clrP clrBr clrSh3">
+  <div class="padMd">
+    <header>
+      <% if (ob.userAvatarHashes || ob.userName) { %>
+        <div>
+          <div class="titleRow flexVCent gutterHSm">
+            <% if (ob.userAvatarHashes) { %>
+              <div class=" discTn clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+            <% } %>
+            <% if (ob.userName) { %>
+              <h2 class="h4 txUnl lineHeight1 clrT"><%= ob.userName %></h2>
+            <% } %>
+          </div>
+        </div>
+      <% } %>
+    </header>
+    <div class="txCtr">
+      <div class="flexVCent flexInline gutterH row">
+        <div class="discSm clrBr2 clrSh1 flexNoShrink" style="<%= ob.getAvatarBgImage(ob.ownAvatarHashes) %>"></div>
+        <% const colorClass = !ob.isProcessing ? 'clrTErr' : '' %>
+        <% const disabledToAvatar = !ob.isProcessing ? 'disabled' : '' %>
+        <i class="ion-android-arrow-forward clrT2 lineHeight1 tx3 <%= colorClass %>"></i>
+        <div class="discSm clrBr2 clrSh1 flexNoShrink  <%= disabledToAvatar %>" style="<%= ob.getAvatarBgImage(ob.userAvatarHashes) %>"></div>
+      </div>
+      <% if (ob.isProcessing) { %>
+        <h1 class="h3 clrT"><%= ob.polyT('userPage.loading.connecting') %></h1>
+      <% } else { %>
+        <h1 class="h3 clrTErr"><%= ob.polyT('userPage.loading.failedToConnect') %></h1>
+      <% } %>
+      <div class="rowHg contentWrap">
+        <% if (ob.contentHtml) { %>
+          print(ob.contentHtml);
+        <% } else if (ob.contentText) { %>
+          <p class="clrT2 tx5"><%= ob.contentText %></p>
+        <% } %>
+      </div>
+      <p class="clrT2 tx6 rowSm"><%= ob.polyT('userPage.loading.socialHeading') %></p>
+      <div class="flexVCent flexInline gutterHSm socialIcons">
+        <a href="https://twitter.com/openbazaar" data-open-external>
+          <i class="ion-social-twitter twitterColor"></i>
+        </a>
+        <a href="https://www.facebook.com/OpenBazaarProject" data-open-external>
+          <i class="ion-social-facebook facebookColor"></i>
+        </a>
+        <a href="https://www.reddit.com/r/OpenBazaar/" data-open-external>
+          <i class="ion-social-reddit redditColor"></i>
+        </a>
+        <a href="https://github.com/OpenBazaar/openbazaar-desktop" data-open-external>   
+          <i class="ion-social-github githubColor"></i>
+        </a>
+        <a href="https://openbazaar.org/slack/" data-open-external>   
+          <i class="thumb non-ionic-icon" style="background-image: url(../imgs/slack-icon.png)"></i>
+        </a>      
+      </div>
+    </div>
+  </div>
+  <div class="flexRow flexBtnWrapper">
+    <a class="txCtr btnFlx flexExpand js-btnCancel"><%= ob.polyT('userPage.loading.btnCancel') %></a>
+    <%= ob.processingButton({
+      className: `btnFlx flexExpand clrP js-btnRetry ${ob.isProcessing ? 'processing' : ''}`,
+      btnText: ob.polyT('userPage.loading.btnTryAgain'),
+    }) %>
+  </div>
+</section>

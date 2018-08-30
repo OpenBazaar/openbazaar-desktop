@@ -1,0 +1,6 @@
+<div class="contentBox padLg clrP clrBr clrSh3">
+  <% if (ob.vendor && ob.vendor.name) { %>
+    <h2 class="txUnb"><%= ob.polyT('listingDetail.moreBy', { name: ob.vendor.name }) %></h2>
+  <% } %>
+  <div class="listingsGrid flex js-cardWrapper"></div>
+</div>

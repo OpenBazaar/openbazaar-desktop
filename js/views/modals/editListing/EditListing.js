@@ -611,11 +611,11 @@ export default class extends BaseModal {
         title: app.polyglot.t('editListing.confirmCloseDialog.title'),
         message: app.polyglot.t(`editListing.confirmCloseDialog.${messageKey}`),
         buttons: [{
-          text: app.polyglot.t('editListing.confirmCloseDialog.btnYes'),
-          fragment: 'yes',
-        }, {
           text: app.polyglot.t('editListing.confirmCloseDialog.btnNo'),
           fragment: 'no',
+        }, {
+          text: app.polyglot.t('editListing.confirmCloseDialog.btnYes'),
+          fragment: 'yes',
         }],
       })
         .on('click-yes', () => {
