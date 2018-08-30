@@ -550,8 +550,8 @@ export default class ObRouter extends Router {
       }
 
       userPageFetchError = userPageFetchError ?
-        `${userPageFetchError} - ${reason || 'none'}` :
-        reason || 'none';
+        `${userPageFetchError} - ${reason || 'unknown'}` :
+        reason || 'unknown';
 
       let contentText = app.polyglot.t('userPage.loading.failTextStore', {
         store: `<b>${handle || `${guid.slice(0, 8)}…`}</b>`,
@@ -578,7 +578,7 @@ export default class ObRouter extends Router {
           ownPage: guid === app.profile.id,
           tab: pageState,
           listing: !!listingFetch,
-          errors: userPageFetchError,
+          errors: userPageFetchError || 'none',
         });
       });
   }
