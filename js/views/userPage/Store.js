@@ -17,6 +17,7 @@ import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import TypeFilter from './TypeFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
+import { localizeNumber } from '../../utils/number';
 
 class Store extends BaseVw {
   constructor(options = {}) {
@@ -476,8 +477,10 @@ class Store extends BaseVw {
     col.sort();
 
     this.$listingsContainer.empty();
+
     const countPhrase = app.polyglot.t('userPage.store.countListings',
-      { smart_count: col.length });
+     { smart_count: col.length, display_count: localizeNumber(col.length) });
+
     const fullListingCount =
         app.polyglot.t('userPage.store.countListingsFound',
           { countListings: `<span class="txB">${countPhrase}</span>` });
