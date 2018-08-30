@@ -343,6 +343,12 @@
         "showLess": "less",
         "all": "All"
       },
+      "typeFilter": {
+        "heading": "Type",
+        "showMore": "%{smart_count} more… |||| %{smart_count} more…",
+        "showLess": "less",
+        "all": "All"
+      },
       "toolTip": {
         "contentView": "Toggle view"
       }

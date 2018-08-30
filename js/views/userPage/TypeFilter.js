@@ -13,10 +13,10 @@ export default class extends BaseVw {
     };
 
     opts.initialState = {
-      categories: [],
+      types: [],
       selected: 'all',
       expanded: false,
-      maxInitiallyVisibleCats: 6,
+      maxInitiallyVisibleTypes: 6,
       ...(options.initialState || {}),
     };
 
@@ -31,7 +31,7 @@ export default class extends BaseVw {
   events() {
     return {
       'click .js-showMoreLess': 'onClickShowMoreLess',
-      'change input[type="radio"]': 'onChangeCategory',
+      'change input[type="radio"]': 'onChangeType',
     };
   }
 
@@ -39,13 +39,13 @@ export default class extends BaseVw {
     this.setState({ expanded: !this.getState().expanded });
   }
 
-  onChangeCategory(e) {
+  onChangeType(e) {
     this._state.selected = e.target.value;
-    this.trigger('category-change', { value: $(e.target).val() });
+    this.trigger('type-change', { value: $(e.target).val() });
   }
 
   render() {
-    loadTemplate('userPage/categoryFilter.html', (t) => {
+    loadTemplate('userPage/typeFilter.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));
