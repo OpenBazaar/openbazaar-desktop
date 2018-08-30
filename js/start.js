@@ -7,7 +7,7 @@ import moment from 'moment';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
-import { getServerCurrency } from './data/cryptoCurrencies';
+// import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
