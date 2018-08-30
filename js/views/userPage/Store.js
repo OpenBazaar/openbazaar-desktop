@@ -17,7 +17,7 @@ import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
 
-export default class extends BaseVw {
+class Store extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -192,7 +192,7 @@ export default class extends BaseVw {
 
   onClickRetryFetch() {
     this.retryPressed = true;
-    this.collection.fetch();
+    this.fetchListings();
     this.$btnRetry.addClass('processing');
   }
 
@@ -248,7 +248,7 @@ export default class extends BaseVw {
           buildRefreshAlertMessage(app.polyglot.t('userPage.store.listingDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.fetchListings()));
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();
@@ -268,7 +268,7 @@ export default class extends BaseVw {
           buildRefreshAlertMessage(app.polyglot.t('userPage.store.shippingDataChangedPopin')),
       });
 
-      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.fetchListings()));
 
       this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
         this.shippingChangePopIn.remove();
@@ -277,6 +277,10 @@ export default class extends BaseVw {
 
       this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
+  }
+
+  fetchListings(options = {}) {
+    Store.fetchListings(this.collection, options);
   }
 
   search(term) {
@@ -599,3 +603,8 @@ export default class extends BaseVw {
     return this;
   }
 }
+
+Store.fetchListings = (cl, options = {}) =>
+  cl.fetch({ cache: false, ...options });
+
+export default Store;
