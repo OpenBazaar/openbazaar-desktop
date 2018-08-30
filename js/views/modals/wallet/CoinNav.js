@@ -25,6 +25,10 @@ export default class extends baseVw {
     return 'ul';
   }
 
+  get active() {
+    return this.getState().active;
+  }
+
   render() {
     const state = this.getState();
 

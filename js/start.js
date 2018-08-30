@@ -428,10 +428,6 @@ function onboardIfNeeded() {
   return onboardIfNeededDeferred.promise();
 }
 
-function isCryptoCurrencySupported(cryptoCurrency) {
-  return !!getCurrencyByCode(cryptoCurrency);
-}
-
 let ensureValidSettingsCurDeferred;
 
 function ensureValidSettingsCurrency() {
@@ -502,32 +498,6 @@ function start() {
     // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
 
-    if (!isCryptoCurrencySupported(app.serverConfig.cryptoCurrency)) {
-      const connectLink =
-        '<button class="btnAsLink js-connect clrTEm">' +
-          `${app.polyglot.t('unsupportedCryptoCurDialog.connectLink')}` +
-          '</button>';
-
-      const unsupportedCryptoCurDialog = openSimpleMessage(
-        app.polyglot.t('unsupportedCryptoCurDialog.title'),
-        app.polyglot.t('unsupportedCryptoCurDialog.body', {
-          curCode: app.serverConfig.cryptoCurrency,
-          connectLink,
-        }),
-        {
-          dismissOnEscPress: false,
-          showCloseButton: false,
-        }
-      );
-
-      unsupportedCryptoCurDialog.$('.js-connect')
-        .on('click', () => app.connectionManagmentModal.open());
-
-      serverConnectEvents.once('connected', () => unsupportedCryptoCurDialog.remove());
-
-      return;
-    }
-
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();
@@ -536,17 +506,6 @@ function start() {
 
     if (curConn && curConn.status !== 'disconnected') {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
-
-      const serverCur = getServerCurrency();
-
-      if (serverCur.code === 'ZEC') {
-        startupConnectMessaging.setState({
-          msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
-            cancelLink: '<a class="js-cancel">' +
-              `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
-          }),
-        });
-      }
     }
 
     app.ownFollowing = new Followers([], {

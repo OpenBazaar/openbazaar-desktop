@@ -60,11 +60,6 @@
     "btnNext": "Next",
     "alreadyInUse": "Already in use"
   },
-  "unsupportedCryptoCurDialog": {
-    "title": "Unsupported Currency",
-    "body": "We are unable to proceed because the server is using a crypto currency (%{curCode}) that this client does not support. Please %{connectLink} to a different server",
-    "connectLink": "connect"
-  },
   "setValidCurDialog": {
     "title": "Invalid Local Currency",
     "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
@@ -177,8 +172,7 @@
     },
     "connectMessaging": {
       "cancelLink": "cancel",
-      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}",
-      "zecBinaryInit": "Initializing the zcash binary. This may take a few minutes. %{cancelLink}"
+      "connectAttemptMsg": "Connecting to %{serverName}. %{cancelLink}"
     }
   },
   "notifications": {
