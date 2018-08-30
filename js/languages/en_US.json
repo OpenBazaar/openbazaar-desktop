@@ -314,7 +314,7 @@
       "btnClearSearch": "Clear Search Criteria",
       "shipsToFilterAny": "(Any country)",
       "sortBy": "Sort By",
-      "countListings": "%{smart_count} listing |||| %{smart_count} listings",
+      "countListings": "%{display_count} listing |||| %{display_count} listings",
       "countListingsFound": "%{smart_count} found",
       "inactive": "Your store is currently inactive and hidden from the public. %{link}",
       "inactiveLink": "Change",
