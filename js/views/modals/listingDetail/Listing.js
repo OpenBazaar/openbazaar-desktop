@@ -18,7 +18,6 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
-import { randomInt } from '../../../utils/number';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
