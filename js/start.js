@@ -5,6 +5,7 @@ import Polyglot from 'node-polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
+import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
 import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
@@ -78,11 +79,11 @@ app.localSettings.on('change:language', (localSettings, lang) => {
     title: app.polyglot.t('langChangeRestartTitle'),
     message: app.polyglot.t('langChangeRestartMessage'),
     buttons: [{
+      text: app.polyglot.t('restartLater'),
+      fragment: 'restarLater',
+    }, {
       text: app.polyglot.t('restartNow'),
       fragment: 'restartNow',
-    }, {
-      text: app.polyglot.t('restartLater'),
-      fragment: 'restartLater',
     }],
   }).on('click-restartNow', () => location.reload())
   .on('click-restartLater', () => restartLangChangeDialog.close())
@@ -633,6 +634,20 @@ function start() {
                 app.walletBalance.set(parsedData);
               }
             });
+          }
+
+          // Make sure the client is running on a compatible version of the server.
+          if (app.settings.prettyServerVer !== serverVersionRequired) {
+            const cLink = `<a href="https://github.com/OpenBazaar/openbazaar-desktop/releases">${app.polyglot.t('serverVersionWarning.clientLink')}</a>`;
+            const sLink = `<a href="https://github.com/OpenBazaar/openbazaar-go/releases">${app.polyglot.t('serverVersionWarning.serverLink')}</a>`;
+            const message = app.polyglot.t('serverVersionWarning.message', {
+              serverVersion: app.settings.prettyServerVer,
+              expectedVersion: serverVersionRequired,
+            });
+            const body = `<p>${message}</p><p>${cLink}</p><p>${sLink}</p>`;
+            openSimpleMessage(
+              app.polyglot.t('serverVersionWarning.title'), body
+            ).$el.css('z-index', '9999999');
           }
         });
       });

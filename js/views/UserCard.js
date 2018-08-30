@@ -258,7 +258,7 @@ export default class extends BaseVw {
       const createOptions = getModeratorOptions({
         model: verifiedMod,
       });
-      if (verifiedMod) {
+      if (verifiedMod && this.model.isModerator) {
         this.verifiedMod = this.createChild(VerifiedMod, {
           ...createOptions,
           initialState: {
