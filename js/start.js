@@ -80,7 +80,7 @@ app.localSettings.on('change:language', (localSettings, lang) => {
     message: app.polyglot.t('langChangeRestartMessage'),
     buttons: [{
       text: app.polyglot.t('restartLater'),
-      fragment: 'restarLater',
+      fragment: 'restartLater',
     }, {
       text: app.polyglot.t('restartNow'),
       fragment: 'restartNow',
