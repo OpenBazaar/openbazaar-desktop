@@ -157,7 +157,7 @@
         "title": "Unable to get data about who you're following."
       },
       "unableToGetWalletBalance": {
-        "title": "Unable to get wallet balance."
+        "title": "Unable to get wallet balances."
       },
       "unableToGetSearchProviders": {
         "title": "Unable to load search providers.",

@@ -1,6 +1,6 @@
-import app from '../app';
+import app from '../../app';
 import { Collection } from 'backbone';
-import Transaction from '../models/wallet/Transaction';
+import Transaction from '../../models/wallet/Transaction';
 
 export default class extends Collection {
   model(attrs, options) {
