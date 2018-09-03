@@ -6,6 +6,13 @@ import {
   getEvents as getCurrencyEvents,
 } from '../utils/currency';
 
+// TODO
+// TODO
+// TODO
+// TODO
+// TODO
+// TODO Put note how this differs from the cryptoCurrencies data file
+
 // Since the exchange rate api is dependant on 3rd parties, we can't absolutely rely on
 // consistent results, so we'll start with a hard-coded list of crypto-listing currencies.
 // The base list could be updated from release to release. If there are additional crypto
