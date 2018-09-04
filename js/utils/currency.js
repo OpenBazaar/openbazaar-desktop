@@ -6,7 +6,6 @@ import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
 import {
-  getServerCurrency,
   getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
@@ -366,15 +365,7 @@ export function getExchangeRate(currency) {
     throw new Error('Please provide a currency.');
   }
 
-  let returnVal = exchangeRates[currency];
-  const serverCurrency = getServerCurrency();
-
-  if (serverCurrency.code === currency ||
-    serverCurrency.testnetCode === currency) {
-    returnVal = 1;
-  }
-
-  return returnVal;
+  return exchangeRates[currency];
 }
 
 /**
@@ -389,12 +380,6 @@ export function getExchangeRates() {
  * Converts an amount from one currency to another based on exchange rate data.
  */
 export function convertCurrency(amount, fromCur, toCur) {
-  const fromCurCaps = fromCur.toUpperCase();
-  const toCurCaps = toCur.toUpperCase();
-  const serverCur = getServerCurrency();
-  const isFromServerCur = fromCurCaps === serverCur.code || fromCurCaps === serverCur.testnetCode;
-  const isToServerCur = toCurCaps === serverCur.code || toCurCaps === serverCur.testnetCode;
-
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -403,28 +388,31 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new Error('Please provide an amount that is not NaN');
   }
 
-  if (typeof fromCurCaps !== 'string') {
+  if (typeof fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string');
   }
 
-  if (typeof toCurCaps !== 'string') {
+  if (typeof toCur !== 'string') {
     throw new Error('Please provide a toCur as a string');
   }
+
+  const fromCurCaps = fromCur.toUpperCase();
+  const toCurCaps = toCur.toUpperCase();
 
   if (fromCurCaps === toCurCaps) {
     return amount;
   }
 
-  if (!isFromServerCur && !exchangeRates[fromCurCaps]) {
+  if (!exchangeRates[fromCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
   }
 
-  if (!isToServerCur && !exchangeRates[toCurCaps]) {
+  if (!exchangeRates[toCurCaps]) {
     throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
   }
 
-  const fromRate = isFromServerCur ? 1 : getExchangeRate(fromCurCaps);
-  const toRate = isToServerCur ? 1 : getExchangeRate(toCurCaps);
+  const fromRate = getExchangeRate(fromCurCaps);
+  const toRate = getExchangeRate(toCurCaps);
 
   return (amount / fromRate) * toRate;
 }
@@ -476,16 +464,8 @@ export function getCurrencyValidity(cur) {
   let returnVal;
 
   if (curData) {
-    // Determine if the given currency is the one the node is running in
-    const isCurServerCurrency = curData.isCrypto &&
-      app.serverConfig.cryptoCurrency === cur ||
-      app.serverConfig.cryptoCurrency === curData.testnetCode;
-
-    if (getExchangeRate(cur) || isCurServerCurrency) {
-      returnVal = 'VALID';
-    } else {
-      returnVal = 'EXCHANGE_RATE_MISSING';
-    }
+    returnVal = getExchangeRate(cur) ?
+      'VALID' : 'EXCHANGE_RATE_MISSING';
   } else {
     returnVal = 'UNRECOGNIZED_CURRENCY';
   }

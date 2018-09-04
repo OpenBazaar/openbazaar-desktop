@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
+import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/cryptoCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
@@ -335,15 +335,26 @@ export default class extends BaseModel {
           }
         });
 
+        // TODO: perhaps a metadata.fromCur automagically set in set() and parse()
+        // in concert with the acceptedCurrencies would be a better centralization of
+        // this code...?
+        // TODO
+        // TODO
+        // TODO
+        // TODO
         // Update the crypto title based on the accepted currency and
         // coin type.
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
           const coinType = options.attrs.metadata.coinType;
-
-          // TODO: This will need to change when we implement multi-currency
-          // support. The listing itself will likely contain the coin or coins
-          // it accepts.
-          const fromCur = getServerCurrency().code;
+          let fromCur = options.attrs.metadata.acceptedCurrencies &&
+            options.attrs.metadata.acceptedCurrencies[0];
+          if (fromCur) {
+            const curObj = getCryptoCurrencyByCode(fromCur);
+            // if it's a recognized currency, ensure the mainnet code is used
+            fromCur = curObj ? curObj.code : fromCur;
+          } else {
+            fromCur = 'UNKNOWN';
+          }
           options.attrs.item.title = `${fromCur}-${coinType}`;
         } else {
           // Don't send over crypto currency specific fields if it's not a

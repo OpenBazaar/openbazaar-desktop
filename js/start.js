@@ -1,3 +1,9 @@
+// TODO
+// TODizzle
+// TODO
+// TODO
+// TODO Confirm if any hard-coded ZEC related code is neeeded anymore.
+
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
@@ -504,6 +510,9 @@ function start() {
     app.serverConfig = {
       ...app.serverConfig,
       wallets: (app.serverConfig.wallets || [])
+        // todo: use cryptoCur supported function here?
+        // TODO
+        // TODO
         .reduce((acc, cur) => {
           acc[cur] = { clientSupported: !!getCryptoCurrencyByCode(cur) };
           return acc;
@@ -567,9 +576,6 @@ function start() {
             if (metricsOn) addMetrics();
             Backbone.history.start();
           }
-
-          console.log('howdy');
-          window.howdy = app;
 
           // load chat
           const chatConvos = new ChatHeads();

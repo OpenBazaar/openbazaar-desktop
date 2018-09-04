@@ -2,7 +2,6 @@ import _ from 'underscore';
 import app from '../app';
 import {
   getCurrencyByCode as getCryptoCurByCode,
-  getServerCurrency,
 } from './cryptoCurrencies';
 
 const currencies = [
@@ -725,12 +724,7 @@ export function getCurrenciesSortedByCode() {
     return currenciesSortedByCode;
   }
 
-  const curs = [...currencies];
-  const serverCur = getServerCurrency();
-
-  if (serverCur) curs.push(serverCur);
-
-  currenciesSortedByCode = curs.sort((a, b) => {
+  currenciesSortedByCode = [...currencies].sort((a, b) => {
     if (a.code < b.code) return -1;
     if (a.code > b.code) return 1;
     return 0;

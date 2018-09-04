@@ -231,6 +231,33 @@ export function getServerCurrency() {
   return curData;
 }
 
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: doc up this bad boy
+export function supportedWalletCurs(options = {}) {
+  const opts = {
+    onClient: true,
+    onServer: true,
+    serverCurs: app && app.serverConfig && app.serverConfig.wallets || [],
+    ...options,
+  };
+
+  if (!opts.onClient && !opts.onServer) {
+    throw new Error('At least one of opts.onClient and opts.onServer must be true.');
+  }
+
+  if (!Array.isArray(opts.serverCurs)) {
+    throw new Error('opts.serverCurs must be an Array.');
+  }
+
+  return opts.serverCurs
+    .filter(cur => (opts.onClient ? cur.clientSupported : true));
+}
+
 export function getBlockChainTxUrl(txid, isTestnet) {
   const serverCur = getServerCurrency();
 

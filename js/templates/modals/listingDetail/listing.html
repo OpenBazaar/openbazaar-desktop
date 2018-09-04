@@ -112,10 +112,17 @@
                 'listingDetail.buyNow' :
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
-              const serverCur = ob.currencyMod.getServerCurrency();
-              const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
 
-              if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
+              // TODO: Change warning to info icon and test this scenario
+              // TODO
+              // TODO
+              // TODO
+              // TODO
+              
+              if (
+                !ob.metadata.acceptedCurrencies
+                  .filter(cur => ob.currency.supportedWalletCurs.includes(cur)).length
+              ) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
                   {
                     acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
