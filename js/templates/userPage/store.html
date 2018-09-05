@@ -26,7 +26,7 @@
 <% } else if (!ob.isFetching) { %>
   <div class="flex">
     <div class="col storeFilters <% if (!ob.listingCount) print('disabled') %>">
-      <div class="clrP clrBr padMd clrT clrSh2 contentBox">
+      <div class="js-shippingFilterContainer clrP clrBr padMd clrT clrSh2 contentBox">
         <div class="txB rowSm"><%= ob.polyT('userPage.store.shippingFilter.heading') %></div>
         <div class="flexVCent rowSm">
           <label class="margRSm" for="shipsToSelect"><%= ob.polyT('userPage.store.shippingFilter.shipsTo') %>:</label>
@@ -45,6 +45,7 @@
         </div>
       </div>
       <div class="js-catFilterContainer"></div>
+      <div class="js-typeFilterContainer"></div>
     </div>
     <div class="col storeListings">
       <% if (ob.listingCount) { %>

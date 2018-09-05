@@ -1,5 +1,8 @@
+/* categoryFilter.js and typeFilter.js share quite a bit. Ensure that when one is updated,
+the other is also maintained.
+*/
+
 import $ from 'jquery';
-import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
@@ -19,11 +22,10 @@ export default class extends BaseVw {
 
     super(opts);
     this.options = opts;
-    this._state = opts.initialState;
   }
 
   className() {
-    return 'clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryFilter';
+    return 'clrP clrBr padMd clrT contentBox clrSh2 form veryCompact categoryOrTypeFilter';
   }
 
   events() {
@@ -42,41 +44,12 @@ export default class extends BaseVw {
     this.trigger('category-change', { value: $(e.target).val() });
   }
 
-  get selectedCat() {
-    return this._selected;
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state = {}) {
-    const newState = {
-      ...this._state,
-      ...state,
-    };
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      if (this.rendered) this.render();
-    }
-  }
-
-  replaceState(state = {}) {
-    if (!_.isEqual(this._state, state)) {
-      this._state = state;
-      if (this.rendered) this.render();
-    }
-  }
-
   render() {
     loadTemplate('userPage/categoryFilter.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));
     });
-
-    this.rendered = true;
 
     return this;
   }

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import { Collection } from 'backbone';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -29,6 +30,8 @@ import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMe
 import { openSimpleMessage } from '../SimpleMessage';
 import NsfwWarning from '../NsfwWarning';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
+import Listings from '../../../collections/Listings';
+import MoreListings from './MoreListings';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -171,6 +174,28 @@ export default class extends BaseModal {
         e => (this._inventory = e.inventory));
     }
 
+    this.moreListingsCol = new Listings([], { guid: this.vendor.peerID });
+
+    const fetchOpts =
+      this.vendor.peerID === app.profile.id ? {} :
+      {
+        data: $.param({
+          'max-age': 60 * 60, // 1 hour
+        }),
+      };
+
+    this.moreListingsFetch = this.moreListingsCol.fetch(fetchOpts)
+      .done(() => {
+        this.moreListingsData = this.randomizeMoreListings(this.moreListingsCol);
+        setTimeout(() => {
+          if (this.moreListings) {
+            this.moreListings.setState({
+              listings: this.moreListingsData,
+            });
+          }
+        });
+      });
+
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
 
@@ -306,6 +331,17 @@ export default class extends BaseModal {
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
+  }
+
+  randomizeMoreListings(cl) {
+    if (!(cl instanceof Collection)) {
+      throw new Error('Please provide a Collection instance.');
+    }
+
+    return _.shuffle(cl.models)
+      .filter(md => md.get('slug') !== this.model.get('slug'))
+      .map(md => md.toJSON())
+      .slice(0, 8);
   }
 
   gotoPhotos() {
@@ -595,6 +631,7 @@ export default class extends BaseModal {
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
+    if (this.moreListingsFetch) this.moreListingsFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
   }
@@ -653,6 +690,17 @@ export default class extends BaseModal {
         });
         this.$('.js-socialBtns').append(this.socialBtns.render().$el);
       }
+
+      if (this.moreListings) this.moreListings.remove();
+      this.moreListings = this.createChild(MoreListings, {
+        initialState: {
+          vendor: this.vendor,
+          listings: this.moreListingsData,
+        },
+      });
+      this.listenTo(this.moreListings, 'listingDetailOpened', () => this.remove());
+      this.getCachedEl('.js-moreListings')
+        .append(this.moreListings.render().$el);
 
       this.$photoSelectedInner = this.$('.js-photoSelectedInner');
       this._$deleteListing = null;

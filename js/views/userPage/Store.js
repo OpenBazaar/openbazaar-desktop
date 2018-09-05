@@ -15,9 +15,10 @@ import BaseVw from '../baseVw';
 import ListingDetail from '../modals/listingDetail/Listing';
 import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
+import TypeFilter from './TypeFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
 
-export default class extends BaseVw {
+class Store extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -34,6 +35,7 @@ export default class extends BaseVw {
 
     this.defaultFilter = {
       category: 'all',
+      type: 'all',
       shipsTo: 'any',
       searchTerm: '',
       sortBy: 'PRICE_ASC',
@@ -192,7 +194,7 @@ export default class extends BaseVw {
 
   onClickRetryFetch() {
     this.retryPressed = true;
-    this.collection.fetch();
+    this.fetchListings();
     this.$btnRetry.addClass('processing');
   }
 
@@ -248,7 +250,7 @@ export default class extends BaseVw {
           buildRefreshAlertMessage(app.polyglot.t('userPage.store.listingDataChangedPopin')),
       });
 
-      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.listenTo(this.dataChangePopIn, 'clickRefresh', () => (this.fetchListings()));
 
       this.listenTo(this.dataChangePopIn, 'clickDismiss', () => {
         this.dataChangePopIn.remove();
@@ -268,7 +270,7 @@ export default class extends BaseVw {
           buildRefreshAlertMessage(app.polyglot.t('userPage.store.shippingDataChangedPopin')),
       });
 
-      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.collection.fetch()));
+      this.listenTo(this.shippingChangePopIn, 'clickRefresh', () => (this.fetchListings()));
 
       this.listenTo(this.shippingChangePopIn, 'clickDismiss', () => {
         this.shippingChangePopIn.remove();
@@ -277,6 +279,10 @@ export default class extends BaseVw {
 
       this.$popInMessages.append(this.shippingChangePopIn.render().el);
     }
+  }
+
+  fetchListings(options = {}) {
+    Store.fetchListings(this.collection, options);
   }
 
   search(term) {
@@ -320,28 +326,38 @@ export default class extends BaseVw {
   }
 
   get $btnRetry() {
-    return this._$btnRetry ||
-      (this._$btnRetry = this.$('.js-retryFetch'));
+    return this.getCachedEl('.js-retryFetch');
   }
 
   get $listingsContainer() {
-    return this._$listingsContainer ||
-      (this._$listingsContainer = this.$('.js-listingsContainer'));
+    return this.getCachedEl('.js-listingsContainer');
+  }
+  get $shippingFilterContainer() {
+    return this.getCachedEl('.js-shippingFilterContainer');
   }
 
   get $catFilterContainer() {
-    return this._$catFilterContainer ||
-      (this._$catFilterContainer = this.$('.js-catFilterContainer'));
+    return this.getCachedEl('.js-catFilterContainer');
+  }
+
+  get $typeFilterContainer() {
+    return this.getCachedEl('.js-typeFilterContainer');
   }
 
   get $listingCount() {
-    return this._$listingCount ||
-      (this._$listingCount = this.$('.js-listingCount'));
+    return this.getCachedEl('.js-listingCount');
   }
 
   get $noResults() {
-    return this._$noResults ||
-      (this._$noResults = this.$('.js-noResults'));
+    return this.getCachedEl('.js-noResults') || null;
+  }
+
+  get $popInMessages() {
+    return this.getCachedEl('.js-popInMessages');
+  }
+
+  get $inactiveWarning() {
+    return this.getCachedEl('.js-inactiveWarning');
   }
 
   filteredCollection(filter = this.filter, collection = this.collection) {
@@ -354,6 +370,11 @@ export default class extends BaseVw {
 
       if (this.filter.category !== 'all' &&
         md.get('categories').indexOf(this.filter.category) === -1) {
+        passesFilter = false;
+      }
+
+      if (this.filter.type !== 'all' &&
+        md.get('contractType') !== this.filter.type) {
         passesFilter = false;
       }
 
@@ -522,14 +543,44 @@ export default class extends BaseVw {
     }
   }
 
-  get $popInMessages() {
-    return this._$popInMessages ||
-      (this._$popInMessages = this.$('.js-popInMessages'));
-  }
+  renderTypes(types = this.collection.types) {
+    if (!this.typeFilter) {
+      this.typeFilter = new TypeFilter({
+        initialState: {
+          types,
+          selected: this.filter.type,
+        },
+      });
 
-  get $inactiveWarning() {
-    return this._$inactiveWarning ||
-      (this._$inactiveWarning = this.$('.js-inactiveWarning'));
+      this.typeFilter.render();
+
+      this.listenTo(this.typeFilter, 'type-change', (e) => {
+        this.filter.type = e.value;
+
+        if (this.filter.type !== 'PHYSICAL_GOOD' && this.filter.type !== 'all') {
+          this.$shippingFilterContainer.addClass('disabled');
+        } else {
+          this.$shippingFilterContainer.removeClass('disabled');
+        }
+
+        this.renderListings(this.filteredCollection());
+      });
+    } else {
+      if (types.indexOf(this.filter.type) === -1) {
+        this.filter.type = 'all';
+      }
+
+      this.typeFilter.setState({
+        types,
+        selected: this.filter.type,
+      });
+    }
+
+    if (!this.$typeFilterContainer[0].contains(this.typeFilter.el)) {
+      this.typeFilter.delegateEvents();
+      this.$typeFilterContainer.empty()
+        .append(this.typeFilter.el);
+    }
   }
 
   remove() {
@@ -538,6 +589,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
     if (this.shippingChangePopIn) this.shippingChangePopIn.remove();
 
@@ -561,13 +614,6 @@ export default class extends BaseVw {
 
     this.$sortBy = this.$('.js-sortBySelect');
     this.$shipsToSelect = this.$('.js-shipsToSelect');
-    this._$btnRetry = null;
-    this._$listingsContainer = null;
-    this._$catFilterContainer = null;
-    this._$listingCount = null;
-    this._$popInMessages = null;
-    this._$inactiveWarning = null;
-    this._$noResults = null;
 
     this.$sortBy.select2({
       minimumResultsForSearch: -1,
@@ -590,6 +636,7 @@ export default class extends BaseVw {
 
     if (!isFetching && !fetchFailed) {
       this.renderCategories(this.collection.categories);
+      this.renderTypes(this.collection.types);
 
       if (this.collection.length) {
         this.renderListings(this.filteredCollection());
@@ -599,3 +646,8 @@ export default class extends BaseVw {
     return this;
   }
 }
+
+Store.fetchListings = (cl, options = {}) =>
+  cl.fetch({ cache: false, ...options });
+
+export default Store;

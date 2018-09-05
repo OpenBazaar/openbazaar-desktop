@@ -1,9 +1,0 @@
-<div class="tx5">
-  <h1 class="txCtr"><%= ob.polyT('errorPage.listingNotFoundTitle') %></h1>
-  <% if (ob.listing) { %>
-    <p class="txCtr"><%= ob.polyT('errorPage.listingNotFoundMsg', { listing: ob.listing }) %></p>
-  <% } %>
-  <% if (ob.link) { %>
-  <p class="txCtr"><a href="<%= ob.link %>"><%= ob.polyT('errorPage.listingNotFoundLink') %></a></p>
-  <% } %>
-</div>
