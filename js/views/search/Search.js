@@ -165,9 +165,10 @@ export default class extends baseVw {
 
   /**
    * This will create a url with the term and other query parameters
-   * @param {string} term
+   * @param {string} term - the term to search for
+   * @param {boolean} reset - reset the filters
    */
-  processTerm(term) {
+  processTerm(term, reset) {
     this.term = term || '';
     // if term is false, search for *
     const query = `q=${encodeURIComponent(term || '*')}`;
@@ -176,8 +177,9 @@ export default class extends baseVw {
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
     const formData = this.getFormData(this.$filters);
     // keep any parameters that aren't present in the form on the page
-    let filters = $.param({ ...this.defaultParams, ...this.filterParams, ...formData });
-    filters = filters ? `&${filters}` : '';
+    let filters = { ...this.defaultParams };
+    if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
+    filters = filters ? `&${$.param(filters)}` : '';
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     this.callSearchProvider(newURL);
   }
@@ -201,8 +203,7 @@ export default class extends baseVw {
       this.mustSelectDefault = false;
       this.makeDefaultProvider();
     }
-    this.filterParams = '';
-    this.processTerm(this.term);
+    this.processTerm(this.term, true);
   }
 
   deleteProvider(md = this.sProvider) {
@@ -212,6 +213,12 @@ export default class extends baseVw {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
     }
+  }
+
+  resetSearch() {
+    this.serverPage = 0;
+    this.filterParams = '';
+    this.processTerm('', true);
   }
 
   clickDeleteProvider() {
@@ -414,6 +421,7 @@ export default class extends baseVw {
 
     this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
     this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
+    this.listenTo(resultsView, 'resetSearch', () => this.resetSearch());
   }
 
   clickSearchBtn() {

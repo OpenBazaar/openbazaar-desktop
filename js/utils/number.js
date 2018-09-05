@@ -1,3 +1,5 @@
+import app from '../app';
+
 /*
  * Will return a string representation of a number ensuring that standard
  * notation is used (as opposed to the default JS representation which uses
@@ -50,3 +52,22 @@ export function upToFixed(number, decimalPlaces) {
 export function randomInt(min = 0, range = 0) {
   return Math.floor((Math.random() * (range + 1)) + min);
 }
+
+/*
+ * Uses local settings' language or provided optional language to return a localized
+ * string representing the provided number.
+ *
+ * ex: number='30000.05', lang='en-us' => 30,000.05
+ * ex: number='30000.05', lang='ru' => 30 000,05
+ * ex: number='30000.05', lang='es' => 30.000,05
+*/
+export function localizeNumber(number,
+  lang = app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US'
+ ) {
+  if (typeof number !== 'number') {
+    throw new Error('Please provide a number.');
+  }
+
+  return new Intl.NumberFormat(lang).format(number);
+}
+
