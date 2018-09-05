@@ -16,6 +16,7 @@ import {
   getBlockChainAddressUrl,
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
+  areCursSupported as areCursSupportedByWallet,
 } from '../data/cryptoCurrencies';
 import {
   renderCryptoIcon,
@@ -105,6 +106,7 @@ const currencyExport = {
   getCryptoCurByCode,
   getExchangeRate,
   supportedWalletCurs,
+  areCursSupportedByWallet,
   formattedCurrency: renderFormattedCurrency,
   pairedCurrency: renderPairedCurrency,
   getBlockChainTxUrl,

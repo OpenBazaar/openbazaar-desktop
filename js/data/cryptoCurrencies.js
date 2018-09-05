@@ -238,24 +238,42 @@ export function getServerCurrency() {
 // TODO: unit test this bad boy
 // TODO: unit test this bad boy
 // TODO: doc up this bad boy
+// TODO: doc this shit up!
 export function supportedWalletCurs(options = {}) {
   const opts = {
     onClient: true,
     onServer: true,
-    serverCurs: app && app.serverConfig && app.serverConfig.wallets || [],
+    serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
     ...options,
   };
 
   if (!opts.onClient && !opts.onServer) {
-    throw new Error('At least one of opts.onClient and opts.onServer must be true.');
+    throw new Error('At least one of options.onClient or options.onServer must be true.');
   }
 
-  if (!Array.isArray(opts.serverCurs)) {
-    throw new Error('opts.serverCurs must be an Array.');
+  if (typeof opts.serverCurs !== 'object') {
+    throw new Error('options.serverCurs must be an object.');
   }
 
-  return opts.serverCurs
-    .filter(cur => (opts.onClient ? cur.clientSupported : true));
+  return Object.keys(opts.serverCurs)
+    .filter(cur => (opts.onClient ? opts.serverCurs[cur].clientSupported : true));
+}
+
+// TODO: unit test this bad boy
+// TODO: doc up this bad boy
+// TODO: doc this shit up!
+export function areCursSupported(curs = [], options = {}) {
+  if (!Array.isArray(curs)) {
+    throw new Error('Curs must be provided as an Array.');
+  }
+
+  if (curs.filter(cur => (typeof cur !== 'string')).length) {
+    throw new Error('Curs items must be provided as strings.');
+  }
+
+  const supportedCurs = supportedWalletCurs(options);
+
+  return !!(curs.filter(cur => supportedCurs.includes(cur)).length);
 }
 
 export function getBlockChainTxUrl(txid, isTestnet) {

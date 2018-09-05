@@ -113,20 +113,12 @@
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
 
-              // TODO: Change warning to info icon and test this scenario
-              // TODO
-              // TODO
-              // TODO
-              // TODO
-              
-              if (
-                !ob.metadata.acceptedCurrencies
-                  .filter(cur => ob.currency.supportedWalletCurs.includes(cur)).length
-              ) {
+              if (!ob.currencyMod.areCursSupportedByWallet(ob.metadata.acceptedCurrencies)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
                   {
-                    acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
-                    serverCur: serverCurCode,
+                    acceptedCurs: ob.metadata.acceptedCurrencies.join(', '),
+                    serverCurs: ob.currencyMod.supportedWalletCurs()
+                      .join(', '),
                   });
               } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
                 ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
@@ -141,7 +133,7 @@
                 unpurchaseable = false;
               }
 
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') }&nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-help-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT(buyNowTranslationKey) %>
