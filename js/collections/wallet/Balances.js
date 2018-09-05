@@ -16,6 +16,10 @@ export default class extends Collection {
     return new Balance(attrs, options);
   }
 
+  modelId(attrs) {
+    return attrs.code;
+  }
+
   comparator(balance) {
     // put unsupported currencies at the end
     // TODO:
@@ -29,7 +33,7 @@ export default class extends Collection {
   }
 
   parse(response) {
-    return Object.keys(response || {})
+    const foo = Object.keys(response || {})
       .map(cur => {
         const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
           app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
@@ -41,5 +45,20 @@ export default class extends Collection {
           clientSupported,
         };
       });
+
+    console.dir(foo);
+    return foo;
+    // return Object.keys(response || {})
+    //   .map(cur => {
+    //     const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
+    //       app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
+    //       false;
+
+    //     return {
+    //       ...response[cur],
+    //       code: cur,
+    //       clientSupported,
+    //     };
+    //   });
   }
 }
