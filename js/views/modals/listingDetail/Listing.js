@@ -674,6 +674,7 @@ export default class extends BaseModal {
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
         isCrypto: this.model.isCrypto,
+        _: { sortBy: _.sortBy },
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
