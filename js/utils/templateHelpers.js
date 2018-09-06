@@ -30,6 +30,31 @@ import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
 import is from 'is_js';
 
+/**
+ * This higher-order function will augment the given function so that rather than
+ * bombing on an exception, it will log the error to the console and return a fallback
+ * return value (defaults to an empty string). This is useful for templates where you'd
+ * rather the whole template doesn't bomb on bad data (for example because some 3rd party
+ * data is missing) and instead some fallback text is displayed.
+ */
+function gracefulException(func, fallbackReturnVal = '') {
+  if (typeof func !== 'function') {
+    throw new Error('Please provided a function.');
+  }
+
+  return ((...args) => {
+    let retVal = fallbackReturnVal;
+
+    try {
+      retVal = func(...args);
+    } catch (e) {
+      console.error(e);
+    }
+
+    return retVal;
+  });
+}
+
 export function polyT(...args) {
   return app.polyglot.t(...args);
 }
@@ -81,16 +106,16 @@ const currencyExport = {
   getServerCurrency,
   getCryptoCurByCode,
   getExchangeRate,
-  formattedCurrency: renderFormattedCurrency,
-  pairedCurrency: renderPairedCurrency,
+  formattedCurrency: gracefulException(renderFormattedCurrency),
+  pairedCurrency: gracefulException(renderPairedCurrency),
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
 };
 
 const crypto = {
-  cryptoIcon: renderCryptoIcon,
-  tradingPair: renderCryptoTradingPair,
-  cryptoPrice: renderCryptoPrice,
+  cryptoIcon: gracefulException(renderCryptoIcon),
+  tradingPair: gracefulException(renderCryptoTradingPair),
+  cryptoPrice: gracefulException(renderCryptoPrice),
 };
 
 export {
