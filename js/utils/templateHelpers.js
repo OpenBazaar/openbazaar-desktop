@@ -22,6 +22,7 @@ import {
   renderCryptoIcon,
   renderCryptoTradingPair,
   renderCryptoPrice,
+  ensureMainnetCode,
 } from '../utils/crypto';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
@@ -117,6 +118,7 @@ const crypto = {
   cryptoIcon: renderCryptoIcon,
   tradingPair: renderCryptoTradingPair,
   cryptoPrice: renderCryptoPrice,
+  ensureMainnetCode,
 };
 
 export {

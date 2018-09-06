@@ -1,5 +1,3 @@
-<% ob.metadata.acceptedCurrencies = ['TBTC', 'TZEC', 'TLTC', 'YoMamma', 'TBCH'] %>
-
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls withEndBtn flex">
@@ -180,17 +178,18 @@
           <%
             const curObjs = ob.metadata.acceptedCurrencies
               .map(cur => {
-                // If it's a known currency, attempt to use the mainnet code.
-                const curData = ob.currencyMod.getCryptoCurByCode(cur);
-                const code = curData && curData.code || cur;
+                const code = ob.crypto.ensureMainnetCode(cur);
+                const displayName = ob.polyTFallback(`cryptoCurrencies.${code}`, cur);
+                const sortDisplayName = displayName.toUpperCase();
 
                 return {
                   code,
-                  displayName: ob.polyTFallback(`cryptoCurrencies.${code}`, cur),
+                  displayName,
+                  sortDisplayName,
                 };
               })
 
-            _.sortBy(curObjs, 'displayName')
+            _.sortBy(curObjs, 'sortDisplayName')
               .forEach(cur => {
           %>
             <li class="flexVCent gutterHSm clrBr">
