@@ -16,7 +16,6 @@ import defaultSearchProviders from '../../data/defaultSearchProviders';
 import '../../lib/select2';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
