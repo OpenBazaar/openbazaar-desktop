@@ -33,7 +33,7 @@ export default class extends Collection {
   }
 
   parse(response) {
-    const foo = Object.keys(response || {})
+    return Object.keys(response || {})
       .map(cur => {
         const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
           app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
@@ -45,20 +45,5 @@ export default class extends Collection {
           clientSupported,
         };
       });
-
-    console.dir(foo);
-    return foo;
-    // return Object.keys(response || {})
-    //   .map(cur => {
-    //     const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
-    //       app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
-    //       false;
-
-    //     return {
-    //       ...response[cur],
-    //       code: cur,
-    //       clientSupported,
-    //     };
-    //   });
   }
 }

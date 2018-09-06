@@ -217,6 +217,12 @@ export function getCurrenciesSortedByCode() {
 // TODO: This probably needs to go away...
 // TODO: This probably needs to go away...
 export function getServerCurrency() {
+  // // temeporary, so the client doesn't implode.
+  // return {
+  //   ...currencies[0],
+  //   isTestnet: true,
+  // };
+
   if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
     throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
   }
