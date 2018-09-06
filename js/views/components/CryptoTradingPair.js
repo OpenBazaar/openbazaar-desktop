@@ -1,5 +1,16 @@
+/**
+ * Will render a a combination of two currenciees indicating that one is being
+ * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC), followed by an
+ * optional line of text indicating the exchange rate between the two currencies
+ * (the view will update if the exchange rate changes). This differs from
+ * renderCryptoTradingPair in the crypto util module (which is also the
+ * ob.crypto.tradingPair template helper) in that the latter is just a simple display
+ * of two currencies being traded for one another. If you do not need to display an
+ * exchange rate and your currencies won't change dynamically, the latter might be
+ * slightly less boilerplate to implement.
+ */
+
 import app from '../../app';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import {
   getExchangeRate,
   events as currencyEvents,
@@ -10,13 +21,12 @@ import BaseVw from '../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const serverCur = getServerCurrency();
     const opts = {
       ...options,
       initialState: {
         tradingPairClass: 'cryptoTradingPairLg',
         exchangeRateClass: '',
-        fromCur: serverCur && serverCur.code || '',
+        fromCur: '',
         fromCurAmount: 1,
         toCur: '',
         localCurrency: app.settings.get('localCurrency'),

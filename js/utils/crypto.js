@@ -32,6 +32,10 @@ export function renderCryptoIcon(options = {}) {
     throw new Error('If providing the code, it must be a non-empty string.');
   }
 
+  // todo:
+  // todo:
+  // todo:
+  // todo - force an icon to be passed in. No more single server currency shennanigans.
   if (!code) {
     const serverCur = getServerCurrency();
     code = serverCur && serverCur.code || '';
@@ -60,6 +64,16 @@ export function renderCryptoIcon(options = {}) {
   return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
 }
 
+/**
+ * Will render a a combination of two currenciees indicating that one is being
+ * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC). This differs from
+ * the CryptoTradingPair view in that the latter allows you to display the exchange
+ * rate next to the trading pair. It's also more easily updatable (just setState())
+ * in case your currencies need to change dynamically.
+ * TODO:
+ * TODO:
+ * TODO: document the options.
+ */
 export function renderCryptoTradingPair(options = {}) {
   if (typeof options.fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string.');
