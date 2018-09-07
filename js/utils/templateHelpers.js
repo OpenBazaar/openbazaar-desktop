@@ -143,7 +143,7 @@ const crypto = {
   cryptoPrice: gracefulException(renderCryptoPrice),
   ensureMainnetCode,
   supportedWalletCurs,
-  areCursSupportedByWallet,  
+  areCursSupportedByWallet,
 };
 
 export {

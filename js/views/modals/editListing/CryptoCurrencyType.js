@@ -1,6 +1,5 @@
 import app from '../../../app';
 import '../../../lib/select2';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
