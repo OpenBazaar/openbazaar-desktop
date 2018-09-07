@@ -131,8 +131,6 @@ const currencyExport = {
   getServerCurrency,
   getCryptoCurByCode,
   getExchangeRate,
-  supportedWalletCurs,
-  areCursSupportedByWallet,
   formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),
   getBlockChainTxUrl,
@@ -144,6 +142,8 @@ const crypto = {
   tradingPair: gracefulException(renderCryptoTradingPair),
   cryptoPrice: gracefulException(renderCryptoPrice),
   ensureMainnetCode,
+  supportedWalletCurs,
+  areCursSupportedByWallet,  
 };
 
 export {

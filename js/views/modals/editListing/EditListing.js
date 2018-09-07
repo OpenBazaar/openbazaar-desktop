@@ -1167,8 +1167,6 @@ export default class extends BaseModal {
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
 
-    console.dir(this.currencies);
-
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {
         this.$el.html(t({
@@ -1235,7 +1233,30 @@ export default class extends BaseModal {
           minimumResultsForSearch: Infinity,
         });
 
-        this.$('#editListingCurrency').select2()
+        this.$('#editListingCurrency').select2({
+          matcher: (params, data) => {
+            if (!params.term || params.term.trim() === '') {
+              return data;
+            }
+
+            const term = params.term
+              .toUpperCase()
+              .trim();
+
+            const name = data.element.getAttribute('data-name');
+
+            if (
+              data.text
+                .toUpperCase()
+                .includes(term) ||
+              (name && name.toUpperCase().includes(term))
+            ) {
+              return data;
+            }
+
+            return null;
+          },
+        })
           .on('change', () => this.variantInventory.render());
 
         this.$editListingTags.selectize({

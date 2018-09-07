@@ -4,6 +4,8 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
 } from './cryptoCurrencies';
+import { ensureMainnetCode } from '../utils/crypto';
+import { polyTFallback } from '../utils/templateHelpers';
 
 const currencies = [
   {
@@ -653,7 +655,7 @@ function getIndexedCurrencies() {
 
 export function getCurrencyByCode(code, options = {}) {
   const opts = {
-    includeCrypto: true,
+    includeWalletCurs: true,
     ...options,
   };
 
@@ -663,82 +665,67 @@ export function getCurrencyByCode(code, options = {}) {
 
   const currency = getIndexedCurrencies()[code];
 
-  if (!currency && opts.includeCrypto) {
+  if (!currency && opts.includeWalletCurs) {
     return getCryptoCurByCode(code);
   }
 
   return currency;
 }
 
-function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
-  options = {}) {
+function getCurrencies(options = {}) {
   const opts = {
-    sort: true,
-    includeServerCur: true,
-    ...options,
-  };
-
-  if (!lang) {
-    throw new Error('Please provide the language the translated currencies' +
-      ' should be returned in.');
-  }
-
-  let translated = currencies.map(currency => {
-    const name = app.polyglot.t(`currencies.${currency.code}`);
-    return {
-      ...currency,
-      name,
-      nameWithCode: app.polyglot.t('currencyWithCode', {
-        name,
-        code: currency.code,
-      }),
-    };
-  });
-
-  if (opts.includeServerCur && app && app.serverConfig && app.serverConfig.cryptoCurrency) {
-    const serverCur = getCryptoCurByCode(app.serverConfig.cryptoCurrency);
-
-    if (serverCur) {
-      translated = translated.concat({
-        ...serverCur,
-        name: app.polyglot.t(`cryptoCurrencies.${serverCur.code}`),
-      });
-    }
-  }
-
-  if (opts.sort) {
-    translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
-  }
-
-  return translated;
-}
-
-const memoizedGetTranslatedCurrencies =
-  _.memoize(getTranslatedCurrencies, (lang, opts) => `${lang}-${JSON.stringify(opts)}`);
-
-export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
-
-let currenciesSortedByCode;
-
-function getCurrenciesSortedByCode(options = {}) {
-  const opts = {
+    sortBy: 'name',
     includeWalletCurs: true,
+    lang: app && app.localSettings && app.localSettings.standardizedTranslatedLang() ||
+      'en-US',
     ...options,
   };
+
+  if (typeof opts.sortBy !== 'string' && opts.sortyBy !== false) {
+    throw new Error('The sortBy option must be provided as a string or false.');
+  }
+
+  if (typeof opts.lang !== 'string') {
+    throw new Error('The lang option must be a string.');
+  }
+
+  const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
+    .map(cur => {
+      const code = ensureMainnetCode(cur);
+
+      return {
+        ...(getCryptoCurByCode(code)),
+        code,
+        name: polyTFallback(`cryptoCurrencies.${code}`, code),
+      };
+    });
+
+  const fiatCurs = currencies
+    .map(cur => ({
+      ...cur,
+      name: polyTFallback(`currencies.${cur.code}`, cur.code),
+    }));
 
   const curs = [
-    ...(opts.includeWalletCurs ? supportedWalletCurs() : []),
-    ...currencies,
+    ...walletCurs,
+    ...fiatCurs,
   ];
 
-  return curs.sort((a, b) => {
-    if (a.code < b.code) return -1;
-    if (a.code > b.code) return 1;
-    return 0;
-  });
+  if (opts.sortBy) {
+    curs.sort((a, b) => a.name.localeCompare(b.name, opts.lang));
+  }
+
+  return curs;
 }
 
-const memoizedGetCurrenciesSortedByCode =
-  _.memoize(getCurrenciesSortedByCode, (opts) => JSON.stringify(opts));
+const memoizedGetCurrencies =
+  _.memoize(getCurrencies, opts => `${JSON.stringify(opts)}`);
 
-export { memoizedGetCurrenciesSortedByCode as getCurrenciesSortedByCode };
+export { memoizedGetCurrencies as getCurrencies };
+
+export function getCurrenciesSortedByCode(options = {}) {
+  return getCurrencies({
+    ...options,
+    sortBy: 'code',
+  });
+}

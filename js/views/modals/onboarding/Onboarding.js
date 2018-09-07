@@ -4,7 +4,7 @@ import '../../../lib/select2';
 import app from '../../../app';
 import { getCurrentConnection } from '../../../utils/serverConnect';
 import { getTranslatedCountries } from '../../../data/countries';
-import { getTranslatedCurrencies } from '../../../data/currencies';
+import { getCurrencies } from '../../../data/currencies';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -28,7 +28,10 @@ export default class extends BaseModal {
     this.lastAvatarImageRotate = 0;
     this.avatarChanged = false;
     this.countryList = getTranslatedCountries();
-    this.currencyList = getTranslatedCurrencies();
+    // todo: test this change
+    // todo: test this change
+    // todo: test this change
+    this.currencyList = getCurrencies();
   }
 
   className() {

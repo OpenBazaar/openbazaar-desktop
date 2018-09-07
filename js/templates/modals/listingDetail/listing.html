@@ -113,11 +113,11 @@
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
 
-              if (!ob.currencyMod.areCursSupportedByWallet(ob.metadata.acceptedCurrencies)) {
+              if (!ob.crypto.areCursSupportedByWallet(ob.metadata.acceptedCurrencies)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
                   {
                     acceptedCurs: ob.metadata.acceptedCurrencies.join(', '),
-                    serverCurs: ob.currencyMod.supportedWalletCurs()
+                    serverCurs: ob.crypto.supportedWalletCurs()
                       .join(', '),
                   });
               } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&

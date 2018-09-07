@@ -1,6 +1,6 @@
 import { remote } from 'electron';
 import openSimpleMessage from './SimpleMessage';
-import { getTranslatedCurrencies } from '../../data/cryptoCurrencies';
+import { getCurrencies } from '../../data/cryptoCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
 
@@ -19,7 +19,7 @@ export default class extends BaseModal {
       throw new Error('Please provide a server configuration model.');
     }
 
-    this.cryptoCurs = getTranslatedCurrencies();
+    this.cryptoCurs = getCurrencies();
   }
 
   className() {

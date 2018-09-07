@@ -80,11 +80,6 @@ export default class extends BaseView {
 
   tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
     return app.polyglot.t('editListing.cryptoCurrencyType.helperCoinType', {
-      // TODOD
-      // TODOD
-      // TODOD
-      // TODOD
-      // TODOD
       // toCur: getServerCurrency().code,
       toCur: 'BTC',
       fromCur,
@@ -139,6 +134,7 @@ export default class extends BaseView {
           initialState: {
             tradingPairClass: 'cryptoTradingPairLg rowSm',
             exchangeRateClass: 'clrT2 tx6',
+            fromCur: 'BTC',
             toCur: this.getCachedEl('#editListingCoinType').val(),
           },
         });

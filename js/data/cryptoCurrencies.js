@@ -245,6 +245,7 @@ export function getServerCurrency() {
 // TODO: unit test this bad boy
 // TODO: doc up this bad boy
 // TODO: doc this shit up!
+// TODO: is this the right module for this?
 export function supportedWalletCurs(options = {}) {
   const opts = {
     clientSupported: true,
@@ -263,6 +264,7 @@ export function supportedWalletCurs(options = {}) {
 // TODO: unit test this bad boy
 // TODO: doc up this bad boy
 // TODO: doc this shit up!
+// TODO: is this the right module for this?
 export function areCursSupported(curs = [], options = {}) {
   if (!Array.isArray(curs)) {
     throw new Error('Curs must be provided as an Array.');
