@@ -2,6 +2,7 @@ import _ from 'underscore';
 import app from '../app';
 import {
   getCurrencyByCode as getCryptoCurByCode,
+  supportedWalletCurs,
 } from './cryptoCurrencies';
 
 const currencies = [
@@ -719,16 +720,25 @@ export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
 
 let currenciesSortedByCode;
 
-export function getCurrenciesSortedByCode() {
-  if (currenciesSortedByCode) {
-    return currenciesSortedByCode;
-  }
+function getCurrenciesSortedByCode(options = {}) {
+  const opts = {
+    includeWalletCurs: true,
+    ...options,
+  };
 
-  currenciesSortedByCode = [...currencies].sort((a, b) => {
+  const curs = [
+    ...(opts.includeWalletCurs ? supportedWalletCurs() : []),
+    ...currencies,
+  ];
+
+  return curs.sort((a, b) => {
     if (a.code < b.code) return -1;
     if (a.code > b.code) return 1;
     return 0;
   });
-
-  return currenciesSortedByCode;
 }
+
+const memoizedGetCurrenciesSortedByCode =
+  _.memoize(getCurrenciesSortedByCode, (opts) => JSON.stringify(opts));
+
+export { memoizedGetCurrenciesSortedByCode as getCurrenciesSortedByCode };

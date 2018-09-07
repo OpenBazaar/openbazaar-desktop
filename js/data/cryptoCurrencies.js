@@ -247,22 +247,17 @@ export function getServerCurrency() {
 // TODO: doc this shit up!
 export function supportedWalletCurs(options = {}) {
   const opts = {
-    onClient: true,
-    onServer: true,
+    clientSupported: true,
     serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
     ...options,
   };
-
-  if (!opts.onClient && !opts.onServer) {
-    throw new Error('At least one of options.onClient or options.onServer must be true.');
-  }
 
   if (typeof opts.serverCurs !== 'object') {
     throw new Error('options.serverCurs must be an object.');
   }
 
   return Object.keys(opts.serverCurs)
-    .filter(cur => (opts.onClient ? opts.serverCurs[cur].clientSupported : true));
+    .filter(cur => (opts.clientSupported ? opts.serverCurs[cur].clientSupported : true));
 }
 
 // TODO: unit test this bad boy
