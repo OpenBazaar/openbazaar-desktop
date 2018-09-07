@@ -5,6 +5,7 @@ import Profile from '../../models/profile/Profile';
 import VerifiedMod, { getModeratorOptions } from './VerifiedMod';
 import { handleLinks } from '../../utils/dom';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
+import { anySupportedByWallet } from '../../data/cryptoCurrencies';
 import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseVw {
@@ -39,8 +40,7 @@ export default class extends BaseVw {
 
     const modInfo = this.model.get('moderatorInfo');
     const modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
-    this.userCurrency = app.serverConfig.cryptoCurrency;
-    this.hasValidCurrency = modCurs.includes(this.userCurrency);
+    this.hasValidCurrency = anySupportedByWallet(modCurs);
 
     handleLinks(this.el);
   }
@@ -115,7 +115,6 @@ export default class extends BaseVw {
         cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
-        userCurrency: this.userCurrency,
         hasValidCurrency: this.hasValidCurrency,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,

@@ -417,7 +417,7 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "The information for this moderator failed to load.",
     "invalid": "This user is not currently a moderator.",
-    "invalidCurrency": "This moderator does not support %{currency}.",
+    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
   },
   "moderatorDetails": {
@@ -435,7 +435,7 @@
     "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Languages",
     "currenciesSupported": "Currencies Supported",
-    "noCoinSupport": "This moderator does not support %{coin}."
+    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports."
   },
   "about": {
     "linkText": "About OpenBazaar",
@@ -1025,7 +1025,7 @@
     "returnToStore": "Return to store",
     "goToStore": "Go to store",
     "unableToPurchase": {
-      "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts %{acceptedCurs}, whereas your wallet supports %{serverCurs}.",
+      "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts %{acceptedCurs}, whereas your wallet supports %{walletCurs}.",
       "unrecognizedCur": "The item is priced in an unrecognized currency.",
       "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable.",
       "unpurchaseable": "This listing is not purchasable."

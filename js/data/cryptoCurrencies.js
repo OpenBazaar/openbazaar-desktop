@@ -265,7 +265,7 @@ export function supportedWalletCurs(options = {}) {
 // TODO: doc up this bad boy
 // TODO: doc this shit up!
 // TODO: is this the right module for this?
-export function areCursSupported(curs = [], options = {}) {
+export function onlySupportedWalletCurs(curs = [], options = {}) {
   if (!Array.isArray(curs)) {
     throw new Error('Curs must be provided as an Array.');
   }
@@ -276,7 +276,15 @@ export function areCursSupported(curs = [], options = {}) {
 
   const supportedCurs = supportedWalletCurs(options);
 
-  return !!(curs.filter(cur => supportedCurs.includes(cur)).length);
+  return curs.filter(cur => supportedCurs.includes(cur));
+}
+
+// TODO: unit test this bad boy
+// TODO: doc up this bad boy
+// TODO: doc this shit up!
+// TODO: is this the right module for this?
+export function anySupportedByWallet(...args) {
+  return !!(onlySupportedWalletCurs(...args).length);
 }
 
 export function getBlockChainTxUrl(txid, isTestnet) {

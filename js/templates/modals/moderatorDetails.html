@@ -75,12 +75,11 @@
         <hr class="clrBr">
       </div>
       <div class="flexCol flexHCent gutterV">
+        <%
+          ob.moderatorInfo.acceptedCurrencies = ['cheesy', 'WHEEZY', 'bReeZey'];
+        %>
         <% if (ob.cardState !== 'selected' && (!ob.ownMod || ob.purchase)) { %>
-          <%
-          const curSupported = ob.moderatorInfo.acceptedCurrencies.includes(
-            ob.currencyMod.getServerCurrency().isTestnet ?   ob.currencyMod.getServerCurrency().testnetCode :   ob.currencyMod.getServerCurrency().code
-          );
-          if (curSupported) { %>
+          <% if (ob.crypto.anySupportedByWallet(ob.moderatorInfo.acceptedCurrencies)) { %>
             <button class="btn clrP clrBr js-addAsModerator">
               <% if (ob.purchase) { %>
                 <%= ob.polyT('purchase.chooseModerator') %>
@@ -90,7 +89,7 @@
             </button>
           <% } else { %>
             <strong>
-              <%= ob.polyT('moderatorDetails.noCoinSupport', { coin: ob.currencyMod.getServerCurrency().code }) %>
+              <%= ob.polyT('moderatorDetails.noCoinSupport')%>
             </strong>
           <% } %>
         <% } %>

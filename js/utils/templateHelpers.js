@@ -16,7 +16,7 @@ import {
   getBlockChainAddressUrl,
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
-  areCursSupported as areCursSupportedByWallet,
+  anySupportedByWallet,
 } from '../data/cryptoCurrencies';
 import {
   renderCryptoIcon,
@@ -143,7 +143,7 @@ const crypto = {
   cryptoPrice: gracefulException(renderCryptoPrice),
   ensureMainnetCode,
   supportedWalletCurs,
-  areCursSupportedByWallet,
+  anySupportedByWallet,
 };
 
 export {
