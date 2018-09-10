@@ -86,7 +86,7 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/about/about.html', (t) => {
-      loadTemplate('brandingBox.html', brandingBoxT => {
+      loadTemplate('components/brandingBox.html', brandingBoxT => {
         this.$el.html(t({
           brandingBoxT,
           serverVersion: app.settings.prettyServerVer,

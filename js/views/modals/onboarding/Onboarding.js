@@ -207,7 +207,7 @@ export default class extends BaseModal {
     this.clearCachedElementMap();
 
     loadTemplate('modals/onboarding/onboarding.html', t => {
-      loadTemplate('brandingBox.html', brandingBoxT => {
+      loadTemplate('components/brandingBox.html', brandingBoxT => {
         const state = this.getState();
 
         this.$el.html(t({
