@@ -659,7 +659,7 @@
       "transaction": {
         "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
-        "defaultFee": "%{cur} Fee",
+        "defaultFee": "Transaction Fee",
         "low": "Economic",
         "medium": "Normal",
         "high": "Priority"
