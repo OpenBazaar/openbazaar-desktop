@@ -5,6 +5,7 @@ import SocialBtns from '../components/SocialBtns';
 import BaseModal from './BaseModal';
 import { getLangByCode } from '../../data/languages';
 import VerifiedMod, { getModeratorOptions } from '../components/VerifiedMod';
+import SupportedCurrenciesList from '../components/SupportedCurrenciesList';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -90,6 +91,16 @@ export default class extends BaseModal {
         shortText: false,
       }));
       this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+
+      if (this.supportedCurrenciesList) this.supportedCurrenciesList.remove();
+      this.supportedCurrenciesList = this.createChild(SupportedCurrenciesList, {
+        initialState: {
+          currencies: this.model.get('moderatorInfo')
+            .get('acceptedCurrencies'),
+        },
+      });
+      this.getCachedEl('.js-supportedCurrenciesList')
+        .append(this.supportedCurrenciesList.render().el);
     });
 
     return this;

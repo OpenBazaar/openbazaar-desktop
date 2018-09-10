@@ -40,8 +40,8 @@
                 <% } %>
               </div>
             <% } %>
-            <div class="flex snipKids gutterH tx5 detailsRow">
-              <% if (ob.hasValidCurrency) { %>
+            <div class="flex gutterH tx5 detailsRow">
+              <% if (ob.hasValidCurrency && false) { %>
                 <div class="flexNoShrink TODO">
                   <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
                 </div>
@@ -54,7 +54,7 @@
                 </div>
                 <div class="flexExpand flexNoShrink verifiedWrapper js-verifiedMod"></div>
               <% } else { %>
-                <span class="clrTErr"><%= ob.polyT('moderatorCard.noCoinSupport') %></span>
+                <span class="clrTErr clamp2"><%= ob.polyT('moderatorCard.noCoinSupport') %></span>
               <% } %>
             </div>
           <% } else { %>

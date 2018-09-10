@@ -185,8 +185,8 @@ function getIndexedCurrencies() {
 }
 
 export function getCurrencyByCode(code) {
-  if (!code) {
-    throw new Error('Please provide a currency code.');
+  if (typeof code !== 'string') {
+    throw new Error('Please provide a currency code as a string.');
   }
 
   return getIndexedCurrencies()[code];
