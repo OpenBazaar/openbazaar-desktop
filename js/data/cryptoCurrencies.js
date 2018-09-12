@@ -261,6 +261,24 @@ export function supportedWalletCurs(options = {}) {
     .filter(cur => (opts.clientSupported ? opts.serverCurs[cur].clientSupported : true));
 }
 
+// TODO: work this into other places
+export function isSupportedWalletCur(cur, options = {}) {
+  if (typeof cur !== 'string') {
+    throw new Error('Please provide a cur as a string.');
+  }
+
+  const opts = {
+    serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
+    ...options,
+  };
+
+  if (typeof opts.serverCurs !== 'object') {
+    throw new Error('options.serverCurs must be an object.');
+  }
+
+  return !!(opts.serverCurs[cur] && getCurrencyByCode(cur));
+}
+
 // TODO: unit test this bad boy
 // TODO: doc up this bad boy
 // TODO: doc this shit up!

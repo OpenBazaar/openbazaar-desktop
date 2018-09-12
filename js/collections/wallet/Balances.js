@@ -20,30 +20,29 @@ export default class extends Collection {
     return attrs.code;
   }
 
-  comparator(balance) {
-    // put unsupported currencies at the end
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO:
-    // TODO - test that unsupported end up at the end.
-    return `${balance.get('unsupported') ? 'ZZZZZZZZ' : ''}${balance.get('code')}`;
-  }
+  // comparator(balance) {
+  //   // put unsupported currencies at the end
+  //   // TODO:
+  //   // TODO:
+  //   // TODO:
+  //   // TODO:
+  //   // TODO:
+  //   // TODO:
+  //   // TODO - test that unsupported end up at the end.
+  //   return `${balance.get('unsupported') ? 'ZZZZZZZZ' : ''}${balance.get('code')}`;
+  // }
 
   parse(response) {
     return Object.keys(response || {})
-      .map(cur => {
-        const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
-          app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
-          false;
+      .map(cur => ({
+      // todo: is this really neccssary?
+      // const clientSupported = app && app.serverConfig && app.serverConfig.wallets &&
+      //   app.serverConfig.wallets[cur] && app.serverConfig.wallets[cur].unsupported ||
+      //   false;
 
-        return {
-          ...response[cur],
-          code: cur,
-          clientSupported,
-        };
-      });
+        ...response[cur],
+        code: cur,
+        // clientSupported,
+      }));
   }
 }

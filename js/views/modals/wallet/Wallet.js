@@ -1,210 +1,85 @@
-import $ from 'jquery';
-import { getSocket } from '../../../utils/serverConnect';
+// import $ from 'jquery';
+// import { getSocket } from '../../../utils/serverConnect';
+// import { recordEvent } from '../../../utils/metrics';
+import { isSupportedWalletCur } from '../../../data/cryptoCurrencies';
+import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
-import { recordEvent } from '../../../utils/metrics';
 import loadTemplate from '../../../utils/loadTemplate';
-import Transaction from '../../../models/wallet/Transaction';
-import Transactions from '../../../collections/wallet/Transactions';
 import BaseModal from '../BaseModal';
-import BTCTicker from '../../BTCTicker';
-import Stats from './Stats';
-import SendMoney from './SendMoney';
-import ReceiveMoney from './ReceiveMoney';
-import TransactionsVw from './Transactions';
+import CoinNav from './CoinNav';
 
 export default class extends BaseModal {
   constructor(options = {}) {
+    let navCoins = [];
+
+    if (app && app.walletBalances) {
+      navCoins = app.walletBalances.toJSON()
+        .sort((a, b) => {
+          // sort by currency display name, but leave client unsupported coins
+          // at the end
+          const getSortDisplayName = code => {
+            const displayName = polyTFallback(`cryptoCurrencies.${code}`, code);
+            return isSupportedWalletCur(code) ?
+              displayName : `ZZZZZZZZZZZ${displayName}`;
+          };
+
+
+          const aSortVal = getSortDisplayName(a.code);
+          const bSortVal = getSortDisplayName(b.code);
+
+          if (aSortVal < bSortVal) return -1;
+          if (aSortVal > bSortVal) return 1;
+          return 0;
+        });
+    }
+
     const opts = {
+      initialActiveCoin: navCoins.length && navCoins[0] &&
+        navCoins[0].code || 'BTC',
       ...options,
     };
 
     super(opts);
-    this.options = opts;
-    this.sendModeOn = true;
-    this.addressFetches = [];
-    this.needAddressFetch = true;
+    this._activeCoin = opts.initialActiveCoin;
+    this.navCoins = navCoins.map(coin => {
+      const code = coin.code;
 
-    this.transactions = new Transactions();
-
-    this.listenTo(this.transactions, 'sync', (md, response) => {
-      if (this.stats) {
-        this.stats.setState({ transactionCount: response.count });
-      }
+      return {
+        active: code === opts.initialNavCoin,
+        code,
+        name: polyTFallback(`cryptoCurrencies.${code}`, code),
+        balance: coin.confirmed,
+      };
     });
-
-    this.listenTo(app.walletBalance, 'change:confirmed', (md, confirmedAmount) => {
-      if (this.stats) {
-        this.stats.setState({
-          balance: confirmedAmount,
-        });
-      }
-    });
-
-    this.listenTo(app.settings, 'change:localCurrency', (md, curr) => {
-      if (this.stats) {
-        this.stats.setState({
-          userCurrency: curr,
-        });
-      }
-    });
-
-    const serverSocket = getSocket();
-
-    if (serverSocket) {
-      this.listenTo(serverSocket, 'message', e => {
-        // "wallet" sockets come for new transactions and when a transaction gets it's
-        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
-        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
-          if (this.stats) {
-            this.stats.setState({
-              transactionCount: this.stats.getState().transactionCount + 1,
-            });
-          }
-
-          if (this.sendModeOn) {
-            // we'll fetch the next time we show the receive money section
-            this.needAddressFetch = true;
-          } else {
-            this.fetchAddress();
-          }
-        }
-      });
-    }
   }
 
   className() {
-    return `${super.className()} wallet modalScrollPage modalMedium`;
+    return `${super.className()} wallet modalScrollPage`;
   }
 
-  events() {
-    return {
-      'click .js-toggleSendReceive': 'onClickToggleSendReceive',
-      ...super.events(),
-    };
+  // events() {
+  //   return {
+  //     'click .js-toggleSendReceive': 'onClickToggleSendReceive',
+  //     ...super.events(),
+  //   };
+  // }
+
+  // remove() {
+  //   this.addressFetches.forEach(fetch => fetch.abort());
+  //   super.remove();
+  // }
+
+  get activeCoin() {
+    return this._activeCoin;
   }
 
-  onClickToggleSendReceive() {
-    recordEvent(this.sendModeOn ? 'Wallet_ReceiveShow' : 'Wallet_SendShow');
-    this.sendModeOn = !this.sendModeOn;
-  }
-
-  onSpendSuccess(data) {
-    if (this.transactionsVw) {
-      const transaction = new Transaction({
-        value: data.amount * -1,
-        txid: data.txid,
-        timestamp: data.timestamp,
-        address: data.address,
-        memo: data.memo,
-      }, { parse: true });
-
-      this.transactionsVw.collection.unshift(transaction);
-    }
-  }
-
-  set sendModeOn(bool) {
-    if (typeof bool !== 'boolean') {
-      throw new Error('Please provide a boolean.');
-    }
-
-    if (bool !== this._sendModeOn) {
-      this.$el.toggleClass('receiveModeOn', !bool);
-      this._sendModeOn = bool;
-
-      if (bool && this.sendMoney) {
-        this.sendMoney.focusAddress();
-      }
-
-      if (!bool && this.needAddressFetch) {
-        this.fetchAddress();
+  set activeCoin(coin) {
+    if (coin !== this._activeCoin) {
+      this._activeCoin = coin;
+      if (this.coinNav) {
+        this.coinNav.setState({ active: coin });
       }
     }
-  }
-
-  get sendModeOn() {
-    return this._sendModeOn;
-  }
-
-  /**
-   * Set the contents of the Send Money form. Will return
-   * true if able to set the form or false otherwise. The most
-   * common reason for not being able to set the form is that a
-   * send is already in progress.
-   */
-  setSendFormData(data = {}, options = {}) {
-    if (!this.sendMoney) return false;
-
-    if (this.sendMoney.saveInProgress) {
-      return false;
-    }
-
-    const opts = {
-      showSendMode: true,
-      // focus will only happen if you showSendMode
-      focusAddressInput: true,
-      ...options,
-    };
-
-    if (opts.showSendMode) this.sendModeOn = true;
-    this.sendMoney.setFormData(data, !!opts.focusAddressInput);
-    return true;
-  }
-
-  fetchAddress() {
-    if (this.receiveMoney) {
-      this.receiveMoney.setState({
-        fetching: true,
-      });
-    }
-
-    this.needAddressFetch = false;
-
-    let address = '';
-
-    const fetch = $.get(app.getServerUrl('wallet/address/'))
-      .done((data) => {
-        address = data.address;
-      }).always(() => {
-        if (this.isRemoved()) return;
-
-        if (this.receiveMoney && !this.isAdressFetching()) {
-          this.receiveMoney.setState({
-            fetching: false,
-            address,
-          });
-        }
-      });
-
-    this.addressFetches.push(fetch);
-
-    return fetch;
-  }
-
-  isAdressFetching() {
-    if (this.addressFetches) {
-      return this.addressFetches.some(fetch => fetch.state() === 'pending');
-    }
-
-    return false;
-  }
-
-  open(clearSendForm = this.sendMoney && !this.sendMoney.saveInProgress) {
-    this.sendModeOn = true;
-
-    if (this.sendMoney) {
-      if (clearSendForm) this.sendMoney.clearForm();
-
-      setTimeout(() => {
-        this.sendMoney.focusAddress();
-      });
-    }
-
-    return super.open();
-  }
-
-  remove() {
-    this.addressFetches.forEach(fetch => fetch.abort());
-    super.remove();
   }
 
   render() {
@@ -216,47 +91,17 @@ export default class extends BaseModal {
 
         super.render();
 
-        if (this.btcTicker) this.btcTicker.remove();
-        this.btcTicker = this.createChild(BTCTicker);
-        this.$('.js-btcTickerContainer').append(this.btcTicker.render().$el);
+        console.dir(this.navCoins);
 
-        // render the wallet stats
-        if (this.stats) this.stats.remove();
-
-        this.stats = this.createChild(Stats, {
+        if (this.coinNav) this.coinNav.remove();
+        this.coinNav = this.createChild(CoinNav, {
           initialState: {
-            balance: app.walletBalance.get('confirmed'),
-            userCurrency: app.settings.get('localCurrency'),
+            coins: this.navCoins,
+            active: this.activeCoin,
           },
         });
 
-        this.$('.js-walletStatsContainer').html(this.stats.render().el);
-
-        // render the send money view
-        if (this.sendMoney) this.sendMoney.remove();
-        this.sendMoney = this.createChild(SendMoney);
-        this.$('.js-sendReceiveContainer').html(this.sendMoney.render().el);
-
-        // render the receive money view
-        if (this.receiveMoney) this.receiveMoney.remove();
-
-        this.receiveMoney = this.createChild(ReceiveMoney, {
-          initialState: {
-            fetching: this.isAdressFetching(),
-          },
-        });
-
-        this.listenTo(this.receiveMoney, 'click-cancel', () => (this.sendModeOn = true));
-        this.$('.js-sendReceiveContainer').append(this.receiveMoney.render().el);
-
-        if (this.transactions) this.transactions.remove();
-
-        this.transactionsVw = new TransactionsVw({
-          collection: this.transactions,
-          $scrollContainer: this.$el,
-        });
-
-        this.$('.js-transactionContainer').html(this.transactionsVw.render().el);
+        this.getCachedEl('.js-coinNavContainer').html(this.coinNav.render().el);
       });
     });
 

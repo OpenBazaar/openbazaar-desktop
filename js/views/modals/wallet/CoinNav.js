@@ -18,7 +18,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'unstyled coinNav';
+    return 'unstyled border padMdKids borderStacked clrP clrBr clrSh3';
   }
 
   tagName() {
@@ -40,6 +40,7 @@ export default class extends baseVw {
       const vw = this.createChild(CoinNavItem, {
         initialState: {
           active: state.active === coin.code,
+          ...coin,
         },
       });
 
@@ -50,7 +51,7 @@ export default class extends baseVw {
       coinContainer.appendChild(vw.render().el);
     });
 
-    this.el.html(coinContainer);
+    this.$el.html(coinContainer);
 
     return this;
   }

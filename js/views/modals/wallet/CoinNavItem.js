@@ -8,6 +8,7 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         active: false,
+        unsupported: false,
         code: '',
         name: '',
         balance: 0,
@@ -30,11 +31,11 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'coinNavItem';
+    return 'coinNavItem flexVCent gutterHSm tx4';
   }
 
   tagName() {
-    return 'li flexVCent gutterHSm tx4';
+    return 'li';
   }
 
   events() {
