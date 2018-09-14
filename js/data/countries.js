@@ -1407,6 +1407,12 @@ const countries = [
     number: '840',
   },
   {
+    name: 'United States Minor Outlying Islands',
+    dataName: 'UNITED_STATES_MINOR_ISLANDS',
+    currency: 'USD',
+    number: '581',
+  },
+  {
     name: 'Uruguay',
     dataName: 'URUGUAY',
     currency: 'UYU',
