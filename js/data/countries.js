@@ -1437,7 +1437,7 @@ const countries = [
     number: '937',
   },
   {
-    name: 'Vietnam',
+    name: 'Việt Nam',
     dataName: 'VIETNAM',
     currency: 'VND',
     number: '704',
