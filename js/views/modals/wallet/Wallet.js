@@ -14,18 +14,13 @@ export default class extends BaseModal {
 
     if (app && app.walletBalances) {
       navCoins = app.walletBalances.toJSON()
+        .filter(balanceObj => isSupportedWalletCur(balanceObj.code))
         .sort((a, b) => {
-          // sort by currency display name, but leave client unsupported coins
-          // at the end
-          const getSortDisplayName = code => {
-            const displayName = polyTFallback(`cryptoCurrencies.${code}`, code);
-            return isSupportedWalletCur(code) ?
-              displayName : `ZZZZZZZZZZZ${displayName}`;
-          };
+          const getDisplayName = code => polyTFallback(`cryptoCurrencies.${code}`, code);
 
 
-          const aSortVal = getSortDisplayName(a.code);
-          const bSortVal = getSortDisplayName(b.code);
+          const aSortVal = getDisplayName(a.code);
+          const bSortVal = getDisplayName(b.code);
 
           if (aSortVal < bSortVal) return -1;
           if (aSortVal > bSortVal) return 1;
@@ -90,8 +85,6 @@ export default class extends BaseModal {
         }));
 
         super.render();
-
-        console.dir(this.navCoins);
 
         if (this.coinNav) this.coinNav.remove();
         this.coinNav = this.createChild(CoinNav, {

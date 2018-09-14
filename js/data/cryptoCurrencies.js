@@ -119,7 +119,7 @@ const currencies = [
   },
   {
     code: 'ZEC',
-    testnetCode: 'TZEC',
+    testnetCode: 'ZEC',
     baseUnit: 100000000,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,

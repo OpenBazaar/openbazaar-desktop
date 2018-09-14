@@ -24,6 +24,11 @@ export function ensureMainnetCode(cur) {
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
  * attempt to use the server currency.
  */
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
 export function renderCryptoIcon(options = {}) {
   let code = options.code;
   const baseIconPath = '../imgs/cryptoIcons/';

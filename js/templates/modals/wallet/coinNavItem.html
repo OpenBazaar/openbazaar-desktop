@@ -1,10 +1,20 @@
 <%
-  const amount = ob.active ? '>' : ob.currencyMod.formattedCurrency(ob.balance, ob.code, ob.displayCur);
+  const convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, ob.code, ob.displayCur);
+  const formattedBalance = convertedCurrency < 1000000 ?
+    ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur) :
+    ob.abbrNum(convertedCurrency);
+  const balanceText = ob.balance ?
+    `<span class="clrTEm txB">${formattedBalance}</span>` : formattedBalance;
+  const amount = ob.active ?
+    '<i class="ion-arrow-right-c clrT2 activeBalanceIcon"></i>' :
+    balanceText;
 %>
 
 <%= ob.crypto.cryptoIcon({
   code: ob.code,
   className: 'flexNoShrink',
 }) %>
-<div class="flexNoShrink"><%= ob.polyTFallback(`cryptoCurrencies.${ob.code}`, ob.code) %></div>
-<div class="flexExpand flexHRight <%= ob.balance > 0 && 'clrTEm' %>"><%= amount %></div>
+<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyTFallback(`cryptoCurrencies.${ob.code}`, ob.code) %></div>
+<div class="flexNoShrink <%= ob.balance > 0 ? 'clrTEm' : '' %>">
+  <div class="flexVCent flexHRight"><%= amount %></div>
+</div>

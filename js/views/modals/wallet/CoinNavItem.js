@@ -1,5 +1,6 @@
 // import _ from 'underscore';
 import app from '../../../app';
+import { abbrNum } from '../../../utils';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -8,9 +9,6 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         active: false,
-        unsupported: false,
-        code: '',
-        name: '',
         balance: 0,
         displayCur: app && app.settings && app.settings.get('localCurrency') || 'PLN',
         ...options.initialState,
@@ -31,7 +29,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'coinNavItem flexVCent gutterHSm tx4';
+    return 'coinNavItem flexVCent gutterHSm lineHeight1 tx4 clrT2';
   }
 
   tagName() {
@@ -55,6 +53,7 @@ export default class extends baseVw {
     loadTemplate('modals/wallet/coinNavItem.html', (t) => {
       this.$el.html(t({
         ...state,
+        abbrNum,
       }));
     });
 

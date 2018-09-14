@@ -1,11 +1,38 @@
 .wallet {
-  
   .walletIconWrap {
     display: inline-flex;
     width: auto;
 
     .iconWallet {
       width: 18px;
+    }
+  }
+
+  .coinNav {
+    .coinNavItem {
+      cursor: pointer;
+
+      .coinName {
+        // in case the name and/or balance are really long, don't let
+        // the name column get too small
+        min-width: 80px;
+        word-wrap: break-word;
+      }
+
+      &.active {
+        cursor: default;
+        font-weight: bold;
+        outline: {
+          style: solid;
+          width: 1px;
+        }
+
+        .activeBalanceIcon {
+          font-size: 22px;
+          line-height: 1;
+          position: absolute;
+        }        
+      }
     }
   }
 }
