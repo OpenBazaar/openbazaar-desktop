@@ -25,10 +25,6 @@ export default class extends baseVw {
     return 'ul';
   }
 
-  get active() {
-    return this.getState().active;
-  }
-
   render() {
     const state = this.getState();
 
@@ -44,8 +40,9 @@ export default class extends baseVw {
         },
       });
 
-      this.listenTo(vw, 'click', e => {
+      this.listenTo(vw, 'selected', e => {
         this.setState({ active: e.code });
+        this.trigger('coinSelected', { code: e.code });
       });
 
       coinContainer.appendChild(vw.render().el);

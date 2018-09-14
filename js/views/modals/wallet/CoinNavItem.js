@@ -43,7 +43,9 @@ export default class extends baseVw {
   }
 
   onClick() {
-    this.trigger('click', { code: this.getState().code });
+    if (!this.getState().active) {
+      this.trigger('selected', { code: this.getState().code });
+    }
   }
 
   render() {
