@@ -417,6 +417,12 @@ const countries = [
     number: '978',
   },
   {
+    name: 'Eswatini',
+    dataName: 'ESWATINI',
+    currency: 'SZL',
+    number: '748',
+  },
+  {
     name: 'Ethiopia',
     dataName: 'ETHIOPIA',
     currency: 'ETB',
@@ -1267,12 +1273,6 @@ const countries = [
     dataName: 'SVALBARD',
     currency: 'NOK',
     number: '578',
-  },
-  {
-    name: 'Swaziland',
-    dataName: 'SWAZILAND',
-    currency: 'SZL',
-    number: '748',
   },
   {
     name: 'Sweden',
