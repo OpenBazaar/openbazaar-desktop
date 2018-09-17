@@ -1,6 +1,7 @@
 // import _ from 'underscore';
 import app from '../../../app';
 import { abbrNum } from '../../../utils';
+import { NoExchangeRateDataError } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -56,6 +57,7 @@ export default class extends baseVw {
       this.$el.html(t({
         ...state,
         abbrNum,
+        NoExchangeRateDataError,
       }));
     });
 

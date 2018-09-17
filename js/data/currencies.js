@@ -691,16 +691,16 @@ function getCurrencies(options = {}) {
 
   const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
     .map(cur => {
-      const code = ensureMainnetCode(cur);
-      const name = polyTFallback(`cryptoCurrencies.${code}`, code);
+      // const code = ensureMainnetCode(cur);
+      const name = polyTFallback(`cryptoCurrencies.${cur}`, cur);
 
       return {
-        ...(getCryptoCurByCode(code)),
-        code,
+        ...(getCryptoCurByCode(cur)),
+        code: cur,
         name,
         nameWithCode: app.polyglot.t('currencyWithCode', {
           name,
-          code,
+          cur,
         }),
       };
     });

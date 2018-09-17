@@ -1,6 +1,18 @@
 <%
-  const convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, ob.code, ob.displayCur);
-  const formattedBalance = convertedCurrency < 1000000 ?
+  let convertedCurrency;
+
+  try {
+    convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, ob.code, ob.displayCur);
+  } catch (e) {
+    if (e instanceof ob.NoExchangeRateDataError) {
+     // pass - we'll just show the unconverted amount if the exchange rate data isn't
+     // available
+    } else {
+      throw e; // let others bubble up
+    }
+  }
+
+  const formattedBalance = convertedCurrency === undefined || convertedCurrency < 1000000 ?
     ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur) :
     ob.abbrNum(convertedCurrency);
   const balanceText = ob.balance ?

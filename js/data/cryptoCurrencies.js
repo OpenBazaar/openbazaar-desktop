@@ -119,7 +119,7 @@ const currencies = [
   },
   {
     code: 'ZEC',
-    testnetCode: 'ZEC',
+    testnetCode: 'TZEC',
     baseUnit: 100000000,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
@@ -145,6 +145,10 @@ const currencies = [
 
 export default currencies;
 
+// TODO: is this really needed anymore? What is this used for?
+// TODO: is this really needed anymore? What is this used for?
+// TODO: is this really needed anymore? What is this used for?
+// TODO: is this really needed anymore? What is this used for?
 const defaultLangParam = app && app.localSettings &&
   app.localSettings.standardizedTranslatedLang() || 'en-US';
 function getTranslatedCurrencies(lang = defaultLangParam, sort = true) {
@@ -175,7 +179,7 @@ let _indexedCurrencies;
 function getIndexedCurrencies() {
   if (_indexedCurrencies) return _indexedCurrencies;
 
-  _indexedCurrencies = memoizedGetTranslatedCurrencies(undefined, false)
+  _indexedCurrencies = currencies
     .reduce((indexedObj, currency) => {
       indexedObj[currency.code] = indexedObj[currency.testnetCode] = { ...currency };
       return indexedObj;

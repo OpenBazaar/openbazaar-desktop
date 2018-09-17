@@ -114,7 +114,7 @@ export default class extends BaseModal {
 
         // const transactions = this[`${this.getState().transactionCoin}Transactions`];
 
-        this.BTCTransactions.fetch();
+        this[app.serverConfig.testnet ? 'TBTCTransactions' : 'BTCTransactions'].fetch();
 
         // if (transactions) {
         //   // this.getCachedEl('.js-transactions').html()

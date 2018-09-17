@@ -74,9 +74,10 @@ export function polyT(key, options) {
 // TODO
 // Apply this to places this functionality was manually done prior to this function creation!
 export function polyTFallback(key, fallback, options) {
-  const translated = polyT(key, options);
+  const processedKey = app.polyglot.getKey(key);
+  const translated = polyT(processedKey, options);
 
-  if (translated === key) {
+  if (translated === processedKey) {
     // no translation is present for the given key
     return fallback;
   }

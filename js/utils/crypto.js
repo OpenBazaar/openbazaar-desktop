@@ -59,8 +59,8 @@ export function renderCryptoIcon(options = {}) {
   const attrs = Object.keys(opts.attrs).reduce(
     (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
   );
-  const iconUrl = opts.code ?
-    `url(${baseIconPath}${opts.code}-icon.png),` :
+  const iconUrl = code ?
+    `url(${baseIconPath}${code}-icon.png),` :
     '';
   const defaultIcon = opts.defaultIcon ?
     `url(${opts.defaultIcon})` :

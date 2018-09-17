@@ -8,6 +8,7 @@ import { getCurrencyByCode } from '../data/currencies';
 import {
   getCurrencyByCode as getCryptoCurByCode,
 } from '../data/cryptoCurrencies';
+import { ensureMainnetCode } from '../utils/crypto';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
@@ -396,23 +397,25 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new Error('Please provide a toCur as a string');
   }
 
-  const fromCurCaps = fromCur.toUpperCase();
-  const toCurCaps = toCur.toUpperCase();
+  const fromCurCode = ensureMainnetCode(fromCur.toUpperCase());
+  const toCurCode = ensureMainnetCode(toCur.toUpperCase());
 
-  if (fromCurCaps === toCurCaps) {
+  if (fromCurCode === toCurCode) {
     return amount;
   }
 
-  if (!exchangeRates[fromCurCaps]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
+  if (!exchangeRates[fromCurCode]) {
+    throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
+      `${fromCur.toUpperCase()}.`);
   }
 
-  if (!exchangeRates[toCurCaps]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
+  if (!exchangeRates[toCurCode]) {
+    throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
+      `${toCur.toUpperCase()}.`);
   }
 
-  const fromRate = getExchangeRate(fromCurCaps);
-  const toRate = getExchangeRate(toCurCaps);
+  const fromRate = getExchangeRate(fromCurCode);
+  const toRate = getExchangeRate(toCurCode);
 
   return (amount / fromRate) * toRate;
 }

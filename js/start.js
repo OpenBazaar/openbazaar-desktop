@@ -42,6 +42,7 @@ import Settings from './models/settings/Settings';
 import WalletBalances from './collections/wallet/Balances';
 import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
+import { ensureMainnetCode } from './utils/crypto';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
@@ -72,7 +73,22 @@ function getValidLanguage(lang) {
 const initialLang = getValidLanguage(app.localSettings.get('language'));
 app.localSettings.set('language', initialLang);
 moment.locale(initialLang);
+// TODO: PUT this monkey patching shennanigans in it's own module!
 app.polyglot = new Polyglot();
+app.polyglot.getKey = key => {
+  const splitKey = key.split('.');
+  return splitKey.map((keyFrag, index) => {
+    if (index === 1 && splitKey[0] === 'cryptoCurrencies' &&
+      keyFrag) {
+      return ensureMainnetCode(keyFrag);
+    }
+
+    return keyFrag;
+  }).join('.');
+};
+const oldPolyT = app.polyglot.t;
+app.polyglot.t = (key, options) =>
+  oldPolyT.apply(app.polyglot, [app.polyglot.getKey(key), options]);
 app.polyglot.extend(require(`./languages/${initialLang}.json`));
 
 app.localSettings.on('change:language', (localSettings, lang) => {
