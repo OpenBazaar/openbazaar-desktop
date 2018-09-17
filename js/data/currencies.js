@@ -4,7 +4,6 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
 } from './cryptoCurrencies';
-import { ensureMainnetCode } from '../utils/crypto';
 import { polyTFallback } from '../utils/templateHelpers';
 
 const currencies = [
@@ -691,7 +690,6 @@ function getCurrencies(options = {}) {
 
   const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
     .map(cur => {
-      // const code = ensureMainnetCode(cur);
       const name = polyTFallback(`cryptoCurrencies.${cur}`, cur);
 
       return {
