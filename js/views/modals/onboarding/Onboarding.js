@@ -32,6 +32,8 @@ export default class extends BaseModal {
     // todo: test this change
     // todo: test this change
     this.currencyList = getCurrencies();
+    console.log('moo');
+    window.moo = this.currencyList;
   }
 
   className() {

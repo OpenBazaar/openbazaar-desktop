@@ -84,8 +84,11 @@ class Spend extends BaseModel {
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
         } else if (exchangeRateAvailable &&
-          this.amountInServerCur >= app.walletBalance.get('confirmed')) {
-          addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+          app.walletBalances) {
+          const balanceMd = app.walletBalances.get(attrs.wallet);
+          if (balanceMd && this.amountInServerCur >= balanceMd.get('confirmed')) {
+            addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+          }
         }
 
         if (this.feeLevels.indexOf(attrs.feeLevel) === -1) {
@@ -164,13 +167,17 @@ export function spend(fields) {
       });
   } else {
     save.done(data => {
-      if (app.walletBalance) {
-        app.walletBalance.set(
-          app.walletBalance.parse({
-            confirmed: data.confirmedBalance,
-            unconfirmed: data.unconfirmedBalance,
-          })
-        );
+      if (app.walletBalances) {
+        const balanceMd = app.walletBalances.get(this.get('wallet'));
+
+        if (balanceMd) {
+          balanceMd.set(
+            app.walletBalance.parse({
+              confirmed: data.confirmedBalance,
+              unconfirmed: data.unconfirmedBalance,
+            })
+          );
+        }
       }
 
       const wallet = getWallet();

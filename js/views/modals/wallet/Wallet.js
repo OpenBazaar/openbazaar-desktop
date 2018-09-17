@@ -5,6 +5,8 @@ import { isSupportedWalletCur } from '../../../data/cryptoCurrencies';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import Spend from '../../../models/wallet/Spend';
+import Transactions from '../../../collections/wallet/Transactions';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 
@@ -46,6 +48,26 @@ export default class extends BaseModal {
         balance: coin.confirmed,
       };
     });
+
+    this.navCoins.forEach(coin => {
+      const code = coin.code;
+      console.log(`${code}Spend`);
+      window[`${code}Spend`] = this[`${code}Spend`] = new Spend({ wallet: code });
+      console.log(`${code}Transactions`);
+      window[`${code}Transactions`] = this[`${code}Transactions`] =
+        new Transactions([], { coinType: code });
+    });
+
+    this.coinNav = this.createChild(CoinNav, {
+      initialState: {
+        coins: this.navCoins,
+        active: this.activeCoin,
+      },
+    }).render();
+
+    this.listenTo(this.coinNav, 'coinSelected', e => {
+      this.activeCoin = e.code;
+    });
   }
 
   className() {
@@ -71,9 +93,10 @@ export default class extends BaseModal {
   set activeCoin(coin) {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
-      if (this.coinNav) {
-        this.coinNav.setState({ active: coin });
-      }
+      this.coinNav.setState({ active: coin });
+      this.setState({
+        transactionCoin: coin,
+      });
     }
   }
 
@@ -86,15 +109,17 @@ export default class extends BaseModal {
 
         super.render();
 
-        if (this.coinNav) this.coinNav.remove();
-        this.coinNav = this.createChild(CoinNav, {
-          initialState: {
-            coins: this.navCoins,
-            active: this.activeCoin,
-          },
-        });
+        this.coinNav.delegateEvents();
+        this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-        this.getCachedEl('.js-coinNavContainer').html(this.coinNav.render().el);
+        const transactions = this[`${this.getState().transactionCoin}Transactions`];
+
+        this.BTCTransactions.fetch();
+
+        // if (transactions) {
+        //   // this.getCachedEl('.js-transactions').html()
+        // }
+        // js-btcTransactions
       });
     });
 

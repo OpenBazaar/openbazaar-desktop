@@ -692,19 +692,32 @@ function getCurrencies(options = {}) {
   const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
     .map(cur => {
       const code = ensureMainnetCode(cur);
+      const name = polyTFallback(`cryptoCurrencies.${code}`, code);
 
       return {
         ...(getCryptoCurByCode(code)),
         code,
-        name: polyTFallback(`cryptoCurrencies.${code}`, code),
+        name,
+        nameWithCode: app.polyglot.t('currencyWithCode', {
+          name,
+          code,
+        }),
       };
     });
 
   const fiatCurs = currencies
-    .map(cur => ({
-      ...cur,
-      name: polyTFallback(`currencies.${cur.code}`, cur.code),
-    }));
+    .map(cur => {
+      const name = polyTFallback(`currencies.${cur.code}`, cur.code);
+
+      return {
+        ...cur,
+        name,
+        nameWithCode: app.polyglot.t('currencyWithCode', {
+          name,
+          code: cur.code,
+        }),
+      };
+    });
 
   const curs = [
     ...walletCurs,
