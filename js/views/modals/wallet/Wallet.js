@@ -112,7 +112,7 @@ export default class extends BaseModal {
         this.coinNav.delegateEvents();
         this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-        const transactions = this[`${this.getState().transactionCoin}Transactions`];
+        // const transactions = this[`${this.getState().transactionCoin}Transactions`];
 
         this.BTCTransactions.fetch();
 
