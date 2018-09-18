@@ -19,6 +19,11 @@
         word-wrap: break-word;
       }
 
+      .balanceText {
+        word-wrap: break-word;
+        max-width: 100px;
+      }
+
       &.active {
         cursor: default;
         font-weight: bold;

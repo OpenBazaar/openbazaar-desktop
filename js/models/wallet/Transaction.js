@@ -4,6 +4,11 @@ import { getServerCurrency } from '../../data/cryptoCurrencies';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
+  constructor(attrs = {}, options = {}) {
+    super(attrs, options);
+    this.options = options;
+  }
+
   defaults() {
     return {
       confirmations: 0,
@@ -60,7 +65,7 @@ export default class extends BaseModel {
     return super.set(attrs, opts);
   }
 
-  parse(response = {}) {
+  parse(response = {}, options = {}) {
     let returnVal = { ...response };
 
     // The client will in set() manage the status attribute. The reason is that
@@ -89,7 +94,7 @@ export default class extends BaseModel {
         ...returnVal,
         // Convert from base units
         value: integerToDecimal(returnVal.value,
-          app.serverConfig.cryptoCurrency),
+          this.options ? this.options.coinType : options.coinType),
       };
     }
 

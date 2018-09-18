@@ -3,7 +3,7 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   isSupportedWalletCur,
 } from '../../data/cryptoCurrencies';
-import { getWallet } from '../../utils/modalManager';
+// import { getWallet } from '../../utils/modalManager';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -68,15 +68,24 @@ class Spend extends BaseModel {
             { cur: walletCur.name }));
         }
 
-        const exchangeRateAvailable = typeof getExchangeRate(attrs.currency) === 'number';
+        let exchangeRateAvailable = false;
 
         if (!attrs.currency) {
           addError('currency', 'Please provide a currency.');
-        } else if (!exchangeRateAvailable) {
-          addError('currency', app.polyglot.t('spendModelErrors.missingExchangeRateData', {
-            cur: attrs.currency,
-            serverCur: walletCur.code,
-          }));
+        } else {
+          exchangeRateAvailable = attrs.currency === attrs.wallet ||
+            typeof getExchangeRate(attrs.currency) === 'number';
+
+          if (!exchangeRateAvailable) {
+            // TODO:
+            // TODO:
+            // TODO:
+            // TODO: test this scenario.
+            addError('currency', app.polyglot.t('spendModelErrors.missingExchangeRateData', {
+              cur: attrs.currency,
+              serverCur: walletCur.code,
+            }));
+          }
         }
 
         if (typeof attrs.amount !== 'number') {
@@ -180,16 +189,19 @@ export function spend(fields) {
         }
       }
 
-      const wallet = getWallet();
+      // const wallet = getWallet();
 
-      if (wallet && wallet.onSpendSuccess) {
-        wallet.onSpendSuccess({
-          address: spendModel.get('address'),
-          ...data,
-        });
-      }
+      // if (wallet && wallet.onSpendSuccess) {
+      //   wallet.onSpendSuccess({
+      //     address: spendModel.get('address'),
+      //     ...data,
+      //   });
+      // }
     });
   }
 
   return save;
 }
+
+console.log('spend');
+window.spend = spend;

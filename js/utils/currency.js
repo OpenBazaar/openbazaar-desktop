@@ -107,6 +107,13 @@ export function integerToDecimal(amount, currency, options = {}) {
   return returnVal;
 }
 
+// TODO: Doc me Up
+// TODO
+// TODO
+export function isFiatCur(code) {
+  return !!getCurrencyByCode(code, { includeWalletCurs: false });
+}
+
 /**
  * Will increase the desired number of decimal places to display if the
  * desired amount would render a poorly represented price. For example,
@@ -366,7 +373,9 @@ export function getExchangeRate(currency) {
     throw new Error('Please provide a currency.');
   }
 
-  return exchangeRates[currency];
+  const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
+
+  return exchangeRates[cur];
 }
 
 /**

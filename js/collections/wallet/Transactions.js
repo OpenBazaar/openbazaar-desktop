@@ -13,7 +13,10 @@ export default class extends Collection {
   }
 
   model(attrs, options) {
-    return new Transaction(attrs, options);
+    return new Transaction(attrs, {
+      coinType: options.collection.options.coinType,
+      ...options,
+    });
   }
 
   url() {

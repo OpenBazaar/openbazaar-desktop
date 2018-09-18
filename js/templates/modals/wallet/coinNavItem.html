@@ -12,9 +12,14 @@
     }
   }
 
-  const formattedBalance = convertedCurrency === undefined || convertedCurrency < 1000000 ?
-    ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur) :
-    ob.abbrNum(convertedCurrency);
+  // TODO
+  // TODO
+  // TODO
+  // TODO - maxDisplayDecimals of 2 for fiat currencies.
+  const formattedBalance = convertedCurrency === undefined ?
+    ob.currencyMod.formatCurrency(ob.balance, ob.code, { maxDisplayDecimals: 4 }) :
+    ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur, { maxDisplayDecimals: 4 });
+
   const balanceText = ob.balance ?
     `<span class="clrTEm txB">${formattedBalance}</span>` : formattedBalance;
   const amount = ob.active ?
@@ -27,6 +32,6 @@
   className: 'flexNoShrink',
 }) %>
 <div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyTFallback(`cryptoCurrencies.${ob.code}`, ob.code) %></div>
-<div class="flexNoShrink <%= ob.balance > 0 ? 'clrTEm' : '' %>">
+<div class="<%= ob.balance > 0 ? 'clrTEm' : '' %> flexNoShrink balanceText">
   <div class="flexVCent flexHRight"><%= amount %></div>
 </div>

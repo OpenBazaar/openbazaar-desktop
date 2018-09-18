@@ -1,4 +1,4 @@
-// import $ from 'jquery';
+import $ from 'jquery';
 // import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
 import { isSupportedWalletCur } from '../../../data/cryptoCurrencies';
@@ -30,10 +30,15 @@ export default class extends BaseModal {
         });
     }
 
+    const initialActiveCoin = navCoins.length && navCoins[0] &&
+        navCoins[0].code || 'BTC';
     const opts = {
-      initialActiveCoin: navCoins.length && navCoins[0] &&
-        navCoins[0].code || 'BTC',
+      initialActiveCoin,
       ...options,
+      initialState: {
+        transactionCoin: initialActiveCoin,
+        ...options.initialState,
+      },
     };
 
     super(opts);
@@ -56,6 +61,9 @@ export default class extends BaseModal {
       console.log(`${code}Transactions`);
       window[`${code}Transactions`] = this[`${code}Transactions`] =
         new Transactions([], { coinType: code });
+      this.listenTo(this[`${code}Transactions`], 'update', () => {
+        this.render();
+      });
     });
 
     this.coinNav = this.createChild(CoinNav, {
@@ -97,6 +105,8 @@ export default class extends BaseModal {
       this.setState({
         transactionCoin: coin,
       });
+      const transactions = this[`${this.getState().transactionCoin}Transactions`];
+      if (transactions) transactions.fetch();
     }
   }
 
@@ -112,14 +122,17 @@ export default class extends BaseModal {
         this.coinNav.delegateEvents();
         this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-        // const transactions = this[`${this.getState().transactionCoin}Transactions`];
+        const transactions = this[`${this.getState().transactionCoin}Transactions`];
 
-        this[app.serverConfig.testnet ? 'TBTCTransactions' : 'BTCTransactions'].fetch();
+        if (transactions) {
+          const transFrag = document.createDocumentFragment();
+          transactions.forEach(trans => {
+            $(`<div>${JSON.stringify(trans.toJSON())}<br /><br /></div>`)
+              .appendTo(transFrag);
+          });
 
-        // if (transactions) {
-        //   // this.getCachedEl('.js-transactions').html()
-        // }
-        // js-btcTransactions
+          this.getCachedEl('.js-transactions').html(transFrag);
+        }
       });
     });
 

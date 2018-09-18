@@ -4,6 +4,7 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
 } from './cryptoCurrencies';
+import { ensureMainnetCode } from '../utils/crypto';
 import { polyTFallback } from '../utils/templateHelpers';
 
 const currencies = [
@@ -698,7 +699,7 @@ function getCurrencies(options = {}) {
         name,
         nameWithCode: app.polyglot.t('currencyWithCode', {
           name,
-          cur,
+          code: ensureMainnetCode(cur),
         }),
       };
     });
