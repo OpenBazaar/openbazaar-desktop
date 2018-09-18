@@ -31,6 +31,7 @@ import { upToFixed } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
+import { getKey as getTranslationKey } from '../utils/Polyglot';
 import is from 'is_js';
 
 /**
@@ -70,11 +71,10 @@ export function polyT(key, options) {
  * string in that case, e.g. app.polyglot.t('howdy', 'no soup for you') would return
  * 'no soup for you' if the 'howdy' key is not presetn.
  */
-// TODO
-// TODO
-// Apply this to places this functionality was manually done prior to this function creation!
+// TODO: Apply this to places this functionality was manually done prior to this
+// function creation!
 export function polyTFallback(key, fallback, options) {
-  const processedKey = app.polyglot.getKey(key);
+  const processedKey = getTranslationKey(key);
   const translated = polyT(processedKey, options);
 
   if (translated === processedKey) {
