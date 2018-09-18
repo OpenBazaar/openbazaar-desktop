@@ -605,7 +605,7 @@ function start() {
           if (serverSocket) {
             serverSocket.on('message', (e = {}) => {
               if (e.jsonData.walletUpdate) {
-                app.walletBalances.set(app.walletBalances.parse(e.jsonData.walletUpdate));
+                app.walletBalances.set(e.jsonData.walletUpdate, { parse: true });
               }
             });
           }
