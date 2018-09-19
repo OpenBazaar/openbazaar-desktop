@@ -13,7 +13,6 @@ import moment from 'moment';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
-import { getCurrencyByCode as getCryptoCurrencyByCode } from './data/walletCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
