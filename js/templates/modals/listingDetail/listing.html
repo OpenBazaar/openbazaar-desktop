@@ -106,6 +106,7 @@
               </div>
             <% }); %>
             <%
+              const priceCryptoCode = ob.currencyMod.getCryptoCurByCode(ob.price.currencyCode);
               let tip;
               let buyNowClass = 'disabled';
               let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
@@ -121,7 +122,18 @@
                       .join(', '),
                   });
               } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+                !(
+                  priceCryptoCode &&
+                  ob.crypto.anySupportedByWallet([priceCryptoCode.code, priceCryptoCode.testnetCode])
+                ) &&
                 ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
+                // Ensure we have exchange rate data based on the currency the listing is listed
+                // in. Otherwise, it is not purchaseable since the price cannot be determined.
+                // If the listing price code is one of the accepted currencies AND the user pays in
+                // that currency, then exchange rate data is not needed.
+                // TODO:
+                // TODO:
+                // TODO: ugh - how to handle that case?
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
                    ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
                   ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');

@@ -695,7 +695,7 @@ function getCurrencies(options = {}) {
 
       return {
         ...(getCryptoCurByCode(cur)),
-        code: cur,
+        code: ensureMainnetCode(cur),
         name,
         nameWithCode: app.polyglot.t('currencyWithCode', {
           name,
@@ -724,7 +724,7 @@ function getCurrencies(options = {}) {
   ];
 
   if (opts.sortBy) {
-    curs.sort((a, b) => a.name.localeCompare(b.name, opts.lang));
+    curs.sort((a, b) => a[opts.sortBy].localeCompare(b[opts.sortBy], opts.lang));
   }
 
   return curs;

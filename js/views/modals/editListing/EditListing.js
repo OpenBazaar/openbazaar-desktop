@@ -1166,6 +1166,8 @@ export default class extends BaseModal {
 
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
+    console.log('moo');
+    window.moo = this.currencies;
 
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {

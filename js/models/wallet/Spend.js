@@ -202,6 +202,3 @@ export function spend(fields) {
 
   return save;
 }
-
-console.log('spend');
-window.spend = spend;

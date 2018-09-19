@@ -2,7 +2,6 @@ import _ from 'underscore';
 import app from '../app';
 import bitcoreLib from 'bitcore-lib';
 import bech32 from 'bech32';
-import { getCurrencyByCode as getFiatCurrencyByCode } from '../data/currencies';
 
 // If a currency does not support fee bumping or you want to disable it, do not provide a
 // feeBumpTransactionSize setting.
@@ -267,8 +266,8 @@ export function getServerCurrency() {
  *   that information, the client can't really support the currency since fundamental information
  *   (e.g baseUnits) aren't available. In most context, we will not want to show a currency if it
  *   is not client supported.
- * @param {object} [options.serverCurs=app.serverConfig.wallets] - The object of currencies that
- *   are supported by the server's wallet. By default this is obtained from the server config
+ * @param {Array} [options.serverCurs=app.serverConfig.wallets] - The list of currencies that
+ *   are supported by the server's wallet. By default, this is obtained from the server config
  *   API. In almost all cases, the default should be used. It's mainly exposed as an option
  *   for unit testing.
  * @return {Array} An Array containing the currency codes that are supported by the wallet.
@@ -276,7 +275,7 @@ export function getServerCurrency() {
 export function supportedWalletCurs(options = {}) {
   const opts = {
     clientSupported: true,
-    serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
+    serverCurs: app && app.serverConfig && app.serverConfig.wallets || [],
     ...options,
   };
 
@@ -284,11 +283,11 @@ export function supportedWalletCurs(options = {}) {
     throw new Error('options.serverCurs must be an object.');
   }
 
-  return Object.keys(opts.serverCurs)
+  return opts.serverCurs
     .filter(cur =>
       (
         opts.clientSupported ?
-          !!getFiatCurrencyByCode(cur, { includeWalletCurs: false }) :
+          !!getIndexedCurrencies()[cur] :
           true
       )
     );
@@ -302,28 +301,12 @@ export function supportedWalletCurs(options = {}) {
  * Returns a boolean indicating whether the given code is supported by the wallet.
  *
  * @param {string} cur - A currency code.
- * @param {object} [options={}] - Function options
- * @param {boolean} [options.clientSupported=true] - If true, the given currency must be
- *   supported as a wallet currency on both the client and server.
- * @param {object} [options.serverCurs=app.serverConfig.wallets] - The object of currencies that
- *   are supported by the server's wallet. By default this is obtained from the server config
- *   API. In almost all cases, the default should be used. It's mainly exposed as an option
- *   for unit testing.
+ * @param {object} [options={}] - Function options - these are sent to supportedWalletCurs.
  * @return {boolean} A boolean indicating whether the given code is supported by the wallet.
  */
 export function isSupportedWalletCur(cur, options = {}) {
   if (typeof cur !== 'string') {
     throw new Error('Please provide a cur as a string.');
-  }
-
-  const opts = {
-    clientSupported: true,
-    serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
-    ...options,
-  };
-
-  if (typeof opts.serverCurs !== 'object') {
-    throw new Error('options.serverCurs must be an object.');
   }
 
   return supportedWalletCurs(options).includes(cur);
@@ -337,7 +320,7 @@ export function isSupportedWalletCur(cur, options = {}) {
  * currencies in the list that are supported by the wallet
  *
  * @param {Array} curs - A list of currencies to filter.
- * @param {object} [options={}] - Function options - these are sent to supportedWalletCurs.
+ * @param {object} [options={}] - Function options - these are sent to isSupportedWalletCur.
  * @return {Array} A list based off the intersection of the giveen curs and the supported
  *   wallt curs.
  */
@@ -350,7 +333,7 @@ export function onlySupportedWalletCurs(curs = [], options = {}) {
     throw new Error('Curs items must be provided as strings.');
   }
 
-  return curs.filter(cur => supportedWalletCurs(options).includes(cur));
+  return curs.filter(cur => isSupportedWalletCur(cur, options));
 }
 
 // TODO: unit test this bad boy

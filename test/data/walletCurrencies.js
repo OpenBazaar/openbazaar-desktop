@@ -1,6 +1,6 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import currencies from '../../js/data/cryptoCurrencies';
+import currencies from '../../js/data/walletCurrencies';
 
 describe('the crypto currencies data module', () => {
   describe('has a config array of crypto currency configuration objects', () => {

@@ -1,6 +1,7 @@
 import loadTemplate from './loadTemplate';
 import {
   getServerCurrency,
+  ensureMainnetCode,
 } from '../data/walletCurrencies';
 
 /**

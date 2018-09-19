@@ -113,7 +113,7 @@ export default class extends baseVw {
       // TODO
       // TODO
       // This is temporary. This should be updated to send a list based on
-      // app.serverConfig.wallets. And, search should update the filter
+      // supportedWalletCurs(). And, search should update the filter
       // to be a checkbox instead of a radio
       // TODO
       // TODO

@@ -375,6 +375,7 @@ export function getExchangeRate(currency) {
 
   const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
 
+  // return 123;
   return exchangeRates[cur];
 }
 
@@ -476,7 +477,7 @@ export function getCurrencyValidity(cur) {
   let returnVal;
 
   if (curData) {
-    returnVal = getExchangeRate(cur) ?
+    returnVal = getExchangeRate(ensureMainnetCode(cur)) ?
       'VALID' : 'EXCHANGE_RATE_MISSING';
   } else {
     returnVal = 'UNRECOGNIZED_CURRENCY';

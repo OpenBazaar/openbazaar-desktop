@@ -501,24 +501,13 @@ function start() {
   // This is the server config as returned by ob/config. It has nothing to do with
   // app.serverConfigs which is a collection of server configuration data related
   // to connecting with a server. The latter is stored in local storage.
-  // TODO
-  // TODO
   // TODO - instead of these elaborate comments explaining the distinction, perhaps rename
   // serverConfigs to serverConnectionConfigs?
   fetchConfig().done((data) => {
     app.serverConfig = data || {};
-    app.serverConfig = {
-      ...app.serverConfig,
-      wallets: (app.serverConfig.wallets || [])
-        // todo: use cryptoCur supported function here?
-        // TODO
-        // TODO
-        .reduce((acc, cur) => {
-          acc[cur] = { clientSupported: !!getCryptoCurrencyByCode(cur) };
-          return acc;
-        }, {}),
-    };
-
+    app.serverConfig.walletsHelp = 'CAUTION! - Rather than reading the wallet curs directly ' +
+      'from this config object, you likely want to use one of the relevant util functions in ' +
+      'data/walletCurrencies, for example, supportedWalletCurs()';
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();
