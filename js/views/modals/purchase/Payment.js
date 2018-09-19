@@ -6,7 +6,7 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';

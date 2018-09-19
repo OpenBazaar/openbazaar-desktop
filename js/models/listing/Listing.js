@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
-import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/cryptoCurrencies';
+import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';

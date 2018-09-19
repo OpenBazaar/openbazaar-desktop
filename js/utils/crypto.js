@@ -1,24 +1,7 @@
 import loadTemplate from './loadTemplate';
 import {
   getServerCurrency,
-  getCurrencyByCode,
-} from '../data/cryptoCurrencies';
-
-/**
- * Since many of our crypto related mapping (e.g. icons) are done based off of
- * a mainnet code, this function will attempt to obtain the mainnet code if a testnet
- * one is passed in. This only works for crypto coins that we have registered as
- * accepted currencies (i.e. are enumerated in data/cryptoCurrencies), but those are
- * the only ones that should ever come as testnet codes.
- */
-export function ensureMainnetCode(cur) {
-  if (typeof cur !== 'string' || !cur.length) {
-    throw new Error('Please provide a non-empty string.');
-  }
-
-  const curObj = getCurrencyByCode(cur);
-  return curObj ? curObj.code : cur;
-}
+} from '../data/walletCurrencies';
 
 /**
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will

@@ -1,7 +1,7 @@
 import { clipboard, remote } from 'electron';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../data/walletCurrencies';
 import baseVw from '../../baseVw';
 import qr from 'qr-encode';
 

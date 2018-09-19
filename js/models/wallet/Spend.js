@@ -2,7 +2,7 @@ import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/
 import {
   getCurrencyByCode as getCryptoCurByCode,
   isSupportedWalletCur,
-} from '../../data/cryptoCurrencies';
+} from '../../data/walletCurrencies';
 // import { getWallet } from '../../utils/modalManager';
 import app from '../../app';
 import BaseModel from '../BaseModel';

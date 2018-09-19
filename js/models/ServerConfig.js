@@ -8,7 +8,7 @@ import fs from 'fs';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
-import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
+import { getCurrencyByCode as getCryptoCurByCode } from '../data/walletCurrencies';
 import app from '../app';
 import BaseModel from './BaseModel';
 

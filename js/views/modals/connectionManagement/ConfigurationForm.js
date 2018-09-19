@@ -3,7 +3,7 @@ import { remote } from 'electron';
 import { platform } from 'os';
 import openSimpleMessage from '../SimpleMessage';
 import { getCurrentConnection } from '../../../utils/serverConnect';
-import { getTranslatedCurrencies } from '../../../data/cryptoCurrencies';
+import { getTranslatedCurrencies } from '../../../data/walletCurrencies';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';

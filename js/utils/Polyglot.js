@@ -1,5 +1,5 @@
 import Polyglot from 'node-polyglot';
-import { ensureMainnetCode } from '../utils/crypto';
+import { ensureMainnetCode } from '../data/walletCurrencies';
 
 export function getKey(key) {
   const splitKey = key.split('.');

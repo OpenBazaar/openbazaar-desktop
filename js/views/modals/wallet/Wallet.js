@@ -1,7 +1,7 @@
 import $ from 'jquery';
 // import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
-import { isSupportedWalletCur } from '../../../data/cryptoCurrencies';
+import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';

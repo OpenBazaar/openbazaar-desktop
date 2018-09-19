@@ -1,6 +1,6 @@
 import app from '../../app';
 import { integerToDecimal } from '../../utils/currency';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {

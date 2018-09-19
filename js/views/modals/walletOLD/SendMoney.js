@@ -1,7 +1,7 @@
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../data/walletCurrencies';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { convertCurrency, getExchangeRate } from '../../../utils/currency';
 import { openSimpleMessage } from '../../modals/SimpleMessage';

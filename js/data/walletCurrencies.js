@@ -2,13 +2,7 @@ import _ from 'underscore';
 import app from '../app';
 import bitcoreLib from 'bitcore-lib';
 import bech32 from 'bech32';
-
-// TODO
-// TODO
-// TODO
-// TODO
-// TODO
-// TODO Put note how this differs from the cryptoListingsCurrencies data file
+import { getCurrencyByCode as getFiatCurrencyByCode } from '../data/currencies';
 
 // If a currency does not support fee bumping or you want to disable it, do not provide a
 // feeBumpTransactionSize setting.
@@ -145,13 +139,11 @@ const currencies = [
 
 export default currencies;
 
-// TODO: is this really needed anymore? What is this used for?
-// TODO: is this really needed anymore? What is this used for?
-// TODO: is this really needed anymore? What is this used for?
-// TODO: is this really needed anymore? What is this used for?
-const defaultLangParam = app && app.localSettings &&
-  app.localSettings.standardizedTranslatedLang() || 'en-US';
-function getTranslatedCurrencies(lang = defaultLangParam, sort = true) {
+function getTranslatedCurrencies(
+  lang = app && app.localSettings &&
+    app.localSettings.standardizedTranslatedLang() || 'en-US',
+  sort = true
+) {
   if (!lang) {
     throw new Error('Please provide the language the translated currencies' +
       ' should be returned in.');
@@ -213,6 +205,22 @@ export function getCurrenciesSortedByCode() {
 }
 
 /**
+ * Since many of our crypto related mapping (e.g. icons) are done based off of
+ * a mainnet code, this function will attempt to obtain the mainnet code if a testnet
+ * one is passed in. This only works for crypto coins that we have registered as
+ * accepted currencies (i.e. are enumerated in data/cryptoCurrencies), but those are
+ * the only ones that should ever come as testnet codes.
+ */
+export function ensureMainnetCode(cur) {
+  if (typeof cur !== 'string' || !cur.length) {
+    throw new Error('Please provide a non-empty string.');
+  }
+
+  const curObj = getCurrencyByCode(cur);
+  return curObj ? curObj.code : cur;
+}
+
+/**
  * Returns the currency data object based on the currency the connected server is in.
  */
 // TODO: This probably needs to go away...
@@ -220,6 +228,8 @@ export function getCurrenciesSortedByCode() {
 // TODO: This probably needs to go away...
 // TODO: This probably needs to go away...
 // TODO: This probably needs to go away...
+// There no longer is a single server currency. It must come from other means depending
+// on context.
 export function getServerCurrency() {
   // // temeporary, so the client doesn't implode.
   // return {
@@ -247,9 +257,22 @@ export function getServerCurrency() {
 // TODO: unit test this bad boy
 // TODO: unit test this bad boy
 // TODO: unit test this bad boy
-// TODO: doc up this bad boy
-// TODO: doc this shit up!
-// TODO: is this the right module for this?
+/**
+ * Returns a list of the crypto currencies supported by the wallet.
+ *
+ * @param {object} [options={}] - Function options
+ * @param {boolean} [options.clientSupported=true] - If true, it will only include
+ *   currencies that are supported by both the client and the server. For the client to
+ *   support the currency, it must have an entry in the walletCurrencies data file. Without
+ *   that information, the client can't really support the currency since fundamental information
+ *   (e.g baseUnits) aren't available. In most context, we will not want to show a currency if it
+ *   is not client supported.
+ * @param {object} [options.serverCurs=app.serverConfig.wallets] - The object of currencies that
+ *   are supported by the server's wallet. By default this is obtained from the server config
+ *   API. In almost all cases, the default should be used. It's mainly exposed as an option
+ *   for unit testing.
+ * @return {Array} An Array containing the currency codes that are supported by the wallet.
+ */
 export function supportedWalletCurs(options = {}) {
   const opts = {
     clientSupported: true,
@@ -262,16 +285,39 @@ export function supportedWalletCurs(options = {}) {
   }
 
   return Object.keys(opts.serverCurs)
-    .filter(cur => (opts.clientSupported ? opts.serverCurs[cur].clientSupported : true));
+    .filter(cur =>
+      (
+        opts.clientSupported ?
+          !!getFiatCurrencyByCode(cur, { includeWalletCurs: false }) :
+          true
+      )
+    );
 }
 
-// TODO: work this into other places
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+/**
+ * Returns a boolean indicating whether the given code is supported by the wallet.
+ *
+ * @param {string} cur - A currency code.
+ * @param {object} [options={}] - Function options
+ * @param {boolean} [options.clientSupported=true] - If true, the given currency must be
+ *   supported as a wallet currency on both the client and server.
+ * @param {object} [options.serverCurs=app.serverConfig.wallets] - The object of currencies that
+ *   are supported by the server's wallet. By default this is obtained from the server config
+ *   API. In almost all cases, the default should be used. It's mainly exposed as an option
+ *   for unit testing.
+ * @return {boolean} A boolean indicating whether the given code is supported by the wallet.
+ */
 export function isSupportedWalletCur(cur, options = {}) {
   if (typeof cur !== 'string') {
     throw new Error('Please provide a cur as a string.');
   }
 
   const opts = {
+    clientSupported: true,
     serverCurs: app && app.serverConfig && app.serverConfig.wallets || {},
     ...options,
   };
@@ -280,13 +326,21 @@ export function isSupportedWalletCur(cur, options = {}) {
     throw new Error('options.serverCurs must be an object.');
   }
 
-  return !!(opts.serverCurs[cur] && getCurrencyByCode(cur));
+  return supportedWalletCurs(options).includes(cur);
 }
 
 // TODO: unit test this bad boy
-// TODO: doc up this bad boy
-// TODO: doc this shit up!
-// TODO: is this the right module for this?
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+/**
+ * Given a list of currencies, a filtered list will be returned containing only the
+ * currencies in the list that are supported by the wallet
+ *
+ * @param {Array} curs - A list of currencies to filter.
+ * @param {object} [options={}] - Function options - these are sent to supportedWalletCurs.
+ * @return {Array} A list based off the intersection of the giveen curs and the supported
+ *   wallt curs.
+ */
 export function onlySupportedWalletCurs(curs = [], options = {}) {
   if (!Array.isArray(curs)) {
     throw new Error('Curs must be provided as an Array.');
@@ -296,15 +350,20 @@ export function onlySupportedWalletCurs(curs = [], options = {}) {
     throw new Error('Curs items must be provided as strings.');
   }
 
-  const supportedCurs = supportedWalletCurs(options);
-
-  return curs.filter(cur => supportedCurs.includes(cur));
+  return curs.filter(cur => supportedWalletCurs(options).includes(cur));
 }
 
 // TODO: unit test this bad boy
-// TODO: doc up this bad boy
-// TODO: doc this shit up!
-// TODO: is this the right module for this?
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+// TODO: unit test this bad boy
+/**
+ * A proxy for onlySupportedWalletCurs with the difference being that this will
+ * return a boolean indicating if any of the provided curs are supported as wallet
+ * currencies. (same arguments as onlySupportedWalletCurs).
+ * @return {boolean} A boolean indicating if any of the provided curs are supported
+ *   as wallet currencies.
+ */
 export function anySupportedByWallet(...args) {
   return !!(onlySupportedWalletCurs(...args).length);
 }

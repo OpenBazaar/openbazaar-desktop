@@ -1,6 +1,6 @@
 import { remote } from 'electron';
 import openSimpleMessage from './SimpleMessage';
-import { getCurrencies } from '../../data/cryptoCurrencies';
+import { getCurrencies } from '../../data/walletCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseModal from './BaseModal';
 

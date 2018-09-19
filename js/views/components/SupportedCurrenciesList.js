@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
 import { polyTFallback } from '../../utils/templateHelpers';
-import { ensureMainnetCode } from '../../utils/crypto';
+import { ensureMainnetCode } from '../../data/walletCurrencies';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {

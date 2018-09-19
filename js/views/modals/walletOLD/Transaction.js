@@ -4,7 +4,7 @@ import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../utils/';
 import { getFees } from '../../../utils/fees';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../data/walletCurrencies';
 import app from '../../../app';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';

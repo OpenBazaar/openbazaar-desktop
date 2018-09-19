@@ -3,8 +3,8 @@ import app from '../app';
 import {
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
-} from './cryptoCurrencies';
-import { ensureMainnetCode } from '../utils/crypto';
+  ensureMainnetCode,
+} from './walletCurrencies';
 import { polyTFallback } from '../utils/templateHelpers';
 
 const currencies = [

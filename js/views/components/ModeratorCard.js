@@ -5,7 +5,7 @@ import Profile from '../../models/profile/Profile';
 import VerifiedMod, { getModeratorOptions } from './VerifiedMod';
 import { handleLinks } from '../../utils/dom';
 import { launchModeratorDetailsModal } from '../../utils/modalManager';
-import { anySupportedByWallet } from '../../data/cryptoCurrencies';
+import { anySupportedByWallet } from '../../data/walletCurrencies';
 import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseVw {

@@ -17,12 +17,12 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   supportedWalletCurs,
   anySupportedByWallet,
-} from '../data/cryptoCurrencies';
+  ensureMainnetCode,
+} from '../data/walletCurrencies';
 import {
   renderCryptoIcon,
   renderCryptoTradingPair,
   renderCryptoPrice,
-  ensureMainnetCode,
 } from '../utils/crypto';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,

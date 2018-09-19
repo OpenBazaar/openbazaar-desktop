@@ -7,8 +7,8 @@ import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
 import {
   getCurrencyByCode as getCryptoCurByCode,
-} from '../data/cryptoCurrencies';
-import { ensureMainnetCode } from '../utils/crypto';
+  ensureMainnetCode,
+} from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 

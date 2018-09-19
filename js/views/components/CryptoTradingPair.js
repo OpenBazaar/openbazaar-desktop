@@ -15,7 +15,7 @@ import {
   getExchangeRate,
   events as currencyEvents,
 } from '../../utils/currency';
-import { ensureMainnetCode } from '../../utils/crypto';
+import { ensureMainnetCode } from '../../data/walletCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
