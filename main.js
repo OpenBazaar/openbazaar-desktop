@@ -389,7 +389,7 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 
   ipcMain.on('contextmenu-click', () => {
-    menu.popup();
+    menu.popup({});
   });
 
   // put logic here to set tray icon based on OS
