@@ -1,14 +1,15 @@
-import $ from 'jquery';
+// import $ from 'jquery';
 // import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import Spend from '../../../models/wallet/Spend';
-import Transactions from '../../../collections/wallet/Transactions';
+// import Spend from '../../../models/wallet/Spend';
+// import Transactions from '../../../collections/wallet/Transactions';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
+import CoinStats from './CoinStats';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -35,10 +36,6 @@ export default class extends BaseModal {
     const opts = {
       initialActiveCoin,
       ...options,
-      initialState: {
-        transactionCoin: initialActiveCoin,
-        ...options.initialState,
-      },
     };
 
     super(opts);
@@ -54,17 +51,17 @@ export default class extends BaseModal {
       };
     });
 
-    this.navCoins.forEach(coin => {
-      const code = coin.code;
-      console.log(`${code}Spend`);
-      window[`${code}Spend`] = this[`${code}Spend`] = new Spend({ wallet: code });
-      console.log(`${code}Transactions`);
-      window[`${code}Transactions`] = this[`${code}Transactions`] =
-        new Transactions([], { coinType: code });
-      this.listenTo(this[`${code}Transactions`], 'update', () => {
-        this.render();
-      });
-    });
+    // this.navCoins.forEach(coin => {
+    //   const code = coin.code;
+    //   console.log(`${code}Spend`);
+    //   window[`${code}Spend`] = this[`${code}Spend`] = new Spend({ wallet: code });
+    //   console.log(`${code}Transactions`);
+    //   window[`${code}Transactions`] = this[`${code}Transactions`] =
+    //     new Transactions([], { coinType: code });
+    //   this.listenTo(this[`${code}Transactions`], 'update', () => {
+    //     this.render();
+    //   });
+    // });
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
@@ -76,6 +73,15 @@ export default class extends BaseModal {
     this.listenTo(this.coinNav, 'coinSelected', e => {
       this.activeCoin = e.code;
     });
+
+    this.coinStats = this.createChild(CoinStats, {
+      initialState: {
+        cryptoCur: 'BTC',
+        displayCur: 'USD',
+        balance: 1.567,
+        transactionCount: 28,
+      },
+    }).render();
   }
 
   className() {
@@ -102,11 +108,6 @@ export default class extends BaseModal {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
       this.coinNav.setState({ active: coin });
-      this.setState({
-        transactionCoin: coin,
-      });
-      const transactions = this[`${this.getState().transactionCoin}Transactions`];
-      if (transactions) transactions.fetch();
     }
   }
 
@@ -122,17 +123,8 @@ export default class extends BaseModal {
         this.coinNav.delegateEvents();
         this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-        const transactions = this[`${this.getState().transactionCoin}Transactions`];
-
-        if (transactions) {
-          const transFrag = document.createDocumentFragment();
-          transactions.forEach(trans => {
-            $(`<div>${JSON.stringify(trans.toJSON())}<br /><br /></div>`)
-              .appendTo(transFrag);
-          });
-
-          this.getCachedEl('.js-transactions').html(transFrag);
-        }
+        this.coinStats.delegateEvents();
+        this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
       });
     });
 

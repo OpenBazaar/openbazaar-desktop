@@ -40,6 +40,34 @@
       }
     }
   }
+
+  .coinStats {
+    height: 102px;
+    padding: 20px;
+
+    .colWrap {
+      height: 100%;
+
+      .statCol {
+        padding-top: 25px;
+
+        &.displayCurCol {
+          height: 100%;
+          padding-top: 0;
+
+          .displayCurColContent {
+            padding-top: 25px;
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-left-width: 1px;
+            border-left-style: solid;
+            justify-content: flex-start;
+            height: 100%;
+          }        
+        }
+      }
+    }
+  }
 }
 
 .spendConfirmBox {
