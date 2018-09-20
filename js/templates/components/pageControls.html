@@ -48,7 +48,7 @@
       </button>
       <% if (ob.textStyle && currentPage) {%>
         <div class="btn clrP clrBr unclickable">
-          <span class="txUnb"><%= currentPage %></span>
+          <span class="txUnb"><%= ob.localizeNumber(currentPage) %></span>
         </div>
       <% }%>
       <button class="btn clrP clrBr pageNext js-pageNext <% if (disabledNext) print('disabled') %>">

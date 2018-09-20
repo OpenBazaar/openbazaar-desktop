@@ -178,7 +178,7 @@ export default class extends baseVw {
 
       if (this.pageControls) this.pageControls.remove();
       this.pageControls = this.createChild(PageControls, {
-        initialState:{
+        initialState: {
           hideCount: true,
           textStyle: true,
         },

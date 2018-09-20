@@ -21,6 +21,7 @@ import {
   renderCryptoTradingPair,
   renderCryptoPrice,
 } from '../utils/crypto';
+import { localizeNumber } from '../utils/number';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
@@ -126,6 +127,7 @@ export {
   isSmallHeight,
   getAvatarBgImage,
   getListingBgImage,
+  localizeNumber,
   upToFixed,
   splitIntoRows,
   is,

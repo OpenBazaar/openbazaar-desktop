@@ -1,7 +1,5 @@
-import _ from 'underscore';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
-import localizeNumber from '../../utils/number';
 
 export default class extends baseVw {
   constructor(options = {}) {
