@@ -142,7 +142,7 @@ crashReporter.start({
   productName: 'OpenBazaar 2',
   companyName: 'OpenBazaar',
   submitURL: 'http://104.131.17.128:1127/post',
-  autoSubmit: true,
+  uploadToServer: true,
   extra: {
     bundled: isBundledApp,
   },
