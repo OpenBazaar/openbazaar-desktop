@@ -1348,7 +1348,9 @@
   },
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
-    "displaying": "Displaying %{displayingCounts}"
+    "displaying": "Displaying %{displayingCounts}",
+    "previous":"Previous",
+    "next":"Next"
   },
   "purchase": {
     "purchaseDataChangedPopin": "The data for this listing has changed.",

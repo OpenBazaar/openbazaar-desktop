@@ -1,10 +1,12 @@
 <%
-  var countsAvailable = false;
+  let countsAvailable = false;
+  let currentPage;
 
   if (typeof ob.start === 'number' &&
     typeof ob.end === 'number' &&
     typeof ob.total === 'number') {
     countsAvailable = true;
+    currentPage = ob.pageSize && Math.ceil(ob.end / ob.pageSize);
   }
 
   var disabledPrev = true;
@@ -23,7 +25,7 @@
 
 <div class="floR">
   <div class="pageControls flexVCent gutterH tx5">
-    <% if (countsAvailable) { %>
+    <% if (countsAvailable && !ob.hideCount) { %>
     <div>
       <%=
         ob.polyT('pageControls.displaying', {
@@ -38,10 +40,23 @@
     <% } %>
     <div class="btnStrip">
       <button class="btn clrP clrBr pagePrev js-pagePrev <% if (disabledPrev) print('disabled') %>">
-        <i class="ion-arrow-left-b"></i>
+        <% if (!ob.textStyle){ %>
+          <i class="ion-arrow-left-b"></i>
+        <% } else { %>
+          <span class="txUnb">< <%= ob.polyT('pageControls.previous') %></span>
+        <% } %>
       </button>
+      <% if (ob.textStyle && currentPage) {%>
+        <div class="btn clrP clrBr unclickable">
+          <span class="txUnb"><%= currentPage %></span>
+        </div>
+      <% }%>
       <button class="btn clrP clrBr pageNext js-pageNext <% if (disabledNext) print('disabled') %>">
+        <% if (!ob.textStyle) { %>
         <i class="ion-arrow-right-b"></i>
+        <% } else { %>
+          <span class="txUnb"><%= ob.polyT('pageControls.next') %> ></span>
+        <% } %>
       </button>
     </div>
   </div>
