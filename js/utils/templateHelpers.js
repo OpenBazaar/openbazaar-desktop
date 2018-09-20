@@ -21,11 +21,10 @@ import {
   renderCryptoTradingPair,
   renderCryptoPrice,
 } from '../utils/crypto';
-import { localizeNumber } from '../utils/number';
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
-import { upToFixed } from './number';
+import { upToFixed, localizeNumber } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
