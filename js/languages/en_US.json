@@ -454,8 +454,10 @@
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet": "Open in Wallet",
       "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
+      "introLine": "%{coin} donations can be sent to the following address:",
       "bchWarning": "Do not send Bitcoin Cash to this address.",
+      "btcWarning": "Do not send Bitcoin to this address.",
+      "coinWarning": "You are using a %{walletCoin} wallet, this address can only accept %{donationCoin}.",
       "unableToOpenInWallet": {
         "title": "Unable to open in wallet",
         "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."

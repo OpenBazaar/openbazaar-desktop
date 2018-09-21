@@ -1,10 +1,13 @@
-<%
-  // todo: no hard coded BTC
-  // todo: no hard coded BTC
-  // todo: no hard coded BTC
-  // todo: no hard coded BTC    
-%>
-<% const serverCur = 'BTC' %>
+<div class="flexBtnWrapper flexBtnTop flexRow">
+  <button class="btnFlx underlineOnly flexExpand clrP clrBr gutterHSm js-btc <% if (ob.showCoin === 'BTC') print('active') %>">
+    <%= ob.crypto.cryptoIcon({ code: 'BTC' }) %>
+    <span><%= ob.polyT('cryptoCurrencies.BTC') %></span>
+  </button>
+  <button class="btnFlx underlineOnly flexExpand clrP clrBr gutterHSm js-bch <% if (ob.showCoin === 'BCH') print('active') %>">
+    <%= ob.crypto.cryptoIcon({ code: 'BCH' }) %>
+    <span><%= ob.polyT('cryptoCurrencies.BCH') %></span>
+  </button>
+</div>
 <div class="flex padGi">
   <img class="flexNoShrink" src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
@@ -13,12 +16,12 @@
         <%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %>
       </h2>
       <div class="clrT2 donationAddress posR">
-        <% if (serverCur !== 'BTC') { %>
-          <p><%= ob.polyT('about.donationsTab.bitcoinIntroLine') %></p>
-        <% } %>
+        <p><%= ob.polyT('about.donationsTab.introLine', { coin: ob.showCoin }) %></p>
         <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
-        <% if (serverCur !== 'BTC') { %>
-          <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.bchWarning') %></p>
+        <% if (ob.showCoin !== 'BTC') { %>
+          <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.btcWarning') %></p>
+        <% } else if (ob.showCoin !== 'BCH') { %>
+        <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.bchWarning') %></p>
         <% } %>
         <div class="js-copyNotification copyNotification clrT clrBr clrP">
           <%= ob.polyT('copiedToClipboardShort') %>

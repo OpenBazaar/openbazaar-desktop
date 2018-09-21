@@ -350,6 +350,24 @@
   .contentBox & .btnFlx:last-child {
     border-bottom-right-radius: 2px;
   }
+
+  &.flexBtnTop {
+    // use for flexButtons on the vertical top side of the container
+    .btnFlx {
+      border-radius: 0;
+      border-top: none;
+      padding: 0;
+      height: 48px;
+      display: inline-flex;
+      align-items: center;
+
+      &.underlineOnly.active,
+      &:hover,
+      &:focus {
+        border-bottom-width: 2px;
+      }
+    }
+  }
 }
 
 .searchWrapper {
