@@ -323,6 +323,19 @@ export function formatCurrency(amount, currency, options) {
 
 let exchangeRates = {};
 
+// TODO: Temp
+// TODO: Temp
+// TODO: Temp
+// TODO: Temp
+// TODO
+// TODO: Temp
+exchangeRates = {
+  BTC: 1,
+  USD: 123.45,
+  PLN: 12.9361,
+  MSP: 3.23,
+};
+
 /**
  * Will fetch exchange rate data from the server. This is already called on an interval via
  * exchangeRateSyncer.js, so it's unlikely you would need to call this method. Instead access
@@ -375,7 +388,6 @@ export function getExchangeRate(currency) {
 
   const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
 
-  // return 123;
   return exchangeRates[cur];
 }
 
@@ -414,7 +426,7 @@ export function convertCurrency(amount, fromCur, toCur) {
     return amount;
   }
 
-  if (!exchangeRates[fromCurCode]) {
+  if (!exchangeRates[fromCur]) {
     throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
       `${fromCur.toUpperCase()}.`);
   }

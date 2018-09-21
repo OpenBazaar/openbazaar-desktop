@@ -1,29 +1,94 @@
 <%
-  const showDisplayCur = ob.displayCur !== ob.cur;
-  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';
+
+  const isValidCryptoCur = typeof ob.cryptoCur === 'string' && ob.cryptoCur;
+  const isValidDisplayCur = typeof ob.displayCur === 'string' && ob.displayCur;
+  const cryptoCurHasExchangeRate = isValidCryptoCur &&
+    typeof ob.currencyMod.getExchangeRate(ob.cryptoCur) === 'number';
+  const displayCurHasExchangeRate = isValidDisplayCur &&
+    typeof ob.currencyMod.getExchangeRate(ob.displayCur) === 'number';
+  const showDisplayCur = isValidCryptoCur && isValidDisplayCur &&
+    cryptoCurHasExchangeRate && displayCurHasExchangeRate && 
+    ob.displayCur !== ob.cryptoCur;
+  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';  
+  let confirmedText = typeof ob.confirmed === 'number' && isValidCryptoCur ?
+      ob.currencyMod.formatCurrency(ob.confirmed, ob.cryptoCur, { includeCryptoCurIdentifier: false }) : '';
+  let confirmedTextSizeClass = 'tx2';
+  confirmedTextSizeClass = confirmedText.length > 15 ? 'tx3' : confirmedTextSizeClass;
+  confirmedTextSizeClass = confirmedText.length > 21 ? 'tx4' : confirmedTextSizeClass;
+  // the icon should be added after the text size class determination
+  confirmedText = confirmedText ?
+    `<div class="flexVCent gutterHTn">
+       ${
+         ob.polyT('cryptoAmountIconPairing', {
+           amount: `<div>${confirmedText}</div>`,
+           icon: ob.crypto.cryptoIcon({
+             code: ob.cryptoCur,
+             className: 'cryptoIcon18',
+           })
+         })
+        }
+      </div>` : '';
+  let unconfirmedText = typeof ob.unconfirmed === 'number' && isValidCryptoCur ?
+      ob.currencyMod.formatCurrency(ob.unconfirmed, ob.cryptoCur, { useCryptoSymbol: false }) : '';
+  unconfirmedText = unconfirmedText ?
+     ob.polyT('wallet.coinStats.unconfirmedBalance', { amount: unconfirmedText}) : '';
 %>
 <div>
 </div>
-<div class="flex colWrap">
+<div class="flex colWrap gutterH">
   <div class="<%= colClass %> flexExpand">
     <div class="flexCol flexHCent gutterVSm">
-      <div class="txB tx5">Balance</div>
-      <div class="clrTEm txB tx2">1.5678</div>
-      <div class="clrT2 tx5b lineHeight1">(0.23885 unconfirmed)</div>      
+      <div class="txB tx5"><%= ob.polyT('wallet.coinStats.balanceHeader') %></div>
+      <div class="clrTEm txB <%= confirmedTextSizeClass %>"><%= confirmedText %></div>
+      <div class="clrT2 tx5b lineHeight1"><%= unconfirmedText %></div>
     </div>
   </div>
   <% if (showDisplayCur) { %>
     <div class="<%= colClass %> flexExpand displayCurCol">
       <div class="flexCol flexHCent gutterVSm clrBr displayCurColContent">
-        <div class="txB tx5">Value in USD</div>
-        <div class="clrTEm txB tx2">$134.56</div>
+        <div class="txB tx5"><%= ob.polyT('wallet.coinStats.valueInDisplayCur', { cur: ob.displayCur }) %></div>
+        <%
+          const valueInDisplayCur =
+            ob.currencyMod.convertAndFormatCurrency(ob.confirmed, ob.displayCur, ob.cryptoCur, {
+              includeCryptoCurIdentifier: false,
+            });
+          let valueInDisplayCurSizeClass = valueInDisplayCur.length > 15 ?
+            'tx3' : 'tx2';
+          valueInDisplayCurSizeClass = valueInDisplayCur.length > 20 ?
+            'tx4' : valueInDisplayCurSizeClass;
+        %>
+        <div class="clrTEm txB <%= valueInDisplayCurSizeClass %>">
+          <% if (ob.currencyMod.isFiatCur(ob.displayCur)) { %>
+            <%= ob.currencyMod.convertAndFormatCurrency(ob.confirmed, ob.cryptoCur, ob.displayCur) %>
+          <% } else { %>
+            <div class="flexVCent gutterHTn">
+              <%=
+                ob.polyT('cryptoAmountIconPairing', {
+                  amount:
+                    `<div>${
+                      ob.currencyMod.convertAndFormatCurrency(ob.confirmed, ob.cryptoCur, ob.displayCur, {
+                        includeCryptoCurIdentifier: false,
+                      })}
+                    </div>`,
+                  icon: ob.crypto.cryptoIcon({
+                    code: ob.displayCur,
+                    className: 'cryptoIcon18',
+                  })
+                })
+              %>
+            </div>
+          <% } %>
+        </div>
       </div>
     </div>
   <% } %>
   <div class="<%= colClass %> flexExpand">
     <div class="flexCol flexHCent gutterVSm">
-      <div class="txB tx5">Transactions</div>
-      <div class="clrTEm txB tx2">23</div>
+      <div class="txB tx5"><%= ob.polyT('wallet.coinStats.transactionsHeader') %></div>
+      <div class="clrTEm txB tx2">
+        <%= typeof ob.transactionCount === 'number' ?
+          ob.localizeNumber(ob.transactionCount) : '' %>
+      </div>
     </div>
   </div>
 </div>

@@ -6,9 +6,10 @@ export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       initialState: {
-        cur: '',
+        cryptoCur: '',
         displayCur: '',
-        balance: undefined,
+        confirmed: undefined,
+        unconfirmed: undefined,
         transactionCount: undefined,
         ...options.initialState,
       },

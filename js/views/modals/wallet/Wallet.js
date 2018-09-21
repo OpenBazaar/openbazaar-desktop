@@ -78,10 +78,13 @@ export default class extends BaseModal {
       initialState: {
         cryptoCur: 'BTC',
         displayCur: 'USD',
-        balance: 1.567,
+        confirmed: 1.567,
+        unconfirmed: 0.03234,
         transactionCount: 28,
       },
     }).render();
+    console.log('coinStats');
+    window.coinStats = this.coinStats;
   }
 
   className() {
