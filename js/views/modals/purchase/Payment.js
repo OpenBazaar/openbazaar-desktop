@@ -11,7 +11,7 @@ import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
 import qr from 'qr-encode';
-import { clipboard, remote } from 'electron';
+import { clipboard } from 'electron';
 import { spend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';

@@ -1,4 +1,4 @@
-import { clipboard, remote } from 'electron';
+import { clipboard } from 'electron';
 import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import { getServerCurrency } from '../../../data/walletCurrencies';
