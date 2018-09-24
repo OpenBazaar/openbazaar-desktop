@@ -9,6 +9,7 @@ import {
   getExchangeRate,
   renderFormattedCurrency,
   renderPairedCurrency,
+  isFiatCur,
 } from './currency';
 import {
   getServerCurrency,
@@ -27,7 +28,7 @@ import {
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
-import { upToFixed } from './number';
+import { upToFixed, localizeNumber } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
@@ -136,6 +137,7 @@ const currencyExport = {
   pairedCurrency: gracefulException(renderPairedCurrency),
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
+  isFiatCur,
 };
 
 const crypto = {
@@ -155,6 +157,7 @@ export {
   isSmallHeight,
   getAvatarBgImage,
   getListingBgImage,
+  localizeNumber,
   upToFixed,
   splitIntoRows,
   is,

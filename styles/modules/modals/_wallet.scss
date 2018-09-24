@@ -45,6 +45,20 @@
     height: 102px;
     padding: 20px;
 
+    .coinIcon {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      transform: translateY(calc(-50% + 1px));
+      text-align: center;
+
+      .cryptoIcon  {
+        width: 34px;
+        height: 34px;
+      }
+    }
+
     .colWrap {
       height: 100%;
 

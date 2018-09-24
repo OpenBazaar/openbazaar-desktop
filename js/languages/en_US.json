@@ -903,6 +903,16 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
+    "coinStats": {
+      "balanceHeader": "Balance",
+      "unconfirmedBalance": "(%{amount} unconfirmed)",
+      "valueInDisplayCur": "Value in %{cur}",
+      "transactionsHeader": "Transactions"
+    }
+  },
+  "walletOLD": {
+    "title": "Wallet",
+    "closeLink": "Close wallet",
     "fundsHeader": "Funds",
     "btnReceiveMoney": "Receive Money",
     "btnSendMoney": "Send Money",
