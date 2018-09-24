@@ -12,20 +12,17 @@
   <img class="flexNoShrink" src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
     <div class="padMd">
-      <h2 class="tx2b">
-        <%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %>
-      </h2>
+      <h3 class="tx2b">
+        <%= ob.polyT(`about.donationsTab.bannerTitle${ob.showCoin}`) %>
+      </h3>
       <div class="clrT2 donationAddress posR">
-        <p><%= ob.polyT('about.donationsTab.introLine', { coin: ob.showCoin }) %></p>
-        <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
-        <% if (ob.showCoin !== 'BTC') { %>
-          <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.btcWarning') %></p>
-        <% } else if (ob.showCoin !== 'BCH') { %>
-        <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.bchWarning') %></p>
-        <% } %>
-        <div class="js-copyNotification copyNotification clrT clrBr clrP">
-          <%= ob.polyT('copiedToClipboardShort') %>
+        <div class="posR">
+          <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
+          <div class="js-copyNotification copyNotification clrT clrBr clrP">
+            <%= ob.polyT('copiedToClipboardShort') %>
+          </div>
         </div>
+        <p class="clrTErr txUnl tx6"><i class="ion-alert-circled"></i> <%= ob.polyT(`about.donationsTab.${ob.showCoin}Warning`) %></p>
       </div>
 
     </div>
@@ -33,7 +30,7 @@
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
       </a>
-      <a class="btn clrP clrBr js-openInWallet flexNoShrink">
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink <% if (!ob.supported) print('disabled') %>">
         <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
       </a>
     </div>
