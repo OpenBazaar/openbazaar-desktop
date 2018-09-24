@@ -323,26 +323,16 @@ export function formatCurrency(amount, currency, options) {
 
 let exchangeRates = {};
 
-// TODO: Temp
-// TODO: Temp
-// TODO: Temp
-// TODO: Temp
-// TODO
-// TODO: Temp
-exchangeRates = {
-  BTC: 1,
-  USD: 123.45,
-  PLN: 12.9361,
-  MSP: 3.23,
-};
-
 /**
  * Will fetch exchange rate data from the server. This is already called on an interval via
  * exchangeRateSyncer.js, so it's unlikely you would need to call this method. Instead access
  * cached values via getExchangeRate() or more commonly convertCurrency().
  */
+// TODO:
+// TODO:
+// TODO: Don't assume a BTC wallet!!!
 export function fetchExchangeRates(options = {}) {
-  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+  const xhr = $.get(app.getServerUrl('ob/exchangerates/BTC'), options)
     .done(data => {
       const changed = new Set();
 
