@@ -22,16 +22,6 @@ export default class extends baseVw {
     return 'coinStats border clrP clrBr clrSh3';
   }
 
-  // tagName() {
-  //   return 'li';
-  // }
-
-  // events() {
-  //   return {
-  //     click: 'onClick',
-  //   };
-  // }
-
   render() {
     loadTemplate('modals/wallet/coinStats.html', (t) => {
       this.$el.html(t({
