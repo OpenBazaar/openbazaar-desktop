@@ -92,7 +92,7 @@ export function formatRating(average, count, skipCount) {
   if (skipCount) ratingCount = '';
   const error = !avIsNum || (!countIsNum && !skipCount) ?
     ' <i class="ion-alert-circled clrTErr"></i>' : '';
-  return `${parseEmojis('⭐')} ${ratingAverage}${ratingCount}${error}`;
+  return `${parseEmojis('⭐')}&nbsp;${ratingAverage}${ratingCount}${error}`;
 }
 
 export const getServerUrl = app.getServerUrl.bind(app);

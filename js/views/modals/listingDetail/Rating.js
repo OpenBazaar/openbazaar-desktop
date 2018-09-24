@@ -10,6 +10,10 @@ export default class extends BaseView {
     this.fetched = options.fetched || false;
   }
 
+  className() {
+    return 'ratingStrip';
+  }
+
   render() {
     loadTemplate('modals/listingDetail/rating.html', t => {
       this.$el.html(t({

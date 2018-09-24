@@ -225,6 +225,11 @@
 
       .repBg {
         font-size: 38px;
+        display: inline-flex;
+
+        & > .emoji {
+          margin-right: 0.2em;
+        }
       }
 
       .statsBox {
