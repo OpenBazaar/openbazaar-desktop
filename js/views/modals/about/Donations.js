@@ -39,7 +39,7 @@ export default class extends baseVw {
         qrCodeDataURI: qr(`bitcoin:${bchAddress}`,
           { type: 6, size: 6, level: 'Q' }),
         supported: isSupportedWalletCur('BCH'),
-      }
+      },
     };
   }
 
@@ -54,7 +54,7 @@ export default class extends baseVw {
 
   showBTC() {
     this.setState({ showCoin: 'BTC' });
-  };
+  }
 
   showBCH() {
     this.setState({ showCoin: 'BCH' });
@@ -79,12 +79,12 @@ export default class extends baseVw {
       launchWallet({
         initialActiveCoin: this.getState().showCoin,
         // TODO: add send address here
-      })
+      });
     } else {
       /*
-      * Do we still need a check to see if the wallet is in the middle of
-      * sending a payment here? If so, show this error message:
-      * openSimpleMessage(
+      * We probably still need a check to see if the wallet is in the middle of
+      * sending a payment here. If so, use the API provided to check and show
+      * this error message: openSimpleMessage(
       * app.polyglot.t('about.donationsTab.unableToOpenInWallet.title'),
       * app.polyglot.t('about.donationsTab.unableToOpenInWallet.body'));
       * The phrases will need to be added back to en_US.json
