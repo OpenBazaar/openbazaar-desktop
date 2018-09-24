@@ -1,7 +1,10 @@
 // import $ from 'jquery';
 // import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
-import { isSupportedWalletCur } from '../../../data/walletCurrencies';
+import {
+  isSupportedWalletCur,
+  ensureMainnetCode,
+} from '../../../data/walletCurrencies';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -75,13 +78,10 @@ export default class extends BaseModal {
     });
 
     this.coinStats = this.createChild(CoinStats, {
-      initialState: {
-        cryptoCur: 'BTC',
-        displayCur: 'USD',
-        balance: 1.567,
-        transactionCount: 28,
-      },
+      initialState: this.coinStatsState,
     }).render();
+    console.log('coinStats');
+    window.coinStats = this.coinStats;
   }
 
   className() {
@@ -108,7 +108,23 @@ export default class extends BaseModal {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
       this.coinNav.setState({ active: coin });
+      this.coinStats.setState(this.coinStatsState);
     }
+  }
+
+  get coinStatsState() {
+    const activeCoin = this.activeCoin;
+    const balance = app && app.walletBalances &&
+      app.walletBalances.get(activeCoin);
+
+    return {
+      cryptoCur: ensureMainnetCode(activeCoin),
+      displayCur: app && app.settings && app.settings.get('localCurrency') ||
+        'USD',
+      confirmed: balance && balance.get('confirmed'),
+      unconfirmed: balance && balance.get('unconfirmed'),
+      transactionCount: 28,
+    };
   }
 
   render() {

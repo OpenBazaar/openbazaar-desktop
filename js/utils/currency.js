@@ -328,8 +328,11 @@ let exchangeRates = {};
  * exchangeRateSyncer.js, so it's unlikely you would need to call this method. Instead access
  * cached values via getExchangeRate() or more commonly convertCurrency().
  */
+// TODO:
+// TODO:
+// TODO: Don't assume a BTC wallet!!!
 export function fetchExchangeRates(options = {}) {
-  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+  const xhr = $.get(app.getServerUrl('ob/exchangerates/BTC'), options)
     .done(data => {
       const changed = new Set();
 
@@ -375,7 +378,6 @@ export function getExchangeRate(currency) {
 
   const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
 
-  // return 123;
   return exchangeRates[cur];
 }
 
@@ -414,7 +416,7 @@ export function convertCurrency(amount, fromCur, toCur) {
     return amount;
   }
 
-  if (!exchangeRates[fromCurCode]) {
+  if (!exchangeRates[fromCur]) {
     throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
       `${fromCur.toUpperCase()}.`);
   }

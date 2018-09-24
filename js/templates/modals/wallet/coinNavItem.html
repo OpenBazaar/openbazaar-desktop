@@ -1,8 +1,9 @@
 <%
+  const mnCode = ob.crypto.ensureMainnetCode(ob.code);
   let convertedCurrency;
 
   try {
-    convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, ob.code, ob.displayCur);
+    convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, mnCode, ob.displayCur);
   } catch (e) {
     if (e instanceof ob.NoExchangeRateDataError) {
      // pass - we'll just show the unconverted amount if the exchange rate data isn't
@@ -17,7 +18,7 @@
   // TODO
   // TODO - maxDisplayDecimals of 2 for fiat currencies.
   const formattedBalance = convertedCurrency === undefined ?
-    ob.currencyMod.formatCurrency(ob.balance, ob.code, { maxDisplayDecimals: 4 }) :
+    ob.currencyMod.formatCurrency(ob.balance, mnCode, { maxDisplayDecimals: 4 }) :
     ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur, { maxDisplayDecimals: 4 });
 
   const balanceText = ob.balance ?
@@ -28,10 +29,10 @@
 %>
 
 <%= ob.crypto.cryptoIcon({
-  code: ob.code,
+  code: mnCode,
   className: 'flexNoShrink',
 }) %>
-<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyTFallback(`cryptoCurrencies.${ob.code}`, ob.code) %></div>
+<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyTFallback(`cryptoCurrencies.${mnCode}`, mnCode) %></div>
 <div class="<%= ob.balance > 0 ? 'clrTEm' : '' %> flexNoShrink balanceText">
   <div class="flexVCent flexHRight"><%= amount %></div>
 </div>
