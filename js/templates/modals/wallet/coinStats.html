@@ -33,7 +33,8 @@
   unconfirmedText = unconfirmedText ?
      ob.polyT('wallet.coinStats.unconfirmedBalance', { amount: unconfirmedText}) : '';
 %>
-<div>
+<div class="coinIcon">
+  <%= ob.crypto.cryptoIcon({ code: ob.cryptoCur, className: '' }) %>
 </div>
 <div class="flex colWrap gutterH">
   <div class="<%= colClass %> flexExpand">
