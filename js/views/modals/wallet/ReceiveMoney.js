@@ -1,17 +1,18 @@
 import { clipboard } from 'electron';
-import _ from 'underscore';
-import loadTemplate from '../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../data/walletCurrencies';
-import baseVw from '../../baseVw';
 import qr from 'qr-encode';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
+import { polyTFallback } from '../../../utils/templateHelpers';
+import loadTemplate from '../../../utils/loadTemplate';
+import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-
-    this._state = {
-      ...options.initialState || {},
-    };
+    super({
+      initialState: {
+        coinType: 'BTC',
+        ...options.initialState,
+      },
+    });
   }
 
   className() {
@@ -22,29 +23,7 @@ export default class extends baseVw {
     return {
       'click .js-receiveAddress': 'onClickReceiveAddress',
       'click .js-receiveQrCode': 'onClickReceiveQrCode',
-      'click .js-cancelReceiveBtn': 'onClickCancelReceive',
     };
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
   onClickReceiveAddress() {
@@ -53,10 +32,6 @@ export default class extends baseVw {
 
   onClickReceiveQrCode() {
     this.copyAddressToClipboard();
-  }
-
-  onClickCancelReceive() {
-    this.trigger('click-cancel');
   }
 
   copyAddressToClipboard() {
@@ -81,15 +56,25 @@ export default class extends baseVw {
       // when the spinner is showing
       let qrDataUri = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
       const address = this.getState().address;
+      const coinType = this.getState().coinType;
+      let walletCur;
 
-      if (address) {
-        qrDataUri = qr(getServerCurrency().qrCodeText(address),
+      try {
+        walletCur = getWalletCurByCode(coinType);
+      } catch (e) {
+        // pass
+      }
+
+      if (address && walletCur) {
+        qrDataUri = qr(walletCur.qrCodeText(address),
           { type: 6, size: 5, level: 'Q' });
       }
 
       this.$el.html(t({
         ...this._state,
         qrDataUri,
+        coinName: polyTFallback(`cryptoCurrencies.${coinType}`, coinType),
+        walletCur,
         errors: {},
       }));
 

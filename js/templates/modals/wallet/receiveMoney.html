@@ -1,4 +1,3 @@
-<a class="js-cancelReceiveBtn btn clrT clrBr cancelReceiveBtn"><%= ob.polyT('wallet.receiveMoney.btnCancel') %></a>
 <h2 class="h3 txCtr txUnl row"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
 <div class="codeAddressWrap">
   <div class="rowLg <% if (ob.fetching) print('invisible') %>">
@@ -16,11 +15,14 @@
   <div>
     <div class="flexVCent gutterH">
       <div class="flexVCent">
-        <% serverCur = ob.currencyMod.getServerCurrency() %>
-        <% if (serverCur.needCoinLink) { %>
-          <%= ob.crypto.cryptoIcon({ className: 'margRSm'}) %>
-          <a href="<%= serverCur.needCoinLink %>" class="clrT txB txU">
-            <%= ob.polyT('wallet.receiveMoney.needCoinLink', { cur: serverCur.name }) %>
+        <% if (ob.walletCur && ob.walletCur.needCoinLink) { %>
+          <%= ob.crypto.cryptoIcon({
+            className: 'margRSm',
+            code: ob.coinType,
+          }) %>
+          <a href="<%= ob.walletCur.needCoinLink %>" class="clrT txB txU">
+            <%= ob.polyT('wallet.receiveMoney.needCoinLink',
+              { cur: ob.coinName }) %>
           </a>
         <% } %>
       </div>

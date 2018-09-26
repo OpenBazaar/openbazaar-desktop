@@ -910,20 +910,6 @@
       "unconfirmedBalance": "(%{amount} unconfirmed)",
       "valueInDisplayCur": "Value in %{cur}",
       "transactionsHeader": "Transactions"
-    }
-  },
-  "walletOLD": {
-    "title": "Wallet",
-    "closeLink": "Close wallet",
-    "fundsHeader": "Funds",
-    "btnReceiveMoney": "Receive Money",
-    "btnSendMoney": "Send Money",
-    "valueInCurrencyLabel": "Value in %{currency}",
-    "transactionsLabel": "Transactions",
-    "receiveMoney": {
-      "title": "Receive Money",
-      "btnCancel": "Cancel",
-      "needCoinLink": "Need %{cur}?"
     },
     "sendMoney": {
       "toLabel": "To",
@@ -936,6 +922,20 @@
       "sendPaymentFailDialogTitle": "Unable to send payment",
       "errorInvalidAddress": "The payment address is not valid."
     },
+    "receiveMoney": {
+      "title": "Receive Money",
+      "btnCancel": "Cancel",
+      "needCoinLink": "Need %{cur}?"
+    }    
+  },
+  "walletOLD": {
+    "title": "Wallet",
+    "closeLink": "Close wallet",
+    "fundsHeader": "Funds",
+    "btnReceiveMoney": "Receive Money",
+    "btnSendMoney": "Send Money",
+    "valueInCurrencyLabel": "Value in %{currency}",
+    "transactionsLabel": "Transactions",
     "spendConfirmBox": {
       "heading": "Are you sure?",
       "body": "A network fee will be included, currently estimated at %{currencyPairing}",

@@ -13,6 +13,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
+import SendReceiveNav from './SendReceiveNav';
+import SendMoney from './SendMoney';
+import ReceiveMoney from './ReceiveMoney';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -38,11 +41,16 @@ export default class extends BaseModal {
         navCoins[0].code || 'BTC';
     const opts = {
       initialActiveCoin,
+      initialSendModeOn: true,
       ...options,
     };
 
     super(opts);
     this._activeCoin = opts.initialActiveCoin;
+    this._sendModeOn = opts.initialSendModeOn;
+    this._sendMoneyVws = {};
+    this._receiveMoneyVws = {};
+
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
 
@@ -53,18 +61,6 @@ export default class extends BaseModal {
         balance: coin.confirmed,
       };
     });
-
-    // this.navCoins.forEach(coin => {
-    //   const code = coin.code;
-    //   console.log(`${code}Spend`);
-    //   window[`${code}Spend`] = this[`${code}Spend`] = new Spend({ wallet: code });
-    //   console.log(`${code}Transactions`);
-    //   window[`${code}Transactions`] = this[`${code}Transactions`] =
-    //     new Transactions([], { coinType: code });
-    //   this.listenTo(this[`${code}Transactions`], 'update', () => {
-    //     this.render();
-    //   });
-    // });
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
@@ -80,8 +76,18 @@ export default class extends BaseModal {
     this.coinStats = this.createChild(CoinStats, {
       initialState: this.coinStatsState,
     }).render();
-    console.log('coinStats');
-    window.coinStats = this.coinStats;
+
+    this.sendReceiveNav = this.createChild(SendReceiveNav, {
+      initialState: this.sendReceivNavState,
+    }).render();
+
+    this.listenTo(this.sendReceiveNav, 'click-send', () => {
+      this.sendModeOn = true;
+    });
+
+    this.listenTo(this.sendReceiveNav, 'click-receive', () => {
+      this.sendModeOn = false;
+    });
   }
 
   className() {
@@ -100,6 +106,10 @@ export default class extends BaseModal {
   //   super.remove();
   // }
 
+  /**
+   * Indicates which coin is currently active. The remaining interface (coinStats,
+   * Send/Receive, Transactions, etc...) will be in the context of this coin.
+   */
   get activeCoin() {
     return this._activeCoin;
   }
@@ -109,6 +119,24 @@ export default class extends BaseModal {
       this._activeCoin = coin;
       this.coinNav.setState({ active: coin });
       this.coinStats.setState(this.coinStatsState);
+    }
+  }
+
+  /**
+   * True indicates that the wallet interface has the Send tab (as opposed to Recieve)
+   * active for the selected activeCoin.
+   */
+  get sendModeOn() {
+    return this._sendModeOn;
+  }
+
+  set sendModeOn(bool) {
+    const normalizedBool = !!bool;
+
+    if (normalizedBool !== this._sendModeOn) {
+      this._sendModeOn = normalizedBool;
+      this.sendReceiveNav.setState(this.sendReceivNavState);
+      this.renderSendReceiveVw();
     }
   }
 
@@ -127,6 +155,54 @@ export default class extends BaseModal {
     };
   }
 
+  get sendReceivNavState() {
+    return { sendModeOn: this.sendModeOn };
+  }
+
+  getSendMoneyVw(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this._sendMoneyVws[coinType]) {
+      return this._sendMoneyVws[coinType];
+    }
+
+    this._sendMoneyVws[coinType] = this.createChild(SendMoney, {
+      coinType,
+    })
+      .render();
+
+    return this._sendMoneyVws[coinType];
+  }
+
+  getReceiveMoneyVw(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this._receiveMoneyVws[coinType]) {
+      return this._receiveMoneyVws[coinType];
+    }
+
+    this._receiveMoneyVws[coinType] = this.createChild(ReceiveMoney, {
+      initialState: { coinType },
+    })
+      .render();
+
+    return this._receiveMoneyVws[coinType];
+  }
+
+  renderSendReceiveVw() {
+    if (this.sendModeOn) {
+      this.getCachedEl('.js-sendReceiveContainer')
+        .html(this.getSendMoneyVw().el);
+    } else {
+      this.getCachedEl('.js-sendReceiveContainer')
+        .html(this.getReceiveMoneyVw().el);
+    }
+  }
+
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
@@ -141,6 +217,11 @@ export default class extends BaseModal {
 
         this.coinStats.delegateEvents();
         this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
+
+        this.sendReceiveNav.delegateEvents();
+        this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
+
+        this.renderSendReceiveVw();
       });
     });
 
