@@ -1,3 +1,4 @@
+/* eslint-disable */
 import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 import app from '../../../app';
