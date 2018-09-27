@@ -1,5 +1,5 @@
-// import $ from 'jquery';
-// import { getSocket } from '../../../utils/serverConnect';
+import $ from 'jquery';
+import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
 import {
   isSupportedWalletCur,
@@ -50,6 +50,11 @@ export default class extends BaseModal {
     this._sendModeOn = opts.initialSendModeOn;
     this._sendMoneyVws = {};
     this._receiveMoneyVws = {};
+    this.addressFetches = {};
+    this.needAddress = navCoins.reduce((acc, coin) => {
+      acc[coin.code] = true;
+      return acc;
+    }, {});
 
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
@@ -88,6 +93,32 @@ export default class extends BaseModal {
     this.listenTo(this.sendReceiveNav, 'click-receive', () => {
       this.sendModeOn = false;
     });
+
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        // "wallet" sockets come for new transactions and when a transaction gets it's
+        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
+        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
+          if (this.stats) {
+            this.stats.setState({
+              transactionCount: this.stats.getState().transactionCount + 1,
+            });
+          }
+
+          if (this.sendModeOn) {
+            // we'll fetch the next time we show the receive money section
+            this.needAddress = true;
+          } else {
+            this.fetchAddress();
+          }
+        }
+      });
+    }
+
+    // This should be after all the child views are initialized.
+    this.onActiveCoinChange();
   }
 
   className() {
@@ -106,6 +137,14 @@ export default class extends BaseModal {
   //   super.remove();
   // }
 
+  onActiveCoinChange(coin = this.activeCoin) {
+    this.coinNav.setState({ active: coin });
+    this.coinStats.setState(this.coinStatsState);
+    if (this.needAddress[coin]) {
+      this.fetchAddress(coin);
+    }
+  }
+
   /**
    * Indicates which coin is currently active. The remaining interface (coinStats,
    * Send/Receive, Transactions, etc...) will be in the context of this coin.
@@ -117,8 +156,7 @@ export default class extends BaseModal {
   set activeCoin(coin) {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
-      this.coinNav.setState({ active: coin });
-      this.coinStats.setState(this.coinStatsState);
+      this.onActiveCoinChange();
     }
   }
 
@@ -191,6 +229,57 @@ export default class extends BaseModal {
       .render();
 
     return this._receiveMoneyVws[coinType];
+  }
+
+  fetchAddress(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this.addressFetches[coinType]) {
+      return this.addressFetches[coinType];
+    }
+
+    const receiveMoneyVw = this.getReceiveMoneyVw(coinType);
+
+    if (receiveMoneyVw) {
+      receiveMoneyVw.setState({
+        fetching: true,
+      });
+    }
+
+    this.needAddress[coinType] = false;
+
+    const fetch = $.get(app.getServerUrl(`wallet/address/${coinType}`))
+      .done((data) => {
+        if (receiveMoneyVw && !receiveMoneyVw.isRemoved()) {
+          receiveMoneyVw.setState({
+            fetching: false,
+            address: data.address,
+          });
+        }
+      }).fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.needAddress[coinType] = true;
+        if (receiveMoneyVw && !receiveMoneyVw.isRemoved()) {
+          receiveMoneyVw.setState({
+            fetching: false,
+          });
+        }
+      });
+
+    this.addressFetches[coinType] = this.addressFetches[coinType] || [];
+    this.addressFetches[coinType].push(fetch);
+
+    return fetch;
+  }
+
+  remove() {
+    Object.keys(this.addressFetches)
+      .forEach(coinType => {
+        this.addressFetches[coinType].forEach(fetch => fetch.abort());
+      });
+    super.remove();
   }
 
   renderSendReceiveVw() {

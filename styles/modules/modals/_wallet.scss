@@ -82,6 +82,59 @@
       }
     }
   }
+
+  .sendReceiveContainer {
+    // So there's no jump when toggling between send / receive mode. If the larger
+    // size changes, this may need to be updated.
+    height: 363px;
+    // padding-top: 25px;
+
+    .receiveMoney {
+      text-align: center;
+      position: relative;
+      // height: 273px;
+      // padding-left: $padMd;
+
+      .receiveAddressWrap {
+        // display: inline-block;
+        // position: relative;
+        // width: 100%;
+
+        .copiedText {
+          // margin-bottom: 5px;
+          // position: absolute;
+          // top: -20px;
+          // right: 0;
+        }
+
+        // .receiveAddressLink {
+        //   border-width: 1px;
+        //   border-style: solid;
+        //   padding: 5px 10px;
+        //   display: inline-block;
+        //   min-width: 360px;
+        //   max-width: calc(100% - 30px);
+        // }
+
+        &.copyingAddress {
+          
+        }
+      }
+
+      .spinnerWrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .spinner {
+          width: 100px;
+          @include center();
+        }
+      }
+    }
+  }
 }
 
 .spendConfirmBox {

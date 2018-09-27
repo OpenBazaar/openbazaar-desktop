@@ -1,31 +1,12 @@
-<h2 class="h3 txCtr txUnl row"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
-<div class="codeAddressWrap">
-  <div class="rowLg <% if (ob.fetching) print('invisible') %>">
-    <a class="js-receiveQrCode"><img src="<%= ob.qrDataUri %>"></a>
-  </div>
-  <div class="rowMd receiveAddressWrap <% if (ob.fetching) print('invisible') %>">
-    <div class="copiedText hide js-copiedText">Copied</div>
-    <a class="js-receiveAddress clrT clrBr receiveAddressLink noOverflow"><%= ob.address %></a>
-  </div>
-  <div class="spinnerWrap <% if (!ob.fetching) print('hide') %>">
-    <%= ob.spinner() %>
-  </div>
+<h2 class="h4 txUnl row"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
+<div class="rowLg <% if (ob.fetching) print('invisible') %>">
+  <a class="js-receiveQrCode"><img src="<%= ob.qrDataUri %>"></a>
 </div>
-<div class="flexCent buttonsWrap">
-  <div>
-    <div class="flexVCent gutterH">
-      <div class="flexVCent">
-        <% if (ob.walletCur && ob.walletCur.needCoinLink) { %>
-          <%= ob.crypto.cryptoIcon({
-            className: 'margRSm',
-            code: ob.coinType,
-          }) %>
-          <a href="<%= ob.walletCur.needCoinLink %>" class="clrT txB txU">
-            <%= ob.polyT('wallet.receiveMoney.needCoinLink',
-              { cur: ob.coinName }) %>
-          </a>
-        <% } %>
-      </div>
-    </div>
-  </div>
+<div class="rowMd re2222ceiveAddressWrap <% if (ob.fetching) print('invisible') %>">
+  <a class="js-receiveAddress clrT clrBr"><%= ob.address %></a>
+  <a class="js-copyAddress">Copy</a>
+  <span class="posA hi2de js-copiedText">Copied</span>
+</div>
+<div class="spinnerWrap <% if (!ob.fetching) print('hide') %>">
+  <%= ob.spinner() %>
 </div>

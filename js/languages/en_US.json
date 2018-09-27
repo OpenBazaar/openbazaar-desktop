@@ -923,10 +923,8 @@
       "errorInvalidAddress": "The payment address is not valid."
     },
     "receiveMoney": {
-      "title": "Receive Money",
-      "btnCancel": "Cancel",
-      "needCoinLink": "Need %{cur}?"
-    }    
+      "title": "Scan or send coins to this address"
+    }
   },
   "walletOLD": {
     "title": "Wallet",

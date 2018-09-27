@@ -74,8 +74,6 @@ export default class extends baseVw {
         ...this._state,
         qrDataUri,
         coinName: polyTFallback(`cryptoCurrencies.${coinType}`, coinType),
-        walletCur,
-        errors: {},
       }));
 
       this._$copiedText = null;
