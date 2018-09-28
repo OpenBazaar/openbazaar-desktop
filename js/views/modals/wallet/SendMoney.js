@@ -89,8 +89,6 @@ export default class extends baseVw {
   }
 
   focusAddress() {
-    console.log('they focus me dog!');
-    window.dog = this.$addressInput;
     if (!this.saveInProgress) this.$addressInput.focus();
   }
 
