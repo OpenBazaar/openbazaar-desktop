@@ -92,7 +92,7 @@ export default class extends baseVw {
       start,
       end,
       total,
-      currentPage: Number(this.serverPage) +1,
+      currentPage: Number(this.serverPage) + 1,
     });
     // hide the loading spinner
     this.$el.removeClass('loading');
