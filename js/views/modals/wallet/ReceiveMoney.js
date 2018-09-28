@@ -16,41 +16,35 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'receiveMoney';
+    return 'receiveMoney padMd';
   }
 
   events() {
     return {
-      'click .js-receiveAddress': 'onClickReceiveAddress',
-      'click .js-receiveQrCode': 'onClickReceiveQrCode',
+      'click .js-copyAddress': 'copyAddressToClipboard',
+      'click .js-receiveAddress': 'copyAddressToClipboard',
+      'click .js-receiveQrCode': 'copyAddressToClipboard',
     };
-  }
-
-  onClickReceiveAddress() {
-    this.copyAddressToClipboard();
-  }
-
-  onClickReceiveQrCode() {
-    this.copyAddressToClipboard();
   }
 
   copyAddressToClipboard() {
     clipboard.writeText(this.getState().address);
-    clearTimeout(this.copyTextFadeoutTimeout);
-    this.$copiedText.stop()
-      .fadeIn(600, () => {
-        this.copyTextFadeoutTimeout = setTimeout(() => {
-          this.$copiedText.fadeOut(600);
-        }, 1000);
-      });
-  }
+    clearTimeout(this.copyTextTimeout);
+    const $copyText = this.getCachedEl('.js-copyAddress')
+      .addClass('invisible');
+    const $copiedText = this.getCachedEl('.js-copiedText')
+      .stop()
+      .show();
 
-  get $copiedText() {
-    return this._$copiedText ||
-      (this._$copiedText = this.$('.js-copiedText'));
+    this.copyTextTimeout = setTimeout(() => {
+      $copiedText.hide();
+      $copyText.removeClass('invisible');
+    }, 1000);
   }
 
   render() {
+    super.render();
+
     loadTemplate('modals/wallet/receiveMoney.html', (t) => {
       // defaulting to an empty image - needed for proper spacing
       // when the spinner is showing
@@ -75,8 +69,6 @@ export default class extends baseVw {
         qrDataUri,
         coinName: polyTFallback(`cryptoCurrencies.${coinType}`, coinType),
       }));
-
-      this._$copiedText = null;
     });
 
     return this;

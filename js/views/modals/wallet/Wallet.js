@@ -132,17 +132,13 @@ export default class extends BaseModal {
   //   };
   // }
 
-  // remove() {
-  //   this.addressFetches.forEach(fetch => fetch.abort());
-  //   super.remove();
-  // }
-
   onActiveCoinChange(coin = this.activeCoin) {
     this.coinNav.setState({ active: coin });
     this.coinStats.setState(this.coinStatsState);
     if (this.needAddress[coin]) {
       this.fetchAddress(coin);
     }
+    this.renderSendReceiveVw();
   }
 
   /**
@@ -284,11 +280,15 @@ export default class extends BaseModal {
 
   renderSendReceiveVw() {
     if (this.sendModeOn) {
+      const sendVw = this.getSendMoneyVw();
+      sendVw.delegateEvents();
       this.getCachedEl('.js-sendReceiveContainer')
-        .html(this.getSendMoneyVw().el);
+        .html(sendVw.el);
     } else {
+      const receiveVw = this.getReceiveMoneyVw();
+      receiveVw.delegateEvents();
       this.getCachedEl('.js-sendReceiveContainer')
-        .html(this.getReceiveMoneyVw().el);
+        .html(receiveVw.el);
     }
   }
 
