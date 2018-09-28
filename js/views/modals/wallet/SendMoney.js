@@ -3,9 +3,9 @@ import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { convertCurrency, getExchangeRate } from '../../../utils/currency';
+import loadTemplate from '../../../utils/loadTemplate';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
-import loadTemplate from '../../../utils/loadTemplate';
 import SendConfirmBox from './SpendConfirmBox';
 import baseVw from '../../baseVw';
 
@@ -89,15 +89,27 @@ export default class extends baseVw {
   }
 
   focusAddress() {
+    console.log('they focus me dog!');
+    window.dog = this.$addressInput;
     if (!this.saveInProgress) this.$addressInput.focus();
   }
 
-  setFormData(data = {}, focusAddressInput = true) {
+  getFormData($formFields = this.$formFields) {
+    return super.getFormData($formFields);
+  }
+
+  setFormData(data = {}, options = {}) {
+    const opts = {
+      focusAddressInput: true,
+      render: true,
+      ...options,
+    };
+
     this.clearForm();
     this.model.set(data);
-    this.render();
+    if (opts.render) this.render();
     setTimeout(() => {
-      if (focusAddressInput) this.focusAddress();
+      if (opts.focusAddressInput) this.focusAddress();
     });
   }
 

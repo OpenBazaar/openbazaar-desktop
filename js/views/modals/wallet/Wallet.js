@@ -284,6 +284,14 @@ export default class extends BaseModal {
       sendVw.delegateEvents();
       this.getCachedEl('.js-sendReceiveContainer')
         .html(sendVw.el);
+
+      // select2 shits the bed if it's removed and re-insertd into the dom -
+      // hence the re-render below with extra hoops to maintain state
+      // (e.g. form fields). <shaking-fist-at-select2 />
+      const modelErrors = sendVw.model.validationError;
+      sendVw.setFormData(sendVw.getFormData(), { render: false });
+      sendVw.model.validationError = modelErrors;
+      sendVw.render();
     } else {
       const receiveVw = this.getReceiveMoneyVw();
       receiveVw.delegateEvents();
