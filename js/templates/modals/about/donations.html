@@ -30,7 +30,7 @@
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
       </a>
-      <a class="btn clrP clrBr js-openInWallet flexNoShrink <% if (!ob.supported) print('disabled') %>">
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink <% if (!ob.walletSupported) print('disabled') %>">
         <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
       </a>
     </div>

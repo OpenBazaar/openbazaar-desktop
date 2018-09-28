@@ -1,6 +1,7 @@
 import { clipboard } from 'electron';
 import qr from 'qr-encode';
-import { isSupportedWalletCur } from '../../../data/walletCurrencies';
+import { isSupportedWalletCur,
+  getCurrencyByCode } from '../../../data/walletCurrencies';
 import { getWallet, launchWallet } from '../../../utils/modalManager';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -14,8 +15,8 @@ export default class extends baseVw {
       ...options,
       initialState: {
         showCoin: 'BTC',
+        ...options.initialState,
       },
-      ...options.initialState,
     };
 
     super({
@@ -25,20 +26,20 @@ export default class extends baseVw {
     this.options = opts;
 
     const btcAddress = '3EN8kP3yW9MGvyiRMtGqKavQ9wYg4BspzR';
+    const btcQRAddress = getCurrencyByCode('BTC').qrCodeText(btcAddress);
     const bchAddress = 'prws8awqjg8l497x3h7qeu6jps4fdmk75vhlng8akj';
+    const bchQRAddress = getCurrencyByCode('BCH').qrCodeText(bchAddress);
 
     this.dCoins = {
       BTC: {
         obDonationAddress: btcAddress,
-        qrCodeDataURI: qr(`bitcoin:${btcAddress}`,
-          { type: 6, size: 6, level: 'Q' }),
-        supported: isSupportedWalletCur('BTC'),
+        qrCodeDataURI: qr(btcQRAddress, { type: 6, size: 6, level: 'Q' }),
+        walletSupported: isSupportedWalletCur('BTC'),
       },
       BCH: {
         obDonationAddress: bchAddress,
-        qrCodeDataURI: qr(`bitcoin:${bchAddress}`,
-          { type: 6, size: 6, level: 'Q' }),
-        supported: isSupportedWalletCur('BCH'),
+        qrCodeDataURI: qr(bchQRAddress, { type: 6, size: 6, level: 'Q' }),
+        walletSupported: isSupportedWalletCur('BCH'),
       },
     };
   }
@@ -63,14 +64,13 @@ export default class extends baseVw {
   copyDonationAddress() {
     const addr = this.dCoins[this.getState().showCoin].obDonationAddress;
     clipboard.writeText(addr);
+    const copyNotif = this.getCachedEl('.js-copyNotification');
 
-    this.getCachedEl('.js-copyNotification').addClass('active');
+    copyNotif.addClass('active');
     if (!!hiderTimer) {
       clearTimeout(hiderTimer);
     }
-    hiderTimer = setTimeout(
-      () => this.getCachedEl('.js-copyNotification')
-        .removeClass('active'), 3000);
+    hiderTimer = setTimeout(() => copyNotif.removeClass('active'), 3000);
   }
 
   openInWalletClick() {

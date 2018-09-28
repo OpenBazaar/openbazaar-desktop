@@ -456,8 +456,7 @@
       "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
       "bannerTitleBCH":"Scan or send Bitcoin Cash (BCH) to this address",
       "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
-      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address.",
-      "coinWarning": "You are using a %{walletCoin} wallet, this address can only accept %{donationCoin}."
+      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address."
     },
     "licenseTab": {
       "linkText": "License",
