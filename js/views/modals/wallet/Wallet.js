@@ -270,6 +270,15 @@ export default class extends BaseModal {
     return fetch;
   }
 
+  open(...args) {
+    const returnVal = super.open(...args);
+    if (this.sendModeOn) {
+      const sendVw = this.getSendMoneyVw();
+      if (sendVw) sendVw.focusAddress();
+    }
+    return returnVal;
+  }
+
   remove() {
     Object.keys(this.addressFetches)
       .forEach(coinType => {
