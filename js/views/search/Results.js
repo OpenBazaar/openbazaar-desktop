@@ -88,8 +88,12 @@ export default class extends baseVw {
 
     this.$resultsGrid.html(resultsFrag);
     // update the page controls
-    // this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
-    this.pageControls.setState({ start, end, total, pageSize: this.pageSize });
+    this.pageControls.setState({
+      start,
+      end,
+      total,
+      currentPage: Number(this.serverPage) +1,
+    });
     // hide the loading spinner
     this.$el.removeClass('loading');
     /*
@@ -179,8 +183,8 @@ export default class extends baseVw {
       if (this.pageControls) this.pageControls.remove();
       this.pageControls = this.createChild(PageControls, {
         initialState: {
-          hideCount: true,
-          textStyle: true,
+          currentPage: this.serverPage,
+          type: 'search',
         },
       });
       this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);

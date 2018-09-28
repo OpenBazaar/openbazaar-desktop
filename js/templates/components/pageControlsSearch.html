@@ -1,0 +1,35 @@
+<%
+  let countsAvailable;
+
+  if (typeof ob.start === 'number' &&
+    typeof ob.end === 'number' &&
+    typeof ob.total === 'number') {
+    countsAvailable = true;
+  }
+
+  let disabledPrev = true;
+  let disabledNext = true;
+
+  if (countsAvailable) {
+    if (ob.start > 1) disabledPrev = false;
+    if (ob.end < ob.total) disabledNext = false;
+  }
+%>
+
+<div class="floR">
+  <div class="pageControls flexVCent gutterH tx5">
+    <div class="btnStrip">
+      <button class="btn clrP clrBr pagePrev js-pagePrev <% if (disabledPrev) print('disabled') %>">
+          <span class="txUnb">< <%= ob.polyT('pageControls.previous') %></span>
+      </button>
+      <% if (typeof ob.currentPage === 'number'){%>
+        <div class="btn clrP clrBr unclickable">
+          <span class="txUnb"><%= ob.localizeNumber(ob.currentPage) %></span>
+        </div>
+      <% } %>
+      <button class="btn clrP clrBr pageNext js-pageNext <% if (disabledNext) print('disabled') %>">
+          <span class="txUnb"><%= ob.polyT('pageControls.next') %> ></span>
+      </button>
+    </div>
+  </div>
+</div>

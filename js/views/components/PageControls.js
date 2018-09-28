@@ -34,7 +34,9 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('components/pageControls.html', (t) => {
+    const path = this.getState().type === 'search' ?
+      'components/pageControlsSearch.html' : 'components/pageControls.html';
+    loadTemplate(path, (t) => {
       this.$el.html(t({
         type: this.type,
         ...this.getState(),
