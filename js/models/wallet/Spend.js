@@ -3,7 +3,7 @@ import {
   getCurrencyByCode as getCryptoCurByCode,
   isSupportedWalletCur,
 } from '../../data/walletCurrencies';
-// import { getWallet } from '../../utils/modalManager';
+import { polyTFallback } from '../../utils/templateHelpers';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -62,10 +62,10 @@ class Spend extends BaseModel {
       if (walletCur) {
         if (!attrs.address) {
           addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
-        } else if (walletCur.isValidAddress === 'function' &&
+        } else if (typeof walletCur.isValidAddress === 'function' &&
           !walletCur.isValidAddress(attrs.address)) {
           addError('address', app.polyglot.t('spendModelErrors.invalidAddress',
-            { cur: walletCur.name }));
+            { cur: polyTFallback(`cryptoCurrencies.${walletCurCode}`, walletCurCode) }));
         }
 
         let exchangeRateAvailable = false;

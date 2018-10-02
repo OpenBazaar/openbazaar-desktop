@@ -106,7 +106,7 @@
               </div>
             <% }); %>
             <%
-              const priceCryptoCode = ob.currencyMod.getCryptoCurByCode(ob.price.currencyCode);
+              const priceCryptoCode = ob.crypto.getWalletCurByCode(ob.price.currencyCode);
               let tip;
               let buyNowClass = 'disabled';
               let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?

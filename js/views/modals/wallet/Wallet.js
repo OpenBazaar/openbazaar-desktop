@@ -1,7 +1,10 @@
-// import $ from 'jquery';
-// import { getSocket } from '../../../utils/serverConnect';
+import $ from 'jquery';
+import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
-import { isSupportedWalletCur } from '../../../data/walletCurrencies';
+import {
+  isSupportedWalletCur,
+  ensureMainnetCode,
+} from '../../../data/walletCurrencies';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -10,6 +13,9 @@ import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
+import SendReceiveNav from './SendReceiveNav';
+import SendMoney from './SendMoney';
+import ReceiveMoney from './ReceiveMoney';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -35,11 +41,21 @@ export default class extends BaseModal {
         navCoins[0].code || 'BTC';
     const opts = {
       initialActiveCoin,
+      initialSendModeOn: true,
       ...options,
     };
 
     super(opts);
     this._activeCoin = opts.initialActiveCoin;
+    this._sendModeOn = opts.initialSendModeOn;
+    this._sendMoneyVws = {};
+    this._receiveMoneyVws = {};
+    this.addressFetches = {};
+    this.needAddress = navCoins.reduce((acc, coin) => {
+      acc[coin.code] = true;
+      return acc;
+    }, {});
+
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
 
@@ -50,18 +66,6 @@ export default class extends BaseModal {
         balance: coin.confirmed,
       };
     });
-
-    // this.navCoins.forEach(coin => {
-    //   const code = coin.code;
-    //   console.log(`${code}Spend`);
-    //   window[`${code}Spend`] = this[`${code}Spend`] = new Spend({ wallet: code });
-    //   console.log(`${code}Transactions`);
-    //   window[`${code}Transactions`] = this[`${code}Transactions`] =
-    //     new Transactions([], { coinType: code });
-    //   this.listenTo(this[`${code}Transactions`], 'update', () => {
-    //     this.render();
-    //   });
-    // });
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
@@ -75,16 +79,46 @@ export default class extends BaseModal {
     });
 
     this.coinStats = this.createChild(CoinStats, {
-      initialState: {
-        cryptoCur: 'BTC',
-        displayCur: 'USD',
-        confirmed: 1.567,
-        unconfirmed: 0.03234,
-        transactionCount: 28,
-      },
+      initialState: this.coinStatsState,
     }).render();
-    console.log('coinStats');
-    window.coinStats = this.coinStats;
+
+    this.sendReceiveNav = this.createChild(SendReceiveNav, {
+      initialState: this.sendReceivNavState,
+    }).render();
+
+    this.listenTo(this.sendReceiveNav, 'click-send', () => {
+      this.sendModeOn = true;
+    });
+
+    this.listenTo(this.sendReceiveNav, 'click-receive', () => {
+      this.sendModeOn = false;
+    });
+
+    const serverSocket = getSocket();
+
+    if (serverSocket) {
+      this.listenTo(serverSocket, 'message', e => {
+        // "wallet" sockets come for new transactions and when a transaction gets it's
+        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
+        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
+          if (this.stats) {
+            this.stats.setState({
+              transactionCount: this.stats.getState().transactionCount + 1,
+            });
+          }
+
+          if (this.sendModeOn) {
+            // we'll fetch the next time we show the receive money section
+            this.needAddress = true;
+          } else {
+            this.fetchAddress();
+          }
+        }
+      });
+    }
+
+    // This should be after all the child views are initialized.
+    this.onActiveCoinChange();
   }
 
   className() {
@@ -98,11 +132,19 @@ export default class extends BaseModal {
   //   };
   // }
 
-  // remove() {
-  //   this.addressFetches.forEach(fetch => fetch.abort());
-  //   super.remove();
-  // }
+  onActiveCoinChange(coin = this.activeCoin) {
+    this.coinNav.setState({ active: coin });
+    this.coinStats.setState(this.coinStatsState);
+    if (this.needAddress[coin]) {
+      this.fetchAddress(coin);
+    }
+    this.renderSendReceiveVw();
+  }
 
+  /**
+   * Indicates which coin is currently active. The remaining interface (coinStats,
+   * Send/Receive, Transactions, etc...) will be in the context of this coin.
+   */
   get activeCoin() {
     return this._activeCoin;
   }
@@ -110,7 +152,160 @@ export default class extends BaseModal {
   set activeCoin(coin) {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
-      this.coinNav.setState({ active: coin });
+      this.onActiveCoinChange();
+    }
+  }
+
+  /**
+   * True indicates that the wallet interface has the Send tab (as opposed to Recieve)
+   * active for the selected activeCoin.
+   */
+  get sendModeOn() {
+    return this._sendModeOn;
+  }
+
+  set sendModeOn(bool) {
+    const normalizedBool = !!bool;
+
+    if (normalizedBool !== this._sendModeOn) {
+      this._sendModeOn = normalizedBool;
+      this.sendReceiveNav.setState(this.sendReceivNavState);
+      this.renderSendReceiveVw();
+    }
+  }
+
+  get coinStatsState() {
+    const activeCoin = this.activeCoin;
+    const balance = app && app.walletBalances &&
+      app.walletBalances.get(activeCoin);
+
+    return {
+      cryptoCur: ensureMainnetCode(activeCoin),
+      displayCur: app && app.settings && app.settings.get('localCurrency') ||
+        'USD',
+      confirmed: balance && balance.get('confirmed'),
+      unconfirmed: balance && balance.get('unconfirmed'),
+      transactionCount: 28,
+    };
+  }
+
+  get sendReceivNavState() {
+    return { sendModeOn: this.sendModeOn };
+  }
+
+  getSendMoneyVw(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this._sendMoneyVws[coinType]) {
+      return this._sendMoneyVws[coinType];
+    }
+
+    this._sendMoneyVws[coinType] = this.createChild(SendMoney, {
+      coinType,
+    })
+      .render();
+
+    return this._sendMoneyVws[coinType];
+  }
+
+  getReceiveMoneyVw(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this._receiveMoneyVws[coinType]) {
+      return this._receiveMoneyVws[coinType];
+    }
+
+    this._receiveMoneyVws[coinType] = this.createChild(ReceiveMoney, {
+      initialState: { coinType },
+    })
+      .render();
+
+    return this._receiveMoneyVws[coinType];
+  }
+
+  fetchAddress(coinType = this.activeCoin) {
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
+    if (this.addressFetches[coinType]) {
+      return this.addressFetches[coinType];
+    }
+
+    const receiveMoneyVw = this.getReceiveMoneyVw(coinType);
+
+    if (receiveMoneyVw) {
+      receiveMoneyVw.setState({
+        fetching: true,
+      });
+    }
+
+    this.needAddress[coinType] = false;
+
+    const fetch = $.get(app.getServerUrl(`wallet/address/${coinType}`))
+      .done((data) => {
+        if (receiveMoneyVw && !receiveMoneyVw.isRemoved()) {
+          receiveMoneyVw.setState({
+            fetching: false,
+            address: data.address,
+          });
+        }
+      }).fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+        this.needAddress[coinType] = true;
+        if (receiveMoneyVw && !receiveMoneyVw.isRemoved()) {
+          receiveMoneyVw.setState({
+            fetching: false,
+          });
+        }
+      });
+
+    this.addressFetches[coinType] = this.addressFetches[coinType] || [];
+    this.addressFetches[coinType].push(fetch);
+
+    return fetch;
+  }
+
+  open(...args) {
+    const returnVal = super.open(...args);
+    if (this.sendModeOn) {
+      const sendVw = this.getSendMoneyVw();
+      if (sendVw) sendVw.focusAddress();
+    }
+    return returnVal;
+  }
+
+  remove() {
+    Object.keys(this.addressFetches)
+      .forEach(coinType => {
+        this.addressFetches[coinType].forEach(fetch => fetch.abort());
+      });
+    super.remove();
+  }
+
+  renderSendReceiveVw() {
+    if (this.sendModeOn) {
+      const sendVw = this.getSendMoneyVw();
+      sendVw.delegateEvents();
+      this.getCachedEl('.js-sendReceiveContainer')
+        .html(sendVw.el);
+
+      // select2 shits the bed if it's removed and re-insertd into the dom -
+      // hence the re-render below with extra hoops to maintain state
+      // (e.g. form data). <shaking-fist-at-select2 />
+      const modelErrors = sendVw.model.validationError;
+      sendVw.setFormData(sendVw.getFormData(), { render: false });
+      sendVw.model.validationError = modelErrors;
+      sendVw.render();
+    } else {
+      const receiveVw = this.getReceiveMoneyVw();
+      receiveVw.delegateEvents();
+      this.getCachedEl('.js-sendReceiveContainer')
+        .html(receiveVw.el);
     }
   }
 
@@ -128,6 +323,11 @@ export default class extends BaseModal {
 
         this.coinStats.delegateEvents();
         this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
+
+        this.sendReceiveNav.delegateEvents();
+        this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
+
+        this.renderSendReceiveVw();
       });
     });
 

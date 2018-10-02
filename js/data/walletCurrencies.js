@@ -18,7 +18,6 @@ const currencies = [
     qrCodeText: address => `bitcoin:${address}`,
     icon: 'imgs/cryptoIcons/BTC.png',
     url: 'https://bitcoin.org/',
-    needCoinLink: 'https://openbazaar.org/bitcoin',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBTC/address/${address}` :

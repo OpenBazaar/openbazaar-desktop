@@ -1,0 +1,14 @@
+<h2 class="h4 txUnl rowMd"><%= ob.polyT('wallet.receiveMoney.title') %></h2>
+<div class="rowMd receiveQrCodeWrap <% if (ob.fetching) print('invisible') %>">
+  <a class="js-receiveQrCode"><img src="<%= ob.qrDataUri %>"></a>
+</div>
+<div class="rowMd <% if (ob.fetching) print('invisible') %>">
+  <a class="js-receiveAddress clrT clrBr tx5 addressText clamp"><%= ob.address %></a>
+  <span class="posR copyTextWrap">
+    <a class="tx5b txU copyAddress js-copyAddress">Copy</a>
+    <span class="hide tx5b copiedText js-copiedText">Copied</span>
+  </span>
+</div>
+<div class="spinnerWrap <% if (!ob.fetching) print('hide') %>">
+  <%= ob.spinner() %>
+</div>

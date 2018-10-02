@@ -82,6 +82,58 @@
       }
     }
   }
+
+  .sendReceiveContainer {
+    // So there's no jump when toggling between send / receive mode. If the larger
+    // size changes, this may need to be updated.
+    min-height: 320px;
+
+    .receiveMoney {
+      text-align: center;
+      position: relative;
+
+      .addressText {
+        max-width: 325px;
+        display: inline-block;
+        vertical-align: top;
+      }
+
+      .receiveQrCodeWrap {
+        // needed so space is allocated when the qr code is not displayed
+        // during fetching
+        height: 208px;
+      }
+
+      .copyTextWrap {
+        padding-left: 8px;
+  
+        .copyAddress, .copiedText {
+          position: absolute;
+          max-width: 90px;
+          display: inline-block;
+          text-align: left;
+          word-wrap: break-word;
+        }
+
+        .copiedText {
+          left: 8px;
+        }
+      }
+
+      .spinnerWrap {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        .spinner {
+          width: 100px;
+          @include center();
+        }
+      }
+    }
+  }
 }
 
 .spendConfirmBox {

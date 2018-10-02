@@ -1,0 +1,17 @@
+<%
+  // todo:
+  // todo:
+  // todo:
+  // todo: no pointer events on "active" nav
+%>
+<div class="col6">
+  <a class="flexCent clrT js-btnSend <% if (ob.sendModeOn) print('txB txU') %>"
+    style="border-right: 1px solid black">
+    Send
+  </a>
+</div>
+<div class="col6">
+  <a class="flexCent clrT js-btnReceive <% if (!ob.sendModeOn) print('txB txU') %>">
+    Receive
+  </a>
+</div>
