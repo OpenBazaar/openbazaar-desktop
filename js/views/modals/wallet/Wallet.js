@@ -117,6 +117,20 @@ export default class extends BaseModal {
       });
     }
 
+    this.listenTo(app.settings, 'change:localCurrency', (md, curr) => {
+      if (this.coinNav) {
+        this.coinNav.setState({
+          displayCur: curr,
+        });
+      }
+
+      if (this.coinStats) {
+        this.coinStats.setState({
+          displayCur: curr,
+        });
+      }
+    });
+
     // This should be after all the child views are initialized.
     this.onActiveCoinChange();
   }

@@ -9,7 +9,7 @@ export default class extends baseVw {
       initialState: {
         active: false,
         balance: 0,
-        displayCur: app && app.settings && app.settings.get('localCurrency') || 'PLN',
+        displayCur: app && app.settings && app.settings.get('localCurrency') || 'USD',
         ...options.initialState,
       },
     };

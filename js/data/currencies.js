@@ -741,3 +741,7 @@ export function getCurrenciesSortedByCode(options = {}) {
     sortBy: 'code',
   });
 }
+
+export function isFiatCur(code) {
+  return !!getCurrencyByCode(code, { includeWalletCurs: false });
+}

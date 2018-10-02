@@ -4,7 +4,7 @@ import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
-import { getCurrencyByCode } from '../data/currencies';
+import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
   getCurrencyByCode as getCryptoCurByCode,
   ensureMainnetCode,
@@ -105,13 +105,6 @@ export function integerToDecimal(amount, currency, options = {}) {
   }
 
   return returnVal;
-}
-
-// TODO: Doc me Up
-// TODO
-// TODO
-export function isFiatCur(code) {
-  return !!getCurrencyByCode(code, { includeWalletCurs: false });
 }
 
 /**

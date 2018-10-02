@@ -1,4 +1,4 @@
-// import app from '../../../app';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -7,7 +7,7 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         cryptoCur: '',
-        displayCur: '',
+        displayCur: app && app.settings && app.settings.get('localCurrency') || 'USD',
         confirmed: undefined,
         unconfirmed: undefined,
         transactionCount: undefined,

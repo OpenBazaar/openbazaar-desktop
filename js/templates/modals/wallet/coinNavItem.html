@@ -13,13 +13,10 @@
     }
   }
 
-  // TODO
-  // TODO
-  // TODO
-  // TODO - maxDisplayDecimals of 2 for fiat currencies.
   const formattedBalance = convertedCurrency === undefined ?
     ob.currencyMod.formatCurrency(ob.balance, mnCode, { maxDisplayDecimals: 4 }) :
-    ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur, { maxDisplayDecimals: 4 });
+    ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur,
+      { maxDisplayDecimals: ob.currencyMod.isFiatCur(ob.displayCur) ? 2 : 4 });
 
   const balanceText = ob.balance ?
     `<span class="clrTEm txB">${formattedBalance}</span>` : formattedBalance;

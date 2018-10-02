@@ -1,6 +1,4 @@
-// import _ from 'underscore';
-// import app from '../../../app';
-// import loadTemplate from '../../../utils/loadTemplate';
+import app from '../../../app';
 import baseVw from '../../baseVw';
 import CoinNavItem from './CoinNavItem';
 
@@ -9,6 +7,7 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         coins: [],
+        displayCur: app && app.settings && app.settings.get('localCurrency') || 'USD',
         ...options.initialState,
       },
     };
@@ -37,6 +36,7 @@ export default class extends baseVw {
         initialState: {
           ...coin,
           active: state.active === coin.code,
+          displayCur: state.displayCur,
         },
       });
 

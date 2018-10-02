@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
+import { isFiatCur } from '../data/currencies';
 import {
   formatCurrency,
   convertAndFormatCurrency,
@@ -9,7 +10,6 @@ import {
   getExchangeRate,
   renderFormattedCurrency,
   renderPairedCurrency,
-  isFiatCur,
 } from './currency';
 import {
   getServerCurrency,
