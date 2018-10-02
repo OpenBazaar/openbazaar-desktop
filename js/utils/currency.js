@@ -6,7 +6,7 @@ import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
-  getCurrencyByCode as getCryptoCurByCode,
+  getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
 } from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
@@ -69,7 +69,7 @@ export function decimalToInteger(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (getCryptoCurByCode(currency)) {
+    if (getWalletCurByCode(currency)) {
       returnVal = Math.round(amount * curData.baseUnit);
     } else {
       returnVal = Math.round(amount * 100);
@@ -97,7 +97,7 @@ export function integerToDecimal(amount, currency, options = {}) {
       throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
     }
   } else {
-    if (getCryptoCurByCode(currency)) {
+    if (getWalletCurByCode(currency)) {
       returnVal = Number(amount / curData.baseUnit);
     } else {
       returnVal = Number(amount / 100);
@@ -182,7 +182,7 @@ export function formatPrice(price, currency) {
   // todo: this needs to take into account crypto listing currency codes,
   // which using the method below, would result in most of them being
   // considered as fiat.
-  const cryptoCur = getCryptoCurByCode(currency);
+  const cryptoCur = getWalletCurByCode(currency);
 
   if (cryptoCur) {
     // Format crypto price so it has up to the max decimal places (as specified in the crypto
@@ -233,7 +233,7 @@ export function formatCurrency(amount, currency, options) {
   const curData = getCurrencyByCode(cur);
 
   let formattedCurrency;
-  const cryptoCur = getCryptoCurByCode(cur);
+  const cryptoCur = getWalletCurByCode(cur);
 
   // If we don't recognize the currency, we'll assume it's a crypto
   // listing cur.
