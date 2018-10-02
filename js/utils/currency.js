@@ -409,7 +409,7 @@ export function convertCurrency(amount, fromCur, toCur) {
     return amount;
   }
 
-  if (!exchangeRates[fromCur]) {
+  if (!exchangeRates[fromCurCode]) {
     throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
       `${fromCur.toUpperCase()}.`);
   }

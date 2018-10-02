@@ -114,6 +114,9 @@ export default class extends BaseVw {
         sufficientFunds: true,
       });
       this.spendConfirmBox.setState({ show: true });
+      // todo: need to pass coinTypee into fetchFeeEstimate
+      // todo: need to pass coinTypee into fetchFeeEstimate
+      // todo: need to pass coinTypee into fetchFeeEstimate
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     }
 

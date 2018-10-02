@@ -2,6 +2,7 @@ import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/
 import {
   getCurrencyByCode as getCryptoCurByCode,
   isSupportedWalletCur,
+  ensureMainnetCode,
 } from '../../data/walletCurrencies';
 import { polyTFallback } from '../../utils/templateHelpers';
 import app from '../../app';
@@ -68,19 +69,17 @@ class Spend extends BaseModel {
             { cur: polyTFallback(`cryptoCurrencies.${walletCurCode}`, walletCurCode) }));
         }
 
-        let exchangeRateAvailable = false;
+        let exchangeRatesAvailable = false;
 
         if (!attrs.currency) {
           addError('currency', 'Please provide a currency.');
         } else {
-          exchangeRateAvailable = attrs.currency === attrs.wallet ||
-            typeof getExchangeRate(attrs.currency) === 'number';
+          exchangeRatesAvailable =
+            ensureMainnetCode(attrs.currency) === ensureMainnetCode(attrs.wallet) ||
+              (typeof getExchangeRate(attrs.currency) === 'number' &&
+                typeof getExchangeRate(attrs.wallet) === 'number');
 
-          if (!exchangeRateAvailable) {
-            // TODO:
-            // TODO:
-            // TODO:
-            // TODO: test this scenario.
+          if (!exchangeRatesAvailable) {
             addError('currency', app.polyglot.t('spendModelErrors.missingExchangeRateData', {
               cur: attrs.currency,
               serverCur: walletCur.code,
@@ -92,7 +91,7 @@ class Spend extends BaseModel {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-        } else if (exchangeRateAvailable &&
+        } else if (exchangeRatesAvailable &&
           app.walletBalances) {
           const balanceMd = app.walletBalances.get(attrs.wallet);
           if (balanceMd && this.amountInServerCur >= balanceMd.get('confirmed')) {

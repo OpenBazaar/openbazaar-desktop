@@ -147,7 +147,7 @@ export default class extends baseVw {
   fetchFeeEstimate() {
     const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'),
       this.coinType);
-    this.sendConfirmBox.fetchFeeEstimate(amount);
+    this.sendConfirmBox.fetchFeeEstimate(amount, this.coinType);
   }
 
   get $addressInput() {

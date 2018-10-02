@@ -28,7 +28,7 @@
     <% } else if (typeof ob.fee === 'number') {
       let feeText = ob.currencyMod.pairedCurrency(
         ob.fee,
-        ob.currencyMod.getServerCurrency().code,
+        ob.coinType,
         ob.displayCurrency
       );      
     %>
