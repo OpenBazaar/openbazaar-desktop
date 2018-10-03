@@ -176,11 +176,13 @@ export function spend(fields) {
   } else {
     save.done(data => {
       if (app.walletBalances) {
-        const balanceMd = app.walletBalances.get(this.get('wallet'));
+        const coinType = spendModel.get('wallet');
+        const balanceMd = app.walletBalances.get(spendModel.get('wallet'));
 
         if (balanceMd) {
           balanceMd.set(
-            app.walletBalance.parse({
+            balanceMd.parse({
+              code: coinType,
               confirmed: data.confirmedBalance,
               unconfirmed: data.unconfirmedBalance,
             })

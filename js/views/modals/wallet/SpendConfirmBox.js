@@ -85,9 +85,6 @@ export default class extends baseVw {
       throw new Error('Please provide the coinType as a string.');
     }
 
-    console.log(`the amount is ${amount}`);
-    console.log(`the coinType is ${coinType}`);
-
     this.lastFetchFeeEstimateArgs = {
       amount,
       coinType,

@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import $ from 'jquery';
 import { getSocket } from '../../../utils/serverConnect';
 // import { recordEvent } from '../../../utils/metrics';
@@ -8,7 +9,6 @@ import {
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-// import Spend from '../../../models/wallet/Spend';
 // import Transactions from '../../../collections/wallet/Transactions';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
@@ -100,11 +100,6 @@ export default class extends BaseModal {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
         // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
-        if (e.jsonData.wallet) {
-          console.log(`the active coin is ${this.activeCoin}`);
-          console.log(`the wallt coin is ${e.jsonData.wallet.wallet}`);
-        }
-
         if (e.jsonData.wallet && !e.jsonData.wallet.height) {
           if (this.activeCoin === e.jsonData.wallet.wallet) {
             // const curTranCount = this.coinStats.getState()transactionCount
@@ -136,6 +131,11 @@ export default class extends BaseModal {
       }
     });
 
+    app.walletBalances.forEach(balanceMd => {
+      this.listenTo(balanceMd, 'change:confirmed change:unconfirmed',
+        _.debounce(this.onBalanceChange, 1));
+    });
+
     // This should be after all the child views are initialized.
     this.onActiveCoinChange();
   }
@@ -144,12 +144,22 @@ export default class extends BaseModal {
     return `${super.className()} wallet modalScrollPage`;
   }
 
-  // events() {
-  //   return {
-  //     'click .js-toggleSendReceive': 'onClickToggleSendReceive',
-  //     ...super.events(),
-  //   };
-  // }
+  onBalanceChange(md) {
+    if (md.id === this.activeCoin) {
+      this.coinStats.setState({
+        confirmed: md.get('confirmed'),
+        unconfirmed: md.get('unconfirmed'),
+      });
+    }
+
+    this.navCoins = this.navCoins.map(navCoin => ({
+      ...navCoin,
+      balance: md.id === navCoin.code ?
+        md.get('confirmed') : navCoin.balance,
+    }));
+
+    this.coinNav.setState({ coins: this.navCoins });
+  }
 
   onActiveCoinChange(coin = this.activeCoin) {
     this.coinNav.setState({ active: coin });
