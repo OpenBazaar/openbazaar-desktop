@@ -100,18 +100,23 @@ export default class extends BaseModal {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
         // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
-        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
-          if (this.stats) {
-            this.stats.setState({
-              transactionCount: this.stats.getState().transactionCount + 1,
-            });
-          }
+        if (e.jsonData.wallet) {
+          console.log(`the active coin is ${this.activeCoin}`);
+          console.log(`the wallt coin is ${e.jsonData.wallet.wallet}`);
+        }
 
-          if (this.sendModeOn) {
-            // we'll fetch the next time we show the receive money section
-            this.needAddress = true;
-          } else {
+        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
+          if (this.activeCoin === e.jsonData.wallet.wallet) {
+            // const curTranCount = this.coinStats.getState()transactionCount
+            // this.coinStats.setState({ })
+            // if (this.stats) {
+            //   this.stats.setState({
+            //     transactionCount: this.stats.getState().transactionCount + 1,
+            //   });
+            // }
             this.fetchAddress();
+          } else {
+            this.needAddress[e.jsonData.wallet.wallet] = true;
           }
         }
       });
@@ -247,7 +252,9 @@ export default class extends BaseModal {
     }
 
     if (this.addressFetches[coinType]) {
-      return this.addressFetches[coinType];
+      const pendingFetch = this.addressFetches[coinType]
+        .find(xhr => xhr.state() === 'pending');
+      if (pendingFetch) return pendingFetch;
     }
 
     const receiveMoneyVw = this.getReceiveMoneyVw(coinType);
