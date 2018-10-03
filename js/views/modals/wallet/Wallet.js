@@ -98,21 +98,23 @@ export default class extends BaseModal {
 
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
-        // "wallet" sockets come for new transactions and when a transaction gets it's
-        // first confirmation. We're only interested in new transactions (i.e. the height will be 0)
         if (e.jsonData.wallet && !e.jsonData.wallet.height) {
-          if (this.activeCoin === e.jsonData.wallet.wallet) {
-            // const curTranCount = this.coinStats.getState()transactionCount
-            // this.coinStats.setState({ })
-            // if (this.stats) {
-            //   this.stats.setState({
-            //     transactionCount: this.stats.getState().transactionCount + 1,
-            //   });
-            // }
-            this.fetchAddress();
-          } else {
-            this.needAddress[e.jsonData.wallet.wallet] = true;
+          // for incoming transactions, we'll need a new receiving address
+          if (e.jsonData.wallet.value > 0) {
+            if (this.activeCoin === e.jsonData.wallet.wallet) {
+              this.fetchAddress();
+            } else {
+              this.needAddress[e.jsonData.wallet.wallet] = true;
+            }
           }
+
+          // const curTranCount = this.coinStats.getState()transactionCount
+          // this.coinStats.setState({ })
+          // if (this.stats) {
+          //   this.stats.setState({
+          //     transactionCount: this.stats.getState().transactionCount + 1,
+          //   });
+          // }
         }
       });
     }
