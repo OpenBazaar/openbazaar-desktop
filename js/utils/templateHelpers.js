@@ -74,6 +74,7 @@ export function polyT(key, options) {
  */
 // TODO: Apply this to places this functionality was manually done prior to this
 // function creation!
+// TODO: THis is actually possible with default t() functionality!!!!!!
 export function polyTFallback(key, fallback, options) {
   const processedKey = getTranslationKey(key);
   const translated = polyT(processedKey, options);
