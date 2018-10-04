@@ -1,9 +1,9 @@
 <div class="flexBtnWrapper flexBtnTop flexRow">
-  <button class="btnFlx underlineOnly flexExpand clrP clrBr gutterHSm js-btc <% if (ob.showCoin === 'BTC') print('active') %>">
+  <button class="btnFlx col6 underlineOnly flexExpand clrP clrBr gutterHSm js-btc <% if (ob.showCoin === 'BTC') print('active') %>">
     <%= ob.crypto.cryptoIcon({ code: 'BTC' }) %>
     <span><%= ob.polyT('cryptoCurrencies.BTC') %></span>
   </button>
-  <button class="btnFlx underlineOnly flexExpand clrP clrBr gutterHSm js-bch <% if (ob.showCoin === 'BCH') print('active') %>">
+  <button class="btnFlx col6 underlineOnly flexExpand clrP clrBr gutterHSm js-bch <% if (ob.showCoin === 'BCH') print('active') %>">
     <%= ob.crypto.cryptoIcon({ code: 'BCH' }) %>
     <span><%= ob.polyT('cryptoCurrencies.BCH') %></span>
   </button>

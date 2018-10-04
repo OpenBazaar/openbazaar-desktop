@@ -332,7 +332,6 @@
     @extend .btn;
     padding: 25px;
     border-radius: 0px;
-    border: none;
     border-width: 1px;
     border-style: solid;
     flex-grow: 1;
@@ -360,11 +359,21 @@
       height: 48px;
       display: inline-flex;
       align-items: center;
+      font-weight: 400;
+
+      & > * {
+        // Set text to the same height as icons to prevent wobble on hover.
+        // If the text or icons are a different size, override this.
+        line-height: 16px;
+      }
 
       &.underlineOnly.active,
       &:hover,
       &:focus {
         border-bottom-width: 2px;
+      }
+      &.underlineOnly.active {
+        font-weight: 700;
       }
     }
   }
