@@ -936,16 +936,7 @@
       "btnCancel": "Cancel",
       "btnConfirmSend": "Yes, Send",
       "btnClose": "Close"
-    }    
-  },
-  "walletOLD": {
-    "title": "Wallet",
-    "closeLink": "Close wallet",
-    "fundsHeader": "Funds",
-    "btnReceiveMoney": "Receive Money",
-    "btnSendMoney": "Send Money",
-    "valueInCurrencyLabel": "Value in %{currency}",
-    "transactionsLabel": "Transactions",
+    },
     "transactions": {
       "header": "Transactions",
       "transaction": {
@@ -968,12 +959,21 @@
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
         "feeBumpOf": "Fee bump of %{address}"
       },
-      "noTransactionsPlaceholder": "You have no transactions.",
+      "noTransactionsPlaceholder": "No %{coinType} transactions found.",
       "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
       "recoverySeedLink": "backup your wallet recovery seed",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
     }
+  },
+  "walletOLD": {
+    "title": "Wallet",
+    "closeLink": "Close wallet",
+    "fundsHeader": "Funds",
+    "btnReceiveMoney": "Receive Money",
+    "btnSendMoney": "Send Money",
+    "valueInCurrencyLabel": "Value in %{currency}",
+    "transactionsLabel": "Transactions"
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",

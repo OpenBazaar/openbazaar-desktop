@@ -9,13 +9,14 @@ import {
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-// import Transactions from '../../../collections/wallet/Transactions';
+import Transactions from '../../../collections/wallet/Transactions';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
 import SendReceiveNav from './SendReceiveNav';
 import SendMoney from './SendMoney';
 import ReceiveMoney from './ReceiveMoney';
+import TransactionsVw from './transactions/Transactions';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -55,6 +56,7 @@ export default class extends BaseModal {
       acc[coin.code] = true;
       return acc;
     }, {});
+    this.transactionsCls = {};
 
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
@@ -342,6 +344,19 @@ export default class extends BaseModal {
     }
   }
 
+  renderTransactionsView() {
+    const activeCoin = this.activeCoin;
+    const cl = this.transactionsCls[activeCoin] ?
+      this.transactionsCls[activeCoin] :
+        new Transactions([], { coinType: activeCoin });
+    this.transactionsVw = this.createChild(TransactionsVw, {
+      collection: cl,
+      $scrollContainer: this.$el,
+    });
+    this.getCachedEl('.js-transactionsContainer')
+      .html(this.transactionsVw.render().el);
+  }
+
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
       loadTemplate('walletIcon.svg', (walletIconTmpl) => {
@@ -361,6 +376,7 @@ export default class extends BaseModal {
         this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
 
         this.renderSendReceiveVw();
+        this.renderTransactionsView();
       });
     });
 

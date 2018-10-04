@@ -1,8 +1,8 @@
 import _ from 'underscore';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
 
@@ -47,7 +47,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('modals/wallet/transactionFetchState.html', (t) => {
+    loadTemplate('modals/wallet/transactions/transactionFetchState.html', (t) => {
       this.$el.html(t({
         ...this._state,
       }));
