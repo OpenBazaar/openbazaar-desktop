@@ -113,7 +113,7 @@
       <% } %>
     </div>
     <div class="flex">
-      <div class="flexExpand tx5b">
+      <div class="flexExpand tx5b ratingStrip">
         <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
       </div>
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
@@ -177,7 +177,7 @@
           }) %>
         <% } %>
         <div class="flexVCent gutterHSm tx5b">
-          <div class="flexNoShrink">
+          <div class="flexNoShrink ratingStrip">
             <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
           </div>
           <div class="verifiedModWrapper js-verifiedMod"></div>
@@ -263,11 +263,13 @@
               totalStoreRatings = ob.vendor.stats.ratingCount;
             }
           %>
-          <div class="cl2amp clrT2 tx6 flex gutterHSm">
-            <div><%= ob.formatRating(averageStoreRating, totalStoreRatings) %></div>
+          <div class="cl2amp clrT2 tx6 flexVCent gutterHSm">
+            <div class="ratingStrip">
+              <%= ob.formatRating(averageStoreRating, totalStoreRatings) %>
+            </div>
             <div class="verifiedModWrapper">
               <div class="js-verifiedMod"></div>
-            </div>              
+            </div>
           </div>
         </div>
       </div>

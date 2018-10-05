@@ -417,6 +417,12 @@ const countries = [
     number: '978',
   },
   {
+    name: 'Eswatini',
+    dataName: 'ESWATINI',
+    currency: 'SZL',
+    number: '748',
+  },
+  {
     name: 'Ethiopia',
     dataName: 'ETHIOPIA',
     currency: 'ETB',
@@ -1269,12 +1275,6 @@ const countries = [
     number: '578',
   },
   {
-    name: 'Swaziland',
-    dataName: 'SWAZILAND',
-    currency: 'SZL',
-    number: '748',
-  },
-  {
     name: 'Sweden',
     dataName: 'SWEDEN',
     currency: 'SEK',
@@ -1407,6 +1407,12 @@ const countries = [
     number: '840',
   },
   {
+    name: 'United States Minor Outlying Islands',
+    dataName: 'UNITED_STATES_MINOR_ISLANDS',
+    currency: 'USD',
+    number: '581',
+  },
+  {
     name: 'Uruguay',
     dataName: 'URUGUAY',
     currency: 'UYU',
@@ -1431,7 +1437,7 @@ const countries = [
     number: '937',
   },
   {
-    name: 'Vietnam',
+    name: 'Việt Nam',
     dataName: 'VIETNAM',
     currency: 'VND',
     number: '704',

@@ -51,6 +51,8 @@
 }
 
 .ratingStrip {
+  display: inline-flex;
+
   .ratingIcons {
     display: inline-flex;
     flex-direction: row-reverse;
@@ -83,8 +85,8 @@
 }
 
 .emoji {
-  height: 1em !important; // don't allow parent text sizes to override this
-  width: 1em !important;  // don't allow parent text sizes to override this
+  height: 1em;
+  width: 1em;
 
   &.fade {
     opacity: .35;
