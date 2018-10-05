@@ -1348,7 +1348,9 @@
   },
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
-    "displaying": "Displaying %{displayingCounts}",
+    "displaying": "Displaying %{displayingCounts}"
+  },
+  "pageControlsTextStyle": {
     "previous":"Previous",
     "next":"Next"
   },

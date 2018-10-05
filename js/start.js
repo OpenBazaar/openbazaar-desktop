@@ -502,6 +502,8 @@ function start() {
     // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
 
+    console.log(app.serverConfig.cryptoCurrency)
+
     if (!isCryptoCurrencySupported(app.serverConfig.cryptoCurrency)) {
       const connectLink =
         '<button class="btnAsLink js-connect clrTEm">' +

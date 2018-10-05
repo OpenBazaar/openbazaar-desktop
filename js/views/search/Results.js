@@ -181,12 +181,7 @@ export default class extends baseVw {
       this.removeCardViews();
 
       if (this.pageControls) this.pageControls.remove();
-      this.pageControls = this.createChild(PageControls, {
-        initialState: {
-          currentPage: this.serverPage,
-          type: 'search',
-        },
-      });
+      this.pageControls = this.createChild(PageControls);
       this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
       this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
       this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
