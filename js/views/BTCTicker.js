@@ -3,7 +3,7 @@
 import loadTemplate from '../utils/loadTemplate';
 import baseVw from './baseVw';
 import { getExchangeRate } from '../utils/currency';
-import { getServerCurrency } from '../data/cryptoCurrencies';
+import { getServerCurrency } from '../data/walletCurrencies';
 import app from '../app';
 
 const RATE_EXPIRY_S = '300';

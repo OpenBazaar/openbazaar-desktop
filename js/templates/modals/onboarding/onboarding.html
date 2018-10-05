@@ -1,6 +1,8 @@
 <section class="contentBox padMd clrP clrBr clrSh3 <%= `${ob.screen}Screen` %>">
   <div class="flexVCent gutterH posR">
-    <div class="<% if (ob.screen === 'intro') print('flexExpand') %>"><%= ob.brandingBoxT() %></div>
+    <div class="<% if (ob.screen === 'intro') print('flexExpand') %>">
+      <%= ob.brandingBoxT() %>
+    </div>
     <% if (ob.screen === 'intro') { %>
       <% if (ob.curConn && ob.curConn.server) { %>
         <% const serverName = ob.curConn.server.get('name') || ''; %>
@@ -27,7 +29,7 @@
     <div class="flexCent">
       <div>
         <div class="txCtr rowSm">
-          <span class="txUp txB clrT2"><%= ob.polyT('onboarding.introScreen.introLine', { cur: ob.currencyMod.getServerCurrency().name }) %></span><%= ob.crypto.cryptoIcon() %></i>
+          <span class="txUp txB clrT2"><%= ob.polyT('onboarding.introScreen.introLine') %></i>
         </div>
         <div class="headline clrT txCtr rowHg"><%= ob.polyT('onboarding.introScreen.tagLine') %></div>
         <div class="txCtr">
@@ -93,7 +95,7 @@
           <% if (ob.settingsErrors.currency) print(ob.formErrorTmpl({ errors: ob.settingsErrors.currency })) %>
           <select id="onboardingCurrency" name="localCurrency" class="clrSh2" data-model="settings">
             <% ob.currencyList.forEach((currency) => { %>
-            <option value="<%= currency.code %>" <% if (currency.code == ob.settings.localCurrency) print('selected') %>><%= currency.nameWithCode %></option>
+              <option value="<%= currency.code %>" <% if (currency.code == ob.settings.localCurrency) print('selected') %>><%= currency.nameWithCode %></option>
             <% }); %>
           </select>
         </div>

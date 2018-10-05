@@ -5,5 +5,8 @@
 </div>
 <div class="js-transactionFetchStateWrap"></div>
 <% if (!ob.transactions.length && !ob.isFetching) { %>
-  <div class="center txCtr"><%= ob.polyT('wallet.transactions.noTransactionsPlaceholder') %></div>
+  <div class="center txCtr">
+    <%= ob.polyT('wallet.transactions.noTransactionsPlaceholder',
+      { coinType: ob.polyTFallback(`cryptoCurrencies.${ob.coinType}`, ob.coinType) }) %>
+  </div>
 <% } %>

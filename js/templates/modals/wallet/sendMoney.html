@@ -1,4 +1,3 @@
-<h2 class="h3 txCtr txUnl"><%= ob.polyT('wallet.btnSendMoney') %></h2>
 <form class="padMdKids padStack">
   <div class="flexRow gutterHLg">
     <div class="col2">
@@ -8,7 +7,7 @@
     </div>
     <div class="col9">
       <% if (ob.errors.address) print(ob.formErrorTmpl({ errors: ob.errors.address })) %>
-      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder', { cur: ob.currencyMod.getServerCurrency().name }) %>">
+      <input type="text" class="clrBr clrSh2 <% if (ob.saveInProgress) print('disabled') %>" name="address" id="walletSendTo" value="<%= ob.address %>" placeholder="<%= ob.polyT('wallet.sendMoney.toPlaceholder', { cur: ob.polyTFallback(`cryptoCurrencies.${ob.coinType}`, ob.coinType) }) %>">
     </div>
   </div>
   <div class="flexRow gutterHLg">
@@ -42,7 +41,6 @@
     </div>
   </div>
   <div class="flexVCent">
-    <div class="margL js-feeChangeContainer"></div>
     <div class="flexExpand">
       <div class="flexHRight flexVCent gutterH col11">
         <a class="js-sendMoneyClear flexNoShrink"><%= ob.polyT('wallet.sendMoney.clear') %></a>

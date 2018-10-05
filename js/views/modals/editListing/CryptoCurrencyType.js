@@ -1,6 +1,5 @@
 import app from '../../../app';
 import '../../../lib/select2';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -80,7 +79,8 @@ export default class extends BaseView {
 
   tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
     return app.polyglot.t('editListing.cryptoCurrencyType.helperCoinType', {
-      toCur: getServerCurrency().code,
+      // toCur: getServerCurrency().code,
+      toCur: 'BTC',
       fromCur,
     });
   }
@@ -133,6 +133,7 @@ export default class extends BaseView {
           initialState: {
             tradingPairClass: 'cryptoTradingPairLg rowSm',
             exchangeRateClass: 'clrT2 tx6',
+            fromCur: 'BTC',
             toCur: this.getCachedEl('#editListingCoinType').val(),
           },
         });

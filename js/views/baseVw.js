@@ -9,9 +9,8 @@ export default class baseVw extends View {
     this._childViews = [];
     this._unregisterFromParent = true;
     this._removed = false;
-    this._state = {
-      ...options.initialState || {},
-    };
+    this._state = {};
+    this.setState((options.initialState || {}), { renderOnChange: false });
   }
 
   /**

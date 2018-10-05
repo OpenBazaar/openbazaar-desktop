@@ -7,7 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
 import { getTranslatedLangs } from '../../../data/languages';
-import { getTranslatedCurrencies } from '../../../data/currencies';
+import { getCurrencies } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 
 export default class extends baseVw {
@@ -41,7 +41,7 @@ export default class extends baseVw {
     this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
     this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
-    this.currencyList = getTranslatedCurrencies();
+    this.currencyList = getCurrencies();
 
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({

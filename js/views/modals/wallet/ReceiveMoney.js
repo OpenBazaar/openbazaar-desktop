@@ -1,107 +1,74 @@
-import { clipboard, remote } from 'electron';
-import _ from 'underscore';
-import loadTemplate from '../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
-import baseVw from '../../baseVw';
+import { clipboard } from 'electron';
 import qr from 'qr-encode';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
+import { polyTFallback } from '../../../utils/templateHelpers';
+import loadTemplate from '../../../utils/loadTemplate';
+import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-
-    this._state = {
-      ...options.initialState || {},
-    };
+    super({
+      initialState: {
+        coinType: 'BTC',
+        ...options.initialState,
+      },
+    });
   }
 
   className() {
-    return 'receiveMoney';
+    return 'receiveMoney padMd';
   }
 
   events() {
     return {
-      'click .js-receiveAddress': 'onClickReceiveAddress',
-      'click .js-receiveQrCode': 'onClickReceiveQrCode',
-      'click .js-cancelReceiveBtn': 'onClickCancelReceive',
-      'click .js-fundViaShapeshift': 'onClickFundViaShapshift',
+      'click .js-copyAddress': 'copyAddressToClipboard',
+      'click .js-receiveAddress': 'copyAddressToClipboard',
+      'click .js-receiveQrCode': 'copyAddressToClipboard',
     };
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
-  onClickReceiveAddress() {
-    this.copyAddressToClipboard();
-  }
-
-  onClickReceiveQrCode() {
-    this.copyAddressToClipboard();
-  }
-
-  onClickCancelReceive() {
-    this.trigger('click-cancel');
-  }
-
-  onClickFundViaShapshift() {
-    const serverCur = getServerCurrency().code;
-    const shapeshiftURL = `https://shapeshift.io/shifty.html?destination=${this.getState().address}&output=${serverCur}&apiKey=6e9fbc30b836f85d339b84f3b60cade3f946d2d49a14207d5546895ecca60233b47ec67304cdcfa06e019231a9d135a7965ae50de0a1e68d6ec01b8e57f2b812`;
-    const shapeshiftWin = new remote.BrowserWindow({ width: 700, height: 500, frame: true });
-    shapeshiftWin.loadURL(shapeshiftURL);
   }
 
   copyAddressToClipboard() {
     clipboard.writeText(this.getState().address);
-    clearTimeout(this.copyTextFadeoutTimeout);
-    this.$copiedText.stop()
-      .fadeIn(600, () => {
-        this.copyTextFadeoutTimeout = setTimeout(() => {
-          this.$copiedText.fadeOut(600);
-        }, 1000);
-      });
-  }
+    clearTimeout(this.copyTextTimeout);
+    const $copyText = this.getCachedEl('.js-copyAddress')
+      .addClass('invisible');
+    const $copiedText = this.getCachedEl('.js-copiedText')
+      .stop()
+      .show();
 
-  get $copiedText() {
-    return this._$copiedText ||
-      (this._$copiedText = this.$('.js-copiedText'));
+    this.copyTextTimeout = setTimeout(() => {
+      $copiedText.hide();
+      $copyText.removeClass('invisible');
+    }, 1000);
   }
 
   render() {
+    super.render();
+
     loadTemplate('modals/wallet/receiveMoney.html', (t) => {
       // defaulting to an empty image - needed for proper spacing
       // when the spinner is showing
       let qrDataUri = 'data:image/gif;base64,R0lGODlhAQABAAAAACw=';
       const address = this.getState().address;
+      const coinType = this.getState().coinType;
+      let walletCur;
 
-      if (address) {
-        qrDataUri = qr(getServerCurrency().qrCodeText(address),
+      try {
+        walletCur = getWalletCurByCode(coinType);
+      } catch (e) {
+        // pass
+      }
+
+      if (address && walletCur) {
+        qrDataUri = qr(walletCur.qrCodeText(address),
           { type: 6, size: 5, level: 'Q' });
       }
 
       this.$el.html(t({
         ...this._state,
         qrDataUri,
-        errors: {},
+        coinName: polyTFallback(`cryptoCurrencies.${coinType}`, coinType),
       }));
-
-      this._$copiedText = null;
     });
 
     return this;

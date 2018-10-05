@@ -9,7 +9,6 @@ import Contributors from './Contributors';
 import Donations from './Donations';
 import Help from './Help';
 import License from './License';
-import BTCTicker from '../../BTCTicker';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -86,14 +85,8 @@ export default class extends BaseModal {
   }
 
   render() {
-    // remove any existing tickers from previous renders
-    if (this.btcTicker) this.btcTicker.remove();
-
-    this.btcTicker = this.createChild(BTCTicker);
-    this.btcTicker.render();
-
     loadTemplate('modals/about/about.html', (t) => {
-      loadTemplate('brandingBox.html', brandingBoxT => {
+      loadTemplate('components/brandingBox.html', brandingBoxT => {
         this.$el.html(t({
           brandingBoxT,
           serverVersion: app.settings.prettyServerVer,
@@ -106,7 +99,6 @@ export default class extends BaseModal {
 
         this.$tabContent = this.$('.js-tabContent .contentBox');
         this.selectTab(this.currentTabName);
-        this.$('.js-btcTicker').append(this.btcTicker.$el);
       });
     });
 
