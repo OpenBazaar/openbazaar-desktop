@@ -164,14 +164,14 @@ export default class extends BaseModal {
     this.coinNav.setState({ coins: this.navCoins });
   }
 
-  onActiveCoinChange(coin = this.activeCoin) {
+  // onActiveCoinChange(coin = this.activeCoin) {
     // this.coinNav.setState({ active: coin });
     // this.coinStats.setState(this.coinStatsState);
     // if (this.needAddress[coin]) {
     //   this.fetchAddress(coin);
     // }
     // this.renderSendReceiveVw();
-  }
+  // }
 
   /**
    * Indicates which coin is currently active. The remaining interface (coinStats,
