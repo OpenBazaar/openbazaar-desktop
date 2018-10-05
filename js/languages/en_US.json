@@ -1350,6 +1350,10 @@
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
     "displaying": "Displaying %{displayingCounts}"
   },
+  "pageControlsTextStyle": {
+    "previous":"Previous",
+    "next":"Next"
+  },
   "purchase": {
     "purchaseDataChangedPopin": "The data for this listing has changed.",
     "returnToListing": "Return To Listing",

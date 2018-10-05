@@ -4,7 +4,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
-import PageControls from '../components/PageControls';
+import PageControls from '../components/PageControlsTextStyle';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
@@ -88,8 +88,12 @@ export default class extends baseVw {
 
     this.$resultsGrid.html(resultsFrag);
     // update the page controls
-    // this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
-    this.pageControls.setState({ start, end, total });
+    this.pageControls.setState({
+      start,
+      end,
+      total,
+      currentPage: Number(this.serverPage) + 1,
+    });
     // hide the loading spinner
     this.$el.removeClass('loading');
     /*

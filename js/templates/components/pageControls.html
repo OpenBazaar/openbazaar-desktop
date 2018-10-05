@@ -28,9 +28,9 @@
       <%=
         ob.polyT('pageControls.displaying', {
           displayingCounts: ob.polyT('pageControls.displayingCounts', {
-            start: ob.start,
-            end: ob.end,
-            total: ob.total,
+            start: ob.localizeNumber(ob.start),
+            end: ob.localizeNumber(ob.end),
+            total: ob.localizeNumber(ob.total),
           }),
         })
       %>
