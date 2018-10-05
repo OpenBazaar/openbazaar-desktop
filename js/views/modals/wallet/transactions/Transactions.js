@@ -13,14 +13,19 @@ import PopInMessage, { buildRefreshAlertMessage } from '../../../components/PopI
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    const opts = {
+      fetchOnInit: true,
+      ...options,
+    };
+
     super(options);
-    this.options = options;
+    this.options = opts;
 
     if (!this.collection) {
       throw new Error('Please provide a Transactions collection.');
     }
 
-    if (!options.$scrollContainer || !options.$scrollContainer.length) {
+    if (!opts.$scrollContainer || !opts.$scrollContainer.length) {
       throw new Error('Please provide a jQuery object containing the scrollable element ' +
         'this view is in.');
     }
@@ -32,18 +37,18 @@ export default class extends BaseVw {
     this.popInTimeouts = [];
     this.coinType = this.collection.options.coinType;
 
-    this.listenTo(this.collection, 'update', (cl, opts) => {
-      if (opts.changes.added.length) {
+    this.listenTo(this.collection, 'update', (cl, clUpdateOpts) => {
+      if (clUpdateOpts.changes.added.length) {
         // Expecting either a single new transactions on top or a page
         // of transactions on the bottom.
-        if (opts.changes.added.length === this.collection.length ||
-          opts.changes.added[opts.changes.added.length - 1] ===
+        if (clUpdateOpts.changes.added.length === this.collection.length ||
+          clUpdateOpts.changes.added[clUpdateOpts.changes.added.length - 1] ===
             this.collection.at(this.collection.length - 1)) {
           // It's a page of transactions at the bottom
-          this.renderTransactions(opts.changes.added, 'append');
+          this.renderTransactions(clUpdateOpts.changes.added, 'append');
         } else {
           // New transaction at top
-          this.renderTransactions(opts.changes.added, 'prepend');
+          this.renderTransactions(clUpdateOpts.changes.added, 'prepend');
         }
       }
     });
@@ -109,10 +114,10 @@ export default class extends BaseVw {
       });
     }
 
-    this.$scrollContainer = options.$scrollContainer;
+    this.$scrollContainer = opts.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-    this.fetchTransactions();
+    if (opts.fetchOnInit) this.fetchTransactions();
   }
 
   className() {
@@ -148,7 +153,8 @@ export default class extends BaseVw {
   }
 
   fetchTransactions() {
-    if (this.transactionsFetch) this.transactionsFetch.abort();
+    if (this.transactionsFetch &&
+      this.transactionsFetch.state() === 'pending') return;
 
     const fetchParams = {
       limit: this.transactionsPerFetch,

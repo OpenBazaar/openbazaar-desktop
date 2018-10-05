@@ -57,6 +57,7 @@ export default class extends BaseModal {
       return acc;
     }, {});
     this.transactionsCls = {};
+    this.transactionsInitialFetchComplete = {};
 
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
@@ -352,12 +353,25 @@ export default class extends BaseModal {
 
   renderTransactionsView() {
     const activeCoin = this.activeCoin;
-    const cl = this.transactionsCls[activeCoin] ?
-      this.transactionsCls[activeCoin] :
+    let cl = this.transactionsCls[activeCoin];
+
+    if (!cl) {
+      cl = this.transactionsCls[activeCoin] =
         new Transactions([], { coinType: activeCoin });
+
+      this.listenTo(cl, 'sync', (md, response, options) => {
+        if (options && options.xhr) {
+          options.xhr.done(() =>
+            (this.transactionsInitialFetchComplete[activeCoin] = true));
+        }
+      });
+    }
+
+    if (this.transactionsVw) this.transactionsVw.remove();
     this.transactionsVw = this.createChild(TransactionsVw, {
       collection: cl,
       $scrollContainer: this.$el,
+      fetchOnInit: !this.transactionsInitialFetchComplete[activeCoin],
     });
     this.getCachedEl('.js-transactionsContainer')
       .html(this.transactionsVw.render().el);
