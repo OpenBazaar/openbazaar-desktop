@@ -115,7 +115,8 @@ export default class extends BaseModal {
               }
             }
 
-            const cl = this.transactionsCls[e.jsonData.wallet.wallet];
+            const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
+              this.transactionsState[e.jsonData.wallet.wallet].cl;
             if (cl && this.activeCoin !== e.jsonData.wallet.wallet) {
               // If this is a new / updated transaction for the active coin, we'll
               // do nothing since the transactionsVw will handle updating the collection
@@ -127,18 +128,14 @@ export default class extends BaseModal {
                 // existing transaction has been confirmed
                 transaction.set(transaction.parse(data));
               } else {
-                this.transactionsCls[e.jsonData.wallet.wallet]
-                  .unshift(data);
+                // TODO
+                // TODO
+                // TODO
+                // TODO
+                // TODO test this scenario
+                cl.add(data, { parse: true, at: 0 });
               }
             }
-
-            // const curTranCount = this.coinStats.getState()transactionCount
-            // this.coinStats.setState({ })
-            // if (this.stats) {
-            //   this.stats.setState({
-            //     transactionCount: this.stats.getState().transactionCount + 1,
-            //   });
-            // }
           }
         }
       });
@@ -238,7 +235,9 @@ export default class extends BaseModal {
         'USD',
       confirmed: balance && balance.get('confirmed'),
       unconfirmed: balance && balance.get('unconfirmed'),
-      transactionCount: 28,
+      transactionCount: this.transactionsState && this.transactionsState[activeCoin] &&
+        this.transactionsState[activeCoin].cl ?
+          this.transactionsState[activeCoin].cl.length : undefined,
     };
   }
 
@@ -373,12 +372,24 @@ export default class extends BaseModal {
       cl = transactionsState.cl =
         new Transactions([], { coinType: activeCoin });
 
+      this.coinStats.setState({ transactionCount: undefined });
+
       this.listenTo(cl, 'sync', (md, response, options) => {
         if (options && options.xhr) {
           options.xhr.done(data => {
             transactionsState.initialFetchComplete = true;
             transactionsState.countAtFirstFetch = data.count;
           });
+        }
+
+        if (this.activeCoin === activeCoin && !cl.length) {
+          this.coinStats.setState({ transactionCount: 0 });
+        }
+      });
+
+      this.listenTo(cl, 'update', () => {
+        if (this.activeCoin === activeCoin) {
+          this.coinStats.setState({ transactionCount: cl.length });
         }
       });
     }
