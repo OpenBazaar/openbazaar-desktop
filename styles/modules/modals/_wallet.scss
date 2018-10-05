@@ -136,7 +136,7 @@
   }
 
   .walletTransactions {
-    padding: $padMd;
+    padding: $padLg;
     min-height: 335px;
     position: relative;
 
@@ -145,7 +145,20 @@
       font-size: $tx5;
 
       .btn {
-        font-size: $tx6;
+        font-size: $tx5b;
+        font-weight: bold;
+        padding: {
+          right: 10px;
+          left: 10px;
+        }
+      }
+
+      &:last-child {
+        border-bottom: {
+          style: solid;
+          width: 1px;
+          color: inherit;
+        }
       }
 
       .statusIconCol {

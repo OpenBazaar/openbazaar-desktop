@@ -30,10 +30,10 @@
 
       if (ob.value > 0) {
         infoLine = ob.polyT('wallet.transactions.transaction.incomingText', {
-          currencyPairing: `<span class="txB flexNoShrink margRTxt">${priceFrag}</span>`,
+          currencyPairing: `<span class="txB flexNoShrink margRTxt clrTEm">${priceFrag}</span>`,
         });
       } else {
-        const currencyPairing = `<span class="txB flexNoShrink margRTxt">${priceFrag}</span>`;
+        const currencyPairing = `<span class="txB flexNoShrink margRTxt clrTEm">${priceFrag}</span>`;
 
         if (ob.address) {
           infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
@@ -57,7 +57,7 @@
       <div class="flexInline gutterH margR clrT2 tx6 floL">
         <div class="flexNoShrink"><%= timeAgoAndConfirmCount %></div>
         <div class="flexNoShrink" style="max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
+          <div class="noOverflow"><a class="clrT2 txU js-txidLink"><%= ob.txid %></a></div>
         </div>
       </div>
       <%
