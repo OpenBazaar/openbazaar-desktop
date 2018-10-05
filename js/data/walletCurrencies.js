@@ -349,24 +349,3 @@ export function onlySupportedWalletCurs(curs = [], options = {}) {
 export function anySupportedByWallet(...args) {
   return !!(onlySupportedWalletCurs(...args).length);
 }
-
-export function getBlockChainTxUrl(txid, isTestnet) {
-  const serverCur = getServerCurrency();
-
-  if (serverCur) {
-    return serverCur.getBlockChainTxUrl(txid, isTestnet);
-  }
-
-  return '';
-}
-
-export function getBlockChainAddressUrl(address, isTestnet) {
-  const serverCur = getServerCurrency();
-
-  if (serverCur) {
-    return serverCur.getBlockChainAddressUrl(address, isTestnet);
-  }
-
-  return '';
-}
-

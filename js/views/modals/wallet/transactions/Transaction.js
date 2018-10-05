@@ -1,10 +1,11 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import { setTimeagoInterval } from '../../../../utils/';
 import { getFees } from '../../../../utils/fees';
-import { getServerCurrency } from '../../../../data/walletCurrencies';
+import {
+  getCurrencyByCode as getWalletCurByCode,
+} from '../../../../data/walletCurrencies';
 import app from '../../../../app';
 import { openSimpleMessage } from '../../../modals/SimpleMessage';
 import loadTemplate from '../../../../utils/loadTemplate';
@@ -19,10 +20,15 @@ export default class extends BaseVw {
       throw new Error('Please provide a Transaction model.');
     }
 
+    if (typeof options.coinType !== 'string') {
+      throw new Error('Please provide a coinType as a string.');
+    }
+
     this._state = {
       ...options.initialState || {},
     };
 
+    this.walletCur = getWalletCurByCode(options.coinType);
     this.listenTo(this.model, 'change', () => this.render());
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
       const timeAgo = moment(this.model.get('timestamp')).fromNow();
@@ -114,27 +120,6 @@ export default class extends BaseVw {
     }, 1000);
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   fetchFees() {
     this.setState({
       retryConfirmOn: true,
@@ -148,8 +133,8 @@ export default class extends BaseVw {
       this.setState({
         fetchingEstimatedFee: false,
         // server doubles the fee when bumping
-        estimatedFee: (getServerCurrency().feeBumpTransactionSize * fees.priority * 2) /
-          getServerCurrency().baseUnit,
+        estimatedFee: (this.walletCur.feeBumpTransactionSize * fees.priority * 2) /
+          this.walletCur.baseUnit,
       });
     }).fail(xhr => {
       if (this.isRemoved()) return;
@@ -185,12 +170,14 @@ export default class extends BaseVw {
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
     loadTemplate('modals/wallet/transactions/transaction.html', (t) => {
+      const walletBalance = app.walletBalances && app.walletBalances[this.options.coinType];
       this.$el.html(t({
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),
         timeAgo: this.renderedTimeAgo,
         isTestnet: !!app.serverConfig.testnet,
-        walletBalance: app.walletBalance.toJSON(),
+        walletBalance: walletBalance && walletBalance.toJSON() || null,
+        walletCur: this.walletCur,
         ...this._state,
       }));
     });

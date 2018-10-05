@@ -943,7 +943,7 @@
         "outgoingText": "%{currencyPairing} to %{address}",
         "incomingText": "%{currencyPairing} received",
         "timeAgoAndConfirmCount": "%{timeAgo} (%{confirmationsCount} confirmation) |||| %{timeAgo} (%{confirmationsCount} confirmations)",
-        "viewDetailsBtn": "View Details",
+        "viewDetailsBtn": "Details",
         "retryTransactionBtn": "Increase Fee",
         "retryPaymentConfirmBox": {
           "title": "Retry Payment",

@@ -96,17 +96,13 @@ export default class extends BaseVw {
 
         // The "walletUpdate" socket comes on a regular interval and gives us the current block
         // height which we can use to update the confirmations on a transaction.
-        if (e.jsonData.walletUpdate) {
+        if (e.jsonData.walletUpdate && e.jsonData.walletUpdate[this.coinType]) {
+          const walletUpdate = e.jsonData.walletUpdate[this.coinType];
           this.collection.models
             .filter(transaction => (transaction.get('height') > 0))
             .forEach(transaction => {
-              const txHeight = transaction.get('height');
-              let confirmations = 0;
-
-              if (txHeight > 0) {
-                confirmations = e.jsonData.walletUpdate.height - txHeight + 1;
-              }
-
+              const confirmations =
+                walletUpdate.height - transaction.get('height') + 1;
               transaction.set('confirmations', confirmations);
             });
         }
@@ -274,6 +270,7 @@ export default class extends BaseVw {
   createTransactionView(model, options = {}) {
     const view = this.createChild(Transaction, {
       model,
+      coinType: this.coinType,
       ...options,
     });
 

@@ -140,8 +140,7 @@ export default class extends BaseModal {
         _.debounce(this.onBalanceChange, 1));
     });
 
-    // This should be after all the child views are initialized.
-    this.onActiveCoinChange();
+    this.fetchAddress();
   }
 
   className() {
@@ -166,12 +165,12 @@ export default class extends BaseModal {
   }
 
   onActiveCoinChange(coin = this.activeCoin) {
-    this.coinNav.setState({ active: coin });
-    this.coinStats.setState(this.coinStatsState);
-    if (this.needAddress[coin]) {
-      this.fetchAddress(coin);
-    }
-    this.renderSendReceiveVw();
+    // this.coinNav.setState({ active: coin });
+    // this.coinStats.setState(this.coinStatsState);
+    // if (this.needAddress[coin]) {
+    //   this.fetchAddress(coin);
+    // }
+    // this.renderSendReceiveVw();
   }
 
   /**
@@ -185,7 +184,14 @@ export default class extends BaseModal {
   set activeCoin(coin) {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
-      this.onActiveCoinChange();
+      // this.onActiveCoinChange();
+      this.coinNav.setState({ active: coin });
+      this.coinStats.setState(this.coinStatsState);
+      if (this.needAddress[coin]) {
+        this.fetchAddress(coin);
+      }
+      this.renderSendReceiveVw();
+      this.renderTransactionsView();
     }
   }
 
