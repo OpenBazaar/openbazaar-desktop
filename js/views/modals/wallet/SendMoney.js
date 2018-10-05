@@ -1,22 +1,25 @@
 import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { convertCurrency, getExchangeRate } from '../../../utils/currency';
+import loadTemplate from '../../../utils/loadTemplate';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
-import loadTemplate from '../../../utils/loadTemplate';
 import SendConfirmBox from './SpendConfirmBox';
-import FeeChange from '../../components/FeeChange';
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
+    if (typeof options.coinType !== 'string' || !options.coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
     super(options);
+    this.coinType = options.coinType;
     this._saveInProgress = false;
     this._sendConfirmOn = false;
-    this.model = new Spend();
+    this.model = new Spend({ wallet: options.coinType });
   }
 
   className() {
@@ -89,12 +92,22 @@ export default class extends baseVw {
     if (!this.saveInProgress) this.$addressInput.focus();
   }
 
-  setFormData(data = {}, focusAddressInput = true) {
+  getFormData($formFields = this.$formFields) {
+    return super.getFormData($formFields);
+  }
+
+  setFormData(data = {}, options = {}) {
+    const opts = {
+      focusAddressInput: true,
+      render: true,
+      ...options,
+    };
+
     this.clearForm();
     this.model.set(data);
-    this.render();
+    if (opts.render) this.render();
     setTimeout(() => {
-      if (focusAddressInput) this.focusAddress();
+      if (opts.focusAddressInput) this.focusAddress();
     });
   }
 
@@ -133,8 +146,8 @@ export default class extends baseVw {
 
   fetchFeeEstimate() {
     const amount = convertCurrency(this.model.get('amount'), this.model.get('currency'),
-      getServerCurrency().code);
-    this.sendConfirmBox.fetchFeeEstimate(amount);
+      this.coinType);
+    this.sendConfirmBox.fetchFeeEstimate(amount, this.coinType);
   }
 
   get $addressInput() {
@@ -158,7 +171,7 @@ export default class extends baseVw {
     super.render();
 
     const defaultCur = typeof getExchangeRate(app.settings.get('localCurrency')) === 'number' ?
-      app.settings.get('localCurrency') : getServerCurrency().code;
+      app.settings.get('localCurrency') : this.coinType;
 
     loadTemplate('modals/wallet/sendMoney.html', (t) => {
       this.$el.html(t({
@@ -168,6 +181,7 @@ export default class extends baseVw {
         currencies: this.currencies ||
           getCurrenciesSortedByCode(),
         saveInProgress: this.saveInProgress,
+        coinType: this.coinType,
       }));
 
       this._$addressInput = null;
@@ -185,10 +199,6 @@ export default class extends baseVw {
       });
       this.listenTo(this.sendConfirmBox, 'clickSend', this.onClickConfirmSend);
       this.getCachedEl('.js-sendConfirmContainer').html(this.sendConfirmBox.render().el);
-
-      if (this.feeChange) this.feeChange.remove();
-      this.feeChange = this.createChild(FeeChange);
-      this.$('.js-feeChangeContainer').html(this.feeChange.render().el);
     });
 
     return this;

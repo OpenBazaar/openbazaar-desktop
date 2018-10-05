@@ -8,111 +8,129 @@
     }
   }
 
-  .btcTickerContainer {
-    margin-left: auto;
-    margin-right: 40px;
+  .coinNav {
+    .coinNavItem {
+      cursor: pointer;
 
-    .btcTicker {
+      .coinName {
+        // in case the name and/or balance are really long, don't let
+        // the name column get too small
+        min-width: 80px;
+        word-wrap: break-word;
+      }
+
+      .balanceText {
+        word-wrap: break-word;
+        max-width: 100px;
+      }
+
+      &.active {
+        cursor: default;
+        font-weight: bold;
+        outline: {
+          style: solid;
+          width: 1px;
+        }
+
+        .activeBalanceIcon {
+          font-size: 22px;
+          line-height: 1;
+          position: absolute;
+        }        
+      }
+    }
+  }
+
+  .coinStats {
+    height: 102px;
+    padding: 20px;
+
+    .coinIcon {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      transform: translateY(calc(-50% + 1px));
+      text-align: center;
+
+      .cryptoIcon  {
+        width: 34px;
+        height: 34px;
+      }
+    }
+
+    .colWrap {
       height: 100%;
-    }
-  }
 
-  .statsWrap {
-    border-right-width: 1px;
-    border-right-style: solid;
-    padding-right: $padMd;
+      .statCol {
+        padding-top: 25px;
 
-    .buttonWrap {
-      .btn {
-        width: 100%;
+        &.displayCurCol {
+          height: 100%;
+          padding-top: 0;
+
+          .displayCurColContent {
+            padding-top: 25px;
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-left-width: 1px;
+            border-left-style: solid;
+            justify-content: flex-start;
+            height: 100%;
+          }        
+        }
       }
-    }
-
-    .transactionCount {
-      .spinner {
-        width: 30px;
-        margin-left: 10px;
-      }
-    }
-  }
-
-  .receiveMoney, .btnSendMoney {
-    display: none;
-  }
-
-  &.receiveModeOn {
-    .receiveMoney {
-      display: block;
-    }
-
-    .btnSendMoney {
-      display: inline-flex;
-    }
-
-    .sendMoney, .btnReceiveMoney {
-      display: none;
     }
   }
 
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
-    height: 363px;
-    padding-top: 25px;
+    min-height: 320px;
 
     .receiveMoney {
       text-align: center;
       position: relative;
 
-      .codeAddressWrap {
-        height: 273px;
-        padding-left: $padMd;
+      .addressText {
+        max-width: 325px;
+        display: inline-block;
+        vertical-align: top;
+      }
 
-        .receiveAddressWrap {
-          display: inline-block;
-          position: relative;
-          width: 100%;
+      .receiveQrCodeWrap {
+        // needed so space is allocated when the qr code is not displayed
+        // during fetching
+        height: 208px;
+      }
 
-          .copiedText {
-            margin-bottom: 5px;
-            position: absolute;
-            top: -20px;
-            right: 0;
-          }
-
-          .receiveAddressLink {
-            border-width: 1px;
-            border-style: solid;
-            padding: 5px 10px;
-            display: inline-block;
-            min-width: 360px;
-            max-width: calc(100% - 30px);
-          }
-        }
-
-        .spinnerWrap {
+      .copyTextWrap {
+        padding-left: 8px;
+  
+        .copyAddress, .copiedText {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          max-width: 90px;
+          display: inline-block;
+          text-align: left;
+          word-wrap: break-word;
+        }
 
-          .spinner {
-            width: 100px;
-            @include center();
-          }
+        .copiedText {
+          left: 8px;
         }
       }
 
-      .cancelReceiveBtn {
+      .spinnerWrap {
         position: absolute;
+        top: 0;
+        left: 0;
         right: 0;
-        top: -25px;
-      }
+        bottom: 0;
 
-      .buttonsWrap {
-        position: relative;
-        left: calc($padMd / 2);
+        .spinner {
+          width: 100px;
+          @include center();
+        }
       }
     }
   }
@@ -210,7 +228,7 @@
         height: auto;
       }
     }
-  }
+  }  
 }
 
 .spendConfirmBox {

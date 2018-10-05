@@ -1,29 +1,18 @@
 import loadTemplate from './loadTemplate';
 import {
   getServerCurrency,
-  getCurrencyByCode,
-} from '../data/cryptoCurrencies';
-
-/**
- * Since many of our crypto related mapping (e.g. icons) are done based off of
- * a mainnet code, this function will attempt to obtain the mainnet code if a testnet
- * one is passed in. This only works for crypto coins that we have registered as
- * accepted currencies (i.e. are enumerated in data/cryptoCurrencies), but those are
- * the only ones that should ever come as testnet codes.
- */
-export function ensureMainnetCode(cur) {
-  if (typeof cur !== 'string' || !cur.length) {
-    throw new Error('Please provide a non-empty string.');
-  }
-
-  const curObj = getCurrencyByCode(cur);
-  return curObj ? curObj.code : cur;
-}
+  ensureMainnetCode,
+} from '../data/walletCurrencies';
 
 /**
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
  * attempt to use the server currency.
  */
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
+ // TODO: this should give priority to the icon in the wallet curs data file.
 export function renderCryptoIcon(options = {}) {
   let code = options.code;
   const baseIconPath = '../imgs/cryptoIcons/';
@@ -32,6 +21,10 @@ export function renderCryptoIcon(options = {}) {
     throw new Error('If providing the code, it must be a non-empty string.');
   }
 
+  // todo:
+  // todo:
+  // todo:
+  // todo - force an icon to be passed in. No more single server currency shennanigans.
   if (!code) {
     const serverCur = getServerCurrency();
     code = serverCur && serverCur.code || '';
@@ -50,8 +43,8 @@ export function renderCryptoIcon(options = {}) {
   const attrs = Object.keys(opts.attrs).reduce(
     (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
   );
-  const iconUrl = opts.code ?
-    `url(${baseIconPath}${opts.code}-icon.png),` :
+  const iconUrl = code ?
+    `url(${baseIconPath}${code}-icon.png),` :
     '';
   const defaultIcon = opts.defaultIcon ?
     `url(${opts.defaultIcon})` :
@@ -60,6 +53,16 @@ export function renderCryptoIcon(options = {}) {
   return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
 }
 
+/**
+ * Will render a a combination of two currenciees indicating that one is being
+ * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC). This differs from
+ * the CryptoTradingPair view in that the latter allows you to display the exchange
+ * rate next to the trading pair. It's also more easily updatable (just setState())
+ * in case your currencies need to change dynamically.
+ * TODO:
+ * TODO:
+ * TODO: document the options.
+ */
 export function renderCryptoTradingPair(options = {}) {
   if (typeof options.fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string.');

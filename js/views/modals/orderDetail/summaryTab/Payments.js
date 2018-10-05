@@ -8,7 +8,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../../utils/order';
-import { getServerCurrency } from '../../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../../data/walletCurrencies';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import baseVw from '../../../baseVw';
 import Payment from './Payment';

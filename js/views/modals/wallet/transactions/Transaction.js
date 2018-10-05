@@ -2,15 +2,15 @@ import $ from 'jquery';
 import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
-import { setTimeagoInterval } from '../../../utils/';
-import { getFees } from '../../../utils/fees';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
-import app from '../../../app';
-import { openSimpleMessage } from '../../modals/SimpleMessage';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import { setTimeagoInterval } from '../../../../utils/';
+import { getFees } from '../../../../utils/fees';
+import { getServerCurrency } from '../../../../data/walletCurrencies';
+import app from '../../../../app';
+import { openSimpleMessage } from '../../../modals/SimpleMessage';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -184,7 +184,7 @@ export default class extends baseVw {
   render() {
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
-    loadTemplate('modals/wallet/transaction.html', (t) => {
+    loadTemplate('modals/wallet/transactions/transaction.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),

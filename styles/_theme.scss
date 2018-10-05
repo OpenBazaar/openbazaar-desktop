@@ -407,6 +407,15 @@ input[type=range][class~="clrS"] {
 }
 
 .wallet {
+  .coinNav {
+    .coinNavItem {
+      &.active {
+        outline-color: black;
+      }
+    }
+  }
+
+  // DO We we wE We or Wizzle-eee need this anymmore?  
   .walletTransactions {
     .statusIconCol {
       .ion-alert-circled {

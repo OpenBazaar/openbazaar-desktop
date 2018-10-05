@@ -3,7 +3,7 @@ import { clipboard } from 'electron';
 import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../../data/walletCurrencies';
 import {
   completingOrder,
   events as orderEvents,

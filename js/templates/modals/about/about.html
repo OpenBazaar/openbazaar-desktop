@@ -1,4 +1,4 @@
-<div class="topControls flexRow js-btcTicker"></div>
+<div class="topControls flex"></div>
 <div class="flex gutterH">
   <div class="tabColumn contentBox padMd clrP clrBr clrSh3">
     <h1 class="h3 txUp clrT2"><%= ob.polyT('tabMenuHeading') %></h1>
@@ -14,8 +14,8 @@
     <div class="js-tabContent tabContent">
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexVCent">
-          <div class="floL"><%= ob.brandingBoxT() %></div>
-          <h2 id=tabTitle class="h3 clrT txCtr flexExpand"></h2>
+          <div><%= ob.brandingBoxT() %></div>
+          <h2 id=tabTitle class="h3 clrT txCtr flexExpand txUnl"></h2>
           <div>
             <div class="tx6 txRgt rowSm">
               <% if (ob.version === ob.serverVersion) { %>

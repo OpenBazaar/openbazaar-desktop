@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import { integerToDecimal } from '../../utils/currency';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../data/walletCurrencies';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';

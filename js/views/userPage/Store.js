@@ -132,7 +132,7 @@ class Store extends BaseVw {
         const price = md.get('price');
 
         if (price.amount !== undefined) {
-          // An undefined price means it was likely in an unrecognized currency that we
+          // An undefined price means it was likely an unrecognized currency that we
           // weren't able to convert from decimal/base units to integer/non-base units.
           try {
             md.convertedPrice = convertCurrency(price.amount, price.currencyCode,

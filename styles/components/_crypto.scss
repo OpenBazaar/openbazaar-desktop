@@ -1,3 +1,21 @@
+.cryptoIcon {
+  width: 16px;
+  height: 16px;
+  background-size: contain;
+  display: inline-block;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.cryptoIcon18 {
+  width: 18px;
+  height: 18px;
+}
+
+.shapeShiftIcon {
+  @extend .cryptoIcon;
+}
+
 .cryptoTradingPair {
   @extend .flexInline;
   align-items: center;

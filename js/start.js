@@ -1,13 +1,18 @@
+// TODO
+// TODizzle
+// TODO
+// TODO
+// TODO Confirm if any hard-coded ZEC related code is neeeded anymore.
+
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
-import Polyglot from 'node-polyglot';
+import Polyglot from './utils/Polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
-import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
@@ -33,7 +38,7 @@ import StatusBar from './views/StatusBar';
 import { getTranslationLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
-import WalletBalance from './models/wallet/WalletBalance';
+import WalletBalances from './collections/wallet/Balances';
 import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
@@ -316,7 +321,7 @@ function fetchVerifiedMods() {
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
 let exchangeRatesFetch;
-let walletBalanceFetch;
+let walletBalancesFetch;
 let searchProvidersFetch;
 
 function fetchStartupData() {
@@ -324,15 +329,15 @@ function fetchStartupData() {
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = !exchangeRatesFetch || exchangeRatesFetch.state() === 'rejected' ?
     fetchExchangeRates() : exchangeRatesFetch;
-  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch.state() === 'rejected' ?
-    app.walletBalance.fetch() : walletBalanceFetch;
+  walletBalancesFetch = !walletBalancesFetch || walletBalancesFetch.state() === 'rejected' ?
+    app.walletBalances.fetch() : walletBalancesFetch;
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch.state() === 'rejected' ?
     app.searchProviders.fetch() : searchProvidersFetch;
 
   const fetches = [
     ownFollowingFetch,
     exchangeRatesFetch,
-    walletBalanceFetch,
+    walletBalancesFetch,
     searchProvidersFetch,
   ];
 
@@ -367,7 +372,7 @@ function fetchStartupData() {
 
         if (ownFollowingFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else if (walletBalanceFetch.state() === 'rejected') {
+        } else if (walletBalancesFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
         } else {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
@@ -426,10 +431,6 @@ function onboardIfNeeded() {
   });
 
   return onboardIfNeededDeferred.promise();
-}
-
-function isCryptoCurrencySupported(cryptoCurrency) {
-  return !!getCurrencyByCode(cryptoCurrency);
 }
 
 let ensureValidSettingsCurDeferred;
@@ -496,38 +497,16 @@ function ensureValidSettingsCurrency() {
 // let's start our flow - do we need onboarding?,
 // fetching app-wide models...
 function start() {
+  // This is the server config as returned by ob/config. It has nothing to do with
+  // app.serverConfigs which is a collection of server configuration data related
+  // to connecting with a server. The latter is stored in local storage.
+  // TODO - instead of these elaborate comments explaining the distinction, perhaps rename
+  // serverConfigs to serverConnectionConfigs?
   fetchConfig().done((data) => {
-    // This is the server config as returned by ob/config. It has nothing to do with
-    // app.serverConfigs which is a collection of server configuration data related
-    // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
-
-    if (!isCryptoCurrencySupported(app.serverConfig.cryptoCurrency)) {
-      const connectLink =
-        '<button class="btnAsLink js-connect clrTEm">' +
-          `${app.polyglot.t('unsupportedCryptoCurDialog.connectLink')}` +
-          '</button>';
-
-      const unsupportedCryptoCurDialog = openSimpleMessage(
-        app.polyglot.t('unsupportedCryptoCurDialog.title'),
-        app.polyglot.t('unsupportedCryptoCurDialog.body', {
-          curCode: app.serverConfig.cryptoCurrency,
-          connectLink,
-        }),
-        {
-          dismissOnEscPress: false,
-          showCloseButton: false,
-        }
-      );
-
-      unsupportedCryptoCurDialog.$('.js-connect')
-        .on('click', () => app.connectionManagmentModal.open());
-
-      serverConnectEvents.once('connected', () => unsupportedCryptoCurDialog.remove());
-
-      return;
-    }
-
+    app.serverConfig.walletsHelp = 'CAUTION! - Rather than reading the wallet curs directly ' +
+      'from this config object, you likely want to use one of the relevant util functions in ' +
+      'data/walletCurrencies, for example, supportedWalletCurs()';
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();
@@ -536,17 +515,6 @@ function start() {
 
     if (curConn && curConn.status !== 'disconnected') {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
-
-      const serverCur = getServerCurrency();
-
-      if (serverCur.code === 'ZEC') {
-        startupConnectMessaging.setState({
-          msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
-            cancelLink: '<a class="js-cancel">' +
-              `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
-          }),
-        });
-      }
     }
 
     app.ownFollowing = new Followers([], {
@@ -554,7 +522,7 @@ function start() {
       peerId: app.profile.id,
     });
 
-    app.walletBalance = new WalletBalance();
+    app.walletBalances = new WalletBalances();
     app.searchProviders = new SearchProvidersCol();
 
     onboardIfNeeded().done(() => {
@@ -619,19 +587,13 @@ function start() {
           fetchVerifiedMods();
           setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
-          // have our walletBalance model update from the walletUpdate socket event
+          // have our walletBalances collection update from the walletUpdate socket event
           const serverSocket = getSocket();
 
           if (serverSocket) {
             serverSocket.on('message', (e = {}) => {
               if (e.jsonData.walletUpdate) {
-                const parsedData = app.walletBalance.parse({
-                  confirmed: e.jsonData.walletUpdate.confirmed,
-                  unconfirmed: e.jsonData.walletUpdate.unconfirmed,
-                  height: e.jsonData.walletUpdate.height,
-                });
-
-                app.walletBalance.set(parsedData);
+                app.walletBalances.set(e.jsonData.walletUpdate, { parse: true });
               }
             });
           }

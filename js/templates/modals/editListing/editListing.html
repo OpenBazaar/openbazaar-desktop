@@ -111,12 +111,21 @@
                     <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' && ob.metadata.pricingCurrency ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
                     <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                       <% ob.currencies.forEach((currency) => {%>
-                      <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+                      <option value="<%= currency.code %>" data-name="<%= currency.name %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
                       <% }); %>
                     </select>
                   </div>
+                  <%
+                    const supportedWalletCurs = ob.crypto.supportedWalletCurs()
+                      .map(cur => ob.crypto.ensureMainnetCode(cur));
+                    const helperCryptoCurCode = supportedWalletCurs.includes('BTC') ?
+                      'BTC' : supportedWalletCurs.sort()[0] || 'EUR';
+                    const helperCryptoCurName =
+                      ob.polyTFallback(`cryptoCurrencies.${helperCryptoCurCode}`,
+                        ob.polyTFallback(`currencies.${helperCryptoCurCode}`, helperCryptoCurCode));
+                  %>
                   <div class="clrT2 txSm helper"><%=
-                  ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                  ob.polyT('editListing.helperPrice', { cur: helperCryptoCurName }) %></div>
                 </div>
                 <div class="col6 simpleFlexCol conditionWrap">
                   <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>

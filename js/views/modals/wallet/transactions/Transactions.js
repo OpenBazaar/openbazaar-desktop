@@ -1,17 +1,17 @@
 import _ from 'underscore';
-import app from '../../../app';
-import { isScrolledIntoView } from '../../../utils/dom';
-import { getSocket, getCurrentConnection } from '../../../utils/serverConnect';
-import { openSimpleMessage } from '../SimpleMessage';
-import { launchSettingsModal } from '../../../utils/modalManager';
-import TransactionMd from '../../../models/wallet/Transaction';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import app from '../../../../app';
+import { isScrolledIntoView } from '../../../../utils/dom';
+import { getSocket, getCurrentConnection } from '../../../../utils/serverConnect';
+import { openSimpleMessage } from '../../SimpleMessage';
+import { launchSettingsModal } from '../../../../utils/modalManager';
+import TransactionMd from '../../../../models/wallet/Transaction';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 import Transaction from './Transaction';
 import TransactionFetchState from './TransactionFetchState';
-import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../../components/PopInMessage';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
@@ -30,6 +30,7 @@ export default class extends baseVw {
     this.fetchErrorMessage = '';
     this.newTransactionCount = 0;
     this.popInTimeouts = [];
+    this.coinType = this.collection.options.coinType;
 
     this.listenTo(this.collection, 'update', (cl, opts) => {
       if (opts.changes.added.length) {
@@ -345,10 +346,11 @@ export default class extends baseVw {
       this.newTransactionPopIn = null;
     }
 
-    loadTemplate('modals/wallet/transactions.html', (t) => {
+    loadTemplate('modals/wallet/transactions/transactions.html', (t) => {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
         isFetching: this.isFetching,
+        coinType: this.coinType,
       }));
     });
 

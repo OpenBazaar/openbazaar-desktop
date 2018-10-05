@@ -26,12 +26,13 @@ import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
 import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
+import Listings from '../../../collections/Listings';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
 import NsfwWarning from '../NsfwWarning';
-import CryptoTradingPair from '../../components/CryptoTradingPair';
-import Listings from '../../../collections/Listings';
 import MoreListings from './MoreListings';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
+import SupportedCurrenciesList from '../../components/SupportedCurrenciesList';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -674,6 +675,7 @@ export default class extends BaseModal {
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
         isCrypto: this.model.isCrypto,
+        _: { sortBy: _.sortBy },
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -682,6 +684,16 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (this.supportedCurrenciesList) this.supportedCurrenciesList.remove();
+      this.supportedCurrenciesList = this.createChild(SupportedCurrenciesList, {
+        initialState: {
+          currencies: this.model.get('metadata')
+            .get('acceptedCurrencies'),
+        },
+      });
+      this.getCachedEl('.js-supportedCurrenciesList')
+        .append(this.supportedCurrenciesList.render().el);
 
       if (!this.model.isOwnListing) {
         if (this.socialBtns) this.socialBtns.remove();

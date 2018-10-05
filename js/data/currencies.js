@@ -2,8 +2,10 @@ import _ from 'underscore';
 import app from '../app';
 import {
   getCurrencyByCode as getCryptoCurByCode,
-  getServerCurrency,
-} from './cryptoCurrencies';
+  supportedWalletCurs,
+  ensureMainnetCode,
+} from './walletCurrencies';
+import { polyTFallback } from '../utils/templateHelpers';
 
 const currencies = [
   {
@@ -653,7 +655,7 @@ function getIndexedCurrencies() {
 
 export function getCurrencyByCode(code, options = {}) {
   const opts = {
-    includeCrypto: true,
+    includeWalletCurs: true,
     ...options,
   };
 
@@ -663,78 +665,83 @@ export function getCurrencyByCode(code, options = {}) {
 
   const currency = getIndexedCurrencies()[code];
 
-  if (!currency && opts.includeCrypto) {
+  if (!currency && opts.includeWalletCurs) {
     return getCryptoCurByCode(code);
   }
 
   return currency;
 }
 
-function getTranslatedCurrencies(lang = app.localSettings.standardizedTranslatedLang(),
-  options = {}) {
+function getCurrencies(options = {}) {
   const opts = {
-    sort: true,
-    includeServerCur: true,
+    sortBy: 'name',
+    includeWalletCurs: true,
+    lang: app && app.localSettings && app.localSettings.standardizedTranslatedLang() ||
+      'en-US',
     ...options,
   };
 
-  if (!lang) {
-    throw new Error('Please provide the language the translated currencies' +
-      ' should be returned in.');
+  if (typeof opts.sortBy !== 'string' && opts.sortyBy !== false) {
+    throw new Error('The sortBy option must be provided as a string or false.');
   }
 
-  let translated = currencies.map(currency => {
-    const name = app.polyglot.t(`currencies.${currency.code}`);
-    return {
-      ...currency,
-      name,
-      nameWithCode: app.polyglot.t('currencyWithCode', {
+  if (typeof opts.lang !== 'string') {
+    throw new Error('The lang option must be a string.');
+  }
+
+  const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
+    .map(cur => {
+      const name = polyTFallback(`cryptoCurrencies.${cur}`, cur);
+
+      return {
+        ...(getCryptoCurByCode(cur)),
+        code: ensureMainnetCode(cur),
         name,
-        code: currency.code,
-      }),
-    };
-  });
+        nameWithCode: app.polyglot.t('currencyWithCode', {
+          name,
+          code: ensureMainnetCode(cur),
+        }),
+      };
+    });
 
-  if (opts.includeServerCur && app && app.serverConfig && app.serverConfig.cryptoCurrency) {
-    const serverCur = getCryptoCurByCode(app.serverConfig.cryptoCurrency);
+  const fiatCurs = currencies
+    .map(cur => {
+      const name = polyTFallback(`currencies.${cur.code}`, cur.code);
 
-    if (serverCur) {
-      translated = translated.concat({
-        ...serverCur,
-        name: app.polyglot.t(`cryptoCurrencies.${serverCur.code}`),
-      });
-    }
+      return {
+        ...cur,
+        name,
+        nameWithCode: app.polyglot.t('currencyWithCode', {
+          name,
+          code: cur.code,
+        }),
+      };
+    });
+
+  const curs = [
+    ...walletCurs,
+    ...fiatCurs,
+  ];
+
+  if (opts.sortBy) {
+    curs.sort((a, b) => a[opts.sortBy].localeCompare(b[opts.sortBy], opts.lang));
   }
 
-  if (opts.sort) {
-    translated = translated.sort((a, b) => a.name.localeCompare(b.name, lang));
-  }
-
-  return translated;
+  return curs;
 }
 
-const memoizedGetTranslatedCurrencies =
-  _.memoize(getTranslatedCurrencies, (lang, opts) => `${lang}-${JSON.stringify(opts)}`);
+const memoizedGetCurrencies =
+  _.memoize(getCurrencies, opts => `${JSON.stringify(opts)}`);
 
-export { memoizedGetTranslatedCurrencies as getTranslatedCurrencies };
+export { memoizedGetCurrencies as getCurrencies };
 
-let currenciesSortedByCode;
-
-export function getCurrenciesSortedByCode() {
-  if (currenciesSortedByCode) {
-    return currenciesSortedByCode;
-  }
-
-  const curs = [...currencies];
-  const serverCur = getServerCurrency();
-
-  if (serverCur) curs.push(serverCur);
-
-  currenciesSortedByCode = curs.sort((a, b) => {
-    if (a.code < b.code) return -1;
-    if (a.code > b.code) return 1;
-    return 0;
+export function getCurrenciesSortedByCode(options = {}) {
+  return getCurrencies({
+    ...options,
+    sortBy: 'code',
   });
+}
 
-  return currenciesSortedByCode;
+export function isFiatCur(code) {
+  return !!getCurrencyByCode(code, { includeWalletCurs: false });
 }

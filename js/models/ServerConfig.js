@@ -1,8 +1,14 @@
+/**
+ * This differs from the Config model. This is a representation of a connection to the
+ * server and is stored in local storage. Whereas, Config contains the configuartion provided
+ * from the server via the ob/config api.
+ */
+
 import fs from 'fs';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
-import { getCurrencyByCode as getCryptoCurByCode } from '../data/cryptoCurrencies';
+import { getCurrencyByCode as getCryptoCurByCode } from '../data/walletCurrencies';
 import app from '../app';
 import BaseModel from './BaseModel';
 

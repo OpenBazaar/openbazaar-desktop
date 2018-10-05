@@ -3,7 +3,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
+import { getServerCurrency } from '../../../data/walletCurrencies';
 import {
   resolvingDispute,
   events as orderEvents,

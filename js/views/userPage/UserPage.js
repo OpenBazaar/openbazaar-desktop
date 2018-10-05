@@ -105,7 +105,7 @@ export default class extends baseVw {
 
   clickTab(e) {
     const targ = $(e.target).closest('.js-tab');
-    this.setState(targ.attr('data-tab'));
+    this.setTabState(targ.attr('data-tab'));
   }
 
   clickMore() {
@@ -133,7 +133,7 @@ export default class extends baseVw {
   }
 
   clickRating() {
-    this.setState('reputation');
+    this.setTabState('reputation');
   }
 
   get followingCount() {
@@ -238,7 +238,7 @@ export default class extends baseVw {
     });
   }
 
-  setState(state, options = {}) {
+  setTabState(state, options = {}) {
     if (!state) {
       throw new Error('Please provide a state.');
     }
@@ -336,7 +336,7 @@ export default class extends baseVw {
       this.miniProfile = this.createChild(MiniProfile, {
         model: this.model,
         fetchFollowsYou: false,
-        onClickRating: () => this.setState('reputation'),
+        onClickRating: () => this.setTabState('reputation'),
         initialState: {
           followsYou: this.followsYou,
         },
@@ -353,7 +353,7 @@ export default class extends baseVw {
       }
 
       this.tabViewCache = {}; // clear for re-renders
-      this.setState(this.state, {
+      this.setTabState(this.state, {
         addTabToHistory: false,
         listing: this.options.listing,
       });

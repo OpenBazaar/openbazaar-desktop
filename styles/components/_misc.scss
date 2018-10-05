@@ -29,24 +29,6 @@
   images are added */
 }
 
-.cryptoIcon {
-  width: 16px;
-  height: 16px;
-  background-size: contain;
-  display: inline-block;
-  background-repeat: no-repeat;
-  background-position: center;
-}
-
-.cryptoIcon18 {
-  width: 18px;
-  height: 18px;
-}
-
-.shapeShiftIcon {
-  @extend .cryptoIcon;
-}
-
 .copyNotification {
   font-weight: bold;
   font-size: $baseFontSize;
@@ -147,4 +129,8 @@
     top: 0;
     left: 0;
   }
+}
+
+.unclickable {
+  pointer-events: none;
 }

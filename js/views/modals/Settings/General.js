@@ -3,7 +3,7 @@ import '../../../lib/select2';
 import app from '../../../app';
 import { translationLangs } from '../../../data/languages';
 import { getTranslatedCountries } from '../../../data/countries';
-import { getTranslatedCurrencies } from '../../../data/currencies';
+import { getCurrencies } from '../../../data/currencies';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -35,7 +35,7 @@ export default class extends baseVw {
       (md, resp, opts) => app.localSettings.set(opts.attrs));
 
     this.countryList = getTranslatedCountries();
-    this.currencyList = getTranslatedCurrencies();
+    this.currencyList = getCurrencies();
   }
 
   events() {
