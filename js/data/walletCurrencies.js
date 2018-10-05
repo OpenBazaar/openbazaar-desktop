@@ -101,8 +101,8 @@ const currencies = [
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tLTC/tx/${txid}` :
-        `https://blockchair.com/litecoin/transaction/${txid}`
+        `https://chain.so/tx/LTCTEST/${txid}` :
+        `https://chain.so/address/LTCTEST/${txid}`
     ),
     canShapeShiftIntoWallet: true,
     canShapeShiftIntoPurchase: false,

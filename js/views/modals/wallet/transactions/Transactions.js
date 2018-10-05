@@ -15,6 +15,10 @@ export default class extends BaseVw {
   constructor(options = {}) {
     const opts = {
       fetchOnInit: true,
+      // If not fetching on init, you may want to pass in the count of transactions
+      // that were returned by the first fetch which is used to determine if all the
+      // pages have been fetched.
+      countAtFirstFetch: undefined,
       ...options,
     };
 
@@ -36,6 +40,7 @@ export default class extends BaseVw {
     this.newTransactionCount = 0;
     this.popInTimeouts = [];
     this.coinType = this.collection.options.coinType;
+    this.countAtFirstFetch = opts.countAtFirstFetch;
 
     this.listenTo(this.collection, 'update', (cl, clUpdateOpts) => {
       if (clUpdateOpts.changes.added.length) {
@@ -67,16 +72,12 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
         // first confirmation.
-        if (e.jsonData.wallet) {
+        if (e.jsonData.wallet && e.jsonData.wallet.wallet === this.coinType) {
           const transaction = this.collection.get(e.jsonData.wallet.txid);
 
           if (transaction) {
             // existing transaction has been confirmed
-            transaction.set(transaction.parse({
-              // Omitting timestamp since it's not set properly in the socket. In either case,
-              // the transaction should already have it set.
-              ...(_.omit(e.jsonData.wallet, 'timestamp')),
-            }));
+            transaction.set(transaction.parse(_.omit(e.jsonData.wallet, 'wallet')));
           } else {
             // new transaction
             this.newTransactionCount += 1;

@@ -66,6 +66,7 @@ export default class extends BaseModel {
   }
 
   parse(response = {}, options = {}) {
+    console.log('they parse me dog');
     let returnVal = { ...response };
 
     // The client will in set() manage the status attribute. The reason is that

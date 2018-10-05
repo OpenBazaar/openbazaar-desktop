@@ -56,8 +56,9 @@ export default class extends BaseModal {
       acc[coin.code] = true;
       return acc;
     }, {});
-    this.transactionsCls = {};
-    this.transactionsInitialFetchComplete = {};
+    // The majority of the TransactionsVw state is managed within the component, but
+    // some of it we'll manage so as you nav from coin to coin, certain state is maintained.
+    this.transactionsState = {};
 
     this.navCoins = navCoins.map(coin => {
       const code = coin.code;
@@ -101,23 +102,44 @@ export default class extends BaseModal {
 
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
-        if (e.jsonData.wallet && !e.jsonData.wallet.height) {
-          // for incoming transactions, we'll need a new receiving address
-          if (e.jsonData.wallet.value > 0) {
-            if (this.activeCoin === e.jsonData.wallet.wallet) {
-              this.fetchAddress();
-            } else {
-              this.needAddress[e.jsonData.wallet.wallet] = true;
-            }
-          }
+        if (e.jsonData.wallet) {
+          if (!e.jsonData.wallet.height) {
+            // new transactions
 
-          // const curTranCount = this.coinStats.getState()transactionCount
-          // this.coinStats.setState({ })
-          // if (this.stats) {
-          //   this.stats.setState({
-          //     transactionCount: this.stats.getState().transactionCount + 1,
-          //   });
-          // }
+            if (e.jsonData.wallet.value > 0) {
+              // for incoming new transactions, we'll need a new receiving address
+              if (this.activeCoin === e.jsonData.wallet.wallet) {
+                this.fetchAddress();
+              } else {
+                this.needAddress[e.jsonData.wallet.wallet] = true;
+              }
+            }
+
+            const cl = this.transactionsCls[e.jsonData.wallet.wallet];
+            if (cl && this.activeCoin !== e.jsonData.wallet.wallet) {
+              // If this is a new / updated transaction for the active coin, we'll
+              // do nothing since the transactionsVw will handle updating the collection
+              // and UI. Otherwise, we'll update the collection here.
+              const transaction = cl.get(e.jsonData.wallet.txid);
+              const data = _.omit(e.jsonData.wallet, 'wallet');
+
+              if (transaction) {
+                // existing transaction has been confirmed
+                transaction.set(transaction.parse(data));
+              } else {
+                this.transactionsCls[e.jsonData.wallet.wallet]
+                  .unshift(data);
+              }
+            }
+
+            // const curTranCount = this.coinStats.getState()transactionCount
+            // this.coinStats.setState({ })
+            // if (this.stats) {
+            //   this.stats.setState({
+            //     transactionCount: this.stats.getState().transactionCount + 1,
+            //   });
+            // }
+          }
         }
       });
     }
@@ -164,15 +186,6 @@ export default class extends BaseModal {
 
     this.coinNav.setState({ coins: this.navCoins });
   }
-
-  // onActiveCoinChange(coin = this.activeCoin) {
-    // this.coinNav.setState({ active: coin });
-    // this.coinStats.setState(this.coinStatsState);
-    // if (this.needAddress[coin]) {
-    //   this.fetchAddress(coin);
-    // }
-    // this.renderSendReceiveVw();
-  // }
 
   /**
    * Indicates which coin is currently active. The remaining interface (coinStats,
@@ -353,16 +366,19 @@ export default class extends BaseModal {
 
   renderTransactionsView() {
     const activeCoin = this.activeCoin;
-    let cl = this.transactionsCls[activeCoin];
+    const transactionsState = this.transactionsState[activeCoin] || {};
+    let cl = transactionsState && transactionsState.cl;
 
     if (!cl) {
-      cl = this.transactionsCls[activeCoin] =
+      cl = transactionsState.cl =
         new Transactions([], { coinType: activeCoin });
 
       this.listenTo(cl, 'sync', (md, response, options) => {
         if (options && options.xhr) {
-          options.xhr.done(() =>
-            (this.transactionsInitialFetchComplete[activeCoin] = true));
+          options.xhr.done(data => {
+            transactionsState.initialFetchComplete = true;
+            transactionsState.countAtFirstFetch = data.count;
+          });
         }
       });
     }
@@ -371,10 +387,13 @@ export default class extends BaseModal {
     this.transactionsVw = this.createChild(TransactionsVw, {
       collection: cl,
       $scrollContainer: this.$el,
-      fetchOnInit: !this.transactionsInitialFetchComplete[activeCoin],
+      fetchOnInit: !transactionsState.initialFetchComplete,
+      countAtFirstFetch: transactionsState.countAtFirstFetch,
     });
     this.getCachedEl('.js-transactionsContainer')
       .html(this.transactionsVw.render().el);
+
+    this.transactionsState[activeCoin] = transactionsState;
   }
 
   render() {
