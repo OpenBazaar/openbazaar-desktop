@@ -143,6 +143,10 @@
     .transaction {
       position: relative;
       font-size: $tx5;
+      padding: {
+        right: 0;
+        left: 0;
+      }
 
       .btn {
         font-size: $tx5b;
@@ -241,7 +245,15 @@
         height: auto;
       }
     }
-  }  
+  }
+
+  .resyncLink {
+    position: absolute;
+    top: 20px;
+    right: $padLg;
+    max-width: 200px;
+    z-index: 1;
+  }
 }
 
 .spendConfirmBox {

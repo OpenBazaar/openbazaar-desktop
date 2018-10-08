@@ -2,10 +2,10 @@ import resyncBlockchain, {
   isResyncAvailable,
   isResyncingBlockchain,
   events as resyncEvents,
-} from '../../../../utils/resyncBlockchain';
-import { recordEvent } from '../../../../utils/metrics';
-import loadTemplate from '../../../../utils/loadTemplate';
-import BaseVw from '../../../baseVw';
+} from '../../../utils/resyncBlockchain';
+import { recordEvent } from '../../../utils/metrics';
+import loadTemplate from '../../../utils/loadTemplate';
+import BaseVw from '../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -54,7 +54,7 @@ export default class extends BaseVw {
   render() {
     super.render();
 
-    loadTemplate('modals/settings/advanced/reloadTransactions.html', (t) => {
+    loadTemplate('modals/wallet/reloadTransactions.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));

@@ -8,7 +8,6 @@ import loadTemplate from '../../../../utils/loadTemplate';
 import baseVw from '../../../baseVw';
 import WalletSeed from './WalletSeed';
 import SmtpSettings from './SmtpSettings';
-import ReloadTransactions from './ReloadTransactions';
 import MetricsStatus from './MetricsStatus';
 
 export default class extends baseVw {
@@ -235,23 +234,12 @@ export default class extends baseVw {
     }
   }
 
-  get reloadTransactions() {
-    if (this._reloadTransactions) return this._reloadTransactions;
-    this._reloadTransactions = this.createChild(ReloadTransactions);
-    return this._reloadTransactions;
-  }
-
   get $smtpSettingsFields() {
     const selector = `.js-smtpSettingsForm select[name], .js-smtpSettingsForm input[name],
       .js-smtpSettingsForm textarea[name]:not([class*="trumbowyg"]),
       .js-smtpSettingsForm div[contenteditable][name]`;
 
     return this.getCachedEl(selector);
-  }
-
-  remove() {
-    if (this.resync) this.resync.abort();
-    super.remove();
   }
 
   render() {
@@ -262,7 +250,6 @@ export default class extends baseVw {
           ...(this.settings.validationError || {}),
           ...(this.localSettings.validationError || {}),
         },
-        isSyncing: this.resync && this.resync.state() === 'pending',
         isPurging: this.purge && this.purge.state() === 'pending',
         isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
         ...this.settings.toJSON(),
@@ -293,10 +280,6 @@ export default class extends baseVw {
         model: this.settings.get('smtpSettings'),
       });
       this.getCachedEl('.js-smtpSettingsContainer').html(this.smtpSettings.render().el);
-
-      if (this.reloadTransactions) this.reloadTransactions.delegateEvents();
-      this.getCachedEl('.js-reloadTransactionsContainer')
-        .append(this.reloadTransactions.render().el);
 
       if (this.metricsStatus) this.metricsStatus.remove();
       this.metricsStatus = this.createChild(MetricsStatus);

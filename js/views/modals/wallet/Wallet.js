@@ -17,6 +17,7 @@ import SendReceiveNav from './SendReceiveNav';
 import SendMoney from './SendMoney';
 import ReceiveMoney from './ReceiveMoney';
 import TransactionsVw from './transactions/Transactions';
+import ReloadTransactions from './ReloadTransactions';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -97,6 +98,12 @@ export default class extends BaseModal {
     this.listenTo(this.sendReceiveNav, 'click-receive', () => {
       this.sendModeOn = false;
     });
+
+    this.reloadTransactions = this.createChild(ReloadTransactions, {
+      initialState: {
+
+      },
+    }).render();
 
     const serverSocket = getSocket();
 
@@ -427,6 +434,10 @@ export default class extends BaseModal {
 
         this.renderSendReceiveVw();
         this.renderTransactionsView();
+
+        this.reloadTransactions.delegateEvents();
+        this.getCachedEl('.js-reloadTransactionsContainer')
+          .html(this.reloadTransactions.el);
       });
     });
 

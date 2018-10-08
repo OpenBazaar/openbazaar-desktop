@@ -1,7 +1,15 @@
 <%= ob.processingButton({
-  className: `btn clrP clrBr clrSh2 flexNoShrink js-resync ${ob.isSyncing ? 'processing' : ''} ${ob.isResyncAvailable ? '' : 'disabled'}`,
+  className: `hide btn clrP clrBr clrSh2 flexNoShrink js-resync ${ob.isSyncing ? 'processing' : ''} ${ob.isResyncAvailable ? '' : 'disabled'}`,
   btnText: ob.polyT('settings.advancedTab.server.reloadTransactionsWidget.resyncBtn'),
 }) %>
+
+<div class="posR tx5b txU">
+  <% if (ob.isSyncing) { %>
+    <a class="invisible"></a>
+  <% } else { %>
+    <a class="js-reload"><%= ob.polyT('wallet.reloadTransactionsWidget.resyncBtn') %></a>
+  <% } %>
+</div>
 
 <% if (ob.syncComplete) { %>
 <div class="tx6 clrTEmph1"><%= ob.polyT('settings.advancedTab.server.reloadTransactionsWidget.resyncComplete') %></div>

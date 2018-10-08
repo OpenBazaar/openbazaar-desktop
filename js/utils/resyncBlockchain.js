@@ -16,7 +16,7 @@ export { events };
 let server = getServer();
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
-// long its unavailable (e.g. Advanced Settings).
+// long its unavailable.
 const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
 
 /**

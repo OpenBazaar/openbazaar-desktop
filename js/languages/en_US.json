@@ -625,11 +625,6 @@
         "peersBtn": "Show Connected Peers",
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
-        "reloadTransactionsWidget": {
-          "resyncBtn": "Reload Transactions",
-          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
-          "syncUnavailable": "You can only reload transactions once per hour."
-        },
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
@@ -964,6 +959,11 @@
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
       "recoverySeedLink": "backup your wallet recovery seed",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
+    },
+    "reloadTransactionsWidget": {
+      "resyncBtn": "Resync",
+      "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+      "syncUnavailable": "You can only reload transactions once per hour."
     }
   },
   "walletOLD": {
