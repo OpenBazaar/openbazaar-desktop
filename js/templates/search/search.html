@@ -108,12 +108,12 @@
                   <% if (ob.term) { %>
                     <%= ob.polyT('search.resultsFound', {
                       term: ob.parseEmojis(ob.term),
-                      smart_count: ob.results.total,
+                      smart_count: ob.localizeNumber(ob.results.total),
                     }) %>
                   <% } else { %>
                   <b>
                     <%= ob.polyT('search.resultsTotal', {
-                      smart_count: ob.results.total,
+                      smart_count: ob.localizeNumber(ob.results.total),
                     }) %>
                   </b>
                   <% } %>

@@ -453,13 +453,10 @@
       "sectionHeader": "Donations",
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet": "Open in Wallet",
-      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
-      "unableToOpenInWallet": {
-        "title": "Unable to open in wallet",
-        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
-      }
+      "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
+      "bannerTitleBCH":"Scan or send Bitcoin Cash (BCH) to this address",
+      "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
+      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address."
     },
     "licenseTab": {
       "linkText": "License",
@@ -1349,6 +1346,10 @@
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
     "displaying": "Displaying %{displayingCounts}"
+  },
+  "pageControlsTextStyle": {
+    "previous":"Previous",
+    "next":"Next"
   },
   "purchase": {
     "purchaseDataChangedPopin": "The data for this listing has changed.",
