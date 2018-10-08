@@ -2,7 +2,7 @@ import { clipboard } from 'electron';
 import qr from 'qr-encode';
 import {
   isSupportedWalletCur,
-  getCurrencyByCode
+  getCurrencyByCode,
 } from '../../../data/walletCurrencies';
 import { getWallet, launchWallet } from '../../../utils/modalManager';
 import loadTemplate from '../../../utils/loadTemplate';
