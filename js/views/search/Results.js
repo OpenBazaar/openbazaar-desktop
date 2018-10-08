@@ -70,10 +70,6 @@ export default class extends baseVw {
 
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
-    const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    const total = models.total;
-    let start = 0;
-    if (total) start = this.pageSize * Number(this.serverPage) + 1;
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -84,16 +80,19 @@ export default class extends baseVw {
       }
     });
 
-    this.$el.toggleClass('noResults', total < 1);
+    this.$el.toggleClass('noResults', models.total < 1);
 
     this.$resultsGrid.html(resultsFrag);
+
     // update the page controls
+    const currentPage = Number(this.serverPage) + 1;
+    const lastPage = Math.ceil(models.total / this.pageSize);
+
     this.pageControls.setState({
-      start,
-      end,
-      total,
-      currentPage: Number(this.serverPage) + 1,
+      currentPage,
+      morePages: currentPage < lastPage,
     });
+
     // hide the loading spinner
     this.$el.removeClass('loading');
     /*

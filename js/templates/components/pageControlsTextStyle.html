@@ -1,19 +1,6 @@
 <%
-let countsAvailable;
-
-if (typeof ob.start === 'number' &&
-typeof ob.end === 'number' &&
-typeof ob.total === 'number') {
-countsAvailable = true;
-}
-
-let disabledPrev = true;
-let disabledNext = true;
-
-if (countsAvailable) {
-if (ob.start > 1) disabledPrev = false;
-if (ob.end < ob.total) disabledNext = false;
-}
+const disabledPrev = ob.currentPage === 1;
+const disabledNext = !ob.morePages;
 %>
 
 <div class="floR">
