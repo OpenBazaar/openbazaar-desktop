@@ -34,9 +34,8 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('components/pageControls.html', (t) => {
+    loadTemplate('components/pageControlsTextStyle.html', (t) => {
       this.$el.html(t({
-        type: this.type,
         ...this.getState(),
       }));
     });

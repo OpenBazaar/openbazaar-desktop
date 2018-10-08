@@ -130,3 +130,7 @@
     left: 0;
   }
 }
+
+.unclickable {
+  pointer-events: none;
+}
