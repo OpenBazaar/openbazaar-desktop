@@ -101,9 +101,12 @@ export default class extends BaseModal {
 
     this.reloadTransactions = this.createChild(ReloadTransactions, {
       initialState: {
-
+        coinType: this.activeCoin,
       },
     }).render();
+
+    console.log('charlie');
+    window.charlie = this.reloadTransactions;
 
     const serverSocket = getSocket();
 

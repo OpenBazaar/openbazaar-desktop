@@ -9,14 +9,20 @@ import BaseVw from '../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    if (!options.initialState ||
+      (typeof options.initialState.coinType !== 'string' &&
+      !options.initialState.coinType)) {
+      throw new Error('Please provide a coinType in the initial state');
+    }
+
     const opts = {
+      ...options,
       initialState: {
-        isSyncing: isResyncingBlockchain(),
+        isSyncing: isResyncingBlockchain(options.initialState.coinType),
         syncComplete: false,
-        isResyncAvailable: isResyncAvailable(),
+        isResyncAvailable: isResyncAvailable(options.initialState.coinType),
         ...options.initialState || {},
       },
-      ...options,
     };
 
     super(opts);
@@ -32,8 +38,11 @@ export default class extends BaseVw {
       }));
     this.listenTo(resyncEvents, 'resyncFail',
       () => this.setState({ isSyncing: false }));
-    this.listenTo(resyncEvents, 'changeResyncAvailable',
-      (resyncAvailable) => this.setState({ isResyncAvailable: resyncAvailable }));
+    this.listenTo(resyncEvents, 'changeResyncAvailable', e => {
+      if (e.coinType === this.getState().coinType) {
+        this.setState({ isResyncAvailable: !!e.available });
+      }
+    });
   }
 
   className() {
@@ -48,7 +57,7 @@ export default class extends BaseVw {
 
   onClickResync() {
     recordEvent('Settings_Advanced_Resync');
-    resyncBlockchain();
+    resyncBlockchain(this.getState().coinType);
   }
 
   render() {
