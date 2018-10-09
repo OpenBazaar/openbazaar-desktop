@@ -281,22 +281,28 @@ export default class extends BaseVw {
       ...options,
     });
 
-    this.listenTo(view, 'retrySuccess', e => {
-      app.walletBalance.set({
-        confirmed: e.data.confirmed,
-        unconfirmed: e.data.unconfirmed,
-      });
+    this.listenTo(view, 'bumpFeeSuccess', e =>
+      this.trigger('bumpFeeSuccess', e));
 
-      const transaction = new TransactionMd({
-        value: e.data.amount * -1,
-        txid: e.data.txid,
-        timestamp: e.data.timestamp,
-        address: e.data.address,
-        memo: e.data.memo,
-      }, { parse: true });
+    this.listenTo(view, 'bumpFeeAttempt', e =>
+      this.trigger('bumpFeeAttempt', e));
 
-      this.collection.unshift(transaction);
-    });
+    // this.listenTo(view, 'retrySuccess', e => {
+    //   app.walletBalance.set({
+    //     confirmed: e.data.confirmed,
+    //     unconfirmed: e.data.unconfirmed,
+    //   });
+
+    //   const transaction = new TransactionMd({
+    //     value: e.data.amount * -1,
+    //     txid: e.data.txid,
+    //     timestamp: e.data.timestamp,
+    //     address: e.data.address,
+    //     memo: e.data.memo,
+    //   }, { parse: true });
+
+    //   this.collection.unshift(transaction);
+    // });
 
     return view;
   }

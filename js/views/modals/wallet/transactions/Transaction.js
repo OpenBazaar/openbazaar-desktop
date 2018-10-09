@@ -13,27 +13,40 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      ...options,
+      initialState: {
+        retryConfirmOn: false,
+        retryInProgress: false,
+        copiedIndicatorOn: false,
+        fetchingEstimatedFee: false,
+        fetchFeeError: '',
+        fetchFeeFailed: false,
+        ...options.initialState,
+      },
+    };
+
+    super(opts);
+    this.options = opts;
 
     if (!this.model) {
       throw new Error('Please provide a Transaction model.');
     }
 
-    if (typeof options.coinType !== 'string') {
+    if (typeof opts.coinType !== 'string') {
       throw new Error('Please provide a coinType as a string.');
     }
 
-    this._state = {
-      ...options.initialState || {},
-    };
-
-    this.walletCur = getWalletCurByCode(options.coinType);
+    this.walletCur = getWalletCurByCode(opts.coinType);
     this.listenTo(this.model, 'change', () => this.render());
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
       const timeAgo = moment(this.model.get('timestamp')).fromNow();
       if (timeAgo !== this.renderedTimeAgo) this.render();
     });
+
+    if (opts.bumpFeePost) {
+      this.onPostBumpFee(opts.bumpFeePost, { triggerBumpFeeAttempt: false });
+    }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -68,28 +81,56 @@ export default class extends BaseVw {
     e.stopPropagation();
   }
 
-  onClickRetryConfirmed() {
+  onPostBumpFee(xhr, options = {}) {
+    const opts = {
+      triggerBumpFeeAttempt: true,
+      ...options,
+    };
+
+    if (
+      !xhr ||
+      typeof xhr.done !== 'function' &&
+      typeof xhr.fail !== 'function' &&
+      typeof xhr.always !== 'function'
+    ) {
+      throw new Error('Please provide a jQuery xhr');
+    }
+
     this.setState({
       retryInProgress: true,
       retryConfirmOn: false,
     });
 
-    this.retryPost = $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`))
-      .always(() => {
-        this.setState({
-          retryInProgress: false,
-        });
-      }).fail((xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
-        openSimpleMessage(
-          app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
-          failReason);
-      })
-      .done(data => {
-        this.trigger('retrySuccess', { data });
-        this.model.set('feeBumped', true);
+    xhr.always(() => {
+      this.setState({
+        retryInProgress: false,
       });
+    }).fail(failXhr => {
+      if (failXhr.statusText === 'abort') return;
+      const failReason = failXhr.responseJSON && failXhr.responseJSON.reason || '';
+      openSimpleMessage(
+        app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
+        failReason);
+    })
+    .done(data => {
+      this.trigger('bumpFeeSuccess', {
+        md: this.model,
+        data,
+      });
+      this.model.set('feeBumped', true);
+    });
+
+    if (opts.triggerBumpFeeAttempt) {
+      this.trigger('bumpFeeAttempt', {
+        md: this.model,
+        xhr,
+      });
+    }
+  }
+
+  onClickRetryConfirmed() {
+    const post = $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`));
+    this.onPostBumpFee(post);
   }
 
   onClickRetryPmt(e) {
@@ -124,11 +165,11 @@ export default class extends BaseVw {
     this.setState({
       retryConfirmOn: true,
       fetchingEstimatedFee: true,
-      fetchError: '',
-      fetchFailed: false,
+      fetchFeeError: '',
+      fetchFeeFailed: false,
     });
 
-    getFees().done(fees => {
+    getFees(this.options.coinType).done(fees => {
       if (this.isRemoved()) return;
       this.setState({
         fetchingEstimatedFee: false,
@@ -140,8 +181,8 @@ export default class extends BaseVw {
       if (this.isRemoved()) return;
       this.setState({
         fetchingEstimatedFee: false,
-        fetchFailed: true,
-        fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+        fetchFeeFailed: true,
+        fetchFeeError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
       });
     });
   }
@@ -159,7 +200,6 @@ export default class extends BaseVw {
   }
 
   remove() {
-    if (this.retryPost) this.retryPost.abort();
     $(document).off('click', this.boundDocClick);
     this.timeAgoInterval.cancel();
     clearTimeout(this.copiedIndicatorTimeout);
