@@ -51,7 +51,7 @@ function setResyncAvailable(coinType, bool = __isResyncAvailable(coinType)) {
     throw new Error('Please provide bool as a boolean.');
   }
 
-  if (bool !== _isResyncAvailable) {
+  if (bool !== _isResyncAvailable[coinType]) {
     _isResyncAvailable[coinType] = bool;
     events.trigger('changeResyncAvailable', {
       available: bool,
@@ -73,10 +73,12 @@ function setlastResyncExpiresTimeouts(coinType) {
 
   if (typeof lastBlockchainResync === 'number') {
     const fromNow = (new Date(lastBlockchainResync)).getTime() + resyncInactiveTime - Date.now();
-    lastResyncExpiresTimeouts[coinType] = setTimeout(() => {
-      setResyncAvailable(coinType);
-    }, fromNow + (1000 * 60));
-    // Giving a 1m buffer in case the timeout is a little fast
+    if (fromNow > 0) {
+      lastResyncExpiresTimeouts[coinType] = setTimeout(() => {
+        setResyncAvailable(coinType);
+      }, fromNow + (1000 * 60));
+      // Giving a 1m buffer in case the timeout is a little fast
+    }
   }
 }
 

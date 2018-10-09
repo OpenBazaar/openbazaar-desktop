@@ -1,8 +1,11 @@
+import app from '../../../app';
+import { openSimpleMessage } from '../../../views/modals/SimpleMessage';
 import resyncBlockchain, {
   isResyncAvailable,
   isResyncingBlockchain,
   events as resyncEvents,
 } from '../../../utils/resyncBlockchain';
+import { ensureMainnetCode } from '../../../data/walletCurrencies';
 import { recordEvent } from '../../../utils/metrics';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
@@ -19,28 +22,37 @@ export default class extends BaseVw {
       ...options,
       initialState: {
         isSyncing: isResyncingBlockchain(options.initialState.coinType),
-        syncComplete: false,
         isResyncAvailable: isResyncAvailable(options.initialState.coinType),
         ...options.initialState || {},
       },
     };
 
     super(opts);
-    this.listenTo(resyncEvents, 'resyncing',
-      () => this.setState({
-        isSyncing: true,
-        syncComplete: false,
-      }));
-    this.listenTo(resyncEvents, 'resyncComplete',
-      () => this.setState({
-        isSyncing: false,
-        syncComplete: true,
-      }));
-    this.listenTo(resyncEvents, 'resyncFail',
-      () => this.setState({ isSyncing: false }));
+    this.listenTo(resyncEvents, 'resyncing', e => {
+      if (e.coinType === this.getState().coinType) {
+        this.setState({
+          isSyncing: true,
+        });
+      }
+    });
+
+    this.listenTo(resyncEvents, 'resyncComplete', e => {
+      if (e.coinType === this.getState().coinType) {
+        this.setState({
+          isSyncing: false,
+        });
+      }
+    });
+
+    this.listenTo(resyncEvents, 'resyncFail', e => {
+      if (e.coinType === this.getState().coinType) {
+        this.setState({ isSyncing: false });
+      }
+    });
+
     this.listenTo(resyncEvents, 'changeResyncAvailable', e => {
       if (e.coinType === this.getState().coinType) {
-        this.setState({ isResyncAvailable: !!e.available });
+        this.setState({ isResyncAvailable: e.available });
       }
     });
   }
@@ -56,8 +68,31 @@ export default class extends BaseVw {
   }
 
   onClickResync() {
+    const coinType = this.getState().coinType;
     recordEvent('Settings_Advanced_Resync');
-    resyncBlockchain(this.getState().coinType);
+    resyncBlockchain(this.getState().coinType)
+      .done(() => {
+        openSimpleMessage(
+          app.polyglot.t('wallet.reloadTransactionsWidget.resyncCompleteTitle', {
+            cur: ensureMainnetCode(coinType),
+          }),
+          app.polyglot.t('wallet.reloadTransactionsWidget.resyncComplete')
+        );
+      });
+  }
+
+  setState(state = {}, options = {}) {
+    const curState = this.getState();
+    let newState = { ...state };
+    if (state.coinType !== undefined && state.coinType !== curState.coinType) {
+      newState = {
+        ...newState,
+        isSyncing: isResyncingBlockchain(state.coinType),
+        isResyncAvailable: isResyncAvailable(state.coinType),
+      };
+    }
+
+    return super.setState(newState, options);
   }
 
   render() {

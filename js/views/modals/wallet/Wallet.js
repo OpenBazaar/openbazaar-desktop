@@ -105,9 +105,6 @@ export default class extends BaseModal {
       },
     }).render();
 
-    console.log('charlie');
-    window.charlie = this.reloadTransactions;
-
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -205,7 +202,6 @@ export default class extends BaseModal {
   set activeCoin(coin) {
     if (coin !== this._activeCoin) {
       this._activeCoin = coin;
-      // this.onActiveCoinChange();
       this.coinNav.setState({ active: coin });
       this.coinStats.setState(this.coinStatsState);
       if (this.needAddress[coin]) {
@@ -213,6 +209,9 @@ export default class extends BaseModal {
       }
       this.renderSendReceiveVw();
       this.renderTransactionsView();
+      this.reloadTransactions.setState({
+        coinType: coin,
+      });
     }
   }
 
