@@ -62,6 +62,9 @@ export default class extends BaseModel {
       }
     }
 
+    attrs.status = 'STUCK';
+    attrs.allowFeeBump = true;
+
     return super.set(attrs, opts);
   }
 

@@ -10,6 +10,7 @@ import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import Transactions from '../../../collections/wallet/Transactions';
+import TransactionMd from '../../../models/wallet/Transaction';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
@@ -123,7 +124,7 @@ export default class extends BaseModal {
             }
 
             const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
-              this.transactionsState[e.jsonData.wallet.wallet].cl;
+              this.transactionsState[e.jsonData.wallet.wallet].cl || null;
             if (cl && this.activeCoin !== e.jsonData.wallet.wallet) {
               // If this is a new / updated transaction for the active coin, we'll
               // do nothing since the transactionsVw will handle updating the collection
@@ -135,11 +136,6 @@ export default class extends BaseModal {
                 // existing transaction has been confirmed
                 transaction.set(transaction.parse(data));
               } else {
-                // TODO
-                // TODO
-                // TODO
-                // TODO
-                // TODO test this scenario
                 cl.add(data, { parse: true, at: 0 });
               }
             }
@@ -347,6 +343,16 @@ export default class extends BaseModal {
       .forEach(coinType => {
         this.addressFetches[coinType].forEach(fetch => fetch.abort());
       });
+    Object.keys(this.transactionsState)
+      .forEach(coinType => {
+        if (this.transactionsState[coinType] &&
+          typeof this.transactionsState[coinType].bumpFeeAttempts === 'object') {
+          Object.keys(this.transactionsState[coinType].bumpFeeAttempts)
+            .forEach(txId =>
+              this.transactionsState[coinType]
+                .bumpFeeAttempts[txId].abort());
+        }
+      });
     super.remove();
   }
 
@@ -409,9 +415,34 @@ export default class extends BaseModal {
       $scrollContainer: this.$el,
       fetchOnInit: !transactionsState.initialFetchComplete,
       countAtFirstFetch: transactionsState.countAtFirstFetch,
+      bumpFeeXhrs: transactionsState.bumpFeeAttempts || undefined,
     });
     this.getCachedEl('.js-transactionsContainer')
       .html(this.transactionsVw.render().el);
+
+    this.listenTo(this.transactionsVw, 'bumpFeeAttempt', e => {
+      transactionsState.bumpFeeAttempts =
+        transactionsState.bumpFeeAttempts || {};
+      transactionsState.bumpFeeAttempts[e.md.id] = e.xhr;
+    });
+
+    this.listenTo(this.transactionsVw, 'bumpFeeSuccess', e => {
+      app.walletBalances.get(activeCoin).set({
+        confirmed: e.data.confirmed,
+        unconfirmed: e.data.unconfirmed,
+      });
+
+      cl.add({
+        value: e.data.amount * -1,
+        txid: e.data.txid,
+        timestamp: e.data.timestamp,
+        address: e.data.address,
+        memo: e.data.memo,
+      }, {
+        parse: true,
+        at: 0,
+      });
+    });
 
     this.transactionsState[activeCoin] = transactionsState;
   }

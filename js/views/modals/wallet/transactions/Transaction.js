@@ -44,8 +44,13 @@ export default class extends BaseVw {
       if (timeAgo !== this.renderedTimeAgo) this.render();
     });
 
-    if (opts.bumpFeePost) {
-      this.onPostBumpFee(opts.bumpFeePost, { triggerBumpFeeAttempt: false });
+    if (opts.bumpFeeXhr) {
+      this.onPostBumpFee(opts.bumpFeeXhr, {
+        // These both will already happen since the fee bump was initiated from this
+        // view. Let's prevent them from happening a duplicate time.
+        triggerBumpFeeAttempt: false,
+        showErrorOnFail: false,
+      });
     }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
@@ -84,6 +89,7 @@ export default class extends BaseVw {
   onPostBumpFee(xhr, options = {}) {
     const opts = {
       triggerBumpFeeAttempt: true,
+      showErrorOnFail: true,
       ...options,
     };
 
@@ -106,11 +112,13 @@ export default class extends BaseVw {
         retryInProgress: false,
       });
     }).fail(failXhr => {
-      if (failXhr.statusText === 'abort') return;
-      const failReason = failXhr.responseJSON && failXhr.responseJSON.reason || '';
-      openSimpleMessage(
-        app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
-        failReason);
+      if (opts.showErrorOnFail) {
+        if (failXhr.statusText === 'abort') return;
+        const failReason = failXhr.responseJSON && failXhr.responseJSON.reason || '';
+        openSimpleMessage(
+          app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
+          failReason);
+      }
     })
     .done(data => {
       this.trigger('bumpFeeSuccess', {
