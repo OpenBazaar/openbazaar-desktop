@@ -4,7 +4,7 @@ import { isScrolledIntoView } from '../../../../utils/dom';
 import { getSocket, getCurrentConnection } from '../../../../utils/serverConnect';
 import { openSimpleMessage } from '../../SimpleMessage';
 import { launchSettingsModal } from '../../../../utils/modalManager';
-import TransactionMd from '../../../../models/wallet/Transaction';
+// import TransactionMd from '../../../../models/wallet/Transaction';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 import Transaction from './Transaction';
