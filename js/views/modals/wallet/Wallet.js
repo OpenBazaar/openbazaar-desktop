@@ -10,7 +10,6 @@ import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import Transactions from '../../../collections/wallet/Transactions';
-import TransactionMd from '../../../models/wallet/Transaction';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
