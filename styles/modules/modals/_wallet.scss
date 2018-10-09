@@ -222,9 +222,13 @@
     }
 
     .popInMessageHolder {
+      transform: translateX(4px);
+      top: 100px;
+      
       &.notFixed {
         position: absolute;
         top: -65px;
+        transform: translateX(-50%);
       }
     }
 

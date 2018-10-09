@@ -187,6 +187,8 @@
     }
 
     .popInMessageHolder {
+      transform: initial;
+      
       &.notFixed {
         position: absolute;
         top: -65px;

@@ -244,7 +244,7 @@ export default class extends BaseVw {
   }
 
   setPopInMessageHolderPositioning() {
-    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 338);
+    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 515);
   }
 
   showNewTransactionPopup() {
