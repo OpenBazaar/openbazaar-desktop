@@ -110,6 +110,30 @@ export default class extends BaseModal {
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         if (e.jsonData.wallet) {
+          const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
+            this.transactionsState[e.jsonData.wallet.wallet].cl || null;
+          const transaction = cl.get(e.jsonData.wallet.txid);
+
+          if (cl) {
+            if (this.activeCoin !== e.jsonData.wallet.wallet) {
+              // If this is a new / updated transaction for the active coin, we won't
+              // update the collection since the transactionsVw will handle that. Otherwise,
+              // we'll update the collection here.
+              const data = _.omit(e.jsonData.wallet, 'wallet');
+
+              if (transaction) {
+                // existing transaction has been confirmed
+                transaction.set(transaction.parse(data));
+              } else {
+                cl.add(data, { parse: true, at: 0 });
+              }
+            }
+          }
+
+          if (!transaction) {
+            this.incrementCountAtFirstFetch(e.jsonData.wallet.wallet);
+          }
+
           if (!e.jsonData.wallet.height) {
             // new transactions
 
@@ -119,23 +143,6 @@ export default class extends BaseModal {
                 this.fetchAddress();
               } else {
                 this.needAddress[e.jsonData.wallet.wallet] = true;
-              }
-            }
-
-            const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
-              this.transactionsState[e.jsonData.wallet.wallet].cl || null;
-            if (cl && this.activeCoin !== e.jsonData.wallet.wallet) {
-              // If this is a new / updated transaction for the active coin, we'll
-              // do nothing since the transactionsVw will handle updating the collection
-              // and UI. Otherwise, we'll update the collection here.
-              const transaction = cl.get(e.jsonData.wallet.txid);
-              const data = _.omit(e.jsonData.wallet, 'wallet');
-
-              if (transaction) {
-                // existing transaction has been confirmed
-                transaction.set(transaction.parse(data));
-              } else {
-                cl.add(data, { parse: true, at: 0 });
               }
             }
           }
@@ -248,10 +255,14 @@ export default class extends BaseModal {
     return { sendModeOn: this.sendModeOn };
   }
 
-  getSendMoneyVw(coinType = this.activeCoin) {
+  checkCoinType(coinType) {
     if (typeof coinType !== 'string' || !coinType) {
       throw new Error('Please provide the coinType as a string.');
     }
+  }
+
+  getSendMoneyVw(coinType = this.activeCoin) {
+    this.checkCoinType(coinType);
 
     if (this._sendMoneyVws[coinType]) {
       return this._sendMoneyVws[coinType];
@@ -266,9 +277,7 @@ export default class extends BaseModal {
   }
 
   getReceiveMoneyVw(coinType = this.activeCoin) {
-    if (typeof coinType !== 'string' || !coinType) {
-      throw new Error('Please provide the coinType as a string.');
-    }
+    this.checkCoinType(coinType);
 
     if (this._receiveMoneyVws[coinType]) {
       return this._receiveMoneyVws[coinType];
@@ -283,9 +292,7 @@ export default class extends BaseModal {
   }
 
   fetchAddress(coinType = this.activeCoin) {
-    if (typeof coinType !== 'string' || !coinType) {
-      throw new Error('Please provide the coinType as a string.');
-    }
+    this.checkCoinType(coinType);
 
     if (this.addressFetches[coinType]) {
       const pendingFetch = this.addressFetches[coinType]
@@ -327,14 +334,19 @@ export default class extends BaseModal {
     return fetch;
   }
 
+  getCountAtFirstFetch(coinType = this.activeCoin) {
+    this.checkCoinType(coinType);
+
+    return this.transactionsState[coinType] &&
+      this.transactionsState[coinType].countAtFirstFetch;
+  }
+
   setCountAtFirstFetch(count, coinType = this.activeCoin) {
     if (typeof count !== 'number') {
       throw new Error('Please provide a count as a number.');
     }
 
-    if (typeof coinType !== 'string' || !coinType) {
-      throw new Error('Please provide the coinType as a string.');
-    }
+    this.checkCoinType(coinType);
 
     if (!this.transactionsState[coinType] ||
       this.transactionsState[coinType].countAtFirstFetch !== count) {
@@ -345,6 +357,16 @@ export default class extends BaseModal {
         this.coinStats.setState({ transactionCount: count });
       }
     }
+  }
+
+  incrementCountAtFirstFetch(coinType = this.activeCoin) {
+    this.checkCoinType(coinType);
+    const curCount = this.getCountAtFirstFetch(coinType);
+
+    this.setCountAtFirstFetch(
+      typeof curCount === 'number' ? curCount + 1 : 1,
+      coinType
+    );
   }
 
   open(...args) {
@@ -412,12 +434,18 @@ export default class extends BaseModal {
           options.xhr.done(data => {
             transactionsState.initialFetchComplete = true;
             this.setCountAtFirstFetch(data.count, activeCoin);
-
-            if (this.activeCoin === activeCoin) {
-              this.coinStats.setState({ transactionCount: data.count });
-            }
           });
         }
+      });
+
+      this.listenToOnce(cl, 'reset', () => {
+        this.listenToOnce(cl, 'sync', (md, response, options) => {
+          if (options && options.xhr) {
+            options.xhr.done(data => {
+              this.setCountAtFirstFetch(data.count, activeCoin);
+            });
+          }
+        });
       });
     }
 
@@ -454,6 +482,8 @@ export default class extends BaseModal {
         parse: true,
         at: 0,
       });
+
+      this.incrementCountAtFirstFetch(activeCoin);
     });
 
     this.transactionsState[activeCoin] = transactionsState;

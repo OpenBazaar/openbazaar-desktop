@@ -16,8 +16,7 @@ let server;
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
 // long its unavailable.
-// const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
-const resyncInactiveTime = 1000 * 3; // 1 hour
+const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
 
 function checkCoinType(coinType) {
   if (typeof coinType !== 'string' && !coinType) {
