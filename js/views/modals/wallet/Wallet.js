@@ -46,7 +46,8 @@ export default class extends BaseModal {
         navCoins[0].code || 'BTC';
     const opts = {
       initialActiveCoin,
-      initialSendModeOn: true,
+      initialSendModeOn: app.walletBalances.get(initialActiveCoin) &&
+        app.walletBalances.get(initialActiveCoin).get('confirmed') || false,
       ...options,
     };
 
@@ -239,6 +240,16 @@ export default class extends BaseModal {
       this.reloadTransactions.setState({
         coinType: coin,
       });
+
+      if (
+        this.sendModeOn &&
+        !(
+          app.walletBalances.get(coin) &&
+            app.walletBalances.get(coin).get('confirmed')
+        )
+      ) {
+        this.sendModeOn = false;
+      }
     }
   }
 
