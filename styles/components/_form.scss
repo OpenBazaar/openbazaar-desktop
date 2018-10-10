@@ -270,9 +270,11 @@ input[type="checkbox"] {
     }
   }
 
-  &.centerLabel {
-    & + label {
-      align-items: center;
+  &.centerLabel + label {
+    align-items: center;
+
+    &:before {
+      top: 0;
     }
   }
 }

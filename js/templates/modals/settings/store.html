@@ -45,6 +45,19 @@
       <div class="box padMdKids padStack">
         <div class="flexRow gutterH">
           <div class="col3">
+            <label class="required"><%= ob.polyT('settings.storeTab.currencies') %></label>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesHelper') %></div>
+          </div>
+          <div class="col9">
+            <% if (ob.errors.currencies) print(ob.formErrorTmpl({ errors: ob.errors.currencies })) %>
+            <div class="js-currencySelector"></div>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesNote') %></div>
+          </div>
+        </div>
+      </div>
+      <div class="box padMdKids padStack">
+        <div class="flexRow gutterH">
+          <div class="col3">
             <label><%= ob.polyT('settings.storeTab.moderators') %></label>
             <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.moderatorsHelper') %></div>
           </div>

@@ -1,12 +1,13 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
-import { isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
+import loadTemplate from '../../../utils/loadTemplate';
+import { isMultihash } from '../../../utils';
 import Moderators from '../../components/Moderators';
+import CurrencySelector from '../../components/CurrencySelector';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
@@ -37,6 +38,14 @@ export default class extends baseVw {
     // Sync the global settings model with any changes we save via our clone.
     this.listenTo(this.settings, 'sync',
       (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
+
+    const currencies = new Set(app.profile.get('currencies'));
+    this.currencySelector = new CurrencySelector({
+      initialState: {
+        currencies,
+        activeCurs: currencies,
+      },
+    });
 
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
@@ -304,6 +313,10 @@ export default class extends baseVw {
         ...this.profile.toJSON(),
         ...this.settings.toJSON(),
       }));
+
+
+      this.currencySelector.delegateEvents();
+      this.$('.js-currencySelector').append(this.currencySelector.render().el);
 
       this.modsSelected.delegateEvents();
       this.$('.js-modListSelected').append(this.modsSelected.render().el);
