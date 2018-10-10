@@ -491,28 +491,31 @@ export default class extends BaseModal {
 
   render() {
     loadTemplate('modals/wallet/wallet.html', t => {
-      loadTemplate('walletIcon.svg', (walletIconTmpl) => {
-        this.$el.html(t({
-          walletIconTmpl,
-        }));
+      loadTemplate('walletIcon.svg', walletIconTmpl => {
+        loadTemplate('modals/wallet/cryptoListingsTeaser.html', cryptoTeaserT => {
+          this.$el.html(t({
+            walletIconTmpl,
+            cryptoTeaserHtml: cryptoTeaserT(),
+          }));
 
-        super.render();
+          super.render();
 
-        this.coinNav.delegateEvents();
-        this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
+          this.coinNav.delegateEvents();
+          this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-        this.coinStats.delegateEvents();
-        this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
+          this.coinStats.delegateEvents();
+          this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
 
-        this.sendReceiveNav.delegateEvents();
-        this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
+          this.sendReceiveNav.delegateEvents();
+          this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
 
-        this.renderSendReceiveVw();
-        this.renderTransactionsView();
+          this.renderSendReceiveVw();
+          this.renderTransactionsView();
 
-        this.reloadTransactions.delegateEvents();
-        this.getCachedEl('.js-reloadTransactionsContainer')
-          .html(this.reloadTransactions.el);
+          this.reloadTransactions.delegateEvents();
+          this.getCachedEl('.js-reloadTransactionsContainer')
+            .html(this.reloadTransactions.el);
+        });
       });
     });
 

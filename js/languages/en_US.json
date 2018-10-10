@@ -962,6 +962,12 @@
       "resyncCompleteTitle": "%{cur} Resync Started",
       "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
       "syncUnavailable": "You can only reload transactions once per hour."
+    },
+    "cryptoTeaser": {
+      "coinCount": "%{count}+ coins",
+      "bodyLine": "Trade %{coinCount} on OpenBazaar for free",
+      "btnCreateListing": "Create Listing",
+      "linkViewCryptoListings": "View crypto listings"
     }
   },
   "walletOLD": {
