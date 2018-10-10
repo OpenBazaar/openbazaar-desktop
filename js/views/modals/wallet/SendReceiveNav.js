@@ -14,7 +14,7 @@ export default class extends baseVw {
   }
 
   className() {
-    return 'flex tx3 padMd clrP';
+    return 'sendReceiveNav clrP';
   }
 
   events() {

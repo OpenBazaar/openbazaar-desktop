@@ -903,6 +903,8 @@
       "valueInDisplayCur": "Value in %{cur}",
       "transactionsHeader": "Transactions"
     },
+    "sendBtn": "Send",
+    "receiveBtn": "Receive",
     "sendMoney": {
       "toLabel": "To",
       "toPlaceholder": "Enter a %{cur} Address",

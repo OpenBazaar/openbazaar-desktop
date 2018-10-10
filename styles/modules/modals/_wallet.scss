@@ -83,6 +83,12 @@
     }
   }
 
+  .sendReceiveNav {
+    .active, .btnFlx:hover, .btnFlx:focus {
+      font-weight: bold;
+    }
+  }
+
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
