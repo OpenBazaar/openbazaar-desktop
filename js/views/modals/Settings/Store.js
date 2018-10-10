@@ -196,6 +196,7 @@ export default class extends baseVw {
   save() {
     // this view saves to two different models
     const profileFormData = this.getProfileFormData();
+    profileFormData.currencies = this.currencySelector.getState().activeCurs;
     const settingsFormData = this.getSettingsData();
 
     this.profile.set(profileFormData);
