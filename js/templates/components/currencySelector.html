@@ -2,7 +2,8 @@
   <li class="clrBr curRow">
     <input type="<%= ob.controlType %>"
            id="<%=`curSel${cur.code}` %>"
-           class="centerLabel"
+           class="centerLabel js-curControl"
+           data-code="<%= cur.code %>"
            <% if (ob.controlType === 'radio') {%>
              name="currencies"
            <%} %>

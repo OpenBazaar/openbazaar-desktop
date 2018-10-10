@@ -10,6 +10,7 @@ export default class extends baseVw {
     // de-dupe any passed in currencies or active currencies
     const currencies = new Set(options.initialState.currencies || []);
     const activeCurs = new Set(options.initialState.activeCurs || []);
+
     const opts = {
       controlType: 'checkbox',
       ...options,
@@ -27,7 +28,7 @@ export default class extends baseVw {
     }
 
     if (!Array.isArray(opts.initialState.activeCurs)) {
-      throw new Error('If activeCurs are provided, they just be an array.');
+      throw new Error('If activeCurs are provided, they must be an array.');
     }
 
     super(opts);
@@ -40,6 +41,29 @@ export default class extends baseVw {
 
   get tagName() {
     return 'ul';
+  }
+
+  events() {
+    return {
+      'click .js-curControl': 'handleCurClick',
+    };
+  }
+
+  handleCurClick(e) {
+    const targ = $(e.target);
+    const code = targ.attr('data-code');
+    if (!targ.prop('checked')) {
+      this.setState({
+        activeCurs: this.getState().activeCurs.filter(c => c !== code),
+      })
+    } else {
+      const aCurs = new Set(this.getState().activeCurs);
+      aCurs.add(code);
+
+      this.setState({
+        activeCurs: [...aCurs],
+      })
+    }
   }
 
   setState(state = {}, options = {}) {
@@ -65,15 +89,23 @@ export default class extends baseVw {
             code,
             displayName,
             walletSupported: isSupportedWalletCur(code),
-            active: state.activeCurs.includes(code),
+            active: processedState.activeCurs.includes(code),
           };
         });
 
       const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
-      if (processedState.sort) {
-        processedState.sort((a, b) =>
-          a.localCompare(b, locale, { sensitivity: 'base' }));
+      if (processedState.processedCurs.sort) {
+        processedState.processedCurs.sort((a, b) =>
+          a.displayName.localeCompare(b.displayName, locale,
+            {sensitivity: 'base'}));
       }
+    }
+
+    if (!_.isEqual(curState.activeCurs, processedState.activeCurs)){
+      processedState.processedCurs.map(cur => {
+        cur.active = processedState.activeCurs.includes(cur.code);
+        return cur;
+      })
     }
 
     super.setState(processedState, options);

@@ -6,6 +6,7 @@ import '../../../lib/whenAll.jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
+import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import Moderators from '../../components/Moderators';
 import CurrencySelector from '../../components/CurrencySelector';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -42,7 +43,7 @@ export default class extends baseVw {
     const currencies = new Set(app.profile.get('currencies'));
     this.currencySelector = new CurrencySelector({
       initialState: {
-        currencies,
+        currencies: supportedWalletCurs(),
         activeCurs: currencies,
       },
     });
