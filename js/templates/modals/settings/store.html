@@ -50,7 +50,7 @@
           </div>
           <div class="col9">
             <% if (ob.errors.currencies) print(ob.formErrorTmpl({ errors: ob.errors.currencies })) %>
-            <div class="js-currencySelector"></div>
+            <div class="row js-currencySelector"></div>
             <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesNote') %></div>
           </div>
         </div>
@@ -81,8 +81,6 @@
                 }) %>
               </div>
               <div class="js-modListByID"></div>
-
-              <hr class="clrBr unleaded">
               <div>
                 <div class="rowLg"><% // just a spacer %></div>
               </div>
