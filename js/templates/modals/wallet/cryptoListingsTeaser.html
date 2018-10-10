@@ -1,4 +1,4 @@
-<div class="padLg txCtr clrP clrBr clrSh3">
+<div class="padLg txCtr">
   <%=
     ob.crypto.tradingPair({
       className: 'cryptoTradingPairXL hideCodes rowMd',
@@ -18,9 +18,11 @@
       <%= ob.polyT('wallet.cryptoTeaser.btnCreateListing') %>
     </a>
   </div>
-  <div>
-    <a class="js-viewCryptoListings tx6 txU">
-      <%= ob.polyT('wallet.cryptoTeaser.linkViewCryptoListings') %>
-    </a>
-  </div>  
+  <% if (ob.viewCryptoListingsUrl) { %>
+    <div>
+      <a class="tx6 txU" href="<%= ob.viewCryptoListingsUrl %>">
+        <%= ob.polyT('wallet.cryptoTeaser.linkViewCryptoListings') %>
+      </a>
+    </div>
+  <% } %>
 </div>

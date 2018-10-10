@@ -1,15 +1,18 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import { getSocket } from '../../../utils/serverConnect';
-// import { recordEvent } from '../../../utils/metrics';
 import {
   isSupportedWalletCur,
   ensureMainnetCode,
 } from '../../../data/walletCurrencies';
+import defaultSearchProviders from '../../../data/defaultSearchProviders';
+// import { recordEvent } from '../../../utils/metrics';
+import { getSocket } from '../../../utils/serverConnect';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
+import { launchEditListingModal } from '../../../utils/modalManager';
 import Transactions from '../../../collections/wallet/Transactions';
+import Listing from '../../../models/listing/Listing';
 import BaseModal from '../BaseModal';
 import CoinNav from './CoinNav';
 import CoinStats from './CoinStats';
@@ -105,6 +108,11 @@ export default class extends BaseModal {
       },
     }).render();
 
+    const ob1ProviderData = defaultSearchProviders.find(provider => provider.id === 'ob1');
+    this.viewCryptoListingsUrl = ob1ProviderData ?
+      `#search?providerQ=${ob1ProviderData.search}/listings?type=cryptocurrency` :
+      null;
+
     const serverSocket = getSocket();
 
     if (serverSocket) {
@@ -176,6 +184,13 @@ export default class extends BaseModal {
     return `${super.className()} wallet modalScrollPage`;
   }
 
+  events() {
+    return {
+      'click .js-createListing': 'onClickCreateListing',
+      ...super.events(),
+    };
+  }
+
   onBalanceChange(md) {
     if (md.id === this.activeCoin) {
       this.coinStats.setState({
@@ -191,6 +206,16 @@ export default class extends BaseModal {
     }));
 
     this.coinNav.setState({ coins: this.navCoins });
+  }
+
+  onClickCreateListing() {
+    const model = new Listing({
+      metadata: {
+        contractType: 'CRYPTOCURRENCY',
+      },
+    });
+
+    launchEditListingModal({ model });
   }
 
   /**
@@ -495,7 +520,9 @@ export default class extends BaseModal {
         loadTemplate('modals/wallet/cryptoListingsTeaser.html', cryptoTeaserT => {
           this.$el.html(t({
             walletIconTmpl,
-            cryptoTeaserHtml: cryptoTeaserT(),
+            cryptoTeaserHtml: cryptoTeaserT({
+              viewCryptoListingsUrl: this.viewCryptoListingsUrl,
+            }),
           }));
 
           super.render();
