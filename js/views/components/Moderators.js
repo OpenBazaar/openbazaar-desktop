@@ -1,12 +1,13 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
+import { anySupportedByWallet } from '../../data/walletCurrencies';
+import loadTemplate from '../../utils/loadTemplate';
 import { getSocket } from '../../utils/serverConnect';
-import { openSimpleMessage } from '../modals/SimpleMessage';
 import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 import ModCard from './ModeratorCard';
 import ModeratorsStatus from './ModeratorsStatus';
 
@@ -155,9 +156,8 @@ export default class extends baseVw {
     // peerIDs that are out of date, and are no longer moderators.
     const validMod = data.moderator && data.moderatorInfo;
     // if the moderator has an invalid currency, remove them from the list
-    const buyerCur = app.serverConfig.cryptoCurrency;
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const validCur = modCurs.includes(buyerCur);
+    const validCur = anySupportedByWallet(modCurs);
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(data, { parse: true }));
