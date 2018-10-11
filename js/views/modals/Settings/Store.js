@@ -40,11 +40,10 @@ export default class extends baseVw {
     this.listenTo(this.settings, 'sync',
       (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
-    const currencies = new Set(app.profile.get('currencies'));
     this.currencySelector = new CurrencySelector({
       initialState: {
         currencies: supportedWalletCurs(),
-        activeCurs: currencies,
+        activeCurs: [...new Set(app.profile.get('currencies'))],
       },
     });
 
