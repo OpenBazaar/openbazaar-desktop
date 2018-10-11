@@ -28,8 +28,6 @@ const currencies = [
         `https://www.blocktrail.com/tBTC/tx/${txid}` :
         `https://blockchair.com/bitcoin/transaction/${txid}`
     ),
-    canShapeShiftIntoWallet: true,
-    canShapeShiftIntoPurchase: false,
     isValidAddress: address => {
       if (typeof address !== 'string') {
         throw new Error('Please provide a string.');
@@ -77,8 +75,6 @@ const currencies = [
         `https://www.blocktrail.com/tBCC/tx/${txid}` :
         `https://blockdozer.com/tx/${txid}`
     ),
-    canShapeShiftIntoWallet: true,
-    canShapeShiftIntoPurchase: false,
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
@@ -104,8 +100,6 @@ const currencies = [
         `https://chain.so/tx/LTCTEST/${txid}` :
         `https://chain.so/address/LTCTEST/${txid}`
     ),
-    canShapeShiftIntoWallet: true,
-    canShapeShiftIntoPurchase: false,
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 2.5,
   },
@@ -128,8 +122,6 @@ const currencies = [
         `https://explorer.testnet.z.cash/tx/${txid}` :
         `https://explorer.zcha.in/transactions/${txid}`
     ),
-    canShapeShiftIntoWallet: true,
-    canShapeShiftIntoPurchase: false,
     supportsEscrowTimeout: false,
     blockTime: 1000 * 60 * 2.5,
   },

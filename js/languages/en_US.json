@@ -233,8 +233,7 @@
       "wallet": "Wallet",
       "notifications": "Notifications",
       "nav": "Navigation",
-      "close": "Close",
-      "currentPrice": "Current %{cur} price"
+      "close": "Close"
     },
     "serversMenu": {
       "newServer": "New Server",
@@ -453,13 +452,10 @@
       "sectionHeader": "Donations",
       "btnCopyAddress": "Copy Address",
       "btnOpenInWallet": "Open in Wallet",
-      "bannerCountDonations": "%{donationCountFloor}+ Donations Received!",
-      "bitcoinIntroLine": "Bitcoin donations can be sent to the following address:",
-      "bchWarning": "Do not send Bitcoin Cash to this address.",
-      "unableToOpenInWallet": {
-        "title": "Unable to open in wallet",
-        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
-      }
+      "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
+      "bannerTitleBCH":"Scan or send Bitcoin Cash (BCH) to this address",
+      "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
+      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address."
     },
     "licenseTab": {
       "linkText": "License",
@@ -625,11 +621,6 @@
         "peersBtn": "Show Connected Peers",
         "resync": "Reload Transactions",
         "resyncHelper": "Synchronize your transactions if some are missing",
-        "reloadTransactionsWidget": {
-          "resyncBtn": "Reload Transactions",
-          "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
-          "syncUnavailable": "You can only reload transactions once per hour."
-        },
         "purge": "Purge Shared Files",
         "purgeHelper": "Delete cached files you are sharing with others",
         "purgeBtn": "Purge Files",
@@ -905,6 +896,9 @@
     "btnCancel": "Cancel",
     "btnProceed": "Yes, proceed"
   },
+  "cryptoTicker": {
+    "currentPrice": "Current %{cur} price"
+  },
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
@@ -914,6 +908,8 @@
       "valueInDisplayCur": "Value in %{cur}",
       "transactionsHeader": "Transactions"
     },
+    "sendBtn": "Send",
+    "receiveBtn": "Receive",
     "sendMoney": {
       "toLabel": "To",
       "toPlaceholder": "Enter a %{cur} Address",
@@ -967,6 +963,18 @@
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
       "recoverySeedLink": "backup your wallet recovery seed",
       "backupWalletWarningBody": "Looks like you have a transaction or two. This would be a good time to %{link}."
+    },
+    "reloadTransactionsWidget": {
+      "resyncBtn": "Resync",
+      "resyncCompleteTitle": "%{cur} Resync Started",
+      "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
+      "syncUnavailable": "You can only reload transactions once per hour."
+    },
+    "cryptoTeaser": {
+      "coinCount": "%{count}+ coins",
+      "bodyLine": "Trade %{coinCount} on OpenBazaar for free",
+      "btnCreateListing": "Create Listing",
+      "linkViewCryptoListings": "View crypto listings"
     }
   },
   "walletOLD": {
@@ -1352,6 +1360,10 @@
   "pageControls": {
     "displayingCounts": "<b>%{start}-%{end} of %{total}</b>",
     "displaying": "Displaying %{displayingCounts}"
+  },
+  "pageControlsTextStyle": {
+    "previous":"Previous",
+    "next":"Next"
   },
   "purchase": {
     "purchaseDataChangedPopin": "The data for this listing has changed.",

@@ -29,7 +29,17 @@
     &::before {
       font-weight: bold;
     }
-  }  
+  }
+
+  &.hideCodes {
+    .fromCur, .toCur {
+      display: none;
+    }
+
+    .cryptoIcon {
+      margin-right: 0;
+    }
+  }
 }
 
 .cryptoTradingPairXL {
@@ -98,5 +108,14 @@
     position: relative;
     top: 1px;
     font-weight: normal;
+  }
+}
+
+.cryptoTicker {
+  .contentBox {
+    padding: {
+      left: 10px;
+      right: 10px;
+    }
   }
 }

@@ -1,26 +1,34 @@
 <div class="flexColRows gutterV">
   <div class="topControls flexRow">
-    <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn">
+    <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn flexNoShrink">
       <div class="flexVCent walletIconWrap"><%= ob.walletIconTmpl() %></div>
       <span><%= ob.polyT('wallet.title') %></span>
       <a class="jsModalClose tx6 txU"><%= ob.polyT('wallet.closeLink') %></a>
     </div>
-    <div class="js-btcTickerContainer btcTickerContainer"></div>
+    <div class="js-tickerContainer tickerContainer flexHRight"></div>
   </div>
   <div class="flex gutterH">
     <div class="col3">
-      <div class="js-coinNavContainer"></div>
+      <div class="flexColWide gutterV">
+        <div class="js-coinNavContainer"></div>
+        <div class="js-cryptoListingsTeaser border clrP clrBr clrSh3">
+          <%= ob.cryptoTeaserHtml %>
+        </div>
+      </div>
     </div>
     <div class="col9">
       <div class="flexColWide gutterV">
         <div class="js-coinStatsContainer"></div>
         <div>
           <div class="flexColWide clrP clrSh3">
-            <div class="js-sendReceiveNavContainer"></div>
+            <div class="js-sendReceiveNavContainer rowMd"></div>
             <div class="js-sendReceiveContainer sendReceiveContainer clrP"></div>
           </div>
         </div>
-        <div class="js-transactionsContainer clrP clrSh3"></div>
+        <div class="clrP clrSh3 posR">
+          <div class="js-reloadTransactionsContainer reloadTransactions"></div>
+          <div class="js-transactionsContainer"></div>
+        </div>
       </div>
     </div>
   </div>

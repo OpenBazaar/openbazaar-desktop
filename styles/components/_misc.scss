@@ -156,4 +156,7 @@
       top: 0.09em;
     }
   }
+
+.unclickable {
+  pointer-events: none;
 }

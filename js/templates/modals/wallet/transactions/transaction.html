@@ -85,8 +85,8 @@
   <div class="tx3 txB rowSm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.title') %></div>
   <% if (ob.fetchingEstimatedFee) { %>
     <%= ob.spinner({ className: 'txCtr spinnerMd' }) %>
-  <% } else if (ob.fetchFailed) { %>
-    <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchError || '' }) %></p>
+  <% } else if (ob.fetchFeeFailed) { %>
+    <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchFeeError || '' }) %></p>
     <a class="js-retryFeeFetch clrTEm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnRetry') %></a>
   <% } else if (typeof ob.estimatedFee === 'number') {
     let estimatedFeeCombo = ob.currencyMod.pairedCurrency(

@@ -87,18 +87,6 @@ describe('the crypto currencies data module', () => {
       });
     });
 
-    it('that requires the canShapeShiftIntoWallet to be a boolean', () => {
-      currencies.forEach(cur => {
-        expect(typeof cur.canShapeShiftIntoWallet).to.equal('boolean');
-      });
-    });
-
-    it('that requires the canShapeShiftIntoPurchase to be a boolean', () => {
-      currencies.forEach(cur => {
-        expect(typeof cur.canShapeShiftIntoPurchase).to.equal('boolean');
-      });
-    });
-
     it('that, if provided, requires isValidAddress to be a function', () => {
       currencies.forEach(cur => {
         if (cur.isValidAddress !== undefined) {

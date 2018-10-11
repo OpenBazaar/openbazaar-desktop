@@ -8,6 +8,14 @@
     }
   }
 
+  .tickerContainer {
+    margin-right: 40px;
+
+    .cryptoTicker {
+      height: 100%;
+    }
+  }
+
   .coinNav {
     .coinNavItem {
       cursor: pointer;
@@ -83,6 +91,12 @@
     }
   }
 
+  .sendReceiveNav {
+    .active, .btnFlx:hover, .btnFlx:focus {
+      font-weight: bold;
+    }
+  }
+
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
@@ -143,6 +157,10 @@
     .transaction {
       position: relative;
       font-size: $tx5;
+      padding: {
+        right: 0;
+        left: 0;
+      }
 
       .btn {
         font-size: $tx5b;
@@ -218,9 +236,13 @@
     }
 
     .popInMessageHolder {
+      transform: translateX(4px);
+      top: 100px;
+      
       &.notFixed {
         position: absolute;
         top: -65px;
+        transform: translateX(-50%);
       }
     }
 
@@ -241,7 +263,15 @@
         height: auto;
       }
     }
-  }  
+  }
+
+  .reloadTransactions {
+    position: absolute;
+    top: 20px;
+    right: $padLg;
+    max-width: 200px;
+    z-index: 1;
+  }
 }
 
 .spendConfirmBox {

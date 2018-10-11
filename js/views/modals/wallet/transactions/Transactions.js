@@ -4,7 +4,6 @@ import { isScrolledIntoView } from '../../../../utils/dom';
 import { getSocket, getCurrentConnection } from '../../../../utils/serverConnect';
 import { openSimpleMessage } from '../../SimpleMessage';
 import { launchSettingsModal } from '../../../../utils/modalManager';
-import TransactionMd from '../../../../models/wallet/Transaction';
 import loadTemplate from '../../../../utils/loadTemplate';
 import BaseVw from '../../../baseVw';
 import Transaction from './Transaction';
@@ -19,6 +18,10 @@ export default class extends BaseVw {
       // that were returned by the first fetch which is used to determine if all the
       // pages have been fetched.
       countAtFirstFetch: undefined,
+      // If there are any existing bump fee attempts that you want shuttled into the
+      // individual transaction views, please provide an indexed object (indexed by txid)
+      // of them here.
+      bumpFeeXhrs: undefined,
       ...options,
     };
 
@@ -241,7 +244,7 @@ export default class extends BaseVw {
   }
 
   setPopInMessageHolderPositioning() {
-    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 338);
+    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 515);
   }
 
   showNewTransactionPopup() {
@@ -278,25 +281,16 @@ export default class extends BaseVw {
     const view = this.createChild(Transaction, {
       model,
       coinType: this.coinType,
+      bumpFeeXhr: this.options.bumpFeeXhrs &&
+        this.options.bumpFeeXhrs[model.id] || undefined,
       ...options,
     });
 
-    this.listenTo(view, 'retrySuccess', e => {
-      app.walletBalance.set({
-        confirmed: e.data.confirmed,
-        unconfirmed: e.data.unconfirmed,
-      });
+    this.listenTo(view, 'bumpFeeSuccess', e =>
+      this.trigger('bumpFeeSuccess', e));
 
-      const transaction = new TransactionMd({
-        value: e.data.amount * -1,
-        txid: e.data.txid,
-        timestamp: e.data.timestamp,
-        address: e.data.address,
-        memo: e.data.memo,
-      }, { parse: true });
-
-      this.collection.unshift(transaction);
-    });
+    this.listenTo(view, 'bumpFeeAttempt', e =>
+      this.trigger('bumpFeeAttempt', e));
 
     return view;
   }
@@ -304,6 +298,7 @@ export default class extends BaseVw {
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.$scrollContainer.off('scroll', this.throttledOnScroll);
     super.remove();
   }
 
