@@ -21,6 +21,7 @@ import SendMoney from './SendMoney';
 import ReceiveMoney from './ReceiveMoney';
 import TransactionsVw from './transactions/Transactions';
 import ReloadTransactions from './ReloadTransactions';
+import CryptoTicker from '../../components/CryptoTicker';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -104,6 +105,12 @@ export default class extends BaseModal {
     });
 
     this.reloadTransactions = this.createChild(ReloadTransactions, {
+      initialState: {
+        coinType: this.activeCoin,
+      },
+    }).render();
+
+    this.ticker = this.createChild(CryptoTicker, {
       initialState: {
         coinType: this.activeCoin,
       },
@@ -250,6 +257,8 @@ export default class extends BaseModal {
       ) {
         this.sendModeOn = false;
       }
+
+      this.ticker.setState({ coinType: this.activeCoin });
     }
   }
 
@@ -553,6 +562,10 @@ export default class extends BaseModal {
           this.reloadTransactions.delegateEvents();
           this.getCachedEl('.js-reloadTransactionsContainer')
             .html(this.reloadTransactions.el);
+
+          this.ticker.delegateEvents();
+          this.getCachedEl('.js-tickerContainer')
+            .html(this.ticker.el);
         });
       });
     });

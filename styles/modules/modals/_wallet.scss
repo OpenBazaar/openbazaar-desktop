@@ -8,6 +8,14 @@
     }
   }
 
+  .tickerContainer {
+    margin-right: 40px;
+
+    .cryptoTicker {
+      height: 100%;
+    }
+  }
+
   .coinNav {
     .coinNavItem {
       cursor: pointer;

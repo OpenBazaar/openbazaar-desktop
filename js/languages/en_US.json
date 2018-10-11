@@ -233,8 +233,7 @@
       "wallet": "Wallet",
       "notifications": "Notifications",
       "nav": "Navigation",
-      "close": "Close",
-      "currentPrice": "Current %{cur} price"
+      "close": "Close"
     },
     "serversMenu": {
       "newServer": "New Server",
@@ -893,6 +892,9 @@
     "doNotShowAgain": "Do not show this warning again",
     "btnCancel": "Cancel",
     "btnProceed": "Yes, proceed"
+  },
+  "cryptoTicker": {
+    "currentPrice": "Current %{cur} price"
   },
   "wallet": {
     "title": "Wallet",
