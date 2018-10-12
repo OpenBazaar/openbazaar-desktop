@@ -1,6 +1,7 @@
 import app from '../../../app';
 import '../../../lib/select2';
-import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
+// import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
+import { isJQPromise } from '../../../utils/object';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
@@ -11,7 +12,12 @@ export default class extends BaseView {
       throw new Error('Please provide a Listing model.');
     }
 
+    if (!isJQPromise(options.getCoinTypes)) {
+      throw new Error('Please provide getCoinTypes as a jQuery promise.');
+    }
+
     super(options);
+    this.getCoinTypes = options.getCoinTypes;
 
     this.listenTo(app.settings, 'change:localCurrency', () => {
       this.getCachedEl('.js-marketValueWrap')
@@ -39,63 +45,63 @@ export default class extends BaseView {
     });
   }
 
-  get currencies() {
-    // const coinTypes = getCurrenciesSortedByName()
-    //   .map(coin => {
-    //     const translationKey = `cryptoCurrencies.${coin}`;
+  // get currencies() {
+  //   // const coinTypes = getCurrenciesSortedByName()
+  //   //   .map(coin => {
+  //   //     const translationKey = `cryptoCurrencies.${coin}`;
 
-    //     return {
-    //       code: coin,
-    //       name: app.polyglot.t(translationKey) === translationKey ?
-    //         coin :
-    //         app.polyglot.t('cryptoCurrenciesNameCodePairing', {
-    //           name: app.polyglot.t(translationKey),
-    //           code: coin,
-    //         }),
-    //     };
-    //   });
+  //   //     return {
+  //   //       code: coin,
+  //   //       name: app.polyglot.t(translationKey) === translationKey ?
+  //   //         coin :
+  //   //         app.polyglot.t('cryptoCurrenciesNameCodePairing', {
+  //   //           name: app.polyglot.t(translationKey),
+  //   //           code: coin,
+  //   //         }),
+  //   //     };
+  //   //   });
     
-    getCurrenciesSortedByName()
-      .done(curs => {
-        console.time('mapSizzle');
-        curs.map(coin => {
-          const translationKey = `cryptoCurrencies.${coin}`;
+  //   getCurrenciesSortedByName()
+  //     .done(curs => {
+  //       console.time('mapSizzle');
+  //       curs.map(coin => {
+  //         const translationKey = `cryptoCurrencies.${coin}`;
 
-          return {
-            code: coin,
-            name: app.polyglot.t(translationKey) === translationKey ?
-              coin :
-              app.polyglot.t('cryptoCurrenciesNameCodePairing', {
-                name: app.polyglot.t(translationKey),
-                code: coin,
-              }),
-          };
-        });
-        console.timeEnd('mapSizzle');
-      });
+  //         return {
+  //           code: coin,
+  //           name: app.polyglot.t(translationKey) === translationKey ?
+  //             coin :
+  //             app.polyglot.t('cryptoCurrenciesNameCodePairing', {
+  //               name: app.polyglot.t(translationKey),
+  //               code: coin,
+  //             }),
+  //         };
+  //       });
+  //       console.timeEnd('mapSizzle');
+  //     });
 
-    return ['howdy', 'skipper'];
+  //   return ['howdy', 'skipper'];
 
-    const coinType = this.model.get('metadata')
-      .get('coinType');
+  //   const coinType = this.model.get('metadata')
+  //     .get('coinType');
 
-    if (coinType && coinType.length && !coinTypes.find(coin => (coin.code === coinType))) {
-      // If the listing has a coin type that's not in our crypto currency list,
-      // we'll just plop it at the end of the list. It may be that our crypto cur list
-      // needs to be updated and/or the exchange rate api is misbehaving. In either case, if the
-      // exchange rate data is not available, a warning will be shown.
-      coinTypes.push({
-        code: coinType,
-        name: coinType,
-      });
-    }
+  //   if (coinType && coinType.length && !coinTypes.find(coin => (coin.code === coinType))) {
+  //     // If the listing has a coin type that's not in our crypto currency list,
+  //     // we'll just plop it at the end of the list. It may be that our crypto cur list
+  //     // needs to be updated and/or the exchange rate api is misbehaving. In either case, if the
+  //     // exchange rate data is not available, a warning will be shown.
+  //     coinTypes.push({
+  //       code: coinType,
+  //       name: coinType,
+  //     });
+  //   }
 
-    return coinTypes;
-  }
+  //   return coinTypes;
+  // }
 
   get defaultFromCur() {
     return this.model.get('metadata').get('coinType') ||
-      this.currencies[0].code;
+      this.coinTypes ? this.coinTypes[0].code : '';
   }
 
   tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
@@ -113,7 +119,8 @@ export default class extends BaseView {
       loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
         this.$el.html(t({
           contractTypes: this.model.get('metadata').contractTypesVerbose,
-          coinTypes: this.currencies,
+          // fetchingCoinTypes: this.getCoinTypes.state() === 'pending',
+          coinTypes: this.coinTypes,
           helperCoinType: this.tmplCoinTypeHelper(),
           errors: this.model.validationError || {},
           viewListingsT,
@@ -148,6 +155,7 @@ export default class extends BaseView {
           },
         });
 
+        const showCryptoTradingPair = !!(this.coinTypes && this.coinTypes.length);
         if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
         this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
           className: 'cryptoTradingPairWrap row',
@@ -155,12 +163,14 @@ export default class extends BaseView {
             tradingPairClass: 'cryptoTradingPairLg rowSm',
             exchangeRateClass: 'clrT2 tx6',
             fromCur: 'BTC',
-            toCur: this.getCachedEl('#editListingCoinType').val(),
+            toCur: showCryptoTradingPair ?
+              this.getCachedEl('#editListingCoinType').val() : 'BTC',
           },
         });
         this.getCachedEl('.js-cryptoTradingPairContainer').html(
           this.cryptoTradingPair.render().el
         );
+        this.cryptoTradingPair.$el.toggleClass('invisible', !showCryptoTradingPair);
       });
     });
 

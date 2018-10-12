@@ -1192,7 +1192,8 @@
       "coinType": "Trade",
       "quantity": "Inventory",
       "priceModifier": "Price Modifier (+/-)",
-      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
+      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)",
+      "lblReceive": "Receive"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",

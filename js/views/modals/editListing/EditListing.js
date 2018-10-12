@@ -12,6 +12,10 @@ import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import {
+  getCurrenciesSortedByName as getCryptoCursByName,
+  getCurrenciesSortedByCode as getCryptoCursByCode,
+} from '../../../data/cryptoListingCurrencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
@@ -1437,6 +1441,7 @@ export default class extends BaseModal {
         if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
         this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
           model: this.model,
+          getCoinTypes: $.Deferred().promise(),
         });
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);
