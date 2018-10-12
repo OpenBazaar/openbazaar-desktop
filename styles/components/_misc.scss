@@ -136,7 +136,7 @@
     padding: 0 12px;
 
     input[type="checkbox"] + label {
-      line-height:42px; // Makes the entire row clickable.
+      line-height: 42px; // Makes the entire row clickable.
 
       &:before {
         // Tweak the checkbox size so it centers correctly. Otherwise the
@@ -156,6 +156,7 @@
       top: 0.09em;
     }
   }
+}
 
 .unclickable {
   pointer-events: none;
