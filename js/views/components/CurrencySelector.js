@@ -45,16 +45,16 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click .js-curControl': 'handleCurClick',
+      'click .js-curRow': 'handleCurClick',
     };
   }
 
   handleCurClick(e) {
-    const targ = $(e.target);
+    const targ = $(e.target).closest('.js-curRow');
     const code = targ.attr('data-code');
     const active = targ.prop('checked');
 
-    this.trigger('currencyClicked', { curreny: code, active });
+    this.trigger('currencyClicked', { currency: code, active });
 
     if (active){
       this.setState({
