@@ -52,14 +52,18 @@ export default class extends baseVw {
   handleCurClick(e) {
     const targ = $(e.target);
     const code = targ.attr('data-code');
-    if (!targ.prop('checked')) {
+    const active = targ.prop('checked');
+
+    this.trigger('currencyClicked', { curreny: code, active });
+
+    if (active){
+      this.setState({
+        activeCurs: this.getState().activeCurs.push(code),
+      });
+    } else {
       this.setState({
         activeCurs: this.getState().activeCurs.filter(c => c !== code),
       });
-    } else {
-      const aCurs = new Set(this.getState().activeCurs);
-      aCurs.add(code);
-      this.setState({ activeCurs: [...aCurs] });
     }
   }
 
@@ -67,6 +71,7 @@ export default class extends baseVw {
     const curState = this.getState();
     // de-dupe any passed in currencies
     if (state.currencies) state.currencies = [...new Set(state.currencies)];
+    if (state.activeCurs) state.activeCurs = [...new Set(state.activeCurs)];
 
     const processedState = {
       ...state,

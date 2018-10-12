@@ -137,10 +137,6 @@ export default class Profile extends BaseModel {
       response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, cur);
     }
 
-    if (response.moderatorInfo) {
-      response.moderatorInfo.acceptedCurrencies = ['MSP', 'MILLY', 'JEAN'];
-    }
-
     if (response.handle && response.handle.startsWith('@')) {
       response.handle = response.handle.slice(1);
     }

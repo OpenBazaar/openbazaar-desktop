@@ -155,11 +155,8 @@ export default class extends baseVw {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
     const validMod = data.moderator && data.moderatorInfo;
-    // if the moderator has an invalid currency, remove them from the list
-    const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const validCur = anySupportedByWallet(modCurs);
 
-    if ((!!validMod && validCur || this.options.showInvalid)) {
+    if ((!!validMod || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(data, { parse: true }));
       this.removeNotFetched(data.peerID);
     } else {
