@@ -40,20 +40,41 @@ export default class extends BaseView {
   }
 
   get currencies() {
-    const coinTypes = getCurrenciesSortedByName()
-      .map(coin => {
-        const translationKey = `cryptoCurrencies.${coin}`;
+    // const coinTypes = getCurrenciesSortedByName()
+    //   .map(coin => {
+    //     const translationKey = `cryptoCurrencies.${coin}`;
 
-        return {
-          code: coin,
-          name: app.polyglot.t(translationKey) === translationKey ?
-            coin :
-            app.polyglot.t('cryptoCurrenciesNameCodePairing', {
-              name: app.polyglot.t(translationKey),
-              code: coin,
-            }),
-        };
+    //     return {
+    //       code: coin,
+    //       name: app.polyglot.t(translationKey) === translationKey ?
+    //         coin :
+    //         app.polyglot.t('cryptoCurrenciesNameCodePairing', {
+    //           name: app.polyglot.t(translationKey),
+    //           code: coin,
+    //         }),
+    //     };
+    //   });
+    
+    getCurrenciesSortedByName()
+      .done(curs => {
+        console.time('mapSizzle');
+        curs.map(coin => {
+          const translationKey = `cryptoCurrencies.${coin}`;
+
+          return {
+            code: coin,
+            name: app.polyglot.t(translationKey) === translationKey ?
+              coin :
+              app.polyglot.t('cryptoCurrenciesNameCodePairing', {
+                name: app.polyglot.t(translationKey),
+                code: coin,
+              }),
+          };
+        });
+        console.timeEnd('mapSizzle');
       });
+
+    return ['howdy', 'skipper'];
 
     const coinType = this.model.get('metadata')
       .get('coinType');
