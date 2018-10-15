@@ -25,9 +25,9 @@ export default class extends baseVw {
     }
 
     const opts = {
-      controlType: 'checkbox',
       ...options,
       initialState: {
+        controlType: 'checkbox',
         currencies: [],
         activeCurs: [],
         ...options.initialState,
@@ -35,7 +35,6 @@ export default class extends baseVw {
     };
 
     super(opts);
-    this.controlType = opts.controlType;
   }
 
   get className() {
@@ -57,8 +56,12 @@ export default class extends baseVw {
     let activeCurs = [...this.getState().activeCurs];
     const active = !activeCurs.includes(code);
 
-    if (active) activeCurs.push(code);
-    else activeCurs = activeCurs.filter(c => c !== code);
+    if (this.getState().controlType === 'radio') {
+      activeCurs = [code];
+    } else {
+      if (active) activeCurs.push(code);
+      else activeCurs = activeCurs.filter(c => c !== code);
+    }
 
     this.trigger('currencyClicked', {
       currency: code,
@@ -75,7 +78,15 @@ export default class extends baseVw {
     const curState = this.getState();
     // De-dupe any passed in currencies.
     if (state.currencies) state.currencies = [...new Set(state.currencies)];
-    if (state.activeCurs) state.activeCurs = [...new Set(state.activeCurs)];
+
+    if (state.activeCurs) {
+      // Radio controls can only have one active currency.
+      if (state.controlType === 'radio' ) {
+        state.activeCurs = [state.activeCurs[0]];
+      } else {
+        state.activeCurs = [...new Set(state.activeCurs)];
+      }
+    }
 
     const processedState = {
       ...state,
@@ -123,7 +134,6 @@ export default class extends baseVw {
   render() {
     loadTemplate('components/currencySelector.html', (t) => {
       this.$el.html(t({
-        controlType: this.controlType,
         ...this.getState(),
       }));
     });
