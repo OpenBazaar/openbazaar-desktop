@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import BaseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
@@ -10,37 +11,50 @@ import { getLangByCode } from '../../data/languages';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    /* There are 3 valid card selected states:
+     selected: This mod is pre-selected, or was activated by the user.
+     unselected: Neutral. No action has been taken by the user on this mod.
+     deselected: The user has rejected or turned off this mod.
+     */
+    const selectedState = options.initialState.selectedState;
+    const validSelectedStates = ['selected', 'unselected', 'deselected'];
+
+    if (!validSelectedStates.includes(selectedState)) {
+      throw new Error('This card does not have a valid selected state.');
+    }
+
     const opts = {
-      cardState: 'unselected',
-      notSelected: 'unselected',
       radioStyle: false,
       controlsOnInvalid: false,
+      notSelected: 'unselected',
+      checkPreferredCurs: false,
       ...options,
+      initialState: {
+        selectedState,
+        preferredCurs: [],
+        ...options.initialState,
+      },
     };
 
     super(opts);
     this.options = opts;
-    this.notSelected = opts.notSelected;
-    this.cardState = opts.cardState;
-
-    /* There are 3 valid card states:
-       selected: This mod is pre-selected, or was activated by the user.
-       unselected: Neutral. No action has been taken by the user on this mod.
-       deselected: The user has rejected or turned off this mod.
-     */
-    const validCardStates = ['selected', 'unselected', 'deselected'];
-
-    if (!validCardStates.includes(this.cardState)) {
-      throw new Error('This card does not have a valid card state.');
-    }
 
     if (!this.model || !(this.model instanceof Profile)) {
       throw new Error('Please provide a Profile model.');
     }
 
     const modInfo = this.model.get('moderatorInfo');
-    const modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
-    this.hasValidCurrency = anySupportedByWallet(modCurs);
+    this.modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
+
+    this.modLanguages = [];
+    if (this.model.isModerator) {
+      this.modLanguages = this.model.get('moderatorInfo')
+        .get('languages')
+        .map(lang => {
+          const langData = getLangByCode(lang);
+          return langData && langData.name || lang;
+        });
+    }
 
     handleLinks(this.el);
   }
@@ -61,7 +75,7 @@ export default class extends BaseVw {
     const modModal = launchModeratorDetailsModal({
       model: this.model,
       purchase: this.options.purchase,
-      cardState: this.cardState,
+      cardState: this.getState('selectedState'),
     });
     this.listenTo(modModal, 'addAsModerator', () => {
       this.changeSelectState('selected');
@@ -73,8 +87,17 @@ export default class extends BaseVw {
     this.rotateSelectState();
   }
 
+  get hasValidCurrency() {
+    return anySupportedByWallet(this.modCurs);
+  }
+
+  get hasPreferredCur() {
+    const preCur = _.intersection(this.getState().preferredCurs, this.modCurs);
+    return !!preCur.length;
+  }
+
   rotateSelectState() {
-    if (this.cardState === 'selected' && !this.options.radioStyle) {
+    if (this.getState().selectedState === 'selected' && !this.options.radioStyle) {
       this.changeSelectState(this.notSelected);
     } else if (this.model.isModerator && this.hasValidCurrency) {
       /* Only change to selected if this is a valid moderator and the user's currency is supported.
@@ -84,12 +107,11 @@ export default class extends BaseVw {
     }
   }
 
-  changeSelectState(cardState) {
-    if (cardState !== this.cardState) {
-      this.cardState = cardState;
-      this.render();
+  changeSelectState(newSelectedState) {
+    if (newSelectedState !== this.getState().selectedState) {
+      this.setState({ selectedState: newSelectedState });
       this.trigger('modSelectChange', {
-        selected: cardState === 'selected',
+        selected: newSelectedState === 'selected',
         guid: this.model.id,
       });
     }
@@ -98,29 +120,23 @@ export default class extends BaseVw {
   render() {
     super.render();
 
-    let modLanguages = [];
-    if (this.model.isModerator) {
-      modLanguages = this.model.get('moderatorInfo')
-        .get('languages')
-        .map(lang => {
-          const langData = getLangByCode(lang);
-          return langData && langData.name || lang;
-        });
-    }
+    const showPreferredWarning = this.options.checkPreferredCurs &&
+      !this.hasPreferredCur;
 
     const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
 
     loadTemplate('components/moderatorCard.html', (t) => {
       this.$el.html(t({
-        cardState: this.cardState,
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,
         hasValidCurrency: this.hasValidCurrency,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,
+        showPreferredWarning,
         verified: !!verifiedMod,
-        modLanguages,
+        modLanguages: this.modLanguages,
         ...this.model.toJSON(),
+        ...this.getState(),
       }));
 
       if (this.verifiedMod) this.verifiedMod.remove();

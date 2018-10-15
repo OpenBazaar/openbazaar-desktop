@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { polyTFallback } from '../../utils/templateHelpers';
@@ -15,7 +16,7 @@ export default class extends baseVw {
 
     if (!options.initialState.currencies ||
       !Array.isArray(options.initialState.currencies)) {
-      throw new Error('Please provide an initial array of currencies.')
+      throw new Error('Please provide an initial array of currencies.');
     }
 
     if (options.initialState.activeCurs &&
@@ -27,6 +28,8 @@ export default class extends baseVw {
       controlType: 'checkbox',
       ...options,
       initialState: {
+        currencies: [],
+        activeCurs: [],
         ...options.initialState,
       },
     };
@@ -45,31 +48,32 @@ export default class extends baseVw {
 
   events() {
     return {
-      'click .js-curRow': 'handleCurClick',
+      'click .js-curControl': 'handleCurClick',
     };
   }
 
   handleCurClick(e) {
-    const targ = $(e.target).closest('.js-curRow');
-    const code = targ.attr('data-code');
-    const active = targ.prop('checked');
+    const code = $(e.target).attr('data-code');
+    let activeCurs = [...this.getState().activeCurs];
+    const active = !activeCurs.includes(code);
 
-    this.trigger('currencyClicked', { currency: code, active });
+    if (active) activeCurs.push(code);
+    else activeCurs = activeCurs.filter(c => c !== code);
 
-    if (active){
-      this.setState({
-        activeCurs: this.getState().activeCurs.push(code),
-      });
-    } else {
-      this.setState({
-        activeCurs: this.getState().activeCurs.filter(c => c !== code),
-      });
-    }
+    this.trigger('currencyClicked', {
+      currency: code,
+      active,
+      activeCurs,
+    });
+
+    this.setState({
+      activeCurs,
+    });
   }
 
   setState(state = {}, options = {}) {
     const curState = this.getState();
-    // de-dupe any passed in currencies
+    // De-dupe any passed in currencies.
     if (state.currencies) state.currencies = [...new Set(state.currencies)];
     if (state.activeCurs) state.activeCurs = [...new Set(state.activeCurs)];
 
@@ -102,15 +106,15 @@ export default class extends baseVw {
       if (processedState.processedCurs.sort) {
         processedState.processedCurs.sort((a, b) =>
           a.displayName.localeCompare(b.displayName, locale,
-            {sensitivity: 'base'}));
+            { sensitivity: 'base' }));
       }
     }
 
-    if (!_.isEqual(curState.activeCurs, processedState.activeCurs)){
+    if (!_.isEqual(curState.activeCurs, processedState.activeCurs)) {
       processedState.processedCurs.map(cur => {
         cur.active = processedState.activeCurs.includes(cur.code);
         return cur;
-      })
+      });
     }
 
     super.setState(processedState, options);

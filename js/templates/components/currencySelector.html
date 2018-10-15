@@ -1,8 +1,9 @@
 <% ob.processedCurs.forEach(cur => { %>
-  <li class="clrBr curRow js-curRow" data-code="<%= cur.code %>">
+  <li class="clrBr curRow">
     <input type="<%= ob.controlType %>"
            id="<%=`curSel${cur.code}` %>"
-           class="centerLabel"
+           class="centerLabel js-curControl"
+           data-code="<%= cur.code %>"
            <% if (ob.controlType === 'radio') {%>
              name="currencies"
            <%} %>

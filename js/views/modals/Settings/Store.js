@@ -40,32 +40,47 @@ export default class extends baseVw {
     this.listenTo(this.settings, 'sync',
       (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
+    const preferredCurs = [...new Set(app.profile.get('currencies'))];
+
     this.currencySelector = new CurrencySelector({
       initialState: {
         currencies: supportedWalletCurs(),
-        activeCurs: [...new Set(app.profile.get('currencies'))],
+        activeCurs: preferredCurs,
       },
+    });
+
+    this.listenTo(this.currencySelector, 'currencyClicked', sOpts => {
+      this.handleCurrencyClicked(sOpts);
     });
 
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
 
+    const commonModOptions = {
+      checkPreferredCurs: true,
+      initialState: {
+        preferredCurs,
+      },
+    };
+
     this.modsSelected = new Moderators({
-      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
+      controlsOnInvalid: true,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       notSelected: 'deselected',
       showInvalid: true,
-      controlsOnInvalid: true,
       showSpinner: false,
+      ...commonModOptions,
     });
 
     this.modsByID = new Moderators({
       async: false,
-      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       showInvalid: true,
-      wrapperClasses: 'noMin',
       showSpinner: false,
+      wrapperClasses: 'noMin',
+      ...commonModOptions,
     });
 
     this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsByIDFound(mOpts.guids));
@@ -73,9 +88,10 @@ export default class extends baseVw {
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
       excludeIDs: this.currentMods,
-      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
+      showVerifiedOnly: true,
+      ...commonModOptions,
     });
 
     const modsToCheckOnVerifiedUpdate = [
@@ -139,6 +155,13 @@ export default class extends baseVw {
   showModByIDError(msg) {
     this.getCachedEl('.js-submitModByIDInputError').removeClass('hide');
     this.getCachedEl('.js-submitModByIDInputErrorText').text(msg);
+  }
+
+  handleCurrencyClicked(opts) {
+    const preferredCurs = opts.activeCurs;
+    this.modsSelected.setState({ preferredCurs });
+    this.modsByID.setState({ preferredCurs });
+    this.modsAvailable.setState({ preferredCurs });
   }
 
   clickSubmitModByID() {
