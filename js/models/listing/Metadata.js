@@ -6,6 +6,14 @@ import { getCurrencyByCode } from '../../data/currencies';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 
 export default class extends BaseModel {
+  constructor(attrs = {}, options = {}) {
+    return super({
+      // when ready, this will come from settings
+      acceptedCurrencies: ['BTC', 'ZEC', 'LTC'],
+      ...attrs,
+    }, options);
+  }
+
   defaults() {
     return {
       contractType: 'PHYSICAL_GOOD',
@@ -14,6 +22,7 @@ export default class extends BaseModel {
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
       coinDivisibility: defaultQuantityBaseUnit,
       priceModifier: 0,
+      acceptedCurrencies: [],
     };
   }
 

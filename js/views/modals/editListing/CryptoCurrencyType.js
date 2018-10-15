@@ -1,6 +1,7 @@
 import app from '../../../app';
 import '../../../lib/select2';
 // import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
+import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import { isJQPromise } from '../../../utils/object';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -18,6 +19,26 @@ export default class extends BaseView {
 
     super(options);
     this.getCoinTypes = options.getCoinTypes;
+    this.receiveCurs = supportedWalletCurs();
+    const receiveCur = this.model.get('metadata')
+      .get('acceptedCurrencies')[0];
+
+
+    if (!this.receiveCurs.includes(receiveCur)) {
+      // if the model has the receiving currency set to an unsupported cur,
+      // we'll manually add that to the list of available options. Upon a
+      // a save attempt, the user will be presented with an error prompting them
+      // to select a valid currency.
+      this.receiveCurs.push(receiveCur);
+      this.unsupportedReceiveCur = receiveCur;
+    }
+
+    this.receiveCurs = this.receiveCurs.map(cur => ({
+      code: cur,
+      name: app.polyglot.t(`cryptoCurrencies.${cur}`, {
+        _: cur,
+      }),
+    }));
 
     this.listenTo(app.settings, 'change:localCurrency', () => {
       this.getCachedEl('.js-marketValueWrap')
@@ -32,6 +53,7 @@ export default class extends BaseView {
   events() {
     return {
       'change #editListingCoinType': 'onChangeCoinType',
+      'change #editListingCryptoReceive': 'onChangeReceiveCur',
     };
   }
 
@@ -43,6 +65,14 @@ export default class extends BaseView {
     this.cryptoTradingPair.setState({
       toCur: this.getCachedEl('#editListingCoinType').val(),
     });
+  }
+
+  onChangeReceiveCur() {
+    if (this.unsupportedReceiveCur) {
+      this.receiveCurs = this.receiveCurs.filter(
+        cur => cur.code === this.unsupportedReceiveCur);
+      this.unsupportedReceiveCur = null;
+    }
   }
 
   // get currencies() {
@@ -119,9 +149,31 @@ export default class extends BaseView {
       loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
         this.$el.html(t({
           contractTypes: this.model.get('metadata').contractTypesVerbose,
-          // fetchingCoinTypes: this.getCoinTypes.state() === 'pending',
-          coinTypes: this.coinTypes,
+          // coinTypes: this.coinTypes,
+          coinTypes: [
+            {
+              code: 'BTC',
+              name: 'Bitcoin',
+            },
+            {
+              code: 'BCH',
+              name: 'Bitcoin Cash',
+            },
+            {
+              code: 'LTC',
+              name: 'Litecoin',
+            },
+            {
+              code: 'ZEC',
+              name: 'Zcash',
+            },
+            {
+              code: 'ZRX',
+              name: '0x Protocol',
+            },
+          ],
           helperCoinType: this.tmplCoinTypeHelper(),
+          receiveCurs: this.receiveCurs,
           errors: this.model.validationError || {},
           viewListingsT,
           ...this.model.toJSON(),
@@ -131,7 +183,7 @@ export default class extends BaseView {
           minimumResultsForSearch: Infinity,
         });
 
-        this.getCachedEl('#editListingCoinType').select2({
+        this.getCachedEl('#editListingCoinType, #editListingCryptoReceive').select2({
           minimumResultsForSearch: 5,
           matcher: (params, data) => {
             if (!params.term || params.term.trim() === '') {
