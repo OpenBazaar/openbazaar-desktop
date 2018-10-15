@@ -1,0 +1,14 @@
+<% const curs = ob.isFetching ? [] : ob.curs; %>
+<div class="posR">
+  <% if (ob.isFetching) { %>
+    <%= ob.spinner({ className: 'center spinnerMd' }) %>
+  <% } %>
+  <div class="<%= ob.isFetching ? 'invisible' : '' %>">
+    <select id="editListingCoinType" name="metadata.coinType" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
+      <% curs.forEach(coin => { %>
+        <option value="<%= coin.code %>" <% if (coin.code === ob.selected) print('selected') %>><%= coin.name %></option>
+      <% }) %>
+    </select>
+    <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperTrade') %></div>
+  </div>
+</div>

@@ -103,6 +103,10 @@ export default class extends BaseModal {
     this.images = this.model.get('item').get('images');
     this.shippingOptions = this.model.get('shippingOptions');
     this.shippingOptionViews = [];
+    this.getCoinTypesDeferred = $.Deferred();
+
+    getCryptoCursByName().done(curs => this.getCoinTypesDeferred.resolve(curs))
+      .fail(() => this.getCoinTypesDeferred.resolve(getCryptoCursByCode()));
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));
@@ -1441,7 +1445,7 @@ export default class extends BaseModal {
         if (this.cryptoCurrencyType) this.cryptoCurrencyType.remove();
         this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
           model: this.model,
-          getCoinTypes: $.Deferred().promise(),
+          getCoinTypes: this.getCoinTypesDeferred.promise(),
         });
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);

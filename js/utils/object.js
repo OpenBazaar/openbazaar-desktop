@@ -48,7 +48,7 @@ export function isPromise(obj) {
  * Return true if obj is a promise / deffered.
  */
 export function isJQPromise(value) {
-  if (typeof value === 'object' && typeof value.then !== "function") {
+  if (typeof value === 'object' && typeof value.then !== 'function') {
     return false;
   }
   const promiseThenSrc = String($.Deferred().then);

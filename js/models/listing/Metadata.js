@@ -9,7 +9,8 @@ export default class extends BaseModel {
   constructor(attrs = {}, options = {}) {
     return super({
       // when ready, this will come from settings
-      acceptedCurrencies: ['BTC', 'ZEC', 'LTC'],
+      acceptedCurrencies: attrs.contractType === 'CRYPTOCURRENCY' ?
+        [] : ['BTC', 'ZEC', 'LTC'],
       ...attrs,
     }, options);
   }

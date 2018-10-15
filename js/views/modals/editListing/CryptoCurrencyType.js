@@ -6,6 +6,7 @@ import { isJQPromise } from '../../../utils/object';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
+import CryptoCurrencyTradeField from './CryptoCurrencyTradeField';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -40,6 +41,24 @@ export default class extends BaseView {
       }),
     }));
 
+    this.tradeField = this.createChild(CryptoCurrencyTradeField, {
+      select2Opts: this.tradeSelect2Opts,
+      initialState: {
+        isFetching: this.getCoinTypes.state() === 'pending',
+      },
+    });
+
+    this.getCoinTypes.done(curs => {
+      this.tradeField.setState({
+        curs,
+        isFetching: false,
+        selected: this.model.get('metadata')
+          .get('acceptedCurrencies')[0] || curs[0],
+      });
+    });
+
+    this.tradeField.render();
+
     this.listenTo(app.settings, 'change:localCurrency', () => {
       this.getCachedEl('.js-marketValueWrap')
         .html(this.tmplMarketValue({ getDataFromUi: true }));
@@ -60,8 +79,6 @@ export default class extends BaseView {
   onChangeCoinType(e) {
     this.getCachedEl('.js-quantityCoinType')
       .text(e.target.value);
-    this.getCachedEl('.js-helperCoinType')
-      .html(this.tmplCoinTypeHelper(e.target.value));
     this.cryptoTradingPair.setState({
       toCur: this.getCachedEl('#editListingCoinType').val(),
     });
@@ -90,7 +107,7 @@ export default class extends BaseView {
   //   //         }),
   //   //     };
   //   //   });
-    
+
   //   getCurrenciesSortedByName()
   //     .done(curs => {
   //       console.time('mapSizzle');
@@ -134,12 +151,30 @@ export default class extends BaseView {
       this.coinTypes ? this.coinTypes[0].code : '';
   }
 
-  tmplCoinTypeHelper(fromCur = this.defaultFromCur) {
-    return app.polyglot.t('editListing.cryptoCurrencyType.helperCoinType', {
-      // toCur: getServerCurrency().code,
-      toCur: 'BTC',
-      fromCur,
-    });
+  get tradeSelect2Opts() {
+    return {
+      minimumResultsForSearch: 5,
+      matcher: (params, data) => {
+        if (!params.term || params.term.trim() === '') {
+          return data;
+        }
+
+        const term = params.term
+          .toUpperCase()
+          .trim();
+
+        if (
+          data.text
+            .toUpperCase()
+            .includes(term) ||
+          data.id.includes(term)
+        ) {
+          return data;
+        }
+
+        return null;
+      },
+    };
   }
 
   render() {
@@ -149,30 +184,7 @@ export default class extends BaseView {
       loadTemplate('modals/editListing/cryptoCurrencyType.html', t => {
         this.$el.html(t({
           contractTypes: this.model.get('metadata').contractTypesVerbose,
-          // coinTypes: this.coinTypes,
-          coinTypes: [
-            {
-              code: 'BTC',
-              name: 'Bitcoin',
-            },
-            {
-              code: 'BCH',
-              name: 'Bitcoin Cash',
-            },
-            {
-              code: 'LTC',
-              name: 'Litecoin',
-            },
-            {
-              code: 'ZEC',
-              name: 'Zcash',
-            },
-            {
-              code: 'ZRX',
-              name: '0x Protocol',
-            },
-          ],
-          helperCoinType: this.tmplCoinTypeHelper(),
+          coinTypes: this.coinTypes,
           receiveCurs: this.receiveCurs,
           errors: this.model.validationError || {},
           viewListingsT,
@@ -183,29 +195,10 @@ export default class extends BaseView {
           minimumResultsForSearch: Infinity,
         });
 
-        this.getCachedEl('#editListingCoinType, #editListingCryptoReceive').select2({
-          minimumResultsForSearch: 5,
-          matcher: (params, data) => {
-            if (!params.term || params.term.trim() === '') {
-              return data;
-            }
+        this.getCachedEl('#editListingCryptoReceive').select2(this.tradeSelect2Opts);
 
-            const term = params.term
-              .toUpperCase()
-              .trim();
-
-            if (
-              data.text
-                .toUpperCase()
-                .includes(term) ||
-              data.id.includes(term)
-            ) {
-              return data;
-            }
-
-            return null;
-          },
-        });
+        this.tradeField.delegateEvents();
+        this.getCachedEl('.js-cryptoCurrencyTradeContainer').html(this.tradeField.el);
 
         const showCryptoTradingPair = !!(this.coinTypes && this.coinTypes.length);
         if (this.cryptoTradingPair) this.cryptoTradingPair.remove();

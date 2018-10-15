@@ -1193,7 +1193,8 @@
       "quantity": "Inventory",
       "priceModifier": "Price Modifier (+/-)",
       "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)",
-      "lblReceive": "Receive"
+      "lblReceive": "Receive",
+      "helperTrade": "The currency you’re offering for trade"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",

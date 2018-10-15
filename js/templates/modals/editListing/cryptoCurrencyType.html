@@ -22,17 +22,10 @@
   </div>
 </div>
 <div class="flexRow gutterH">
-  <div class="col6 simpleFlexCol">
-    <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.coinType') %></label>
-      <% if (Array.isArray(ob.coinTypes)) { %>
-        <% if (ob.errors['meta.coinType']) print(ob.formErrorTmpl({ errors: ob.errors['meta.coinType'] })) %>
-        <select id="editListingCoinType" name="metadata.coinType" class="clrBr clrP clrSh2 marginTopAuto">
-          <% ob.coinTypes.forEach(coin => { %>
-          <option value="<%= coin.code %>" <% if (coin.code === ob.metadata.coinType) print('selected') %>><%= coin.name %></option>
-          <% }) %>
-        </select>
-        <div class="clrT2 txSm helper js-helperCoinType"><%= ob.helperCoinType %></div>
-      <% } %>
+    <div class="col6 simpleFlexCol">
+      <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.coinType') %></label>
+      <% if (ob.errors['metadata.coinType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.coinType'] })) %>
+      <div class="js-cryptoCurrencyTradeContainer"></div>
     </div>
     <div class="col6 simpleFlexCol">
       <label for="editListingCryptoQuantity" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.quantity') %></label>
@@ -54,13 +47,13 @@
     <label for="editListingCryptoReceive" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.lblReceive') %></label>
     <div class="posR">
       <% const receiveCur = ob.metadata.acceptedCurrencies[0]; %>
-      <% if (ob.errors['meta.acceptedCurrencies']) print(ob.formErrorTmpl({ errors: ob.errors['meta.acceptedCurrencies'] })) %>
+      <% if (ob.errors['metadata.acceptedCurrencies']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.acceptedCurrencies'] })) %>
       <select id="editListingCryptoReceive" name="metadata.acceptedCurrencies" class="clrBr clrP clrSh2 marginTopAuto">
         <% ob.receiveCurs.forEach(coin => { %>
           <option value="<%= coin.code %>" <% if (coin.code === 'BTC') print('selected') %>><%= coin.name %></option>
         <% }) %>
       </select>
-      <div class="clrT2 txSm helper js-helperCoinType">The currency you'll receive for the trade</div>
+      <div class="clrT2 txSm helper">The currency you'll receive for the trade</div>
     </div>
   </div>
   <div class="col6 simpleFlexCol">
