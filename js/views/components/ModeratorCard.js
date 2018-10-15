@@ -16,22 +16,21 @@ export default class extends BaseVw {
      unselected: Neutral. No action has been taken by the user on this mod.
      deselected: The user has rejected or turned off this mod.
      */
-    const selectedState = options.initialState.selectedState;
     const validSelectedStates = ['selected', 'unselected', 'deselected'];
 
-    if (!validSelectedStates.includes(selectedState)) {
-      throw new Error('This card does not have a valid selected state.');
+    if (!validSelectedStates.includes(options.initialState.selectedState)) {
+      throw new Error('Please provide a valid selected state.');
     }
 
     const opts = {
       radioStyle: false,
       controlsOnInvalid: false,
       notSelected: 'unselected',
-      checkPreferredCurs: false,
       ...options,
       initialState: {
-        selectedState,
+        selectedState: 'unselected',
         preferredCurs: [],
+        checkPreferredCurs: false,
         ...options.initialState,
       },
     };
@@ -98,7 +97,7 @@ export default class extends BaseVw {
 
   rotateSelectState() {
     if (this.getState().selectedState === 'selected' && !this.options.radioStyle) {
-      this.changeSelectState(this.notSelected);
+      this.changeSelectState(this.options.notSelected);
     } else if (this.model.isModerator && this.hasValidCurrency) {
       /* Only change to selected if this is a valid moderator and the user's currency is supported.
       Moderators that have become invalid may be displayed, and can be de-selected to remove them.
@@ -107,11 +106,11 @@ export default class extends BaseVw {
     }
   }
 
-  changeSelectState(newSelectedState) {
-    if (newSelectedState !== this.getState().selectedState) {
-      this.setState({ selectedState: newSelectedState });
+  changeSelectState(selectedState) {
+    if (selectedState !== this.getState().selectedState) {
+      this.setState({ selectedState });
       this.trigger('modSelectChange', {
-        selected: newSelectedState === 'selected',
+        selected: selectedState === 'selected',
         guid: this.model.id,
       });
     }
@@ -120,7 +119,7 @@ export default class extends BaseVw {
   render() {
     super.render();
 
-    const showPreferredWarning = this.options.checkPreferredCurs &&
+    const showPreferredWarning = this.getState().checkPreferredCurs &&
       !this.hasPreferredCur;
 
     const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));

@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../app';
+import { anySupportedByWallet } from '../../data/walletCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import { getSocket } from '../../utils/serverConnect';
 import Moderators from '../../collections/Moderators';
@@ -159,8 +160,12 @@ export default class extends baseVw {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
     const validMod = data.moderator && data.moderatorInfo;
+    // If the moderator has an invalid currency, remove them from the list.
+    // With multi-wallet, this should be a very rare occurrence.
+    const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
+    const validCur = anySupportedByWallet(modCurs);
 
-    if ((!!validMod || this.options.showInvalid)) {
+    if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(data, { parse: true }));
       this.removeNotFetched(data.peerID);
     } else {
@@ -298,13 +303,13 @@ export default class extends baseVw {
     const modCard = this.createChild(ModCard, {
       model,
       purchase: this.options.purchase,
+      notSelected: this.options.notSelected,
       radioStyle: this.options.radioStyle,
       controlsOnInvalid: this.options.controlsOnInvalid,
-      notSelected: this.options.notSelected,
-      checkPreferredCurs: this.options.checkPreferredCurs,
       initialState: {
         selectedState: this.options.cardState,
         preferredCurs: this.getState().preferredCurs,
+        checkPreferredCurs: this.options.checkPreferredCurs,
       },
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
