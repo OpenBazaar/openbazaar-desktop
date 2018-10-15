@@ -24,6 +24,18 @@ export default class extends BaseView {
     return 'cryptoCurrencyTradeField';
   }
 
+  events() {
+    return {
+      'change #editListingCoinType': 'onChangeCoinType',
+    };
+  }
+
+  onChangeCoinType(e) {
+    this.setState({
+      selected: e.target.value,
+    }, { renderOnChange: false });
+  }
+
   render() {
     super.render();
 
