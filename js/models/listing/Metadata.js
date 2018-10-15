@@ -107,6 +107,18 @@ export default class extends BaseModel {
       addError('pricingCurrency', 'The currency is not one of the available ones.');
     }
 
+    if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies ||
+      !attrs.acceptedCurrencies.length) {
+      const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
+        'metadataModelErrors.provideAcceptedCurrencyCrypto' :
+        'metadataModelErrors.provideAcceptedCurrency';
+      addError('acceptedCurrencies',
+        app.polyglot.t(translationKey));
+    } else if (attrs.acceptedCurrencies.find(cur => (typeof cur !== 'string' || !cur)) !==
+      undefined) {
+      addError('acceptedCurrencies', 'Accepted currency values must be non-empty strings.');
+    }
+
     if (attrs.contractType === 'CRYPTOCURRENCY') {
       if (attrs.priceModifier === '') {
         addError('priceModifier', app.polyglot.t('metadataModelErrors.providePriceModifier'));
@@ -118,6 +130,11 @@ export default class extends BaseModel {
           min: this.constraints.minPriceModifier,
           max: this.constraints.maxPriceModifier,
         }));
+      }
+
+      if (Array.isArray(attrs.acceptedCurrencies) && attrs.acceptedCurrencies.length > 1) {
+        addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted currency ' +
+          'is allowed.');
       }
     }
 
