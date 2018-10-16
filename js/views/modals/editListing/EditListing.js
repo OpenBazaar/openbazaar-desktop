@@ -61,8 +61,6 @@ export default class extends BaseModal {
     this._origModel = this.model;
     this.model = this._origModel.clone();
 
-    console.dir(this.model.toJSON());
-
     this.listenTo(this.model, 'sync', () => {
       setTimeout(() => {
         if (this.createMode && !this.model.isNew()) {

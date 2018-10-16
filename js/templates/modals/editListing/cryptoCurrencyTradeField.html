@@ -5,7 +5,7 @@
   <% } %>
   <div class="<%= ob.isFetching ? 'invisible' : '' %>">
     <% const nameAttr = ob.isFetching ? '' : 'name="metadata.coinType"'; %>
-    <select id="editListingCoinType" <%= print(nameAttr) %> class="clrBr clrP clrSh2" style="width: 100%">
+    <select id="editListingCoinType" <%= nameAttr %> class="clrBr clrP clrSh2" style="width: 100%">
       <% curs.forEach(coin => { %>
         <option value="<%= coin.code %>" <% if (coin.code === ob.selected) print('selected') %>><%= coin.name %></option>
       <% }) %>
