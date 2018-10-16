@@ -23,6 +23,8 @@ export default class extends BaseView {
     const receiveCur = this.model.get('metadata')
       .get('acceptedCurrencies')[0];
 
+    console.dir(this.model.toJSON());
+
     if (receiveCur && !this.receiveCurs.includes(receiveCur)) {
       // if the model has the receiving currency set to an unsupported cur,
       // we'll manually add that to the list of available options. Upon a
@@ -71,6 +73,8 @@ export default class extends BaseView {
     this.getCoinTypes.done(curs => {
       const selected = this.model.get('metadata')
         .get('coinType') || curs[0].code;
+
+      console.dir(this.model.toJSON());
 
       this.coinTypes = curs;
 

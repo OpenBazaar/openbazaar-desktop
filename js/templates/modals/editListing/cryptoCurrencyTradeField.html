@@ -4,7 +4,8 @@
     <%= ob.spinner({ className: 'center spinnerMd' }) %>
   <% } %>
   <div class="<%= ob.isFetching ? 'invisible' : '' %>">
-    <select id="editListingCoinType" name="metadata.coinType" class="clrBr clrP clrSh2" style="width: 100%">
+    <% const nameAttr = ob.isFetching ? '' : 'name="metadata.coinType"'; %>
+    <select id="editListingCoinType" <%= print(nameAttr) %> class="clrBr clrP clrSh2" style="width: 100%">
       <% curs.forEach(coin => { %>
         <option value="<%= coin.code %>" <% if (coin.code === ob.selected) print('selected') %>><%= coin.name %></option>
       <% }) %>
