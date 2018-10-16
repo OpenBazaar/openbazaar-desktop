@@ -2122,7 +2122,7 @@
   "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
   "cryptoTradingPair": {
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
-    "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
+    "tipMissingExchangeRate": "There is no exchange rate data available for %{coins}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
   "cryptoPriceBelowMarket": "%{amount}% under market",
   "cryptoPriceAboveMarket": "%{amount}% above market",
