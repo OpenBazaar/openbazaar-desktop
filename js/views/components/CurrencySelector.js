@@ -10,7 +10,8 @@ export default class extends baseVw {
   constructor(options = {}) {
     const controlTypes = ['checkbox', 'radio'];
 
-    if (options.controlType && !controlTypes.includes(options.controlType)) {
+    const controlType = options.initialState.controlType;
+    if (controlType && !controlTypes.includes(controlType)) {
       throw new Error('If provided the controlType must be a valid value.');
     }
 
