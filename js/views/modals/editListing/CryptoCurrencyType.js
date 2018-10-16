@@ -24,14 +24,12 @@ export default class extends BaseView {
     const receiveCur = this.model.get('metadata')
       .get('acceptedCurrencies')[0];
 
-
-    if (!this.receiveCurs.includes(receiveCur)) {
+    if (receiveCur && !this.receiveCurs.includes(receiveCur)) {
       // if the model has the receiving currency set to an unsupported cur,
       // we'll manually add that to the list of available options. Upon a
       // a save attempt, the user will be presented with an error prompting them
       // to select a valid currency.
       this.receiveCurs.push(receiveCur);
-      this.unsupportedReceiveCur = receiveCur;
     }
 
     this.receiveCurs = this.receiveCurs.map(cur => ({
@@ -41,6 +39,12 @@ export default class extends BaseView {
       }),
     }));
 
+    this.receiveCurs = this.receiveCurs.sort((a, b) => {
+      if (a.name < b.name) return -1;
+      if (a.name > b.name) return 1;
+      return 0;
+    });
+
     this.tradeField = this.createChild(CryptoCurrencyTradeField, {
       select2Opts: this.tradeSelect2Opts,
       initialState: {
@@ -48,16 +52,41 @@ export default class extends BaseView {
       },
     });
 
+    const showCryptoTradingPair = !!(this.coinTypes && this.coinTypes.length);
+    this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
+      className:
+        `cryptoTradingPairWrap row ${!showCryptoTradingPair ? 'invisible' : ''}`,
+      initialState: {
+        tradingPairClass: 'cryptoTradingPairLg rowSm',
+        exchangeRateClass: 'clrT2 tx6',
+        fromCur: showCryptoTradingPair ?
+          this.getCachedEl('#editListingCoinType').val() : 'BTC',
+        toCur: this.model.get('metadata')
+          .get('acceptedCurrencies')[0] ||
+          (this.receiveCurs[0] && this.receiveCurs[0].code) || 'BTC',
+      },
+    });
+
     this.getCoinTypes.done(curs => {
+      const selected = this.model.get('metadata')
+          .get('acceptedCurrencies')[0] || curs[0];
+
+      this.coinTypes = curs;
+
       this.tradeField.setState({
         curs,
         isFetching: false,
-        selected: this.model.get('metadata')
-          .get('acceptedCurrencies')[0] || curs[0],
+        selected,
+      });
+
+      this.cryptoTradingPair.$el.removeClass('invisible');
+      this.cryptoTradingPair.setState({
+        fromCur: selected,
       });
     });
 
     this.tradeField.render();
+    this.cryptoTradingPair.render();
 
     this.listenTo(app.settings, 'change:localCurrency', () => {
       this.getCachedEl('.js-marketValueWrap')
@@ -80,71 +109,15 @@ export default class extends BaseView {
     this.getCachedEl('.js-quantityCoinType')
       .text(e.target.value);
     this.cryptoTradingPair.setState({
-      toCur: this.getCachedEl('#editListingCoinType').val(),
+      toCur: e.target.value,
     });
   }
 
-  onChangeReceiveCur() {
-    if (this.unsupportedReceiveCur) {
-      this.receiveCurs = this.receiveCurs.filter(
-        cur => cur.code === this.unsupportedReceiveCur);
-      this.unsupportedReceiveCur = null;
-    }
+  onChangeReceiveCur(e) {
+    this.cryptoTradingPair.setState({
+      fromCur: e.target.value,
+    });
   }
-
-  // get currencies() {
-  //   // const coinTypes = getCurrenciesSortedByName()
-  //   //   .map(coin => {
-  //   //     const translationKey = `cryptoCurrencies.${coin}`;
-
-  //   //     return {
-  //   //       code: coin,
-  //   //       name: app.polyglot.t(translationKey) === translationKey ?
-  //   //         coin :
-  //   //         app.polyglot.t('cryptoCurrenciesNameCodePairing', {
-  //   //           name: app.polyglot.t(translationKey),
-  //   //           code: coin,
-  //   //         }),
-  //   //     };
-  //   //   });
-
-  //   getCurrenciesSortedByName()
-  //     .done(curs => {
-  //       console.time('mapSizzle');
-  //       curs.map(coin => {
-  //         const translationKey = `cryptoCurrencies.${coin}`;
-
-  //         return {
-  //           code: coin,
-  //           name: app.polyglot.t(translationKey) === translationKey ?
-  //             coin :
-  //             app.polyglot.t('cryptoCurrenciesNameCodePairing', {
-  //               name: app.polyglot.t(translationKey),
-  //               code: coin,
-  //             }),
-  //         };
-  //       });
-  //       console.timeEnd('mapSizzle');
-  //     });
-
-  //   return ['howdy', 'skipper'];
-
-  //   const coinType = this.model.get('metadata')
-  //     .get('coinType');
-
-  //   if (coinType && coinType.length && !coinTypes.find(coin => (coin.code === coinType))) {
-  //     // If the listing has a coin type that's not in our crypto currency list,
-  //     // we'll just plop it at the end of the list. It may be that our crypto cur list
-  //     // needs to be updated and/or the exchange rate api is misbehaving. In either case, if the
-  //     // exchange rate data is not available, a warning will be shown.
-  //     coinTypes.push({
-  //       code: coinType,
-  //       name: coinType,
-  //     });
-  //   }
-
-  //   return coinTypes;
-  // }
 
   get defaultFromCur() {
     return this.model.get('metadata').get('coinType') ||
@@ -177,6 +150,10 @@ export default class extends BaseView {
     };
   }
 
+  renderCryptoTradingPair() {
+
+  }
+
   render() {
     super.render();
 
@@ -200,22 +177,8 @@ export default class extends BaseView {
         this.tradeField.delegateEvents();
         this.getCachedEl('.js-cryptoCurrencyTradeContainer').html(this.tradeField.el);
 
-        const showCryptoTradingPair = !!(this.coinTypes && this.coinTypes.length);
-        if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
-        this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
-          className: 'cryptoTradingPairWrap row',
-          initialState: {
-            tradingPairClass: 'cryptoTradingPairLg rowSm',
-            exchangeRateClass: 'clrT2 tx6',
-            fromCur: 'BTC',
-            toCur: showCryptoTradingPair ?
-              this.getCachedEl('#editListingCoinType').val() : 'BTC',
-          },
-        });
-        this.getCachedEl('.js-cryptoTradingPairContainer').html(
-          this.cryptoTradingPair.render().el
-        );
-        this.cryptoTradingPair.$el.toggleClass('invisible', !showCryptoTradingPair);
+        this.cryptoTradingPair.delegateEvents();
+        this.getCachedEl('.js-cryptoTradingPairContainer').html(this.cryptoTradingPair.el);
       });
     });
 

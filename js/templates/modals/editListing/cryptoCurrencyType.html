@@ -57,7 +57,7 @@
           <option value="<%= coin.code %>" <% if (coin.code === 'BTC') print('selected') %>><%= coin.name %></option>
         <% }) %>
       </select>
-      <div class="clrT2 txSm helper"></div>
+      <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperReceive') %></div>
     </div>
   </div>
   <div class="col6 simpleFlexCol">

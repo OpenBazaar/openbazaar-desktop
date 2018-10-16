@@ -202,6 +202,9 @@ function bindLangChange() {
   langChangeBound = true;
 }
 
+// For some reason, if the promise returned by this function is already resolved, the
+// done() handler won't fire, but the then() handler will. So for now, please use then().
+// TODO: investigate why the done() handler isn't firing if the promise is already resolved.
 export function getCurrenciesSortedByName() {
   if (currenciesSortedByNameDeferred) {
     return currenciesSortedByNameDeferred.promise();

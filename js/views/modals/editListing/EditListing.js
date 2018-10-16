@@ -105,8 +105,11 @@ export default class extends BaseModal {
     this.shippingOptionViews = [];
     this.getCoinTypesDeferred = $.Deferred();
 
-    getCryptoCursByName().done(curs => this.getCoinTypesDeferred.resolve(curs))
-      .fail(() => this.getCoinTypesDeferred.resolve(getCryptoCursByCode()));
+    getCryptoCursByName().then(
+      curs => this.getCoinTypesDeferred.resolve(curs),
+      // todo: test the failure state
+      () => this.getCoinTypesDeferred.resolve(getCryptoCursByCode())
+    );
 
     loadTemplate('modals/editListing/uploadPhoto.html',
       uploadT => (this.uploadPhotoT = uploadT));

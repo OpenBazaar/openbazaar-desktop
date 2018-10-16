@@ -112,13 +112,14 @@ export default class extends BaseVw {
   }
 
   getConversionState(fromCur, toCur, fromCurAmount) {
-    const exchangeRate = getExchangeRate(toCur);
-    const toCurAmount = fromCurAmount * exchangeRate;
+    const fromCurRate = getExchangeRate(fromCur);
+    const toCurRate = getExchangeRate(toCur);
 
     return {
-      toCurAmount,
-      fromCurConvertedAmount: fromCurAmount / toCurAmount,
-      exchangeRateUnavailable: exchangeRate === undefined,
+      toCurAmount: (toCurRate / fromCurRate) * fromCurAmount,
+      fromCurConvertedAmount: (fromCurRate / toCurRate) * fromCurAmount,
+      exchangeRateUnavailable: fromCurRate === undefined ||
+        toCurRate === undefined,
     };
   }
 
