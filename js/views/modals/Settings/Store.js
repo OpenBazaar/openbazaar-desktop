@@ -56,10 +56,10 @@ export default class extends baseVw {
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
 
-    const commonModOptions = {
-      checkPreferredCurs: true,
+    const commonModState = {
       initialState: {
         preferredCurs,
+        checkPreferredCurs: true,
       },
     };
 
@@ -70,7 +70,7 @@ export default class extends baseVw {
       notSelected: 'deselected',
       showInvalid: true,
       showSpinner: false,
-      ...commonModOptions,
+      ...commonModState,
     });
 
     this.modsByID = new Moderators({
@@ -80,7 +80,7 @@ export default class extends baseVw {
       showInvalid: true,
       showSpinner: false,
       wrapperClasses: 'noMin',
-      ...commonModOptions,
+      ...commonModState,
     });
 
     this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsByIDFound(mOpts.guids));
@@ -91,7 +91,7 @@ export default class extends baseVw {
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
       showVerifiedOnly: true,
-      ...commonModOptions,
+      ...commonModState,
     });
 
     const modsToCheckOnVerifiedUpdate = [

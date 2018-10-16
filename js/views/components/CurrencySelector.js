@@ -81,7 +81,7 @@ export default class extends baseVw {
 
     if (state.activeCurs) {
       // Radio controls can only have one active currency.
-      if (state.controlType === 'radio' ) {
+      if (state.controlType === 'radio') {
         state.activeCurs = [state.activeCurs[0]];
       } else {
         state.activeCurs = [...new Set(state.activeCurs)];

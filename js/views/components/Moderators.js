@@ -36,7 +36,6 @@ export default class extends baseVw {
    * @param {boolean} options.showLoadBtn       - Show the load more button in the status bar.
    * @param {boolean} options.showSpinner       - Show the spinner in the status bar
    * @param {boolean} options.showVerifiedOnly  - Show only verified moderators
-   * @param {boolean} options.checkPreferredCurs - Should mod cards check the preferred currencies?
    */
 
   constructor(options = {}) {
@@ -65,6 +64,7 @@ export default class extends baseVw {
       ...options,
       initialState: {
         preferredCurs: [],
+        checkPreferredCurs: false,
         ...options.initialState,
       },
     };
@@ -308,8 +308,7 @@ export default class extends baseVw {
       controlsOnInvalid: this.options.controlsOnInvalid,
       initialState: {
         selectedState: this.options.cardState,
-        preferredCurs: this.getState().preferredCurs,
-        checkPreferredCurs: this.options.checkPreferredCurs,
+        ...this.getState(),
       },
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
