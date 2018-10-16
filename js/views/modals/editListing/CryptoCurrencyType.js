@@ -1,6 +1,5 @@
 import app from '../../../app';
 import '../../../lib/select2';
-// import { getCurrenciesSortedByName } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import { isJQPromise } from '../../../utils/object';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -52,24 +51,26 @@ export default class extends BaseView {
       },
     });
 
-    const showCryptoTradingPair = !!(this.coinTypes && this.coinTypes.length);
+    // Initially we'll show this as 'invisible' for spacing purposes. A spinner will
+    // show until the subsequent getCoinTypes() call returns.
     this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
-      className:
-        `cryptoTradingPairWrap row ${!showCryptoTradingPair ? 'invisible' : ''}`,
+      className: 'cryptoTradingPairWrap row invisible',
       initialState: {
         tradingPairClass: 'cryptoTradingPairLg rowSm',
         exchangeRateClass: 'clrT2 tx6',
-        fromCur: showCryptoTradingPair ?
-          this.getCachedEl('#editListingCoinType').val() : 'BTC',
-        toCur: this.model.get('metadata')
+        // TODO
+        // TODO
+        // TODO - don't assume BTC, hard-code to the exchange rate reference coin
+        fromCur: this.model.get('metadata')
           .get('acceptedCurrencies')[0] ||
           (this.receiveCurs[0] && this.receiveCurs[0].code) || 'BTC',
+        toCur: 'BTC',
       },
     });
 
     this.getCoinTypes.done(curs => {
       const selected = this.model.get('metadata')
-          .get('acceptedCurrencies')[0] || curs[0];
+        .get('coinType') || curs[0].code;
 
       this.coinTypes = curs;
 
@@ -81,8 +82,11 @@ export default class extends BaseView {
 
       this.cryptoTradingPair.$el.removeClass('invisible');
       this.cryptoTradingPair.setState({
-        fromCur: selected,
+        toCur: selected,
       });
+
+      this.getCachedEl('.js-quantityCoinType')
+        .text(selected);
     });
 
     this.tradeField.render();

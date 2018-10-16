@@ -1195,6 +1195,7 @@
       "coinType": "Trade",
       "quantity": "Inventory",
       "priceModifier": "Price Modifier (+/-)",
+      "priceModifierPlaceholder": "0.00 (market rate)",
       "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)",
       "lblReceive": "Receive"
     },

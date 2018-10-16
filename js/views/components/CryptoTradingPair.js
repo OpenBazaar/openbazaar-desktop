@@ -83,7 +83,7 @@ export default class extends BaseVw {
 
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
-        newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
+        newState.fromCur = ensureMainnetCode(state.fromCur);
 
         if (newState.fromCur > state.truncateCurAfter) {
           newState.fromCur = `${newState.fromCur.slice(0, state.truncateCurAfter)}…`;
@@ -91,7 +91,7 @@ export default class extends BaseVw {
       }
 
       if (typeof state.toCur === 'string') {
-        newState.toCur = ensureMainnetCode(state.toCur.toUpperCase());
+        newState.toCur = ensureMainnetCode(state.toCur);
 
         if (newState.toCur > state.truncateCurAfter) {
           newState.toCur = `${newState.toCur.slice(0, state.truncateCurAfter)}…`;

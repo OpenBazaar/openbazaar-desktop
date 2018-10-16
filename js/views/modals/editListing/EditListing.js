@@ -108,7 +108,9 @@ export default class extends BaseModal {
     getCryptoCursByName().then(
       curs => this.getCoinTypesDeferred.resolve(curs),
       // todo: test the failure state
-      () => this.getCoinTypesDeferred.resolve(getCryptoCursByCode())
+      () => this.getCoinTypesDeferred.resolve(
+        getCryptoCursByCode().map(cur => ({ code: cur, name: cur }))
+      )
     );
 
     loadTemplate('modals/editListing/uploadPhoto.html',
@@ -361,7 +363,6 @@ export default class extends BaseModal {
     reader.readAsArrayBuffer(file.slice(0, 64 * 1024));
   }
 
-  // todo: write a unit test for this
   truncateImageFilename(filename) {
     if (!filename || typeof filename !== 'string') {
       throw new Error('Please provide a filename as a string.');
@@ -916,6 +917,8 @@ export default class extends BaseModal {
         },
         metadata: {
           ...formData.metadata,
+          acceptedCurrencies: typeof formData.metadata.acceptedCurrencies === 'string' ?
+            [formData.metadata.acceptedCurrencies] : [],
           format: 'MARKET_PRICE',
         },
         shippingOptions: [],

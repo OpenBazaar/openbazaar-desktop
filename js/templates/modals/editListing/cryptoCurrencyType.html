@@ -29,7 +29,7 @@
     <div class="col6 simpleFlexCol">
       <label for="editListingCoinType" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.coinType') %></label>
       <% if (ob.errors['metadata.coinType']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.coinType'] })) %>
-      <div class="js-cryptoCurrencyTradeContainer"></div>
+      <div class="js-cryptoCurrencyTradeContainer marginTopAuto"></div>
     </div>
     <div class="col6 simpleFlexCol">
       <label for="editListingCryptoQuantity" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.quantity') %></label>
@@ -49,12 +49,12 @@
 <div class="flexRow gutterH">
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoReceive" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.lblReceive') %></label>
-    <div class="posR">
+    <div class="posR marginTopAuto">
       <% const receiveCur = ob.metadata.acceptedCurrencies[0]; %>
       <% if (ob.errors['metadata.acceptedCurrencies']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.acceptedCurrencies'] })) %>
       <select id="editListingCryptoReceive" name="metadata.acceptedCurrencies" class="clrBr clrP clrSh2 marginTopAuto">
         <% ob.receiveCurs.forEach(coin => { %>
-          <option value="<%= coin.code %>" <% if (coin.code === 'BTC') print('selected') %>><%= coin.name %></option>
+          <option value="<%= coin.code %>" <% if (coin.code === receiveCur) print('selected') %>><%= coin.name %></option>
         <% }) %>
       </select>
       <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperReceive') %></div>
@@ -63,8 +63,8 @@
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoPriceModifier" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.priceModifier') %></label>
     <% if (ob.errors['metadata.priceModifier']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.priceModifier'] })) %>
-    <div class="posR">
-      <input type="text" class="clrBr clrP clrSh2" name="metadata.priceModifier" id="editListingCryptoPriceModifier" value="<%= ob.metadata.priceModifier %>" placeholder="0.00" data-var-type="number">
+    <div class="posR marginTopAuto">
+      <input type="text" class="clrBr clrP clrSh2" name="metadata.priceModifier" id="editListingCryptoPriceModifier" value="<%= ob.metadata.priceModifier %>" placeholder="<%= ob.polyT('editListing.cryptoCurrencyType.priceModifierPlaceholder') %>" data-var-type="number">
       <div class="cryptoPriceModifierPercentSymbol clrT2 tx5">%</div>
     </div>
     <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperPriceModifier') %></div>

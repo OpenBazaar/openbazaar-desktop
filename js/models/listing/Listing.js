@@ -299,6 +299,7 @@ export default class extends BaseModel {
 
           if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
             dummySku.quantity = options.attrs.item.cryptoQuantity;
+            delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
           }
