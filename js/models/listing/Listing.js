@@ -150,7 +150,7 @@ export default class extends BaseModel {
 
     if (contractType === 'CRYPTOCURRENCY') {
       if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
-        addError('metadata.coinType', 'The coin type must be provided as a string.');
+        addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
       if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
