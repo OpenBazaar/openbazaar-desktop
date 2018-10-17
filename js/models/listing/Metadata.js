@@ -4,6 +4,7 @@ import is from 'is_js';
 import { upToFixed } from '../../utils/number';
 import { getCurrencyByCode } from '../../data/currencies';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
+import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
   constructor(attrs = {}, options = {}) {
@@ -131,9 +132,15 @@ export default class extends BaseModel {
         }));
       }
 
-      if (Array.isArray(attrs.acceptedCurrencies) && attrs.acceptedCurrencies.length > 1) {
-        addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted currency ' +
-          'is allowed.');
+      if (Array.isArray(attrs.acceptedCurrencies)) {
+        if (attrs.acceptedCurrencies.length > 1) {
+          addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted ' +
+            'currency is allowed.');
+        } else if (!isSupportedWalletCur(attrs.acceptedCurrencies[0])) {
+          addError('acceptedCurrencies',
+            app.polyglot.t('metadataModelErrors.unsupportedCoinType',
+              { cur: attrs.acceptedCurrencies[0] }));
+        }
       }
     }
 

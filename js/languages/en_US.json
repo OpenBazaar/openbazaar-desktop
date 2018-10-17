@@ -1980,7 +1980,8 @@
     "priceModifierRange": "The price modifier must be between %{min} and %{max}",
     "provideAcceptedCurrency": "Please select at least one accepted currency.",
     "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
-    "provideCoinType": "Please select a coin to trade."
+    "provideCoinType": "Please select a coin to trade.",
+    "unsupportedCoinType": "%{cur} is not supported by your wallet. Please select a different currency."
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
