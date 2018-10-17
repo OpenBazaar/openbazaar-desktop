@@ -42,21 +42,24 @@ export function processMessage(message) {
     if (node.nodeType === 3) {
       // It's a text node. Loop through each word and if it's a guid or handle we keep track of it
       // so later we'll wrap it in an anchor element.
-      node.textContent.replace(/\r\n/g, ' ')
+      const words = node.textContent.replace(/\r\n/g, ' ')
         .replace('\n', ' ')
-        .match(/\S+\s*/g)
-        .forEach(word => {
-          const w = word.trim();
-          if (wordsToAnchorify.includes(w)) return;
+        .match(/\S+\s*/g);
 
-          if ((w.startsWith('@') && w.length > 1) ||
-            (w.startsWith('ob://') && w.length > 5) ||
-            (w.startsWith('http://') && w.length >= 11) ||
-            (w.startsWith('https://') && w.length >= 12) ||
-            (w.startsWith('www.') && w.length >= 8)) {
-            wordsToAnchorify.push(w);
-          }
-        });
+      if (!words) return;
+
+      words.forEach(word => {
+        const w = word.trim();
+        if (wordsToAnchorify.includes(w)) return;
+
+        if ((w.startsWith('@') && w.length > 1) ||
+          (w.startsWith('ob://') && w.length > 5) ||
+          (w.startsWith('http://') && w.length >= 11) ||
+          (w.startsWith('https://') && w.length >= 12) ||
+          (w.startsWith('www.') && w.length >= 8)) {
+          wordsToAnchorify.push(w);
+        }
+      });
     } else {
       node.childNodes.forEach(child => findWords(child));
     }
