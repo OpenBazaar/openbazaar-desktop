@@ -365,6 +365,10 @@ svg {
     cursor: pointer;
   }
 
+  .unclickable {
+    pointer-events: none;
+  }
+
   .lineHeight1 {
     line-height: 1;
   }

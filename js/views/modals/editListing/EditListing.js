@@ -16,6 +16,7 @@ import {
   getCurrenciesSortedByName as getCryptoCursByName,
   getCurrenciesSortedByCode as getCryptoCursByCode,
 } from '../../../data/cryptoListingCurrencies';
+import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
@@ -35,6 +36,7 @@ import InventoryManagement from './InventoryManagement';
 import SkuField from './SkuField';
 import UnsupportedCurrency from './UnsupportedCurrency';
 import CryptoCurrencyType from './CryptoCurrencyType';
+import CryptoCurSelector from '../../components/CurrencySelector';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -1482,6 +1484,21 @@ export default class extends BaseModal {
         });
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);
+
+        const activeCurs = this.model.get('metadata')
+          .get('acceptedCurrencies');
+        if (this.cryptoCurSelector) this.cryptoCurSelector.remove();
+        this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
+          initialState: {
+            currencies: [
+              ...activeCurs,
+              ...supportedWalletCurs,
+            ],
+            activeCurs,
+          },
+        });
+        this.getCachedEl('.js-cryptoCurSelectContainer')
+          .html(this.cryptoCurSelector.render().el);
 
         setTimeout(() => {
           if (!this.rendered) {
