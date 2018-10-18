@@ -1134,7 +1134,8 @@
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons",
       "inventoryManagement": "Inventory Management",
-      "variantInventory": "Variant Inventory"
+      "variantInventory": "Variant Inventory",
+      "acceptedCurrencies": "Accepted Currencies"
     },
     "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -1155,6 +1156,7 @@
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperAcceptedCurrencies": "Accepting all coins will attract the largest audience",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
