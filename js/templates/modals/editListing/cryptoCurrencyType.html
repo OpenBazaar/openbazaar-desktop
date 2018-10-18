@@ -50,11 +50,10 @@
   <div class="col6 simpleFlexCol">
     <label for="editListingCryptoReceive" class="required"><%= ob.polyT('editListing.cryptoCurrencyType.lblReceive') %></label>
     <div class="posR marginTopAuto">
-      <% const receiveCur = ob.metadata.acceptedCurrencies[0]; %>
       <% if (ob.errors['metadata.acceptedCurrencies']) print(ob.formErrorTmpl({ errors: ob.errors['metadata.acceptedCurrencies'] })) %>
       <select id="editListingCryptoReceive" name="metadata.acceptedCurrencies" class="clrBr clrP clrSh2 marginTopAuto">
         <% ob.receiveCurs.forEach(coin => { %>
-          <option value="<%= coin.code %>" <% if (coin.code === receiveCur) print('selected') %>><%= coin.name %></option>
+          <option value="<%= coin.code %>" <% if (coin.code === ob.receiveCur) print('selected') %>><%= coin.name %></option>
         <% }) %>
       </select>
       <div class="clrT2 txSm helper"><%= ob.polyT('editListing.cryptoCurrencyType.helperReceive') %></div>

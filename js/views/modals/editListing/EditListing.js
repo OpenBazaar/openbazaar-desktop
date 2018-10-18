@@ -105,6 +105,28 @@ export default class extends BaseModal {
     this.shippingOptionViews = [];
     this.getCoinTypesDeferred = $.Deferred();
 
+    // Since the UI is driven from the model and since the Receive field
+    // and the Accepted Currencies select list are both driven by the same
+    // model field (acceptdCurrencies), we'll keep track of their values
+    // seperately, so they don't interfere with each other.
+    const getAcceptedCurs = () => this.model.get('metadata')
+      .get('acceptedCurrencies');
+    const getReceiveCur = () => (
+      this.model.isCrypto ?
+        getAcceptedCurs().length && getAcceptedCurs()[0] || null :
+        null
+    );
+    this._receiveCryptoCur = getReceiveCur();
+    this._acceptedCurs = getAcceptedCurs();
+    this.listenTo(this.model.get('metadata'),
+      'change:acceptedCurrencies', () => {
+        if (this.model.isCrypto) {
+          this._receiveCryptoCur = getReceiveCur();
+        } else {
+          this._acceptedCurs = getAcceptedCurs();
+        }
+      });
+
     getCryptoCursByName().then(
       curs => this.getCoinTypesDeferred.resolve(curs),
       // todo: test the failure state
@@ -305,6 +327,8 @@ export default class extends BaseModal {
 
     if (!data.fromCryptoTypeChange) {
       if (e.target.value === 'CRYPTOCURRENCY') {
+        this.model.get('metadata')
+          .set('acceptedCurrencies', [this._receiveCryptoCur]);
         this.getCachedEl('#editListingCryptoContractType')
           .val('CRYPTOCURRENCY');
         this.getCachedEl('#editListingCryptoContractType')
@@ -317,6 +341,8 @@ export default class extends BaseModal {
   onChangeCryptoContractType(e) {
     if (e.target.value === 'CRYPTOCURRENCY') return;
 
+    this.model.get('metadata')
+      .set('acceptedCurrencies', this._acceptedCurs);
     this.getCachedEl('#editContractType')
       .val(e.target.value);
     this.getCachedEl('#editContractType')
@@ -1452,6 +1478,7 @@ export default class extends BaseModal {
         this.cryptoCurrencyType = this.createChild(CryptoCurrencyType, {
           model: this.model,
           getCoinTypes: this.getCoinTypesDeferred.promise(),
+          getReceiveCur: () => this._receiveCryptoCur,
         });
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);

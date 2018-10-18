@@ -7,13 +7,6 @@ import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
-  constructor(attrs = {}, options = {}) {
-    return super({
-      acceptedCurrencies: [],
-      ...attrs,
-    }, options);
-  }
-
   defaults() {
     return {
       contractType: 'PHYSICAL_GOOD',
@@ -21,8 +14,9 @@ export default class extends BaseModel {
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
       coinDivisibility: defaultQuantityBaseUnit,
-      // priceModifier: 0,
-      acceptedCurrencies: [],
+      acceptedCurrencies: [
+        ...(app && app.profile && app.profile.get('currencies') || []),
+      ],
     };
   }
 
@@ -129,7 +123,7 @@ export default class extends BaseModel {
 
       if (unsupportedCurrencies.length) {
         const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
-          'metadataModelErrors.unsupportedCoinType' :
+          'metadataModelErrors.unsupportedAcceptedCur' :
           'metadataModelErrors.unsupportedAcceptedCurs';
         const translationArgKey = attrs.contractType === 'CRYPTOCURRENCY' ?
           'cur' : 'curs';

@@ -18,10 +18,20 @@ export default class extends BaseView {
     }
 
     super(options);
+
+    this.options = {
+      getReceiveCur: () => this.model.get('metadata')
+        .get('acceptedCurrencies')[0],
+      ...options,
+    };
+
+    if (typeof this.options.getReceiveCur !== 'function') {
+      throw new Error('If providing a getReceiveCur options, it must be a function.');
+    }
+
     this.getCoinTypes = options.getCoinTypes;
     this.receiveCurs = supportedWalletCurs();
-    const receiveCur = this.model.get('metadata')
-      .get('acceptedCurrencies')[0];
+    const receiveCur = this.options.getReceiveCur();
 
     if (receiveCur && !this.receiveCurs.includes(receiveCur)) {
       // if the model has the receiving currency set to an unsupported cur,
@@ -61,8 +71,7 @@ export default class extends BaseView {
         // TODO
         // TODO
         // TODO - don't assume BTC, hard-code to the exchange rate reference coin
-        fromCur: this.model.get('metadata')
-          .get('acceptedCurrencies')[0] ||
+        fromCur: this.options.getReceiveCur() ||
           (this.receiveCurs[0] && this.receiveCurs[0].code) || 'BTC',
         toCur: 'BTC',
       },
@@ -170,6 +179,7 @@ export default class extends BaseView {
           errors: this.model.validationError || {},
           viewListingsT,
           ...this.model.toJSON(),
+          receiveCur: this.options.getReceiveCur(),
         }));
 
         this.getCachedEl('#editListingCryptoContractType').select2({
