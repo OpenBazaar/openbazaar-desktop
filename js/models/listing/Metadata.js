@@ -116,7 +116,27 @@ export default class extends BaseModel {
         app.polyglot.t(translationKey));
     } else if (attrs.acceptedCurrencies.find(cur => (typeof cur !== 'string' || !cur)) !==
       undefined) {
+      // Ensure only non-empty strings are provided as accepted currencies
       addError('acceptedCurrencies', 'Accepted currency values must be non-empty strings.');
+    } else {
+      // Ensure only supported wallet currencies are provided as accepted currencies
+      const acceptedCurs = attrs.acceptedCurrencies.slice(
+        0,
+        attrs.contractType === 'CRYPTOCURRENCY' ? 1 : attrs.acceptedCurrencies.length
+      );
+      const unsupportedCurrencies = acceptedCurs
+        .filter(cur => !isSupportedWalletCur(cur));
+
+      if (unsupportedCurrencies.length) {
+        const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
+          'metadataModelErrors.unsupportedCoinType' :
+          'metadataModelErrors.unsupportedAcceptedCurs';
+        const translationArgKey = attrs.contractType === 'CRYPTOCURRENCY' ?
+          'cur' : 'curs';
+        addError('acceptedCurrencies',
+          app.polyglot.t(translationKey,
+            { [translationArgKey]: unsupportedCurrencies.join(', ') }));
+      }
     }
 
     if (attrs.contractType === 'CRYPTOCURRENCY') {
@@ -132,15 +152,9 @@ export default class extends BaseModel {
         }));
       }
 
-      if (Array.isArray(attrs.acceptedCurrencies)) {
-        if (attrs.acceptedCurrencies.length > 1) {
-          addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted ' +
-            'currency is allowed.');
-        } else if (!isSupportedWalletCur(attrs.acceptedCurrencies[0])) {
-          addError('acceptedCurrencies',
-            app.polyglot.t('metadataModelErrors.unsupportedCoinType',
-              { cur: attrs.acceptedCurrencies[0] }));
-        }
+      if (Array.isArray(attrs.acceptedCurrencies) && attrs.acceptedCurrencies.length > 1) {
+        addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted ' +
+          'currency is allowed.');
       }
     }
 
