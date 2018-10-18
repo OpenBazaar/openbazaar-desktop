@@ -3,7 +3,7 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { polyTFallback } from '../../utils/templateHelpers';
-import { ensureMainnetCode, isSupportedWalletCur } from '../../data/walletCurrencies';
+import { isSupportedWalletCur } from '../../data/walletCurrencies';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {
