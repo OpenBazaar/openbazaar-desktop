@@ -7,9 +7,8 @@
            <% if (ob.controlType === 'radio') {%>
              name="currencies"
            <%} %>
-           <% if (!cur.walletSupported) print('disabled') %>
            <% if (cur.active && cur.walletSupported) print('checked') %>>
-    <label class="gutterHSm txB" for="<%=`curSel${cur.code}` %>">
+    <label class="gutterHSm txB <% if (!cur.walletSupported) print('disabled') %>" for="<%=`curSel${cur.code}` %>">
       <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
       <span class="curName"><%= cur.displayName %></span>
     </label>
