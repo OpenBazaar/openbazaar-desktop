@@ -66,7 +66,7 @@ export default class extends baseVw {
     const controlTypes = ['checkbox', 'radio'];
     const curState = this.getState();
 
-    if (state.hasOwnProperty('controlType') !== undefined &&
+    if (state.hasOwnProperty('controlType') &&
       !controlTypes.includes(state.controlType)) {
       throw new Error('If provided the controlType must be a valid value.');
     }
@@ -108,7 +108,7 @@ export default class extends baseVw {
       state.currencies ||
       !!processedState.sort !== !!state.sort
     ) {
-      processedState.processedCurs = state.currencies
+      processedState.processedCurs = processedState.currencies
         .map(cur => ({
           code: cur,
           displayName: app.polyglot.t(`cryptoCurrencies.${cur}`, {
