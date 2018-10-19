@@ -7,11 +7,12 @@
   input[type="checkbox"] + label {
     line-height: 42px; // Makes the entire row clickable.
 
-  &:before {
-     // Tweak the checkbox size so it centers correctly. Otherwise the
-     // anti-aliasing makes it too high or two low.
-     font-size: 24px;
-   }
+    &:before {
+      // Tweak the checkbox size so it centers correctly. Otherwise the
+      // anti-aliasing makes it too high or two low.
+      font-size: 24px;
+      font-weight: 400;
+    }
   }
 
   input[type="radio"] {
