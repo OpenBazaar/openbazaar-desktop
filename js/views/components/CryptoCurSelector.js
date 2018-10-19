@@ -25,12 +25,23 @@ export default class extends baseVw {
       throw new Error('If activeCurs are provided, they must be an array.');
     }
 
+    if (options.initialState.disabledCurs &&
+      !Array.isArray(options.initialState.disabledCurs)) {
+      throw new Error('If disabledCurs are provided, they must be an array.');
+    }
+
+    const disabledCurs = options.initialState.disabledCurs ?
+      options.initialState.disabledCurs :
+      options.initialState.currencies.filter(c => !isSupportedWalletCur(c));
+
     const opts = {
       ...options,
       initialState: {
         controlType: 'checkbox',
         currencies: [],
         activeCurs: [],
+        disabledCurs,
+        sort: false,
         ...options.initialState,
       },
     };
@@ -55,18 +66,19 @@ export default class extends baseVw {
   handleCurClick(e) {
     const code = $(e.target).attr('data-code');
     let activeCurs = [...this.getState().activeCurs];
-    const active = !activeCurs.includes(code);
+    // Toggle the current active state when clicked.
+    const nowActive = !activeCurs.includes(code);
 
     if (this.getState().controlType === 'radio') {
       activeCurs = [code];
     } else {
-      if (active) activeCurs.push(code);
+      if (nowActive) activeCurs.push(code);
       else activeCurs = activeCurs.filter(c => c !== code);
     }
 
     this.trigger('currencyClicked', {
       currency: code,
-      active,
+      active: nowActive,
       activeCurs,
     });
 
@@ -78,15 +90,21 @@ export default class extends baseVw {
   setState(state = {}, options = {}) {
     const curState = this.getState();
     // De-dupe any passed in currencies.
-    if (state.currencies) state.currencies = [...new Set(state.currencies)];
+    state.currencies = state.currencies && Array.isArray(state.currencies) ?
+      [...new Set(state.currencies)] : [];
 
-    if (state.activeCurs) {
-      // Radio controls can only have one active currency.
-      if (state.controlType === 'radio') {
-        state.activeCurs = [state.activeCurs[0]];
-      } else {
-        state.activeCurs = [...new Set(state.activeCurs)];
-      }
+    state.activeCurs = state.activeCurs && Array.isArray(state.activeCurs) ?
+      [...new Set(state.activeCurs)] : [];
+
+    // Remove any disabled currencies from the active list.
+    if (state.disabledCurs && state.disabledCurs.length) {
+      state.activeCurs = state.activeCurs.filter(c =>
+        !state.disabledCurs.includes(c));
+    }
+
+    // Radio controls can only have one active currency.
+    if (state.activeCurs.length && state.controlType === 'radio') {
+      state.activeCurs = [state.activeCurs[0]];
     }
 
     const processedState = {
@@ -96,33 +114,30 @@ export default class extends baseVw {
         curState.processedCurs : [],
     };
 
-    if (Array.isArray(processedState.currencies) &&
-      (
-        curState.sort !== processedState.sort ||
-        !_.isEqual(curState.currencies, state.currencies)
-      )) {
+    // If news currencies have been passed in, replace the old ones.
+    if (processedState.currencies.length &&
+      !_.isEqual(curState.currencies, processedState.currencies)) {
       processedState.processedCurs = processedState.currencies
         .map(cur => {
-          const code = ensureMainnetCode(cur);
-          const displayName = polyTFallback(`cryptoCurrencies.${code}`, cur);
+          const dCode = ensureMainnetCode(cur);
+          const displayName = polyTFallback(`cryptoCurrencies.${dCode}`, dCode);
 
           return {
-            code,
+            code: cur,
             displayName,
-            walletSupported: isSupportedWalletCur(code),
-            active: processedState.activeCurs.includes(code),
+            disabled: processedState.disabledCurs.includes(cur),
+            active: processedState.activeCurs.includes(cur),
           };
         });
 
       const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
-      if (processedState.processedCurs.sort) {
+      if (processedState.sort) {
         processedState.processedCurs.sort((a, b) =>
           a.displayName.localeCompare(b.displayName, locale,
             { sensitivity: 'base' }));
       }
-    }
-
-    if (!_.isEqual(curState.activeCurs, processedState.activeCurs)) {
+    } else {
+      // Handle changes to the active state if the currencies didn't change.
       processedState.processedCurs.map(cur => {
         cur.active = processedState.activeCurs.includes(cur.code);
         return cur;

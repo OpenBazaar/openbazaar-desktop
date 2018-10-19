@@ -46,6 +46,7 @@ export default class extends baseVw {
       initialState: {
         currencies: supportedWalletCurs(),
         activeCurs: preferredCurs,
+        sort: true,
       },
     });
 
