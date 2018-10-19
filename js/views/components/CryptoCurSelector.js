@@ -1,35 +1,11 @@
-import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
-import { polyTFallback } from '../../utils/templateHelpers';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    const controlTypes = ['checkbox', 'radio'];
-
-    const controlType = options.initialState.controlType;
-    if (controlType && !controlTypes.includes(controlType)) {
-      throw new Error('If provided the controlType must be a valid value.');
-    }
-
-    if (!options.initialState.currencies ||
-      !Array.isArray(options.initialState.currencies)) {
-      throw new Error('Please provide an initial array of currencies.');
-    }
-
-    if (options.initialState.activeCurs &&
-      !Array.isArray(options.initialState.activeCurs)) {
-      throw new Error('If activeCurs are provided, they must be an array.');
-    }
-
-    if (options.initialState.disabledCurs &&
-      !Array.isArray(options.initialState.disabledCurs)) {
-      throw new Error('If disabledCurs are provided, they must be an array.');
-    }
-
     const disabledCurs = options.initialState.disabledCurs ?
       options.initialState.disabledCurs :
       options.initialState.currencies.filter(c => !isSupportedWalletCur(c));
@@ -82,68 +58,79 @@ export default class extends baseVw {
       activeCurs,
     });
 
-    this.setState({
-      activeCurs,
-    });
+    this.setState({ activeCurs });
   }
 
+
   setState(state = {}, options = {}) {
+    const controlTypes = ['checkbox', 'radio'];
     const curState = this.getState();
 
+    if (state.hasOwnProperty('controlType') !== undefined &&
+      !controlTypes.includes(state.controlType)) {
+      throw new Error('If provided the controlType must be a valid value.');
+    }
+
+    const checkCurArray = (fieldName => {
+      if (state.hasOwnProperty(fieldName) &&
+        !Array.isArray(state[fieldName])) {
+        throw new Error(`If provided the ${fieldName} must be an array.`);
+      }
+    });
+
+    ['currencies', 'activeCurs', 'disabledCurs']
+      .forEach(field => checkCurArray(field));
+
+    // This is a derived field and should not be directly set
+    delete state.processedCurs;
+
     const processedState = {
+      ...curState,
       ...state,
-      // This is a derived field and should not be directly set
-      processedCurs: Array.isArray(curState.processedCurs) ?
-        curState.processedCurs : [],
+      currencies: Array.isArray(state.currencies) ?
+        [...new Set(state.currencies)] : curState.currencies,
     };
 
-    // De-dupe any passed in currencies.
-    if (state.currencies && Array.isArray(state.currencies)) {
-      processedState.currencies = [...new Set(state.currencies)];
+    // Remove any disabled currencies from the active list.
+    if (state.activeCurs || state.disabledCurs) {
+      processedState.activeCurs = processedState.activeCurs
+        .filter(c => !processedState.disabledCurs.includes(c));
     }
 
-    // De-dupe any passed in active currencies
-    if (state.activeCurs && Array.isArray(state.activeCurs)) {
-      let activeCurs = [...new Set(state.activeCurs)];
-
-      // Remove any disabled currencies from the active list.
-      if (state.disabledCurs && state.disabledCurs.length) {
-        activeCurs = activeCurs.filter(c => !state.disabledCurs.includes(c));
-      }
-
-      // Radio controls can only have one active currency.
-      if (state.controlType === 'radio') activeCurs = [state.activeCurs[0]];
-
-      processedState.activeCurs = activeCurs;
+    // Radio controls can only have one active currency.
+    if (state.activeCurs && processedState.controlType === 'radio') {
+      processedState.activeCurs = [processedState.activeCurs[0]];
     }
 
-    // If new currencies have been passed in, replace the old ones.
-    if (processedState.currencies && processedState.currencies.length &&
-      !_.isEqual(curState.currencies, processedState.currencies)) {
-      processedState.processedCurs = processedState.currencies
-        .map(cur => {
-          const displayName = polyTFallback(`cryptoCurrencies.${cur}`, cur);
+    // If necessary, create the processed curs
+    if (
+      !processedState.processedCurs ||
+      state.currencies ||
+      !!processedState.sort !== !!state.sort
+    ) {
+      processedState.processedCurs = state.currencies
+        .map(cur => ({
+          code: cur,
+          displayName: app.polyglot.t(`cryptoCurrencies.${cur}`, {
+            _: cur,
+          }),
+          disabled: processedState.disabledCurs.includes(cur),
+          active: processedState.activeCurs.includes(cur),
+        }));
 
-          return {
-            code: cur,
-            displayName,
-            disabled: processedState.disabledCurs.includes(cur),
-            active: processedState.activeCurs.includes(cur),
-          };
-        });
-
-      const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
       if (processedState.sort) {
+        const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
         processedState.processedCurs.sort((a, b) =>
           a.displayName.localeCompare(b.displayName, locale,
             { sensitivity: 'base' }));
       }
-    } else {
-      // Handle changes to the active state if the currencies didn't change.
-      processedState.processedCurs.map(cur => {
-        cur.active = processedState.activeCurs.includes(cur.code);
-        return cur;
-      });
+    } else if (state.activeCurs || state.disabledCurs) {
+      // If active or disabled lists are passed in, we'll assume they're
+      // different and ensure the processedCurrencies list reflects them.
+      processedState.processedCurs = processedState.processedCurs.map(cur => ({
+        active: processedState.activeCurs.includes(cur.code),
+        disabled: processedState.disabledCurs.includes(cur.code),
+      }));
     }
 
     super.setState(processedState, options);
