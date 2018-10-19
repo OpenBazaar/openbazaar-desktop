@@ -36,7 +36,7 @@ import InventoryManagement from './InventoryManagement';
 import SkuField from './SkuField';
 import UnsupportedCurrency from './UnsupportedCurrency';
 import CryptoCurrencyType from './CryptoCurrencyType';
-import CryptoCurSelector from '../../components/CurrencySelector';
+import CryptoCurSelector from '../../components/CryptoCurSelector';
 
 export default class extends BaseModal {
   constructor(options = {}) {
