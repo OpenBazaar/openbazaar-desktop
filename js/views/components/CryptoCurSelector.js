@@ -3,7 +3,7 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { polyTFallback } from '../../utils/templateHelpers';
-import { ensureMainnetCode, isSupportedWalletCur } from '../../data/walletCurrencies';
+import { isSupportedWalletCur } from '../../data/walletCurrencies';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {
@@ -89,23 +89,6 @@ export default class extends baseVw {
 
   setState(state = {}, options = {}) {
     const curState = this.getState();
-    // De-dupe any passed in currencies.
-    state.currencies = state.currencies && Array.isArray(state.currencies) ?
-      [...new Set(state.currencies)] : [];
-
-    state.activeCurs = state.activeCurs && Array.isArray(state.activeCurs) ?
-      [...new Set(state.activeCurs)] : [];
-
-    // Remove any disabled currencies from the active list.
-    if (state.disabledCurs && state.disabledCurs.length) {
-      state.activeCurs = state.activeCurs.filter(c =>
-        !state.disabledCurs.includes(c));
-    }
-
-    // Radio controls can only have one active currency.
-    if (state.activeCurs.length && state.controlType === 'radio') {
-      state.activeCurs = [state.activeCurs[0]];
-    }
 
     const processedState = {
       ...state,
@@ -114,13 +97,32 @@ export default class extends baseVw {
         curState.processedCurs : [],
     };
 
-    // If news currencies have been passed in, replace the old ones.
-    if (processedState.currencies.length &&
+    // De-dupe any passed in currencies.
+    if (state.currencies && Array.isArray(state.currencies)) {
+      processedState.currencies = [...new Set(state.currencies)];
+    }
+
+    // De-dupe any passed in active currencies
+    if (state.activeCurs && Array.isArray(state.activeCurs)) {
+      let activeCurs = [...new Set(state.activeCurs)];
+
+      // Remove any disabled currencies from the active list.
+      if (state.disabledCurs && state.disabledCurs.length) {
+        activeCurs = activeCurs.filter(c => !state.disabledCurs.includes(c));
+      }
+
+      // Radio controls can only have one active currency.
+      if (state.controlType === 'radio') activeCurs = [state.activeCurs[0]];
+
+      processedState.activeCurs = activeCurs;
+    }
+
+    // If new currencies have been passed in, replace the old ones.
+    if (processedState.currencies && processedState.currencies.length &&
       !_.isEqual(curState.currencies, processedState.currencies)) {
       processedState.processedCurs = processedState.currencies
         .map(cur => {
-          const dCode = ensureMainnetCode(cur);
-          const displayName = polyTFallback(`cryptoCurrencies.${dCode}`, dCode);
+          const displayName = polyTFallback(`cryptoCurrencies.${cur}`, cur);
 
           return {
             code: cur,

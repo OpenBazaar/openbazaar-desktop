@@ -30,7 +30,6 @@ export default class extends BaseVw {
       initialState: {
         selectedState: 'unselected',
         preferredCurs: [],
-        checkPreferredCurs: false,
         ...options.initialState,
       },
     };
@@ -119,7 +118,7 @@ export default class extends BaseVw {
   render() {
     super.render();
 
-    const showPreferredWarning = this.getState().checkPreferredCurs &&
+    const showPreferredWarning = this.getState().preferredCurs.length &&
       !this.hasPreferredCur;
 
     const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));

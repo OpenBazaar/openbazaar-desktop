@@ -60,7 +60,6 @@ export default class extends baseVw {
     const commonModState = {
       initialState: {
         preferredCurs,
-        checkPreferredCurs: true,
       },
     };
 

@@ -64,7 +64,6 @@ export default class extends baseVw {
       ...options,
       initialState: {
         preferredCurs: [],
-        checkPreferredCurs: false,
         ...options.initialState,
       },
     };
@@ -308,7 +307,7 @@ export default class extends baseVw {
       controlsOnInvalid: this.options.controlsOnInvalid,
       initialState: {
         selectedState: this.options.cardState,
-        ...this.getState(),
+        preferredCurs: this.getState().preferredCurs,
       },
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
