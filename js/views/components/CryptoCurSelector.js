@@ -133,7 +133,7 @@ export default class extends baseVw {
   }
 
   render() {
-    loadTemplate('components/currencySelector.html', (t) => {
+    loadTemplate('components/cryptoCurSelector.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));

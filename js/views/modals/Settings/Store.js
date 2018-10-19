@@ -8,7 +8,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import Moderators from '../../components/Moderators';
-import CurrencySelector from '../../components/CurrencySelector';
+import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
