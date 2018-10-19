@@ -58,7 +58,7 @@
     "mocha": "^2.5.3",
     "node-fetch": "^2.1.2",
     "node-sass": "^4.7.2",
-    "nodemon": "^1.9.2",
+    "nodemon": "^1.18.4",
     "npm-run-all": "^2.2.0",
     "pre-commit": "^1.2.2",
     "pre-push": "^0.1.1",
