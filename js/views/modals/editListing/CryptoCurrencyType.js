@@ -40,6 +40,7 @@ export default class extends BaseView {
       // to select a valid currency.
       this.receiveCurs.push(receiveCur);
     }
+    this.receiveCurs.push('FAT-BILLY');
 
     this.receiveCurs = this.receiveCurs.map(cur => ({
       code: cur,

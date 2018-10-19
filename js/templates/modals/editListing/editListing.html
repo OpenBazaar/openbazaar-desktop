@@ -279,7 +279,13 @@
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 acceptedCurrenciesSection">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.acceptedCurrencies') %></h2>
         <hr class="clrBr rowMd" />
-        <div class="js-cryptoCurSelectContainer"></div>
+        <%
+          if (ob.errors['metadata.acceptedCurrencies'] &&
+            ob.metadata.contractType !== 'CRYPTOCURRENCY') {
+            print(ob.formErrorTmpl({ errors: ob.errors['metadata.acceptedCurrencies'] }));
+          }
+        %>
+        <div class="js-cryptoCurSelectContainer rowSm"></div>
         <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperAcceptedCurrencies') %></div>
       </section>      
 

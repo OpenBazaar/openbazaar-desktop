@@ -928,6 +928,9 @@ export default class extends BaseModal {
       formData.metadata = {
         ...formData.metadata,
         format: 'FIXED_PRICE',
+        acceptedCurrencies: this.cryptoCurSelector ?
+          this.cryptoCurSelector.getState().activeCurs :
+          metadata.get('acceptedCurrencies'),
       };
     } else {
       item.unset('condition');
@@ -1487,15 +1490,23 @@ export default class extends BaseModal {
 
         const activeCurs = this.model.get('metadata')
           .get('acceptedCurrencies');
-        if (this.cryptoCurSelector) this.cryptoCurSelector.remove();
+        let curSelectorInitialState = {
+          currencies: [
+            ...activeCurs,
+            ...supportedWalletCurs(),
+          ],
+          activeCurs,
+          sort: true,
+        };
+        if (this.cryptoCurSelector) {
+          this.cryptoCurSelector.remove();
+          curSelectorInitialState = {
+            ...curSelectorInitialState,
+            ...this.cryptoCurSelector.getState(),
+          };
+        }
         this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
-          initialState: {
-            currencies: [
-              ...activeCurs,
-              ...supportedWalletCurs,
-            ],
-            activeCurs,
-          },
+          initialState: curSelectorInitialState,
         });
         this.getCachedEl('.js-cryptoCurSelectContainer')
           .html(this.cryptoCurSelector.render().el);
