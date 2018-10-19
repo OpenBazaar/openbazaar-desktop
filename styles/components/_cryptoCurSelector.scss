@@ -1,0 +1,39 @@
+.curSelector {
+  .curRow {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+
+  input[type="checkbox"] + label {
+    line-height: 42px; // Makes the entire row clickable.
+
+  &:before {
+     // Tweak the checkbox size so it centers correctly. Otherwise the
+     // anti-aliasing makes it too high or two low.
+     font-size: 24px;
+   }
+  }
+
+  input[type="radio"] {
+    margin-right: 0.6em;
+
+  & + label {
+      display: flex;
+      align-items: center;
+      line-height: 42px; // Makes the entire row clickable.
+    }
+  }
+
+  .cryptoIcon {
+    // add visual space for icons after the checkbox
+    margin-left: 0.2em;
+  }
+
+  .curName {
+    // Bump text down to center it visually. It looks off because it has
+    // ascenders but not decenders most of the time.
+    position: relative;
+      top: 0.09em;
+    }
+  }
+}
