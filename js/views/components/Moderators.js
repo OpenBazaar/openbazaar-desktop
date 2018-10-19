@@ -1,12 +1,13 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import loadTemplate from '../../utils/loadTemplate';
 import app from '../../app';
+import { anySupportedByWallet } from '../../data/walletCurrencies';
+import loadTemplate from '../../utils/loadTemplate';
 import { getSocket } from '../../utils/serverConnect';
-import { openSimpleMessage } from '../modals/SimpleMessage';
 import Moderators from '../../collections/Moderators';
 import Moderator from '../../models/profile/Profile';
 import baseVw from '../baseVw';
+import { openSimpleMessage } from '../modals/SimpleMessage';
 import ModCard from './ModeratorCard';
 import ModeratorsStatus from './ModeratorsStatus';
 
@@ -61,6 +62,10 @@ export default class extends baseVw {
       showLoadBtn: false,
       showSpinner: true,
       ...options,
+      initialState: {
+        preferredCurs: [],
+        ...options.initialState,
+      },
     };
 
     if (!opts.apiPath || ['fetchprofiles', 'moderators'].indexOf(opts.apiPath) === -1) {
@@ -154,10 +159,10 @@ export default class extends baseVw {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
     const validMod = data.moderator && data.moderatorInfo;
-    // if the moderator has an invalid currency, remove them from the list
-    const buyerCur = app.serverConfig.cryptoCurrency;
+    // If the moderator has an invalid currency, remove them from the list.
+    // With multi-wallet, this should be a very rare occurrence.
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const validCur = modCurs.includes(buyerCur);
+    const validCur = anySupportedByWallet(modCurs);
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
       this.moderatorsCol.add(new Moderator(data, { parse: true }));
@@ -298,9 +303,12 @@ export default class extends baseVw {
       model,
       purchase: this.options.purchase,
       notSelected: this.options.notSelected,
-      cardState: this.options.cardState,
       radioStyle: this.options.radioStyle,
       controlsOnInvalid: this.options.controlsOnInvalid,
+      initialState: {
+        selectedState: this.options.cardState,
+        preferredCurs: this.getState().preferredCurs,
+      },
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
       if (data.selected) {
@@ -343,7 +351,7 @@ export default class extends baseVw {
   get selectedIDs() {
     const IDs = [];
     this.modCards.forEach((mod) => {
-      if (mod.cardState === 'selected') {
+      if (mod.getState().selectedState === 'selected') {
         IDs.push(mod.model.id);
       }
     });
@@ -353,7 +361,7 @@ export default class extends baseVw {
   get unselectedIDs() {
     const IDs = [];
     this.modCards.forEach((mod) => {
-      if (mod.cardState !== 'selected') {
+      if (mod.getState().selectedState !== 'selected') {
         IDs.push(mod.model.id);
       }
     });
@@ -406,6 +414,8 @@ export default class extends baseVw {
       super.render();
       this.modCards.forEach(mod => {
         mod.delegateEvents();
+        mod.setState({ preferredCurs: this.getState().preferredCurs },
+          { renderOnChange: false });
         this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
 
