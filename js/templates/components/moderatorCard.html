@@ -3,7 +3,7 @@
    const loaded = !!ob.name;
    /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
       The view should prevent the invalid card from being selected again, disabling it is redundant but important visually. */
-   const isDisabled = (!ob.valid && !ob.controlsOnInvalid ) || (!ob.valid && ob.controlsOnInvalid && ob.cardState !== 'selected') || !loaded ? 'disabled' : '';
+   const isDisabled = (!ob.valid && !ob.controlsOnInvalid ) || (!ob.valid && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
@@ -12,9 +12,9 @@
     <% if (ob.radioStyle) { %>
       <div class="flexNoShrink">
         <div class="btnRadio">
-          <% const act = ob.cardState === 'selected' ? 'active' : 'inactive'; %>
+          <% const act = ob.selectedState === 'selected' ? 'active' : 'inactive'; %>
           <% // the card state may be set on render or set on the fly by the view %>
-          <div tabindex="0" class="fauxRadioBtn js-selectBtn <%= act %>" data-state="<%= ob.cardState %>">
+          <div tabindex="0" class="fauxRadioBtn js-selectBtn <%= act %>" data-state="<%= ob.selectedState %>">
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@
               </div>
             <% } %>
             <div class="flex gutterH tx5 detailsRow">
-              <% if (ob.hasValidCurrency && false) { %>
+              <% if (ob.hasValidCurrency) { %>
                 <div class="flexNoShrink TODO">
                   <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
                 </div>
@@ -57,6 +57,9 @@
                 <span class="clrTErr clamp2"><%= ob.polyT('moderatorCard.noCoinSupport') %></span>
               <% } %>
             </div>
+          <% if (ob.showPreferredWarning) { %>
+            <div class="clrTErr note"><%= ob.polyT('moderatorCard.noPreferredSupport', { coins: ob.moderatorInfo.acceptedCurrencies.join(', ') }) %></div>
+          <% } %>
           <% } else { %>
             <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
           <% } %>
@@ -77,7 +80,7 @@
             </button>
           <% } %>
           <% if (!ob.radioStyle) { %>
-            <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.cardState %>">
+            <button class="btn clrP clrBr clrSh2 selectBtn js-selectBtn" data-state="<%= ob.selectedState %>">
               <i class="ion-checkmark showIfSelected clrTEmph1"></i>
               <i class="ion-close showIfDeselected clrTErr"></i>
               <i class="ion-checkmark showIfUnselected clrTEmph1Disabled"></i>
