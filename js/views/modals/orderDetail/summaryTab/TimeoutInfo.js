@@ -9,29 +9,30 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      ...options,
+      initialState: {
+        awaitingBlockHeight: false,
+        isFundingConfirmed: false,
+        isDisputed: false,
+        hasDisputeEscrowExpired: false,
+        canBuyerComplete: false,
+        isPaymentClaimable: false,
+        isPaymentFinalized: false,
+        showDisputeBtn: false,
+        showDiscussBtn: false,
+        showResolveDisputeBtn: false,
+        isClaimingPayment: releasingEscrow(this.orderId),
+        invalidContractData: false,
+        ...options.initialState,
+      },
+    });
 
     if (!options.orderId) {
       throw new Error('Please provide an orderId');
     }
 
     this.orderId = options.orderId;
-
-    this._state = {
-      awaitingBlockHeight: false,
-      isFundingConfirmed: false,
-      isDisputed: false,
-      hasDisputeEscrowExpired: false,
-      canBuyerComplete: false,
-      isPaymentClaimable: false,
-      isPaymentFinalized: false,
-      showDisputeBtn: false,
-      showDiscussBtn: false,
-      showResolveDisputeBtn: false,
-      isClaimingPayment: releasingEscrow(this.orderId),
-      invalidContractData: false,
-      ...options.initialState || {},
-    };
 
     this.listenTo(orderEvents, 'releasingEscrow', e => {
       if (e.id === this.orderId) {

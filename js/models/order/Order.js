@@ -143,17 +143,15 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    const serverCur = getServerCurrency();
-
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
       response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
 
+      const payment = response.contract.buyerOrder.payment;
       // convert price fields
       response.contract.buyerOrder.payment.amount =
-        integerToDecimal(response.contract.buyerOrder.payment.amount,
-          app.serverConfig.cryptoCurrency);
+        integerToDecimal(payment.amount, payment.coin);
 
       // convert crypto listing quantities
       response.contract.buyerOrder.items.forEach((item, index) => {
@@ -180,6 +178,12 @@ export default class extends BaseOrder {
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
 
+        // TODO no app.serverConfig.cryptoCurrency
+        // TODO no app.serverConfig.cryptoCurrency
+        // TODO no app.serverConfig.cryptoCurrency
+        // TODO no app.serverConfig.cryptoCurrency
+        // TODO no app.serverConfig.cryptoCurrency
+        // TODO no app.serverConfig.cryptoCurrency
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.buyerOutput.amount || 0,
@@ -205,8 +209,6 @@ export default class extends BaseOrder {
     if (response.refundAddressTransaction) {
       payments.push(response.refundAddressTransaction);
     }
-
-    payments.forEach(pmt => (pmt.paymentCoin = serverCur.code));
 
     return response;
   }

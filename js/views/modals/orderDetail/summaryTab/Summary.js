@@ -3,7 +3,9 @@ import { clipboard } from 'electron';
 import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../../data/walletCurrencies';
+import {
+  getCurrencyByCode as getWalletCurByCode
+} from '../../../../data/walletCurrencies';
 import {
   completingOrder,
   events as orderEvents,
@@ -378,6 +380,13 @@ export default class extends BaseVw {
     return state;
   }
 
+  get paymentCurData() {
+    return getWalletCurByCode(
+      this.contract.get('buyerOrder')
+        .get('coin')
+    );
+  }
+
   get paymentAddress() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
 
@@ -391,8 +400,10 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
+    const paymentCurData = this.paymentCurData();
+
     return (
-      getServerCurrency().supportsEscrowTimeout &&
+      (!paymentCurData || paymentCurData.supportsEscrowTimeout) &&
       (
         this.model.isOrderDisputable ||
         ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))
@@ -401,7 +412,7 @@ export default class extends BaseVw {
   }
 
   renderTimeoutInfoView() {
-    const cryptoCur = getServerCurrency();
+    const paymentCurData = this.paymentCurData();
     const orderState = this.model.get('state');
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     const isCase = this.model.isCase;
@@ -417,15 +428,13 @@ export default class extends BaseVw {
     // so in the escrow timeouts 45 is represented as '45 days' instead of '1 month'.
     moment.relativeTimeThreshold('d', 364);
 
-    const height = app.walletBalance.get('height');
     let state = {
       ownPeerId: app.profile.id,
       buyer: this.buyer.id,
       vendor: this.vendor.id,
       moderator: this.moderator && this.moderator.id || undefined,
-      awaitingBlockHeight: false,
       isFundingConfirmed: false,
-      blockTime: cryptoCur.blockTime,
+      blockTime: paymentCurData && paymentCurData.blockTime,
       isDisputed: orderState === 'DISPUTED',
       hasDisputeEscrowExpired: false,
       canBuyerComplete: this.model.canBuyerComplete,
@@ -436,11 +445,7 @@ export default class extends BaseVw {
       showResolveDisputeBtn: false,
     };
 
-    if (!height) {
-      // temporary, this will not be needed once this server issue is completed:
-      // https://github.com/OpenBazaar/openbazaar-go/issues/843
-      state.awaitingBlockHeight = true;
-    } else if (orderState === 'PAYMENT_FINALIZED') {
+    if (orderState === 'PAYMENT_FINALIZED') {
       state.isPaymentFinalized = true;
     } else {
       let disputeStartTime;
@@ -476,6 +481,8 @@ export default class extends BaseVw {
           showDisputeBtn: this.model.isOrderStateDisputable,
           showResolveDisputeBtn: isCase,
         };
+      } else if (!paymentCurData) {
+        
       } else {
         const timeoutHours = orderState === 'DISPUTED' ?
           this.contract.disputeExpiry : escrowTimeoutHours;
@@ -531,11 +538,11 @@ export default class extends BaseVw {
           };
         } else {
           const fundedHeight = this.model.fundedBlockHeight;
-          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
+          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / paymentCurData.blockTime;
           const blocksRemaining = fundedHeight ?
             blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
             blocksPerTimeout;
-          const msRemaining = blocksRemaining * cryptoCur.blockTime;
+          const msRemaining = blocksRemaining * paymentCurData.blockTime;
 
           const timeRemaining =
             moment(Date.now()).from(moment(Date.now() + msRemaining), true);
