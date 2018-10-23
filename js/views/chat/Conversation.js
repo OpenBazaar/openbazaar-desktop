@@ -376,8 +376,8 @@ export default class extends baseVw {
         }
       }
 
-      // We'll consider them to be done typing if an acutal message came
-      // in. If they re-start typing, we'll get another socket messsage.
+      // We'll consider them to be done typing if an actual message came
+      // in. If they re-start typing, we'll get another socket message.
       this.hideTypingIndicator();
     } else if (e.jsonData.messageTyping &&
       e.jsonData.messageTyping.subject === this.subject &&
