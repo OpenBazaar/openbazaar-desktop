@@ -13,22 +13,23 @@ import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import { getExchangeRate } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
-import { openSimpleMessage } from '../SimpleMessage';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
 import Purchase from '../../../models/purchase/Purchase';
 import BaseModal from '../BaseModal';
+import { openSimpleMessage } from '../SimpleMessage';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import Moderators from '../../components/Moderators';
+import FeeChange from '../../components/FeeChange';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
+import CryptoCurSelector from '../../components/CryptoCurSelector';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
-import FeeChange from '../../components/FeeChange';
-import CryptoTradingPair from '../../components/CryptoTradingPair';
 
 export default class extends BaseModal {
   constructor(options = {}) {
