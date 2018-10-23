@@ -54,6 +54,14 @@ export default class Profile extends BaseModel {
       !!this.get('moderatorInfo');
   }
 
+  get isVerified() {
+    return !!app.verifiedMods.get(this.get('peerID'));
+  }
+
+  hasModCurrency(cur) {
+    return this.get('moderatorInfo').acceptedCurrencies.includes(cur);
+  }
+
   get max() {
     return {
       locationLength: 100,

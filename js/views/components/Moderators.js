@@ -35,7 +35,6 @@ export default class extends baseVw {
    * @param {string}  options.notSelected       - Which not selected state to use on the mod cards.
    * @param {boolean} options.showLoadBtn       - Show the load more button in the status bar.
    * @param {boolean} options.showSpinner       - Show the spinner in the status bar
-   * @param {boolean} options.showVerifiedOnly  - Show only verified moderators
    */
 
   constructor(options = {}) {
@@ -64,6 +63,7 @@ export default class extends baseVw {
       ...options,
       initialState: {
         preferredCurs: [],
+        showVerifiedOnly: false,
         ...options.initialState,
       },
     };
@@ -100,20 +100,8 @@ export default class extends baseVw {
     this.modFetches = [];
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
-      const modCard = this.addMod(model);
-
-      // if required, select the first  moderator
-      if (opts.selectFirst && !this.firstSelected && !this.noneSelected) {
-        let selectIt = true;
-        // if only verified mods are shown, only select the first verified mod
-        if (opts.showVerifiedOnly) selectIt = !!app.verifiedMods.get(model.get('peerID'));
-
-        if (selectIt) {
-          this.firstSelected = true;
-          modCard.changeSelectState('selected');
-        }
-      }
-      this.render();
+      this.addMod(model);
+      this.batchCardRender(model);
     });
     this.listenTo(this.moderatorsCol, 'remove', (md) => {
       const removeIndex = this.modCards.findIndex(card => card.model === md);
@@ -121,7 +109,7 @@ export default class extends baseVw {
     });
     this.modCards = [];
 
-    // create a moderator status view. It should retain it's state between renders of this view.
+    // create a moderators status view. It should retain it's state between renders of this view.
     this.moderatorsStatus = this.createChild(ModeratorsStatus, {
       initialState: {
         mode: opts.method === 'GET' ? 'loaded' : '',
@@ -293,10 +281,9 @@ export default class extends baseVw {
     }
   }
 
-
   addMod(model) {
     if (!model || !(model instanceof Moderator)) {
-      throw new Error('Please provide a moderator model.');
+      throw new Error('Please provide a valid profile model.');
     }
 
     const modCard = this.createChild(ModCard, {
@@ -312,16 +299,14 @@ export default class extends baseVw {
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
       if (data.selected) {
-        this.noneSelected = false;
         // if only one moderator should be selected, deselect the other moderators
         if (this.options.singleSelect) this.deselectOthers(data.guid);
         this.trigger('cardSelect');
       }
     });
     // add verified mods to the beginning
-    if (app.verifiedMods.get(model.get('peerID'))) {
-      const firstUnverifiedIndex = this.modCards.findIndex(card =>
-        !app.verifiedMods.get(card.model.get('peerID')));
+    if (model.isVerified) {
+      const firstUnverifiedIndex = this.modCards.findIndex(card => !card.model.isVerified);
       const insertAtIndex = firstUnverifiedIndex < 0 ?
         0 : firstUnverifiedIndex;
       this.modCards.splice(insertAtIndex, 0, modCard);
@@ -329,6 +314,27 @@ export default class extends baseVw {
       this.modCards.push(modCard);
     }
     return modCard;
+  }
+
+  modShouldRender(model) {
+    const hideOnUnverified = this.getState().showVerifiedOnly && !model.isVerified;
+    const showCur = this.getState().showOnlyCur;
+    const hideOnCur = showCur && !model.hasModCurrency(showCur);
+    return !(hideOnUnverified || hideOnCur);
+  }
+
+  batchCardRender(model) {
+    if (!model || !(model instanceof Moderator)) {
+      throw new Error('Please provide a valid moderator profile.');
+    }
+
+    // Render in batches only if the card being added should be visible.
+    if (!this.renderTimer && this.modShouldRender(model)) {
+      this.renderTimer = setTimeout(() => {
+        this.render();
+        this.renderTimer = null;
+      }, 300);
+    }
   }
 
   get excludeIDs() {
@@ -381,7 +387,6 @@ export default class extends baseVw {
         card.changeSelectState(this.options.notSelected);
       }
     });
-    this.noneSelected = !guid;
   }
 
   togVerifiedShown(bool) {
@@ -389,15 +394,12 @@ export default class extends baseVw {
   }
 
   get noneSelected() {
-    return this._noneSelected;
-  }
-
-  set noneSelected(bool) {
-    this._noneSelected = bool;
+    return !this.modCards.filter(mod => mod.getState().selectedState === 'selected').length;
   }
 
   remove() {
     this.modFetches.forEach(fetch => fetch.abort());
+    if (this.renderTimer) clearTimeout(this.renderTimer);
     super.remove();
   }
 
@@ -405,17 +407,27 @@ export default class extends baseVw {
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
-        showVerifiedOnly: this.options.showVerifiedOnly,
         placeholder: !this.modCards.length,
         purchase: this.options.purchase,
         ...this.getState(),
       }));
 
       super.render();
-      this.modCards.forEach(mod => {
+
+      const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
+
+      const noneSelected = !this.modCards.filter(card =>
+        card.getState().selectedState === 'selected').length;
+
+      showMods.forEach((mod, i) => {
         mod.delegateEvents();
-        mod.setState({ preferredCurs: this.getState().preferredCurs },
-          { renderOnChange: false });
+        const opts = {};
+        if (noneSelected && this.options.selectFirst && i === 0) opts.selectedState = 'selected';
+
+        mod.setState({
+          preferredCurs: this.getState().preferredCurs,
+          ...opts,
+        }, { renderOnChange: false });
         this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
       });
 
