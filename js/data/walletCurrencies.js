@@ -210,37 +210,6 @@ export function ensureMainnetCode(cur) {
   return curObj ? curObj.code : cur;
 }
 
-/**
- * Returns the currency data object based on the currency the connected server is in.
- */
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// There no longer is a single server currency. It must come from other means depending
-// on context.
-export function getServerCurrency() {
-  // // temeporary, so the client doesn't implode.
-  // return {
-  //   ...currencies[0],
-  //   isTestnet: true,
-  // };
-
-  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
-    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
-  }
-
-  let curData = getCurrencyByCode(app.serverConfig.cryptoCurrency);
-
-  curData = {
-    ...curData,
-    isTestnet: app.serverConfig.cryptoCurrency === curData.testnetCode,
-  };
-
-  return curData;
-}
-
 // TODO: unit test this bad boy
 // TODO: unit test this bad boy
 // TODO: unit test this bad boy

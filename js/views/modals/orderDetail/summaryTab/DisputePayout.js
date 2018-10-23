@@ -13,7 +13,16 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      ...options,
+      initialState: {
+        userCurrency: app.settings.get('localCurrency') || 'USD',
+        showAcceptButton: false,
+        acceptConfirmOn: false,
+        paymentCoin: undefined,
+        ...options.initialState,
+      },
+    });
 
     if (!options.orderId) {
       throw new Error('Please provide the orderId');
@@ -22,10 +31,7 @@ export default class extends BaseVw {
     this.orderId = options.orderId;
 
     this._state = {
-      userCurrency: app.settings.get('localCurrency') || 'USD',
-      showAcceptButton: false,
-      acceptConfirmOn: false,
-      ...options.initialState || {},
+
     };
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
@@ -88,27 +94,6 @@ export default class extends BaseVw {
     recordEvent('OrderDetails_DisputeAcceptConfirm');
     this.setState({ acceptConfirmOn: false });
     acceptPayout(this.orderId);
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
   remove() {

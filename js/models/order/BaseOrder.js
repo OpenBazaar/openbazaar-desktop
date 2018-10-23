@@ -1,3 +1,4 @@
+import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
 function checkSynced(model) {
@@ -62,5 +63,35 @@ export default class extends BaseModel {
 
     return this.contract.get('vendorOrderFulfillment') &&
       ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
+  }
+
+  // TODO: doees this work on a dispute??
+  // TODO: doees this work on a dispute??
+  // TODO: doees this work on a dispute??
+  get paymentCoin() {
+    let paymentCoin;
+
+    try {
+      paymentCoin = this.contract.get('buyerOrder').payment.coin;
+    } catch (e) {
+      // pass
+    }
+
+    return paymentCoin;
+  }
+
+  get paymentCurData() {
+    let curData;
+
+    try {
+      curData = getWalletCurByCode(
+        this.contract.get('buyerOrder')
+          .payment.coin
+      );
+    } catch (e) {
+      // pass
+    }
+
+    return curData;
   }
 }

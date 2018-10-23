@@ -12,7 +12,6 @@ import {
   renderPairedCurrency,
 } from './currency';
 import {
-  getServerCurrency,
   getBlockChainTxUrl,
   getBlockChainAddressUrl,
   getCurrencyByCode as getWalletCurByCode,
@@ -131,7 +130,6 @@ const currencyExport = {
   convertAndFormatCurrency,
   convertCurrency,
   getCurrencyValidity,
-  getServerCurrency,
   getExchangeRate,
   formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),

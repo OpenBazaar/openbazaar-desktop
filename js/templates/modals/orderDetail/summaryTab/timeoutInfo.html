@@ -22,7 +22,18 @@
     }
 
     messageClass = 'txCtr clrTErr';
-    tipClass = 'hide';    
+    tipClass = 'hide';
+  } else if (ob.unrecognizedPaymentCur) {
+    if (ob.moderator) {
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modUnrecognizedPaymentCur');
+    } else {
+      message = ob.isDisputed ?
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedUnrecognizedPaymentCur') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.unrecognizedPaymentCur');
+    }
+
+    messageClass = 'txCtr clrTErr';
+    tipClass = 'hide';
   } else if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
       ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutBuyer') :

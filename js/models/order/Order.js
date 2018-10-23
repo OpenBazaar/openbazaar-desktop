@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import { integerToDecimal } from '../../utils/currency';
-import { getServerCurrency } from '../../data/walletCurrencies';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
@@ -60,11 +59,16 @@ export default class extends BaseOrder {
   }
 
   getBalanceRemaining() {
-    const balanceRemaining = this.orderPrice - this.totalPaid;
+    const paymentCurData = this.paymentCurData;
+    let balanceRemaining = this.orderPrice - this.totalPaid;
 
-    // round based on the coins base units
-    const cryptoBaseUnit = getServerCurrency().baseUnit;
-    return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
+    if (this.paymentCurData) {
+      // round based on the coins base units
+      const cryptoBaseUnit = paymentCurData.baseUnit;
+      balanceRemaining = Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
+    }
+
+    return balanceRemaining;
   }
 
   get isPartiallyFunded() {

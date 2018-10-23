@@ -497,8 +497,11 @@ export default class extends BaseModal {
    * based upon the order state.
    */
   get actionBarButtonState() {
+    const paymentCurData = this.model.paymentCurData;
+
     return {
-      showDisputeOrderButton: !getServerCurrency().supportsEscrowTimeout &&
+      showDisputeOrderButton:
+        (!paymentCurData || !paymentCurData.supportsEscrowTimeout) &&
         this.model.isOrderDisputable,
     };
   }

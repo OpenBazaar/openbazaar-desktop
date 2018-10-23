@@ -9,6 +9,10 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
+    if (!options.orderId) {
+      throw new Error('Please provide an orderId');
+    }
+
     super({
       ...options,
       initialState: {
@@ -22,15 +26,12 @@ export default class extends BaseVw {
         showDisputeBtn: false,
         showDiscussBtn: false,
         showResolveDisputeBtn: false,
-        isClaimingPayment: releasingEscrow(this.orderId),
+        isClaimingPayment: releasingEscrow(options.orderId),
         invalidContractData: false,
+        unrecognizedPaymentCur: false,
         ...options.initialState,
       },
     });
-
-    if (!options.orderId) {
-      throw new Error('Please provide an orderId');
-    }
 
     this.orderId = options.orderId;
 

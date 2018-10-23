@@ -4,9 +4,6 @@ import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 import {
-  getCurrencyByCode as getWalletCurByCode
-} from '../../../../data/walletCurrencies';
-import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
@@ -380,13 +377,6 @@ export default class extends BaseVw {
     return state;
   }
 
-  get paymentCurData() {
-    return getWalletCurByCode(
-      this.contract.get('buyerOrder')
-        .get('coin')
-    );
-  }
-
   get paymentAddress() {
     const vendorOrderConfirmation = this.contract.get('vendorOrderConfirmation');
 
@@ -400,7 +390,7 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
-    const paymentCurData = this.paymentCurData();
+    const paymentCurData = this.model.paymentCurData;
 
     return (
       (!paymentCurData || paymentCurData.supportsEscrowTimeout) &&
@@ -412,7 +402,7 @@ export default class extends BaseVw {
   }
 
   renderTimeoutInfoView() {
-    const paymentCurData = this.paymentCurData();
+    const paymentCurData = this.model.paymentCurData;
     const orderState = this.model.get('state');
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     const isCase = this.model.isCase;
@@ -443,6 +433,7 @@ export default class extends BaseVw {
       showDisputeBtn: false,
       showDiscussBtn: orderState === 'DISPUTED',
       showResolveDisputeBtn: false,
+      unrecognizedPaymentCur: false,
     };
 
     if (orderState === 'PAYMENT_FINALIZED') {
@@ -482,7 +473,11 @@ export default class extends BaseVw {
           showResolveDisputeBtn: isCase,
         };
       } else if (!paymentCurData) {
-        
+        // The order was paid in a coin not supported by this client, which
+        // means we don't know the blocktime and can't display timeout info.
+        state = {
+          unrecognizedPaymentCur: true,
+        };
       } else {
         const timeoutHours = orderState === 'DISPUTED' ?
           this.contract.disputeExpiry : escrowTimeoutHours;
@@ -651,6 +646,7 @@ export default class extends BaseVw {
     if (this.accepted) this.accepted.remove();
     this.accepted = this.createChild(Accepted, {
       orderId: this.model.id,
+      paymentCoin: this.model.paymentCoin,
       initialState,
     });
     this.listenTo(this.accepted, 'clickFulfillOrder',
@@ -817,6 +813,7 @@ export default class extends BaseVw {
       initialState: {
         ...data,
         showAcceptButton: !this.model.isCase && this.model.get('state') === 'DECIDED',
+        paymentCoin: this.model.paymentCoin,
       },
     });
 

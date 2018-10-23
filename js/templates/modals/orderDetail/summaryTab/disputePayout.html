@@ -5,7 +5,7 @@
   ['buyer', 'vendor', 'moderator'].forEach(type => {
     priceLines[type] = ob.currencyMod.pairedCurrency(
       ob.payout[`${type}Output`].amount,
-      ob.currencyMod.getServerCurrency().code,
+      ob.paymentCoin,
       ob.userCurrency
     );
 
