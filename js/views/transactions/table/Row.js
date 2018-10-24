@@ -3,7 +3,6 @@
 */
 
 import app from '../../../app';
-import _ from 'underscore';
 import moment from 'moment';
 import loadTemplate from '../../../utils/loadTemplate';
 import { recordEvent } from '../../../utils/metrics';

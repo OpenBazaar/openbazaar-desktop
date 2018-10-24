@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import app from '../../../../app';
-import _ from 'underscore';
 import moment from 'moment';
 import {
   acceptingPayout,
