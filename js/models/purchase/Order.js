@@ -22,7 +22,7 @@ export default class extends BaseModel {
       moderator: '',
       items: new Items(),
       alternateContactInfo: '',
-      paymentCoin: 'TBCH',
+      paymentCoin: 'TBTC',
     };
   }
 

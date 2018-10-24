@@ -1809,7 +1809,8 @@
         "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
         "procErrVendorNoMsg": "There was an error processing the order.",
         "procErrVendor": "You were unable to process the order due to the following errors:"
-      }
+      },
+      "unableToShowPayForOrder": "Unable to show the Pay For Order section. The order was paid for in a currency this client does not support."
     },
     "fulfillOrderTab": {
       "heading": "Fulfill Order",

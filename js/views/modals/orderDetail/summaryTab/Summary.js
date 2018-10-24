@@ -7,6 +7,7 @@ import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../../data/walletCurrencies';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
@@ -833,17 +834,31 @@ export default class extends BaseVw {
   }
 
   renderPayForOrder() {
-    if (this.payForOrder) this.payForOrder.remove();
+    const paymentCoin = this.model.paymentCoin;
 
-    this.payForOrder = this.createChild(PayForOrder, {
-      balanceRemaining: this.model.getBalanceRemaining(),
-      paymentAddress: this.paymentAddress,
-      orderId: this.model.id,
-      isModerated: !!this.moderator,
-      metricsOrigin: 'Transactions',
-    });
+    if (getWalletCurByCode(paymentCoin)) {
+      if (this.payForOrder) this.payForOrder.remove();
 
-    this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+      this.payForOrder = this.createChild(PayForOrder, {
+        balanceRemaining: this.model.getBalanceRemaining(),
+        paymentAddress: this.paymentAddress,
+        orderId: this.model.id,
+        isModerated: !!this.moderator,
+        metricsOrigin: 'Transactions',
+        paymentCoin: this.model.paymentCoin,
+      });
+
+      this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+    } else {
+      this.getCachedEl('.js-payForOrderWrap').html(
+        `
+        <i class="ion-alert-circled clrTAlert"></i>
+        <span>
+          ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayForOrder')}
+        </span>
+        `
+      );
+    }
   }
 
   renderDisputeAcceptanceView() {
@@ -1034,6 +1049,8 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
+        console.log('moon');
+        window.moon = this.model;
         if (this.payments) this.payments.remove();
         this.payments = this.createChild(Payments, {
           orderId: this.model.id,
