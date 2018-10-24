@@ -8,7 +8,7 @@ export function getCurrenciesSortedByName(
     const bTranslation = translations[`cryptoCurrencies.${b}`];
     const aName = aTranslation || a;
     const bName = bTranslation || b;
-    return aName.localeCompare(bName, lang);
+    return aName.localeCompare(bName, lang, { sensitivity: 'base' });
   }).map(cur => ({
     code: cur,
     name: translations[`cryptoCurrencies.${cur}`] || cur,
