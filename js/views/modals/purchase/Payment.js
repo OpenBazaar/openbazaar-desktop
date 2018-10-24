@@ -54,6 +54,7 @@ export default class extends BaseVw {
 
     super(options);
     this.options = options;
+    console.log(`the balance remaining is ${options.balanceRemaining}`);
     this._balanceRemaining = options.balanceRemaining;
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
@@ -110,7 +111,9 @@ export default class extends BaseVw {
   }
 
   clickPayFromWallet(e) {
-    const insufficientFunds = this.balanceRemaining > app.walletBalance.get('confirmed');
+    const walletBalance = app.walletBalances.get(this.paymentCoin);
+    const insufficientFunds = this.balanceRemaining >
+     (walletBalance ? walletBalance.get('confirmed') : 0);
 
     if (insufficientFunds) {
       this.spendConfirmBox.setState({
@@ -128,9 +131,6 @@ export default class extends BaseVw {
         sufficientFunds: true,
       });
       this.spendConfirmBox.setState({ show: true });
-      // todo: need to pass coinTypee into fetchFeeEstimate
-      // todo: need to pass coinTypee into fetchFeeEstimate
-      // todo: need to pass coinTypee into fetchFeeEstimate
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     }
 
@@ -153,6 +153,7 @@ export default class extends BaseVw {
         address: this.paymentAddress,
         amount: this.balanceRemaining,
         currency,
+        wallet: currency,
       })
         .done(() => {
           endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, { currency });
@@ -240,6 +241,7 @@ export default class extends BaseVw {
         metricsOrigin: this.metricsOrigin,
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
+          coinType: this.paymentCoin,
         },
       });
       this.listenTo(this.spendConfirmBox, 'clickSend', this.walletConfirm);

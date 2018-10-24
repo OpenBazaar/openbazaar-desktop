@@ -1049,8 +1049,6 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
-        console.log('moon');
-        window.moon = this.model;
         if (this.payments) this.payments.remove();
         this.payments = this.createChild(Payments, {
           orderId: this.model.id,
