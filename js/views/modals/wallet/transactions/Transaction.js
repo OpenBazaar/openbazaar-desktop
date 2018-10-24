@@ -38,7 +38,6 @@ export default class extends BaseVw {
     }
 
     this.walletCur = getWalletCurByCode(opts.coinType);
-    this.walletCur = undefined;
     this.listenTo(this.model, 'change', () => this.render());
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
       const timeAgo = moment(this.model.get('timestamp')).fromNow();

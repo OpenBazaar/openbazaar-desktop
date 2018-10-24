@@ -39,6 +39,8 @@ export default class extends BaseModel {
       (attrs = {})[key] = val;
     }
 
+    const coinType = this.options ? this.options.coinType : opts.coinType;
+
     if (
       attrs.confirmations !== this.attributes.confirmations ||
       attrs.timestamp !== this.attributes.timestamp ||
@@ -50,7 +52,13 @@ export default class extends BaseModel {
       const height = attrs.height === undefined ?
         this.attributes.height : attrs.height;
       const stuckTime = 1000 * 60 * 60 * 6; // 6 hours
-      const walletCurData = getWalletCurByCode(this.options.coinType);
+      let walletCurData;
+
+      try {
+        walletCurData = getWalletCurByCode(coinType);
+      } catch (e) {
+        // pass
+      }
 
       if (height === -1) {
         attrs.status = 'DEAD';
