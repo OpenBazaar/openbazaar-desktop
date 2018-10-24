@@ -141,6 +141,14 @@
         <% } %>
         <section class="contentBox padMd clrP clrBr clrSh3">
           <div class="flexColRows gutterVSm">
+            <div>
+              <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.cryptoCurrencyTitle') %></h2>
+              <div class="js-cryptoCurSelectorWrapper"></div>
+            </div>
+          </div>
+        </section>
+        <section class="contentBox padMd clrP clrBr clrSh3">
+          <div class="flexColRows gutterVSm">
             <div class="flexVCentClearMarg">
               <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <% if (ob.showModerators) { %>

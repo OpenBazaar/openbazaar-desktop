@@ -42,7 +42,8 @@ export default class extends baseVw {
 
     const preferredCurs = [...new Set(app.profile.get('currencies'))];
 
-    this.currencySelector = new CurrencySelector({
+    this.currencySelector = this.createChild(CurrencySelector, {
+      parent: "store",
       initialState: {
         currencies: supportedWalletCurs(),
         activeCurs: preferredCurs,
@@ -337,7 +338,6 @@ export default class extends baseVw {
         ...this.profile.toJSON(),
         ...this.settings.toJSON(),
       }));
-
 
       this.currencySelector.delegateEvents();
       this.$('.js-currencySelector').append(this.currencySelector.render().el);

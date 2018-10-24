@@ -13,6 +13,7 @@ import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import { getExchangeRate } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
+import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
@@ -136,6 +137,18 @@ export default class extends BaseModal {
     this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
     this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
     this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
+
+    const currencies = this.listing.get('metadata').get('acceptedCurrencies') || [];
+    const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
+    this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
+      disabledMsg: app.polyglot.t('purchase.cryptoCurrencyInvalid'),
+      initialState: {
+        controlType: 'radio',
+        currencies,
+        disabledCurs: ['BTC'],
+        sort: true,
+      },
+    });
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -624,6 +637,9 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.el);
+
+      this.cryptoCurSelector.delegateEvents();
+      this.$('.js-cryptoCurSelectorWrapper').append(this.cryptoCurSelector.render().el);
 
       if (this.shipping) {
         this.shipping.delegateEvents();

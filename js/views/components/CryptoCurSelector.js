@@ -11,6 +11,7 @@ export default class extends baseVw {
       options.initialState.currencies.filter(c => !isSupportedWalletCur(c));
 
     const opts = {
+      disabledMsg: '',
       ...options,
       initialState: {
         controlType: 'checkbox',
@@ -23,6 +24,7 @@ export default class extends baseVw {
     };
 
     super(opts);
+    this.options = opts;
   }
 
   get className() {
@@ -139,6 +141,8 @@ export default class extends baseVw {
   render() {
     loadTemplate('components/cryptoCurSelector.html', (t) => {
       this.$el.html(t({
+        cid: this.cid,
+        ...this.options,
         ...this.getState(),
       }));
     });

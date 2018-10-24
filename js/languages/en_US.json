@@ -1371,6 +1371,8 @@
     "returnToListing": "Return To Listing",
     "optional": "optional",
     "shippingTitle": "Shipping",
+    "cryptoCurrencyTitle": "Currency",
+    "cryptoCurrencyInvalid": "Not Accepted",
     "paymentTypeTitle": "Payment Type",
     "moderatorTitle": "Moderator",
     "newAddress": "New Address",
