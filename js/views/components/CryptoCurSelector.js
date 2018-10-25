@@ -6,9 +6,15 @@ import baseVw from '../baseVw';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    const disabledCurs = options.initialState.disabledCurs ?
-      options.initialState.disabledCurs :
-      options.initialState.currencies.filter(c => !isSupportedWalletCur(c));
+    let disabledCurs = [];
+
+    if (
+      Array.isArray(options.initialState.disabledCurs) &&
+      Array.isArray(options.initialState.currencies)
+    ) {
+      disabledCurs =
+        options.initialState.currencies.filter(c => !isSupportedWalletCur(c));
+    }
 
     const opts = {
       disabledMsg: '',

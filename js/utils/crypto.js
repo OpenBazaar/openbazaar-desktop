@@ -1,3 +1,5 @@
+import $ from 'jquery';
+import app from '../app';
 import loadTemplate from './loadTemplate';
 import {
   getServerCurrency,
@@ -128,4 +130,33 @@ export function renderCryptoPrice(options = {}) {
   });
 
   return rendered;
+}
+
+let cryptoNamesDeferred;
+let nameWorker;
+
+function sendPhrases() {
+  if (nameWorker) {
+    nameWorker.postMessage({
+      type: 'phrases',
+      phrases: Object.keys(app.polyglot.phrases)
+        .filter(key => key.startsWith('cryptoCurrencies.'))
+        .reduce((acc, key) => {
+          acc[key] = app.polyglot.phrases[key];
+          return acc;
+        }, {}),
+    });
+  }
+}
+
+export function getCryptoNames() {
+  if (!nameWorker) {
+    nameWorker = new Worker('../js/utils/cryptoNamesWorker.js', { type: 'module' });
+    sendPhrases();
+
+    app.localSettings.on('change:language', () => nameWorker.sendPhrases());
+  }
+
+  cryptoNamesDeferred = cryptoNamesDeferred || $.Deferred();
+  return cryptoNamesDeferred.promise();
 }

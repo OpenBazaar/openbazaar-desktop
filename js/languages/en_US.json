@@ -1138,7 +1138,8 @@
       "termsAndConditions": "Terms and Conditions",
       "coupons": "Coupons",
       "inventoryManagement": "Inventory Management",
-      "variantInventory": "Variant Inventory"
+      "variantInventory": "Variant Inventory",
+      "acceptedCurrencies": "Accepted Currencies"
     },
     "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -1159,6 +1160,7 @@
     "helperReturnPolicy": "If left blank, the listing will display \"No return policy entered\"",
     "helperTerms": "If left blank, the listing will display \"No terms and conditions entered\"",
     "helperPrice": "Set your price in Dollars, Yuan, %{cur}, anything",
+    "helperAcceptedCurrencies": "Accepting all coins will attract the largest audience",
     "createListingLabel": "Create Listing",
     "editListingLabel": "Edit Listing",
     "title": "Title",
@@ -1187,8 +1189,11 @@
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperType": "Trade cryptocurrencies for free",
+      "helperTypeCount": "1500+ cryptocurrencies",
+      "helperType": "Trade %{count} for free",
       "helperCoinType": "Receive %{toCur} in exchange for %{fromCur}",
+      "helperCoinType": "The currency you’re offering for trade",
+      "helperReceive": "The currency you'll receive for the trade",
       "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
       "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
       "marketValueLabel": "Current Market Value",
@@ -1196,7 +1201,9 @@
       "coinType": "Trade",
       "quantity": "Inventory",
       "priceModifier": "Price Modifier (+/-)",
-      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)"
+      "priceModifierPlaceholder": "0.00 (market rate)",
+      "helperPriceModifier": "Trade at market rate, or specify a price modifier (+/-)",
+      "lblReceive": "Receive"
     },
     "shippingOptions": {
       "optionHeading": "Shipping Option #%{listPosition}",
@@ -1978,7 +1985,12 @@
   "metadataModelErrors": {
     "providePriceModifier": "Please provide a price modifier.",
     "numericPriceModifier": "Please provide the price modifier as a number.",
-    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}",
+    "provideAcceptedCurrency": "Please select at least one accepted currency.",
+    "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
+    "provideCoinType": "Please select a coin to trade.",
+    "unsupportedAcceptedCur": "%{cur} is not supported by your wallet. Please select a different currency.",
+    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: ${curs}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
@@ -2121,7 +2133,7 @@
   "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
   "cryptoTradingPair": {
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
-    "tipMissingExchangeRate": "There is no exchange rate data available for %{coinType}. If the data will not be available at the time of purchase, the listing will not be purchasable."
+    "tipMissingExchangeRate": "There is no exchange rate data available for %{coins}. If the data will not be available at the time of purchase, the listing will not be purchasable."
   },
   "cryptoPriceBelowMarket": "%{amount}% under market",
   "cryptoPriceAboveMarket": "%{amount}% above market",
