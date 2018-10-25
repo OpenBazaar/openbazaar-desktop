@@ -145,7 +145,7 @@ export default class extends BaseModal {
       initialState: {
         controlType: 'radio',
         currencies,
-        disabledCurs: ['BTC'],
+        disabledCurs,
         sort: true,
       },
     });
@@ -392,17 +392,17 @@ export default class extends BaseModal {
   }
 
   updateShippingOption() {
-    // set the shipping option
+    // Set the shipping option.
     this.order.get('items').at(0).get('shipping')
       .set(this.shipping.selectedOption);
   }
 
   purchaseListing() {
-    // clear any old errors
+    // Clear any old errors.
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.each((i, container) => $(container).html(''));
 
-    // don't allow a zero or negative price purchase
+    // Don't allow a zero or negative price purchase.
     const priceObj = this.prices[0];
     if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
       this.insertErrors(this.getCachedEl('.js-errors'),
@@ -411,17 +411,21 @@ export default class extends BaseModal {
       return;
     }
 
-    // set the shipping address if the listing is shippable
+    // Set the payment coin.
+    const paymentCoin = this.currencySelector.getState().activeCurs;
+    this.order.set({ paymentCoin });
+
+    // Set the shipping address if the listing is shippable.
     if (this.shipping && this.shipping.selectedAddress) {
       this.order.addAddress(this.shipping.selectedAddress);
     }
 
-    // set the moderator
+    // Set the moderator.
     const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
     this.order.set({ moderator });
     this.order.set({}, { validate: true });
 
-    // cancel any existing order
+    // Cancel any existing order.
     if (this.orderSubmit) this.orderSubmit.abort();
 
     this.setState({ phase: 'processing' });

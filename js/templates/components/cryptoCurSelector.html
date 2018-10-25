@@ -12,7 +12,7 @@
       <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
       <span class="curName flexExpand"><%= cur.displayName %></span>
       <% if (cur.disabled && ob.disabledMsg) { %>
-      <span class="disabledMsg clrTErr">Not accepted</span>
+      <span class="disabledMsg clrTErr tx5b"><%= ob.disabledMsg %></span>
       <% }%>
     </label>
   </li>

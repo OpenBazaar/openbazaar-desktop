@@ -1,6 +1,7 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import Items from '../../collections/purchase/Items';
+import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
@@ -12,16 +13,17 @@ export default class extends BaseModel {
   defaults() {
     return {
       // if the listing is not physical, the address and shipping attributes should be blank
-      shipTo: '',
       address: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      countryCode: '',
       addressNotes: '',
-      moderator: '',
-      items: new Items(),
       alternateContactInfo: '',
+      city: '',
+      countryCode: '',
+      items: new Items(),
+      moderator: '',
+      paymentCoin:'',
+      postalCode: '',
+      shipTo: '',
+      state: '',
     };
   }
 
@@ -55,6 +57,11 @@ export default class extends BaseModel {
 
     if (!attrs.items.length) {
       addError('items', 'At least one item is required.');
+    }
+
+    const c = attrs.paymentCoin;
+    if (!c || !(typeof c === 'string') || !isSupportedWalletCur(c)) {
+      addError('paymentCoin', app.polyglot.t('orderModelErrors.paymentCoinInvalid'));
     }
 
     if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
