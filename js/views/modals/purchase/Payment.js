@@ -1,12 +1,12 @@
 /*
-  This view is also used by the Order Detail overlay. If you make any changes, please
-  ensure they are compatible with both the Purchase and Order Detail flows.
-*/
+ This view is also used by the Order Detail overlay. If you make any changes, please
+ ensure they are compatible with both the Purchase and Order Detail flows.
+ */
 
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { formatCurrency, integerToDecimal } from '../../../utils/currency';
-import { getServerCurrency } from '../../../data/walletCurrencies';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
@@ -40,13 +40,28 @@ export default class extends BaseVw {
       throw new Error('Please provide a boolean indicating whether the order is moderated.');
     }
 
+    let paymentCoinData;
+
+    try {
+      paymentCoinData = getWalletCurByCode(options.paymentCoin);
+    } catch (e) {
+      // pass
+    }
+
+    if (!paymentCoinData) {
+      throw new Error(`Unable to obtain wallet currency data for "${options.paymentCoin}"`);
+    }
+
     super(options);
     this.options = options;
+    console.log(`the balance remaining is ${options.balanceRemaining}`);
     this._balanceRemaining = options.balanceRemaining;
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
     this.isModerated = options.isModerated;
     this.metricsOrigin = options.metricsOrigin;
+    this.paymentCoin = options.paymentCoin;
+    this.paymentCoinData = paymentCoinData;
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -96,7 +111,9 @@ export default class extends BaseVw {
   }
 
   clickPayFromWallet(e) {
-    const insufficientFunds = this.balanceRemaining > app.walletBalance.get('confirmed');
+    const walletBalance = app.walletBalances.get(this.paymentCoin);
+    const insufficientFunds = this.balanceRemaining >
+      (walletBalance ? walletBalance.get('confirmed') : 0);
 
     if (insufficientFunds) {
       this.spendConfirmBox.setState({
@@ -105,18 +122,15 @@ export default class extends BaseVw {
         fetchError: 'ERROR_INSUFFICIENT_FUNDS',
       });
       recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
-        currency: getServerCurrency().code,
+        currency: this.paymentCoin,
         sufficientFunds: false,
       });
     } else {
       recordPrefixedEvent('PayFromWallet', this.metricsOrigin, {
-        currency: getServerCurrency().code,
+        currency: this.paymentCoin,
         sufficientFunds: true,
       });
       this.spendConfirmBox.setState({ show: true });
-      // todo: need to pass coinTypee into fetchFeeEstimate
-      // todo: need to pass coinTypee into fetchFeeEstimate
-      // todo: need to pass coinTypee into fetchFeeEstimate
       this.spendConfirmBox.fetchFeeEstimate(this.balanceRemaining);
     }
 
@@ -130,7 +144,7 @@ export default class extends BaseVw {
   walletConfirm() {
     this.getCachedEl('.js-payFromWallet').addClass('processing');
     this.spendConfirmBox.setState({ show: false });
-    const currency = getServerCurrency().code;
+    const currency = this.paymentCoin;
 
     startPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin);
 
@@ -139,6 +153,7 @@ export default class extends BaseVw {
         address: this.paymentAddress,
         amount: this.balanceRemaining,
         currency,
+        wallet: currency,
       })
         .done(() => {
           endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, { currency });
@@ -189,11 +204,11 @@ export default class extends BaseVw {
 
   get amountDueLine() {
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, getServerCurrency().code) });
+      { amountBTC: formatCurrency(this.balanceRemaining, this.paymentCoin) });
   }
 
   get qrDataUri() {
-    const address = getServerCurrency().qrCodeText(this.paymentAddress);
+    const address = this.paymentCoinData.qrCodeText(this.paymentAddress);
     const URL = `${address}?amount=${this.balanceRemaining}`;
     return qr(URL, { type: 8, size: 5, level: 'Q' });
   }
@@ -218,6 +233,7 @@ export default class extends BaseVw {
           qrDataUri: this.qrDataUri,
           walletIconTmpl,
           isModerated: this.isModerated,
+          paymentCoin: this.paymentCoin,
         }));
       });
 
@@ -225,6 +241,7 @@ export default class extends BaseVw {
         metricsOrigin: this.metricsOrigin,
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
+          coinType: this.paymentCoin,
         },
       });
       this.listenTo(this.spendConfirmBox, 'clickSend', this.walletConfirm);

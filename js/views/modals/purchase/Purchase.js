@@ -11,13 +11,12 @@ import {
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
-import { getExchangeRate } from '../../../utils/currency';
+import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
-import Purchase from '../../../models/purchase/Purchase';
 import BaseModal from '../BaseModal';
 import { openSimpleMessage } from '../SimpleMessage';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
@@ -95,9 +94,6 @@ export default class extends BaseModal {
     // add the item to the order.
     this.order.get('items').add(item);
 
-    // create an empty purchase model
-    this.purchase = new Purchase();
-
     this.actionBtn = this.createChild(ActionBtn, {
       listing: this.listing,
     });
@@ -145,6 +141,7 @@ export default class extends BaseModal {
       initialState: {
         controlType: 'radio',
         currencies,
+        activeCurs: [currencies[0]],
         disabledCurs,
         sort: true,
       },
@@ -412,7 +409,7 @@ export default class extends BaseModal {
     }
 
     // Set the payment coin.
-    const paymentCoin = this.currencySelector.getState().activeCurs;
+    const paymentCoin = this.cryptoCurSelector.getState().activeCurs[0];
     this.order.set({ paymentCoin });
 
     // Set the shipping address if the listing is shippable.
@@ -464,19 +461,18 @@ export default class extends BaseModal {
         })
           .done((data) => {
             this.setState({ phase: 'pending' });
-            this.purchase.set(this.purchase.parse(data));
             this.payment = this.createChild(Payment, {
-              balanceRemaining: this.purchase.get('amount'),
-              paymentAddress: this.purchase.get('paymentAddress'),
-              orderId: this.purchase.get('orderId'),
+              balanceRemaining: integerToDecimal(data.amount, paymentCoin),
+              paymentAddress: data.paymentAddress,
+              orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
               metricsOrigin: 'Purchase',
+              paymentCoin,
             });
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            endAjaxEvent('Purchase', {
-            });
+            endAjaxEvent('Purchase');
           })
           .fail(jqXHR => {
             this.setState({ phase: 'pay' });

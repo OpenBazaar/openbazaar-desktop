@@ -20,7 +20,7 @@ export default class extends BaseModel {
       countryCode: '',
       items: new Items(),
       moderator: '',
-      paymentCoin:'',
+      paymentCoin: '',
       postalCode: '',
       shipTo: '',
       state: '',
@@ -60,7 +60,7 @@ export default class extends BaseModel {
     }
 
     const c = attrs.paymentCoin;
-    if (!c || !(typeof c === 'string') || !isSupportedWalletCur(c)) {
+    if (!(c && typeof c === 'string' && isSupportedWalletCur(c))) {
       addError('paymentCoin', app.polyglot.t('orderModelErrors.paymentCoinInvalid'));
     }
 
