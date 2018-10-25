@@ -31,10 +31,13 @@ export default class extends BaseVw {
         toCur: '',
         localCurrency: app.settings.get('localCurrency'),
         // If passing this in, it should be a string or a function. If it's a function
-        // it will be passed the coinType and should return a string.
-        noExchangeRateTip: coinType =>
-          app.polyglot.t('cryptoTradingPair.tipMissingExchangeRate',
-              { coinType }),
+        // it will be passed the state and coin(s) with missing exchange rates and it
+        // should return a string.
+        noExchangeRateTip: coinsMissingRates => (
+          app.polyglot.t('cryptoTradingPair.tipMissingExchangeRate', {
+            coins: coinsMissingRates.join(', '),
+          })
+        ),
         exchangeRateUnavailable: false,
         iconClass: 'ion-alert-circled clrTAlert',
         truncateCurAfter: 8,
@@ -83,7 +86,7 @@ export default class extends BaseVw {
 
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
-        newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
+        newState.fromCur = ensureMainnetCode(state.fromCur);
 
         if (newState.fromCur > state.truncateCurAfter) {
           newState.fromCur = `${newState.fromCur.slice(0, state.truncateCurAfter)}…`;
@@ -91,7 +94,7 @@ export default class extends BaseVw {
       }
 
       if (typeof state.toCur === 'string') {
-        newState.toCur = ensureMainnetCode(state.toCur.toUpperCase());
+        newState.toCur = ensureMainnetCode(state.toCur);
 
         if (newState.toCur > state.truncateCurAfter) {
           newState.toCur = `${newState.toCur.slice(0, state.truncateCurAfter)}…`;
@@ -112,25 +115,33 @@ export default class extends BaseVw {
   }
 
   getConversionState(fromCur, toCur, fromCurAmount) {
-    const exchangeRate = getExchangeRate(toCur);
-    const toCurAmount = fromCurAmount * exchangeRate;
+    const fromCurRate = getExchangeRate(fromCur);
+    const toCurRate = getExchangeRate(toCur);
 
     return {
-      toCurAmount,
-      fromCurConvertedAmount: fromCurAmount / toCurAmount,
-      exchangeRateUnavailable: exchangeRate === undefined,
+      toCurAmount: (toCurRate / fromCurRate) * fromCurAmount,
+      fromCurConvertedAmount: (fromCurRate / toCurRate) * fromCurAmount,
+      fromRateUnavailable: fromCurRate === undefined,
+      toRateUnavailable: toCurRate === undefined,
     };
   }
 
   render() {
     loadTemplate('components/cryptoTradingPairWrap.html', (t) => {
       const state = this.getState();
+      const coinsMissingRates = [];
+
+      if (state.toRateUnavailable) coinsMissingRates.push(state.toCur);
+      if (state.fromRateUnavailable) coinsMissingRates.push(state.fromCur);
+
       let noExchangeRateTip;
 
-      if (typeof state.noExchangeRateTip === 'function') {
-        noExchangeRateTip = state.noExchangeRateTip(state.toCur);
-      } else if (typeof state.noExchangeRateTip === 'string') {
-        noExchangeRateTip = state.noExchangeRateTip;
+      if (coinsMissingRates.length) {
+        if (typeof state.noExchangeRateTip === 'function') {
+          noExchangeRateTip = state.noExchangeRateTip(coinsMissingRates, state);
+        } else if (typeof state.noExchangeRateTip === 'string') {
+          noExchangeRateTip = state.noExchangeRateTip;
+        }
       }
 
       this.$el.html(t({

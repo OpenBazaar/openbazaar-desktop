@@ -1,4 +1,7 @@
+import $ from 'jquery';
 import _ from 'underscore';
+import fs from 'fs';
+import workerize from 'workerize';
 import app from '../app';
 import fiatCurrencies from '../data/currencies';
 import {
@@ -81,6 +84,9 @@ let currencies;
 let exchangeRateCurs = [];
 let currenciesNeedRefresh = true;
 let exchangeRateChangeBound = false;
+let currenciesSortedByNameDeferred = null;
+
+export const defaultQuantityBaseUnit = 100000000;
 
 export function getCurrencies() {
   if (!exchangeRateChangeBound) {
@@ -94,6 +100,7 @@ export function getCurrencies() {
           )
         ) {
           currenciesNeedRefresh = true;
+          currenciesSortedByNameDeferred = null;
         }
       });
     exchangeRateChangeBound = true;
@@ -142,26 +149,82 @@ export function getCurrenciesSortedByCode() {
   return currenciesSortedByCode;
 }
 
-let currenciesSortedByName;
-const defaultLang = app && app.localSettings &&
-  app.localSettings.standardizedTranslatedLang() || 'en-US';
+const WORKER_PATH = `${__dirname}/../utils/cryptoListingCursWorker.js`;
+let getWorkerDeferred;
 
-export function getCurrenciesSortedByName(lang = defaultLang) {
-  if (currenciesSortedByName && !currenciesNeedRefresh) {
-    return currenciesSortedByName;
+function getWorker() {
+  if (!getWorkerDeferred) {
+    getWorkerDeferred = $.Deferred();
+
+    fs.readFile(WORKER_PATH, 'utf8', (err, data) => {
+      if (err) {
+        getWorkerDeferred.reject(err);
+        return;
+      }
+
+      getWorkerDeferred.resolve(workerize(data));
+    });
   }
 
-  currenciesSortedByName = getCurrencies().sort((a, b) => {
-    const aTranslationKey = `cryptoCurrencies.${a}`;
-    const bTranslationKey = `cryptoCurrencies.${b}`;
-    const aName = app.polyglot.t(aTranslationKey) === aTranslationKey ?
-      a : app.polyglot.t(aTranslationKey);
-    const bName = app.polyglot.t(bTranslationKey) === bTranslationKey ?
-      b : app.polyglot.t(bTranslationKey);
-    return aName.localeCompare(bName, lang);
-  });
-
-  return currenciesSortedByName;
+  return getWorkerDeferred.promise();
 }
 
-export const defaultQuantityBaseUnit = 100000000;
+let phrases = null;
+
+function getPhrases() {
+  if (phrases &&
+    phrases.locale === app.polyglot.currentLocale) {
+    return phrases.data;
+  }
+
+  phrases = {
+    locale: app.polyglot.currentLocale,
+    data: Object.keys(app.polyglot.phrases)
+      .filter(key => key.startsWith('cryptoCurrencies.'))
+      .reduce((obj, key) => {
+        obj[key] = app.polyglot.phrases[key];
+        return obj;
+      }, {}),
+  };
+
+  return phrases.data;
+}
+
+let langChangeBound = false;
+
+function bindLangChange() {
+  if (langChangeBound) return;
+
+  app.localSettings.on('change:language', () => {
+    currenciesSortedByNameDeferred = null;
+  });
+
+  langChangeBound = true;
+}
+
+// For some reason, if the promise returned by this function is already resolved, the
+// done() handler won't fire, but the then() handler will. So for now, please use then().
+// TODO: investigate why the done() handler isn't firing if the promise is already resolved.
+export function getCurrenciesSortedByName() {
+  if (currenciesSortedByNameDeferred) {
+    return currenciesSortedByNameDeferred.promise();
+  }
+
+  bindLangChange();
+
+  const deferred = currenciesSortedByNameDeferred = $.Deferred();
+
+  getWorker()
+    .done(worker => (
+      worker.getCurrenciesSortedByName(
+        getCurrencies(),
+        getPhrases(),
+        app.localSettings.standardizedTranslatedLang()
+      )
+        .then(data => deferred.resolve(data))
+        .catch(e => deferred.reject(e))
+    ))
+    .fail(e => deferred.reject(e));
+
+  return deferred.promise();
+}

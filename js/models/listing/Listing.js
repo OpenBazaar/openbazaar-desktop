@@ -150,7 +150,7 @@ export default class extends BaseModel {
 
     if (contractType === 'CRYPTOCURRENCY') {
       if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
-        addError('metadata.coinType', 'The coin type must be provided as a string.');
+        addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
       if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
@@ -240,15 +240,6 @@ export default class extends BaseModel {
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
-        if (method === 'create') {
-          // TODO
-          // TODO
-          // TODO
-          // TODO: temporary. Eventually this will be worked into the Edit Listing
-          // form and have a default value driven via settings.
-          options.attrs.metadata.acceptedCurrencies = app.serverConfig.wallets;
-        }
-
         // convert price fields
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
@@ -299,6 +290,7 @@ export default class extends BaseModel {
 
           if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
             dummySku.quantity = options.attrs.item.cryptoQuantity;
+            delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
           }
@@ -344,13 +336,6 @@ export default class extends BaseModel {
           }
         });
 
-        // TODO: perhaps a metadata.fromCur automagically set in set() and parse()
-        // in concert with the acceptedCurrencies would be a better centralization of
-        // this code...?
-        // TODO
-        // TODO
-        // TODO
-        // TODO
         // Update the crypto title based on the accepted currency and
         // coin type.
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
