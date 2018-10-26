@@ -162,7 +162,7 @@ export default class extends baseVw {
     });
 
     // On any changes to the order / case detail model state, we'll update the
-    // state in the correponding model in the respective collection driving
+    // state in the corresponding model in the respective collection driving
     // the transaction table.
     this.listenTo(model, 'change:state', (md, state) => {
       let col = this.purchasesCol;
