@@ -64,8 +64,14 @@ export default class extends BaseModel {
       addError('paymentCoin', app.polyglot.t('orderModelErrors.paymentCoinInvalid'));
     }
 
-    if (this.shippable && !attrs.shipTo && !attrs.countryCode) {
-      addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
+    if (this.shippable) {
+      if (!attrs.shipTo || !(typeof attrs.shipTo === 'string')) {
+        addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
+      }
+
+      if (!attrs.countryCode || !(typeof attrs.countryCode === 'string')) {
+        addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
+      }
     }
 
     if (this.moderated && !attrs.moderator && attrs.moderator !== undefined) {
