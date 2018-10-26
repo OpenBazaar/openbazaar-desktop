@@ -74,7 +74,7 @@ export default class extends BaseVw {
   /**
    * Will set the tab to 'All' and set the scroll position to the top - useful
    * when hiding the menu so that it resets to a standard initial position. It will
-   * leave the collections in tact, so the user won't need to fetch notifications
+   * leave the collections intact, so the user won't need to fetch notifications
    * already fetched.
    */
   reset() {
