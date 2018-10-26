@@ -62,7 +62,7 @@ export default class extends BaseModal {
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
     this.setState({
       showModerators: this.moderatorIDs.length,
-      showOnlyVerified: true,
+      showVerifiedOnly: true,
     }, { renderOnChange: false });
 
     this.couponObj = [];
@@ -114,26 +114,6 @@ export default class extends BaseModal {
     this.listenTo(this.coupons, 'changeCoupons',
       (hashes, codes) => this.changeCoupons(hashes, codes));
 
-    this.moderators = this.createChild(Moderators, {
-      moderatorIDs: this.moderatorIDs,
-      useCache: false,
-      showVerifiedOnly: true,
-      fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
-      fetchErrorMsg: app.polyglot.t('purchase.errors.moderatorsMsg'),
-      purchase: true,
-      cardState: 'unselected',
-      notSelected: 'unselected',
-      singleSelect: true,
-      selectFirst: true,
-      radioStyle: true,
-    });
-    // render the moderators so it can start fetching and adding moderator cards
-    this.moderators.render();
-    this.moderators.getModeratorsByID();
-    this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
-    this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
-    this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
-
     const currencies = this.listing.get('metadata').get('acceptedCurrencies') || [];
     const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
     this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
@@ -146,6 +126,32 @@ export default class extends BaseModal {
         sort: true,
       },
     });
+    this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
+      if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
+    });
+
+    this.moderators = this.createChild(Moderators, {
+      moderatorIDs: this.moderatorIDs,
+      useCache: false,
+      fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
+      fetchErrorMsg: app.polyglot.t('purchase.errors.moderatorsMsg'),
+      purchase: true,
+      cardState: 'unselected',
+      notSelected: 'unselected',
+      singleSelect: true,
+      selectFirst: true,
+      radioStyle: true,
+      initialState: {
+        showOnlyCur: currencies[0],
+        showVerifiedOnly: true,
+      },
+    });
+    // render the moderators so it can start fetching and adding moderator cards
+    this.moderators.render();
+    this.moderators.getModeratorsByID();
+    this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
+    this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
+    this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
 
     if (this.listing.get('shippingOptions').length) {
       this.shipping = this.createChild(Shipping, {
@@ -280,11 +286,11 @@ export default class extends BaseModal {
   }
 
   togVerifiedModerators(bool) {
-    // If an unverified moderator is selected, don't set showOnlyVerified to
+    // If an unverified moderator is selected, don't set showVerifiedOnly to
     // true, otherwise you will hide the selected moderator.
     const modBool = bool && this.getState().unverifiedSelected ? false : bool;
     this.moderators.togVerifiedShown(modBool);
-    this.setState({ showOnlyVerified: modBool });
+    this.setState({ showVerifiedOnly: modBool });
   }
 
   onClickVerifiedOnly(e) {
@@ -455,6 +461,7 @@ export default class extends BaseModal {
                   Math.round(item.get('quantity') * coinDivisibility) :
                   item.get('quantity'),
               })),
+            //paymentCoin: ensureMainnetCode(this.order.get('paymentCoin')),
           }),
           dataType: 'json',
           contentType: 'application/json',
@@ -626,7 +633,7 @@ export default class extends BaseModal {
       this._$couponField = null;
 
       this.actionBtn.delegateEvents();
-      this.actionBtn.setState({ phase: state.phase });
+      this.actionBtn.setState({ phase: state.phase }, { renderOnChange: false });
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
       this.receipt.delegateEvents();
@@ -636,6 +643,8 @@ export default class extends BaseModal {
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       this.moderators.delegateEvents();
+      this.moderators.setState({ showVerifiedOnly: state.showVerifiedOnly },
+        { renderOnChange: false });
       this.$('.js-moderatorsWrapper').append(this.moderators.el);
 
       this.cryptoCurSelector.delegateEvents();

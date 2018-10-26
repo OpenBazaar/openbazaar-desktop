@@ -63,6 +63,7 @@ export default class extends baseVw {
       ...options,
       initialState: {
         preferredCurs: [],
+        showOnlyCur: '',
         showVerifiedOnly: false,
         ...options.initialState,
       },
@@ -404,17 +405,19 @@ export default class extends baseVw {
   }
 
   render() {
+    const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
+
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
         placeholder: !this.modCards.length,
         purchase: this.options.purchase,
+        totalShown: showMods.length,
+        totalFetching: this.unfetchedMods.length,
         ...this.getState(),
       }));
 
       super.render();
-
-      const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
 
       const noneSelected = !this.modCards.filter(card =>
         card.getState().selectedState === 'selected').length;

@@ -6,6 +6,16 @@
       </div>
     </div>
   <% } %>
+  <% if (ob.showOnlyCur && ob.totalShown < 1 && ob.totalFetching < 1) {
+     const showVer = ob.showVerifiedOnly ? 'Verified' : '' %>
+      <div class="moderatorCard moderatorsMessage clrBr">
+        <div class="moderatorCardInner">
+          <div class="clrTErr txCtr flexCent">
+            <%= ob.polyT(`moderators.noMatching${showVer}Moderators`, { coin: ob.showOnlyCur }) %>
+          </div>
+        </div>
+      </div>
+  <% } %>
   <% if (ob.purchase) { %>
   <% // only show the errors below if this is a purchase. TODO: move this to the purchase template. %>
     <% if (ob.noValidModerators || ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
