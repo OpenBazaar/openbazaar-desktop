@@ -59,7 +59,9 @@ export default class Profile extends BaseModel {
   }
 
   hasModCurrency(cur) {
-    return this.get('moderatorInfo').get('acceptedCurrencies').includes(cur);
+    return this.get('moderatorInfo') &&
+      Array.isArray(this.get('moderatorInfo').get('acceptedCurrencies')) &&
+      this.get('moderatorInfo').get('acceptedCurrencies').includes(cur);
   }
 
   get max() {

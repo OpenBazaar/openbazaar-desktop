@@ -326,7 +326,7 @@ export default class extends baseVw {
 
   batchCardRender(model) {
     if (!model || !(model instanceof Moderator)) {
-      throw new Error('Please provide a valid moderator profile.');
+      throw new Error('Please provide a valid profile model.');
     }
 
     // Render in batches only if the card being added should be visible.
