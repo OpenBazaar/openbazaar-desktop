@@ -276,7 +276,6 @@ export default class extends BaseModal {
 
     this.order.moderated = false;
     this.moderators.deselectOthers();
-    this.setState({ unverifedSelected: false }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change
   }
 
@@ -286,11 +285,8 @@ export default class extends BaseModal {
   }
 
   togVerifiedModerators(bool) {
-    // If an unverified moderator is selected, don't set showVerifiedOnly to
-    // true, otherwise you will hide the selected moderator.
-    const modBool = bool && this.getState().unverifiedSelected ? false : bool;
-    this.moderators.togVerifiedShown(modBool);
-    this.setState({ showVerifiedOnly: modBool });
+    this.moderators.togVerifiedShown(bool);
+    this.setState({ showVerifiedOnly: bool });
   }
 
   onClickVerifiedOnly(e) {
@@ -299,9 +295,6 @@ export default class extends BaseModal {
 
   onCardSelect() {
     this.order.moderated = true;
-    const selected = this.moderators.selectedIDs;
-    const unverifedSelected = selected.length && !app.verifiedMods.matched(selected).length;
-    this.setState({ unverifedSelected }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change
   }
 
@@ -424,7 +417,7 @@ export default class extends BaseModal {
     }
 
     // Set the moderator.
-    const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
+    const moderator = this.moderators.selectedIDs[0] || '';
     this.order.set({ moderator });
     this.order.set({}, { validate: true });
 
@@ -461,7 +454,6 @@ export default class extends BaseModal {
                   Math.round(item.get('quantity') * coinDivisibility) :
                   item.get('quantity'),
               })),
-            //paymentCoin: ensureMainnetCode(this.order.get('paymentCoin')),
           }),
           dataType: 'json',
           contentType: 'application/json',

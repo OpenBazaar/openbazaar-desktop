@@ -259,22 +259,22 @@ export default class extends baseVw {
   checkNotFetched() {
     const nfYet = this.unfetchedMods.length;
     if (nfYet === 0 && this.fetchingMods.length) {
-      // all ids have been fetched and ids existed to fetch
+      // All ids have been fetched and ids existed to fetch.
       this.moderatorsStatus.setState({
         hidden: true,
       });
-      // check if there are mods that loaded but none were valid
+      // Check if there are mods that loaded but none were valid.
       if (!this.moderatorsCol.length && this.fetchingMods.length) {
         this.trigger('noValidModerators');
         this.setState({ noValidModerators: true });
       }
-      // check if no valid verified mods where loaded
+      // Check if no valid verified mods where loaded.
       if (this.verifiedMods.length && !this.modCount) {
         this.trigger('noValidVerifiedModerators');
         this.setState({ noValidVerifiedModerators: true });
       }
     } else {
-      // either ids are still fetching, or this is an open fetch with no set ids
+      // Either ids are still fetching, or this is an open fetch with no set ids.
       this.moderatorsStatus.setState({
         loaded: this.fetchingMods.length - nfYet, // not shown if open fetch
         total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
@@ -300,12 +300,12 @@ export default class extends baseVw {
     });
     this.listenTo(modCard, 'modSelectChange', (data) => {
       if (data.selected) {
-        // if only one moderator should be selected, deselect the other moderators
+        // If only one moderator should be selected, deselect the other moderators.
         if (this.options.singleSelect) this.deselectOthers(data.guid);
         this.trigger('cardSelect');
       }
     });
-    // add verified mods to the beginning
+    // Add verified mods to the beginning.
     if (model.isVerified) {
       const firstUnverifiedIndex = this.modCards.findIndex(card => !card.model.isVerified);
       const insertAtIndex = firstUnverifiedIndex < 0 ?
@@ -347,7 +347,7 @@ export default class extends baseVw {
   }
 
   get modCount() {
-    // return the number of visible cards. The collection may have unshown invalid moderators.
+    // Return the number of visible cards. The collection may have unshown invalid moderators.
     return this.modCards.length;
   }
 
@@ -419,19 +419,33 @@ export default class extends baseVw {
 
       super.render();
 
-      const noneSelected = !this.modCards.filter(card =>
+      const noShownSelected = !showMods.filter(card =>
         card.getState().selectedState === 'selected').length;
 
-      showMods.forEach((mod, i) => {
-        mod.delegateEvents();
-        const opts = {};
-        if (noneSelected && this.options.selectFirst && i === 0) opts.selectedState = 'selected';
+      let firstSelected = false;
+
+      this.modCards.forEach((mod) => {
+        const newState = {};
+        const shouldRender = this.modShouldRender(mod.model);
+        // If none of the visible moderators are selected, select the first one and make sure none
+        // of the others, visible or not, are still selected.
+        if (noShownSelected && this.options.selectFirst) {
+          newState.selectedState = this.options.notSelected;
+          if (!firstSelected && shouldRender) {
+            newState.selectedState = 'selected';
+            firstSelected = true;
+          }
+        }
 
         mod.setState({
           preferredCurs: this.getState().preferredCurs,
-          ...opts,
+          ...newState,
         }, { renderOnChange: false });
-        this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
+
+        if (shouldRender) {
+          mod.delegateEvents();
+          this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
+        }
       });
 
       this.moderatorsStatus.delegateEvents();
