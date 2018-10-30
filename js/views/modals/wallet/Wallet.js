@@ -5,7 +5,7 @@ import {
   ensureMainnetCode,
 } from '../../../data/walletCurrencies';
 import defaultSearchProviders from '../../../data/defaultSearchProviders';
-// import { recordEvent } from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 import { getSocket } from '../../../utils/serverConnect';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
@@ -222,6 +222,8 @@ export default class extends BaseModal {
         contractType: 'CRYPTOCURRENCY',
       },
     });
+
+    recordEvent('Listing_NewFromWallet');
 
     launchEditListingModal({ model });
   }

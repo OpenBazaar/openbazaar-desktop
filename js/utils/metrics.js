@@ -62,7 +62,7 @@ export function isMetricRestartNeeded() {
 
 export function addMetrics() {
   // Never record metrics on testnet
-  if (app.serverConfig.testnet) return;
+  //if (app.serverConfig.testnet) return;
 
   function loadMetrics() {
     // Reverse the countly opt out in local storage. This is required or nothing will be tracked.
