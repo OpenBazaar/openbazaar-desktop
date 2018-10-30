@@ -471,7 +471,6 @@ export default class extends BaseVw {
           .get('height');
       } catch (e) {
         // pass
-        throw e;
       }
 
       if (orderState === 'DISPUTED' || isCase) {
@@ -1047,13 +1046,26 @@ export default class extends BaseVw {
   render() {
     super.render();
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
-      this.$el.html(t({
+      let templateData = {
         id: this.model.id,
         isCase: this.model.isCase,
-        isTestnet: app.serverConfig.testnet,
-        paymentAddress: this.paymentAddress,
         ...this.model.toJSON(),
-      }));
+      };
+
+      if (this.model.isCase) {
+        const paymentCoinData = this.model.paymentCurData;
+        const paymentAddress = this.paymentAddress;
+
+        templateData = {
+          ...templateData,
+          blockChainAddressUrl: paymentCoinData ?
+            paymentCoinData.getBlockChainAddressUrl(paymentAddress, app.serverConfig.testnet) :
+            false,
+          paymentAddress,
+        };
+      }
+
+      this.$el.html(t(templateData));
       this._$copiedToClipboard = null;
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
