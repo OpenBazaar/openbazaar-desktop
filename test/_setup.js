@@ -11,11 +11,8 @@ if (!fs.existsSync(tmpFolderPath)) {
 }
 
 const indexPage = fs.readFileSync(`${__dirname}/../index.html`);
-
-global.document = require('jsdom').jsdom(indexPage);
-global.window = document.defaultView;
-global.navigator = window.navigator = {};
-global.$ = require('jquery')(window);
+global.jsdom = require('jsdom-global')(indexPage);
+global.$ = require('jquery')(document.defaultView);
 
 let getServerUrl;
 
@@ -30,4 +27,5 @@ before(function () {
 
 after(function () {
   getServerUrl.restore();
+  global.jsdom();
 });
