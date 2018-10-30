@@ -99,8 +99,8 @@ export default class extends baseVw {
 
     // Remove any disabled currencies from the active list.
     if (state.activeCurs || state.disabledCurs) {
-      processedState.activeCurs = processedState.activeCurs
-        .filter(c => !processedState.disabledCurs.includes(c));
+      processedState.activeCurs = [...new Set(processedState.activeCurs
+        .filter(c => !processedState.disabledCurs.includes(c)))];
     }
 
     // Radio controls can only have one active currency.
