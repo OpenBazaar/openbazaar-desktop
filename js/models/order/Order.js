@@ -80,7 +80,10 @@ export default class extends BaseOrder {
           // The expectation is that the data required to determine the paymentCoin
           // will already be set on the model or provided in the attrs passed into
           // this set() call.
-          attrs[field] = new Transactions(attrs[field], { paymentCoin });
+          attrs[field] = new Transactions(attrs[field], {
+            paymentCoin,
+            parse: true,
+          });
         }
       });
     }
