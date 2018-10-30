@@ -237,12 +237,27 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(app.walletBalance, 'change:height',
-      () => {
-        if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
-          this.renderTimeoutInfoView();
+    const balanceMd = app.walletBalances.get(this.model.paymentCoin);
+    const bindHeightChange = md => {
+      this.listenTo(md, 'change:height',
+        () => {
+          if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
+            this.renderTimeoutInfoView();
+          }
+        });
+    };
+
+    if (balanceMd) {
+      bindHeightChange(balanceMd);
+    } else {
+      this.listenTo(app.walletBalances, 'add', md => {
+        if (md.id === this.model.paymentCoin) {
+          bindHeightChange(md);
         }
       });
+    }
+
+
   }
 
   className() {
@@ -434,7 +449,7 @@ export default class extends BaseVw {
       showDisputeBtn: false,
       showDiscussBtn: orderState === 'DISPUTED',
       showResolveDisputeBtn: false,
-      unrecognizedPaymentCur: false,
+      dataUnavailable: false,
     };
 
     if (orderState === 'PAYMENT_FINALIZED') {
@@ -487,7 +502,7 @@ export default class extends BaseVw {
         // the current height of the paymentCoin, which means we don't know the
         // blocktime and can't display timeout info.
         state = {
-          unrecognizedPaymentCur: true,
+          dataUnavailable: true,
         };
       } else {
         const timeoutHours = orderState === 'DISPUTED' ?
