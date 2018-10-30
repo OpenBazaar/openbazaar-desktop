@@ -8,6 +8,7 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    console.dir(response);
     return {
       ...response,
       // Convert from base units

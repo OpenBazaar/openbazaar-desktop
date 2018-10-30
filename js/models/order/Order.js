@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { Collection } from 'backbone';
 import { integerToDecimal } from '../../utils/currency';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
@@ -14,6 +15,8 @@ export default class extends BaseOrder {
     };
 
     const types = ['sale', 'purchase'];
+
+    console.log(`they construct me with ${opts.type}`);
 
     if (types.indexOf(opts.type) === -1) {
       throw new Error(`Type needs to be one of ${types}.`);
@@ -37,6 +40,61 @@ export default class extends BaseOrder {
       paymentAddressTransactions: Transactions,
       refundAddressTransaction: Transaction,
     };
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    let paymentCoin = this.paymentCoin;
+
+    if (!paymentCoin) {
+      try {
+        paymentCoin = attrs.contract.buyerOrder.payment.coin;
+      } catch (e) {
+        // pass
+      }
+    }
+
+    console.log(`the paymentCoin is ${paymentCoin}`);
+    console.log('the set attrs are');
+    console.dir(attrs);
+    console.log('END - the set attrs are');
+
+    if (!opts.unset) {
+      const transactionFields = [
+        'paymentAddressTransactions',
+        'refundAddressTransaction',
+      ];
+
+      transactionFields.forEach(field => {
+        if (
+          attrs[field] &&
+          !(attrs[field] instanceof Collection) &&
+          !this.attributes[field] &&
+          paymentCoin
+        ) {
+          // If setting a transactions field for the first time, we'll
+          // instantiate the collection so that we could pass in the paymentCoin.
+          // The expectation is that the data required to determine the paymentCoin
+          // will already be set on the model.
+          attrs[field] = new Transactions(attrs[field], { paymentCoin });
+          console.log(`FrEE FallIn: ${field}`);
+          window.free = attrs[field];
+          console.dir(attrs);
+        }
+      });
+    }
+
+    return super.set(attrs, opts);
   }
 
   /**
