@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { getServerCurrency } from '../../../data/walletCurrencies';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import {
   resolvingDispute,
   events as orderEvents,
@@ -421,13 +421,19 @@ export default class extends BaseModal {
     const model = new OrderDispute({ orderId: this.model.id });
     const translationKeySuffix = app.profile.id === this.model.buyerId ?
       'Buyer' : 'Vendor';
-    const timeoutMessage =
-      getServerCurrency().supportsEscrowTimeout ?
-        app.polyglot.t(
-          `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
-          { timeoutAmount: contract.disputeExpiryVerbose }
-        ) :
-        '';
+    let timeoutMessage = '';
+
+    try {
+      timeoutMessage =
+        getWalletCurByCode(this.model.paymentCoin).supportsEscrowTimeout ?
+          app.polyglot.t(
+            `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
+            { timeoutAmount: contract.disputeExpiryVerbose }
+          ) :
+          '';
+    } catch (e) {
+      // pass
+    }
 
     const view = this.createChild(DisputeOrder, {
       model,
