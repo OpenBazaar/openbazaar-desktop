@@ -12,8 +12,6 @@ import {
   renderPairedCurrency,
 } from './currency';
 import {
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
   getCurrencyByCode as getWalletCurByCode,
   supportedWalletCurs,
   anySupportedByWallet,
@@ -133,8 +131,6 @@ const currencyExport = {
   getExchangeRate,
   formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
   isFiatCur,
 };
 

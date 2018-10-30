@@ -467,10 +467,11 @@ export default class extends BaseVw {
 
       try {
         curHeight = app.walletBalances
-          .get(this.paymentCoin)
+          .get(this.model.paymentCoin)
           .get('height');
       } catch (e) {
         // pass
+        throw e;
       }
 
       if (orderState === 'DISPUTED' || isCase) {
@@ -482,6 +483,7 @@ export default class extends BaseVw {
               this.contract.get('dispute').timestamp;
           }
         } catch (e) {
+          throw e;
           // pass - will be handled below
         }
       }
@@ -561,7 +563,7 @@ export default class extends BaseVw {
           const fundedHeight = this.model.fundedBlockHeight;
           const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / paymentCurData.blockTime;
           const blocksRemaining = fundedHeight ?
-            blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
+            blocksPerTimeout - curHeight - fundedHeight :
             blocksPerTimeout;
           const msRemaining = blocksRemaining * paymentCurData.blockTime;
 

@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import app from '../../../../app';
 import {
   acceptingOrder,
   acceptOrder,
@@ -185,6 +186,9 @@ export default class extends baseVw {
           acceptInProgress: acceptingOrder(this.orderId),
           rejectInProgress: rejectingOrder(this.orderId),
           isCrypto: this.options.isCrypto,
+          paymentCoin: this.options.paymentCoin,
+          blockChainTxUrl: this.paymentCoinData
+            .getBlockChainTxUrl(payment.id, app.serverConfig.testnet),
         },
       });
 
