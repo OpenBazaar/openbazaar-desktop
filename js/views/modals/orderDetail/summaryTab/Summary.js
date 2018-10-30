@@ -442,11 +442,20 @@ export default class extends BaseVw {
     } else {
       let disputeStartTime;
       let escrowTimeoutHours;
+      let curHeight;
 
       try {
         escrowTimeoutHours = this.contract.escrowTimeoutHours;
       } catch (e) {
         // pass - will be handled below
+      }
+
+      try {
+        curHeight = app.walletBalances
+          .get(this.paymentCoin)
+          .get('height');
+      } catch (e) {
+        // pass
       }
 
       if (orderState === 'DISPUTED' || isCase) {
@@ -473,9 +482,10 @@ export default class extends BaseVw {
           showDisputeBtn: this.model.isOrderStateDisputable,
           showResolveDisputeBtn: isCase,
         };
-      } else if (!paymentCurData) {
-        // The order was paid in a coin not supported by this client, which
-        // means we don't know the blocktime and can't display timeout info.
+      } else if (!paymentCurData || !curHeight) {
+        // The order was paid in a coin not supported by this client or we don't have
+        // the current height of the paymentCoin, which means we don't know the
+        // blocktime and can't display timeout info.
         state = {
           unrecognizedPaymentCur: true,
         };

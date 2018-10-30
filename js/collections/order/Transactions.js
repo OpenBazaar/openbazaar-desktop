@@ -7,8 +7,6 @@ export default class extends Collection {
       throw new Error('Please provide a paymentCoin');
     }
 
-    console.log('IM A-OK PLAYA');
-
     return super(models, options);
   }
 

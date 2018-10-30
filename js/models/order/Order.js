@@ -16,8 +16,6 @@ export default class extends BaseOrder {
 
     const types = ['sale', 'purchase'];
 
-    console.log(`they construct me with ${opts.type}`);
-
     if (types.indexOf(opts.type) === -1) {
       throw new Error(`Type needs to be one of ${types}.`);
     }
@@ -64,11 +62,6 @@ export default class extends BaseOrder {
       }
     }
 
-    console.log(`the paymentCoin is ${paymentCoin}`);
-    console.log('the set attrs are');
-    console.dir(attrs);
-    console.log('END - the set attrs are');
-
     if (!opts.unset) {
       const transactionFields = [
         'paymentAddressTransactions',
@@ -85,11 +78,9 @@ export default class extends BaseOrder {
           // If setting a transactions field for the first time, we'll
           // instantiate the collection so that we could pass in the paymentCoin.
           // The expectation is that the data required to determine the paymentCoin
-          // will already be set on the model.
+          // will already be set on the model or provided in the attrs passed into
+          // this set() call.
           attrs[field] = new Transactions(attrs[field], { paymentCoin });
-          console.log(`FrEE FallIn: ${field}`);
-          window.free = attrs[field];
-          console.dir(attrs);
         }
       });
     }
@@ -158,7 +149,11 @@ export default class extends BaseOrder {
       .sort((a, b) => (a.get('height') - b.get('height')));
 
     _.every(models, (payment, pIndex) => {
-      if (this.getBalanceRemaining(new Transactions(models.slice(0, pIndex + 1))) <= 0) {
+      const transactions = new Transactions(
+        models.slice(0, pIndex + 1),
+        { paymentCoin: this.paymentCoin }
+      );
+      if (this.getBalanceRemaining(transactions) <= 0) {
         height = payment.get('height');
         return false;
       }
@@ -176,8 +171,9 @@ export default class extends BaseOrder {
   get paymentsIn() {
     return new Transactions(
       this.get('paymentAddressTransactions')
-        .filter(payment => (payment.get('value') > 0))
-      );
+        .filter(payment => (payment.get('value') > 0)),
+      { paymentCoin: this.paymentCoin }
+    );
   }
 
   get isOrderCancelable() {

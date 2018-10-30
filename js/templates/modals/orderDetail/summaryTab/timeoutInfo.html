@@ -23,13 +23,13 @@
 
     messageClass = 'txCtr clrTErr';
     tipClass = 'hide';
-  } else if (ob.unrecognizedPaymentCur) {
+  } else if (ob.dataUnavailable) {
     if (ob.moderator) {
-      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modUnrecognizedPaymentCur');
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modDataUnavailable');
     } else {
       message = ob.isDisputed ?
-        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedUnrecognizedPaymentCur') :
-        ob.polyT('orderDetail.summaryTab.timeoutInfo.unrecognizedPaymentCur');
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedDataUnavailable') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.dataUnavailable');
     }
 
     messageClass = 'txCtr clrTErr';
