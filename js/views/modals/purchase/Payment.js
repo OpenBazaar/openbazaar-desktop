@@ -54,7 +54,6 @@ export default class extends BaseVw {
 
     super(options);
     this.options = options;
-    console.log(`the balance remaining is ${options.balanceRemaining}`);
     this._balanceRemaining = options.balanceRemaining;
     this.paymentAddress = options.paymentAddress;
     this.orderId = options.orderId;
@@ -70,7 +69,7 @@ export default class extends BaseVw {
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
-              app.serverConfig.cryptoCurrency);
+              this.paymentCoin);
             if (amount >= this.balanceRemaining) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);

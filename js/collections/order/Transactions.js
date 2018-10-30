@@ -7,7 +7,8 @@ export default class extends Collection {
       throw new Error('Please provide a paymentCoin');
     }
 
-    return super(models, options);
+    super(models, options);
+    this.options = options;
   }
 
   model(attrs, options) {
@@ -16,5 +17,12 @@ export default class extends Collection {
 
   modelId(attrs) {
     return attrs.txid;
+  }
+
+  set(models = [], options = {}) {
+    return super.set(models, {
+      paymentCoin: this.options && this.options.paymentCoin || undefined,
+      ...options,
+    });
   }
 }
