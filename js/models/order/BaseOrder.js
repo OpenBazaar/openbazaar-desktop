@@ -8,7 +8,7 @@ export default class extends BaseModel {
   // and there are cases where that won't be the case (e.g. in parse), yet the data
   // is available to be passed in. The instance getters are there as a convenience
   // (slightly less syntax to call) and in most cases the model will be synced, so they
-  // are the options that is used.
+  // are the option that is used.
 
   // PLEASE NOTE: The majority of the functions below will only return an
   // accurate value if the attribute set of the model is passed in after
