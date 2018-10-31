@@ -406,7 +406,7 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
-    const paymentCurData = this.model.paymentCurData;
+    const paymentCurData = this.model.paymentCoinData;
 
     return (
       (!paymentCurData || paymentCurData.supportsEscrowTimeout) &&
@@ -418,7 +418,7 @@ export default class extends BaseVw {
   }
 
   renderTimeoutInfoView() {
-    const paymentCurData = this.model.paymentCurData;
+    const paymentCurData = this.model.paymentCoinData;
     const orderState = this.model.get('state');
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     const isCase = this.model.isCase;
@@ -691,7 +691,7 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
-    const paymentCoinData = this.model.paymentCurData();
+    const paymentCoinData = this.model.paymentCoinData();
 
     if (!refundMd) {
       throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
@@ -1057,7 +1057,7 @@ export default class extends BaseVw {
       };
 
       if (this.model.isCase) {
-        const paymentCoinData = this.model.paymentCurData;
+        const paymentCoinData = this.model.paymentCoinData;
         const paymentAddress = this.paymentAddress;
 
         templateData = {

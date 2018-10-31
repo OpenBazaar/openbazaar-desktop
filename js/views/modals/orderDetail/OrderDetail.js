@@ -503,7 +503,7 @@ export default class extends BaseModal {
    * based upon the order state.
    */
   get actionBarButtonState() {
-    const paymentCurData = this.model.paymentCurData;
+    const paymentCurData = this.model.paymentCoinData;
 
     return {
       showDisputeOrderButton:

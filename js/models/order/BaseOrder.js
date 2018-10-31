@@ -117,7 +117,7 @@ export default class extends BaseModel {
     return this.constructor.getPaymentCoin(this.toJSON());
   }
 
-  static getPaymentCurData(attrs = {}) {
+  static getPaymentCoinData(attrs = {}) {
     let curData;
 
     try {
@@ -132,7 +132,7 @@ export default class extends BaseModel {
     return curData;
   }
 
-  get paymentCurData() {
-    return this.constructor.getPaymentCurData(this.toJSON());
+  get paymentCoinData() {
+    return this.constructor.getPaymentCoinData(this.toJSON());
   }
 }
