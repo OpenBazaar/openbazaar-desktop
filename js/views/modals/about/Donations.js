@@ -30,9 +30,7 @@ export default class extends baseVw {
     clipboard.writeText(obDonationAddress);
 
     this.$copyNotification.addClass('active');
-    if (!!hiderTimer) {
-      clearTimeout(hiderTimer);
-    }
+    clearTimeout(hiderTimer);
     hiderTimer = setTimeout(
       () => this.$copyNotification.removeClass('active'), 3000);
   }
