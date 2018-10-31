@@ -195,6 +195,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-createListing': 'onClickCreateListing',
+      'click .js-viewCryptoListings': 'onClickViewCryptoListings',
       ...super.events(),
     };
   }
@@ -223,9 +224,13 @@ export default class extends BaseModal {
       },
     });
 
-    recordEvent('Listing_NewFromWallet');
+    recordEvent('Listing_NewCryptoFromWallet');
 
     launchEditListingModal({ model });
+  }
+
+  onClickViewCryptoListings() {
+    recordEvent('Wallet_ViewCryptoListings');
   }
 
   /**

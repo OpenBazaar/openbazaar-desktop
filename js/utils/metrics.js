@@ -62,6 +62,7 @@ export function isMetricRestartNeeded() {
 
 export function addMetrics() {
   // Never record metrics on testnet
+  // TODO: uncomment this out
   //if (app.serverConfig.testnet) return;
 
   function loadMetrics() {
