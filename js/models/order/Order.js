@@ -204,6 +204,8 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
+    const paymentCoin = BaseOrder.paymentCoin;
+
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
@@ -239,32 +241,23 @@ export default class extends BaseOrder {
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
 
-        // TODO no app.serverConfig.cryptoCurrency
-        // TODO no app.serverConfig.cryptoCurrency
-        // TODO no app.serverConfig.cryptoCurrency
-        // TODO no app.serverConfig.cryptoCurrency
-        // TODO no app.serverConfig.cryptoCurrency
-        // TODO no app.serverConfig.cryptoCurrency
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.buyerOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
         response.contract.disputeResolution.payout.vendorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.vendorOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
         response.contract.disputeResolution.payout.moderatorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
       }
     }
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];
 
-    // Embed the payment type into each payment transaction.
-    // TODO: when multi wallet payment support is implemented, this will need to come
-    // from the server.
     const payments = [...response.paymentAddressTransactions];
 
     if (response.refundAddressTransaction) {

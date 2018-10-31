@@ -691,6 +691,7 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
+    const paymentCoinData = this.model.paymentCurData();
 
     if (!refundMd) {
       throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
@@ -702,6 +703,9 @@ export default class extends BaseVw {
       model: refundMd,
       initialState: {
         isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+        blockChainTxUrl: paymentCoinData ?
+          paymentCoinData.getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet) :
+          '',
       },
     });
     this.buyer.getProfile()

@@ -42,7 +42,15 @@ export default class extends BaseModel {
   }
 
   get contract() {
-    return this.constructor.getContract(this.toJSON());
+    let contract = this.get('contract');
+
+    if (this.isCase) {
+      contract = this.get('buyerOpened') ?
+        this.get('buyerContract') :
+        this.get('vendorContract');
+    }
+
+    return contract;
   }
 
   static getParticipantIds(attrs = {}) {
