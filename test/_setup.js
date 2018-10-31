@@ -2,6 +2,7 @@ import path from 'path';
 import fs from 'fs';
 import { before, after } from 'mocha';
 import sinon from 'sinon';
+import { JSDOM } from 'jsdom';
 import app from '../js/app';
 
 const tmpFolderPath = path.join(__dirname, '../.tmp');
@@ -11,8 +12,12 @@ if (!fs.existsSync(tmpFolderPath)) {
 }
 
 const indexPage = fs.readFileSync(`${__dirname}/../index.html`);
-global.jsdom = require('jsdom-global')(indexPage);
-global.$ = require('jquery')(document.defaultView);
+const dom = new JSDOM(indexPage);
+
+global.document = dom.window.document;
+global.window = dom.window;
+global.navigator = window.navigator;
+global.$ = require('jquery')(window);
 
 let getServerUrl;
 
@@ -27,5 +32,4 @@ before(function () {
 
 after(function () {
   getServerUrl.restore();
-  global.jsdom();
 });
