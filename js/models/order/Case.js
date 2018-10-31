@@ -1,5 +1,5 @@
 import { integerToDecimal } from '../../utils/currency';
-import BaseOrder, { getPaymentCoin } from './BaseOrder';
+import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
 
@@ -93,7 +93,7 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    const paymentCoin = getPaymentCoin(response);
+    const paymentCoin = BaseOrder.getPaymentCoin(response);
 
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
