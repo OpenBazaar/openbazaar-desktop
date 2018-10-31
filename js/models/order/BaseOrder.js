@@ -1,97 +1,120 @@
 import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
-function checkSynced(model) {
-  if (!model) {
-    throw new Error('Please provide an Order or Case model.');
+// PLEASE NOTE: The majority of the functions below will only return an
+// accurate value if the attribute set of the model is passed after the model
+// was synced from the server.
+
+function isCase(attrs = {}) {
+  return typeof attrs.buyerOpened !== 'undefined';
+}
+
+/**
+ * Returns the contract. If this is a case, it will return the contract of the
+ * party that opened the dispute, which is the only contract you're guaranteed
+ * to have. If you need the specific contract of either the buyer or seller,
+ * grab it directly via model.get('buyerContract') / model.get('vendorContract').
+ */
+function getContract(attrs = {}) {
+  let contract = attrs.contract;
+
+  if (isCase(attrs)) {
+    contract = attrs.buyerOpened ?
+      attrs.buyerContract :
+      attrs.vendorContract;
   }
 
-  if (model.get('contract') === undefined &&
-    model.get('buyerOpened') === undefined) {
-    throw new Error('The model must be synced to perform this operation.');
+  return contract;
+}
+
+function getParticipantIds(attrs = {}) {
+  return {
+    buyer: getContract(attrs).buyerOrder.buyerID.peerID,
+    vendor: getContract(attrs).vendorListings[0].vendorID.peerID,
+    moderator: getContract(attrs).buyerOrder.payment.moderator,
+  };
+}
+
+function getBuyerId(attrs = {}) {
+  return getParticipantIds(attrs).buyer;
+}
+
+function getVendorId(attrs = {}) {
+  return getParticipantIds(attrs).vendor;
+}
+
+function getModeratorId(attrs = {}) {
+  return getParticipantIds(attrs).moderator;
+}
+
+function canBuyerComplete(attrs = {}) {
+  const orderState = attrs.state;
+
+  return getContract(attrs).vendorOrderFulfillment &&
+    ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
+}
+
+export function getPaymentCoin(attrs = {}) {
+  let paymentCoin;
+
+  try {
+    paymentCoin = getContract(attrs).buyerOrder.payment.coin;
+  } catch (e) {
+    // pass
   }
+
+  return paymentCoin;
+}
+
+function getPaymentCurData(attrs = {}) {
+  let curData;
+
+  try {
+    curData = getWalletCurByCode(
+      getContract(attrs).buyerOrder
+        .payment.coin
+    );
+  } catch (e) {
+    // pass
+  }
+
+  return curData;
 }
 
 export default class extends BaseModel {
   get isCase() {
-    checkSynced(this);
-    return typeof this.get('buyerOpened') !== 'undefined';
+    return isCase(this.toJSON());
   }
 
-  /**
-   * Returns the contract. If this is a case, it will return the contract of the
-   * party that opened the dispute, which is the only contract you're guaranteed
-   * to have. If you need the specific contract of either the buyer or seller,
-   * grab it directly via model.get('buyerContract') / model.get('vendorContract').
-   */
   get contract() {
-    let contract = this.get('contract');
-
-    if (this.isCase) {
-      contract = this.get('buyerOpened') ?
-        this.get('buyerContract') :
-        this.get('vendorContract');
-    }
-
-    return contract;
+    return getContract(this.toJSON());
   }
 
   get participantIds() {
-    const contractJSON = this.contract.toJSON();
-
-    return {
-      buyer: contractJSON.buyerOrder.buyerID.peerID,
-      vendor: contractJSON.vendorListings[0].vendorID.peerID,
-      moderator: contractJSON.buyerOrder.payment.moderator,
-    };
+    return getParticipantIds(this.toJSON());
   }
 
   get buyerId() {
-    return this.participantIds.buyer;
+    return getBuyerId(this.toJSON());
   }
 
   get vendorId() {
-    return this.participantIds.vendor;
+    return getVendorId(this.toJSON());
   }
 
   get moderatorId() {
-    return this.participantIds.moderator;
+    return getModeratorId(this.toJSON());
   }
 
   get canBuyerComplete() {
-    const orderState = this.get('state');
-
-    return this.contract.get('vendorOrderFulfillment') &&
-      ['FULFILLED', 'RESOLVED', 'PAYMENT_FINALIZED'].includes(orderState);
+    return canBuyerComplete(this.toJSON());
   }
 
-  // TODO: doees this work on a dispute??
-  // TODO: doees this work on a dispute??
-  // TODO: doees this work on a dispute??
   get paymentCoin() {
-    let paymentCoin;
-
-    try {
-      paymentCoin = this.contract.get('buyerOrder').payment.coin;
-    } catch (e) {
-      // pass
-    }
-
-    return paymentCoin;
+    return getPaymentCoin(this.toJSON());
   }
 
   get paymentCurData() {
-    let curData;
-
-    try {
-      curData = getWalletCurByCode(
-        this.contract.get('buyerOrder')
-          .payment.coin
-      );
-    } catch (e) {
-      // pass
-    }
-
-    return curData;
+    return getPaymentCurData(this.toJSON());
   }
 }
