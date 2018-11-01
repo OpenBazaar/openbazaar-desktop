@@ -610,6 +610,7 @@ export default class extends BaseVw {
 
   shouldShowPayForOrderSection() {
     return this.buyer.id === app.profile.id &&
+      this.model.paymentCoinData &&
       this.model.getBalanceRemaining() > 0 &&
       !this.model.vendorProcessingError;
   }
@@ -879,15 +880,6 @@ export default class extends BaseVw {
       });
 
       this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
-    } else {
-      this.getCachedEl('.js-payForOrderWrap').html(
-        `
-        <i class="ion-alert-circled clrTAlert"></i>
-        <span>
-          ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayForOrder')}
-        </span>
-        `
-      );
     }
   }
 
@@ -1050,9 +1042,11 @@ export default class extends BaseVw {
   render() {
     super.render();
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
+      const paymentCoin = this.model.paymentCoin;
       let templateData = {
         id: this.model.id,
         isCase: this.model.isCase,
+        paymentCoin,
         ...this.model.toJSON(),
       };
 
@@ -1092,8 +1086,6 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
-        const paymentCoin = this.model.paymentCoin;
-
         if (getWalletCurByCode(paymentCoin)) {
           if (this.payments) this.payments.remove();
           this.payments = this.createChild(Payments, {
@@ -1111,10 +1103,14 @@ export default class extends BaseVw {
         } else {
           this.getCachedEl('.js-paymentsWrap').html(
             `
-            <i class="ion-alert-circled clrTAlert"></i>
-            <span>
-              ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayments')}
-            </span>
+            <div class="rowLg border clrBr padMd">
+              <i class="ion-alert-circled clrTAlert"></i>
+              <span>
+                ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayments', {
+                  cur: paymentCoin,
+                })}
+              </span>
+            </div>  
             `
           );
         }

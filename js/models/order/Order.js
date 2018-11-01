@@ -111,12 +111,18 @@ export default class extends BaseOrder {
   }
 
   getBalanceRemaining() {
-    const paymentCurData = this.paymentCurData;
+    const paymentCoinData = this.paymentCoinData;
     let balanceRemaining = this.orderPrice - this.totalPaid;
 
-    if (this.paymentCurData) {
+    // console.log(`the order price is ${this.orderPrice}`);
+    // console.log(`the total paid is ${this.orderPrice}`);
+    // console.log(`the balance remaining is ${balanceRemaining}`);
+    // console.log(`slip diddly doo`);
+    window.slip = this;
+
+    if (paymentCoinData) {
       // round based on the coins base units
-      const cryptoBaseUnit = paymentCurData.baseUnit;
+      const cryptoBaseUnit = paymentCoinData.baseUnit;
       balanceRemaining = Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
     }
 
