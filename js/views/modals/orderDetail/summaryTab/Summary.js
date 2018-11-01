@@ -256,8 +256,6 @@ export default class extends BaseVw {
         }
       });
     }
-
-
   }
 
   className() {

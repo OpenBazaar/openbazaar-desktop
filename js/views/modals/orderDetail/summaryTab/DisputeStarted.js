@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import moment from 'moment';
-import { getServerCurrency } from '../../../../data/walletCurrencies';
 import {
   events as orderEvents,
 } from '../../../../utils/order';
