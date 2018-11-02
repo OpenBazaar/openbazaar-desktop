@@ -869,7 +869,7 @@ export default class extends BaseVw {
       if (this.payForOrder) this.payForOrder.remove();
 
       this.payForOrder = this.createChild(PayForOrder, {
-        balanceRemaining: this.model.getBalanceRemaining(),
+        balanceRemaining: this.model.getBalanceRemaining({ convertFromSat: true }),
         paymentAddress: this.paymentAddress,
         orderId: this.model.id,
         isModerated: !!this.moderator,

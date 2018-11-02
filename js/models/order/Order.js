@@ -105,33 +105,50 @@ export default class extends BaseOrder {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
+  /**
+   * Returns the order price in Satoshi. Useful if you intend to use it in
+   * arithmetic expression where you need to avoid floating point precision
+   * errors.
+   */
+  get rawOrderPrice() {
+    return this.rawResponse
+      .contract
+      .buyerOrder
+      .payment
+      .amount;
+  }
+
   get totalPaid() {
     return this.paymentsIn
       .reduce((total, transaction) => total + transaction.get('value'), 0);
   }
 
-  getBalanceRemaining() {
-    const paymentCoinData = this.paymentCoinData;
-    let balanceRemaining = this.orderPrice - this.totalPaid;
+  /**
+   * Returns the total paid in Satoshi. Useful if you intend to use it in
+   * arithmetic expression where you need to avoid floating point precision
+   * errors.
+   */
+  get rawTotalPaid() {
+    return this.rawPaymentsIn
+      .reduce((total, transaction) => total + transaction.value, 0);
+  }
 
-    // console.log(`the order price is ${this.orderPrice}`);
-    // console.log(`the total paid is ${this.orderPrice}`);
-    // console.log(`the balance remaining is ${balanceRemaining}`);
-    // console.log(`slip diddly doo`);
-    window.slip = this;
+  getBalanceRemaining(options = {}) {
+    const opts = {
+      convertFromSat: false,
+      ...options,
+    };
 
-    if (paymentCoinData) {
-      // round based on the coins base units
-      const cryptoBaseUnit = paymentCoinData.baseUnit;
-      balanceRemaining = Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
-    }
+    const balanceRemaining = this.rawOrderPrice - this.rawTotalPaid;
 
-    return balanceRemaining;
+    return opts.convertFromSat ?
+      integerToDecimal(balanceRemaining, this.paymentCoin) :
+      balanceRemaining;
   }
 
   get isPartiallyFunded() {
     const balanceRemaining = this.getBalanceRemaining();
-    return balanceRemaining > 0 && balanceRemaining < this.orderPrice;
+    return balanceRemaining > 0 && balanceRemaining < this.rawOrderPrice;
   }
 
   /**
@@ -185,6 +202,18 @@ export default class extends BaseOrder {
     );
   }
 
+  /**
+   * Returns a modified version of the transactions by filtering out any negative payments
+   * (e.g. money moving from the multisig to the vendor, refunds). This differs from
+   * paymentsIn, in that it won't convert prices from Satoshi and rather than returning
+   * a Collection, flat data will be returned.
+   */
+  get rawPaymentsIn() {
+    return this.rawResponse
+      .paymentAddressTransactions
+      .filter(payment => payment.value > 0);
+  }
+
   get isOrderCancelable() {
     return this.buyerId === app.profile.id &&
       !this.moderatorId &&
@@ -210,16 +239,18 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
+    this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
     const paymentCoin = BaseOrder.paymentCoin;
 
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
-      response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+      response.rawContract = this.rawResponse.contract;
 
       const payment = response.contract.buyerOrder.payment;
+
       // convert price fields
-      response.contract.buyerOrder.payment.amount =
+      payment.amount =
         integerToDecimal(payment.amount, payment.coin);
 
       // convert crypto listing quantities
