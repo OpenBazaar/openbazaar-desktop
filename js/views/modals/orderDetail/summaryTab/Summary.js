@@ -690,7 +690,7 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
-    const paymentCoinData = this.model.paymentCoinData();
+    const paymentCoinData = this.model.paymentCoinData;
 
     if (!refundMd) {
       throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +

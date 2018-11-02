@@ -40,57 +40,6 @@ export default class extends BaseOrder {
     };
   }
 
-  set(key, val, options = {}) {
-    // Handle both `"key", value` and `{key: value}` -style arguments.
-    let attrs;
-    let opts = options;
-
-    if (typeof key === 'object') {
-      attrs = key;
-      opts = val || {};
-    } else {
-      (attrs = {})[key] = val;
-    }
-
-    let paymentCoin = this.paymentCoin;
-
-    if (!paymentCoin) {
-      try {
-        paymentCoin = attrs.contract.buyerOrder.payment.coin;
-      } catch (e) {
-        // pass
-      }
-    }
-
-    if (!opts.unset) {
-      const transactionFields = [
-        'paymentAddressTransactions',
-        'refundAddressTransaction',
-      ];
-
-      transactionFields.forEach(field => {
-        if (
-          attrs[field] &&
-          !(attrs[field] instanceof Collection) &&
-          !this.attributes[field] &&
-          paymentCoin
-        ) {
-          // If setting a transactions field for the first time, we'll
-          // instantiate the collection so that we could pass in the paymentCoin.
-          // The expectation is that the data required to determine the paymentCoin
-          // will already be set on the model or provided in the attrs passed into
-          // this set() call.
-          attrs[field] = new Transactions(attrs[field], {
-            paymentCoin,
-            parse: true,
-          });
-        }
-      });
-    }
-
-    return super.set(attrs, opts);
-  }
-
   /**
    * Returns a boolean indicating whether the vendor had an error when processing
    * the order. This is different from just checking for the PROCESSING_ERROR state,
@@ -239,8 +188,8 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
+    const paymentCoin = BaseOrder.getPaymentCoin(response);
     this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
-    const paymentCoin = BaseOrder.paymentCoin;
 
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
@@ -295,11 +244,14 @@ export default class extends BaseOrder {
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];
 
+    // Embed the payment type into each payment transaction.
     const payments = [...response.paymentAddressTransactions];
 
     if (response.refundAddressTransaction) {
       payments.push(response.refundAddressTransaction);
     }
+
+    payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
 
     return response;
   }

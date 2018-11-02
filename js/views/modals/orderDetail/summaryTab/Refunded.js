@@ -7,6 +7,7 @@ import BaseVw from '../../../baseVw';
 export default class extends BaseVw {
   constructor(options = {}) {
     super({
+      ...options,
       initialState: {
         buyerName: '',
         userCurrency: app.settings.get('localCurrency') || 'BTC',

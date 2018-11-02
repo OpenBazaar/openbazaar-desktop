@@ -18,7 +18,7 @@
       <%
         const priceFrag = ob.currencyMod.pairedCurrency(
           ob.value,
-          ob.currencyMod.getServerCurrency().code,
+          ob.paymentCoin,
           ob.userCurrency
         );
 
