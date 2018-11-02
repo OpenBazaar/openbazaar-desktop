@@ -93,12 +93,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tLTC/address/${address}` :
-        `https://blockchair.com/litecoin/address/${address}`
+        `https://live.blockcypher.com/ltc/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://chain.so/tx/LTCTEST/${txid}` :
-        `https://chain.so/address/LTCTEST/${txid}`
+        `https://live.blockcypher.com/ltc/tx/${txid}`
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 2.5,
