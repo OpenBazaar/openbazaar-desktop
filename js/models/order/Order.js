@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import { Collection } from 'backbone';
 import { integerToDecimal } from '../../utils/currency';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
