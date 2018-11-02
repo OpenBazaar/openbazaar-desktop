@@ -324,6 +324,14 @@
             padding-left: 2px;
           }
         }
+
+        &.ion-ios-rewind {
+          font-size: 26px;
+
+          &::before {
+            padding-top: 4px;
+          }          
+        }
       }
     }
 
