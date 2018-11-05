@@ -21,27 +21,6 @@ export default class extends BaseVw {
     return 'orderCompleteEvent rowLg';
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   render() {
     const rating = this.dataObject.ratings[0].ratingData;
     loadTemplate('modals/orderDetail/summaryTab/orderComplete.html', (t) => {
