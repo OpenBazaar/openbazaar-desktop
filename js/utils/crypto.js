@@ -10,32 +10,15 @@ import {
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
  * attempt to use the server currency.
  */
- // TODO: this should give priority to the icon in the wallet curs data file.
- // TODO: this should give priority to the icon in the wallet curs data file.
- // TODO: this should give priority to the icon in the wallet curs data file.
- // TODO: this should give priority to the icon in the wallet curs data file.
- // TODO: this should give priority to the icon in the wallet curs data file.
 export function renderCryptoIcon(options = {}) {
-  let code = options.code;
   const baseIconPath = '../imgs/cryptoIcons/';
 
-  if (code !== undefined && typeof code !== 'string' && code !== '') {
-    throw new Error('If providing the code, it must be a non-empty string.');
-  }
-
-  // todo:
-  // todo:
-  // todo:
-  // todo - force an icon to be passed in. No more single server currency shennanigans.
-  if (!code) {
-    const serverCur = getServerCurrency();
-    code = serverCur && serverCur.code || '';
-  } else {
-    code = ensureMainnetCode(code);
+  if (typeof options.code !== 'string' && options.code !== '') {
+    throw new Error('Please provide a crypto currency code.');
   }
 
   const opts = {
-    code,
+    code: ensureMainnetCode(options.code),
     className: '',
     attrs: {},
     defaultIcon: `${baseIconPath}default-coin-icon.png`,
@@ -45,8 +28,8 @@ export function renderCryptoIcon(options = {}) {
   const attrs = Object.keys(opts.attrs).reduce(
     (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
   );
-  const iconUrl = code ?
-    `url(${baseIconPath}${code}-icon.png),` :
+  const iconUrl = opts.code ?
+    `url(${baseIconPath}${opts.code}-icon.png),` :
     '';
   const defaultIcon = opts.defaultIcon ?
     `url(${opts.defaultIcon})` :
