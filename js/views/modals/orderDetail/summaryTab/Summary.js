@@ -407,7 +407,7 @@ export default class extends BaseVw {
     const paymentCurData = this.model.paymentCoinData;
 
     return (
-      (!paymentCurData || paymentCurData.supportsEscrowTimeout) &&
+      (paymentCurData && paymentCurData.supportsEscrowTimeout) &&
       (
         this.model.isOrderDisputable ||
         ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))

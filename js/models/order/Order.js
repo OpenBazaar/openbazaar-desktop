@@ -173,13 +173,13 @@ export default class extends BaseOrder {
     const orderState = this.get('state');
 
     if (this.buyerId === app.profile.id) {
-      return this.moderatorId &&
+      return !!this.moderatorId &&
         (
           ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].includes(orderState) ||
           (orderState === 'PROCESSING_ERROR' && this.isFunded)
         );
     } else if (this.vendorId === app.profile.id) {
-      return this.moderatorId &&
+      return !!this.moderatorId &&
         ['PARTIALLY_FULFILLED', 'FULFILLED'].includes(orderState);
     }
 
