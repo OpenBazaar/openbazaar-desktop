@@ -770,10 +770,12 @@ export default class extends BaseVw {
         });
     }
 
-    this.$subSections.prepend(this.fulfilled.render().el);
+    if (this.completeOrderForm) {
+      this.completeOrderForm.$el.after(this.fulfilled.render().el);
+    } else {
+      this.$subSections.prepend(this.fulfilled.render().el);
 
-    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
-      this.renderCompleteOrderForm();
+      if (this.shouldShowCompleteOrderForm()) this.renderCompleteOrderForm();
     }
   }
 
@@ -909,10 +911,12 @@ export default class extends BaseVw {
           closerAvatarHashes: profile.get('avatarHashes').toJSON(),
         }));
 
-    this.$subSections.prepend(this.disputeAcceptance.render().el);
+    if (this.completeOrderForm) {
+      this.completeOrderForm.$el.after(this.disputeAcceptance.render().el);
+    } else {
+      this.$subSections.prepend(this.disputeAcceptance.render().el);
 
-    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
-      this.renderCompleteOrderForm();
+      if (this.shouldShowCompleteOrderForm()) this.renderCompleteOrderForm();
     }
   }
 
