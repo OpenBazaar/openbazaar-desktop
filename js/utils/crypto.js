@@ -1,10 +1,7 @@
 import $ from 'jquery';
 import app from '../app';
 import loadTemplate from './loadTemplate';
-import {
-  getServerCurrency,
-  ensureMainnetCode,
-} from '../data/walletCurrencies';
+import { ensureMainnetCode } from '../data/walletCurrencies';
 
 /**
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
