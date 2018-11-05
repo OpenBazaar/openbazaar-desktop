@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import moment from 'moment';
 import twemoji from 'twemoji';
 import { capitalize } from '../../../utils/string';
