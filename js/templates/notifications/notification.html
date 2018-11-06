@@ -9,7 +9,7 @@
     %>
     <% if (ob.notification.type === 'payment') { %>
       <div class="thumbCol flexNoShrink>">
-        <%= ob.crypto.cryptoIcon({ code: 'OB_GO_BUG_1272' }) %>
+        <%= ob.crypto.cryptoIcon({ code: ob.notification.coinType || 'UNKNOWN_CODE' }) %>
       </div>
     <% } else { %>
       <div class="thumbCol disc clrBr2 clrSh1 flexNoShrink <% if (isOrderNotif) print('listingImage') %>" style="<%= ob[imageFunc](ob.notification.thumbnail || ob.notification.avatarHashes || {}) %>"></div>
