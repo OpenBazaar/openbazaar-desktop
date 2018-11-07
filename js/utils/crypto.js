@@ -41,8 +41,6 @@ export function renderCryptoIcon(options = {}) {
  * the CryptoTradingPair view in that the latter allows you to display the exchange
  * rate next to the trading pair. It's also more easily updatable (just setState())
  * in case your currencies need to change dynamically.
- * TODO:
- * TODO:
  * TODO: document the options.
  */
 export function renderCryptoTradingPair(options = {}) {
