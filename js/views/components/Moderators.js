@@ -429,10 +429,10 @@ export default class extends baseVw {
 
       this.modCards.forEach((mod) => {
         const newState = {};
-        const shouldRender = this.modShouldRender(mod.model);
+        const shouldRender = showMods.includes(mod);
+        // Moderators that aren't being rendered should never be selected.
         if (!shouldRender) newState.selectedState = this.options.notSelected;
-        // If none of the visible moderators are selected, select the first one and make sure none
-        // of the others, visible or not, are still selected.
+        // If none of the visible moderators are selected, select the first one.
         if (noShownSelected && state.selectFirst && !firstSelected && shouldRender) {
           newState.selectedState = 'selected';
           firstSelected = true;
@@ -449,10 +449,9 @@ export default class extends baseVw {
         }
       });
 
-      if (firstSelected) this.trigger('cardSelect');
-
       if (showMods.length) {
         this.getCachedEl('.js-moderatorsWrapper').append(cardsFrag);
+        if (firstSelected) this.trigger('cardSelect');
       } else {
         if (this.modCards.length) this.trigger('noModsShown');
       }

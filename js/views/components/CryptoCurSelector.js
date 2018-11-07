@@ -105,9 +105,12 @@ export default class extends baseVw {
         .filter(c => !processedState.disabledCurs.includes(c));
     }
 
-    // Radio controls can only have one active currency.
-    if (state.activeCurs && processedState.controlType === 'radio') {
-      processedState.activeCurs = [processedState.activeCurs[0]];
+    // Radio controls must have exactly one active currency.
+    // TODO: If no active currency is passed in, the one set here may not be the first one after
+    // they are alphabetized. Move the logic to the sort?
+    if (processedState.controlType === 'radio') {
+      processedState.activeCurs = processedState.activeCurs && processedState.activeCurs.length ?
+        [processedState.activeCurs[0]] : [processedState.currencies[0]];
     }
 
     // If necessary, create the processed curs

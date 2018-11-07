@@ -122,7 +122,8 @@ export default class extends BaseModal {
       initialState: {
         controlType: 'radio',
         currencies,
-        activeCurs: [currencies[0]],
+        // Kludge to set it to the first alphabetically, may not always match view sorting
+        activeCurs: [currencies.sort()[0]],
         disabledCurs,
         sort: true,
       },
@@ -638,8 +639,6 @@ export default class extends BaseModal {
       this.$('.js-couponsWrapper').html(this.coupons.render().el);
 
       this.moderators.delegateEvents();
-      this.moderators.setState({ showVerifiedOnly: state.showVerifiedOnly },
-        { renderOnChange: false });
       this.$('.js-moderatorsWrapper').append(this.moderators.el);
 
       if (this.directPayment) this.directPayment.remove();
