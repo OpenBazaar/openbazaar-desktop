@@ -64,6 +64,7 @@ export default class extends baseVw {
         preferredCurs: [],
         showOnlyCur: '',
         showVerifiedOnly: false,
+        loading: false,
         ...options.initialState,
       },
     };
@@ -97,7 +98,6 @@ export default class extends baseVw {
     this.unfetchedMods = [];
     this.fetchingMods = [];
     this.fetchingVerifiedMods = [];
-    this.invalidMods= [];
     this.modFetches = [];
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
@@ -143,7 +143,6 @@ export default class extends baseVw {
 
   removeNotFetched(ID) {
     this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
-    this.invalidMods.push(ID);
     this.checkNotFetched();
   }
 
@@ -403,17 +402,18 @@ export default class extends baseVw {
     const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
     const unVerCount = this.modCards.filter(mod =>
       mod.model.hasModCurrency(state.showOnlyCur) && !mod.model.isVerified).length;
+    const totalIDs = this.allIDs.length;
     clearTimeout(this.renderTimer);
     this.renderTimer = null;
 
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
-        placeholder: !showMods.length && (this.unfetchedMods.length || !this.allIDs.length),
+        placeholder: !showMods.length && (this.unfetchedMods.length || !totalIDs),
         purchase: this.options.purchase,
         totalShown: showMods.length,
         totalPending: this.unfetchedMods.length,
-        totalIDs: this.allIDs.length,
+        totalIDs,
         unVerCount,
         ...state,
       }));
@@ -456,8 +456,6 @@ export default class extends baseVw {
       } else {
         if (this.modCards.length) this.trigger('noModsShown');
       }
-
-      //TODO: if a state change caused none to be selected, trigger an event
 
       this.moderatorsStatus.delegateEvents();
       this.getCachedEl('.js-statusWrapper').append(this.moderatorsStatus.render().$el);
