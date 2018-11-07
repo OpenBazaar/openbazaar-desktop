@@ -78,9 +78,6 @@ const currencies = [
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
-  // todo: does LTC have the right values?
-  // TODO
-  // TODO
   {
     code: 'LTC',
     testnetCode: 'TLTC',
@@ -210,12 +207,6 @@ export function ensureMainnetCode(cur) {
   return curObj ? curObj.code : cur;
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * Returns a list of the crypto currencies supported by the wallet.
  *
@@ -253,10 +244,6 @@ export function supportedWalletCurs(options = {}) {
     );
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * Returns a boolean indicating whether the given code is supported by the wallet.
  *
@@ -272,9 +259,6 @@ export function isSupportedWalletCur(cur, options = {}) {
   return supportedWalletCurs(options).includes(cur);
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * Given a list of currencies, a filtered list will be returned containing only the
  * currencies in the list that are supported by the wallet
@@ -296,10 +280,6 @@ export function onlySupportedWalletCurs(curs = [], options = {}) {
   return curs.filter(cur => isSupportedWalletCur(cur, options));
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * A proxy for onlySupportedWalletCurs with the difference being that this will
  * return a boolean indicating if any of the provided curs are supported as wallet
