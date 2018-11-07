@@ -7,7 +7,6 @@ export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
     this.shippable = options.shippable || false;
-    this.moderated = options.moderated || false;
   }
 
   defaults() {
@@ -65,7 +64,7 @@ export default class extends BaseModel {
     }
 
     if (this.shippable) {
-      if (!attrs.shipTo || !(typeof attrs.shipTo === 'string')) {
+      if (!attrs.shipTo || typeof attrs.shipTo !== 'string') {
         addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
       }
 
@@ -74,13 +73,9 @@ export default class extends BaseModel {
       }
     }
 
-    if (this.moderated && !attrs.moderator && attrs.moderator !== undefined) {
-      addError('moderated', app.polyglot.t('orderModelErrors.needsModerator'));
-    }
-
-    if (!this.moderated && attrs.moderator) {
-      // this should only happen if there is a developer error
-      addError('moderated', app.polyglot.t('orderModelErrors.removeModerator'));
+    if (attrs.moderator && typeof attrs.moderator !== 'string') {
+      // This should only happen if there is a developer error.
+      addError('moderated', 'The moderator value must be a string.');
     }
 
     if (Object.keys(errObj).length) return errObj;

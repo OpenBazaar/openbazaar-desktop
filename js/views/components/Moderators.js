@@ -24,7 +24,6 @@ export default class extends baseVw {
    * @param {boolean} options.purchase          - If this is used in a purchase, pass this to the
    *                                              child moderator card views.
    * @param {boolean} options.singleSelect      - Allow only one moderator to be selected at a time.
-   * @param {boolean} options.selectFirst       - Pre-select the first moderator.
    * @param {boolean} options.radioStyle        - Show the moderator cards with radio buttons.
    * @param {boolean} options.showInvalid       - Show invalid moderator cards.
    * @param {boolean} options.controlsOnInvalid - Show controls on invalid cards so they can be
@@ -53,7 +52,6 @@ export default class extends baseVw {
       include: '',
       purchase: false,
       singleSelect: false,
-      selectFirst: false,
       radioStyle: false,
       controlsOnInvalid: false,
       cardState: 'unselected',
@@ -62,6 +60,7 @@ export default class extends baseVw {
       showSpinner: true,
       ...options,
       initialState: {
+        selectFirst: false,
         preferredCurs: [],
         showOnlyCur: '',
         showVerifiedOnly: false,
@@ -97,7 +96,8 @@ export default class extends baseVw {
     this.excludeIDs = opts.excludeIDs;
     this.unfetchedMods = [];
     this.fetchingMods = [];
-    this.verifiedMods = [];
+    this.fetchingVerifiedMods = [];
+    this.invalidMods= [];
     this.modFetches = [];
     this.moderatorsCol = new Moderators();
     this.listenTo(this.moderatorsCol, 'add', model => {
@@ -113,7 +113,9 @@ export default class extends baseVw {
     // create a moderators status view. It should retain it's state between renders of this view.
     this.moderatorsStatus = this.createChild(ModeratorsStatus, {
       initialState: {
-        mode: opts.method === 'GET' ? 'loaded' : '',
+        mode: opts.method === 'GET' ? 'loaded' : 'loadingXofY',
+        loaded: 0,
+        total: this.options.moderatorIDs.length,
         showLoadBtn: opts.showLoadBtn,
         showSpinner: opts.showSpinner,
       },
@@ -141,6 +143,7 @@ export default class extends baseVw {
 
   removeNotFetched(ID) {
     this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
+    this.invalidMods.push(ID);
     this.checkNotFetched();
   }
 
@@ -173,7 +176,7 @@ export default class extends baseVw {
     }
 
     // don't get any that have already been added or excluded, or the user's own id.
-    const excluded = [...this.allIDs, ...this.excludeIDs, app.profile.id];
+    const excluded = [app.profile.id, ...this.allIDs, ...this.excludeIDs];
     const IDs = _.without(op.moderatorIDs, excluded);
     const includeString = op.include ? `&include=${op.include}` : '';
     const urlString =
@@ -182,11 +185,12 @@ export default class extends baseVw {
 
     this.unfetchedMods = IDs;
     this.fetchingMods = IDs;
-    this.verifiedMods = app.verifiedMods.matched(IDs);
+    this.fetchingVerifiedMods = app.verifiedMods.matched(IDs);
 
     this.setState({
+      loading: true,
       noValidModerators: false,
-      noValidVerifiedModerators: !this.verifiedMods.length && this.fetchingMods.length,
+      noValidVerifiedModerators: !this.fetchingVerifiedMods.length,
     });
 
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
@@ -247,7 +251,7 @@ export default class extends baseVw {
     if (!IDs) {
       throw new Error('You must provide the ID or IDs to remove.');
     }
-    // collect the models so they can be returned to the caller
+    // Collect the models so they can be returned to the caller.
     const removed = [];
     IDs.forEach(id => {
       removed.push(this.moderatorsCol.get(id));
@@ -257,26 +261,18 @@ export default class extends baseVw {
   }
 
   checkNotFetched() {
-    const nfYet = this.unfetchedMods.length;
-    if (nfYet === 0 && this.fetchingMods.length) {
+    if (this.unfetchedMods.length === 0 && this.fetchingMods.length) {
       // All ids have been fetched and ids existed to fetch.
       this.moderatorsStatus.setState({
         hidden: true,
       });
-      // Check if there are mods that loaded but none were valid.
-      if (!this.moderatorsCol.length && this.fetchingMods.length) {
-        this.trigger('noValidModerators');
-        this.setState({ noValidModerators: true });
-      }
-      // Check if no valid verified mods where loaded.
-      if (this.verifiedMods.length && !this.modCount) {
-        this.trigger('noValidVerifiedModerators');
-        this.setState({ noValidVerifiedModerators: true });
-      }
+      this.setState({
+        loading: false,
+      });
     } else {
       // Either ids are still fetching, or this is an open fetch with no set ids.
       this.moderatorsStatus.setState({
-        loaded: this.fetchingMods.length - nfYet, // not shown if open fetch
+        loaded: this.fetchingMods.length - this.unfetchedMods.length, // not shown if open fetch
         total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
       });
     }
@@ -331,10 +327,7 @@ export default class extends baseVw {
 
     // Render in batches only if the card being added should be visible.
     if (!this.renderTimer && this.modShouldRender(model)) {
-      this.renderTimer = setTimeout(() => {
-        this.render();
-        this.renderTimer = null;
-      }, 300);
+      this.renderTimer = setTimeout(() => { this.render(); }, 300);
     }
   }
 
@@ -347,7 +340,8 @@ export default class extends baseVw {
   }
 
   get modCount() {
-    // Return the number of visible cards. The collection may have unshown invalid moderators.
+    // Return the number of loaded cards. The collection may have unshown invalid moderators. May
+    // include cards that are not visible due to the state.
     return this.modCards.length;
   }
 
@@ -400,24 +394,33 @@ export default class extends baseVw {
 
   remove() {
     this.modFetches.forEach(fetch => fetch.abort());
-    if (this.renderTimer) clearTimeout(this.renderTimer);
+    clearTimeout(this.renderTimer);
     super.remove();
   }
 
   render() {
+    const state = this.getState();
     const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
+    const unVerCount = this.modCards.filter(mod =>
+      mod.model.hasModCurrency(state.showOnlyCur) && !mod.model.isVerified).length;
+    clearTimeout(this.renderTimer);
+    this.renderTimer = null;
 
     loadTemplate('components/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
-        placeholder: !this.modCards.length,
+        placeholder: !showMods.length && (this.unfetchedMods.length || !this.allIDs.length),
         purchase: this.options.purchase,
         totalShown: showMods.length,
-        totalFetching: this.unfetchedMods.length,
-        ...this.getState(),
+        totalPending: this.unfetchedMods.length,
+        totalIDs: this.allIDs.length,
+        unVerCount,
+        ...state,
       }));
 
       super.render();
+
+      const cardsFrag = document.createDocumentFragment();
 
       const noShownSelected = !showMods.filter(card =>
         card.getState().selectedState === 'selected').length;
@@ -427,26 +430,34 @@ export default class extends baseVw {
       this.modCards.forEach((mod) => {
         const newState = {};
         const shouldRender = this.modShouldRender(mod.model);
+        if (!shouldRender) newState.selectedState = this.options.notSelected;
         // If none of the visible moderators are selected, select the first one and make sure none
         // of the others, visible or not, are still selected.
-        if (noShownSelected && this.options.selectFirst) {
-          newState.selectedState = this.options.notSelected;
-          if (!firstSelected && shouldRender) {
-            newState.selectedState = 'selected';
-            firstSelected = true;
-          }
+        if (noShownSelected && state.selectFirst && !firstSelected && shouldRender) {
+          newState.selectedState = 'selected';
+          firstSelected = true;
         }
 
         mod.setState({
-          preferredCurs: this.getState().preferredCurs,
+          preferredCurs: state.preferredCurs,
           ...newState,
         }, { renderOnChange: false });
 
         if (shouldRender) {
           mod.delegateEvents();
-          this.getCachedEl('.js-moderatorsWrapper').append(mod.render().$el);
+          $(cardsFrag).append(mod.render().$el);
         }
       });
+
+      if (firstSelected) this.trigger('cardSelect');
+
+      if (showMods.length) {
+        this.getCachedEl('.js-moderatorsWrapper').append(cardsFrag);
+      } else {
+        if (this.modCards.length) this.trigger('noModsShown');
+      }
+
+      //TODO: if a state change caused none to be selected, trigger an event
 
       this.moderatorsStatus.delegateEvents();
       this.getCachedEl('.js-statusWrapper').append(this.moderatorsStatus.render().$el);

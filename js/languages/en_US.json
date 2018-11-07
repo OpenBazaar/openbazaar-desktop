@@ -1494,13 +1494,26 @@
   },
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
+    "moderatorsXofY": "Loading moderator %{current} of %{total}",
     "moderatorsLoaded": "%{total} moderators loaded.",
-    "noValidModerators": "No Valid Moderators Available.",
-    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
-    "noVerifiedModerators": "No Verified Moderators Available",
-    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
-    "noMatchingModerators":"No moderators that accept %{coin} are available on this listing.",
-    "noMatchingVerifiedModerators":"No verified moderators that accept %{coin} are available on this listing.",
+    "noModsMsg":{
+      "noModerators": {
+        "title": "No Valid Moderators Are Available.",
+        "body": "None of the loaded moderators are valid. This order will be a direct payment."
+      },
+      "noVerifiedModerators": {
+        "title": "No Verified Moderators Available",
+        "body": "Try viewing unverified moderators."
+      },
+      "noMatchingModerators": {
+        "title": "No moderators that accept %{coin} are available.",
+        "body": "Moderators are available on one or more of the other currencies accepted by this listing."
+      },
+      "noMatchingVerifiedModerators": {
+        "title": "No verified moderators that accept %{coin} are available.",
+        "body": "Try viewing unverified moderators."
+      }
+    },
     "showUnverified": "Show Unverified Moderators",
     "browseMoreModerators": "Load More"
   },

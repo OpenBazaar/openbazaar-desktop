@@ -55,13 +55,13 @@ export default class Profile extends BaseModel {
   }
 
   get isVerified() {
-    return !!app.verifiedMods.get(this.get('peerID'));
+    return !!app.verifiedMods.get(this.id);
   }
 
   hasModCurrency(cur) {
-    return this.get('moderatorInfo') &&
-      Array.isArray(this.get('moderatorInfo').get('acceptedCurrencies')) &&
-      this.get('moderatorInfo').get('acceptedCurrencies').includes(cur);
+    const modInfo = this.get('moderatorInfo');
+    const acceptedCurs = modInfo ? modInfo.get('acceptedCurrencies') : [];
+    return Array.isArray(acceptedCurs) && acceptedCurs.includes(cur);
   }
 
   get max() {

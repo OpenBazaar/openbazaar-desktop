@@ -18,7 +18,7 @@ describe('the Purchase Order model', () => {
     order.set({}, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.items && !!valErr.items.length || false).to.equal(true);
+    expect(valErr && valErr.items && !!valErr.items.length).to.equal(true);
   });
 
   it('fails validation if the order has a blank payment currency.', () => {
@@ -26,7 +26,7 @@ describe('the Purchase Order model', () => {
     order.set({}, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length || false).to.equal(true);
+    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length).to.equal(true);
   });
 
   it('fails validation if the order has a payment currency that is not a string.', () => {
@@ -34,7 +34,7 @@ describe('the Purchase Order model', () => {
     order.set({ paymentCoin: 42 }, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length || false).to.equal(true);
+    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length).to.equal(true);
   });
 
   it('fails validation if the order has an invalid payment currency.', () => {
@@ -42,7 +42,7 @@ describe('the Purchase Order model', () => {
     order.set({ paymentCoin: 'randomTestCoin' }, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length || false).to.equal(true);
+    expect(valErr && valErr.paymentCoin && !!valErr.paymentCoin.length).to.equal(true);
   });
 
   it('fails validation if the order is shippable but has an invalid shipTo.', () => {
@@ -50,7 +50,7 @@ describe('the Purchase Order model', () => {
     order.set({ countryCode: 'USA' }, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.shipping && !!valErr.shipping.length || false).to.equal(true);
+    expect(valErr && valErr.shipping && !!valErr.shipping.length).to.equal(true);
   });
 
   it('fails validation if the order is shippable but has an invalid country code.', () => {
@@ -58,23 +58,15 @@ describe('the Purchase Order model', () => {
     order.set({ shipTo: 'test' }, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.shipping && !!valErr.shipping.length || false).to.equal(true);
+    expect(valErr && valErr.shipping && !!valErr.shipping.length).to.equal(true);
   });
 
-  it('fails validation if the order is moderated but has no moderator.', () => {
-    const order = new Order({}, { moderated: true });
-    order.set({}, { validate: true });
-    const valErr = order.validationError;
-
-    expect(valErr && valErr.moderated && !!valErr.moderated.length || false).to.equal(true);
-  });
-
-  it('fails validation if the order is not moderated and it has a moderator.', () => {
+  it('fails validation if the moderator is not a string value.', () => {
     const order = new Order();
-    order.set({ moderator: 'test'}, { validate: true });
+    order.set({ moderator: 3 }, { validate: true });
     const valErr = order.validationError;
 
-    expect(valErr && valErr.moderated && !!valErr.moderated.length || false).to.equal(true);
+    expect(valErr && valErr.moderated && !!valErr.moderated.length).to.equal(true);
   });
 });
 

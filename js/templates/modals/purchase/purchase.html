@@ -153,7 +153,7 @@
             <div class="flexVCentClearMarg">
               <h2 class="h4 flexExpand required"><%= ob.polyT('purchase.paymentTypeTitle') %></h2>
               <% if (ob.showModerators) { %>
-                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if(ob.showVerifiedOnly) print('checked') %>>
+                <input type="checkbox" id="purchaseVerifiedOnly" class="js-purchaseVerifiedOnly"<% if (ob.showVerifiedOnly) print('checked') %>>
                 <label class="tx5b" for="purchaseVerifiedOnly"><%= ob.polyT('settings.storeTab.verifiedOnly') %></label>
               <% } %>
             </div>
@@ -167,28 +167,7 @@
               <% } %>
               <hr class="clrBr row">
             <% } %>
-            <% // duplicate the moderator card html to make sure everything aligns %>
-            <div class="moderatorsList">
-              <div class="moderatorsWrapper fauxModeratorsWrapper">
-                <div class="moderatorCard clrBrInvis js-directPayment">
-                  <div class="moderatorCardInner">
-                    <div class="flexRow gutterH moderatorCardContent">
-                      <div class="flexNoShrink">
-                        <div class="btnRadio">
-                          <div tabindex="0" class="fauxRadioBtn <% if (!ob.moderated) print('active') %>"></div>
-                        </div>
-                      </div>
-                      <div class="moderatorCardMiddle">
-                        <div class="flex rowSm">
-                          <b><%= ob.polyT('purchase.directPayment') %></b>
-                        </div>
-                        <div class="clrT2"><%= ob.polyT('purchase.directPaymentDetails') %></div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <div class="js-directPaymentWrapper moderatorsList"></div>
           </div>
         </section>
       <section class="contentBox padMd clrP clrBr clrSh3">

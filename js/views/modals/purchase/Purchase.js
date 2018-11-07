@@ -30,6 +30,7 @@ import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
+import DirectPayment from './DirectPayment';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -139,9 +140,9 @@ export default class extends BaseModal {
       cardState: 'unselected',
       notSelected: 'unselected',
       singleSelect: true,
-      selectFirst: true,
       radioStyle: true,
       initialState: {
+        selectFirst: true,
         showOnlyCur: currencies[0],
         showVerifiedOnly: true,
       },
@@ -149,8 +150,10 @@ export default class extends BaseModal {
     // render the moderators so it can start fetching and adding moderator cards
     this.moderators.render();
     this.moderators.getModeratorsByID();
-    this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
-    this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
+    this.listenTo(this.moderators, 'noModsShown', () => this.render());
+    this.listenTo(this.moderators, 'clickShowUnverified', () => {
+      this.setState({ showVerifiedOnly: false });
+    });
     this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
 
     if (this.listing.get('shippingOptions').length) {
@@ -210,7 +213,6 @@ export default class extends BaseModal {
       'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
-      'click .js-directPayment': 'clickDirectPurchase',
       'change #purchaseQuantity': 'changeQuantityInput',
       'change #purchaseCryptoAddress': 'changeCryptoAddress',
       'click .js-newAddress': 'clickNewAddress',
@@ -271,18 +273,13 @@ export default class extends BaseModal {
     this.close();
   }
 
-  clickDirectPurchase() {
-    if (!this.order.moderated) return;
+  handleDirectPurchaseClick() {
+    if (!this.isModerated) return;
 
-    this.order.moderated = false;
+    this.moderators.setState({ selectFirst: false }, { renderOnChange: false });
     this.moderators.deselectOthers();
     this.setState({ unverifedSelected: false }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change
-  }
-
-  onNoValidModerators() {
-    this.order.moderated = false;
-    this.render();
   }
 
   togVerifiedModerators(bool) {
@@ -295,7 +292,6 @@ export default class extends BaseModal {
   }
 
   onCardSelect() {
-    this.order.moderated = true;
     const selected = this.moderators.selectedIDs;
     const unverifedSelected = selected.length && !app.verifiedMods.matched(selected).length;
     this.setState({ unverifedSelected }, { renderOnChange: false });
@@ -583,6 +579,10 @@ export default class extends BaseModal {
         .get('coinType');
   }
 
+  get isModerated() {
+    return this.moderators.selectedIDs.length > 0;
+  }
+
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
@@ -617,7 +617,6 @@ export default class extends BaseModal {
         variants: this.variants,
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
-        moderated: this.order.moderated,
         quantity: uiQuantity,
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
@@ -642,6 +641,15 @@ export default class extends BaseModal {
       this.moderators.setState({ showVerifiedOnly: state.showVerifiedOnly },
         { renderOnChange: false });
       this.$('.js-moderatorsWrapper').append(this.moderators.el);
+
+      if (this.directPayment) this.directPayment.remove();
+      this.directPayment = this.createChild(DirectPayment, {
+        initialState: {
+          active: !this.isModerated,
+        },
+      });
+      this.listenTo(this.directPayment, 'click', () => this.handleDirectPurchaseClick());
+      this.$('.js-directPaymentWrapper').append(this.directPayment.render().el);
 
       this.cryptoCurSelector.delegateEvents();
       this.$('.js-cryptoCurSelectorWrapper').append(this.cryptoCurSelector.render().el);

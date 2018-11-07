@@ -13,73 +13,71 @@ describe('the Purchase Item model', () => {
     };
   });
 
-  it('fails validation if it a non-crypto item and has a non-number quantity.', () => {
+  it('fails validation if it is a non-crypto item and has a non-number quantity.', () => {
     const item = new Item();
     item.set({ quantity: 'a' }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a non-crypto item and has a non-integer quantity.', () => {
+  it('fails validation if it is a non-crypto item and has a non-integer quantity.', () => {
     const item = new Item();
     item.set({ quantity: '0.0001' }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a non-crypto item and has a negative quantity.', () => {
+  it('fails validation if it is a non-crypto item and has a negative quantity.', () => {
     const item = new Item();
     item.set({ quantity: -1 }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a non-crypto item and has a payment address.', () => {
+  it('fails validation if it is a non-crypto item and has a payment address.', () => {
     const item = new Item();
     item.set({ paymentAddress: 'test' }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.paymentAddress &&
-      !!valErr.paymentAddress.length || false).to.equal(true);
+    expect(valErr && valErr.paymentAddress && !!valErr.paymentAddress.length).to.equal(true);
   });
 
-  it('fails validation if it a crypto item and has a non-number quantity.', () => {
+  it('fails validation if it is a crypto item and has a non-number quantity.', () => {
     const item = new Item({}, { isCrypto: true });
     item.set({ quantity: 'a' }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a crypto item and has a negative quantity.', () => {
+  it('fails validation if it is a crypto item and has a negative quantity.', () => {
     const item = new Item({}, { isCrypto: true });
     item.set({ quantity: -1 }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a crypto item and has a quantity higher than the inventory.', () => {
+  it('fails validation if it is a crypto item and has a quantity higher than the inventory.', () => {
     const item = new Item({}, { isCrypto: true, inventory: 5 });
     item.set({ quantity: 10 }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.quantity && !!valErr.quantity.length || false).to.equal(true);
+    expect(valErr && valErr.quantity && !!valErr.quantity.length).to.equal(true);
   });
 
-  it('fails validation if it a crypto item and is missing a paymentAddress.', () => {
+  it('fails validation if it is a crypto item and is missing a paymentAddress.', () => {
     const item = new Item({}, { isCrypto: true });
     item.set({}, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.paymentAddress &&
-      !!valErr.paymentAddress.length || false).to.equal(true);
+    expect(valErr && valErr.paymentAddress && !!valErr.paymentAddress.length).to.equal(true);
   });
 
-  it('fails validation if it a crypto item and the paymentAddress is too long.', () => {
+  it('fails validation if it is a crypto item and the paymentAddress is too long.', () => {
     const item = new Item({}, { isCrypto: true });
     const fakeAddr = 'v1LbAxmkA0pKkDJ4xqkVYmrcrl1YcUYEGLDFBkpT7XERN7S4xF9EHo45WjWzHNoz8bv8XRdfnqg' +
       'g40C0bnQ53pXYXbsJMnj58GtctUvg0ghhjGFmc1e5iuoZ9BDrVojHXiYZBWskKPlR8wdkpmm9PTsOIAuQDaw9a5gTp' +
@@ -88,8 +86,7 @@ describe('the Purchase Item model', () => {
     item.set({ paymentAddress: fakeAddr }, { validate: true });
     const valErr = item.validationError;
 
-    expect(valErr && valErr.paymentAddress &&
-      !!valErr.paymentAddress.length || false).to.equal(true);
+    expect(valErr && valErr.paymentAddress && !!valErr.paymentAddress.length).to.equal(true);
   });
 });
 
