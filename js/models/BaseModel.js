@@ -115,6 +115,9 @@ export default class extends Model {
 
     // todo: will it break things if we unset a nested attribute?
     if (!opts.unset) {
+      // let's work off of a clone since we modify attrs
+      // attrs = JSON.parse(JSON.stringify(attrs));
+
       if (this.nested) {
         const nested = _.result(this, 'nested', []);
 
@@ -124,11 +127,11 @@ export default class extends Model {
           const nestedInstance = this.attributes[nestedKey];
 
           if (nestedData) {
+            // let's work off of a copy since we modify attrs
+            attrs = { ...attrs };
+
             if (nestedData instanceof NestedClass) {
-              attrs = {
-                ...attrs,
-                [nestedKey]: nestedData,
-              };
+              attrs[nestedKey] = nestedData;
             } else if (nestedInstance) {
               if (nestedInstance instanceof Model) {
                 nestedInstance.set(nestedInstance.parse(nestedData));
@@ -138,10 +141,7 @@ export default class extends Model {
 
               delete attrs[nestedKey];
             } else {
-              attrs = {
-                ...attrs,
-                [nestedKey]: new NestedClass(nestedData, { parse: true }),
-              };
+              attrs[nestedKey] = new NestedClass(nestedData, { parse: true });
             }
           }
         });

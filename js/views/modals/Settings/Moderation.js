@@ -69,8 +69,8 @@ export default class extends baseVw {
     const confirmChecked = this.$understandRequirements.prop('checked') &&
       this.$acceptGuidelines.prop('checked');
 
-    if (!this.profile.get('moderator') &&
-    this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+    if (!confirmChecked && !this.profile.get('moderator') &&
+    this.$('input[name=moderator]:checked').val() === 'true') {
       this.$moderationConfirmError.removeClass('hide');
       return;
     }
