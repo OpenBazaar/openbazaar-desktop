@@ -143,7 +143,6 @@ export default class extends BaseModal {
       singleSelect: true,
       radioStyle: true,
       initialState: {
-        selectFirst: true,
         showOnlyCur: currencies[0],
         showVerifiedOnly: true,
       },
@@ -277,7 +276,6 @@ export default class extends BaseModal {
   handleDirectPurchaseClick() {
     if (!this.isModerated) return;
 
-    this.moderators.setState({ selectFirst: false }, { renderOnChange: false });
     this.moderators.deselectOthers();
     this.setState({ unverifedSelected: false }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change

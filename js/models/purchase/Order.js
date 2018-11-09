@@ -68,7 +68,7 @@ export default class extends BaseModel {
         addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
       }
 
-      if (!attrs.countryCode || !(typeof attrs.countryCode === 'string')) {
+      if (!attrs.countryCode || typeof attrs.countryCode !== 'string') {
         addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
       }
     }

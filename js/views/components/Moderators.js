@@ -60,7 +60,6 @@ export default class extends baseVw {
       showSpinner: true,
       ...options,
       initialState: {
-        selectFirst: false,
         preferredCurs: [],
         showOnlyCur: '',
         showVerifiedOnly: false,
@@ -422,21 +421,11 @@ export default class extends baseVw {
 
       const cardsFrag = document.createDocumentFragment();
 
-      const noShownSelected = !showMods.filter(card =>
-        card.getState().selectedState === 'selected').length;
-
-      let firstSelected = false;
-
       this.modCards.forEach((mod) => {
         const newState = {};
         const shouldRender = showMods.includes(mod);
         // Moderators that aren't being rendered should never be selected.
         if (!shouldRender) newState.selectedState = this.options.notSelected;
-        // If none of the visible moderators are selected, select the first one.
-        if (noShownSelected && state.selectFirst && !firstSelected && shouldRender) {
-          newState.selectedState = 'selected';
-          firstSelected = true;
-        }
 
         mod.setState({
           preferredCurs: state.preferredCurs,
@@ -451,7 +440,6 @@ export default class extends baseVw {
 
       if (showMods.length) {
         this.getCachedEl('.js-moderatorsWrapper').append(cardsFrag);
-        if (firstSelected) this.trigger('cardSelect');
       } else {
         if (this.modCards.length) this.trigger('noModsShown');
       }
