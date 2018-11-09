@@ -331,7 +331,7 @@
 
   .cryptoTypeWrap {
     display: none;
-  }  
+  }
 
   &.TYPE_PHYSICAL_GOOD {
     .tab-shipping,
@@ -362,6 +362,10 @@
       .skuMatureContentRow {
         display: none;
       }
+
+      .acceptedCurrenciesSection {
+        display: none;
+      }
     }
   }
 
@@ -372,6 +376,6 @@
   &.editMode {
     .viewListingLinks {
       display: block;
-    }    
+    }
   }
 }

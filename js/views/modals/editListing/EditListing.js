@@ -1499,11 +1499,11 @@ export default class extends BaseModal {
           sort: true,
         };
         if (this.cryptoCurSelector) {
-          this.cryptoCurSelector.remove();
           curSelectorInitialState = {
             ...curSelectorInitialState,
             ...this.cryptoCurSelector.getState(),
           };
+          this.cryptoCurSelector.remove();
         }
         this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
           initialState: curSelectorInitialState,

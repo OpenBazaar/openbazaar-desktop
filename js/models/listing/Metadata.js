@@ -101,35 +101,24 @@ export default class extends BaseModel {
       addError('pricingCurrency', 'The currency is not one of the available ones.');
     }
 
-    if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies ||
-      !attrs.acceptedCurrencies.length) {
+    if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies.length) {
       const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
         'metadataModelErrors.provideAcceptedCurrencyCrypto' :
         'metadataModelErrors.provideAcceptedCurrency';
       addError('acceptedCurrencies',
         app.polyglot.t(translationKey));
-    } else if (attrs.acceptedCurrencies.find(cur => (typeof cur !== 'string' || !cur)) !==
-      undefined) {
+    } else if (attrs.acceptedCurrencies.findIndex(cur => (typeof cur !== 'string' || !cur)) !==
+      -1) {
       // Ensure only non-empty strings are provided as accepted currencies
       addError('acceptedCurrencies', 'Accepted currency values must be non-empty strings.');
     } else {
       // Ensure only supported wallet currencies are provided as accepted currencies
-      const acceptedCurs = attrs.acceptedCurrencies.slice(
-        0,
-        attrs.contractType === 'CRYPTOCURRENCY' ? 1 : attrs.acceptedCurrencies.length
-      );
-      const unsupportedCurrencies = acceptedCurs
+      const unsupportedCurrencies = attrs.acceptedCurrencies
         .filter(cur => !isSupportedWalletCur(cur));
 
       if (unsupportedCurrencies.length) {
-        const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
-          'metadataModelErrors.unsupportedAcceptedCur' :
-          'metadataModelErrors.unsupportedAcceptedCurs';
-        const translationArgKey = attrs.contractType === 'CRYPTOCURRENCY' ?
-          'cur' : 'curs';
-        addError('acceptedCurrencies',
-          app.polyglot.t(translationKey,
-            { [translationArgKey]: unsupportedCurrencies.join(', ') }));
+        addError('acceptedCurrencies', app.polyglot.t('unsupportedAcceptedCurs',
+          { curs: unsupportedCurrencies.join(', ') }));
       }
     }
 
