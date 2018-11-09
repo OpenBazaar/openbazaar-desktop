@@ -46,10 +46,6 @@ export default class extends BaseModal {
       throw new Error('Please provide an Order or Case model.');
     }
 
-    this._state = {
-      ...opts.initialState || {},
-    };
-
     this.listenTo(this.model, 'request', this.onOrderRequest);
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
     this.listenTo(this.model, 'change:unreadChatMessages',

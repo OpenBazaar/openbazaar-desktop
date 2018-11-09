@@ -30,13 +30,14 @@ export default class extends BaseVw {
 
   render() {
     super.render();
+    const state = this.getState();
 
     loadTemplate('modals/orderDetail/modFragment.html', t => {
       this.$el.html(t({
-        ...this._state,
+        ...state,
       }));
 
-      const verifiedMod = app.verifiedMods.get(this._state.peerID);
+      const verifiedMod = app.verifiedMods.get(state.peerID);
       const createOptions = getModeratorOptions({
         model: verifiedMod,
       });

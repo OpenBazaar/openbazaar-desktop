@@ -39,6 +39,9 @@ export default class extends BaseModel {
       (attrs = {})[key] = val;
     }
 
+    // set is called internally by Backbone before the contructor is complete, so
+    // this.options might not be there. But... Backbone also passes in the constructor
+    // options, when calling set from the constructor.
     const coinType = this.options ? this.options.coinType : opts.coinType;
 
     if (

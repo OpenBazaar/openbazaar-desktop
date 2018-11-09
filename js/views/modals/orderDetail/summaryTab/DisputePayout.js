@@ -29,10 +29,6 @@ export default class extends BaseVw {
 
     this.orderId = options.orderId;
 
-    this._state = {
-
-    };
-
     this.boundOnDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
 

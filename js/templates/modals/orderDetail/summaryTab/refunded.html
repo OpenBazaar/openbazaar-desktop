@@ -54,11 +54,11 @@
         <div class="" style="flex-shrink: 0;max-width: 80px">
           <div class="noOverflow">
             <% if (ob.blockChainTxUrl) { %>
-              <a class="clrT2 js-txidLink" href="<%= ob.blockChainTxUrl %>">
+              <a class="clrT2" href="<%= ob.blockChainTxUrl %>">
                 <%= ob.txid %>
               </a>
             <% } else { %>
-              <div class="clrT2 js-txidLink"><%= ob.txid %></div>
+              <div class="clrT2"><%= ob.txid %></div>
             <% } %>
           </div>
         </div>
