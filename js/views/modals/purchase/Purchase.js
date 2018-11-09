@@ -116,16 +116,22 @@ export default class extends BaseModal {
       (hashes, codes) => this.changeCoupons(hashes, codes));
 
     const currencies = this.listing.get('metadata').get('acceptedCurrencies') || [];
+    const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
+    currencies.sort((a, b) => {
+      const aName = app.polyglot.t(`cryptoCurrencies.${a}`, { _: a });
+      const bName = app.polyglot.t(`cryptoCurrencies.${b}`, { _: b });
+      return aName.localeCompare(bName, locale, { sensitivity: 'base' });
+    });
+
     const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
     this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
       disabledMsg: app.polyglot.t('purchase.cryptoCurrencyInvalid'),
       initialState: {
         controlType: 'radio',
         currencies,
-        // Kludge to set it to the first alphabetically, may not always match view sorting
-        activeCurs: [currencies.sort()[0]],
+        activeCurs: [currencies[0]],
         disabledCurs,
-        sort: true,
+        sort: false,
       },
     });
     this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {

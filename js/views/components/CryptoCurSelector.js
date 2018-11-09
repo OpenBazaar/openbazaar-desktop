@@ -139,6 +139,7 @@ export default class extends baseVw {
       // If active or disabled lists are passed in, we'll assume they're
       // different and ensure the processedCurrencies list reflects them.
       processedState.processedCurs = processedState.processedCurs.map(cur => ({
+        ...cur,
         active: processedState.activeCurs.includes(cur.code),
         disabled: processedState.disabledCurs.includes(cur.code),
       }));
