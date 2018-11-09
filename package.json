@@ -54,7 +54,6 @@
     "grunt": "^1.0.3",
     "grunt-electron-installer": "^2.1.0",
     "jsdom": "13.0.0",
-    "jsdom-global": "3.0.2",
     "json-format": "^1.0.1",
     "mocha": "^5.2.0",
     "node-fetch": "^2.1.2",
