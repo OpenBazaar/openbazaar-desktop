@@ -78,9 +78,6 @@ const currencies = [
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
   },
-  // todo: does LTC have the right values?
-  // TODO
-  // TODO
   {
     code: 'LTC',
     testnetCode: 'TLTC',
@@ -93,12 +90,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tLTC/address/${address}` :
-        `https://blockchair.com/litecoin/address/${address}`
+        `https://live.blockcypher.com/ltc/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://chain.so/tx/LTCTEST/${txid}` :
-        `https://chain.so/address/LTCTEST/${txid}`
+        `https://live.blockcypher.com/ltc/tx/${txid}`
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 2.5,
@@ -211,43 +208,6 @@ export function ensureMainnetCode(cur) {
 }
 
 /**
- * Returns the currency data object based on the currency the connected server is in.
- */
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// TODO: This probably needs to go away...
-// There no longer is a single server currency. It must come from other means depending
-// on context.
-export function getServerCurrency() {
-  // // temeporary, so the client doesn't implode.
-  // return {
-  //   ...currencies[0],
-  //   isTestnet: true,
-  // };
-
-  if (!app || !app.serverConfig || !app.serverConfig.cryptoCurrency) {
-    throw new Error('The cryptoCurrency field must be set on app.serverConfig.');
-  }
-
-  let curData = getCurrencyByCode(app.serverConfig.cryptoCurrency);
-
-  curData = {
-    ...curData,
-    isTestnet: app.serverConfig.cryptoCurrency === curData.testnetCode,
-  };
-
-  return curData;
-}
-
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-/**
  * Returns a list of the crypto currencies supported by the wallet.
  *
  * @param {object} [options={}] - Function options
@@ -284,10 +244,6 @@ export function supportedWalletCurs(options = {}) {
     );
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * Returns a boolean indicating whether the given code is supported by the wallet.
  *
@@ -303,9 +259,6 @@ export function isSupportedWalletCur(cur, options = {}) {
   return supportedWalletCurs(options).includes(cur);
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * Given a list of currencies, a filtered list will be returned containing only the
  * currencies in the list that are supported by the wallet
@@ -327,10 +280,6 @@ export function onlySupportedWalletCurs(curs = [], options = {}) {
   return curs.filter(cur => isSupportedWalletCur(cur, options));
 }
 
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
-// TODO: unit test this bad boy
 /**
  * A proxy for onlySupportedWalletCurs with the difference being that this will
  * return a boolean indicating if any of the provided curs are supported as wallet

@@ -2,9 +2,6 @@
   This view is used by both the Purchase and Order detail flows. When making changes, please ensure
   they play nice with both areas.
 -->
-<%
-  const serverCur = ob.currencyMod.getServerCurrency();
-%>
 <div class="flexRow gutterHLg pad rowMd">
   <div class="flexNoShrink">
     <a class="QR js-purchaseQRCode"><img class="js-qrCodeImg" src="<%= ob.qrDataUri %>"></a>
@@ -38,10 +35,10 @@
           </div>
         </div>
         <div class="txBase clrT2">
-          <% if (serverCur.code === 'BTC') { %>
-          <p>
-            <%= ob.polyT('purchase.pendingSection.walletNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.walletLink') %></button>
-          </p>
+          <% if (['BTC', 'TBTC'].includes(ob.paymentCoin)) { %>
+            <p>
+              <%= ob.polyT('purchase.pendingSection.walletNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.walletLink') %></button>
+            </p>
           <% } %>
           <p>
             <%= ob.polyT('purchase.pendingSection.feeNote') %>
@@ -52,7 +49,7 @@
   </div>
 </div>
 <div class="tx6 clrT2">
-  <% if (serverCur.code === 'BTC') { %>
+  <% if (['BTC', 'TBTC'].includes(ob.paymentCoin)) { %>
     <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
     <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
   <% } %>

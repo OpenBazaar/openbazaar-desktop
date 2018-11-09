@@ -12,21 +12,24 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      ...options,
+      initialState: {
+        infoText: '',
+        showRefundButton: false,
+        showFulfillButton: false,
+        avatarHashes: {},
+        refundConfirmOn: false,
+        paymentCoin: undefined,
+        ...options.initialState,
+      },
+    });
 
     if (!options.orderId) {
       throw new Error('Please provide the order id.');
     }
 
     this.orderId = options.orderId;
-    this._state = {
-      infoText: '',
-      showRefundButton: false,
-      showFulfillButton: false,
-      avatarHashes: {},
-      refundConfirmOn: false,
-      ...options.initialState || {},
-    };
 
     this.listenTo(orderEvents, 'fulfillingOrder', e => {
       if (e.id === this.orderId) {
