@@ -706,7 +706,7 @@
         "fail": "There was an error saving your moderation settings."
       },
       "errors": {
-        "confirm": "To become a moderator, you must agree to both statements below.",
+        "confirm": "To be a moderator, you must agree to both statements below.",
         "save": "The moderation settings were not saved."
       }
     },

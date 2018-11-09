@@ -257,19 +257,6 @@ input[type="checkbox"] {
     content: "\f373";
   }
 
-  &.fauxChecked {
-    // checkbox cannot be clicked, and shows a fake checked mark.
-    pointer-events: none;
-
-    & + label {
-      pointer-events: none;
-
-      &:before {
-        content: "\f373";
-      }
-    }
-  }
-
   &.centerLabel + label {
     align-items: center;
 

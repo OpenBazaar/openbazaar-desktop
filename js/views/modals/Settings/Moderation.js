@@ -66,12 +66,11 @@ export default class extends baseVw {
     /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
      aren't checked, show an error */
 
-    const confirmChecked = this.$understandRequirements.prop('checked') &&
-      this.$acceptGuidelines.prop('checked');
+    const confirmChecked = this.getCachedEl('#understandRequirements').prop('checked') &&
+      this.getCachedEl('#acceptGuidelines').prop('checked');
 
-    if (!this.profile.get('moderator') &&
-    this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
-      this.$moderationConfirmError.removeClass('hide');
+    if (this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+      this.getCachedEl('.js-moderationConfirmError').removeClass('hide');
       return;
     }
 
@@ -119,16 +118,16 @@ export default class extends baseVw {
           type: 'warning',
         });
       }).always(() => {
-        this.$btnSave.removeClass('processing');
+        this.getCachedEl('.js-save').removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
     }
 
-    // render so errrors are shown / cleared
+    // Render so errors are shown / cleared.
     this.render();
 
     if (save) {
-      this.$btnSave.addClass('processing');
+      this.getCachedEl('.js-save').addClass('processing');
     } else {
       const $firstErr = this.$('.errorList:first');
 
@@ -143,38 +142,8 @@ export default class extends baseVw {
   changeFeeType(e) {
     const feeType = $(e.target).val();
 
-    this.$feePercentageInput.toggleClass('visuallyHidden', feeType === 'FIXED');
-    this.$feeFixedInput.toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
-  }
-
-  get $btnSave() {
-    return this._$btnSave ||
-      (this._$btnSave = this.$('.js-save'));
-  }
-
-  get $feePercentageInput() {
-    return this._$feePercentageInput ||
-      (this._$feePercentageInput = this.$('.js-feePercentageInput'));
-  }
-
-  get $feeFixedInput() {
-    return this._$feeFixedInput ||
-      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
-  }
-
-  get $understandRequirements() {
-    return this._$understandRequirements ||
-      (this._$understandRequirements = this.$('#understandRequirements'));
-  }
-
-  get $acceptGuidelines() {
-    return this._$acceptGuidelines ||
-      (this._$acceptGuidelines = this.$('#acceptGuidelines'));
-  }
-
-  get $moderationConfirmError() {
-    return this._$moderationConfirmError ||
-      (this._$moderationConfirmError = this.$('.js-moderationConfirmError'));
+    this.getCachedEl('.js-feePercentageInput').toggleClass('visuallyHidden', feeType === 'FIXED');
+    this.getCachedEl('.js-feeFixedInput').toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
   }
 
   render() {
@@ -195,6 +164,8 @@ export default class extends baseVw {
         ...moderator.toJSON(),
       }));
 
+      super.render();
+
       this.$('#moderationLanguageSelect').selectize({
         maxItems: null,
         valueField: 'code',
@@ -214,12 +185,6 @@ export default class extends baseVw {
       this.$('#moderationCurrency').select2();
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
-      this._$btnSave = null;
-      this._$feePercentageInput = null;
-      this._$feeFixedInput = null;
-      this._$acceptGuidelines = null;
-      this._$understandRequirements = null;
-      this._$moderationConfirmError = null;
     });
 
     return this;
