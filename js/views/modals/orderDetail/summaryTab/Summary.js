@@ -3,11 +3,11 @@ import { clipboard } from 'electron';
 import moment from 'moment';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
-import { getServerCurrency } from '../../../../data/walletCurrencies';
 import {
   completingOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../../data/walletCurrencies';
 import OrderCompletion from '../../../../models/order/orderCompletion/OrderCompletion';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import BaseVw from '../../../baseVw';
@@ -237,12 +237,25 @@ export default class extends BaseVw {
       }
     });
 
-    this.listenTo(app.walletBalance, 'change:height',
-      () => {
-        if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
-          this.renderTimeoutInfoView();
+    const balanceMd = app.walletBalances.get(this.model.paymentCoin);
+    const bindHeightChange = md => {
+      this.listenTo(md, 'change:height',
+        () => {
+          if (this.timeoutInfo || this.shouldShowTimeoutInfoView) {
+            this.renderTimeoutInfoView();
+          }
+        });
+    };
+
+    if (balanceMd) {
+      bindHeightChange(balanceMd);
+    } else {
+      this.listenTo(app.walletBalances, 'add', md => {
+        if (md.id === this.model.paymentCoin) {
+          bindHeightChange(md);
         }
       });
+    }
   }
 
   className() {
@@ -391,8 +404,10 @@ export default class extends BaseVw {
   }
 
   get shouldShowTimeoutInfoView() {
+    const paymentCurData = this.model.paymentCoinData;
+
     return (
-      getServerCurrency().supportsEscrowTimeout &&
+      (paymentCurData && paymentCurData.supportsEscrowTimeout) &&
       (
         this.model.isOrderDisputable ||
         ['DISPUTED', 'PAYMENT_FINALIZED'].includes(this.model.get('state'))
@@ -401,7 +416,7 @@ export default class extends BaseVw {
   }
 
   renderTimeoutInfoView() {
-    const cryptoCur = getServerCurrency();
+    const paymentCurData = this.model.paymentCoinData;
     const orderState = this.model.get('state');
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
     const isCase = this.model.isCase;
@@ -417,15 +432,13 @@ export default class extends BaseVw {
     // so in the escrow timeouts 45 is represented as '45 days' instead of '1 month'.
     moment.relativeTimeThreshold('d', 364);
 
-    const height = app.walletBalance.get('height');
     let state = {
       ownPeerId: app.profile.id,
       buyer: this.buyer.id,
       vendor: this.vendor.id,
       moderator: this.moderator && this.moderator.id || undefined,
-      awaitingBlockHeight: false,
       isFundingConfirmed: false,
-      blockTime: cryptoCur.blockTime,
+      blockTime: paymentCurData && paymentCurData.blockTime,
       isDisputed: orderState === 'DISPUTED',
       hasDisputeEscrowExpired: false,
       canBuyerComplete: this.model.canBuyerComplete,
@@ -434,22 +447,28 @@ export default class extends BaseVw {
       showDisputeBtn: false,
       showDiscussBtn: orderState === 'DISPUTED',
       showResolveDisputeBtn: false,
+      dataUnavailable: false,
     };
 
-    if (!height) {
-      // temporary, this will not be needed once this server issue is completed:
-      // https://github.com/OpenBazaar/openbazaar-go/issues/843
-      state.awaitingBlockHeight = true;
-    } else if (orderState === 'PAYMENT_FINALIZED') {
+    if (orderState === 'PAYMENT_FINALIZED') {
       state.isPaymentFinalized = true;
     } else {
       let disputeStartTime;
       let escrowTimeoutHours;
+      let curHeight;
 
       try {
         escrowTimeoutHours = this.contract.escrowTimeoutHours;
       } catch (e) {
         // pass - will be handled below
+      }
+
+      try {
+        curHeight = app.walletBalances
+          .get(this.model.paymentCoin)
+          .get('height');
+      } catch (e) {
+        // pass
       }
 
       if (orderState === 'DISPUTED' || isCase) {
@@ -461,6 +480,7 @@ export default class extends BaseVw {
               this.contract.get('dispute').timestamp;
           }
         } catch (e) {
+          throw e;
           // pass - will be handled below
         }
       }
@@ -475,6 +495,13 @@ export default class extends BaseVw {
           invalidContractData: true,
           showDisputeBtn: this.model.isOrderStateDisputable,
           showResolveDisputeBtn: isCase,
+        };
+      } else if (!paymentCurData || !curHeight) {
+        // The order was paid in a coin not supported by this client or we don't have
+        // the current height of the paymentCoin, which means we don't know the
+        // blocktime and can't display timeout info.
+        state = {
+          dataUnavailable: true,
         };
       } else {
         const timeoutHours = orderState === 'DISPUTED' ?
@@ -531,11 +558,11 @@ export default class extends BaseVw {
           };
         } else {
           const fundedHeight = this.model.fundedBlockHeight;
-          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / cryptoCur.blockTime;
+          const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / paymentCurData.blockTime;
           const blocksRemaining = fundedHeight ?
-            blocksPerTimeout - (app.walletBalance.get('height') - fundedHeight) :
+            blocksPerTimeout - curHeight - fundedHeight :
             blocksPerTimeout;
-          const msRemaining = blocksRemaining * cryptoCur.blockTime;
+          const msRemaining = blocksRemaining * paymentCurData.blockTime;
 
           const timeRemaining =
             moment(Date.now()).from(moment(Date.now() + msRemaining), true);
@@ -581,6 +608,7 @@ export default class extends BaseVw {
 
   shouldShowPayForOrderSection() {
     return this.buyer.id === app.profile.id &&
+      this.model.paymentCoinData &&
       this.model.getBalanceRemaining() > 0 &&
       !this.model.vendorProcessingError;
   }
@@ -644,6 +672,7 @@ export default class extends BaseVw {
     if (this.accepted) this.accepted.remove();
     this.accepted = this.createChild(Accepted, {
       orderId: this.model.id,
+      paymentCoin: this.model.paymentCoin,
       initialState,
     });
     this.listenTo(this.accepted, 'clickFulfillOrder',
@@ -661,6 +690,7 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
+    const paymentCoinData = this.model.paymentCoinData;
 
     if (!refundMd) {
       throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
@@ -672,6 +702,9 @@ export default class extends BaseVw {
       model: refundMd,
       initialState: {
         isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+        blockChainTxUrl: paymentCoinData ?
+          paymentCoinData.getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet) :
+          '',
       },
     });
     this.buyer.getProfile()
@@ -737,10 +770,12 @@ export default class extends BaseVw {
         });
     }
 
-    this.$subSections.prepend(this.fulfilled.render().el);
+    if (this.completeOrderForm) {
+      this.completeOrderForm.$el.after(this.fulfilled.render().el);
+    } else {
+      this.$subSections.prepend(this.fulfilled.render().el);
 
-    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
-      this.renderCompleteOrderForm();
+      if (this.shouldShowCompleteOrderForm()) this.renderCompleteOrderForm();
     }
   }
 
@@ -810,6 +845,7 @@ export default class extends BaseVw {
       initialState: {
         ...data,
         showAcceptButton: !this.model.isCase && this.model.get('state') === 'DECIDED',
+        paymentCoin: this.model.paymentCoin,
       },
     });
 
@@ -829,17 +865,22 @@ export default class extends BaseVw {
   }
 
   renderPayForOrder() {
-    if (this.payForOrder) this.payForOrder.remove();
+    const paymentCoin = this.model.paymentCoin;
 
-    this.payForOrder = this.createChild(PayForOrder, {
-      balanceRemaining: this.model.getBalanceRemaining(),
-      paymentAddress: this.paymentAddress,
-      orderId: this.model.id,
-      isModerated: !!this.moderator,
-      metricsOrigin: 'Transactions',
-    });
+    if (getWalletCurByCode(paymentCoin)) {
+      if (this.payForOrder) this.payForOrder.remove();
 
-    this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+      this.payForOrder = this.createChild(PayForOrder, {
+        balanceRemaining: this.model.getBalanceRemaining({ convertFromSat: true }),
+        paymentAddress: this.paymentAddress,
+        orderId: this.model.id,
+        isModerated: !!this.moderator,
+        metricsOrigin: 'Transactions',
+        paymentCoin: this.model.paymentCoin,
+      });
+
+      this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);
+    }
   }
 
   renderDisputeAcceptanceView() {
@@ -870,10 +911,12 @@ export default class extends BaseVw {
           closerAvatarHashes: profile.get('avatarHashes').toJSON(),
         }));
 
-    this.$subSections.prepend(this.disputeAcceptance.render().el);
+    if (this.completeOrderForm) {
+      this.completeOrderForm.$el.after(this.disputeAcceptance.render().el);
+    } else {
+      this.$subSections.prepend(this.disputeAcceptance.render().el);
 
-    if (this.shouldShowCompleteOrderForm() && !this.completeOrderForm) {
-      this.renderCompleteOrderForm();
+      if (this.shouldShowCompleteOrderForm()) this.renderCompleteOrderForm();
     }
   }
 
@@ -1001,13 +1044,28 @@ export default class extends BaseVw {
   render() {
     super.render();
     loadTemplate('modals/orderDetail/summaryTab/summary.html', t => {
-      this.$el.html(t({
+      const paymentCoin = this.model.paymentCoin;
+      let templateData = {
         id: this.model.id,
         isCase: this.model.isCase,
-        isTestnet: app.serverConfig.testnet,
-        paymentAddress: this.paymentAddress,
+        paymentCoin,
         ...this.model.toJSON(),
-      }));
+      };
+
+      if (this.model.isCase) {
+        const paymentCoinData = this.model.paymentCoinData;
+        const paymentAddress = this.paymentAddress;
+
+        templateData = {
+          ...templateData,
+          blockChainAddressUrl: paymentCoinData ?
+            paymentCoinData.getBlockChainAddressUrl(paymentAddress, app.serverConfig.testnet) :
+            false,
+          paymentAddress,
+        };
+      }
+
+      this.$el.html(t(templateData));
       this._$copiedToClipboard = null;
 
       if (this.stateProgressBar) this.stateProgressBar.remove();
@@ -1030,18 +1088,34 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
-        if (this.payments) this.payments.remove();
-        this.payments = this.createChild(Payments, {
-          orderId: this.model.id,
-          collection: this.model.paymentsIn,
-          orderPrice: this.model.orderPrice,
-          vendor: this.vendor,
-          isOrderCancelable: () => this.model.isOrderCancelable,
-          isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-          isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
-            this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
-        });
-        this.$('.js-paymentsWrap').html(this.payments.render().el);
+        if (getWalletCurByCode(paymentCoin)) {
+          if (this.payments) this.payments.remove();
+          this.payments = this.createChild(Payments, {
+            orderId: this.model.id,
+            collection: this.model.paymentsIn,
+            orderPrice: this.model.orderPrice,
+            vendor: this.vendor,
+            isOrderCancelable: () => this.model.isOrderCancelable,
+            isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+            isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
+              this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
+            paymentCoin,
+          });
+          this.$('.js-paymentsWrap').html(this.payments.render().el);
+        } else {
+          this.getCachedEl('.js-paymentsWrap').html(
+            `
+            <div class="rowLg border clrBr padMd">
+              <i class="ion-alert-circled clrTAlert"></i>
+              <span>
+                ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayments', {
+                  cur: paymentCoin,
+                })}
+              </span>
+            </div>  
+            `
+          );
+        }
       }
 
       if (this.shouldShowAcceptedSection()) this.renderAcceptedView();

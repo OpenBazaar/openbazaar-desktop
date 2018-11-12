@@ -1,4 +1,4 @@
-<div class="moderatorsWrapper clrBr <% print(ob.wrapperClasses) %> <% if (ob.showVerifiedOnly) print('showVerifiedOnly') %> js-moderatorsWrapper">
+<div class="moderatorsWrapper clrBr <% print(ob.wrapperClasses) %> js-moderatorsWrapper">
   <% // placeholder so border collapse doesn't erase the table border when there are no table cells %>
   <% if (ob.placeholder) { %>
     <div class="moderatorCard clrBr">
@@ -6,29 +6,31 @@
       </div>
     </div>
   <% } %>
-  <% if (ob.purchase) { %>
-  <% // only show the errors below if this is a purchase. TODO: move this to the purchase template. %>
-    <% if (ob.noValidModerators || ob.noValidVerifiedModerators && ob.showVerifiedOnly) { %>
-      <div class="moderatorCard moderatorsMessage clrBr">
-        <div class="moderatorCardInner">
-          <div class="flexCent">
-            <div class="flexColRows flexHCent gutterVTn">
-              <% if (ob.noValidModerators) { %>
-                <h4 class="clrTErr"><%= ob.polyT('moderators.noValidModerators') %></h4>
-                <div class="tx4 clrTErr"><%= ob.polyT('moderators.noValidModeratorsBody') %></div>
-              <% } else { %>
-                <h4><%= ob.polyT('moderators.noVerifiedModerators') %></h4>
-                <div class="tx4 clrT2"><%= ob.polyT('moderators.noVerifiedModeratorsBody') %></div>
+  <% if (ob.totalIDs && !ob.totalShown && !ob.totalPending) { %>
+    <div class="moderatorCard moderatorsMessage clrBr">
+      <div class="moderatorCardInner">
+        <div class="flexCent">
+          <div class="flexColRows flexHCent gutterVTn">
+            <% const showOnlyVer = ob.showVerifiedOnly && ob.unVerCount ? 'Verified' : '';
+               const showOnlyCur = ob.showOnlyCur ? 'Matching' : '';
+               const opts = ob.showOnlyCur ? { coin: ob.showOnlyCur } : {};
+               const msgPath = `moderators.noModsMsg.no${showOnlyCur}${showOnlyVer}Moderators`;
+            %>
+            <h4><%= ob.polyT(`${msgPath}.title`, opts) %></h4>
+            <% // The section below is only relevant if the moderators are loaded in a purchasing context. %>
+            <% if (ob.purchase) { %>
+              <div class="tx4 clrT2"><%= ob.polyT(`${msgPath}.body`) %></div>
+              <% if (showOnlyVer) { %>
                 <div class="padTn"><% // just a spacer %></div>
                 <div>
                   <button class="btn clrP clrBr js-showUnverified"><%= ob.polyT('moderators.showUnverified') %></button>
                 </div>
               <% } %>
-            </div>
+            <% } %>
           </div>
         </div>
       </div>
-    <% } %>
+    </div>
   <% } %>
 </div>
 <div class="js-statusWrapper"></div>

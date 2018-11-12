@@ -1,6 +1,11 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import currencies from '../../js/data/walletCurrencies';
+import currencies, {
+  supportedWalletCurs,
+  isSupportedWalletCur,
+  onlySupportedWalletCurs,
+  anySupportedByWallet,
+} from '../../js/data/walletCurrencies';
 
 describe('the crypto currencies data module', () => {
   describe('has a config array of crypto currency configuration objects', () => {
@@ -127,4 +132,150 @@ describe('the crypto currencies data module', () => {
       });
     });
   });
+
+  if (currencies.length) {
+    describe('has a supportedWalletCurs function', () => {
+      it('that will return the optionally provided serverCurs', () => {
+        const curs = currencies.map(cur => cur.code);
+
+        expect(
+          supportedWalletCurs({
+            clientSupported: true,
+            serverCurs: [...curs],
+          })
+        ).deep.equal([...curs]);
+      });
+
+      it('that, if passing in a "true" clientSupported option, will not return a ' +
+        'server currency if it is not a currency enumerated in the ' +
+        'walletCurrencies data file', () => {
+        expect(
+          supportedWalletCurs({
+            clientSupported: true,
+            serverCurs: [currencies[0].code, 'NOT-CLIENT-SUPPORTED'],
+          })
+        ).deep.equal([currencies[0].code]);
+      });
+
+      it('that, if passing in a "false" clientSupported option, will return a ' +
+        'server currency even if it is not a currency enumerated in the ' +
+        'walletCurrencies data file', () => {
+        expect(
+          supportedWalletCurs({
+            clientSupported: false,
+            serverCurs: [currencies[0].code, 'NOT-CLIENT-SUPPORTED'],
+          })
+        ).deep.equal([currencies[0].code, 'NOT-CLIENT-SUPPORTED']);
+      });
+    });
+
+    describe('has a isSupportedWalletCur function', () => {
+      it('that will return false if the given currency is not a supported wallet ' +
+        'currency', () => {
+        expect(
+          isSupportedWalletCur('NO-SOUP-FOR-YOU', {
+            clientSupported: false,
+            serverCurs: [currencies[0].code],
+          })
+        ).deep.equal(false);
+      });
+
+      it('that will return true if the given currency is a supported wallet ' +
+        'currency', () => {
+        expect(
+          isSupportedWalletCur('SOUP-FOR-YOU', {
+            clientSupported: false,
+            serverCurs: ['SOUP-FOR-YOU'],
+          })
+        ).deep.equal(true);
+      });
+
+      it('that, if passing in a "true" clientSupported option, will return false ' +
+        'if the given currency is not a currency enumerated in the ' +
+        'walletCurrencies data file', () => {
+        expect(
+          isSupportedWalletCur('NOT-CLIENT-SUPPORTED', {
+            clientSupported: true,
+            serverCurs: [currencies[0].code, 'NOT-CLIENT-SUPPORTED'],
+          })
+        ).deep.equal(false);
+      });
+    });
+
+    describe('has a onlySupportedWalletCurs function that takes a list of currencies', () => {
+      it('and returns only the ones that are supported wallet currencies', () => {
+        expect(
+          onlySupportedWalletCurs(['HI', 'THERE', 'SLICK', 'WILLY'], {
+            clientSupported: false,
+            serverCurs: ['HI', 'THERE', 'WILLY'],
+          })
+        ).deep.equal(['HI', 'THERE', 'WILLY']);
+      });
+
+      it('and returns an empty list if none of them are supported wallet ' +
+        'currencies', () => {
+        expect(
+          onlySupportedWalletCurs(['HI', 'THERE', 'SLICK', 'WILLY'], {
+            clientSupported: false,
+            serverCurs: ['BTC', 'ZEC', 'LTC'],
+          })
+        ).deep.equal([]);
+      });
+
+      it('and returns only the ones that are supported wallet currencies ' +
+        'factoring in client support if "true" is passed in for the ' +
+        'clientSupported option', () => {
+        const curs = currencies.map(cur => cur.code);
+        expect(
+          onlySupportedWalletCurs([...curs, 'NO-SOUP-FOR-YOU'], {
+            clientSupported: true,
+            serverCurs: [...curs],
+          })
+        ).deep.equal([...curs]);
+      });
+    });
+
+    describe('has a anySupportedByWallet function that takes a list of currencies', () => {
+      it('and returns true if any of them are supported wallet currencies', () => {
+        expect(
+          anySupportedByWallet(['WIGGLES', 'YES', 'HI', 'NO'], {
+            clientSupported: false,
+            serverCurs: ['HI', 'THERE', 'WILLY'],
+          })
+        ).deep.equal(true);
+      });
+
+      it('and returns false if none of them are supported wallet currencies', () => {
+        expect(
+          anySupportedByWallet(['WIGGLES', 'YES', 'TRUST', 'NO'], {
+            clientSupported: false,
+            serverCurs: ['HI', 'THERE', 'WILLY'],
+          })
+        ).deep.equal(false);
+      });
+
+      it('and returns true if any of them are supported wallet currencies ' +
+        'factoring in client support if "true" is passed in for the ' +
+        'clientSupported option', () => {
+        const curs = currencies.map(cur => cur.code);
+        expect(
+          anySupportedByWallet([curs[0], 'NO', 'MO', 'PICKLES'], {
+            clientSupported: true,
+            serverCurs: [...curs],
+          })
+        ).deep.equal(true);
+      });
+
+      it('and returns false if none of them are supported wallet currencies ' +
+        'factoring in client support if "true" is passed in for the ' +
+        'clientSupported option', () => {
+        expect(
+          anySupportedByWallet(['NO-SOUP-FOR-YOU'], {
+            clientSupported: true,
+            serverCurs: ['NO-SOUP-FOR-YOU'],
+          })
+        ).deep.equal(false);
+      });
+    });
+  }
 });

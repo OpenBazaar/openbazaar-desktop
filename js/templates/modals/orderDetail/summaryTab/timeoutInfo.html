@@ -22,7 +22,18 @@
     }
 
     messageClass = 'txCtr clrTErr';
-    tipClass = 'hide';    
+    tipClass = 'hide';
+  } else if (ob.dataUnavailable) {
+    if (ob.moderator) {
+      message = ob.polyT('orderDetail.summaryTab.timeoutInfo.modDataUnavailable');
+    } else {
+      message = ob.isDisputed ?
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.disputedDataUnavailable') :
+        ob.polyT('orderDetail.summaryTab.timeoutInfo.dataUnavailable');
+    }
+
+    messageClass = 'txCtr clrTErr';
+    tipClass = 'hide';
   } else if (!isCase) {
     tip = ob.ownPeerId === ob.buyer ?
       ob.polyT('orderDetail.summaryTab.timeoutInfo.tipClaimAfterTimeoutBuyer') :
@@ -97,32 +108,27 @@
     tipClass = 'hide';
   }
 %>
-
-  <% if (ob.awaitingBlockHeight) { %>
-  <div class="txCtr">Obtaining current block height...</div>
-  <% } else { %>
-    <div class="flexCol flexCent gutterVSm">
-      <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
-      <div class="flexCent gutterH">
-        <% if (ob.showDisputeBtn) { %>
-          <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDisputeOrder') %></button>
-        <% } %>
-        <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
-          <%= ob.processingButton({
-            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
-            btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnClaimPayment')
-          }) %>
-        <% } %>
-        <% if (ob.showDiscussBtn) { %>
-          <button class="btn tx5b clrP clrBr js-discussOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDiscussOrder') %></button>
-        <% } %>
-        <% if (ob.showResolveDisputeBtn) { %>
-          <%= ob.processingButton({
-            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.isResolvingDispute ? 'processing' : ''}`,
-            btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnResolveDispute')
-          }) %>
-        <% } %>
-      </div>
+  <div class="flexCol flexCent gutterVSm">
+    <p class="<%= messageClass %>"><%= message %> <span class="toolTip clrT <%= tipClass %>" data-tip="<%= tip %>"><i class="ion-help-circled"></i></span></p>
+    <div class="flexCent gutterH">
+      <% if (ob.showDisputeBtn) { %>
+        <button class="btn tx5b clrErr clrBrDec1 clrTOnEmph js-disputeOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDisputeOrder') %></button>
+      <% } %>
+      <% if (ob.ownPeerId === ob.vendor && ob.isPaymentClaimable) { %>
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-claimPayment ${ob.isClaimingPayment ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnClaimPayment')
+        }) %>
+      <% } %>
+      <% if (ob.showDiscussBtn) { %>
+        <button class="btn tx5b clrP clrBr js-discussOrder"><%= ob.polyT('orderDetail.summaryTab.timeoutInfo.btnDiscussOrder') %></button>
+      <% } %>
+      <% if (ob.showResolveDisputeBtn) { %>
+        <%= ob.processingButton({
+          className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute ${ob.isResolvingDispute ? 'processing' : ''}`,
+          btnText: ob.polyT('orderDetail.summaryTab.timeoutInfo.btnResolveDispute')
+        }) %>
+      <% } %>
     </div>
-  <% } %>
+  </div>
 </div>

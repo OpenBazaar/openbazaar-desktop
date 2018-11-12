@@ -11,24 +11,26 @@ import {
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
-import { getExchangeRate } from '../../../utils/currency';
+import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
-import { openSimpleMessage } from '../SimpleMessage';
+import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
 import Listing from '../../../models/listing/Listing';
-import Purchase from '../../../models/purchase/Purchase';
 import BaseModal from '../BaseModal';
+import { openSimpleMessage } from '../SimpleMessage';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import Moderators from '../../components/Moderators';
+import FeeChange from '../../components/FeeChange';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
+import CryptoCurSelector from '../../components/CryptoCurSelector';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
 import ActionBtn from './ActionBtn';
 import Payment from './Payment';
 import Complete from './Complete';
-import FeeChange from '../../components/FeeChange';
-import CryptoTradingPair from '../../components/CryptoTradingPair';
+import DirectPayment from './DirectPayment';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -61,7 +63,7 @@ export default class extends BaseModal {
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
     this.setState({
       showModerators: this.moderatorIDs.length,
-      showOnlyVerified: true,
+      showVerifiedOnly: true,
     }, { renderOnChange: false });
 
     this.couponObj = [];
@@ -93,9 +95,6 @@ export default class extends BaseModal {
     // add the item to the order.
     this.order.get('items').add(item);
 
-    // create an empty purchase model
-    this.purchase = new Purchase();
-
     this.actionBtn = this.createChild(ActionBtn, {
       listing: this.listing,
     });
@@ -116,24 +115,51 @@ export default class extends BaseModal {
     this.listenTo(this.coupons, 'changeCoupons',
       (hashes, codes) => this.changeCoupons(hashes, codes));
 
+    const currencies = this.listing.get('metadata').get('acceptedCurrencies') || [];
+    const locale = app.localSettings.standardizedTranslatedLang() || 'en-US';
+    currencies.sort((a, b) => {
+      const aName = app.polyglot.t(`cryptoCurrencies.${a}`, { _: a });
+      const bName = app.polyglot.t(`cryptoCurrencies.${b}`, { _: b });
+      return aName.localeCompare(bName, locale, { sensitivity: 'base' });
+    });
+
+    const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
+    this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
+      disabledMsg: app.polyglot.t('purchase.cryptoCurrencyInvalid'),
+      initialState: {
+        controlType: 'radio',
+        currencies,
+        activeCurs: [currencies[0]],
+        disabledCurs,
+        sort: false,
+      },
+    });
+    this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
+      if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
+    });
+
     this.moderators = this.createChild(Moderators, {
       moderatorIDs: this.moderatorIDs,
       useCache: false,
-      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('purchase.errors.moderatorsTitle'),
       fetchErrorMsg: app.polyglot.t('purchase.errors.moderatorsMsg'),
       purchase: true,
       cardState: 'unselected',
       notSelected: 'unselected',
       singleSelect: true,
-      selectFirst: true,
       radioStyle: true,
+      initialState: {
+        showOnlyCur: currencies[0],
+        showVerifiedOnly: true,
+      },
     });
     // render the moderators so it can start fetching and adding moderator cards
     this.moderators.render();
     this.moderators.getModeratorsByID();
-    this.listenTo(this.moderators, 'noValidModerators', () => this.onNoValidModerators());
-    this.listenTo(this.moderators, 'clickShowUnverified', () => this.togVerifiedModerators(false));
+    this.listenTo(this.moderators, 'noModsShown', () => this.render());
+    this.listenTo(this.moderators, 'clickShowUnverified', () => {
+      this.setState({ showVerifiedOnly: false });
+    });
     this.listenTo(this.moderators, 'cardSelect', () => this.onCardSelect());
 
     if (this.listing.get('shippingOptions').length) {
@@ -193,7 +219,6 @@ export default class extends BaseModal {
       'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
-      'click .js-directPayment': 'clickDirectPurchase',
       'change #purchaseQuantity': 'changeQuantityInput',
       'change #purchaseCryptoAddress': 'changeCryptoAddress',
       'click .js-newAddress': 'clickNewAddress',
@@ -254,26 +279,17 @@ export default class extends BaseModal {
     this.close();
   }
 
-  clickDirectPurchase() {
-    if (!this.order.moderated) return;
+  handleDirectPurchaseClick() {
+    if (!this.isModerated) return;
 
-    this.order.moderated = false;
     this.moderators.deselectOthers();
     this.setState({ unverifedSelected: false }, { renderOnChange: false });
     this.render(); // always render even if the state didn't change
   }
 
-  onNoValidModerators() {
-    this.order.moderated = false;
-    this.render();
-  }
-
   togVerifiedModerators(bool) {
-    // If an unverified moderator is selected, don't set showOnlyVerified to
-    // true, otherwise you will hide the selected moderator.
-    const modBool = bool && this.getState().unverifiedSelected ? false : bool;
-    this.moderators.togVerifiedShown(modBool);
-    this.setState({ showOnlyVerified: modBool });
+    this.moderators.togVerifiedShown(bool);
+    this.setState({ showVerifiedOnly: bool });
   }
 
   onClickVerifiedOnly(e) {
@@ -281,7 +297,6 @@ export default class extends BaseModal {
   }
 
   onCardSelect() {
-    this.order.moderated = true;
     const selected = this.moderators.selectedIDs;
     const unverifedSelected = selected.length && !app.verifiedMods.matched(selected).length;
     this.setState({ unverifedSelected }, { renderOnChange: false });
@@ -378,17 +393,17 @@ export default class extends BaseModal {
   }
 
   updateShippingOption() {
-    // set the shipping option
+    // Set the shipping option.
     this.order.get('items').at(0).get('shipping')
       .set(this.shipping.selectedOption);
   }
 
   purchaseListing() {
-    // clear any old errors
+    // Clear any old errors.
     const allErrContainers = this.$('div[class $="-errors"]');
     allErrContainers.each((i, container) => $(container).html(''));
 
-    // don't allow a zero or negative price purchase
+    // Don't allow a zero or negative price purchase.
     const priceObj = this.prices[0];
     if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
       this.insertErrors(this.getCachedEl('.js-errors'),
@@ -397,17 +412,21 @@ export default class extends BaseModal {
       return;
     }
 
-    // set the shipping address if the listing is shippable
+    // Set the payment coin.
+    const paymentCoin = this.cryptoCurSelector.getState().activeCurs[0];
+    this.order.set({ paymentCoin });
+
+    // Set the shipping address if the listing is shippable.
     if (this.shipping && this.shipping.selectedAddress) {
       this.order.addAddress(this.shipping.selectedAddress);
     }
 
-    // set the moderator
-    const moderator = this.order.moderated ? this.moderators.selectedIDs[0] : '';
+    // Set the moderator.
+    const moderator = this.moderators.selectedIDs[0] || '';
     this.order.set({ moderator });
     this.order.set({}, { validate: true });
 
-    // cancel any existing order
+    // Cancel any existing order.
     if (this.orderSubmit) this.orderSubmit.abort();
 
     this.setState({ phase: 'processing' });
@@ -446,19 +465,18 @@ export default class extends BaseModal {
         })
           .done((data) => {
             this.setState({ phase: 'pending' });
-            this.purchase.set(this.purchase.parse(data));
             this.payment = this.createChild(Payment, {
-              balanceRemaining: this.purchase.get('amount'),
-              paymentAddress: this.purchase.get('paymentAddress'),
-              orderId: this.purchase.get('orderId'),
+              balanceRemaining: integerToDecimal(data.amount, paymentCoin),
+              paymentAddress: data.paymentAddress,
+              orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
               metricsOrigin: 'Purchase',
+              paymentCoin,
             });
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));
             this.$('.js-pending').append(this.payment.render().el);
-            endAjaxEvent('Purchase', {
-            });
+            endAjaxEvent('Purchase');
           })
           .fail(jqXHR => {
             this.setState({ phase: 'pay' });
@@ -566,6 +584,10 @@ export default class extends BaseModal {
         .get('coinType');
   }
 
+  get isModerated() {
+    return this.moderators.selectedIDs.length > 0;
+  }
+
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
@@ -600,7 +622,6 @@ export default class extends BaseModal {
         variants: this.variants,
         prices: this.prices,
         displayCurrency: app.settings.get('localCurrency'),
-        moderated: this.order.moderated,
         quantity: uiQuantity,
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
@@ -612,7 +633,7 @@ export default class extends BaseModal {
       this._$couponField = null;
 
       this.actionBtn.delegateEvents();
-      this.actionBtn.setState({ phase: state.phase });
+      this.actionBtn.setState({ phase: state.phase }, { renderOnChange: false });
       this.$('.js-actionBtn').append(this.actionBtn.render().el);
 
       this.receipt.delegateEvents();
@@ -623,6 +644,18 @@ export default class extends BaseModal {
 
       this.moderators.delegateEvents();
       this.$('.js-moderatorsWrapper').append(this.moderators.el);
+
+      if (this.directPayment) this.directPayment.remove();
+      this.directPayment = this.createChild(DirectPayment, {
+        initialState: {
+          active: !this.isModerated,
+        },
+      });
+      this.listenTo(this.directPayment, 'click', () => this.handleDirectPurchaseClick());
+      this.$('.js-directPaymentWrapper').append(this.directPayment.render().el);
+
+      this.cryptoCurSelector.delegateEvents();
+      this.$('.js-cryptoCurSelectorWrapper').append(this.cryptoCurSelector.render().el);
 
       if (this.shipping) {
         this.shipping.delegateEvents();

@@ -30,7 +30,7 @@
         ob.fee,
         ob.coinType,
         ob.displayCurrency
-      );      
+      );
     %>
       <p class="clrT2">
         <%= ob.polyT('wallet.spendConfirmBox.body', {
@@ -45,7 +45,7 @@
       <% if (ob.fetchingFee) {
         // invisible button for spacing purposes
       %>
-      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.btnSendText %></a> 
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph invisible"><%= ob.btnSendText %></a>
       <% } else if (!ob.fetchFailed) { %>
       <a class="js-sendConfirmCancel"><%= ob.polyT('wallet.spendConfirmBox.btnCancel') %></a>
       <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-btnConfirmSend"><%= ob.btnSendText %></a>
@@ -54,4 +54,4 @@
       <% } %>
     </div>
   </div>
-<% } %>  
+<% } %>

@@ -63,18 +63,15 @@ export default class extends baseVw {
   }
 
   save() {
-    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
-     aren't checked, show an error */
+    const formData = this.getFormData();
 
-    const confirmChecked = this.getCachedEl('#understandRequirements').prop('checked') &&
-      this.getCachedEl('#acceptGuidelines').prop('checked');
-
-    if (this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
+    // The user must check both boxes at the bottom of the page if they want to be a moderator,
+    // but the values aren't part of the model, they only exist in the DOM and aren't saved.
+    if (formData.moderator && !(this.getCachedEl('#understandRequirements').prop('checked') &&
+      this.getCachedEl('#acceptGuidelines').prop('checked'))) {
       this.getCachedEl('.js-moderationConfirmError').removeClass('hide');
       return;
     }
-
-    const formData = this.getFormData();
 
     // clear unused values by setting them to the default, if it exists
     if (formData.moderatorInfo.fee.feeType === 'PERCENTAGE') {

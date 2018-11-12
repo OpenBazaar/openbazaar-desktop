@@ -1378,8 +1378,13 @@
     "returnToListing": "Return To Listing",
     "optional": "optional",
     "shippingTitle": "Shipping",
+    "cryptoCurrencyTitle": "Currency",
+    "cryptoCurrencyInvalid": "Not Accepted",
     "paymentTypeTitle": "Payment Type",
     "moderatorTitle": "Moderator",
+    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
+    "chooseModerator": "Choose This Moderator",
+    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "newAddress": "New Address",
     "serviceDetails": "%{price} — %{delivery}",
     "localPickup": "Local Pickup",
@@ -1409,7 +1414,6 @@
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "Close",
     "closeNote": "Your payment has been sent to the vendor.",
-    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "cryptoAmount": "Amount",
     "cryptoAddressHeading": "Your %{coinType} address",
@@ -1417,10 +1421,8 @@
     "cryptoAddressHelper": "%{name} will send %{coinType} to this address. %{warning}",
     "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",
     "cryptoAddressHelperWarning2": "This address cannot be changed.",
-    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
     "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
-    "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
       "msg": "If yes, please proceed to the final step.",
@@ -1492,11 +1494,26 @@
   },
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
+    "moderatorsXofY": "Loading moderator %{current} of %{total}",
     "moderatorsLoaded": "%{total} moderators loaded.",
-    "noValidModerators": "No Valid Moderators Available.",
-    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
-    "noVerifiedModerators": "No Verified Moderators Available",
-    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "noModsMsg":{
+      "noModerators": {
+        "title": "No Valid Moderators Are Available.",
+        "body": "None of the loaded moderators are valid. This order will be a direct payment."
+      },
+      "noVerifiedModerators": {
+        "title": "No Verified Moderators Available",
+        "body": "Try viewing unverified moderators."
+      },
+      "noMatchingModerators": {
+        "title": "No moderators that accept %{coin} are available.",
+        "body": "Moderators are available on one or more of the other currencies accepted by this listing."
+      },
+      "noMatchingVerifiedModerators": {
+        "title": "No verified moderators that accept %{coin} are available.",
+        "body": "Try viewing unverified moderators."
+      }
+    },
     "showUnverified": "Show Unverified Moderators",
     "browseMoreModerators": "Load More"
   },
@@ -1769,6 +1786,9 @@
         "modInvalidContractData": "The contract contains invalid data. The time remaining for you to make a decision on the dispute cannot be determined.",
         "invalidContractData": "The contract contains invalid data. The time remaining to open a dispute cannot be determined.",
         "disputedInvalidContractData": "The contract contains invalid data. The time remaining for the moderator to make a decision on the dispute cannot be determined.",
+        "modDataUnavailable": "The data necessary to determine the time remaining for you to make a decision is not available at this time.",
+        "disputedDataUnavailable": "The data necessary to determine the time remaining for the moderator to make a decision on the dispute is not available at this time.",
+        "dataUnavailable": "The data necessary to determine the time remaining to open a dispute is not available at this time.",
         "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
         "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfilled you can claim payment and finalize the order without support from the moderator.",
         "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
@@ -1806,7 +1826,8 @@
         "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
         "procErrVendorNoMsg": "There was an error processing the order.",
         "procErrVendor": "You were unable to process the order due to the following errors:"
-      }
+      },
+      "unableToShowPayments": "Unable to show the payment details. The order was paid for in a currency (%{cur}) this client does not currently support."
     },
     "fulfillOrderTab": {
       "heading": "Fulfill Order",
@@ -2054,6 +2075,7 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
+    "paymentCoinInvalid": "Please choose a valid cryptocurrency to pay with.",
     "missingAddress": "Please choose a valid shipping address.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
     "removeModerator": "An unmoderated purchase cannot have a moderator."
