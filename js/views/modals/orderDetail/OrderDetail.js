@@ -1,9 +1,8 @@
-import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../app';
 import { capitalize } from '../../../utils/string';
 import { getSocket } from '../../../utils/serverConnect';
-import { getServerCurrency } from '../../../data/walletCurrencies';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import {
   resolvingDispute,
   events as orderEvents,
@@ -46,10 +45,6 @@ export default class extends BaseModal {
     if (!this.model) {
       throw new Error('Please provide an Order or Case model.');
     }
-
-    this._state = {
-      ...opts.initialState || {},
-    };
 
     this.listenTo(this.model, 'request', this.onOrderRequest);
     this.listenToOnce(this.model, 'sync', this.onFirstOrderSync);
@@ -273,27 +268,6 @@ export default class extends BaseModal {
     return this._tab;
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   selectTab(targ) {
     if (!this[`create${capitalize(targ)}TabView`]) {
       throw new Error(`${targ} is not a valid tab.`);
@@ -443,13 +417,19 @@ export default class extends BaseModal {
     const model = new OrderDispute({ orderId: this.model.id });
     const translationKeySuffix = app.profile.id === this.model.buyerId ?
       'Buyer' : 'Vendor';
-    const timeoutMessage =
-      getServerCurrency().supportsEscrowTimeout ?
-        app.polyglot.t(
-          `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
-          { timeoutAmount: contract.disputeExpiryVerbose }
-        ) :
-        '';
+    let timeoutMessage = '';
+
+    try {
+      timeoutMessage =
+        getWalletCurByCode(this.model.paymentCoin).supportsEscrowTimeout ?
+          app.polyglot.t(
+            `orderDetail.disputeOrderTab.timeoutMessage${translationKeySuffix}`,
+            { timeoutAmount: contract.disputeExpiryVerbose }
+          ) :
+          '';
+    } catch (e) {
+      // pass
+    }
 
     const view = this.createChild(DisputeOrder, {
       model,
@@ -519,8 +499,11 @@ export default class extends BaseModal {
    * based upon the order state.
    */
   get actionBarButtonState() {
+    const paymentCurData = this.model.paymentCoinData;
+
     return {
-      showDisputeOrderButton: !getServerCurrency().supportsEscrowTimeout &&
+      showDisputeOrderButton:
+        (!paymentCurData || !paymentCurData.supportsEscrowTimeout) &&
         this.model.isOrderDisputable,
     };
   }

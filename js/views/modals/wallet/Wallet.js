@@ -128,9 +128,10 @@ export default class extends BaseModal {
         if (e.jsonData.wallet) {
           const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
             this.transactionsState[e.jsonData.wallet.wallet].cl || null;
-          const transaction = cl.get(e.jsonData.wallet.txid);
 
           if (cl) {
+            const transaction = cl.get(e.jsonData.wallet.txid);
+
             if (this.activeCoin !== e.jsonData.wallet.wallet) {
               // If this is a new / updated transaction for the active coin, we won't
               // update the collection since the transactionsVw will handle that. Otherwise,
@@ -144,10 +145,10 @@ export default class extends BaseModal {
                 cl.add(data, { parse: true, at: 0 });
               }
             }
-          }
 
-          if (!transaction) {
-            this.incrementCountAtFirstFetch(e.jsonData.wallet.wallet);
+            if (!transaction) {
+              this.incrementCountAtFirstFetch(e.jsonData.wallet.wallet);
+            }
           }
 
           if (!e.jsonData.wallet.height) {

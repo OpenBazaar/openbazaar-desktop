@@ -5,6 +5,8 @@
   <span class="clrT4">
     <% if (ob.mode === 'loaded') { %>
       <%= ob.polyT('moderators.moderatorsLoaded', { total: ob.total }) %>
+    <% } else if (ob.mode === 'loadingXofY') { %>
+      <%= ob.polyT('moderators.moderatorsXofY', { current: ob.loaded + 1, total: ob.total }) %>
     <% } else { %>
       <%= ob.polyT('moderators.moderatorsLoading') %>
     <% } %>

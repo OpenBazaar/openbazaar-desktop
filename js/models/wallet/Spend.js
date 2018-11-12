@@ -1,6 +1,6 @@
 import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
 import {
-  getCurrencyByCode as getCryptoCurByCode,
+  getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
   ensureMainnetCode,
 } from '../../data/walletCurrencies';
@@ -58,7 +58,7 @@ class Spend extends BaseModel {
     if (!isWalletCurSupported) {
       addError('wallet', `"${attrs.wallet}" is not a supported wallet currency.`);
     } else {
-      const walletCur = getCryptoCurByCode(walletCurCode);
+      const walletCur = getWalletCurByCode(walletCurCode);
 
       if (walletCur) {
         if (!attrs.address) {
@@ -116,7 +116,7 @@ class Spend extends BaseModel {
 
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
-    const walletCur = getCryptoCurByCode(options.attrs.wallet);
+    const walletCur = getWalletCurByCode(options.attrs.wallet);
 
     if (method === 'create' || method === 'update') {
       let amount = options.attrs.amount;
@@ -174,6 +174,10 @@ export function spend(fields) {
         throw new Error(`${errorKey}: ${spendModel.validationError[errorKey][0]}`);
       });
   } else {
+    // TODO: test that the balance model is properly updated
+    // TODO: test that the balance model is properly updated
+    // TODO: test that the balance model is properly updated
+    // TODO: test that the balance model is properly updated
     save.done(data => {
       if (app.walletBalances) {
         const coinType = spendModel.get('wallet');

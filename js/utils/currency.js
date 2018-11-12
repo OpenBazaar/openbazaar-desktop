@@ -116,10 +116,10 @@ export function integerToDecimal(amount, currency, options = {}) {
  *
  * It also helps with crypto currencies so in most places we could display
  * them with 4 decimal places and it will increase that number if the
- * resulting price would be zero or the rounded number would be too significant
- * of a divergence from the unrounded (e.g a 15% difference).
+ * resulting price would be zero.
  *
  */
+// TODO: unit test this
 function getSmartMaxDisplayDigits(amount, desiredMax) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide the amount as a number.');
@@ -131,21 +131,21 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
 
   let max = desiredMax;
 
-  if (amount < 0.000000005) {
+  if (amount < 0.0000000005) {
     max = 10;
-  } else if (amount < 0.00000005) {
+  } else if (amount < 0.000000005) {
     max = 9;
-  } else if (amount < 0.0000005) {
+  } else if (amount < 0.00000005) {
     max = 8;
-  } else if (amount < 0.000005) {
+  } else if (amount < 0.0000005) {
     max = 7;
-  } else if (amount < 0.00005) {
+  } else if (amount < 0.000005) {
     max = 6;
-  } else if (amount < 0.0005) {
+  } else if (amount < 0.00005) {
     max = 5;
-  } else if (amount < 0.005) {
+  } else if (amount < 0.0005) {
     max = 4;
-  } else if (amount < 0.05) {
+  } else if (amount < 0.005) {
     max = 3;
   }
 

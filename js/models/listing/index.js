@@ -29,7 +29,6 @@ const events = {
 
 export { events };
 
-// todo: unit test me
 export function shipsFreeToMe(md) {
   if (!(md instanceof Listing || md instanceof ListingShort)) {
     throw new Error('Please provide a model as an instance of a Listing' +

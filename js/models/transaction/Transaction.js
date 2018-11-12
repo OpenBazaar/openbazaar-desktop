@@ -1,6 +1,5 @@
 // used for sales, purchases
 import { integerToDecimal } from '../../utils/currency';
-import app from '../../app';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -14,8 +13,7 @@ export default class extends BaseModel {
     returnVal = {
       ...returnVal,
       // Convert from base units
-      total: integerToDecimal(returnVal.total,
-        app.serverConfig.cryptoCurrency),
+      total: integerToDecimal(returnVal.total, returnVal.paymentCoin),
     };
 
     return returnVal;
