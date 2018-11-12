@@ -4,11 +4,9 @@
  * from the server via the ob/config api.
  */
 
-import fs from 'fs';
 import { remote } from 'electron';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
-import { getCurrencyByCode as getCryptoCurByCode } from '../data/walletCurrencies';
 import app from '../app';
 import BaseModel from './BaseModel';
 
@@ -56,9 +54,8 @@ export default class extends BaseModel {
       ...attrs,
     };
 
-    if (fullAttrs.builtIn && typeof attrs.walletCurrency === 'string') {
-      attrs.name = app.polyglot.t('connectionManagement.builtInServerName',
-        { cur: attrs.walletCurrency });
+    if (!this.get('builtIn') && fullAttrs.builtIn) {
+      attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
     }
 
     return super.set(attrs, opts);
@@ -147,13 +144,6 @@ export default class extends BaseModel {
         // on the command line, the local bundled server will always be started
         // with the default port.
         addError('port', `On a built-in server, the port can only be ${this.defaults().port}.`);
-      }
-
-      if (typeof attrs.walletCurrency === 'undefined') {
-        addError('walletCurrency', app.polyglot.t('serverConfigModelErrors.provideWalletCurrency'));
-      } else if (!getCryptoCurByCode(attrs.walletCurrency)) {
-        addError('walletCurrency',
-          `${attrs.walletCurrency} is not a currently supported crypto currency.`);
       }
     }
 

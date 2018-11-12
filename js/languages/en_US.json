@@ -47,16 +47,6 @@
     "btnCancel": "Cancel",
     "btnProceed": "Yes, proceed"
   },
-  "walletSetup": {
-    "heading": "OpenBazaar Wallet Setup",
-    "currencyLabel": "Currency",
-    "currencyHelper": "Choose a currency for your Wallet",
-    "currencyHelper2": "Accept and send payments in the selected currency above. Please choose wisely, it’s currently not possible to change your currency once a selection is made.",
-    "curInUseTip": "You already have a built-in server with this wallet currency.",
-    "btnBrowse": "Browse",
-    "btnNext": "Next",
-    "alreadyInUse": "Already in use"
-  },
   "setValidCurDialog": {
     "title": "Invalid Local Currency",
     "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
@@ -814,7 +804,7 @@
     }
   },
   "connectionManagement": {
-    "builtInServerName": "Built-in Server - %{cur}",
+    "builtInServerName": "Built-in Server",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",

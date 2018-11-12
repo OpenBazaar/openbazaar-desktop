@@ -53,45 +53,6 @@
         </div>
       </div>
     <% } %>
-    <div class="walletSetupForm js-walletSetupForm padMdKids padStack pad0 <% if (!ob.builtIn) print('hide') %>">
-      <% if (ob.isNew) { %>
-        <div class="flexRow">
-          <div class="col3">
-            <label class="required"><%= ob.polyT('walletSetup.currencyLabel') %></label>
-            <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper') %></div>
-          </div>
-          <div class="col9">
-            <% if (ob.errors.walletCurrency) print(ob.formErrorTmpl({ errors: ob.errors.walletCurrency })) %>
-            <div class="currencyRadio rowSm">
-              <%
-                ob.cryptoCurs.forEach(cur => {
-                  const inUse = ob.inUseCrypto.indexOf(cur.code) !== -1;
-              %>
-              <div class="clrBr">
-                <div class="btnRadio <% if (inUse) print('inUse') %>">
-                  <input type="radio"
-                         name="walletCurrency"
-                         value="<%= cur.code %>"
-                         id="walletSetupCurrency<%= cur.code %>"
-                         data-field-builtin
-                         <% if (ob.walletCurrency === cur.code) { %>checked<% } %>>
-                  <label class="flexVCent" for="walletSetupCurrency<%= cur.code %>">
-                    <div class="gutterHSm flexExpand flexVCent coinInfo">
-                      <%= ob.crypto.cryptoIcon({ code: cur.code }) %> <span><%= cur.name %></span> <% if (cur.url) { %><a class="tx6 txU" href="<%= cur.url %>"><%= cur.url %></a><% } %>
-                    </div>
-                    <% if (inUse) { %>
-                      <div class="gutterHSm flexNoShrink tx6 inUseText js-inUseText"><span><%= ob.polyT('walletSetup.alreadyInUse') %></span><span class="toolTip" data-tip="<%= ob.polyT('walletSetup.curInUseTip') %>"><i class="ion-help-circled"></i></span></div>
-                    <% } %>
-                  </label>
-                </div>
-              </div>
-              <% }) %>
-            </div>
-            <div class="clrT2 tx6"><%= ob.polyT('walletSetup.currencyHelper2') %></div>
-          </div>
-        </div>
-      <% } %>
-    </div>
     <div class="padMdKids padStack pad0 js-standAloneSection <% if (ob.builtIn) print('hide') %>">
       <div class="flexRow">
         <div class="col3">

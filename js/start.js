@@ -41,7 +41,6 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleServerShutdownRequests } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
-import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 import VerifiedMods from './collections/VerifiedMods';
@@ -708,45 +707,22 @@ app.connectionManagmentModal = new ConnectionManagement({
   showCloseButton: false,
 }).render();
 
-/**
- * If the provided server requires a wallet setup, the Wallet Setup modal will be launched.
- * The function returns a promise that resolves when the process is complete.
- */
-function setupWallet(server) {
-  const deferred = $.Deferred();
-
-  if (server && server.get('builtIn') && server.get('walletCurrency') === undefined) {
-    new WalletSetup({ model: server })
-      .render()
-      .open()
-      .on('walletSetupComplete', () => deferred.resolve());
-  } else {
-    deferred.resolve();
-  }
-
-  return deferred.promise();
-}
-
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
   // Migrate any old "built in" configurations containing the 'default' flag to
   // use the new 'builtIn' flag.
   app.serverConfigs.forEach(serverConfig => {
     const isDefault = serverConfig.get('default');
-    serverConfig.unset('default');
-    const data = {};
 
     if (typeof isDefault === 'boolean') {
-      data.walletCurrency = 'BTC';
-      data.builtIn = !!isDefault;
-    }
+      serverConfig.unset('default');
+      const configSave = serverConfig.save({ builtIn: !!isDefault });
 
-    const configSave = serverConfig.save(data);
-
-    if (!configSave) {
-      // developer error or wonky data
-      console.error('There was an error migrating the server config, ' +
-        `${serverConfig.get('name')}, from the 'default' to the 'built-in' style.`);
+      if (!configSave) {
+        // developer error or wonky data
+        console.error('There was an error migrating the server config, ' +
+          `${serverConfig.get('name')}, from the 'default' to the 'built-in' style.`);
+      }
     }
   });
 
@@ -760,11 +736,9 @@ app.serverConfigs.fetch().done(() => {
         builtIn: true,
       });
 
-      setupWallet(defaultConfig).done(() => {
-        app.serverConfigs.add(defaultConfig);
-        app.serverConfigs.activeServer = defaultConfig;
-        connectToServer();
-      });
+      app.serverConfigs.add(defaultConfig);
+      app.serverConfigs.activeServer = defaultConfig;
+      connectToServer();
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {
@@ -787,7 +761,7 @@ app.serverConfigs.fetch().done(() => {
       activeServer.set('builtIn', false);
     }
 
-    setupWallet(activeServer).done(() => connectToServer());
+    connectToServer();
   }
 });
 

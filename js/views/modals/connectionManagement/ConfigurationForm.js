@@ -38,8 +38,6 @@ export default class extends baseVw {
       this.model.get('name');
 
     this.cryptoCurs = getTranslatedCurrencies();
-    this.inUseCryptos = app.serverConfigs.filter(config => config.get('builtIn'))
-      .map(config => config.get('walletCurrency'));
 
     this.isBundledApp = remote.getGlobal('isBundledApp');
     if (this.model.isNew() && this.isBundledApp) {
@@ -142,8 +140,6 @@ export default class extends baseVw {
   }
 
   onChangeServerType(e) {
-    this.getCachedEl('.js-walletSetupForm')
-      .toggleClass('hide', e.target.value === 'STAND_ALONE');
     this.getCachedEl('.js-standAloneSection')
       .toggleClass('hide', e.target.value === 'BUILT_IN');
   }
@@ -223,7 +219,6 @@ export default class extends baseVw {
         showTorUnavailableMessage: this.showTorUnavailableMessage,
         isTorPwRequired: this.model.isTorPwRequired(),
         cryptoCurs: this.cryptoCurs,
-        inUseCrypto: this.inUseCryptos,
         isNew: this.model.isNew(),
         isBundledApp: this.isBundledApp,
       }));
