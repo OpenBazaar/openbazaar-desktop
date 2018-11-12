@@ -1786,6 +1786,9 @@
         "modInvalidContractData": "The contract contains invalid data. The time remaining for you to make a decision on the dispute cannot be determined.",
         "invalidContractData": "The contract contains invalid data. The time remaining to open a dispute cannot be determined.",
         "disputedInvalidContractData": "The contract contains invalid data. The time remaining for the moderator to make a decision on the dispute cannot be determined.",
+        "modDataUnavailable": "The data necessary to determine the time remaining for you to make a decision is not available at this time.",
+        "disputedDataUnavailable": "The data necessary to determine the time remaining for the moderator to make a decision on the dispute is not available at this time.",
+        "dataUnavailable": "The data necessary to determine the time remaining to open a dispute is not available at this time.",
         "tipClaimAfterTimeoutBuyer": "Once the clock expires, the vendor can claim payment and finalize the order without support from the moderator.",
         "tipClaimAfterTimeoutVendor": "Once the clock expires, as long as the order is fulfilled you can claim payment and finalize the order without support from the moderator.",
         "disputedModOnClock": "The order is being disputed. The moderator has approximately %{timeRemaining} to process the dispute and make a decision.",
@@ -1823,7 +1826,8 @@
         "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
         "procErrVendorNoMsg": "There was an error processing the order.",
         "procErrVendor": "You were unable to process the order due to the following errors:"
-      }
+      },
+      "unableToShowPayments": "Unable to show the payment details. The order was paid for in a currency (%{cur}) this client does not currently support."
     },
     "fulfillOrderTab": {
       "heading": "Fulfill Order",

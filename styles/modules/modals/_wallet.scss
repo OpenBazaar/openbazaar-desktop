@@ -44,7 +44,7 @@
           font-size: 22px;
           line-height: 1;
           position: absolute;
-        }        
+        }
       }
     }
   }
@@ -85,7 +85,7 @@
             border-left-style: solid;
             justify-content: flex-start;
             height: 100%;
-          }        
+          }
         }
       }
     }
@@ -101,6 +101,7 @@
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
     min-height: 320px;
+    z-index: 1; // Position above the reloadTransactions element.
 
     .receiveMoney {
       text-align: center;
@@ -120,7 +121,7 @@
 
       .copyTextWrap {
         padding-left: 8px;
-  
+
         .copyAddress, .copiedText {
           position: absolute;
           max-width: 90px;
@@ -238,11 +239,12 @@
     .popInMessageHolder {
       transform: translateX(4px);
       top: 100px;
-      
+
       &.notFixed {
         position: absolute;
         top: -65px;
         transform: translateX(-50%);
+        z-index: 2; // Position above the sendReceiveContainer element.
       }
     }
 
@@ -270,7 +272,6 @@
     top: 20px;
     right: $padLg;
     max-width: 200px;
-    z-index: 1;
   }
 }
 

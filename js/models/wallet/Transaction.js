@@ -1,10 +1,14 @@
 import app from '../../app';
 import { integerToDecimal } from '../../utils/currency';
-import { getServerCurrency } from '../../data/walletCurrencies';
+import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
   constructor(attrs = {}, options = {}) {
+    if (!options.coinType || typeof options.coinType !== 'string') {
+      throw new Error('Please provide a coinType as a non-empty string.');
+    }
+
     super(attrs, options);
     this.options = options;
   }
@@ -35,6 +39,11 @@ export default class extends BaseModel {
       (attrs = {})[key] = val;
     }
 
+    // set is called internally by Backbone before the contructor is complete, so
+    // this.options might not be there. But... Backbone also passes in the constructor
+    // options, when calling set from the constructor.
+    const coinType = this.options ? this.options.coinType : opts.coinType;
+
     if (
       attrs.confirmations !== this.attributes.confirmations ||
       attrs.timestamp !== this.attributes.timestamp ||
@@ -46,6 +55,13 @@ export default class extends BaseModel {
       const height = attrs.height === undefined ?
         this.attributes.height : attrs.height;
       const stuckTime = 1000 * 60 * 60 * 6; // 6 hours
+      let walletCurData;
+
+      try {
+        walletCurData = getWalletCurByCode(coinType);
+      } catch (e) {
+        // pass
+      }
 
       if (height === -1) {
         attrs.status = 'DEAD';
@@ -54,7 +70,7 @@ export default class extends BaseModel {
       } else if (confirmations === 0 && (Date.now() - new Date(timestamp).getTime()) > stuckTime) {
         attrs.status = 'STUCK';
         attrs.allowFeeBump = !attrs.feeBumped && attrs.value > 0 &&
-          typeof getServerCurrency().feeBumpTransactionSize === 'number';
+          walletCurData && typeof walletCurData.feeBumpTransactionSize === 'number';
       } else if (confirmations > 0 && confirmations <= 5) {
         attrs.status = 'PENDING';
       } else if (confirmations > 5) {

@@ -36,9 +36,9 @@
         </div>
         <div class="txBase clrT2">
           <% if (['BTC', 'TBTC'].includes(ob.paymentCoin)) { %>
-          <p>
-            <%= ob.polyT('purchase.pendingSection.walletNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.walletLink') %></button>
-          </p>
+            <p>
+              <%= ob.polyT('purchase.pendingSection.walletNote') %> <button class="btnAsLink js-fundWallet"><%= ob.polyT('purchase.pendingSection.walletLink') %></button>
+            </p>
           <% } %>
           <p>
             <%= ob.polyT('purchase.pendingSection.feeNote') %>
@@ -50,8 +50,8 @@
 </div>
 <div class="tx6 clrT2">
   <% if (['BTC', 'TBTC'].includes(ob.paymentCoin)) { %>
-  <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
-  <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
+    <% const link = `<a class="clrTEm" href="https://www.openbazaar.org/bitcoin">${ob.polyT('purchase.pendingSection.note1Link')}</a>`; %>
+    <p><%= ob.polyT('purchase.pendingSection.note1', { link }) %></p>
   <% } %>
   <% if (ob.isModerated) { %>
   <p>

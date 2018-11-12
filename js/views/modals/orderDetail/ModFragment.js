@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseVw from '../../baseVw';
 import VerifiedMod, { getModeratorOptions } from '../../components/VerifiedMod';
@@ -6,19 +5,22 @@ import app from '../../../app';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      ...options,
+      initialState: {
+        maxPeerIdLength: 8,
+        showAvatar: false,
+        ...options.initialState,
+      },
+    });
+
     this.options = options;
+    const state = this.getState();
 
-    this._state = {
-      maxPeerIdLength: 8,
-      showAvatar: false,
-      ...options.initialState || {},
-    };
-
-    this.verifiedModModel = app.verifiedMods.get(this._state.peerID);
+    this.verifiedModModel = app.verifiedMods.get(state.peerID);
 
     this.listenTo(app.verifiedMods, 'update', () => {
-      const newVerifiedModModel = app.verifiedMods.get(this._state.peerID);
+      const newVerifiedModModel = app.verifiedMods.get(state.peerID);
       if (newVerifiedModModel !== this.verifiedModModel) {
         this.verifiedModModel = newVerifiedModModel;
         this.render();
@@ -26,36 +28,16 @@ export default class extends BaseVw {
     });
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   render() {
     super.render();
+    const state = this.getState();
 
     loadTemplate('modals/orderDetail/modFragment.html', t => {
       this.$el.html(t({
-        ...this._state,
+        ...state,
       }));
 
-      const verifiedMod = app.verifiedMods.get(this._state.peerID);
+      const verifiedMod = app.verifiedMods.get(state.peerID);
       const createOptions = getModeratorOptions({
         model: verifiedMod,
       });

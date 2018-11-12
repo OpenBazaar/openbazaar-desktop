@@ -51,9 +51,6 @@ export default class extends baseVw {
 
     this.options = opts;
     this.type = opts.type;
-    this._state = {
-      ...opts.initialState || {},
-    };
     this.views = [];
     this.curPage = 1;
     this.queryTotal = null;
@@ -445,27 +442,6 @@ export default class extends baseVw {
       fetchFailed: false,
       fetchError: '',
     });
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
   remove() {

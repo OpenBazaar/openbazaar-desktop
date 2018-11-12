@@ -112,7 +112,7 @@ export default class extends BaseVw {
   clickPayFromWallet(e) {
     const walletBalance = app.walletBalances.get(this.paymentCoin);
     const insufficientFunds = this.balanceRemaining >
-      (walletBalance ? walletBalance.get('confirmed') : 0);
+     (walletBalance ? walletBalance.get('confirmed') : 0);
 
     if (insufficientFunds) {
       this.spendConfirmBox.setState({

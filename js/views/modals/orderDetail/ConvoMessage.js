@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import moment from 'moment';
 import twemoji from 'twemoji';
 import { capitalize } from '../../../utils/string';
@@ -14,14 +13,15 @@ export default class extends BaseVw {
       throw new Error('Please provide a model.');
     }
 
-    super(options);
-
-    this._state = {
-      showAvatar: true,
-      showTimestampLine: true,
-      showAsRead: false,
-      ...options.initialState || {},
-    };
+    super({
+      ...options,
+      initialState: {
+        showAvatar: true,
+        showTimestampLine: true,
+        showAsRead: false,
+        ...options.initialState,
+      },
+    });
 
     this.listenTo(this.model, 'change', () => this.render());
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
@@ -32,27 +32,6 @@ export default class extends BaseVw {
 
   className() {
     return 'convoMessage';
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
   remove() {
