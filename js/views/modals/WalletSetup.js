@@ -28,19 +28,9 @@ export default class extends BaseModal {
 
   events() {
     return {
-      'click .js-browseZcashBinary': 'onClickBrowseZcashBinary',
       'click .js-navNext': 'onClickNext',
-      'change [name=walletCurrency]': 'onWalletCurrencyChange',
       ...super.events(),
     };
-  }
-
-  onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
-      if (e) {
-        this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
-      }
-    });
   }
 
   onClickNext() {
@@ -70,10 +60,6 @@ export default class extends BaseModal {
       // since we're saving to localStorage this really shouldn't happen
       openSimpleMessage('Unable to save server configuration');
     });
-  }
-
-  onWalletCurrencyChange(e) {
-    this.getCachedEl('.js-zcashSection').toggleClass('hide', e.target.value !== 'ZEC');
   }
 
   render() {
