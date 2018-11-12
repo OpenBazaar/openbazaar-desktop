@@ -732,13 +732,17 @@ app.serverConfigs.fetch().done(() => {
     if (isBundled) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
-      const defaultConfig = new ServerConfig({
+      new ServerConfig({
         builtIn: true,
+      }).save({}, {
+        success: md => {
+          setTimeout(() => {
+            app.serverConfigs.add(md);
+            app.serverConfigs.activeServer = md;
+            connectToServer();
+          });
+        },
       });
-
-      app.serverConfigs.add(defaultConfig);
-      app.serverConfigs.activeServer = defaultConfig;
-      connectToServer();
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {

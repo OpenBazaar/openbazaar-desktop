@@ -1955,7 +1955,7 @@
     "providePortAsNumber": "Please provide a port as a number.",
     "provideValidPortRange": "Please provide a number between 0 and 65535.",
     "invalidTorProxy": "The value does not appear to be in the right format. It should be in the format ip-address:port, e.g. 127.0.0.1:9150. The port must be a number between 0 and 65535.",
-    "provideWalletCurrency": "Please select a wallet currency.",
+    "provideWalletCurrency": "Please select a wallet currency."
   },
   "shippingAddressModelErrors": {
     "provideName": "Please provide a name.",
