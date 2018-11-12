@@ -1,7 +1,7 @@
 /*
-  This view is also used by the Order Detail overlay. If you make any changes, please
-  ensure they are compatible with both the Purchase and Order Detail flows.
-*/
+ This view is also used by the Order Detail overlay. If you make any changes, please
+ ensure they are compatible with both the Purchase and Order Detail flows.
+ */
 
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';

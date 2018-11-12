@@ -1378,8 +1378,13 @@
     "returnToListing": "Return To Listing",
     "optional": "optional",
     "shippingTitle": "Shipping",
+    "cryptoCurrencyTitle": "Currency",
+    "cryptoCurrencyInvalid": "Not Accepted",
     "paymentTypeTitle": "Payment Type",
     "moderatorTitle": "Moderator",
+    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
+    "chooseModerator": "Choose This Moderator",
+    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "newAddress": "New Address",
     "serviceDetails": "%{price} — %{delivery}",
     "localPickup": "Local Pickup",
@@ -1409,7 +1414,6 @@
     "pendingNote": "Please fund the order to complete your transaction.",
     "close": "Close",
     "closeNote": "Your payment has been sent to the vendor.",
-    "moderatorNote": "*The moderator service fee is only applied if a dispute is opened.",
     "quantity": "Quantity",
     "cryptoAmount": "Amount",
     "cryptoAddressHeading": "Your %{coinType} address",
@@ -1417,10 +1421,8 @@
     "cryptoAddressHelper": "%{name} will send %{coinType} to this address. %{warning}",
     "cryptoAddressHelperWarning": "The address cannot be changed once the order has been placed.",
     "cryptoAddressHelperWarning2": "This address cannot be changed.",
-    "moderatorsDisclaimer": "Your payment will be held securely in escrow. If any issues arise, you’ll have the ability to open a dispute with your chosen moderator. *The moderator service fee only applies if a dispute is opened.",
     "directPayment": "Direct Payment",
     "directPaymentDetails": "Send funds directly to the seller without a moderator. You should only use this option with sellers you trust. You will not be able to dispute the order if something goes wrong.",
-    "chooseModerator": "Choose This Moderator",
     "confirmPayment": {
       "title": "Everything look good?",
       "msg": "If yes, please proceed to the final step.",
@@ -1492,11 +1494,26 @@
   },
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
+    "moderatorsXofY": "Loading moderator %{current} of %{total}",
     "moderatorsLoaded": "%{total} moderators loaded.",
-    "noValidModerators": "No Valid Moderators Available.",
-    "noValidModeratorsBody": "None of the loaded moderators are valid. This order will be a direct payment.",
-    "noVerifiedModerators": "No Verified Moderators Available",
-    "noVerifiedModeratorsBody": "Try viewing unverified moderators or select direct payment below.",
+    "noModsMsg":{
+      "noModerators": {
+        "title": "No Valid Moderators Are Available.",
+        "body": "None of the loaded moderators are valid. This order will be a direct payment."
+      },
+      "noVerifiedModerators": {
+        "title": "No Verified Moderators Available",
+        "body": "Try viewing unverified moderators."
+      },
+      "noMatchingModerators": {
+        "title": "No moderators that accept %{coin} are available.",
+        "body": "Moderators are available on one or more of the other currencies accepted by this listing."
+      },
+      "noMatchingVerifiedModerators": {
+        "title": "No verified moderators that accept %{coin} are available.",
+        "body": "Try viewing unverified moderators."
+      }
+    },
     "showUnverified": "Show Unverified Moderators",
     "browseMoreModerators": "Load More"
   },
@@ -2058,6 +2075,7 @@
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
   },
   "orderModelErrors": {
+    "paymentCoinInvalid": "Please choose a valid cryptocurrency to pay with.",
     "missingAddress": "Please choose a valid shipping address.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
     "removeModerator": "An unmoderated purchase cannot have a moderator."

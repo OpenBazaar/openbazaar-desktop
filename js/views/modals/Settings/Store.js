@@ -42,7 +42,7 @@ export default class extends baseVw {
 
     const preferredCurs = [...new Set(app.profile.get('currencies'))];
 
-    this.currencySelector = new CurrencySelector({
+    this.currencySelector = this.createChild(CurrencySelector, {
       initialState: {
         currencies: supportedWalletCurs(),
         activeCurs: preferredCurs,
@@ -57,12 +57,6 @@ export default class extends baseVw {
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
 
-    const commonModState = {
-      initialState: {
-        preferredCurs,
-      },
-    };
-
     this.modsSelected = new Moderators({
       cardState: 'selected',
       controlsOnInvalid: true,
@@ -70,7 +64,9 @@ export default class extends baseVw {
       notSelected: 'deselected',
       showInvalid: true,
       showSpinner: false,
-      ...commonModState,
+      initialState: {
+        preferredCurs,
+      },
     });
 
     this.modsByID = new Moderators({
@@ -80,7 +76,9 @@ export default class extends baseVw {
       showInvalid: true,
       showSpinner: false,
       wrapperClasses: 'noMin',
-      ...commonModState,
+      initialState: {
+        preferredCurs,
+      },
     });
 
     this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsByIDFound(mOpts.guids));
@@ -90,8 +88,10 @@ export default class extends baseVw {
       excludeIDs: this.currentMods,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
-      showVerifiedOnly: true,
-      ...commonModState,
+      initialState: {
+        preferredCurs,
+        showVerifiedOnly: true,
+      },
     });
 
     const modsToCheckOnVerifiedUpdate = [
@@ -338,7 +338,6 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
       }));
 
-
       this.currencySelector.delegateEvents();
       this.$('.js-currencySelector').append(this.currencySelector.render().el);
 
@@ -354,7 +353,6 @@ export default class extends baseVw {
         .toggleClass('hide', !this.modsByID.allIDs.length);
 
       this.modsAvailable.delegateEvents();
-      this.modsAvailable.setState({ showVerifiedOnly: this._showVerifiedOnly });
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);
