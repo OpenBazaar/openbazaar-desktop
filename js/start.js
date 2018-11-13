@@ -1,9 +1,3 @@
-// TODO
-// TODizzle
-// TODO
-// TODO
-// TODO Confirm if any hard-coded ZEC related code is neeeded anymore.
-
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
