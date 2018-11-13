@@ -1,8 +1,6 @@
 import $ from 'jquery';
-import { remote } from 'electron';
 import openSimpleMessage from '../SimpleMessage';
 import { getCurrentConnection } from '../../../utils/serverConnect';
-import { getTranslatedCurrencies } from '../../../data/walletCurrencies';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -36,13 +34,6 @@ export default class extends baseVw {
     this.title = this.model.isNew() ?
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
       this.model.get('name');
-
-    this.cryptoCurs = getTranslatedCurrencies();
-
-    this.isBundledApp = remote.getGlobal('isBundledApp');
-    if (this.model.isNew() && this.isBundledApp) {
-      this.model.set('builtIn', true);
-    }
 
     this.listenTo(this.model, 'change:name', () => {
       const newName = this.model.get('name');
@@ -218,9 +209,6 @@ export default class extends baseVw {
         showConfigureTorMessage: this.showConfigureTorMessage,
         showTorUnavailableMessage: this.showTorUnavailableMessage,
         isTorPwRequired: this.model.isTorPwRequired(),
-        cryptoCurs: this.cryptoCurs,
-        isNew: this.model.isNew(),
-        isBundledApp: this.isBundledApp,
       }));
 
       this._$formFields = null;

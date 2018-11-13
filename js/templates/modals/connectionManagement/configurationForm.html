@@ -21,38 +21,6 @@
   <% } %>
 
   <form class="padMdKids padStack <% if (ob.useTor) print('useTor') %>">
-    <% if (ob.isNew && ob.isBundledApp) { %>
-      <div class="flexRow">
-        <div class="col3">
-          <label class="required"><%= ob.polyT('connectionManagement.configurationForm.lblServerType') %></label>
-          <div class="clrT2 tx6"><%= ob.polyT('connectionManagement.configurationForm.helperServerType') %></div>
-        </div>
-        <div class="col9">
-          <div class="btnStrip allowOverflow">
-            <div class="btnRadio">
-              <input type="radio"
-                     name="serverType"
-                     value="BUILT_IN"
-                     id="serverConfigBuiltin"
-                     data-field-builtin
-                     data-field-standalone
-                     <% if (ob.builtIn === true) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigBuiltin"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltin') %></span><span class="toolTip" data-tip="<%= ob.polyT('connectionManagement.configurationForm.serverTypeBuiltinTip') %>"><i class="ion-help-circled"></i></span></label>
-            </div>
-            <div class="btnRadio">
-              <input type="radio"
-                     name="serverType"
-                     value="STAND_ALONE"
-                     id="serverConfigStandalone"
-                     data-field-builtin
-                     data-field-standalone
-                     <% if (ob.builtIn === false) { %>checked<% } %>>
-              <label class="gutterHSm" for="serverConfigStandalone"><span><%= ob.polyT('connectionManagement.configurationForm.serverTypeStandalone') %></span><span class="toolTip" data-tip="<%= ob.polyT('connectionManagement.configurationForm.serverTypeStandaloneTip') %>"><i class="ion-help-circled"></i></span></label>
-            </div>
-          </div>
-        </div>
-      </div>
-    <% } %>
     <div class="padMdKids padStack pad0 js-standAloneSection <% if (ob.builtIn) print('hide') %>">
       <div class="flexRow">
         <div class="col3">

@@ -70,16 +70,6 @@ export default class extends BaseModel {
 
     if (!is.existy(attrs.name) || is.empty(attrs.name)) {
       addError('name', app.polyglot.t('serverConfigModelErrors.provideValue'));
-    } else {
-      // Slight hack since backbone doesn't document Model.collection and
-      // it will only refer to the first collection that a Model belongs.
-      // http://stackoverflow.com/a/15962917/632806
-      if (this.collection) {
-        const models = this.collection.where({ name: attrs.name });
-        if (models && models.length && (models.length > 1 || models[0].id !== attrs.id)) {
-          addError('name', 'There is already a configuration with that name.');
-        }
-      }
     }
 
     if (!is.existy(attrs.serverIp) || is.empty(attrs.serverIp)) {
