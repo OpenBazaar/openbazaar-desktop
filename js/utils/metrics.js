@@ -62,8 +62,7 @@ export function isMetricRestartNeeded() {
 
 export function addMetrics() {
   // Never record metrics on testnet
-  // TODO: uncomment this out
-  //if (app.serverConfig.testnet) return;
+  if (app.serverConfig.testnet) return;
 
   function loadMetrics() {
     // Reverse the countly opt out in local storage. This is required or nothing will be tracked.
@@ -128,7 +127,7 @@ export function showMetricsModal(opts) {
   return metricsModal;
 }
 
-export function recordEvent(key, segmentation) {
+export function recordEvent(key, segmentation = {}) {
   if (!key) throw new Error('Please provide a key');
   if (segmentation && !_.isObject(segmentation)) {
     throw new Error('please provide the segmentation as an object');
@@ -147,7 +146,7 @@ export function startAjaxEvent(key) {
   if (window.Countly) window.Countly.q.push(['start_event', key]);
 }
 
-export function endAjaxEvent(key, segmentation) {
+export function endAjaxEvent(key, segmentation = {}) {
   if (!key) throw new Error('Please provide a key');
   if (segmentation && !_.isObject(segmentation)) {
     throw new Error('please provide the segmentation as an object');
