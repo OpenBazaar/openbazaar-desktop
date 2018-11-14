@@ -2082,6 +2082,7 @@
   },
   "purchaseItemModelErrors": {
     "provideQuantity": "Please provide a quantity.",
+    "provideCryptoQuantity": "Please provide the amount of this currency you wish to purchase.",
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
     "quantityMustBeNumeric": "The quantity must be numeric.",
