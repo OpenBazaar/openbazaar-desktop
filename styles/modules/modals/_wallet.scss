@@ -46,6 +46,14 @@
           position: absolute;
         }
       }
+
+      &.clientUnsupported {
+        cursor: default;
+
+        .cryptoIcon, .coinName {
+          @include disabled();
+        }
+      }
     }
   }
 

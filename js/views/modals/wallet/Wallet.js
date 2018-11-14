@@ -3,6 +3,7 @@ import $ from 'jquery';
 import {
   isSupportedWalletCur,
   ensureMainnetCode,
+  supportedWalletCurs,
 } from '../../../data/walletCurrencies';
 import defaultSearchProviders from '../../../data/defaultSearchProviders';
 // import { recordEvent } from '../../../utils/metrics';
@@ -27,24 +28,23 @@ export default class extends BaseModal {
   constructor(options = {}) {
     let navCoins = [];
 
-    if (app && app.walletBalances) {
-      navCoins = app.walletBalances.toJSON()
-        .filter(balanceObj => isSupportedWalletCur(balanceObj.code))
-        .sort((a, b) => {
-          const getDisplayName = code => polyTFallback(`cryptoCurrencies.${code}`, code);
+    navCoins = supportedWalletCurs({ clientSupported: false })
+      .sort((a, b) => {
+        const getDisplayName =
+          code => (code ?
+            app.polyglot.t(`cryptoCurrencies.${code}`, { _: code }) : code);
 
+        const aSortVal = getDisplayName(a.code);
+        const bSortVal = getDisplayName(b.code);
 
-          const aSortVal = getDisplayName(a.code);
-          const bSortVal = getDisplayName(b.code);
+        if (aSortVal < bSortVal) return -1;
+        if (aSortVal > bSortVal) return 1;
+        return 0;
+      });
 
-          if (aSortVal < bSortVal) return -1;
-          if (aSortVal > bSortVal) return 1;
-          return 0;
-        });
-    }
-
-    const initialActiveCoin = navCoins.length && navCoins[0] &&
-        navCoins[0].code || 'BTC';
+    // Todo: test empty state.
+    const initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin))
+      || 'BTC';
     const opts = {
       initialActiveCoin,
       initialSendModeOn: app.walletBalances.get(initialActiveCoin) &&
@@ -66,16 +66,13 @@ export default class extends BaseModal {
     // some of it we'll manage so as you nav from coin to coin, certain state is maintained.
     this.transactionsState = {};
 
-    this.navCoins = navCoins.map(coin => {
-      const code = coin.code;
-
-      return {
-        active: code === opts.initialNavCoin,
-        code,
-        name: polyTFallback(`cryptoCurrencies.${code}`, code),
-        balance: coin.confirmed,
-      };
-    });
+    this.navCoins = navCoins.map(coin => ({
+      active: coin === opts.initialNavCoin,
+      code: coin,
+      name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
+      balance: coin.confirmed,
+      clientSupported: isSupportedWalletCur(coin),
+    }));
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
