@@ -27,22 +27,18 @@ export default class extends BaseModal {
   constructor(options = {}) {
     const navCoins = supportedWalletCurs({ clientSupported: false })
       .sort((a, b) => {
-        const getDisplayName =
-          code => (code ?
-            app.polyglot.t(`cryptoCurrencies.${code}`, { _: code }) : code);
+        const aSortVal =
+          app.polyglot.t(`cryptoCurrencies.${a}`, { _: a });
+        const bSortVal =
+          app.polyglot.t(`cryptoCurrencies.${b}`, { _: b });
 
-        const aSortVal = getDisplayName(a.code);
-        const bSortVal = getDisplayName(b.code);
-
-        if (aSortVal < bSortVal) return -1;
-        if (aSortVal > bSortVal) return 1;
-        return 0;
+        return aSortVal.localeCompare(
+          bSortVal,
+          app.localSettings.standardizedTranslatedLang(),
+          { sensitivity: 'base' }
+        );
       });
 
-    // Todo: test empty state.
-    // Todo: test empty state.
-    // Todo: test empty state.
-    // Todo: test empty state.
     let initialActiveCoin;
 
     if (options.initialActiveCoin &&
@@ -73,7 +69,7 @@ export default class extends BaseModal {
     this._receiveMoneyVws = {};
     this.addressFetches = {};
     this.needAddress = navCoins.reduce((acc, coin) => {
-      acc[coin.code] = true;
+      acc[coin] = true;
       return acc;
     }, {});
     // The majority of the TransactionsVw state is managed within the component, but
