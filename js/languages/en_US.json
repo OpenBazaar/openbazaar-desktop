@@ -24,7 +24,7 @@
   },
   "feeChangeWidget": {
     "btnChange": "change",
-    "label": "%{cur} fee:"
+    "label": "Network fee:"
   },
   "blockButton": {
     "tipBlock": "Block this user",
