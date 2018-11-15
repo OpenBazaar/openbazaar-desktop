@@ -7,6 +7,7 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    response.code = 'WINE';
     return {
       ...response,
       // Convert from base units - these will be set to undefined if the client doesn't

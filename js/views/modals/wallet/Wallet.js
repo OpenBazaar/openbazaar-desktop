@@ -8,7 +8,6 @@ import {
 import defaultSearchProviders from '../../../data/defaultSearchProviders';
 // import { recordEvent } from '../../../utils/metrics';
 import { getSocket } from '../../../utils/serverConnect';
-import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -26,9 +25,7 @@ import CryptoTicker from '../../components/CryptoTicker';
 
 export default class extends BaseModal {
   constructor(options = {}) {
-    let navCoins = [];
-
-    navCoins = supportedWalletCurs({ clientSupported: false })
+    const navCoins = supportedWalletCurs({ clientSupported: false })
       .sort((a, b) => {
         const getDisplayName =
           code => (code ?
@@ -43,13 +40,30 @@ export default class extends BaseModal {
       });
 
     // Todo: test empty state.
-    const initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin))
-      || 'BTC';
+    // Todo: test empty state.
+    // Todo: test empty state.
+    // Todo: test empty state.
+    let initialActiveCoin;
+
+    if (options.initialActiveCoin &&
+      typeof options.initialActiveCoin === 'string') {
+      initialActiveCoin = isSupportedWalletCur(options.initialActiveCoin) ?
+        options.initialActiveCoin : null;
+    }
+
+    if (!initialActiveCoin) {
+      initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin)) || null;
+    }
+
+    // If at this point the initialActiveCoin and consequentally this.activeCoin
+    // are null, it indicates that none of the wallet currencies are supported by
+    // this client.
+
     const opts = {
-      initialActiveCoin,
       initialSendModeOn: app.walletBalances.get(initialActiveCoin) &&
         app.walletBalances.get(initialActiveCoin).get('confirmed') || false,
       ...options,
+      initialActiveCoin,
     };
 
     super(opts);
@@ -85,33 +99,35 @@ export default class extends BaseModal {
       this.activeCoin = e.code;
     });
 
-    this.coinStats = this.createChild(CoinStats, {
-      initialState: this.coinStatsState,
-    }).render();
+    if (initialActiveCoin) {
+      this.coinStats = this.createChild(CoinStats, {
+        initialState: this.coinStatsState,
+      }).render();
 
-    this.sendReceiveNav = this.createChild(SendReceiveNav, {
-      initialState: this.sendReceivNavState,
-    }).render();
+      this.sendReceiveNav = this.createChild(SendReceiveNav, {
+        initialState: this.sendReceivNavState,
+      }).render();
 
-    this.listenTo(this.sendReceiveNav, 'click-send', () => {
-      this.sendModeOn = true;
-    });
+      this.listenTo(this.sendReceiveNav, 'click-send', () => {
+        this.sendModeOn = true;
+      });
 
-    this.listenTo(this.sendReceiveNav, 'click-receive', () => {
-      this.sendModeOn = false;
-    });
+      this.listenTo(this.sendReceiveNav, 'click-receive', () => {
+        this.sendModeOn = false;
+      });
 
-    this.reloadTransactions = this.createChild(ReloadTransactions, {
-      initialState: {
-        coinType: this.activeCoin,
-      },
-    }).render();
+      this.reloadTransactions = this.createChild(ReloadTransactions, {
+        initialState: {
+          coinType: this.activeCoin,
+        },
+      }).render();
 
-    this.ticker = this.createChild(CryptoTicker, {
-      initialState: {
-        coinType: this.activeCoin,
-      },
-    }).render();
+      this.ticker = this.createChild(CryptoTicker, {
+        initialState: {
+          coinType: this.activeCoin,
+        },
+      }).render();
+    }
 
     const ob1ProviderData = defaultSearchProviders.find(provider => provider.id === 'ob1');
     this.viewCryptoListingsUrl = ob1ProviderData ?
@@ -120,7 +136,7 @@ export default class extends BaseModal {
 
     const serverSocket = getSocket();
 
-    if (serverSocket) {
+    if (initialActiveCoin && serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         if (e.jsonData.wallet) {
           const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
@@ -183,7 +199,7 @@ export default class extends BaseModal {
         _.debounce(this.onBalanceChange, 1));
     });
 
-    this.fetchAddress();
+    if (initialActiveCoin) this.fetchAddress();
   }
 
   className() {
@@ -541,6 +557,7 @@ export default class extends BaseModal {
             cryptoTeaserHtml: cryptoTeaserT({
               viewCryptoListingsUrl: this.viewCryptoListingsUrl,
             }),
+            activeCoin: this.activeCoin,
           }));
 
           super.render();
@@ -548,22 +565,24 @@ export default class extends BaseModal {
           this.coinNav.delegateEvents();
           this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-          this.coinStats.delegateEvents();
-          this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
+          if (this.activeCoin) {
+            this.coinStats.delegateEvents();
+            this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
 
-          this.sendReceiveNav.delegateEvents();
-          this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
+            this.sendReceiveNav.delegateEvents();
+            this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
 
-          this.renderSendReceiveVw();
-          this.renderTransactionsView();
+            this.renderSendReceiveVw();
+            this.renderTransactionsView();
 
-          this.reloadTransactions.delegateEvents();
-          this.getCachedEl('.js-reloadTransactionsContainer')
-            .html(this.reloadTransactions.el);
+            this.reloadTransactions.delegateEvents();
+            this.getCachedEl('.js-reloadTransactionsContainer')
+              .html(this.reloadTransactions.el);
 
-          this.ticker.delegateEvents();
-          this.getCachedEl('.js-tickerContainer')
-            .html(this.ticker.el);
+            this.ticker.delegateEvents();
+            this.getCachedEl('.js-tickerContainer')
+              .html(this.ticker.el);
+          }
         });
       });
     });

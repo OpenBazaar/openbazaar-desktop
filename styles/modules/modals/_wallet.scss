@@ -16,6 +16,13 @@
     }
   }
 
+  .zeroSupportedCurs {
+    min-height: 250px;
+    text-align: center;
+    padding: $padMd;
+    font-size: $tx4;
+  }
+
   .coinNav {
     .coinNavItem {
       cursor: pointer;
@@ -109,7 +116,6 @@
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
     min-height: 320px;
-    z-index: 1; // Position above the reloadTransactions element.
 
     .receiveMoney {
       text-align: center;
@@ -252,7 +258,6 @@
         position: absolute;
         top: -65px;
         transform: translateX(-50%);
-        z-index: 2; // Position above the sendReceiveContainer element.
       }
     }
 
@@ -286,6 +291,7 @@
 .spendConfirmBox {
   .sendConfirm {
     position: relative;
+    z-index: 2; // Position above the popInMessageHolder
 
     .spinner {
       position: relative;

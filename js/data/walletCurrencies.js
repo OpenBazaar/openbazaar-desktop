@@ -230,8 +230,8 @@ export function supportedWalletCurs(options = {}) {
     ...options,
   };
 
-  if (typeof opts.serverCurs !== 'object') {
-    throw new Error('options.serverCurs must be an object.');
+  if (!Array.isArray(opts.serverCurs)) {
+    throw new Error('options.serverCurs must be provided as an Array.');
   }
 
   return opts.serverCurs
