@@ -8,6 +8,7 @@ import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
   getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
+  supportedWalletCurs,
 } from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
@@ -321,11 +322,18 @@ let exchangeRates = {};
  * exchangeRateSyncer.js, so it's unlikely you would need to call this method. Instead access
  * cached values via getExchangeRate() or more commonly convertCurrency().
  */
-// TODO:
-// TODO:
-// TODO: Don't assume a BTC wallet!!!
 export function fetchExchangeRates(options = {}) {
-  const xhr = $.get(app.getServerUrl('ob/exchangerates/BTC'), options)
+  const supportedCurs = supportedWalletCurs();
+  let coin;
+
+  if (supportedCurs.length) {
+    coin = supportedCurs.includes('BTC') ||
+      supportedCurs.includes('TBTC') ?
+        'BTC' :
+        ensureMainnetCode(supportedCurs[0]);
+  }
+
+  const xhr = $.get(app.getServerUrl(`ob/exchangerates/${coin}`), options)
     .done(data => {
       const changed = new Set();
 
@@ -345,7 +353,10 @@ export function fetchExchangeRates(options = {}) {
 
       const changedArray = Array.from(changed);
       const prevExchangeRates = JSON.parse(JSON.stringify(exchangeRates));
-      exchangeRates = data;
+      exchangeRates = {
+        ...data,
+        [coin]: 1,
+      };
 
       if (changed.size) {
         events.trigger('exchange-rate-change', { changed: changedArray });
