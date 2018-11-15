@@ -716,7 +716,7 @@ app.serverConfigs.fetch().done(() => {
 
     if (typeof isDefault === 'boolean') {
       serverConfig.unset('default');
-      const configSave = serverConfig.save({ builtIn: !!isDefault });
+      const configSave = serverConfig.save({ builtIn: isDefault });
 
       if (!configSave) {
         // developer error or wonky data

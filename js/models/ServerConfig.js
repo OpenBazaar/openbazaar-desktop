@@ -54,7 +54,7 @@ export default class extends BaseModel {
       ...attrs,
     };
 
-    if (!this.get('builtIn') && fullAttrs.builtIn) {
+    if (fullAttrs.builtIn) {
       attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
     }
 

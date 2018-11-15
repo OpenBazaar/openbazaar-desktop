@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import { remote } from 'electron';
 import app from '../../../app';
 import serverConnect from '../../../utils/serverConnect';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -17,7 +16,6 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-    this.isBundledApp = remote.getGlobal('isBundledApp');
 
     this.tabViewCache = {};
     this.tabViews = {
