@@ -7,21 +7,12 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    response.code = 'WINE';
     return {
       ...response,
       // Convert from base units - these will be set to undefined if the client doesn't
       // support the currency as a wallet currency (i.e. no entry in the cryptoCurrencies
       // data file). The wallet will list the currency, but it will be marked as
       // unsupported.
-      // TODO
-      // TODO
-      // TODO
-      // TODO - test the scenario of an unsupported currency
-      // TODO
-      // TODO
-      // TODO
-      // todizzle.
       confirmed: integerToDecimal(response.confirmed, response.code),
       unconfirmed: integerToDecimal(response.unconfirmed, response.code),
     };
