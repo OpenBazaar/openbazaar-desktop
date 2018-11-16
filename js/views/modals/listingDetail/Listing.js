@@ -335,7 +335,7 @@ export default class extends BaseModal {
       recordEvent('Listing_GoToStore',
         {
           OpenedFromStore: false,
-          ownListing: this.model.isOwnListing
+          ownListing: this.model.isOwnListing,
         });
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
