@@ -967,6 +967,7 @@
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
         "feeBumpOf": "Fee bump of %{address}"
       },
+      "fetchFailedMsg": "Unable to obtain your transactions list.",
       "noTransactionsPlaceholder": "No %{coinType} transactions found.",
       "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
