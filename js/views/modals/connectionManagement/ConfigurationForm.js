@@ -1,9 +1,6 @@
 import $ from 'jquery';
-import { remote } from 'electron';
-import { platform } from 'os';
 import openSimpleMessage from '../SimpleMessage';
 import { getCurrentConnection } from '../../../utils/serverConnect';
-import { getTranslatedCurrencies } from '../../../data/walletCurrencies';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
@@ -21,7 +18,6 @@ export default class extends baseVw {
     }
 
     const curConn = getCurrentConnection();
-    this.platform = platform();
     this.showConfigureTorMessage = false;
     this.showTorUnavailableMessage = false;
 
@@ -38,15 +34,6 @@ export default class extends baseVw {
     this.title = this.model.isNew() ?
       app.polyglot.t('connectionManagement.configurationForm.tabName') :
       this.model.get('name');
-
-    this.cryptoCurs = getTranslatedCurrencies();
-    this.inUseCryptos = app.serverConfigs.filter(config => config.get('builtIn'))
-      .map(config => config.get('walletCurrency'));
-
-    this.isBundledApp = remote.getGlobal('isBundledApp');
-    if (this.model.isNew() && this.isBundledApp) {
-      this.model.set('builtIn', true);
-    }
 
     this.listenTo(this.model, 'change:name', () => {
       const newName = this.model.get('name');
@@ -71,8 +58,6 @@ export default class extends baseVw {
       'change #serverConfigServerIp': 'onChangeServerIp',
       'change [name=useTor]': 'onChangeUseTor',
       'change [name=serverType]': 'onChangeServerType',
-      'change [name=walletCurrency]': 'onWalletCurrencyChange',
-      'click .js-browseZcashBinary': 'onClickBrowseZcashBinary',
       'click .js-inUseText': 'onClickInUseText',
     };
   }
@@ -146,22 +131,8 @@ export default class extends baseVw {
   }
 
   onChangeServerType(e) {
-    this.getCachedEl('.js-walletSetupForm')
-      .toggleClass('hide', e.target.value === 'STAND_ALONE');
     this.getCachedEl('.js-standAloneSection')
       .toggleClass('hide', e.target.value === 'BUILT_IN');
-  }
-
-  onWalletCurrencyChange(e) {
-    this.getCachedEl('.js-zcashSection').toggleClass('hide', e.target.value !== 'ZEC');
-  }
-
-  onClickBrowseZcashBinary() {
-    remote.dialog.showOpenDialog({ properties: ['openFile'] }, e => {
-      if (e) {
-        this.getCachedEl('.js-inputZcashBinaryPath').val(e[0] || '');
-      }
-    });
   }
 
   onClickInUseText() {
@@ -238,13 +209,6 @@ export default class extends baseVw {
         showConfigureTorMessage: this.showConfigureTorMessage,
         showTorUnavailableMessage: this.showTorUnavailableMessage,
         isTorPwRequired: this.model.isTorPwRequired(),
-        cryptoCurs: this.cryptoCurs,
-        inUseCrypto: this.inUseCryptos,
-        isNew: this.model.isNew(),
-        isBundledApp: this.isBundledApp,
-        zcashBinaryPlaceholder: this.platform === 'win32' ?
-          'C:\\path\\to\\zcashd.exe' :
-          '/path/to/zcashd',
       }));
 
       this._$formFields = null;
