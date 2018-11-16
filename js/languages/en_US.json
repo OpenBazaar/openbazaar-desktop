@@ -456,7 +456,11 @@
       "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
       "bannerTitleBCH":"Scan or send Bitcoin Cash (BCH) to this address",
       "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
-      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address."
+      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address.",
+      "unableToOpenInWallet": {
+        "title": "Unable to open in wallet",
+        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
+      }
     },
     "licenseTab": {
       "linkText": "License",

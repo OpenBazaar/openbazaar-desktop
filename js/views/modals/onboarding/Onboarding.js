@@ -28,9 +28,6 @@ export default class extends BaseModal {
     this.lastAvatarImageRotate = 0;
     this.avatarChanged = false;
     this.countryList = getTranslatedCountries();
-    // todo: test this change
-    // todo: test this change
-    // todo: test this change
     this.currencyList = getCurrencies();
   }
 
