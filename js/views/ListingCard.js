@@ -24,6 +24,7 @@ export default class extends baseVw {
     const opts = {
       viewType: 'grid',
       reportsUrl: '',
+      searchUrl: '',
       ...options,
     };
 
@@ -254,6 +255,11 @@ export default class extends baseVw {
         this.ownerGuid);
 
       startAjaxEvent('Listing_LoadFromCard');
+      const segmentation = {
+        ownListing: !!this.ownListing,
+        openedFromStore: !!this.options.onStore,
+        searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
+      };
 
       const listingFetch = this.fetchFullListing({ showErrorOnFetchFail: false });
       const loadListing = () => {
@@ -306,7 +312,7 @@ export default class extends baseVw {
 
         listingFetch.done(jqXhr => {
           endAjaxEvent('Listing_LoadFromCard', {
-            ownListing: !!this.ownListing,
+            ...segmentation,
           });
           if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
 
@@ -331,10 +337,13 @@ export default class extends baseVw {
           app.loadingModal.close();
         })
         .fail(xhr => {
+          let err = xhr.responseJSON && xhr.responseJSON.reason || xhr.statusText ||
+              'unknown error';
+          // Consolidate and remove specific data from no link errors.
+          if (err.startsWith('no link named')) err = 'no link named under hash';
           endAjaxEvent('Listing_LoadFromCard', {
-            ownListing: !!this.ownListing,
-            errors: xhr.responseJSON && xhr.responseJSON.reason ||
-              xhr.statusText || 'unknown error',
+            ...segmentation,
+            errors: err,
           });
           if (xhr.statusText === 'abort') return;
           this.userLoadingModal.setState({

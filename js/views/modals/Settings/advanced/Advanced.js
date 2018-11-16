@@ -1,4 +1,4 @@
-import { clipboard } from 'electron';
+import { clipboard, remote } from 'electron';
 import $ from 'jquery';
 import app from '../../../../app';
 import { openSimpleMessage } from '../../SimpleMessage';
@@ -244,6 +244,7 @@ export default class extends baseVw {
 
   render() {
     super.render();
+    const bundled = remote.getGlobal('isBundledApp');
     loadTemplate('modals/settings/advanced/advanced.html', (t) => {
       this.$el.html(t({
         errors: {
@@ -252,6 +253,7 @@ export default class extends baseVw {
         },
         isPurging: this.purge && this.purge.state() === 'pending',
         isGettingBlockData: this.blockData && this.blockData.state() === 'pending',
+        bundled,
         ...this.settings.toJSON(),
         ...this.localSettings.toJSON(),
       }));
@@ -282,8 +284,10 @@ export default class extends baseVw {
       this.getCachedEl('.js-smtpSettingsContainer').html(this.smtpSettings.render().el);
 
       if (this.metricsStatus) this.metricsStatus.remove();
-      this.metricsStatus = this.createChild(MetricsStatus);
-      this.getCachedEl('.js-metricsStatusWrapper').append(this.metricsStatus.render().el);
+      if (bundled) {
+        this.metricsStatus = this.createChild(MetricsStatus);
+        this.getCachedEl('.js-metricsStatusWrapper').append(this.metricsStatus.render().el);
+      }
     });
 
     return this;

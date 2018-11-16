@@ -544,17 +544,22 @@ function start() {
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
 
-          const metricsOn = app.localSettings.get('shareMetrics');
+          // Metrics should only be run on bundled apps.
+          if (remote.getGlobal('isBundledApp')) {
+            const metricsOn = app.localSettings.get('shareMetrics');
 
-          if (metricsOn === undefined || metricsOn && isNewerVersion()) {
-            showMetricsModal({
-              showCloseButton: false,
-              dismissOnEscPress: false,
-              showUndecided: true,
-            })
-              .on('close', () => Backbone.history.start());
+            if (metricsOn === undefined || metricsOn && isNewerVersion()) {
+              showMetricsModal({
+                showCloseButton: false,
+                dismissOnEscPress: false,
+                showUndecided: true,
+              })
+                .on('close', () => Backbone.history.start());
+            } else {
+              if (metricsOn) addMetrics();
+              Backbone.history.start();
+            }
           } else {
-            if (metricsOn) addMetrics();
             Backbone.history.start();
           }
 

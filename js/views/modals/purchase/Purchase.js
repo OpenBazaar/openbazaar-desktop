@@ -56,11 +56,10 @@ export default class extends BaseModal {
     this.variants = opts.variants;
     this.vendor = opts.vendor;
     const shippingOptions = this.listing.get('shippingOptions');
-    const shippable = !!(shippingOptions && shippingOptions.length);
-
     const moderatorIDs = this.listing.get('moderators') || [];
     const disallowedIDs = [app.profile.id, this.listing.get('vendorID').peerID];
     this.moderatorIDs = _.without(moderatorIDs, ...disallowedIDs);
+
     this.setState({
       showModerators: this.moderatorIDs.length,
       showVerifiedOnly: true,
@@ -71,7 +70,7 @@ export default class extends BaseModal {
     this.order = new Order(
       {},
       {
-        shippable,
+        shippable: !!(shippingOptions && shippingOptions.length),
         moderated: this.moderatorIDs.length && app.verifiedMods.matched(this.moderatorIDs).length,
       });
 
@@ -83,7 +82,7 @@ export default class extends BaseModal {
       {
         listingHash: this.listing.get('hash'),
         quantity: !this.listing.isCrypto ? 1 : undefined,
-        options: options.variants || [],
+        options: opts.variants || [],
       },
       {
         isCrypto: this.listing.isCrypto,
@@ -432,6 +431,10 @@ export default class extends BaseModal {
     this.setState({ phase: 'processing' });
 
     startAjaxEvent('Purchase');
+    const segmentation = {
+      paymentCoin,
+      moderated: !!moderator,
+    };
 
     if (!this.order.validationError) {
       if (this.listing.isOwnListing) {
@@ -441,6 +444,7 @@ export default class extends BaseModal {
         const errMsg = app.polyglot.t('purchase.errors.ownIDMsg');
         openSimpleMessage(errTitle, errMsg);
         endAjaxEvent('Purchase', {
+          ...segmentation,
           errors: 'own listing',
         });
       } else {
@@ -503,23 +507,27 @@ export default class extends BaseModal {
 
             openSimpleMessage(errTitle, errMsg);
             endAjaxEvent('Purchase', {
+              ...segmentation,
               errors: errMsg || 'unknown error',
             });
           });
       }
     } else {
       this.setState({ phase: 'pay' });
-      const purchaseErrs = [];
+      const purchaseErrs = {};
       Object.keys(this.order.validationError).forEach(errKey => {
         const domKey = errKey.replace(/\[[^\[\]]*\]/g, '').replace('.', '-');
-        purchaseErrs.push(domKey);
         let container = this.$(`.js-${domKey}-errors`);
         // if no container exists, use the generic container
         container = container.length ? container : this.getCachedEl('.js-errors');
-        this.insertErrors(container, this.order.validationError[errKey]);
+        const err = this.order.validationError[errKey];
+        this.insertErrors(container, err);
+        purchaseErrs[`UserError-${domKey}`] = err.join(', ');
       });
       endAjaxEvent('Purchase', {
-        errors: `Client errors ${purchaseErrs.join()}`,
+        ...segmentation,
+        errors: 'User Error',
+        ...purchaseErrs,
       });
     }
   }
