@@ -137,7 +137,7 @@
             <ul class="unstyled errorList hide js-moderationConfirmError">
               <li><i class="ion-alert-circled"></i> <%= ob.polyT('settings.moderationTab.errors.confirm') %></li>
             </ul>
-            <input type="checkbox" id="acceptGuidelines" class="<% if (ob.isModerator) { print('fauxChecked') } %>">
+            <input type="checkbox" id="acceptGuidelines" <% if (ob.isModerator) { print('checked') } %>>
             <label class="tx5b" for="acceptGuidelines">
               <span>
                 <%= ob.polyT('settings.moderationTab.acceptGuidelines', { acceptGuidelinesLink: `<a href="https://www.openbazaar.org/openbazaar-dispute-resolution-guidelines/" class="clrTEm">${ob.polyT('settings.moderationTab.acceptGuidelinesLink')}</a>` }) %>
@@ -148,7 +148,7 @@
         <div class="flexRow gutterH">
           <div class="col3"></div>
           <div class="col9">
-            <input type="checkbox" id="understandRequirements" class="<% if (ob.isModerator) print('fauxChecked') %>">
+            <input type="checkbox" id="understandRequirements" <% if (ob.isModerator) print('checked') %>>
             <label class="tx5b" for="understandRequirements">
               <span><%= ob.polyT('settings.moderationTab.understandRequirements') %></span>
             </label>
