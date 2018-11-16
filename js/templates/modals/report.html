@@ -16,20 +16,20 @@
         <% } else { %>
           <form class="flexCol flexExpand gutterV compact">
             <div class="btnRadio clrBr">
-              <input type="radio" name="reason" value="Offensive" checked id="Offensive">
+              <input type="radio" name="reason" value="Offensive" id="Offensive" <% if (ob.reason === 'Offensive') print('checked') %>>
               <label for="Offensive"><%= ob.polyT('listingReport.reasonOffensive') %></label>
             </div>
             <div class="btnRadio clrBr">
-              <input type="radio" name="reason" value="Fraudulent" id="Fraud">
+              <input type="radio" name="reason" value="Fraudulent" id="Fraud" <% if (ob.reason === 'Fraudulent') print('checked') %>>
               <label for="Fraud"><%= ob.polyT('listingReport.reasonFraud') %></label>
             </div>
             <div class="btnRadio clrBr">
-              <input type="radio" name="reason" value="Illegal" id="Illegal">
+              <input type="radio" name="reason" value="Illegal" id="Illegal" <% if (ob.reason === 'Illegal') print('checked') %>>
               <label for="Illegal"><%= ob.polyT('listingReport.reasonIllegal') %></label>
             </div>
             <div class="flex gutterH">
               <div class="btnRadio clrBr">
-                <input type="radio" name="reason" value="Other" id="ReasonOther">
+                <input type="radio" name="reason" value="Other" id="ReasonOther" <% if (ob.reason === 'Other') print('checked') %>>
                 <label for="ReasonOther"><%= ob.polyT('listingReport.reasonOther') %></label>
               </div>
               <input type="text" class="js-otherInput clrBr clrSh2" name="other">
