@@ -98,7 +98,6 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/report.html', (t) => {
       this.$el.html(t({
-        ...this.options,
         ...this.getState(),
       }));
 
