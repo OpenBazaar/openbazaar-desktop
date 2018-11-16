@@ -162,12 +162,12 @@ export default class extends BaseModal {
         .done(e => {
           this._inventory = e.inventory;
           endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
+            ownListing: this.model.isOwnListing,
           });
         })
         .fail(e => {
           endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
+            ownListing: this.model.isOwnListing,
             errors: e.error || e.errCode || 'unknown error',
           });
         });
@@ -319,16 +319,24 @@ export default class extends BaseModal {
   }
 
   onClickGotoPhotos() {
-    recordEvent('Listing_GoToPhotos');
+    recordEvent('Listing_GoToPhotos', { ownListing: this.model.isOwnListing });
     this.gotoPhotos();
   }
 
   onClickGoToStore() {
     if (this.options.openedFromStore) {
-      recordEvent('Listing_GoToStore', { OpenedFromStore: true });
+      recordEvent('Listing_GoToStore',
+        {
+          OpenedFromStore: true,
+          ownListing: this.model.isOwnListing,
+        });
       this.close();
     } else {
-      recordEvent('Listing_GoToStore', { OpenedFromStore: false });
+      recordEvent('Listing_GoToStore',
+        {
+          OpenedFromStore: false,
+          ownListing: this.model.isOwnListing,
+        });
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
@@ -346,7 +354,7 @@ export default class extends BaseModal {
   }
 
   gotoPhotos() {
-    recordEvent('Listing_GoToPhotos');
+    recordEvent('Listing_GoToPhotos', { ownListing: this.model.isOwnListing });
     this.$photoSection.velocity(
       'scroll',
       {
@@ -357,7 +365,7 @@ export default class extends BaseModal {
   }
 
   clickRating() {
-    recordEvent('Listing_ClickOnRatings');
+    recordEvent('Listing_ClickOnRatings', { ownListing: this.model.isOwnListing });
     this.gotoReviews();
   }
 
@@ -372,7 +380,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
-    recordEvent('Listing_ClickOnPhoto');
+    recordEvent('Listing_ClickOnPhoto', { ownListing: this.model.isOwnListing });
     this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
@@ -423,7 +431,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
-    recordEvent('Listing_ClickOnPhotoPrev');
+    recordEvent('Listing_ClickOnPhotoPrev', { ownListing: this.model.isOwnListing });
     let targetIndex = this.activePhotoIndex - 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -433,7 +441,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoNext() {
-    recordEvent('Listing_ClickOnPhotoNext');
+    recordEvent('Listing_ClickOnPhotoNext', { ownListing: this.model.isOwnListing });
     let targetIndex = this.activePhotoIndex + 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -443,7 +451,7 @@ export default class extends BaseModal {
   }
 
   onClickFreeShippingLabel() {
-    recordEvent('Listing_ClickFreeShippingLabel');
+    recordEvent('Listing_ClickFreeShippingLabel', { ownListing: this.model.isOwnListing });
     this.gotoShippingOptions();
   }
 

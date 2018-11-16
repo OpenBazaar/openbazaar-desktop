@@ -121,7 +121,9 @@ export default class extends baseVw {
             errors: 'ERROR_INSUFFICIENT_FUNDS',
           });
         } else {
-          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+            errors: 'none',
+          });
         }
 
         this.setState(state);

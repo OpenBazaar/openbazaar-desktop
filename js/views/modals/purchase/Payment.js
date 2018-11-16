@@ -40,6 +40,10 @@ export default class extends BaseVw {
       throw new Error('Please provide a boolean indicating whether the order is moderated.');
     }
 
+    if (!options.metricsOrigin) {
+      throw new Error('Please provide an origin for the metrics reporting');
+    }
+
     let paymentCoinData;
 
     try {

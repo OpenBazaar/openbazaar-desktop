@@ -1,4 +1,6 @@
 import loadTemplate from '../../../utils/loadTemplate';
+import { recordEvent } from '../../../utils/metrics';
+
 import baseVw from '../../baseVw';
 
 export default class extends baseVw {
@@ -26,10 +28,12 @@ export default class extends baseVw {
 
   onClickSend() {
     this.trigger('click-send');
+    recordEvent('Wallet_SendShow');
   }
 
   onClickReceive() {
     this.trigger('click-receive');
+    recordEvent('Wallet_ReceiveShow');
   }
 
   render() {

@@ -5,7 +5,7 @@ import {
   ensureMainnetCode,
 } from '../../../data/walletCurrencies';
 import defaultSearchProviders from '../../../data/defaultSearchProviders';
-// import { recordEvent } from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 import { getSocket } from '../../../utils/serverConnect';
 import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
@@ -196,6 +196,7 @@ export default class extends BaseModal {
   events() {
     return {
       'click .js-createListing': 'onClickCreateListing',
+      'click .js-viewCryptoListings': 'onClickViewCryptoListings',
       ...super.events(),
     };
   }
@@ -224,7 +225,13 @@ export default class extends BaseModal {
       },
     });
 
+    recordEvent('Listing_NewCryptoFromWallet');
+
     launchEditListingModal({ model });
+  }
+
+  onClickViewCryptoListings() {
+    recordEvent('Wallet_ViewCryptoListings');
   }
 
   /**

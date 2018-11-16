@@ -73,7 +73,7 @@ export default class extends baseVw {
     this.render();
 
     if (!this.model.validationError) {
-      recordEvent('Wallet_Send');
+      recordEvent('Wallet_Send', { coin: this.coinType });
       this.sendConfirmBox.setState({ show: true });
       this.fetchFeeEstimate();
     }
