@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import { clipboard } from 'electron';
 import renderjson from '../../../../lib/renderjson';
-import BaseVw from '../../../baseVw';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -56,6 +56,8 @@ export default class extends BaseVw {
   }
 
   render() {
+    super.render();
+
     let renderjsonEl;
 
     if (this.rendered) {

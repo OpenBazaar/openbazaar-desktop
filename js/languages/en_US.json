@@ -1596,8 +1596,6 @@
       "contract": "Contract (JSON)"
     },
     "backToSummary": "Back to summary",
-    "copyContract": "Copy Contract",
-    "copyContractDone": "Copied",
     "discussionTab": {
       "roleVendor": "vendor",
       "roleBuyer": "buyer",
@@ -1623,7 +1621,9 @@
       "buyerContractNotArrived": "The buyer's contract has not yet arrived. It will be sent over the next time they come online.",
       "vendorContractNotArrivedPotentialProcErr": "The vendor's contract has not yet arrived. The buyer's contract indicates the vendor had a processing error, but this cannot be validated because the buyer's contract has validation errors. Please contact the vendor to confirm.",
       "contractHeadingVendor": "Vendor's contract:",
-      "contractHeadingBuyer": "Buyer's contract:"
+      "contractHeadingBuyer": "Buyer's contract:",
+      "copyContract": "Copy Contract",
+      "copyContractDone": "Copied"
     },
     "contractMenuItem": {
       "tipBothContractsHaveError": "Both the buyer and vendor contracts have validation errors.",
