@@ -15,11 +15,11 @@ export function renderCryptoIcon(options = {}) {
   }
 
   const opts = {
-    code: ensureMainnetCode(options.code),
     className: '',
     attrs: {},
     defaultIcon: `${baseIconPath}default-coin-icon.png`,
     ...options,
+    code: ensureMainnetCode(options.code),
   };
 
   const attrs = Object.keys(opts.attrs).reduce(
