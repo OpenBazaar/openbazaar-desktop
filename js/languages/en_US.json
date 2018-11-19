@@ -894,7 +894,7 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
-    "zeroSupportedCurs": "None of the wallet currencies are currently supported by this client.",
+    "zeroSupportedCurs": "None of the wallets provided by your server use currencies supported by this client.",
     "coinStats": {
       "balanceHeader": "Balance",
       "unconfirmedBalance": "(%{amount} unconfirmed)",

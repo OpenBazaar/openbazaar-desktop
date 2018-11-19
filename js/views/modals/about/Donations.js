@@ -98,7 +98,7 @@ export default class extends baseVw {
       const state = this.getState();
       wallet.activeCoin = state.showCoin;
       wallet.sendModeOn = true;
-      wallet.getSendMoneyVw()
+      sendView
         .setFormData({ address: this.dCoins[state.showCoin].obDonationAddress });
       wallet.open();
     }
