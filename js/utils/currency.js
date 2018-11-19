@@ -49,31 +49,38 @@ UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
  * it will convert to its base units.
  */
 export function decimalToInteger(amount, currency, options = {}) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number.');
-  }
-
-  if (typeof currency !== 'string') {
-    throw new Error('Please provide a currency as a string.');
-  }
-
   const opts = {
     returnUndefinedOnError: true,
     ...options,
   };
 
-  const curData = getCurrencyByCode(currency);
   let returnVal;
 
-  if (!curData) {
-    if (!opts.returnUndefinedOnError) {
-      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+  try {
+    if (typeof amount !== 'number') {
+      throw new Error('Please provide an amount as a number.');
     }
-  } else {
-    if (getWalletCurByCode(currency)) {
-      returnVal = Math.round(amount * curData.baseUnit);
+
+    if (typeof currency !== 'string') {
+      throw new Error('Please provide a currency as a string.');
+    }
+
+    const curData = getCurrencyByCode(currency);
+
+    if (!curData) {
+      if (!opts.returnUndefinedOnError) {
+        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+      }
     } else {
-      returnVal = Math.round(amount * 100);
+      if (getWalletCurByCode(currency)) {
+        returnVal = Math.round(amount * curData.baseUnit);
+      } else {
+        returnVal = Math.round(amount * 100);
+      }
+    }
+  } catch (e) {
+    if (!opts.returnUndefinedOnError) {
+      throw e;
     }
   }
 
@@ -90,18 +97,33 @@ export function integerToDecimal(amount, currency, options = {}) {
     ...options,
   };
 
-  const curData = getCurrencyByCode(currency);
   let returnVal;
 
-  if (!curData) {
-    if (!opts.returnUndefinedOnError) {
-      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+  try {
+    if (typeof amount !== 'number') {
+      throw new Error('Please provide an amount as a number.');
     }
-  } else {
-    if (getWalletCurByCode(currency)) {
-      returnVal = Number(amount / curData.baseUnit);
+
+    if (typeof currency !== 'string') {
+      throw new Error('Please provide a currency as a string.');
+    }
+
+    const curData = getCurrencyByCode(currency);
+
+    if (!curData) {
+      if (!opts.returnUndefinedOnError) {
+        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+      }
     } else {
-      returnVal = Number(amount / 100);
+      if (getWalletCurByCode(currency)) {
+        returnVal = Number(amount / curData.baseUnit);
+      } else {
+        returnVal = Number(amount / 100);
+      }
+    }
+  } catch (e) {
+    if (!opts.returnUndefinedOnError) {
+      throw e;
     }
   }
 
