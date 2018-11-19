@@ -1,5 +1,8 @@
+import $ from 'jquery';
+import { clipboard } from 'electron';
 import renderjson from '../../../../lib/renderjson';
 import BaseVw from '../../../baseVw';
+import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
 
 export default class extends BaseVw {
@@ -25,6 +28,31 @@ export default class extends BaseVw {
 
   tagName() {
     return 'section';
+  }
+
+  events() {
+    return {
+      'click .js-copyContract': 'onClickCopyContract',
+    };
+  }
+
+  onClickCopyContract() {
+    clipboard.writeText(JSON.stringify(this.contract));
+    // Fade the link and make it unclickable, but maintain its position in the DOM.
+    this.getCachedEl('.js-copyContract')
+      .addClass('unclickable')
+      .velocity('stop')
+      .velocity({ opacity: 0 })
+      .velocity({ opacity: 1 }, {
+        delay: 5000,
+        complete: (els) => {
+          $(els[0]).removeClass('unclickable');
+        },
+      });
+    this.getCachedEl('.js-copyContractDone')
+      .velocity('stop')
+      .velocity({ opacity: 1 })
+      .velocity({ opacity: 0 }, { delay: 5000 });
   }
 
   render() {

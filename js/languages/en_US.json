@@ -1596,6 +1596,8 @@
       "contract": "Contract (JSON)"
     },
     "backToSummary": "Back to summary",
+    "copyContract": "Copy Contract",
+    "copyContractDone": "Copied",
     "discussionTab": {
       "roleVendor": "vendor",
       "roleBuyer": "buyer",

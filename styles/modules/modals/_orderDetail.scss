@@ -232,6 +232,14 @@
         font-weight: bold;
       }
     }
+
+    .copied {
+      position: absolute;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   .summaryTab {
@@ -330,7 +338,7 @@
 
           &::before {
             padding-top: 4px;
-          }          
+          }
         }
       }
     }
