@@ -127,16 +127,12 @@
                   ob.crypto.anySupportedByWallet([priceCryptoCode.code, priceCryptoCode.testnetCode])
                 ) &&
                 ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
-                // Ensure we have exchange rate data based on the currency the listing is listed
-                // in. Otherwise, it is not purchaseable since the price cannot be determined.
-                // If the listing price code is one of the accepted currencies AND the user pays in
-                // that currency, then exchange rate data is not needed.
-                // TODO:
-                // TODO:
-                // TODO: ugh - how to handle that case?
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
-                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
-                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur',
+                    { cur: ob.price.currencyCode }) :
+                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo', {
+                    cur: ob.price.currencyCode
+                  });
               } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
                 !ob.currencyMod.getExchangeRate(ob.price.currencyCode)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
