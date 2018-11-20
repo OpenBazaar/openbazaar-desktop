@@ -10,10 +10,10 @@
       <%} %>
       <% if (cur.active && !cur.disabled) print('checked') %>>
       <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
-      <span class="curName flexExpand"><%= cur.displayName %></span>
+      <span class="curName noOverflow"><%= cur.displayName %></span>
     </label>
     <% if (cur.disabled && ob.disabledMsg) { %>
-    <span class="noWrap disabledMsg clrTErr tx5b"><%= ob.disabledMsg %></span>
+    <span class="disabledMsg noOverflow clrTErr tx5b"><%= ob.disabledMsg %></span>
     <% }%>
   </li>
 <% }) %>
