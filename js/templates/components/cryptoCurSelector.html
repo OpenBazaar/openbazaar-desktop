@@ -1,14 +1,14 @@
 <% ob.processedCurs.forEach(cur => { %>
   <li class="clrBr curRow">
-    <input type="<%= ob.controlType %>"
-           id="<%=`curSel${cur.code}${ob.cid}` %>"
-           class="centerLabel js-curControl"
-           data-code="<%= cur.code %>"
-           <% if (ob.controlType === 'radio') {%>
-             name="currencies"
-           <%} %>
-           <% if (cur.active && !cur.disabled) print('checked') %>>
     <label class="gutterHSm <% if (cur.disabled) print('disabled') %>" for="<%=`curSel${cur.code}${ob.cid}` %>">
+      <input type="<%= ob.controlType %>"
+             id="<%=`curSel${cur.code}${ob.cid}` %>"
+             class="centerLabel js-curControl"
+             data-code="<%= cur.code %>"
+      <% if (ob.controlType === 'radio') {%>
+      name="currencies"
+      <%} %>
+      <% if (cur.active && !cur.disabled) print('checked') %>>
       <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
       <span class="curName flexExpand"><%= cur.displayName %></span>
     </label>
