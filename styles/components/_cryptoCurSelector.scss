@@ -3,13 +3,14 @@
     display: flex;
     align-items: center;
     font-size: 1.5rem;
-    padding: 0 14px;
-    cursor: pointer;
 
     label {
       line-height: 42px; // Makes the entire row clickable.
       width: 100%;
       cursor: pointer;
+      padding-left: 14px;
+      display: flex;
+      align-items: center;
     }
 
     input {
@@ -46,6 +47,11 @@
       // ascenders but not decenders most of the time.
       position: relative;
         top: 0.09em;
+    }
+
+    .disabledMsg {
+      padding-right: 14px;
+      pointer-events: none;
     }
   }
 }
