@@ -1285,6 +1285,7 @@
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{smart_count} listing</b> found for <b>\"%{term}\"</b> |||| <b>%{smart_count} listings</b> found for <b>\"%{term}\"</b>",
     "resultsTotal": "%{smart_count} listing |||| %{smart_count} listings",
+    "resultsHelper":"Search providers may not display all results on the network. Spam, offensive, or unreachable listings may be omitted.",
     "sortBy": "Sort by",
     "changeProvider": "Close and Choose a New Search Provider",
     "useDefault": "Search for \"%{term}\" using %{defaultProvider}",
