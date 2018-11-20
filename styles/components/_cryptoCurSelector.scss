@@ -6,10 +6,10 @@
 
     label {
       line-height: 42px; // Makes the entire row clickable.
-      width: 100%;
       cursor: pointer;
       padding-left: 14px;
       display: flex;
+      flex-grow: 1;
       align-items: center;
       overflow: hidden;
     }
