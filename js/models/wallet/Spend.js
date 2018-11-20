@@ -174,10 +174,6 @@ export function spend(fields) {
         throw new Error(`${errorKey}: ${spendModel.validationError[errorKey][0]}`);
       });
   } else {
-    // TODO: test that the balance model is properly updated
-    // TODO: test that the balance model is properly updated
-    // TODO: test that the balance model is properly updated
-    // TODO: test that the balance model is properly updated
     save.done(data => {
       if (app.walletBalances) {
         const coinType = spendModel.get('wallet');
@@ -193,15 +189,6 @@ export function spend(fields) {
           );
         }
       }
-
-      // const wallet = getWallet();
-
-      // if (wallet && wallet.onSpendSuccess) {
-      //   wallet.onSpendSuccess({
-      //     address: spendModel.get('address'),
-      //     ...data,
-      //   });
-      // }
     });
   }
 

@@ -24,7 +24,7 @@
   },
   "feeChangeWidget": {
     "btnChange": "change",
-    "label": "%{cur} fee:"
+    "label": "Network fee:"
   },
   "blockButton": {
     "tipBlock": "Block this user",
@@ -443,7 +443,11 @@
       "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
       "bannerTitleBCH":"Scan or send Bitcoin Cash (BCH) to this address",
       "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
-      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address."
+      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address.",
+      "unableToOpenInWallet": {
+        "title": "Unable to open in wallet",
+        "body": "Unable to open the address in the wallet because a payment is in the process of being sent. Please wait until the send completes and try again."
+      }
     },
     "licenseTab": {
       "linkText": "License",
@@ -890,11 +894,15 @@
   "wallet": {
     "title": "Wallet",
     "closeLink": "Close wallet",
+    "zeroSupportedCurs": "None of the wallets provided by your server use currencies supported by this client.",
     "coinStats": {
       "balanceHeader": "Balance",
       "unconfirmedBalance": "(%{amount} unconfirmed)",
       "valueInDisplayCur": "Value in %{cur}",
       "transactionsHeader": "Transactions"
+    },
+    "coinNav": {
+      "unsupportedCurTip": "This is currently an unsupported currency."
     },
     "sendBtn": "Send",
     "receiveBtn": "Receive",
@@ -946,6 +954,7 @@
         "retryFailInsufficientFunds": "You do not have sufficient funds to complete this transaction.",
         "feeBumpOf": "Fee bump of %{address}"
       },
+      "fetchFailedMsg": "Unable to obtain your transactions list.",
       "noTransactionsPlaceholder": "No %{coinType} transactions found.",
       "newTransactionsPopin": "%{smart_count} new transaction |||| %{smart_count} new transactions",
       "backupWalletWarningTitle": "Backup Wallet Recovery Seed",
@@ -964,15 +973,6 @@
       "btnCreateListing": "Create Listing",
       "linkViewCryptoListings": "View crypto listings"
     }
-  },
-  "walletOLD": {
-    "title": "Wallet",
-    "closeLink": "Close wallet",
-    "fundsHeader": "Funds",
-    "btnReceiveMoney": "Receive Money",
-    "btnSendMoney": "Send Money",
-    "valueInCurrencyLabel": "Value in %{currency}",
-    "transactionsLabel": "Transactions"
   },
   "formats": {
     "PHYSICAL_GOOD": "Physical Good",

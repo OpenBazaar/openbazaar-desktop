@@ -497,9 +497,6 @@ function start() {
   // serverConfigs to serverConnectionConfigs?
   fetchConfig().done((data) => {
     app.serverConfig = data || {};
-    app.serverConfig.walletsHelp = 'CAUTION! - Rather than reading the wallet curs directly ' +
-      'from this config object, you likely want to use one of the relevant util functions in ' +
-      'data/walletCurrencies, for example, supportedWalletCurs()';
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();

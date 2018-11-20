@@ -3,11 +3,11 @@ import $ from 'jquery';
 import {
   isSupportedWalletCur,
   ensureMainnetCode,
+  supportedWalletCurs,
 } from '../../../data/walletCurrencies';
 import defaultSearchProviders from '../../../data/defaultSearchProviders';
 import { recordEvent } from '../../../utils/metrics';
 import { getSocket } from '../../../utils/serverConnect';
-import { polyTFallback } from '../../../utils/templateHelpers';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -25,31 +25,41 @@ import CryptoTicker from '../../components/CryptoTicker';
 
 export default class extends BaseModal {
   constructor(options = {}) {
-    let navCoins = [];
+    const navCoins = supportedWalletCurs({ clientSupported: false })
+      .sort((a, b) => {
+        const aSortVal =
+          app.polyglot.t(`cryptoCurrencies.${a}`, { _: a });
+        const bSortVal =
+          app.polyglot.t(`cryptoCurrencies.${b}`, { _: b });
 
-    if (app && app.walletBalances) {
-      navCoins = app.walletBalances.toJSON()
-        .filter(balanceObj => isSupportedWalletCur(balanceObj.code))
-        .sort((a, b) => {
-          const getDisplayName = code => polyTFallback(`cryptoCurrencies.${code}`, code);
+        return aSortVal.localeCompare(
+          bSortVal,
+          app.localSettings.standardizedTranslatedLang(),
+          { sensitivity: 'base' }
+        );
+      });
 
+    let initialActiveCoin;
 
-          const aSortVal = getDisplayName(a.code);
-          const bSortVal = getDisplayName(b.code);
-
-          if (aSortVal < bSortVal) return -1;
-          if (aSortVal > bSortVal) return 1;
-          return 0;
-        });
+    if (options.initialActiveCoin &&
+      typeof options.initialActiveCoin === 'string') {
+      initialActiveCoin = isSupportedWalletCur(options.initialActiveCoin) ?
+        options.initialActiveCoin : null;
     }
 
-    const initialActiveCoin = navCoins.length && navCoins[0] &&
-        navCoins[0].code || 'BTC';
+    if (!initialActiveCoin) {
+      initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin)) || null;
+    }
+
+    // If at this point the initialActiveCoin and consequentally this.activeCoin
+    // are null, it indicates that none of the wallet currencies are supported by
+    // this client.
+
     const opts = {
-      initialActiveCoin,
       initialSendModeOn: app.walletBalances.get(initialActiveCoin) &&
         app.walletBalances.get(initialActiveCoin).get('confirmed') || false,
       ...options,
+      initialActiveCoin,
     };
 
     super(opts);
@@ -59,23 +69,20 @@ export default class extends BaseModal {
     this._receiveMoneyVws = {};
     this.addressFetches = {};
     this.needAddress = navCoins.reduce((acc, coin) => {
-      acc[coin.code] = true;
+      acc[coin] = true;
       return acc;
     }, {});
     // The majority of the TransactionsVw state is managed within the component, but
     // some of it we'll manage so as you nav from coin to coin, certain state is maintained.
     this.transactionsState = {};
 
-    this.navCoins = navCoins.map(coin => {
-      const code = coin.code;
-
-      return {
-        active: code === opts.initialNavCoin,
-        code,
-        name: polyTFallback(`cryptoCurrencies.${code}`, code),
-        balance: coin.confirmed,
-      };
-    });
+    this.navCoins = navCoins.map(coin => ({
+      active: coin === opts.initialNavCoin,
+      code: coin,
+      name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
+      balance: coin.confirmed,
+      clientSupported: isSupportedWalletCur(coin),
+    }));
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
@@ -88,33 +95,35 @@ export default class extends BaseModal {
       this.activeCoin = e.code;
     });
 
-    this.coinStats = this.createChild(CoinStats, {
-      initialState: this.coinStatsState,
-    }).render();
+    if (initialActiveCoin) {
+      this.coinStats = this.createChild(CoinStats, {
+        initialState: this.coinStatsState,
+      }).render();
 
-    this.sendReceiveNav = this.createChild(SendReceiveNav, {
-      initialState: this.sendReceivNavState,
-    }).render();
+      this.sendReceiveNav = this.createChild(SendReceiveNav, {
+        initialState: this.sendReceivNavState,
+      }).render();
 
-    this.listenTo(this.sendReceiveNav, 'click-send', () => {
-      this.sendModeOn = true;
-    });
+      this.listenTo(this.sendReceiveNav, 'click-send', () => {
+        this.sendModeOn = true;
+      });
 
-    this.listenTo(this.sendReceiveNav, 'click-receive', () => {
-      this.sendModeOn = false;
-    });
+      this.listenTo(this.sendReceiveNav, 'click-receive', () => {
+        this.sendModeOn = false;
+      });
 
-    this.reloadTransactions = this.createChild(ReloadTransactions, {
-      initialState: {
-        coinType: this.activeCoin,
-      },
-    }).render();
+      this.reloadTransactions = this.createChild(ReloadTransactions, {
+        initialState: {
+          coinType: this.activeCoin,
+        },
+      }).render();
 
-    this.ticker = this.createChild(CryptoTicker, {
-      initialState: {
-        coinType: this.activeCoin,
-      },
-    }).render();
+      this.ticker = this.createChild(CryptoTicker, {
+        initialState: {
+          coinType: this.activeCoin,
+        },
+      }).render();
+    }
 
     const ob1ProviderData = defaultSearchProviders.find(provider => provider.id === 'ob1');
     this.viewCryptoListingsUrl = ob1ProviderData ?
@@ -123,7 +132,7 @@ export default class extends BaseModal {
 
     const serverSocket = getSocket();
 
-    if (serverSocket) {
+    if (initialActiveCoin && serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         if (e.jsonData.wallet) {
           const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
@@ -186,7 +195,7 @@ export default class extends BaseModal {
         _.debounce(this.onBalanceChange, 1));
     });
 
-    this.fetchAddress();
+    if (initialActiveCoin) this.fetchAddress();
   }
 
   className() {
@@ -551,6 +560,7 @@ export default class extends BaseModal {
             cryptoTeaserHtml: cryptoTeaserT({
               viewCryptoListingsUrl: this.viewCryptoListingsUrl,
             }),
+            activeCoin: this.activeCoin,
           }));
 
           super.render();
@@ -558,22 +568,24 @@ export default class extends BaseModal {
           this.coinNav.delegateEvents();
           this.getCachedEl('.js-coinNavContainer').html(this.coinNav.el);
 
-          this.coinStats.delegateEvents();
-          this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
+          if (this.activeCoin) {
+            this.coinStats.delegateEvents();
+            this.getCachedEl('.js-coinStatsContainer').html(this.coinStats.el);
 
-          this.sendReceiveNav.delegateEvents();
-          this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
+            this.sendReceiveNav.delegateEvents();
+            this.getCachedEl('.js-sendReceiveNavContainer').html(this.sendReceiveNav.el);
 
-          this.renderSendReceiveVw();
-          this.renderTransactionsView();
+            this.renderSendReceiveVw();
+            this.renderTransactionsView();
 
-          this.reloadTransactions.delegateEvents();
-          this.getCachedEl('.js-reloadTransactionsContainer')
-            .html(this.reloadTransactions.el);
+            this.reloadTransactions.delegateEvents();
+            this.getCachedEl('.js-reloadTransactionsContainer')
+              .html(this.reloadTransactions.el);
 
-          this.ticker.delegateEvents();
-          this.getCachedEl('.js-tickerContainer')
-            .html(this.ticker.el);
+            this.ticker.delegateEvents();
+            this.getCachedEl('.js-tickerContainer')
+              .html(this.ticker.el);
+          }
         });
       });
     });

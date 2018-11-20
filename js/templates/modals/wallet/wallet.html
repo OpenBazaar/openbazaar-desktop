@@ -18,17 +18,23 @@
     </div>
     <div class="col9">
       <div class="flexColWide gutterV">
-        <div class="js-coinStatsContainer"></div>
-        <div>
-          <div class="flexColWide clrP clrSh3">
-            <div class="js-sendReceiveNavContainer rowMd"></div>
-            <div class="js-sendReceiveContainer sendReceiveContainer clrP"></div>
+        <% if (ob.activeCoin) { %>
+          <div class="js-coinStatsContainer"></div>
+          <div>
+            <div class="flexColWide clrP clrSh3">
+              <div class="js-sendReceiveNavContainer rowMd"></div>
+              <div class="js-sendReceiveContainer sendReceiveContainer clrP"></div>
+            </div>
           </div>
-        </div>
-        <div class="clrP clrSh3 posR">
-          <div class="js-transactionsContainer"></div>
-          <div class="js-reloadTransactionsContainer reloadTransactions"></div>
-        </div>
+          <div class="clrP clrSh3 posR">
+            <div class="js-transactionsContainer"></div>
+            <div class="js-reloadTransactionsContainer reloadTransactions"></div>
+          </div>
+        <% } else { %>
+          <div class="clrP clrSh3 clrBr border zeroSupportedCurs">
+            <div class="center"><%= ob.polyT('wallet.zeroSupportedCurs') %></div>
+          </div>
+        <% } %>
       </div>
     </div>
   </div>

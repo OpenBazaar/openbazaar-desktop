@@ -173,64 +173,64 @@ export default class extends BaseVw {
       remove: false,
     });
 
-    this.transactionsFetch.always(() => {
-      if (this.isRemoved()) return;
+    this.transactionsFetch
+      .done(data => {
+        if (this.isRemoved()) return;
 
-      if (this.transactionFetchState) {
-        if (!this.collection.length) {
-          this.render();
-        } else {
+        this.fetchFailed = false;
+        this.fetchErrorMessage = '';
+
+        if (typeof this.countAtFirstFetch === 'undefined') {
+          this.countAtFirstFetch = data.count;
+        }
+
+        if (this.collection.length) {
           this.transactionFetchState.setState({
             isFetching: false,
+            fetchFailed: this.fetchFailed,
+            fetchErrorMessage: this.fetchErrorMessage,
           });
-        }
-      }
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText === 'abort') return;
 
-      this.fetchFailed = true;
+          const curConn = getCurrentConnection();
 
-      if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
-        this.fetchErrorMessage = jqXhr.responseJSON.reason;
-      }
+          if (curConn && curConn.server && !curConn.server.get('backupWalletWarned')) {
+            const warning = openSimpleMessage(
+              app.polyglot.t('wallet.transactions.backupWalletWarningTitle'),
+              app.polyglot.t('wallet.transactions.backupWalletWarningBody', {
+                link: '<a class="js-recoverWalletSeed">' +
+                  `${app.polyglot.t('wallet.transactions.recoverySeedLink')}</a>`,
+              })
+            );
 
-      if (this.transactionFetchState) {
-        this.transactionFetchState.setState({
-          fetchFailed: this.fetchFailed,
-          fetchErrorMessage: this.fetchErrorMessage,
-        });
-      }
-    }).done(data => {
-      if (this.isRemoved()) return;
-
-      if (typeof this.countAtFirstFetch === 'undefined') {
-        this.countAtFirstFetch = data.count;
-      }
-
-      if (this.collection.length) {
-        const curConn = getCurrentConnection();
-
-        if (curConn && curConn.server && !curConn.server.get('backupWalletWarned')) {
-          const warning = openSimpleMessage(
-            app.polyglot.t('wallet.transactions.backupWalletWarningTitle'),
-            app.polyglot.t('wallet.transactions.backupWalletWarningBody', {
-              link: '<a class="js-recoverWalletSeed">' +
-                `${app.polyglot.t('wallet.transactions.recoverySeedLink')}</a>`,
-            })
-          );
-
-          warning.$el.on('click', '.js-recoverWalletSeed', () => {
-            launchSettingsModal({
-              initialTab: 'Advanced',
-              scrollTo: '.js-backupWalletSection',
+            warning.$el.on('click', '.js-recoverWalletSeed', () => {
+              launchSettingsModal({
+                initialTab: 'Advanced',
+                scrollTo: '.js-backupWalletSection',
+              });
+              warning.remove();
             });
-            warning.remove();
-          });
 
-          curConn.server.save({ backupWalletWarned: true });
+            curConn.server.save({ backupWalletWarned: true });
+          }
+        } else {
+          this.render();
         }
-      }
-    });
+      }).fail(xhr => {
+        if (this.isRemoved() || xhr.statusText === 'abort') return;
+
+        this.fetchFailed = true;
+        this.fetchErrorMessage = xhr.responseJSON && xhr.responseJSON.reason || '';
+
+        if (this.collection.length) {
+          this.transactionFetchState.setState({
+            isFetching: false,
+            fetchFailed: this.fetchFailed,
+            fetchErrorMessage: this.fetchErrorMessage,
+          });
+        } else {
+          this.render();
+        }
+      });
 
     if (this.transactionFetchState) {
       this.transactionFetchState.setState({
@@ -349,6 +349,7 @@ export default class extends BaseVw {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
         isFetching: this.isFetching,
+        fetchFailed: this.fetchFailed,
         coinType: this.coinType,
       }));
     });
@@ -372,6 +373,11 @@ export default class extends BaseVw {
       },
     });
     this.$('.js-transactionFetchStateWrap').html(this.transactionFetchState.render().el);
+    this.listenTo(this.transactionFetchState, 'clickRetryFetch', () => {
+      // simulate some latency so if it fails again, it looks like it tried.
+      this.transactionFetchState.setState({ isFetching: true });
+      setTimeout(() => this.fetchTransactions(), 250);
+    });
 
     return this;
   }

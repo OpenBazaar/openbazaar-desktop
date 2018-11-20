@@ -131,7 +131,6 @@ export default class extends BaseModal {
 
     getCryptoCursByName().then(
       curs => this.getCoinTypesDeferred.resolve(curs),
-      // todo: test the failure state
       () => this.getCoinTypesDeferred.resolve(
         getCryptoCursByCode().map(cur => ({ code: cur, name: cur }))
       )

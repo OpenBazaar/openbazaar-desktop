@@ -13,15 +13,11 @@ const cacheExpires = 1000 * 60 * 5;
 const estimateFeeCache = {};
 let watchingTransactions = false;
 
-// TODO:
-// TODO:
-// TODO:
-// TODO:
-// TODO: test this scenario
 function onSocket(e) {
   if (e.jsonData.wallet && !e.jsonData.wallet.height) {
-    Object.keys(estimateFeeCache)
-      .forEach(coin => estimateFeeCache[coin].clear());
+    if (estimateFeeCache[e.jsonData.wallet.wallet]) {
+      estimateFeeCache[e.jsonData.wallet.wallet].clear();
+    }
   }
 }
 

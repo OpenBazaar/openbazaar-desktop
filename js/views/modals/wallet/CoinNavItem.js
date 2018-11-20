@@ -8,7 +8,6 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         active: false,
-        balance: 0,
         displayCur: app && app.settings && app.settings.get('localCurrency') || 'USD',
         ...options.initialState,
       },
@@ -42,14 +41,24 @@ export default class extends baseVw {
   }
 
   onClick() {
-    if (!this.getState().active) {
+    const state = this.getState();
+
+    if (!state.active && state.clientSupported) {
       this.trigger('selected', { code: this.getState().code });
     }
   }
 
   render() {
     const state = this.getState();
-    this.$el.toggleClass('active', state.active);
+
+    let addClasses = state.active ? 'active' : '';
+    addClasses = !state.clientSupported ? 'clientUnsupported' : '';
+
+    let removeClasses = !state.active ? 'active' : '';
+    removeClasses = state.clientSupported ? 'clientUnsupported' : '';
+
+    this.$el.addClass(addClasses);
+    this.$el.removeClass(removeClasses);
 
     loadTemplate('modals/wallet/coinNavItem.html', (t) => {
       this.$el.html(t({

@@ -13,14 +13,6 @@ export default class extends BaseModel {
       // support the currency as a wallet currency (i.e. no entry in the cryptoCurrencies
       // data file). The wallet will list the currency, but it will be marked as
       // unsupported.
-      // TODO
-      // TODO
-      // TODO
-      // TODO - test the scenario of an unsupported currency
-      // TODO
-      // TODO
-      // TODO
-      // todizzle.
       confirmed: integerToDecimal(response.confirmed, response.code),
       unconfirmed: integerToDecimal(response.unconfirmed, response.code),
     };

@@ -1,5 +1,7 @@
 import { clipboard } from 'electron';
 import qr from 'qr-encode';
+import app from '../../../app';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
 import {
   isSupportedWalletCur,
   getCurrencyByCode,
@@ -76,23 +78,28 @@ export default class extends baseVw {
   }
 
   openInWalletClick() {
-    const wallet = getWallet();
+    let wallet = getWallet();
+
     if (!wallet) {
-      launchWallet({
+      wallet = launchWallet({
         initialActiveCoin: this.getState().showCoin,
-        // TODO: add send address here
+        initialSendModeOn: true,
       });
+    }
+
+    const sendView = wallet.getSendMoneyVw();
+
+    if (sendView.saveInProgress) {
+      openSimpleMessage(
+        app.polyglot.t('about.donationsTab.unableToOpenInWallet.title'),
+        app.polyglot.t('about.donationsTab.unableToOpenInWallet.body')
+      );
     } else {
-      /*
-      * We probably still need a check to see if the wallet is in the middle of
-      * sending a payment here. If so, use the API provided to check and show
-      * this error message: openSimpleMessage(
-      * app.polyglot.t('about.donationsTab.unableToOpenInWallet.title'),
-      * app.polyglot.t('about.donationsTab.unableToOpenInWallet.body'));
-      * The phrases will need to be added back to en_US.json
-      * */
-      wallet.activeCoin = this.getState().showCoin;
-      // TODO: add send address here
+      const state = this.getState();
+      wallet.activeCoin = state.showCoin;
+      wallet.sendModeOn = true;
+      sendView
+        .setFormData({ address: this.dCoins[state.showCoin].obDonationAddress });
       wallet.open();
     }
   }
