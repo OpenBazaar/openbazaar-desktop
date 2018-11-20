@@ -6,7 +6,7 @@ import { isSupportedWalletCur } from '../../data/walletCurrencies';
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
-    this.shippable = options.shippable || false;
+    this.shippable = options.shippable;
   }
 
   defaults() {
@@ -64,11 +64,8 @@ export default class extends BaseModel {
     }
 
     if (this.shippable) {
-      if (!attrs.shipTo || typeof attrs.shipTo !== 'string') {
-        addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
-      }
-
-      if (!attrs.countryCode || typeof attrs.countryCode !== 'string') {
+      if (!attrs.shipTo || typeof attrs.shipTo !== 'string' ||
+        !attrs.countryCode || typeof attrs.countryCode !== 'string') {
         addError('shipping', app.polyglot.t('orderModelErrors.missingAddress'));
       }
     }
