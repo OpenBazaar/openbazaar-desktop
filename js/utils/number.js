@@ -6,9 +6,9 @@ import app from '../app';
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
 export function toStandardNotation(number, options) {
-  if (typeof number !== 'number') {
-    throw new Error('Please provide a number.');
-  }
+  // if (typeof number !== 'number') {
+  //   throw new Error('Please provide a number.');
+  // }
 
   const opts = {
     minDisplayDecimals: 0,
