@@ -99,8 +99,7 @@ export default class extends baseVw {
         [...new Set(state.currencies)] : curState.currencies,
     };
 
-    // Radio controls must have no more than one active currency. If the list passed in is not
-    // already alphabetized, it's possible the alphabetization will change the order.
+    // Radio controls must have no more than one active currency.
     if (processedState.controlType === 'radio') {
       processedState.activeCurs = processedState.activeCurs && processedState.activeCurs.length ?
         [processedState.activeCurs[0]] : [];
