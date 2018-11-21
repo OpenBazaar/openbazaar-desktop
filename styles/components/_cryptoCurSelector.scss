@@ -6,11 +6,12 @@
 
     label {
       line-height: 42px; // Makes the entire row clickable.
-      width: 100%;
       cursor: pointer;
       padding-left: 14px;
       display: flex;
+      flex-grow: 1;
       align-items: center;
+      overflow: hidden;
     }
 
     input {
@@ -46,7 +47,7 @@
       // Bump text down to center it visually. It looks off because it has
       // ascenders but not decenders most of the time.
       position: relative;
-        top: 0.09em;
+      top: 0.09em;
     }
 
     .disabledMsg {
