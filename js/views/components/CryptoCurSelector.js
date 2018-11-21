@@ -105,8 +105,7 @@ export default class extends baseVw {
         [processedState.activeCurs[0]] : [];
     }
 
-    // Remove any disabled currencies from the active list. It's possible for a radio control to
-    // have the first active cur disabled, in which case none will be selected, which is ok.
+    // Remove any disabled currencies from the active list.
     if (state.activeCurs || state.disabledCurs) {
       processedState.activeCurs = [...new Set(processedState.activeCurs
         .filter(c => !processedState.disabledCurs.includes(c)))];

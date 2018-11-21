@@ -6,7 +6,7 @@
              class="centerLabel js-curControl"
              data-code="<%= cur.code %>"
       <% if (ob.controlType === 'radio') {%>
-      name="currencies"
+        name="currencies"
       <%} %>
       <% if (cur.active && !cur.disabled) print('checked') %>>
       <label for="<%=`curSel${cur.code}${ob.cid}` %>">
@@ -15,7 +15,7 @@
       </label>
     </label>
     <% if (cur.disabled && ob.disabledMsg) { %>
-    <span class="disabledMsg noOverflow clrTErr tx5b"><%= ob.disabledMsg %></span>
+      <span class="disabledMsg noOverflow clrTErr tx5b"><%= ob.disabledMsg %></span>
     <% }%>
   </li>
 <% }) %>
