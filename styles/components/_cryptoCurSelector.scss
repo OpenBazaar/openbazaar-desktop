@@ -3,19 +3,24 @@
     display: flex;
     align-items: center;
     font-size: 1.5rem;
+    padding-right: 14px;
 
-    label {
-      line-height: 42px; // Makes the entire row clickable.
+    & > label {
+      height: 42px;
       cursor: pointer;
       padding-left: 14px;
       display: flex;
       flex-grow: 1;
       align-items: center;
+    }
+
+    label {
       overflow: hidden;
     }
 
     input {
       cursor: pointer;
+      flex-shrink: 0;
     }
 
     input:checked + label {
@@ -30,7 +35,7 @@
     }
 
     input[type="radio"] {
-      margin-right: 0.6em;
+      margin: 0 0.6em 0 0;
 
       & + label {
         display: flex;
@@ -39,19 +44,22 @@
     }
 
     .cryptoIcon {
-      // add visual space for icons after the checkbox
+      // add visual space for icons
       margin-left: 0.2em;
+      margin-right: 0.5em;
+      // Center vertically
+      position: relative;
+      top: 0.05em;
     }
 
     .curName {
-      // Bump text down to center it visually. It looks off because it has
-      // ascenders but not decenders most of the time.
+      // Bump text down to center it visually.
       position: relative;
-      top: 0.09em;
+      top: 0.1em;
+      margin-right: 2em;
     }
 
     .disabledMsg {
-      padding-right: 14px;
       pointer-events: none;
     }
   }

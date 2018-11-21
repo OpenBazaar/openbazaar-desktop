@@ -1,6 +1,6 @@
 <% ob.processedCurs.forEach(cur => { %>
   <li class="clrBr curRow">
-    <label class="gutterHSm <% if (cur.disabled) print('disabled') %>" for="<%=`curSel${cur.code}${ob.cid}` %>">
+    <label class="gutterHSm <% if (cur.disabled) print('disabled') %>">
       <input type="<%= ob.controlType %>"
              id="<%=`curSel${cur.code}${ob.cid}` %>"
              class="centerLabel js-curControl"
@@ -9,8 +9,10 @@
       name="currencies"
       <%} %>
       <% if (cur.active && !cur.disabled) print('checked') %>>
-      <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
-      <span class="curName noOverflow"><%= cur.displayName %></span>
+      <label for="<%=`curSel${cur.code}${ob.cid}` %>">
+        <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
+        <span class="curName noOverflow"><%= cur.displayName %></span>
+      </label>
     </label>
     <% if (cur.disabled && ob.disabledMsg) { %>
     <span class="disabledMsg noOverflow clrTErr tx5b"><%= ob.disabledMsg %></span>
