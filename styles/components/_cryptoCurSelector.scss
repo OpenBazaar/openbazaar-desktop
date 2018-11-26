@@ -3,24 +3,26 @@
     display: flex;
     align-items: center;
     font-size: 1.5rem;
-    padding-right: 14px;
 
-    & > label {
+    .curControlWrapper {
       height: 42px;
       cursor: pointer;
-      padding-left: 14px;
+      padding: 0 14px;
       display: flex;
       flex-grow: 1;
       align-items: center;
+      overflow: hidden;
     }
 
     label {
       overflow: hidden;
+      pointer-events: none; // The label is for display only, the wrapper takes the click event.
     }
 
     input {
       cursor: pointer;
       flex-shrink: 0;
+      pointer-events: none; // The input is for display only, the wrapper takes the click event.
     }
 
     input:checked + label {
@@ -50,6 +52,7 @@
       // Center vertically
       position: relative;
       top: 0.05em;
+      flex-shrink: 0;
     }
 
     .curName {
@@ -61,6 +64,7 @@
 
     .disabledMsg {
       pointer-events: none;
+      padding-right: 14px;
     }
   }
 }
