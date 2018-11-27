@@ -560,7 +560,7 @@ export default class extends BaseVw {
           const fundedHeight = this.model.fundedBlockHeight;
           const blocksPerTimeout = (timeoutHours * 60 * 60 * 1000) / paymentCurData.blockTime;
           const blocksRemaining = fundedHeight ?
-            blocksPerTimeout - curHeight - fundedHeight :
+            blocksPerTimeout - (curHeight - fundedHeight) :
             blocksPerTimeout;
           const msRemaining = blocksRemaining * paymentCurData.blockTime;
 
