@@ -139,13 +139,15 @@ export default class extends baseVw {
           fragment: 'copyBlockData',
         }];
         const message = Object.keys(data).map(coin => {
-          const hash = app.polyglot.t('settings.advancedTab.server.blockBestHash',
-            { hash: data[coin].bestHash });
-          const height = app.polyglot.t('settings.advancedTab.server.blockHeight',
-            { height: data[coin].height });
+          const hash = data[coin].bestHash ||
+            app.polyglot.t('settings.advancedTab.server.blockHashUnknown');
+          const hashTxt = app.polyglot.t('settings.advancedTab.server.blockBestHash', { hash });
+          const height = data[coin].height ||
+            app.polyglot.t('settings.advancedTab.server.blockHeightUnknown');
+          const heightTxt = app.polyglot.t('settings.advancedTab.server.blockHeight', { height });
           return {
-            htmlString: `<p><b>${coin}</b><br>${hash}<br>${height}</p>`,
-            textString: `${coin}\n${hash}\n${height}`,
+            htmlString: `<p><b>${coin}</b><br>${hashTxt}<br>${heightTxt}</p>`,
+            textString: `${coin}\n${hashTxt}\n${heightTxt}`,
           };
         });
         const blockDataDialog = new Dialog({
