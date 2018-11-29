@@ -128,7 +128,6 @@ export default class extends BaseModal {
       initialState: {
         controlType: 'radio',
         currencies,
-        activeCurs: [currencies[0]],
         disabledCurs,
         sort: false,
       },
