@@ -139,7 +139,8 @@ export default class extends baseVw {
           fragment: 'copyBlockData',
         }];
         const message = Object.keys(data).map(coin => {
-          const hash = data[coin].bestHash ||
+          // If the block isn't available, a long string of zeroes is returned.
+          const hash = !/^0*$/.test(data[coin].bestHash) ? data[coin].bestHash :
             app.polyglot.t('settings.advancedTab.server.blockHashUnknown');
           const hashTxt = app.polyglot.t('settings.advancedTab.server.blockBestHash', { hash });
           const height = data[coin].height ||
