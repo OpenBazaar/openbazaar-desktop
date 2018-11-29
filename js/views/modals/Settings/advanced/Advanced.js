@@ -138,17 +138,26 @@ export default class extends baseVw {
           text: app.polyglot.t('settings.advancedTab.server.blockDataCopy'),
           fragment: 'copyBlockData',
         }];
-        const message = `<p><b>Best Hash:</b><br> ${data.bestHash}</p><p><b>Height:</b><br>` +
-          `${data.height}</p>`;
+        const message = Object.keys(data).map(coin => {
+          const hash = app.polyglot.t('settings.advancedTab.server.blockBestHash',
+            { hash: data[coin].bestHash });
+          const height = app.polyglot.t('settings.advancedTab.server.blockHeight',
+            { height: data[coin].height });
+          return {
+            htmlString: `<p><b>${coin}</b><br>${hash}<br>${height}</p>`,
+            textString: `${coin}\n${hash}\n${height}`,
+          };
+        });
         const blockDataDialog = new Dialog({
           title: app.polyglot.t('settings.advancedTab.server.blockDataTitle'),
-          message,
+          message: message.map(msg => msg.htmlString).join(''),
+          messageClass: 'tx6',
           buttons,
           showCloseButton: true,
           removeOnClose: true,
         }).render().open();
         this.listenTo(blockDataDialog, 'click-copyBlockData', () => {
-          clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
+          clipboard.writeText(message.map(msg => msg.textString).join('\n\n'));
         });
       });
   }
