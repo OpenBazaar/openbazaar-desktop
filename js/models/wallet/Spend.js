@@ -8,9 +8,17 @@ import { polyTFallback } from '../../utils/templateHelpers';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
+const getWalletSpendUrl = () => app.getServerUrl('wallet/spend/');
+const getOrderSpendUrl = () => app.getServerUrl('ob/orderspend/');
+
 class Spend extends BaseModel {
+  constructor(attrs, options = {}) {
+    super(attrs, options);
+    this.url = options.url || this.url;
+  }
+
   url() {
-    return app.getServerUrl('wallet/spend/');
+    return getWalletSpendUrl();
   }
 
   defaults() {
@@ -106,6 +114,16 @@ class Spend extends BaseModel {
         if (attrs.memo && typeof attrs.memo !== 'string') {
           addError('memo', 'If provided, the memo should be a string.');
         }
+
+        if (
+          this.url === getOrderSpendUrl() &&
+          (
+            typeof attrs.orderId !== 'string' ||
+            !attrs.orderId
+          )
+        ) {
+          addError('orderId', 'Please provide an orderId.');
+        }
       }
     }
 
@@ -156,7 +174,7 @@ export default Spend;
  * (address, amount and optionally currency, memo and feeLevel).
  * @returns {Object} The jqXhr representing the POST call to the server.
  */
-export function spend(fields) {
+export function _spend(fields, options = {}) {
   const attrs = {
     currency: app && app.settings && app.settings.get('localCurrency') || 'BTC',
     feeLevel: app &&
@@ -165,7 +183,7 @@ export function spend(fields) {
     ...fields,
   };
 
-  const spendModel = new Spend(attrs);
+  const spendModel = new Spend(attrs, options);
   const save = spendModel.save();
 
   if (!save) {
@@ -193,4 +211,12 @@ export function spend(fields) {
   }
 
   return save;
+}
+
+export function spend(fields) {
+  return _spend(fields, { url: getWalletSpendUrl() });
+}
+
+export function orderSpend(fields) {
+  return _spend(fields, { url: getOrderSpendUrl() });
 }

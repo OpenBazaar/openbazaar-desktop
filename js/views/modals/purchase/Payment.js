@@ -12,7 +12,7 @@ import BaseVw from '../../baseVw';
 import SpendConfirmBox from '../wallet/SpendConfirmBox';
 import qr from 'qr-encode';
 import { clipboard } from 'electron';
-import { spend } from '../../../models/wallet/Spend';
+import { orderSpend } from '../../../models/wallet/Spend';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import { launchWallet } from '../../../utils/modalManager';
 import {
@@ -152,7 +152,8 @@ export default class extends BaseVw {
     startPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin);
 
     try {
-      spend({
+      orderSpend({
+        orderId: this.orderId,
         address: this.paymentAddress,
         amount: this.balanceRemaining,
         currency,
