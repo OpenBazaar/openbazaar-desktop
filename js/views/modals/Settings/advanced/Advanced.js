@@ -138,17 +138,29 @@ export default class extends baseVw {
           text: app.polyglot.t('settings.advancedTab.server.blockDataCopy'),
           fragment: 'copyBlockData',
         }];
-        const message = `<p><b>Best Hash:</b><br> ${data.bestHash}</p><p><b>Height:</b><br>` +
-          `${data.height}</p>`;
+        const message = Object.keys(data).map(coin => {
+          // If the block isn't available, a long string of zeroes is returned.
+          const hash = !/^0*$/.test(data[coin].bestHash) ? data[coin].bestHash :
+            app.polyglot.t('settings.advancedTab.server.blockHashUnknown');
+          const hashTxt = app.polyglot.t('settings.advancedTab.server.blockBestHash', { hash });
+          const height = data[coin].height ||
+            app.polyglot.t('settings.advancedTab.server.blockHeightUnknown');
+          const heightTxt = app.polyglot.t('settings.advancedTab.server.blockHeight', { height });
+          return {
+            htmlString: `<p><b>${coin}</b><br>${hashTxt}<br>${heightTxt}</p>`,
+            textString: `${coin}\n${hashTxt}\n${heightTxt}`,
+          };
+        });
         const blockDataDialog = new Dialog({
           title: app.polyglot.t('settings.advancedTab.server.blockDataTitle'),
-          message,
+          message: message.map(msg => msg.htmlString).join(''),
+          messageClass: 'tx6',
           buttons,
           showCloseButton: true,
           removeOnClose: true,
         }).render().open();
         this.listenTo(blockDataDialog, 'click-copyBlockData', () => {
-          clipboard.writeText(`Best Hash: ${data.bestHash} Height: ${data.height}`);
+          clipboard.writeText(message.map(msg => msg.textString).join('\n\n'));
         });
       });
   }
