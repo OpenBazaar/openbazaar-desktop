@@ -47,7 +47,7 @@ class Spend extends BaseModel {
     return cryptoAmount;
   }
 
-  validate(attrs, options) {
+  validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
