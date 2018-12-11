@@ -77,10 +77,6 @@ export default class baseVw extends View {
         }
       }
 
-      if (field.type === 'checkbox') {
-        val = $(field).is(':checked');
-      }
-
       const name = $field.attr('name');
 
       if (name.indexOf('[') !== -1) {
@@ -91,6 +87,9 @@ export default class baseVw extends View {
       } else if (name.indexOf('.') !== -1) {
         // handle nested model
         setDeepValue(data, name, val);
+      } else if (field.type === 'checkbox') {
+        if (!Array.isArray(data[name])) data[name] = [];
+        if ($(field).prop('checked')) data[name].push(val);
       } else {
         data[name] = val;
       }

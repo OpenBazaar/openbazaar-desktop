@@ -94,7 +94,7 @@
                   });
                 %>
                 </div>
-              <% } %>
+              <% } else { console.log(`Unrecognized filter type: ${val.type}`); } %>
             </div>
           <% }); %>
         </div>

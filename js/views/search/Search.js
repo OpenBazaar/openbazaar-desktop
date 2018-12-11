@@ -2,21 +2,22 @@ import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
 import sanitizeHtml from 'sanitize-html';
-import baseVw from '../baseVw';
-import loadTemplate from '../../utils/loadTemplate';
-import app from '../../app';
-import { openSimpleMessage } from '../modals/SimpleMessage';
-import Dialog from '../modals/Dialog';
-import Results from './Results';
-import ResultsCol from '../../collections/Results';
-import Providers from './SearchProviders';
-import ProviderMd from '../../models/search/SearchProvider';
-import Suggestions from './Suggestions';
-import defaultSearchProviders from '../../data/defaultSearchProviders';
 import '../../lib/select2';
+import app from '../../app';
+import baseVw from '../baseVw';
+import Results from './Results';
+import Providers from './SearchProviders';
+import Suggestions from './Suggestions';
+import Dialog from '../modals/Dialog';
+import { openSimpleMessage } from '../modals/SimpleMessage';
+import ResultsCol from '../../collections/Results';
+import ProviderMd from '../../models/search/SearchProvider';
+import { supportedWalletCurs } from '../../data/walletCurrencies';
+import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
+import { getCurrentConnection } from '../../utils/serverConnect';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -110,14 +111,7 @@ export default class extends baseVw {
     // if not passed in, set the user's values for nsfw and the currency
     this.defaultParams = {
       nsfw: String(app.settings.get('showNsfw')),
-      // TODO
-      // TODO
-      // This is temporary. This should be updated to send a list based on
-      // supportedWalletCurs(). And, search should update the filter
-      // to be a checkbox instead of a radio
-      // TODO
-      // TODO
-      acceptedCurrencies: 'BTC',
+      acceptedCurrencies: supportedWalletCurs(),
     };
 
     this.filterParams = {
@@ -185,7 +179,7 @@ export default class extends baseVw {
     // keep any parameters that aren't present in the form on the page
     let filters = { ...this.defaultParams };
     if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
-    filters = filters ? `&${$.param(filters)}` : '';
+    filters = filters ? `&${$.param(filters, true)}` : '';
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     this.callSearchProvider(newURL);
   }
