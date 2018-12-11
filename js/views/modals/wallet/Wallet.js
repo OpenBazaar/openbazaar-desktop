@@ -51,7 +51,7 @@ export default class extends BaseModal {
       initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin)) || null;
     }
 
-    // If at this point the initialActiveCoin and consequentally this.activeCoin
+    // If at this point the initialActiveCoin and consequently this.activeCoin
     // are null, it indicates that none of the wallet currencies are supported by
     // this client.
 
@@ -80,7 +80,7 @@ export default class extends BaseModal {
       active: coin === opts.initialNavCoin,
       code: coin,
       name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
-      balance: coin.confirmed,
+      balance: app.walletBalances.get(coin).get('confirmed'),
       clientSupported: isSupportedWalletCur(coin),
     }));
 
