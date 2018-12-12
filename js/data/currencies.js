@@ -690,7 +690,7 @@ function getCurrencies(options = {}) {
 
   const walletCurs = (opts.includeWalletCurs ? supportedWalletCurs() : [])
     .map(cur => {
-      const name = app.polylgot.t(`cryptoCurrencies.${cur}`, { _: cur });
+      const name = app.polyglot.t(`cryptoCurrencies.${cur}`, { _: cur });
 
       return {
         ...(getCryptoCurByCode(cur)),
