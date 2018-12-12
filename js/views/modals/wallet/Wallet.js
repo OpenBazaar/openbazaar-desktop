@@ -80,7 +80,7 @@ export default class extends BaseModal {
       active: coin === opts.initialNavCoin,
       code: coin,
       name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
-      balance: app.walletBalances.get(coin).get('confirmed'),
+      balance: app.walletBalances.get(coin) ? app.walletBalances.get(coin).get('confirmed') : 0,
       clientSupported: isSupportedWalletCur(coin),
     }));
 
