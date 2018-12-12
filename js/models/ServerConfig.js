@@ -41,19 +41,19 @@ export default class extends BaseModel {
   get walletCurrencyToDataDir() {
     return {
       BTC: {
-        win32: '/path/to/btc-win',
-        darwin: '/path/to/btc-osx',
-        linux: '/path/to/btc-win',
+        win32: '/OpenBazaar2.0',
+        darwin: '/Library/Application Support/OpenBazaar2.0',
+        linux: '/.openbazaar2.0',
       },
       BCH: {
-        win32: '/path/to/bch-win',
-        darwin: '/path/to/bch-osx',
-        linux: '/path/to/bch-linux',
+        win32: '/OpenBazaar2.0-bitcoincash',
+        darwin: '/Library/Application Support/OpenBazaar2.0-bitcoincash',
+        linux: '/.openbazaar2.0-bitcoincash',
       },
       ZEC: {
-        win32: '/path/to/zec-win',
-        darwin: '/path/to/zec-osx',
-        linux: '/path/to/zec-linux',
+        win32: '/OpenBazaar2.0-zcash',
+        darwin: '/Library/Application Support/OpenBazaar2.0-zcash',
+        linux: '/.openbazaar2.0-zcash',
       },
     };
   }
@@ -217,7 +217,7 @@ export default class extends BaseModel {
       response.walletCurrency &&
       !response.dataDir
     ) {
-      const walletCurPaths = this.walletCurrencyToDataDir()[response.walletCurrency];
+      const walletCurPaths = this.walletCurrencyToDataDir[response.walletCurrency];
 
       if (walletCurPaths) {
         const dataDir = walletCurPaths[platform()];

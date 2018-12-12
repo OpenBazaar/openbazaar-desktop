@@ -84,11 +84,14 @@ if (handleStartupEvent()) {
   console.log('OpenBazaar started on Windows...');
 }
 
-const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
-const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
-  'openbazaard' : 'openbazaard.exe';
+// const serverPath = `${__dirname}${path.sep}..${path.sep}openbazaar-go${path.sep}`;
+// const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
+//   'openbazaard' : 'openbazaard.exe';
+const serverPath = `${__dirname}${path.sep}..${path.sep}test-server${path.sep}`;
+const serverFilename = 'openbazaard';
 const isBundledApp = fs.existsSync(serverPath + serverFilename);
 global.isBundledApp = isBundledApp;
+console.log('AM I BUNDLED ======>', isBundledApp);
 let localServer;
 
 if (isBundledApp) {
