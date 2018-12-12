@@ -51,7 +51,7 @@ export default class extends BaseModal {
       initialActiveCoin = navCoins.find(coin => isSupportedWalletCur(coin)) || null;
     }
 
-    // If at this point the initialActiveCoin and consequentally this.activeCoin
+    // If at this point the initialActiveCoin and consequently this.activeCoin
     // are null, it indicates that none of the wallet currencies are supported by
     // this client.
 
@@ -76,13 +76,16 @@ export default class extends BaseModal {
     // some of it we'll manage so as you nav from coin to coin, certain state is maintained.
     this.transactionsState = {};
 
-    this.navCoins = navCoins.map(coin => ({
-      active: coin === opts.initialNavCoin,
-      code: coin,
-      name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
-      balance: coin.confirmed,
-      clientSupported: isSupportedWalletCur(coin),
-    }));
+    this.navCoins = navCoins.map(coin => {
+      const balanceMd = app.walletBalances.get(coin);
+      return {
+        active: coin === opts.initialNavCoin,
+        code: coin,
+        name: app.polyglot.t(`cryptoCurrencies.${coin}`, { _: coin }),
+        balance: balanceMd && balanceMd.get('confirmed'),
+        clientSupported: isSupportedWalletCur(coin),
+      };
+    });
 
     this.coinNav = this.createChild(CoinNav, {
       initialState: {
