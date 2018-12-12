@@ -31,7 +31,7 @@
   code: mnCode,
   className: 'flexNoShrink',
 }) %>
-<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyTFallback(`cryptoCurrencies.${mnCode}`, mnCode) %></div>
+<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyT(`cryptoCurrencies.${mnCode}`, { _: mnCode }) %></div>
 <div class="<%= ob.balance > 0 ? 'clrTEm' : '' %> flexNoShrink balanceText">
   <% if (ob.clientSupported) { %>
     <div class="flexVCent flexHRight"><%= amount %></div>
