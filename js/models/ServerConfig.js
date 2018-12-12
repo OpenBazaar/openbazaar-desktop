@@ -5,6 +5,7 @@
  */
 
 import { remote } from 'electron';
+import { platform } from 'os';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
 import app from '../app';
@@ -37,6 +38,26 @@ export default class extends BaseModel {
     };
   }
 
+  get walletCurrencyToDataDir() {
+    return {
+      BTC: {
+        win32: '/path/to/btc-win',
+        darwin: '/path/to/btc-osx',
+        linux: '/path/to/btc-win',
+      },
+      BCH: {
+        win32: '/path/to/bch-win',
+        darwin: '/path/to/bch-osx',
+        linux: '/path/to/bch-linux',
+      },
+      ZEC: {
+        win32: '/path/to/zec-win',
+        darwin: '/path/to/zec-osx',
+        linux: '/path/to/zec-linux',
+      },
+    };
+  }
+
   set(key, val, options = {}) {
     // Handle both `"key", value` and `{key: value}` -style arguments.
     let attrs;
@@ -55,7 +76,13 @@ export default class extends BaseModel {
     };
 
     if (fullAttrs.builtIn) {
-      attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
+      if (fullAttrs.walletCurrency) {
+        attrs.name = attrs.name ||
+          app.polyglot.t('connectionManagement.builtInServerNameWithCur',
+            { cur: fullAttrs.walletCurrency });
+      } else {
+        attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
+      }
     }
 
     return super.set(attrs, opts);
@@ -182,5 +209,22 @@ export default class extends BaseModel {
   isTorPwRequired() {
     return ['win', 'darwin'].indexOf(remote.process.platform) > -1 &&
       this.isLocalServer() && remote.getGlobal('isBundledApp');
+  }
+
+  parse(response) {
+    if (
+      response.builtIn &&
+      response.walletCurrency &&
+      !response.dataDir
+    ) {
+      const walletCurPaths = this.walletCurrencyToDataDir()[response.walletCurrency];
+
+      if (walletCurPaths) {
+        const dataDir = walletCurPaths[platform()];
+        if (dataDir) response.dataDir = dataDir;
+      }
+    }
+
+    return response;
   }
 }

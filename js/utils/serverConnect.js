@@ -305,12 +305,33 @@ export default function connect(server, options = {}) {
     // and mucking with localStorage and / or fudging the source for the app to masquerade
     // as a bundled app.
     throw new Error('A configuration for a built-in server should only be used on ' +
-      ' the bundled app.');
+      'the bundled app.');
+  }
+
+  const newServerDataDir = server.get('dataDir');
+
+  let commandLineArgs = ['-v'];
+
+  if (server.get('useTor')) commandLineArgs.push('--tor');
+  const torPw = server.get('torPassword');
+  if (torPw) {
+    commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
+  }
+
+  if (newServerDataDir && typeof newServerDataDir === 'string') {
+    commandLineArgs = commandLineArgs.concat(['-d', newServerDataDir]);
   }
 
   // If we're not connecting to the local bundled server or it's running with incompatible
   // command line arguments, let's ensure it's stopped.
-  if (localServer && localServer.isRunning && !server.get('builtIn')) {
+  if (
+    localServer &&
+    localServer.isRunning &&
+    (
+      !server.get('builtIn') ||
+      commandLineArgs.join() !== localServer.lastStartCommandLineArgs.join()
+    )
+  ) {
     deferred.notify({ status: 'stopping-local-server' });
     localServer.stop();
 
@@ -378,20 +399,6 @@ export default function connect(server, options = {}) {
       // This is called when either the client Tor proxy has been set or once we've determined
       // it's not needed.
       const onClientTorProxyChecked = () => {
-        // This flag means that we want the server to be running in a certain tor mode
-        // (tor on or tor off), buts it's already running in the opposite mode.
-        const serverRunningIncompatibleWithTor = server.get('builtIn') &&
-          localServer.isRunning && (server.get('useTor') !==
-            (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
-
-        if (serverRunningIncompatibleWithTor) {
-          // The idea is you will probably be starting the server with multiple attempts. So
-          // if we stop the server now, on a subsequent attempt we'll re-start it in the
-          // desired mode.
-          localServer.stop();
-          innerConnectReject('incompatible-tor-mode');
-        }
-
         if (server.get('builtIn') && !localServer.isRunning) {
           const onTorChecked = () => {
             const onLocalServerStart = () => {
@@ -407,13 +414,6 @@ export default function connect(server, options = {}) {
                 });
             };
 
-            let commandLineArgs = ['-v'];
-
-            if (server.get('useTor')) commandLineArgs.push('--tor');
-            const torPw = server.get('torPassword');
-            if (torPw) {
-              commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
-            }
             innerConnectNotify('starting-local-server');
             localServer.start(commandLineArgs);
 

@@ -813,6 +813,7 @@
   },
   "connectionManagement": {
     "builtInServerName": "Built-in Server",
+    "builtInServerNameWithCur": "Built-in Server - %{cur}",
     "statusBar": {
       "errorPreface": "Error:",
       "needHelpLink": "Need help?",
