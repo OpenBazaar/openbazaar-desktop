@@ -746,8 +746,6 @@ app.serverConfigs.fetch().done(() => {
     }
   } else {
     let activeServer = app.serverConfigs.activeServer;
-    console.log('active beaver');
-    window.beaver = activeServer;
 
     if (activeServer) {
       sendMainActiveServer(activeServer);
