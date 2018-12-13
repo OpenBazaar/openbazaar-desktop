@@ -5,7 +5,6 @@
  */
 
 import { remote } from 'electron';
-import { platform } from 'os';
 import LocalStorageSync from '../utils/lib/backboneLocalStorage';
 import is from 'is_js';
 import app from '../app';
@@ -36,36 +35,6 @@ export default class extends BaseModel {
       torPw: '',
       lastBlockchainResync: {},
     };
-  }
-
-  set(key, val, options = {}) {
-    // Handle both `"key", value` and `{key: value}` -style arguments.
-    let attrs;
-    let opts = options;
-
-    if (typeof key === 'object') {
-      attrs = key;
-      opts = val || {};
-    } else {
-      (attrs = {})[key] = val;
-    }
-
-    const fullAttrs = {
-      ...this.toJSON(),
-      ...attrs,
-    };
-
-    if (fullAttrs.builtIn) {
-      if (fullAttrs.walletCurrency) {
-        attrs.name = attrs.name ||
-          app.polyglot.t('connectionManagement.builtInServerNameWithCur',
-            { cur: fullAttrs.walletCurrency });
-      } else {
-        attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
-      }
-    }
-
-    return super.set(attrs, opts);
   }
 
   validate(attrs) {
@@ -190,21 +159,4 @@ export default class extends BaseModel {
     return ['win', 'darwin'].indexOf(remote.process.platform) > -1 &&
       this.isLocalServer() && remote.getGlobal('isBundledApp');
   }
-
-  // parse(response) {
-  //   if (
-  //     response.builtIn &&
-  //     response.walletCurrency &&
-  //     !response.dataDir
-  //   ) {
-  //     const walletCurPaths = this.walletCurrencyToDataDir[response.walletCurrency];
-
-  //     if (walletCurPaths) {
-  //       const dataDir = walletCurPaths[platform()];
-  //       if (dataDir) response.dataDir = dataDir;
-  //     }
-  //   }
-
-  //   return response;
-  // }
 }
