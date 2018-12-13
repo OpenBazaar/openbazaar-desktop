@@ -389,10 +389,24 @@ export default function connect(server, options = {}) {
     let willWaitForLocalServerStop = false;
 
     if (server.get('builtIn') && localServer.isStopping) {
-      willWaitForLocalServerStop = true;
-      innerConnectNotify('waiting-for-local-server-stop');
-      innerLog('Waiting for the local server started with ' +
-        `"${localServer.lastStartCommandLineArgs}" to stop.`);
+      const dIndex = localServer.lastStartCommandLineArgs
+        .indexOf('-d');
+
+      if (dIndex !== -1) {
+        const dataDir = localServer.lastStartCommandLineArgs[dIndex + 1];
+
+        if (dataDir) {
+          // This secenario will only play out if you have multiple built nodes,
+          // which is only possible if you had them migrated from pre-multiwallet
+          // nodes.
+          willWaitForLocalServerStop = true;
+          const stoppingServer = app.serverConfigs
+            .findWhere({ dataDir });
+          innerConnectNotify('waiting-for-local-server-stop', { stoppingServer });
+          innerLog('Waiting for the local server started with ' +
+            `"${localServer.lastStartCommandLineArgs}" to stop.`);
+        }
+      }
     } else {
       if (willWaitForLocalServerStop) innerConnectNotify('local-server-stopped');
 

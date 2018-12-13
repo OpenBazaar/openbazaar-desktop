@@ -88,7 +88,8 @@ if (handleStartupEvent()) {
 // const serverFilename = process.platform === 'darwin' || process.platform === 'linux' ?
 //   'openbazaard' : 'openbazaard.exe';
 const serverPath = `${__dirname}${path.sep}..${path.sep}test-server${path.sep}`;
-const serverFilename = 'openbazaard';
+const serverFilename = 'openbazaar-go';
+
 const isBundledApp = fs.existsSync(serverPath + serverFilename);
 global.isBundledApp = isBundledApp;
 console.log('AM I BUNDLED ======>', isBundledApp);

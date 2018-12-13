@@ -38,26 +38,6 @@ export default class extends BaseModel {
     };
   }
 
-  get walletCurrencyToDataDir() {
-    return {
-      BTC: {
-        win32: '/OpenBazaar2.0',
-        darwin: '/Library/Application Support/OpenBazaar2.0',
-        linux: '/.openbazaar2.0',
-      },
-      BCH: {
-        win32: '/OpenBazaar2.0-bitcoincash',
-        darwin: '/Library/Application Support/OpenBazaar2.0-bitcoincash',
-        linux: '/.openbazaar2.0-bitcoincash',
-      },
-      ZEC: {
-        win32: '/OpenBazaar2.0-zcash',
-        darwin: '/Library/Application Support/OpenBazaar2.0-zcash',
-        linux: '/.openbazaar2.0-zcash',
-      },
-    };
-  }
-
   set(key, val, options = {}) {
     // Handle both `"key", value` and `{key: value}` -style arguments.
     let attrs;
@@ -211,20 +191,20 @@ export default class extends BaseModel {
       this.isLocalServer() && remote.getGlobal('isBundledApp');
   }
 
-  parse(response) {
-    if (
-      response.builtIn &&
-      response.walletCurrency &&
-      !response.dataDir
-    ) {
-      const walletCurPaths = this.walletCurrencyToDataDir[response.walletCurrency];
+  // parse(response) {
+  //   if (
+  //     response.builtIn &&
+  //     response.walletCurrency &&
+  //     !response.dataDir
+  //   ) {
+  //     const walletCurPaths = this.walletCurrencyToDataDir[response.walletCurrency];
 
-      if (walletCurPaths) {
-        const dataDir = walletCurPaths[platform()];
-        if (dataDir) response.dataDir = dataDir;
-      }
-    }
+  //     if (walletCurPaths) {
+  //       const dataDir = walletCurPaths[platform()];
+  //       if (dataDir) response.dataDir = dataDir;
+  //     }
+  //   }
 
-    return response;
-  }
+  //   return response;
+  // }
 }
