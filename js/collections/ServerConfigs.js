@@ -140,8 +140,6 @@ export default class extends Collection {
       }
     });
 
-    console.log(`the builtIn count is ${builtInCount}`);
-
     // If there is just one built-in server, we'll ensure it has the correct name. If there
     // are multiple, which means they are legazy ones for different walletCurrencies, we'll
     // leave them be so the name still includes the currency and the user could still distinguish

@@ -719,17 +719,24 @@ app.serverConfigs.fetch().done(() => {
     if (isBundled) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
-      new ServerConfig({
+      const serverConfig = new ServerConfig({
         builtIn: true,
-      }).save({}, {
+        name: app.polyglot.t('connectionManagement.builtInServerName'),
+      });
+
+      serverConfig.save({}, {
         success: md => {
           setTimeout(() => {
-            app.serverConfigs.add(md);
-            app.serverConfigs.activeServer = md;
+            app.serverConfigs.activeServer = app.serverConfigs.add(md);
             connectToServer();
           });
         },
       });
+
+      if (serverConfig.validationError) {
+        console.error('There was an error creating the builtIn server config:');
+        console.dir(serverConfig.validationError);
+      }
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {
@@ -739,6 +746,8 @@ app.serverConfigs.fetch().done(() => {
     }
   } else {
     let activeServer = app.serverConfigs.activeServer;
+    console.log('active beaver');
+    window.beaver = activeServer;
 
     if (activeServer) {
       sendMainActiveServer(activeServer);
