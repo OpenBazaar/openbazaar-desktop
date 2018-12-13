@@ -4,7 +4,6 @@ import {
   isSupportedWalletCur,
   ensureMainnetCode,
 } from '../../data/walletCurrencies';
-import { polyTFallback } from '../../utils/templateHelpers';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -73,8 +72,12 @@ class Spend extends BaseModel {
           addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
         } else if (typeof walletCur.isValidAddress === 'function' &&
           !walletCur.isValidAddress(attrs.address)) {
-          addError('address', app.polyglot.t('spendModelErrors.invalidAddress',
-            { cur: polyTFallback(`cryptoCurrencies.${walletCurCode}`, walletCurCode) }));
+          const cur = app.polylgot.t(
+            `cryptoCurrencies.${walletCurCode}`,
+            { _: walletCurCode }
+          );
+
+          addError('address', app.polyglot.t('spendModelErrors.invalidAddress', { cur }));
         }
 
         let exchangeRatesAvailable = false;

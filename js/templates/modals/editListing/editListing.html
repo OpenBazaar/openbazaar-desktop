@@ -122,8 +122,8 @@
                     const helperCryptoCurCode = supportedWalletCurs.includes('BTC') ?
                       'BTC' : supportedWalletCurs.sort()[0] || 'EUR';
                     const helperCryptoCurName =
-                      ob.polyTFallback(`cryptoCurrencies.${helperCryptoCurCode}`,
-                        ob.polyTFallback(`currencies.${helperCryptoCurCode}`, helperCryptoCurCode));
+                      ob.polyT(`cryptoCurrencies.${helperCryptoCurCode}`,
+                        ob.polyT(`currencies.${helperCryptoCurCode}`, { _: helperCryptoCurCode }));
                   %>
                   <div class="clrT2 txSm helper"><%=
                   ob.polyT('editListing.helperPrice', { cur: helperCryptoCurName }) %></div>

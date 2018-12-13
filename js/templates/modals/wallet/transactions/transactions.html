@@ -8,6 +8,6 @@
 <% if (!ob.transactions.length && !ob.isFetching && !ob.fetchFailed) { %>
   <div class="center txCtr tx5 clrT2">
     <%= ob.polyT('wallet.transactions.noTransactionsPlaceholder',
-      { coinType: ob.polyTFallback(`cryptoCurrencies.${ob.coinType}`, ob.coinType) }) %>
+      { coinType: ob.polyT(`cryptoCurrencies.${ob.coinType}`, { _: ob.coinType }) }) %>
   </div>
 <% } %>

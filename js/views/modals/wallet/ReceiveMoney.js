@@ -1,7 +1,7 @@
 import { clipboard } from 'electron';
 import qr from 'qr-encode';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
-import { polyTFallback } from '../../../utils/templateHelpers';
+import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
@@ -67,7 +67,7 @@ export default class extends baseVw {
       this.$el.html(t({
         ...this._state,
         qrDataUri,
-        coinName: polyTFallback(`cryptoCurrencies.${coinType}`, coinType),
+        coinName: app.polyglot.t(`cryptoCurrencies.${coinType}`, { _: coinType }),
       }));
     });
 

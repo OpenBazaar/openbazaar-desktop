@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import loadTemplate from '../../utils/loadTemplate';
-import { polyTFallback } from '../../utils/templateHelpers';
 import { ensureMainnetCode } from '../../data/walletCurrencies';
+import app from '../../app';
 import baseVw from '../baseVw';
 
 export default class extends baseVw {
@@ -44,7 +44,7 @@ export default class extends baseVw {
       processedState.processedCurs = processedState.currencies
         .map(cur => {
           const code = ensureMainnetCode(cur);
-          const displayName = polyTFallback(`cryptoCurrencies.${code}`, cur);
+          const displayName = app.polyglot.t(`cryptoCurrencies.${code}`, { _: cur });
 
           return {
             code,
