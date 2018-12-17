@@ -87,23 +87,22 @@ export default class baseVw extends View {
         }
       }
 
-      const name = $field.attr('name');
+      let name = $field.attr('name');
       const isCheckboxGroup = field.type === 'checkbox' &&
         name.endsWith('[]');
+      if (isCheckboxGroup) name = name.slice(0, name.length - 2);
 
       if (name.indexOf('.') !== -1) {
         let deepVal = val;
-        let deepName = name;
 
         if (isCheckboxGroup) {
           deepVal = this._getCheckboxGroupData($formFields.filter(`[name="${name}"]`));
-          deepName = name.slice(0, name.length - 2);
         } else if (field.type === 'checkbox') {
           deepVal = field.checked;
         }
 
         // handle nested model
-        setDeepValue(data, deepName, deepVal);
+        setDeepValue(data, name, deepVal);
       } else if (isCheckboxGroup) {
         data[name] = this._getCheckboxGroupData($formFields.filter(`[name="${name}"]`));
       } else if (field.type === 'checkbox') {
