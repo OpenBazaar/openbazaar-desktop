@@ -13,6 +13,16 @@ export default class baseVw extends View {
     this.setState((options.initialState || {}), { renderOnChange: false });
   }
 
+  _getCheckboxGroupData($fields) {
+    const data = [];
+
+    $fields.each((index, field) => {
+      if (field.checked) data.push(field.value);
+    });
+
+    return data;
+  }
+
   /**
    * This is a way to handle most common scenarios of getting data
    * from your form into a JS object. This function is very much a
@@ -78,18 +88,28 @@ export default class baseVw extends View {
       }
 
       const name = $field.attr('name');
+      const isCheckboxGroup = field.type === 'checkbox' &&
+        name.endsWith('[]');
+      const checkboxGroupName = name.slice(0, name.length - 2);
 
-      if (name.indexOf('[') !== -1) {
-        // handle nested collection
-        // for now not handling nested collection, please
-        // manage manually
-        data[name] = val;
-      } else if (name.indexOf('.') !== -1) {
+      if (name.indexOf('.') !== -1) {
+        let deepVal = val;
+        let deepName = name;
+
+        if (isCheckboxGroup) {
+          deepVal = this._getCheckboxGroupData($formFields.filter(`[name="${name}"]`));
+          deepName = checkboxGroupName;
+        } else if (field.type === 'checkbox') {
+          deepVal = field.checked;
+        }
+
         // handle nested model
-        setDeepValue(data, name, val);
+        setDeepValue(data, deepName, deepVal);
+      } else if (isCheckboxGroup) {
+        data[checkboxGroupName] =
+          this._getCheckboxGroupData($formFields.filter(`[name="${name}"]`));
       } else if (field.type === 'checkbox') {
-        if (!Array.isArray(data[name])) data[name] = [];
-        if ($(field).prop('checked')) data[name].push(val);
+        data[name] = field.checked;
       } else {
         data[name] = val;
       }
