@@ -37,30 +37,6 @@ export default class extends BaseModel {
     };
   }
 
-  set(key, val, options = {}) {
-    // Handle both `"key", value` and `{key: value}` -style arguments.
-    let attrs;
-    let opts = options;
-
-    if (typeof key === 'object') {
-      attrs = key;
-      opts = val || {};
-    } else {
-      (attrs = {})[key] = val;
-    }
-
-    const fullAttrs = {
-      ...this.toJSON(),
-      ...attrs,
-    };
-
-    if (fullAttrs.builtIn) {
-      attrs.name = app.polyglot.t('connectionManagement.builtInServerName');
-    }
-
-    return super.set(attrs, opts);
-  }
-
   validate(attrs) {
     const errObj = {};
     const addError = (fieldName, error) => {
