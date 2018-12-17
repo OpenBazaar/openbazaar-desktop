@@ -82,6 +82,7 @@
                 <div class="flexCol checkboxCol">
                 <%
                   const anyChecked = val.options.filter(opt => opt.checked);
+                  const keyPostfix = val.options.length > 1 ? '[]' : '';
                   val.options.forEach((option, index) => {
                     let checked = '';
                     // if none of the checkboxes have a checked value, use the default values
@@ -89,7 +90,7 @@
                       checked = 'checked';
                     }
                     var parsedLabel = ob.parseEmojis(option.label);
-                    print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}" value="${option.value}">`);
+                    print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}${keyPostfix}" value="${option.value}">`);
                     print(`<label for="${key + index}"><span>${parsedLabel}</span></label>`);
                   });
                 %>
