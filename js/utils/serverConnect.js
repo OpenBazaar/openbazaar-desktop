@@ -396,7 +396,7 @@ export default function connect(server, options = {}) {
         const dataDir = localServer.lastStartCommandLineArgs[dIndex + 1];
 
         if (dataDir) {
-          // This secenario will only play out if you have multiple built nodes,
+          // This scenario will only play out if you have multiple built-in nodes,
           // which is only possible if you had them migrated from pre-multiwallet
           // nodes.
           willWaitForLocalServerStop = true;
