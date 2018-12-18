@@ -65,7 +65,7 @@ case "$TRAVIS_OS_NAME" in
     npm install -g --save-dev electron-installer-redhat --silent
 
     # Install libgconf2-4
-    sudo apt-get install libgconf2-4
+    sudo apt-get install libgconf2-4 libgconf-2-4 
 
     # Install rpmbuild
     sudo apt-get install rpm
