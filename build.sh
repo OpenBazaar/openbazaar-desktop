@@ -65,7 +65,7 @@ case "$TRAVIS_OS_NAME" in
     npm install -g --save-dev electron-installer-redhat --silent
 
     # Install libgconf2-4
-    sudo apt-get install libgconf2-4
+    sudo apt-get install libgconf2-4 libgconf-2-4 
 
     # Install rpmbuild
     sudo apt-get install rpm
@@ -86,7 +86,7 @@ case "$TRAVIS_OS_NAME" in
     electron-packager . ${APPNAME} --platform=linux --arch=ia32 --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
 
     echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/ 
+    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
     cp -rf temp/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
     mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
     rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
