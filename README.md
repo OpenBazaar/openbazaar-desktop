@@ -4,7 +4,7 @@ This is the reference client for the OpenBazaar network. It is an interface for 
 
 For full installable versions of the OpenBazaar app, with the server and client bundled together, go to [the OpenBazaar download page.](https://www.openbazaar.org/download/)
 
-[![Build Status](https://travis-ci.org/OpenBazaar/openbazaar-desktop.svg)](https://travis-ci.org/OpenBazaar/openbazaar-desktop)
+[![Build Status](https://travis-ci.org/OpenBazaar/openbazaar-desktop.svg?branch=master)](https://travis-ci.org/OpenBazaar/openbazaar-desktop)
 
 ## Getting Started
 
