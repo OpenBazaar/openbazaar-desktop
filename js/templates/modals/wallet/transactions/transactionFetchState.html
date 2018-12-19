@@ -3,8 +3,8 @@
     <%= ob.spinner({ className: 'spinnerMd' }) %>
   </div>
 <% } else if (ob.fetchFailed) { %>
-    <div class="<%= ob.transactionsPresent ? '' : 'center' %> txCtr">
-      <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>">Unable to obtain your transactions list.</div>
+    <div class="<%= ob.transactionsPresent ? '' : 'center' %> txCtr tx5">
+      <div class="txB <% print(ob.initialFetchErrorMessage ? 'rowTn' : 'row') %>"><%= ob.polyT('wallet.transactions.fetchFailedMsg') %></div>
       <% if (ob.fetchErrorMessage) { %>
         <div class="row"><%= ob.fetchErrorMessage %></div>
       <% } %>

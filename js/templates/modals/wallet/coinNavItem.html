@@ -1,0 +1,41 @@
+<%
+  const mnCode = ob.crypto.ensureMainnetCode(ob.code);
+  let convertedCurrency;
+
+  try {
+    convertedCurrency = ob.currencyMod.convertCurrency(ob.balance, mnCode, ob.displayCur);
+  } catch (e) {
+    if (e instanceof ob.NoExchangeRateDataError) {
+     // pass - we'll just show the unconverted amount if the exchange rate data isn't
+     // available
+    }
+  }
+
+  let formattedBalance = '';
+
+  if (typeof ob.balance === 'number') {
+    formattedBalance = convertedCurrency === undefined ?
+      ob.currencyMod.formatCurrency(ob.balance, mnCode, { maxDisplayDecimals: 4 }) :
+      ob.currencyMod.formatCurrency(convertedCurrency, ob.displayCur,
+        { maxDisplayDecimals: ob.currencyMod.isFiatCur(ob.displayCur) ? 2 : 4 });
+  }
+
+  const balanceText = ob.balance > 0 ?
+    `<span class="clrTEm txB">${formattedBalance}</span>` : formattedBalance;
+  const amount = ob.active ?
+    '<i class="ion-arrow-right-c clrT2 activeBalanceIcon"></i>' :
+    balanceText;
+%>
+
+<%= ob.crypto.cryptoIcon({
+  code: mnCode,
+  className: 'flexNoShrink',
+}) %>
+<div class="flexExpand lineHeight1 <%= ob.active ? 'clrT' : '' %> coinName"><%= ob.polyT(`cryptoCurrencies.${mnCode}`, { _: mnCode }) %></div>
+<div class="<%= ob.balance > 0 ? 'clrTEm' : '' %> flexNoShrink balanceText">
+  <% if (ob.clientSupported) { %>
+    <div class="flexVCent flexHRight"><%= amount %></div>
+  <% } else { %>
+    <span class="toolTip" data-tip="<%= ob.polyT('wallet.coinNav.unsupportedCurTip') %>"><i class="ion-help-circled"></i></span>
+  <% } %>
+</div>

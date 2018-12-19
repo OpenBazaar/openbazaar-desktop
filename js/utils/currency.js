@@ -4,11 +4,12 @@ import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
-import { getCurrencyByCode } from '../data/currencies';
+import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
-  getServerCurrency,
-  getCurrencyByCode as getCryptoCurByCode,
-} from '../data/cryptoCurrencies';
+  getCurrencyByCode as getWalletCurByCode,
+  ensureMainnetCode,
+  supportedWalletCurs,
+} from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
@@ -48,31 +49,38 @@ UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
  * it will convert to its base units.
  */
 export function decimalToInteger(amount, currency, options = {}) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number.');
-  }
-
-  if (typeof currency !== 'string') {
-    throw new Error('Please provide a currency as a string.');
-  }
-
   const opts = {
     returnUndefinedOnError: true,
     ...options,
   };
 
-  const curData = getCurrencyByCode(currency);
   let returnVal;
 
-  if (!curData) {
-    if (!opts.returnUndefinedOnError) {
-      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+  try {
+    if (typeof amount !== 'number') {
+      throw new Error('Please provide an amount as a number.');
     }
-  } else {
-    if (getCryptoCurByCode(currency)) {
-      returnVal = Math.round(amount * curData.baseUnit);
+
+    if (typeof currency !== 'string') {
+      throw new Error('Please provide a currency as a string.');
+    }
+
+    const curData = getCurrencyByCode(currency);
+
+    if (!curData) {
+      if (!opts.returnUndefinedOnError) {
+        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+      }
     } else {
-      returnVal = Math.round(amount * 100);
+      if (getWalletCurByCode(currency)) {
+        returnVal = Math.round(amount * curData.baseUnit);
+      } else {
+        returnVal = Math.round(amount * 100);
+      }
+    }
+  } catch (e) {
+    if (!opts.returnUndefinedOnError) {
+      throw e;
     }
   }
 
@@ -89,18 +97,33 @@ export function integerToDecimal(amount, currency, options = {}) {
     ...options,
   };
 
-  const curData = getCurrencyByCode(currency);
   let returnVal;
 
-  if (!curData) {
-    if (!opts.returnUndefinedOnError) {
-      throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+  try {
+    if (typeof amount !== 'number') {
+      throw new Error('Please provide an amount as a number.');
     }
-  } else {
-    if (getCryptoCurByCode(currency)) {
-      returnVal = Number(amount / curData.baseUnit);
+
+    if (typeof currency !== 'string') {
+      throw new Error('Please provide a currency as a string.');
+    }
+
+    const curData = getCurrencyByCode(currency);
+
+    if (!curData) {
+      if (!opts.returnUndefinedOnError) {
+        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
+      }
     } else {
-      returnVal = Number(amount / 100);
+      if (getWalletCurByCode(currency)) {
+        returnVal = Number(amount / curData.baseUnit);
+      } else {
+        returnVal = Number(amount / 100);
+      }
+    }
+  } catch (e) {
+    if (!opts.returnUndefinedOnError) {
+      throw e;
     }
   }
 
@@ -116,10 +139,10 @@ export function integerToDecimal(amount, currency, options = {}) {
  *
  * It also helps with crypto currencies so in most places we could display
  * them with 4 decimal places and it will increase that number if the
- * resulting price would be zero or the rounded number would be too significant
- * of a divergence from the unrounded (e.g a 15% difference).
+ * resulting price would be zero.
  *
  */
+// TODO: unit test this
 function getSmartMaxDisplayDigits(amount, desiredMax) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide the amount as a number.');
@@ -131,21 +154,21 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
 
   let max = desiredMax;
 
-  if (amount < 0.000000005) {
+  if (amount < 0.0000000005) {
     max = 10;
-  } else if (amount < 0.00000005) {
+  } else if (amount < 0.000000005) {
     max = 9;
-  } else if (amount < 0.0000005) {
+  } else if (amount < 0.00000005) {
     max = 8;
-  } else if (amount < 0.000005) {
+  } else if (amount < 0.0000005) {
     max = 7;
-  } else if (amount < 0.00005) {
+  } else if (amount < 0.000005) {
     max = 6;
-  } else if (amount < 0.0005) {
+  } else if (amount < 0.00005) {
     max = 5;
-  } else if (amount < 0.005) {
+  } else if (amount < 0.0005) {
     max = 4;
-  } else if (amount < 0.05) {
+  } else if (amount < 0.005) {
     max = 3;
   }
 
@@ -182,7 +205,7 @@ export function formatPrice(price, currency) {
   // todo: this needs to take into account crypto listing currency codes,
   // which using the method below, would result in most of them being
   // considered as fiat.
-  const cryptoCur = getCryptoCurByCode(currency);
+  const cryptoCur = getWalletCurByCode(currency);
 
   if (cryptoCur) {
     // Format crypto price so it has up to the max decimal places (as specified in the crypto
@@ -233,7 +256,7 @@ export function formatCurrency(amount, currency, options) {
   const curData = getCurrencyByCode(cur);
 
   let formattedCurrency;
-  const cryptoCur = getCryptoCurByCode(cur);
+  const cryptoCur = getWalletCurByCode(cur);
 
   // If we don't recognize the currency, we'll assume it's a crypto
   // listing cur.
@@ -322,7 +345,17 @@ let exchangeRates = {};
  * cached values via getExchangeRate() or more commonly convertCurrency().
  */
 export function fetchExchangeRates(options = {}) {
-  const xhr = $.get(app.getServerUrl('ob/exchangerates/'), options)
+  const supportedCurs = supportedWalletCurs();
+  let coin;
+
+  if (supportedCurs.length) {
+    coin = supportedCurs.includes('BTC') ||
+      supportedCurs.includes('TBTC') ?
+        'BTC' :
+        ensureMainnetCode(supportedCurs[0]);
+  }
+
+  const xhr = $.get(app.getServerUrl(`ob/exchangerates/${coin}`), options)
     .done(data => {
       const changed = new Set();
 
@@ -342,7 +375,10 @@ export function fetchExchangeRates(options = {}) {
 
       const changedArray = Array.from(changed);
       const prevExchangeRates = JSON.parse(JSON.stringify(exchangeRates));
-      exchangeRates = data;
+      exchangeRates = {
+        ...data,
+        [coin]: 1,
+      };
 
       if (changed.size) {
         events.trigger('exchange-rate-change', { changed: changedArray });
@@ -366,15 +402,9 @@ export function getExchangeRate(currency) {
     throw new Error('Please provide a currency.');
   }
 
-  let returnVal = exchangeRates[currency];
-  const serverCurrency = getServerCurrency();
+  const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
 
-  if (serverCurrency.code === currency ||
-    serverCurrency.testnetCode === currency) {
-    returnVal = 1;
-  }
-
-  return returnVal;
+  return exchangeRates[cur];
 }
 
 /**
@@ -389,12 +419,6 @@ export function getExchangeRates() {
  * Converts an amount from one currency to another based on exchange rate data.
  */
 export function convertCurrency(amount, fromCur, toCur) {
-  const fromCurCaps = fromCur.toUpperCase();
-  const toCurCaps = toCur.toUpperCase();
-  const serverCur = getServerCurrency();
-  const isFromServerCur = fromCurCaps === serverCur.code || fromCurCaps === serverCur.testnetCode;
-  const isToServerCur = toCurCaps === serverCur.code || toCurCaps === serverCur.testnetCode;
-
   if (typeof amount !== 'number') {
     throw new Error('Please provide an amount as a number');
   }
@@ -403,28 +427,33 @@ export function convertCurrency(amount, fromCur, toCur) {
     throw new Error('Please provide an amount that is not NaN');
   }
 
-  if (typeof fromCurCaps !== 'string') {
+  if (typeof fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string');
   }
 
-  if (typeof toCurCaps !== 'string') {
+  if (typeof toCur !== 'string') {
     throw new Error('Please provide a toCur as a string');
   }
 
-  if (fromCurCaps === toCurCaps) {
+  const fromCurCode = ensureMainnetCode(fromCur.toUpperCase());
+  const toCurCode = ensureMainnetCode(toCur.toUpperCase());
+
+  if (fromCurCode === toCurCode) {
     return amount;
   }
 
-  if (!isFromServerCur && !exchangeRates[fromCurCaps]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${fromCurCaps}.`);
+  if (!exchangeRates[fromCurCode]) {
+    throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
+      `${fromCur.toUpperCase()}.`);
   }
 
-  if (!isToServerCur && !exchangeRates[toCurCaps]) {
-    throw new NoExchangeRateDataError(`We do not have exchange rate data for ${toCurCaps}.`);
+  if (!exchangeRates[toCurCode]) {
+    throw new NoExchangeRateDataError('We do not have exchange rate data for ' +
+      `${toCur.toUpperCase()}.`);
   }
 
-  const fromRate = isFromServerCur ? 1 : getExchangeRate(fromCurCaps);
-  const toRate = isToServerCur ? 1 : getExchangeRate(toCurCaps);
+  const fromRate = getExchangeRate(fromCurCode);
+  const toRate = getExchangeRate(toCurCode);
 
   return (amount / fromRate) * toRate;
 }
@@ -476,16 +505,8 @@ export function getCurrencyValidity(cur) {
   let returnVal;
 
   if (curData) {
-    // Determine if the given currency is the one the node is running in
-    const isCurServerCurrency = curData.isCrypto &&
-      app.serverConfig.cryptoCurrency === cur ||
-      app.serverConfig.cryptoCurrency === curData.testnetCode;
-
-    if (getExchangeRate(cur) || isCurServerCurrency) {
-      returnVal = 'VALID';
-    } else {
-      returnVal = 'EXCHANGE_RATE_MISSING';
-    }
+    returnVal = getExchangeRate(ensureMainnetCode(cur)) ?
+      'VALID' : 'EXCHANGE_RATE_MISSING';
   } else {
     returnVal = 'UNRECOGNIZED_CURRENCY';
   }

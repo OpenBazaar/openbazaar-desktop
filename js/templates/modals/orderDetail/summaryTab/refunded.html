@@ -18,7 +18,7 @@
       <%
         const priceFrag = ob.currencyMod.pairedCurrency(
           ob.value,
-          ob.currencyMod.getServerCurrency().code,
+          ob.paymentCoin,
           ob.userCurrency
         );
 
@@ -52,7 +52,15 @@
         %>
         <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
         <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.txid %></a></div>
+          <div class="noOverflow">
+            <% if (ob.blockChainTxUrl) { %>
+              <a class="clrT2" href="<%= ob.blockChainTxUrl %>">
+                <%= ob.txid %>
+              </a>
+            <% } else { %>
+              <div class="clrT2"><%= ob.txid %></div>
+            <% } %>
+          </div>
         </div>
       </div>
     </div>

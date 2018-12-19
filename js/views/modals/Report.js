@@ -6,17 +6,21 @@ import { openSimpleMessage } from './SimpleMessage';
 
 export default class extends BaseModal {
   constructor(options = {}) {
-    super(options);
-
-    this._state = {
-      reporting: false,
-      reported: false,
-      ...options.initialState || {},
-    };
-
     if (!options.peerID) throw new Error('You must provide a peerID.');
     if (!options.slug) throw new Error('You must provide a slug.');
     if (!options.url) throw new Error('You must provide a url.');
+
+    const opts = {
+      ...options,
+      initialState: {
+        reason: '',
+        reporting: false,
+        reported: false,
+        ...options.initialState,
+      },
+    };
+
+    super(opts);
 
     this.peerID = options.peerID;
     this.slug = options.slug;
@@ -30,6 +34,7 @@ export default class extends BaseModal {
   events() {
     return {
       'keyup .js-otherInput': 'onKeyupOtherInput',
+      'click input[name="reason"]': 'onReasonClick',
       'click input[value="Other"]': 'onOtherClick',
       'click .js-submit': 'onClickSubmit',
       'click .js-close': 'onClickClose',
@@ -39,6 +44,10 @@ export default class extends BaseModal {
 
   onKeyupOtherInput() {
     this.getCachedEl('#ReasonOther').prop('checked', true);
+  }
+
+  onReasonClick(e) {
+    this.setState({ reason: $(e.target).val() });
   }
 
   onOtherClick() {
@@ -89,8 +98,7 @@ export default class extends BaseModal {
   render() {
     loadTemplate('modals/report.html', (t) => {
       this.$el.html(t({
-        ...this.options,
-        ...this._state,
+        ...this.getState(),
       }));
 
       super.render();

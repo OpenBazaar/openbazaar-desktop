@@ -1,50 +1,25 @@
+import $ from 'jquery';
+import app from '../app';
 import loadTemplate from './loadTemplate';
-import {
-  getServerCurrency,
-  getCurrencyByCode,
-} from '../data/cryptoCurrencies';
-
-/**
- * Since many of our crypto related mapping (e.g. icons) are done based off of
- * a mainnet code, this function will attempt to obtain the mainnet code if a testnet
- * one is passed in. This only works for crypto coins that we have registered as
- * accepted currencies (i.e. are enumerated in data/cryptoCurrencies), but those are
- * the only ones that should ever come as testnet codes.
- */
-export function ensureMainnetCode(cur) {
-  if (typeof cur !== 'string' || !cur.length) {
-    throw new Error('Please provide a non-empty string.');
-  }
-
-  const curObj = getCurrencyByCode(cur);
-  return curObj ? curObj.code : cur;
-}
+import { ensureMainnetCode } from '../data/walletCurrencies';
 
 /**
  * Will render the icon for the crypto currency provided in options.code. If not provided, it will
  * attempt to use the server currency.
  */
 export function renderCryptoIcon(options = {}) {
-  let code = options.code;
   const baseIconPath = '../imgs/cryptoIcons/';
 
-  if (code !== undefined && typeof code !== 'string' && code !== '') {
-    throw new Error('If providing the code, it must be a non-empty string.');
-  }
-
-  if (!code) {
-    const serverCur = getServerCurrency();
-    code = serverCur && serverCur.code || '';
-  } else {
-    code = ensureMainnetCode(code);
+  if (typeof options.code !== 'string' && options.code !== '') {
+    throw new Error('Please provide a crypto currency code.');
   }
 
   const opts = {
-    code,
     className: '',
     attrs: {},
     defaultIcon: `${baseIconPath}default-coin-icon.png`,
     ...options,
+    code: ensureMainnetCode(options.code),
   };
 
   const attrs = Object.keys(opts.attrs).reduce(
@@ -60,6 +35,14 @@ export function renderCryptoIcon(options = {}) {
   return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
 }
 
+/**
+ * Will render a a combination of two currenciees indicating that one is being
+ * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC). This differs from
+ * the CryptoTradingPair view in that the latter allows you to display the exchange
+ * rate next to the trading pair. It's also more easily updatable (just setState())
+ * in case your currencies need to change dynamically.
+ * TODO: document the options.
+ */
 export function renderCryptoTradingPair(options = {}) {
   if (typeof options.fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string.');
@@ -125,4 +108,33 @@ export function renderCryptoPrice(options = {}) {
   });
 
   return rendered;
+}
+
+let cryptoNamesDeferred;
+let nameWorker;
+
+function sendPhrases() {
+  if (nameWorker) {
+    nameWorker.postMessage({
+      type: 'phrases',
+      phrases: Object.keys(app.polyglot.phrases)
+        .filter(key => key.startsWith('cryptoCurrencies.'))
+        .reduce((acc, key) => {
+          acc[key] = app.polyglot.phrases[key];
+          return acc;
+        }, {}),
+    });
+  }
+}
+
+export function getCryptoNames() {
+  if (!nameWorker) {
+    nameWorker = new Worker('../js/utils/cryptoNamesWorker.js', { type: 'module' });
+    sendPhrases();
+
+    app.localSettings.on('change:language', () => nameWorker.sendPhrases());
+  }
+
+  cryptoNamesDeferred = cryptoNamesDeferred || $.Deferred();
+  return cryptoNamesDeferred.promise();
 }

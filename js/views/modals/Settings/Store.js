@@ -1,12 +1,14 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
 import '../../../lib/select2';
 import '../../../lib/whenAll.jquery';
-import { isMultihash } from '../../../utils';
 import baseVw from '../../baseVw';
+import loadTemplate from '../../../utils/loadTemplate';
+import { isMultihash } from '../../../utils';
+import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import Moderators from '../../components/Moderators';
+import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
 
 export default class extends baseVw {
@@ -38,25 +40,45 @@ export default class extends baseVw {
     this.listenTo(this.settings, 'sync',
       (md, resp, sOpts) => app.settings.set(this.settings.toJSON(sOpts.attrs)));
 
+    const preferredCurs = [...new Set(app.profile.get('currencies'))];
+
+    this.currencySelector = this.createChild(CurrencySelector, {
+      initialState: {
+        currencies: supportedWalletCurs(),
+        activeCurs: preferredCurs,
+        sort: true,
+      },
+    });
+
+    this.listenTo(this.currencySelector, 'currencyClicked', sOpts => {
+      this.handleCurrencyClicked(sOpts);
+    });
+
     this.currentMods = this.settings.get('storeModerators');
     this._showVerifiedOnly = true;
 
     this.modsSelected = new Moderators({
-      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       cardState: 'selected',
+      controlsOnInvalid: true,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.selectedModsTitle'),
       notSelected: 'deselected',
       showInvalid: true,
-      controlsOnInvalid: true,
       showSpinner: false,
+      initialState: {
+        preferredCurs,
+      },
     });
 
     this.modsByID = new Moderators({
       async: false,
-      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       excludeIDs: this.currentMods,
+      fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.modNotFoundTitle'),
       showInvalid: true,
-      wrapperClasses: 'noMin',
       showSpinner: false,
+      wrapperClasses: 'noMin',
+      initialState: {
+        preferredCurs,
+      },
     });
 
     this.listenTo(this.modsByID, 'noModsFound', (mOpts) => this.noModsByIDFound(mOpts.guids));
@@ -64,9 +86,12 @@ export default class extends baseVw {
     this.modsAvailable = new Moderators({
       apiPath: 'moderators',
       excludeIDs: this.currentMods,
-      showVerifiedOnly: true,
       fetchErrorTitle: app.polyglot.t('settings.storeTab.errors.availableModsTitle'),
       showLoadBtn: true,
+      initialState: {
+        preferredCurs,
+        showVerifiedOnly: true,
+      },
     });
 
     const modsToCheckOnVerifiedUpdate = [
@@ -132,6 +157,13 @@ export default class extends baseVw {
     this.getCachedEl('.js-submitModByIDInputErrorText').text(msg);
   }
 
+  handleCurrencyClicked(opts) {
+    const preferredCurs = opts.activeCurs;
+    this.modsSelected.setState({ preferredCurs });
+    this.modsByID.setState({ preferredCurs });
+    this.modsAvailable.setState({ preferredCurs });
+  }
+
   clickSubmitModByID() {
     let modID = this.getCachedEl('.js-submitModByIDInput').val();
 
@@ -186,6 +218,7 @@ export default class extends baseVw {
   save() {
     // this view saves to two different models
     const profileFormData = this.getProfileFormData();
+    profileFormData.currencies = this.currencySelector.getState().activeCurs;
     const settingsFormData = this.getSettingsData();
 
     this.profile.set(profileFormData);
@@ -305,6 +338,9 @@ export default class extends baseVw {
         ...this.settings.toJSON(),
       }));
 
+      this.currencySelector.delegateEvents();
+      this.$('.js-currencySelector').append(this.currencySelector.render().el);
+
       this.modsSelected.delegateEvents();
       this.$('.js-modListSelected').append(this.modsSelected.render().el);
       if (!this.modsSelected.modFetches.length) {
@@ -317,7 +353,6 @@ export default class extends baseVw {
         .toggleClass('hide', !this.modsByID.allIDs.length);
 
       this.modsAvailable.delegateEvents();
-      this.modsAvailable.setState({ showVerifiedOnly: this._showVerifiedOnly });
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);

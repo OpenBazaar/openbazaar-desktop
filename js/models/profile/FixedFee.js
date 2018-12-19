@@ -22,7 +22,9 @@ export default class extends BaseModel {
       addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
     }
 
-    if (attrs.currencyCode && !getCurrencyByCode(attrs.currencyCode)) {
+    if (typeof attrs.currencyCode !== 'string' ||
+      !attrs.currencyCode ||
+      !getCurrencyByCode(attrs.currencyCode)) {
       addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
     }
 

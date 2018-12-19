@@ -1,0 +1,13 @@
+<h2 class="h5"><%= ob.polyT('wallet.transactions.header') %></h2>
+<div class="posR">
+  <div class="popInMessageHolder js-popInMessages notFixed"></div>
+  <div class="js-transactionListContainer borderStacked clrBr padMdKids"></div>
+</div>
+<div class="js-transactionFetchStateWrap"></div>
+<div class="js-transactionEmptyState"></div>
+<% if (!ob.transactions.length && !ob.isFetching && !ob.fetchFailed) { %>
+  <div class="center txCtr tx5 clrT2">
+    <%= ob.polyT('wallet.transactions.noTransactionsPlaceholder',
+      { coinType: ob.polyT(`cryptoCurrencies.${ob.coinType}`, { _: ob.coinType }) }) %>
+  </div>
+<% } %>

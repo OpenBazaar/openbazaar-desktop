@@ -1,3 +1,5 @@
+import $ from 'jquery';
+
 // http://stackoverflow.com/a/18937118/632806
 // todo: unit test
 export function setDeepValue(obj, path, value) {
@@ -39,4 +41,17 @@ export function removeProp(obj, key) {
 export function isPromise(obj) {
   return typeof obj === 'object' &&
     typeof obj.then === 'function';
+}
+
+// https://stackoverflow.com/a/13075985/632806
+/*
+ * Return true if obj is a promise / deffered.
+ */
+export function isJQPromise(value) {
+  if (typeof value === 'object' && typeof value.then !== 'function') {
+    return false;
+  }
+  const promiseThenSrc = String($.Deferred().then);
+  const valueThenSrc = String(value.then);
+  return promiseThenSrc === valueThenSrc;
 }

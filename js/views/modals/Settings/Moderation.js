@@ -7,7 +7,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
 import baseVw from '../../baseVw';
 import { getTranslatedLangs } from '../../../data/languages';
-import { getTranslatedCurrencies } from '../../../data/currencies';
+import { getCurrencies } from '../../../data/currencies';
 import { formatPrice } from '../../../utils/currency';
 
 export default class extends baseVw {
@@ -41,7 +41,7 @@ export default class extends baseVw {
     this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
     this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
-    this.currencyList = getTranslatedCurrencies();
+    this.currencyList = getCurrencies();
 
     this.listenTo(this.profile, 'sync', () => {
       app.profile.set({
@@ -63,19 +63,15 @@ export default class extends baseVw {
   }
 
   save() {
-    /* if the user isn't already a moderator, the status is true, and the confirmation checkboxes
-     aren't checked, show an error */
+    const formData = this.getFormData();
 
-    const confirmChecked = this.$understandRequirements.prop('checked') &&
-      this.$acceptGuidelines.prop('checked');
-
-    if (!this.profile.get('moderator') &&
-    this.$('input[name=moderator]:checked').val() === 'true' && !confirmChecked) {
-      this.$moderationConfirmError.removeClass('hide');
+    // The user must check both boxes at the bottom of the page if they want to be a moderator,
+    // but the values aren't part of the model, they only exist in the DOM and aren't saved.
+    if (formData.moderator && !(this.getCachedEl('#understandRequirements').prop('checked') &&
+      this.getCachedEl('#acceptGuidelines').prop('checked'))) {
+      this.getCachedEl('.js-moderationConfirmError').removeClass('hide');
       return;
     }
-
-    const formData = this.getFormData();
 
     // clear unused values by setting them to the default, if it exists
     if (formData.moderatorInfo.fee.feeType === 'PERCENTAGE') {
@@ -119,16 +115,16 @@ export default class extends baseVw {
           type: 'warning',
         });
       }).always(() => {
-        this.$btnSave.removeClass('processing');
+        this.getCachedEl('.js-save').removeClass('processing');
         setTimeout(() => statusMessage.remove(), 3000);
       });
     }
 
-    // render so errrors are shown / cleared
+    // Render so errors are shown / cleared.
     this.render();
 
     if (save) {
-      this.$btnSave.addClass('processing');
+      this.getCachedEl('.js-save').addClass('processing');
     } else {
       const $firstErr = this.$('.errorList:first');
 
@@ -143,38 +139,8 @@ export default class extends baseVw {
   changeFeeType(e) {
     const feeType = $(e.target).val();
 
-    this.$feePercentageInput.toggleClass('visuallyHidden', feeType === 'FIXED');
-    this.$feeFixedInput.toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
-  }
-
-  get $btnSave() {
-    return this._$btnSave ||
-      (this._$btnSave = this.$('.js-save'));
-  }
-
-  get $feePercentageInput() {
-    return this._$feePercentageInput ||
-      (this._$feePercentageInput = this.$('.js-feePercentageInput'));
-  }
-
-  get $feeFixedInput() {
-    return this._$feeFixedInput ||
-      (this._$feeFixedInput = this.$('.js-feeFixedInput'));
-  }
-
-  get $understandRequirements() {
-    return this._$understandRequirements ||
-      (this._$understandRequirements = this.$('#understandRequirements'));
-  }
-
-  get $acceptGuidelines() {
-    return this._$acceptGuidelines ||
-      (this._$acceptGuidelines = this.$('#acceptGuidelines'));
-  }
-
-  get $moderationConfirmError() {
-    return this._$moderationConfirmError ||
-      (this._$moderationConfirmError = this.$('.js-moderationConfirmError'));
+    this.getCachedEl('.js-feePercentageInput').toggleClass('visuallyHidden', feeType === 'FIXED');
+    this.getCachedEl('.js-feeFixedInput').toggleClass('visuallyHidden', feeType === 'PERCENTAGE');
   }
 
   render() {
@@ -195,6 +161,8 @@ export default class extends baseVw {
         ...moderator.toJSON(),
       }));
 
+      super.render();
+
       this.$('#moderationLanguageSelect').selectize({
         maxItems: null,
         valueField: 'code',
@@ -214,12 +182,6 @@ export default class extends baseVw {
       this.$('#moderationCurrency').select2();
 
       this.$formFields = this.$('select[name], input[name], textarea[name]');
-      this._$btnSave = null;
-      this._$feePercentageInput = null;
-      this._$feeFixedInput = null;
-      this._$acceptGuidelines = null;
-      this._$understandRequirements = null;
-      this._$moderationConfirmError = null;
     });
 
     return this;

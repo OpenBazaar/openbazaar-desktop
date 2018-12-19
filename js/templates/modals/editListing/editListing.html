@@ -49,7 +49,11 @@
           {
             key: 'coupons',
             name: ob.polyT('editListing.sectionNames.coupons'),
-          }
+          },
+          {
+            key: 'acceptedCurs',
+            name: ob.polyT('editListing.sectionNames.acceptedCurrencies'),
+          }          
         ].forEach((tab, index) => {
           print(`<a class="js-scrollLink tab row tab-${tab.key} ${ob.selectedNavTabIndex === index ? 'active' : ''}">${tab.name}</a>`)
         });
@@ -95,9 +99,6 @@
                   <div class="hide">
                     <label for="editListingVisibility" class="required"><%= ob.polyT('editListing.visibility') %></label>
                     <select id="editListingVisibility" class="clrBr clrP clrSh2 marginTopAuto">
-                      <%
-                        // todo: will translate and implement fully when this field is implemented into the API.
-                      %>
                       <option value="hidden">Hidden (doesn't display in store)</option>
                     </select>
                   </div>
@@ -111,12 +112,21 @@
                     <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' && ob.metadata.pricingCurrency ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
                     <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
                       <% ob.currencies.forEach((currency) => {%>
-                      <option value="<%= currency.code %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
+                      <option value="<%= currency.code %>" data-name="<%= currency.name %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
                       <% }); %>
                     </select>
                   </div>
+                  <%
+                    const supportedWalletCurs = ob.crypto.supportedWalletCurs()
+                      .map(cur => ob.crypto.ensureMainnetCode(cur));
+                    const helperCryptoCurCode = supportedWalletCurs.includes('BTC') ?
+                      'BTC' : supportedWalletCurs.sort()[0] || 'EUR';
+                    const helperCryptoCurName =
+                      ob.polyT(`cryptoCurrencies.${helperCryptoCurCode}`,
+                        ob.polyT(`currencies.${helperCryptoCurCode}`, { _: helperCryptoCurCode }));
+                  %>
                   <div class="clrT2 txSm helper"><%=
-                  ob.polyT('editListing.helperPrice', { cur: ob.currencyMod.getServerCurrency().name }) %></div>
+                  ob.polyT('editListing.helperPrice', { cur: helperCryptoCurName }) %></div>
                 </div>
                 <div class="col6 simpleFlexCol conditionWrap">
                   <label for="editListingCondition" class="required"><%= ob.polyT('editListing.condition') %></label>
@@ -265,6 +275,19 @@
         <div class="js-couponsContainer couponsContainer"></div>
         <a class="btn clrP clrBr clrSh2 btnAddCoupon js-btnAddCoupon"><%= ob.polyT('editListing.btnAddCoupon') %></a>
       </section>
+
+      <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 acceptedCurrenciesSection">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.acceptedCurrencies') %></h2>
+        <hr class="clrBr rowMd" />
+        <%
+          if (ob.errors['metadata.acceptedCurrencies'] &&
+            ob.metadata.contractType !== 'CRYPTOCURRENCY') {
+            print(ob.formErrorTmpl({ errors: ob.errors['metadata.acceptedCurrencies'] }));
+          }
+        %>
+        <div class="js-cryptoCurSelectContainer rowSm"></div>
+        <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperAcceptedCurrencies') %></div>
+      </section>      
 
       <div class="contentBox padMd clrP clrBr clrSh3">
         <div class="flexHRight flexVCent gutterH">

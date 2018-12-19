@@ -1,26 +1,38 @@
 import _ from 'underscore';
-import app from '../../../app';
-import { isScrolledIntoView } from '../../../utils/dom';
-import { getSocket, getCurrentConnection } from '../../../utils/serverConnect';
-import { openSimpleMessage } from '../SimpleMessage';
-import { launchSettingsModal } from '../../../utils/modalManager';
-import TransactionMd from '../../../models/wallet/Transaction';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import app from '../../../../app';
+import { isScrolledIntoView } from '../../../../utils/dom';
+import { getSocket, getCurrentConnection } from '../../../../utils/serverConnect';
+import { openSimpleMessage } from '../../SimpleMessage';
+import { launchSettingsModal } from '../../../../utils/modalManager';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 import Transaction from './Transaction';
 import TransactionFetchState from './TransactionFetchState';
-import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
+import PopInMessage, { buildRefreshAlertMessage } from '../../../components/PopInMessage';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
+    const opts = {
+      fetchOnInit: true,
+      // If not fetching on init, you may want to pass in the count of transactions
+      // that were returned by the first fetch which is used to determine if all the
+      // pages have been fetched.
+      countAtFirstFetch: undefined,
+      // If there are any existing bump fee attempts that you want shuttled into the
+      // individual transaction views, please provide an indexed object (indexed by txid)
+      // of them here.
+      bumpFeeXhrs: undefined,
+      ...options,
+    };
+
     super(options);
-    this.options = options;
+    this.options = opts;
 
     if (!this.collection) {
       throw new Error('Please provide a Transactions collection.');
     }
 
-    if (!options.$scrollContainer || !options.$scrollContainer.length) {
+    if (!opts.$scrollContainer || !opts.$scrollContainer.length) {
       throw new Error('Please provide a jQuery object containing the scrollable element ' +
         'this view is in.');
     }
@@ -30,19 +42,21 @@ export default class extends baseVw {
     this.fetchErrorMessage = '';
     this.newTransactionCount = 0;
     this.popInTimeouts = [];
+    this.coinType = this.collection.options.coinType;
+    this.countAtFirstFetch = opts.countAtFirstFetch;
 
-    this.listenTo(this.collection, 'update', (cl, opts) => {
-      if (opts.changes.added.length) {
+    this.listenTo(this.collection, 'update', (cl, clUpdateOpts) => {
+      if (clUpdateOpts.changes.added.length) {
         // Expecting either a single new transactions on top or a page
         // of transactions on the bottom.
-        if (opts.changes.added.length === this.collection.length ||
-          opts.changes.added[opts.changes.added.length - 1] ===
+        if (clUpdateOpts.changes.added.length === this.collection.length ||
+          clUpdateOpts.changes.added[clUpdateOpts.changes.added.length - 1] ===
             this.collection.at(this.collection.length - 1)) {
           // It's a page of transactions at the bottom
-          this.renderTransactions(opts.changes.added, 'append');
+          this.renderTransactions(clUpdateOpts.changes.added, 'append');
         } else {
           // New transaction at top
-          this.renderTransactions(opts.changes.added, 'prepend');
+          this.renderTransactions(clUpdateOpts.changes.added, 'prepend');
         }
       }
     });
@@ -61,16 +75,12 @@ export default class extends baseVw {
       this.listenTo(serverSocket, 'message', e => {
         // "wallet" sockets come for new transactions and when a transaction gets it's
         // first confirmation.
-        if (e.jsonData.wallet) {
+        if (e.jsonData.wallet && e.jsonData.wallet.wallet === this.coinType) {
           const transaction = this.collection.get(e.jsonData.wallet.txid);
 
           if (transaction) {
             // existing transaction has been confirmed
-            transaction.set(transaction.parse({
-              // Omitting timestamp since it's not set properly in the socket. In either case,
-              // the transaction should already have it set.
-              ...(_.omit(e.jsonData.wallet, 'timestamp')),
-            }));
+            transaction.set(transaction.parse(_.omit(e.jsonData.wallet, 'wallet')));
           } else {
             // new transaction
             this.newTransactionCount += 1;
@@ -95,27 +105,23 @@ export default class extends baseVw {
 
         // The "walletUpdate" socket comes on a regular interval and gives us the current block
         // height which we can use to update the confirmations on a transaction.
-        if (e.jsonData.walletUpdate) {
+        if (e.jsonData.walletUpdate && e.jsonData.walletUpdate[this.coinType]) {
+          const walletUpdate = e.jsonData.walletUpdate[this.coinType];
           this.collection.models
             .filter(transaction => (transaction.get('height') > 0))
             .forEach(transaction => {
-              const txHeight = transaction.get('height');
-              let confirmations = 0;
-
-              if (txHeight > 0) {
-                confirmations = e.jsonData.walletUpdate.height - txHeight + 1;
-              }
-
+              const confirmations =
+                walletUpdate.height - transaction.get('height') + 1;
               transaction.set('confirmations', confirmations);
             });
         }
       });
     }
 
-    this.$scrollContainer = options.$scrollContainer;
+    this.$scrollContainer = opts.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-    this.fetchTransactions();
+    if (opts.fetchOnInit) this.fetchTransactions();
   }
 
   className() {
@@ -151,7 +157,8 @@ export default class extends baseVw {
   }
 
   fetchTransactions() {
-    if (this.transactionsFetch) this.transactionsFetch.abort();
+    if (this.transactionsFetch &&
+      this.transactionsFetch.state() === 'pending') return;
 
     const fetchParams = {
       limit: this.transactionsPerFetch,
@@ -166,64 +173,64 @@ export default class extends baseVw {
       remove: false,
     });
 
-    this.transactionsFetch.always(() => {
-      if (this.isRemoved()) return;
+    this.transactionsFetch
+      .done(data => {
+        if (this.isRemoved()) return;
 
-      if (this.transactionFetchState) {
-        if (!this.collection.length) {
-          this.render();
-        } else {
+        this.fetchFailed = false;
+        this.fetchErrorMessage = '';
+
+        if (typeof this.countAtFirstFetch === 'undefined') {
+          this.countAtFirstFetch = data.count;
+        }
+
+        if (this.collection.length) {
           this.transactionFetchState.setState({
             isFetching: false,
+            fetchFailed: this.fetchFailed,
+            fetchErrorMessage: this.fetchErrorMessage,
           });
-        }
-      }
-    }).fail((jqXhr) => {
-      if (jqXhr.statusText === 'abort') return;
 
-      this.fetchFailed = true;
+          const curConn = getCurrentConnection();
 
-      if (jqXhr.responseJSON && jqXhr.responseJSON.reason) {
-        this.fetchErrorMessage = jqXhr.responseJSON.reason;
-      }
+          if (curConn && curConn.server && !curConn.server.get('backupWalletWarned')) {
+            const warning = openSimpleMessage(
+              app.polyglot.t('wallet.transactions.backupWalletWarningTitle'),
+              app.polyglot.t('wallet.transactions.backupWalletWarningBody', {
+                link: '<a class="js-recoverWalletSeed">' +
+                  `${app.polyglot.t('wallet.transactions.recoverySeedLink')}</a>`,
+              })
+            );
 
-      if (this.transactionFetchState) {
-        this.transactionFetchState.setState({
-          fetchFailed: this.fetchFailed,
-          fetchErrorMessage: this.fetchErrorMessage,
-        });
-      }
-    }).done(data => {
-      if (this.isRemoved()) return;
-
-      if (typeof this.countAtFirstFetch === 'undefined') {
-        this.countAtFirstFetch = data.count;
-      }
-
-      if (this.collection.length) {
-        const curConn = getCurrentConnection();
-
-        if (curConn && curConn.server && !curConn.server.get('backupWalletWarned')) {
-          const warning = openSimpleMessage(
-            app.polyglot.t('wallet.transactions.backupWalletWarningTitle'),
-            app.polyglot.t('wallet.transactions.backupWalletWarningBody', {
-              link: '<a class="js-recoverWalletSeed">' +
-                `${app.polyglot.t('wallet.transactions.recoverySeedLink')}</a>`,
-            })
-          );
-
-          warning.$el.on('click', '.js-recoverWalletSeed', () => {
-            launchSettingsModal({
-              initialTab: 'Advanced',
-              scrollTo: '.js-backupWalletSection',
+            warning.$el.on('click', '.js-recoverWalletSeed', () => {
+              launchSettingsModal({
+                initialTab: 'Advanced',
+                scrollTo: '.js-backupWalletSection',
+              });
+              warning.remove();
             });
-            warning.remove();
-          });
 
-          curConn.server.save({ backupWalletWarned: true });
+            curConn.server.save({ backupWalletWarned: true });
+          }
+        } else {
+          this.render();
         }
-      }
-    });
+      }).fail(xhr => {
+        if (this.isRemoved() || xhr.statusText === 'abort') return;
+
+        this.fetchFailed = true;
+        this.fetchErrorMessage = xhr.responseJSON && xhr.responseJSON.reason || '';
+
+        if (this.collection.length) {
+          this.transactionFetchState.setState({
+            isFetching: false,
+            fetchFailed: this.fetchFailed,
+            fetchErrorMessage: this.fetchErrorMessage,
+          });
+        } else {
+          this.render();
+        }
+      });
 
     if (this.transactionFetchState) {
       this.transactionFetchState.setState({
@@ -237,7 +244,7 @@ export default class extends baseVw {
   }
 
   setPopInMessageHolderPositioning() {
-    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 338);
+    this.$popInMessages.toggleClass('notFixed', this.$scrollContainer[0].scrollTop < 515);
   }
 
   showNewTransactionPopup() {
@@ -273,25 +280,17 @@ export default class extends baseVw {
   createTransactionView(model, options = {}) {
     const view = this.createChild(Transaction, {
       model,
+      coinType: this.coinType,
+      bumpFeeXhr: this.options.bumpFeeXhrs &&
+        this.options.bumpFeeXhrs[model.id] || undefined,
       ...options,
     });
 
-    this.listenTo(view, 'retrySuccess', e => {
-      app.walletBalance.set({
-        confirmed: e.data.confirmed,
-        unconfirmed: e.data.unconfirmed,
-      });
+    this.listenTo(view, 'bumpFeeSuccess', e =>
+      this.trigger('bumpFeeSuccess', e));
 
-      const transaction = new TransactionMd({
-        value: e.data.amount * -1,
-        txid: e.data.txid,
-        timestamp: e.data.timestamp,
-        address: e.data.address,
-        memo: e.data.memo,
-      }, { parse: true });
-
-      this.collection.unshift(transaction);
-    });
+    this.listenTo(view, 'bumpFeeAttempt', e =>
+      this.trigger('bumpFeeAttempt', e));
 
     return view;
   }
@@ -299,6 +298,7 @@ export default class extends baseVw {
   remove() {
     if (this.transactionsFetch) this.transactionsFetch.abort();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
+    this.$scrollContainer.off('scroll', this.throttledOnScroll);
     super.remove();
   }
 
@@ -345,10 +345,12 @@ export default class extends baseVw {
       this.newTransactionPopIn = null;
     }
 
-    loadTemplate('modals/wallet/transactions.html', (t) => {
+    loadTemplate('modals/wallet/transactions/transactions.html', (t) => {
       this.$el.html(t({
         transactions: this.collection.toJSON(),
         isFetching: this.isFetching,
+        fetchFailed: this.fetchFailed,
+        coinType: this.coinType,
       }));
     });
 
@@ -371,6 +373,11 @@ export default class extends baseVw {
       },
     });
     this.$('.js-transactionFetchStateWrap').html(this.transactionFetchState.render().el);
+    this.listenTo(this.transactionFetchState, 'clickRetryFetch', () => {
+      // simulate some latency so if it fails again, it looks like it tried.
+      this.transactionFetchState.setState({ isFetching: true });
+      setTimeout(() => this.fetchTransactions(), 250);
+    });
 
     return this;
   }

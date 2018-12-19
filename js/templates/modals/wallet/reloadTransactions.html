@@ -1,0 +1,12 @@
+<div class="posR tx5b txU">
+  <% if (!ob.isResyncAvailable) { %>
+    <span class="toolTip" data-tip="<%= ob.polyT('wallet.reloadTransactionsWidget.syncUnavailable') %>" style="text-align: left">
+      <a class="js-resync disabled margRSm"><%= ob.polyT('wallet.reloadTransactionsWidget.resyncBtn') %></a><span class="ion-android-warning clrTErr"></span>
+    </span>
+  <% } else if (ob.isSyncing) { %>
+    <a class="invisible"><%= ob.polyT('wallet.reloadTransactionsWidget.resyncBtn') %></a>
+    <%= ob.spinner({ className: 'center spinnerSm' }) %>
+  <% } else { %>
+    <a class="js-resync"><%= ob.polyT('wallet.reloadTransactionsWidget.resyncBtn') %></a>
+  <% } %>
+</div>

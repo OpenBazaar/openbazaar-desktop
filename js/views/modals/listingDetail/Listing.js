@@ -26,12 +26,13 @@ import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
 import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
+import Listings from '../../../collections/Listings';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
 import { openSimpleMessage } from '../SimpleMessage';
 import NsfwWarning from '../NsfwWarning';
-import CryptoTradingPair from '../../components/CryptoTradingPair';
-import Listings from '../../../collections/Listings';
 import MoreListings from './MoreListings';
+import CryptoTradingPair from '../../components/CryptoTradingPair';
+import SupportedCurrenciesList from '../../components/SupportedCurrenciesList';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -161,12 +162,12 @@ export default class extends BaseModal {
         .done(e => {
           this._inventory = e.inventory;
           endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
+            ownListing: this.model.isOwnListing,
           });
         })
         .fail(e => {
           endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: !!this.ownListing,
+            ownListing: this.model.isOwnListing,
             errors: e.error || e.errCode || 'unknown error',
           });
         });
@@ -318,16 +319,24 @@ export default class extends BaseModal {
   }
 
   onClickGotoPhotos() {
-    recordEvent('Listing_GoToPhotos');
+    recordEvent('Listing_GoToPhotos', { ownListing: this.model.isOwnListing });
     this.gotoPhotos();
   }
 
   onClickGoToStore() {
     if (this.options.openedFromStore) {
-      recordEvent('Listing_GoToStore', { OpenedFromStore: true });
+      recordEvent('Listing_GoToStore',
+        {
+          OpenedFromStore: true,
+          ownListing: this.model.isOwnListing,
+        });
       this.close();
     } else {
-      recordEvent('Listing_GoToStore', { OpenedFromStore: false });
+      recordEvent('Listing_GoToStore',
+        {
+          OpenedFromStore: false,
+          ownListing: this.model.isOwnListing,
+        });
       const base = this.vendor.handle ? `@${this.vendor.handle}` : this.vendor.peerID;
       app.router.navigateUser(`${base}/store`, this.vendor.peerID, { trigger: true });
     }
@@ -345,7 +354,7 @@ export default class extends BaseModal {
   }
 
   gotoPhotos() {
-    recordEvent('Listing_GoToPhotos');
+    recordEvent('Listing_GoToPhotos', { ownListing: this.model.isOwnListing });
     this.$photoSection.velocity(
       'scroll',
       {
@@ -356,7 +365,7 @@ export default class extends BaseModal {
   }
 
   clickRating() {
-    recordEvent('Listing_ClickOnRatings');
+    recordEvent('Listing_ClickOnRatings', { ownListing: this.model.isOwnListing });
     this.gotoReviews();
   }
 
@@ -371,7 +380,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoSelect(e) {
-    recordEvent('Listing_ClickOnPhoto');
+    recordEvent('Listing_ClickOnPhoto', { ownListing: this.model.isOwnListing });
     this.setSelectedPhoto($(e.target).index('.js-photoSelect'));
   }
 
@@ -422,7 +431,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoPrev() {
-    recordEvent('Listing_ClickOnPhotoPrev');
+    recordEvent('Listing_ClickOnPhotoPrev', { ownListing: this.model.isOwnListing });
     let targetIndex = this.activePhotoIndex - 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -432,7 +441,7 @@ export default class extends BaseModal {
   }
 
   onClickPhotoNext() {
-    recordEvent('Listing_ClickOnPhotoNext');
+    recordEvent('Listing_ClickOnPhotoNext', { ownListing: this.model.isOwnListing });
     let targetIndex = this.activePhotoIndex + 1;
     const imagesLength = parseInt(this.model.toJSON().item.images.length, 10);
 
@@ -442,7 +451,7 @@ export default class extends BaseModal {
   }
 
   onClickFreeShippingLabel() {
-    recordEvent('Listing_ClickFreeShippingLabel');
+    recordEvent('Listing_ClickFreeShippingLabel', { ownListing: this.model.isOwnListing });
     this.gotoShippingOptions();
   }
 
@@ -674,6 +683,7 @@ export default class extends BaseModal {
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
         isCrypto: this.model.isCrypto,
+        _: { sortBy: _.sortBy },
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -682,6 +692,16 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (this.supportedCurrenciesList) this.supportedCurrenciesList.remove();
+      this.supportedCurrenciesList = this.createChild(SupportedCurrenciesList, {
+        initialState: {
+          currencies: this.model.get('metadata')
+            .get('acceptedCurrencies'),
+        },
+      });
+      this.getCachedEl('.js-supportedCurrenciesList')
+        .append(this.supportedCurrenciesList.render().el);
 
       if (!this.model.isOwnListing) {
         if (this.socialBtns) this.socialBtns.remove();

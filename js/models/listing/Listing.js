@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
+import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
 import { decimalToInteger, integerToDecimal } from '../../utils/currency';
@@ -150,7 +150,7 @@ export default class extends BaseModel {
 
     if (contractType === 'CRYPTOCURRENCY') {
       if (!metadata || !metadata.coinType || typeof metadata.coinType !== 'string') {
-        addError('metadata.coinType', 'The coin type must be provided as a string.');
+        addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
       if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
@@ -290,6 +290,7 @@ export default class extends BaseModel {
 
           if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
             dummySku.quantity = options.attrs.item.cryptoQuantity;
+            delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
           }
@@ -339,11 +340,15 @@ export default class extends BaseModel {
         // coin type.
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
           const coinType = options.attrs.metadata.coinType;
-
-          // TODO: This will need to change when we implement multi-currency
-          // support. The listing itself will likely contain the coin or coins
-          // it accepts.
-          const fromCur = getServerCurrency().code;
+          let fromCur = options.attrs.metadata.acceptedCurrencies &&
+            options.attrs.metadata.acceptedCurrencies[0];
+          if (fromCur) {
+            const curObj = getCryptoCurrencyByCode(fromCur);
+            // if it's a recognized currency, ensure the mainnet code is used
+            fromCur = curObj ? curObj.code : fromCur;
+          } else {
+            fromCur = 'UNKNOWN';
+          }
           options.attrs.item.title = `${fromCur}-${coinType}`;
         } else {
           // Don't send over crypto currency specific fields if it's not a
