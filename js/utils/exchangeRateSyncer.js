@@ -43,7 +43,7 @@ currencyEvents.on('fetching-exchange-rates', (e) => {
   e.xhr.done(() => {
     if (statusBarMsg) {
       // Defer success state, otherwise it's an odd little flicker if
-      // the call came back too fast.
+      // the call cames back too fast.
       succeedLaterTimeout = setTimeout(() => {
         setRetryStatus({
           type: 'message',

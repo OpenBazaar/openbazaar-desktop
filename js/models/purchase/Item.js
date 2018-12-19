@@ -53,7 +53,8 @@ export default class extends BaseModel {
     };
 
     if (attrs.quantity === undefined) {
-      addError('quantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
+      const isCrypto = this.isCrypto ? 'Crypto' : '';
+      addError('quantity', app.polyglot.t(`purchaseItemModelErrors.provide${isCrypto}Quantity`));
     }
 
     if (!this.isCrypto) {

@@ -1,30 +1,43 @@
+/**
+ * Will render a a combination of two currenciees indicating that one is being
+ * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC), followed by an
+ * optional line of text indicating the exchange rate between the two currencies
+ * (the view will update if the exchange rate changes). This differs from
+ * renderCryptoTradingPair in the crypto util module (which is also the
+ * ob.crypto.tradingPair template helper) in that the latter is just a simple display
+ * of two currencies being traded for one another. If you do not need to display an
+ * exchange rate and your currencies won't change dynamically, the latter might be
+ * slightly less boilerplate to implement.
+ */
+
 import app from '../../app';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import {
   getExchangeRate,
   events as currencyEvents,
 } from '../../utils/currency';
-import { ensureMainnetCode } from '../../utils/crypto';
+import { ensureMainnetCode } from '../../data/walletCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 import BaseVw from '../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    const serverCur = getServerCurrency();
     const opts = {
       ...options,
       initialState: {
         tradingPairClass: 'cryptoTradingPairLg',
         exchangeRateClass: '',
-        fromCur: serverCur && serverCur.code || '',
+        fromCur: '',
         fromCurAmount: 1,
         toCur: '',
         localCurrency: app.settings.get('localCurrency'),
         // If passing this in, it should be a string or a function. If it's a function
-        // it will be passed the coinType and should return a string.
-        noExchangeRateTip: coinType =>
-          app.polyglot.t('cryptoTradingPair.tipMissingExchangeRate',
-              { coinType }),
+        // it will be passed the state and coin(s) with missing exchange rates and it
+        // should return a string.
+        noExchangeRateTip: coinsMissingRates => (
+          app.polyglot.t('cryptoTradingPair.tipMissingExchangeRate', {
+            coins: coinsMissingRates.join(', '),
+          })
+        ),
         exchangeRateUnavailable: false,
         iconClass: 'ion-alert-circled clrTAlert',
         truncateCurAfter: 8,
@@ -73,7 +86,7 @@ export default class extends BaseVw {
 
     if (typeof state === 'object') {
       if (typeof state.fromCur === 'string') {
-        newState.fromCur = ensureMainnetCode(state.fromCur.toUpperCase());
+        newState.fromCur = ensureMainnetCode(state.fromCur);
 
         if (newState.fromCur > state.truncateCurAfter) {
           newState.fromCur = `${newState.fromCur.slice(0, state.truncateCurAfter)}…`;
@@ -81,7 +94,7 @@ export default class extends BaseVw {
       }
 
       if (typeof state.toCur === 'string') {
-        newState.toCur = ensureMainnetCode(state.toCur.toUpperCase());
+        newState.toCur = ensureMainnetCode(state.toCur);
 
         if (newState.toCur > state.truncateCurAfter) {
           newState.toCur = `${newState.toCur.slice(0, state.truncateCurAfter)}…`;
@@ -102,25 +115,33 @@ export default class extends BaseVw {
   }
 
   getConversionState(fromCur, toCur, fromCurAmount) {
-    const exchangeRate = getExchangeRate(toCur);
-    const toCurAmount = fromCurAmount * exchangeRate;
+    const fromCurRate = getExchangeRate(fromCur);
+    const toCurRate = getExchangeRate(toCur);
 
     return {
-      toCurAmount,
-      fromCurConvertedAmount: fromCurAmount / toCurAmount,
-      exchangeRateUnavailable: exchangeRate === undefined,
+      toCurAmount: (toCurRate / fromCurRate) * fromCurAmount,
+      fromCurConvertedAmount: (fromCurRate / toCurRate) * fromCurAmount,
+      fromRateUnavailable: fromCurRate === undefined,
+      toRateUnavailable: toCurRate === undefined,
     };
   }
 
   render() {
     loadTemplate('components/cryptoTradingPairWrap.html', (t) => {
       const state = this.getState();
+      const coinsMissingRates = [];
+
+      if (state.toRateUnavailable) coinsMissingRates.push(state.toCur);
+      if (state.fromRateUnavailable) coinsMissingRates.push(state.fromCur);
+
       let noExchangeRateTip;
 
-      if (typeof state.noExchangeRateTip === 'function') {
-        noExchangeRateTip = state.noExchangeRateTip(state.toCur);
-      } else if (typeof state.noExchangeRateTip === 'string') {
-        noExchangeRateTip = state.noExchangeRateTip;
+      if (coinsMissingRates.length) {
+        if (typeof state.noExchangeRateTip === 'function') {
+          noExchangeRateTip = state.noExchangeRateTip(coinsMissingRates, state);
+        } else if (typeof state.noExchangeRateTip === 'string') {
+          noExchangeRateTip = state.noExchangeRateTip;
+        }
       }
 
       this.$el.html(t({

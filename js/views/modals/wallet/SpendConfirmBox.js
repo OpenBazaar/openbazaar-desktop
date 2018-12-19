@@ -19,7 +19,8 @@ export default class extends baseVw {
       fetchFailed: false,
       fetchError: '',
       fee: false,
-      displayCurrency: app.settings.get('localCurrency') || 'BTC',
+      coinType: '',
+      displayCurrency: app.settings.get('localCurrency') || 'USD',
       btnSendText: app.polyglot.t('wallet.spendConfirmBox.btnConfirmSend'),
       ...options.initialState || {},
     };
@@ -66,19 +67,27 @@ export default class extends baseVw {
   onClickRetry(e) {
     const amount = this.lastFetchFeeEstimateArgs.amount;
     if (typeof amount === 'number') {
-      this.fetchFeeEstimate(amount, this.lastFetchFeeEstimateArgs.feeLevel || null);
+      this.fetchFeeEstimate(...this.lastFetchFeeEstimateArgs);
     }
     e.stopPropagation();
     recordPrefixedEvent('ConfirmBoxRetry', this.metricsOrigin);
   }
 
-  fetchFeeEstimate(amount, feeLevel = app.localSettings.get('defaultTransactionFee')) {
+  fetchFeeEstimate(
+    amount,
+    coinType = this.getState().coinType,
+    feeLevel = app.localSettings.get('defaultTransactionFee')) {
     if (typeof amount !== 'number') {
       throw new Error('Please provide an amount as a number.');
     }
 
+    if (typeof coinType !== 'string' || !coinType) {
+      throw new Error('Please provide the coinType as a string.');
+    }
+
     this.lastFetchFeeEstimateArgs = {
       amount,
+      coinType,
       feeLevel,
     };
 
@@ -86,18 +95,20 @@ export default class extends baseVw {
       fetchingFee: true,
       fetchError: '',
       fetchFailed: false,
+      coinType,
     });
 
     startPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
 
-    estimateFee(feeLevel, amount)
+    estimateFee(coinType, feeLevel, amount)
       .done(fee => {
         let state = {
           fee,
           fetchingFee: false,
         };
 
-        if (fee + amount > app.walletBalance.get('confirmed')) {
+        if (app.walletBalances && app.walletBalances.get(coinType) &&
+          fee + amount > app.walletBalances.get(coinType).get('confirmed')) {
           state = {
             // The fetch didn't actually fail, but since the server allows unconfirmed spends and
             // we don't want to allow that, we'll pretend it failed and simulate the server
@@ -110,7 +121,9 @@ export default class extends baseVw {
             errors: 'ERROR_INSUFFICIENT_FUNDS',
           });
         } else {
-          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
+          endPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin, {
+            errors: 'none',
+          });
         }
 
         this.setState(state);

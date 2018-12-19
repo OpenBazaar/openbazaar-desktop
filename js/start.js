@@ -1,13 +1,12 @@
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';
-import Polyglot from 'node-polyglot';
+import Polyglot from './utils/Polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
-import { getServerCurrency } from './data/cryptoCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
@@ -33,7 +32,7 @@ import StatusBar from './views/StatusBar';
 import { getTranslationLangByCode } from './data/languages';
 import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
-import WalletBalance from './models/wallet/WalletBalance';
+import WalletBalances from './collections/wallet/Balances';
 import Followers from './collections/Followers';
 import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
@@ -42,7 +41,6 @@ import listingDeleteHandler from './startup/listingDelete';
 import { fixLinuxZoomIssue, handleServerShutdownRequests } from './startup';
 import ConnectionManagement from './views/modals/connectionManagement/ConnectionManagement';
 import Onboarding from './views/modals/onboarding/Onboarding';
-import WalletSetup from './views/modals/WalletSetup';
 import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 import VerifiedMods from './collections/VerifiedMods';
@@ -316,7 +314,7 @@ function fetchVerifiedMods() {
 const fetchStartupDataDeferred = $.Deferred();
 let ownFollowingFetch;
 let exchangeRatesFetch;
-let walletBalanceFetch;
+let walletBalancesFetch;
 let searchProvidersFetch;
 
 function fetchStartupData() {
@@ -324,15 +322,15 @@ function fetchStartupData() {
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = !exchangeRatesFetch || exchangeRatesFetch.state() === 'rejected' ?
     fetchExchangeRates() : exchangeRatesFetch;
-  walletBalanceFetch = !walletBalanceFetch || walletBalanceFetch.state() === 'rejected' ?
-    app.walletBalance.fetch() : walletBalanceFetch;
+  walletBalancesFetch = !walletBalancesFetch || walletBalancesFetch.state() === 'rejected' ?
+    app.walletBalances.fetch() : walletBalancesFetch;
   searchProvidersFetch = !searchProvidersFetch || searchProvidersFetch.state() === 'rejected' ?
     app.searchProviders.fetch() : searchProvidersFetch;
 
   const fetches = [
     ownFollowingFetch,
     exchangeRatesFetch,
-    walletBalanceFetch,
+    walletBalancesFetch,
     searchProvidersFetch,
   ];
 
@@ -367,7 +365,7 @@ function fetchStartupData() {
 
         if (ownFollowingFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetFollowData.title');
-        } else if (walletBalanceFetch.state() === 'rejected') {
+        } else if (walletBalancesFetch.state() === 'rejected') {
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletBalance.title');
         } else {
           title = app.polyglot.t('startUp.dialogs.unableToGetSearchProviders.title');
@@ -426,10 +424,6 @@ function onboardIfNeeded() {
   });
 
   return onboardIfNeededDeferred.promise();
-}
-
-function isCryptoCurrencySupported(cryptoCurrency) {
-  return !!getCurrencyByCode(cryptoCurrency);
 }
 
 let ensureValidSettingsCurDeferred;
@@ -496,38 +490,13 @@ function ensureValidSettingsCurrency() {
 // let's start our flow - do we need onboarding?,
 // fetching app-wide models...
 function start() {
+  // This is the server config as returned by ob/config. It has nothing to do with
+  // app.serverConfigs which is a collection of server configuration data related
+  // to connecting with a server. The latter is stored in local storage.
+  // TODO - instead of these elaborate comments explaining the distinction, perhaps rename
+  // serverConfigs to serverConnectionConfigs?
   fetchConfig().done((data) => {
-    // This is the server config as returned by ob/config. It has nothing to do with
-    // app.serverConfigs which is a collection of server configuration data related
-    // to connecting with a server. The latter is stored in local storage.
     app.serverConfig = data || {};
-
-    if (!isCryptoCurrencySupported(app.serverConfig.cryptoCurrency)) {
-      const connectLink =
-        '<button class="btnAsLink js-connect clrTEm">' +
-          `${app.polyglot.t('unsupportedCryptoCurDialog.connectLink')}` +
-          '</button>';
-
-      const unsupportedCryptoCurDialog = openSimpleMessage(
-        app.polyglot.t('unsupportedCryptoCurDialog.title'),
-        app.polyglot.t('unsupportedCryptoCurDialog.body', {
-          curCode: app.serverConfig.cryptoCurrency,
-          connectLink,
-        }),
-        {
-          dismissOnEscPress: false,
-          showCloseButton: false,
-        }
-      );
-
-      unsupportedCryptoCurDialog.$('.js-connect')
-        .on('click', () => app.connectionManagmentModal.open());
-
-      serverConnectEvents.once('connected', () => unsupportedCryptoCurDialog.remove());
-
-      return;
-    }
-
     app.profile = new Profile({ peerID: data.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();
@@ -536,17 +505,6 @@ function start() {
 
     if (curConn && curConn.status !== 'disconnected') {
       app.pageNav.torIndicatorOn = app.serverConfig.tor && curConn.server.get('useTor');
-
-      const serverCur = getServerCurrency();
-
-      if (serverCur.code === 'ZEC') {
-        startupConnectMessaging.setState({
-          msg: app.polyglot.t('startUp.connectMessaging.zecBinaryInit', {
-            cancelLink: '<a class="js-cancel">' +
-              `${app.polyglot.t('startUp.connectMessaging.cancelLink')}</a>`,
-          }),
-        });
-      }
     }
 
     app.ownFollowing = new Followers([], {
@@ -554,7 +512,7 @@ function start() {
       peerId: app.profile.id,
     });
 
-    app.walletBalance = new WalletBalance();
+    app.walletBalances = new WalletBalances();
     app.searchProviders = new SearchProvidersCol();
 
     onboardIfNeeded().done(() => {
@@ -583,17 +541,22 @@ function start() {
 
           localStorage.serverIdAtLastStart = curConn && curConn.server && curConn.server.id;
 
-          const metricsOn = app.localSettings.get('shareMetrics');
+          // Metrics should only be run on bundled apps.
+          if (remote.getGlobal('isBundledApp')) {
+            const metricsOn = app.localSettings.get('shareMetrics');
 
-          if (metricsOn === undefined || metricsOn && isNewerVersion()) {
-            showMetricsModal({
-              showCloseButton: false,
-              dismissOnEscPress: false,
-              showUndecided: true,
-            })
-              .on('close', () => Backbone.history.start());
+            if (metricsOn === undefined || metricsOn && isNewerVersion()) {
+              showMetricsModal({
+                showCloseButton: false,
+                dismissOnEscPress: false,
+                showUndecided: true,
+              })
+                .on('close', () => Backbone.history.start());
+            } else {
+              if (metricsOn) addMetrics();
+              Backbone.history.start();
+            }
           } else {
-            if (metricsOn) addMetrics();
             Backbone.history.start();
           }
 
@@ -619,19 +582,13 @@ function start() {
           fetchVerifiedMods();
           setInterval(() => fetchVerifiedMods(), 1000 * 60 * 60);
 
-          // have our walletBalance model update from the walletUpdate socket event
+          // have our walletBalances collection update from the walletUpdate socket event
           const serverSocket = getSocket();
 
           if (serverSocket) {
             serverSocket.on('message', (e = {}) => {
               if (e.jsonData.walletUpdate) {
-                const parsedData = app.walletBalance.parse({
-                  confirmed: e.jsonData.walletUpdate.confirmed,
-                  unconfirmed: e.jsonData.walletUpdate.unconfirmed,
-                  height: e.jsonData.walletUpdate.height,
-                });
-
-                app.walletBalance.set(parsedData);
+                app.walletBalances.set(e.jsonData.walletUpdate, { parse: true });
               }
             });
           }
@@ -752,47 +709,9 @@ app.connectionManagmentModal = new ConnectionManagement({
   showCloseButton: false,
 }).render();
 
-/**
- * If the provided server requires a wallet setup, the Wallet Setup modal will be launched.
- * The function returns a promise that resolves when the process is complete.
- */
-function setupWallet(server) {
-  const deferred = $.Deferred();
-
-  if (server && server.get('builtIn') && server.get('walletCurrency') === undefined) {
-    new WalletSetup({ model: server })
-      .render()
-      .open()
-      .on('walletSetupComplete', () => deferred.resolve());
-  } else {
-    deferred.resolve();
-  }
-
-  return deferred.promise();
-}
-
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
-  // Migrate any old "built in" configurations containing the 'default' flag to
-  // use the new 'builtIn' flag.
-  app.serverConfigs.forEach(serverConfig => {
-    const isDefault = serverConfig.get('default');
-    serverConfig.unset('default');
-    const data = {};
-
-    if (typeof isDefault === 'boolean') {
-      data.walletCurrency = 'BTC';
-      data.builtIn = !!isDefault;
-    }
-
-    const configSave = serverConfig.save(data);
-
-    if (!configSave) {
-      // developer error or wonky data
-      console.error('There was an error migrating the server config, ' +
-        `${serverConfig.get('name')}, from the 'default' to the 'built-in' style.`);
-    }
-  });
+  app.serverConfigs.migrate();
 
   const isBundled = remote.getGlobal('isBundledApp');
   if (!app.serverConfigs.length) {
@@ -800,15 +719,24 @@ app.serverConfigs.fetch().done(() => {
     if (isBundled) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
-      const defaultConfig = new ServerConfig({
+      const serverConfig = new ServerConfig({
         builtIn: true,
+        name: app.polyglot.t('connectionManagement.builtInServerName'),
       });
 
-      setupWallet(defaultConfig).done(() => {
-        app.serverConfigs.add(defaultConfig);
-        app.serverConfigs.activeServer = defaultConfig;
-        connectToServer();
+      serverConfig.save({}, {
+        success: md => {
+          setTimeout(() => {
+            app.serverConfigs.activeServer = app.serverConfigs.add(md);
+            connectToServer();
+          });
+        },
       });
+
+      if (serverConfig.validationError) {
+        console.error('There was an error creating the builtIn server config:');
+        console.dir(serverConfig.validationError);
+      }
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {
@@ -831,7 +759,7 @@ app.serverConfigs.fetch().done(() => {
       activeServer.set('builtIn', false);
     }
 
-    setupWallet(activeServer).done(() => connectToServer());
+    connectToServer();
   }
 });
 

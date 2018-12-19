@@ -1,22 +1,28 @@
-<% const serverCur = ob.currencyMod.getServerCurrency().code %>
+<div class="flexBtnWrapper flexBtnTop flexRow">
+  <button class="btnFlx col6 underlineOnly flexExpand clrP clrBr gutterHSm js-btc <% if (ob.showCoin === 'BTC') print('active') %>">
+    <%= ob.crypto.cryptoIcon({ code: 'BTC' }) %>
+    <span><%= ob.polyT('cryptoCurrencies.BTC') %></span>
+  </button>
+  <button class="btnFlx col6 underlineOnly flexExpand clrP clrBr gutterHSm js-bch <% if (ob.showCoin === 'BCH') print('active') %>">
+    <%= ob.crypto.cryptoIcon({ code: 'BCH' }) %>
+    <span><%= ob.polyT('cryptoCurrencies.BCH') %></span>
+  </button>
+</div>
 <div class="flex padGi">
   <img class="flexNoShrink" src="<%= ob.qrCodeDataURI %>">
   <div id=donation-dashboard class="padMd flexCol">
     <div class="padMd">
-      <h2 class="tx2b">
-        <%= ob.polyT('about.donationsTab.bannerCountDonations', { donationCountFloor: ob.donationCountFloor }) %>
-      </h2>
+      <h3 class="tx2b">
+        <%= ob.polyT(`about.donationsTab.bannerTitle${ob.showCoin}`) %>
+      </h3>
       <div class="clrT2 donationAddress posR">
-        <% if (serverCur !== 'BTC') { %>
-          <p><%= ob.polyT('about.donationsTab.bitcoinIntroLine') %></p>
-        <% } %>
-        <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
-        <% if (serverCur !== 'BTC') { %>
-          <p class="clrTErr txUnl"><i class="ion-alert-circled"></i> <%= ob.polyT('about.donationsTab.bchWarning') %></p>
-        <% } %>
-        <div class="js-copyNotification copyNotification clrT clrBr clrP">
-          <%= ob.polyT('copiedToClipboardShort') %>
+        <div class="posR">
+          <p class="js-copyAddress rowSm"><%= ob.obDonationAddress %></p>
+          <div class="js-copyNotification copyNotification clrT clrBr clrP">
+            <%= ob.polyT('copiedToClipboardShort') %>
+          </div>
         </div>
+        <p class="clrTErr txUnl tx6"><i class="ion-alert-circled"></i> <%= ob.polyT(`about.donationsTab.${ob.showCoin}Warning`) %></p>
       </div>
 
     </div>
@@ -24,7 +30,7 @@
       <a class="btn clrP clrBr js-copyAddress flexNoShrink">
         <%= ob.polyT('about.donationsTab.btnCopyAddress') %>
       </a>
-      <a class="btn clrP clrBr js-openInWallet flexNoShrink">
+      <a class="btn clrP clrBr js-openInWallet flexNoShrink <% if (!ob.walletSupported) print('disabled') %>">
         <%= ob.polyT('about.donationsTab.btnOpenInWallet') %>
       </a>
     </div>

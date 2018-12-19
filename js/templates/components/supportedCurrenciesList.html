@@ -1,0 +1,7 @@
+<% ob.processedCurs.forEach(cur => { %>
+  <li class="flexVCent gutterHSm clrBr">
+    <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
+    <%= ob.crypto.cryptoIcon({ code: cur.code }) %>
+    <div class="acceptedCurName"><%= cur.displayName %></div>
+  </li>
+<% }) %>

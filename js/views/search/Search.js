@@ -16,7 +16,6 @@ import defaultSearchProviders from '../../data/defaultSearchProviders';
 import '../../lib/select2';
 import { selectEmojis } from '../../utils';
 import { getCurrentConnection } from '../../utils/serverConnect';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import { recordEvent } from '../../utils/metrics';
 
 export default class extends baseVw {
@@ -111,7 +110,14 @@ export default class extends baseVw {
     // if not passed in, set the user's values for nsfw and the currency
     this.defaultParams = {
       nsfw: String(app.settings.get('showNsfw')),
-      acceptedCurrencies: getServerCurrency().code,
+      // TODO
+      // TODO
+      // This is temporary. This should be updated to send a list based on
+      // supportedWalletCurs(). And, search should update the filter
+      // to be a checkbox instead of a radio
+      // TODO
+      // TODO
+      acceptedCurrencies: 'BTC',
     };
 
     this.filterParams = {

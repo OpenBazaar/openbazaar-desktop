@@ -54,8 +54,13 @@ export function splitIntoRows(items, itemsPerRow) {
   return rslt;
 }
 
+// todo: move to the number util mod...?
 // http://stackoverflow.com/a/2686098/632806
 export function abbrNum(_number, _maxDecPlaces = 1) {
+  if (typeof _number !== 'number' || isNaN(_number)) {
+    return '';
+  }
+
   // 2 decimal places => 100, 3 => 1000, etc
   const decPlaces = Math.pow(10, _maxDecPlaces);
   const isNegative = _number < 0;

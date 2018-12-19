@@ -32,30 +32,6 @@ export { events };
 
 const getLocalServer = _.once(() => (remote.getGlobal('localServer')));
 
-const serverCurStartArgMap = {
-  BCH: '--bitcoincash',
-  ZEC: '--zcash',
-};
-
-const defaultLocalServerStartArgs = () => {
-  const ls = getLocalServer();
-  return ls && ls.lastStartCommandLineArgs || [];
-};
-
-/**
- * Will convert an array of command line arguments for the local server into the
- * crypto currency they start the server in.
- */
-const serverStartArgsToCoin = (args = defaultLocalServerStartArgs()) => {
-  let walletCur = 'BTC';
-
-  Object.keys(serverCurStartArgMap).forEach(cur => {
-    if (args.indexOf(serverCurStartArgMap[cur]) !== -1) walletCur = cur;
-  });
-
-  return walletCur;
-};
-
 let currentConnection = null;
 let debugLog = '';
 
@@ -245,7 +221,6 @@ export default function connect(server, options = {}) {
 
   const deferred = $.Deferred();
   const localServer = getLocalServer();
-  const serverCurrency = server.get('walletCurrency');
   let attempt = 1;
   let socket = null;
   let connectAttempt = null;
@@ -330,31 +305,33 @@ export default function connect(server, options = {}) {
     // and mucking with localStorage and / or fudging the source for the app to masquerade
     // as a bundled app.
     throw new Error('A configuration for a built-in server should only be used on ' +
-      ' the bundled app.');
+      'the bundled app.');
   }
 
-  const curLocalServerCoin = serverStartArgsToCoin();
-  let curLocalServerZecBinaryPath = null;
+  const newServerDataDir = server.get('dataDir');
 
-  if (localServer) {
-    if (curLocalServerCoin === 'ZEC') {
-      const zecIndex = localServer.lastStartCommandLineArgs
-        .indexOf(serverCurStartArgMap.ZEC);
+  let commandLineArgs = ['-v'];
 
-      if (zecIndex !== -1 &&
-        typeof localServer.lastStartCommandLineArgs[zecIndex + 1] === 'string') {
-        curLocalServerZecBinaryPath = localServer.lastStartCommandLineArgs[zecIndex + 1];
-      }
-    }
+  if (server.get('useTor')) commandLineArgs.push('--tor');
+  const torPw = server.get('torPassword');
+  if (torPw) {
+    commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
+  }
+
+  if (newServerDataDir && typeof newServerDataDir === 'string') {
+    commandLineArgs = commandLineArgs.concat(['-d', newServerDataDir]);
   }
 
   // If we're not connecting to the local bundled server or it's running with incompatible
   // command line arguments, let's ensure it's stopped.
-  if (localServer && localServer.isRunning &&
+  if (
+    localServer &&
+    localServer.isRunning &&
     (
-      !server.get('builtIn') || serverCurrency !== serverStartArgsToCoin() ||
-      (serverCurrency === 'ZEC' && server.get('zcashBinaryPath') !== curLocalServerZecBinaryPath)
-    )) {
+      !server.get('builtIn') ||
+      commandLineArgs.join() !== localServer.lastStartCommandLineArgs.join()
+    )
+  ) {
     deferred.notify({ status: 'stopping-local-server' });
     localServer.stop();
 
@@ -412,32 +389,30 @@ export default function connect(server, options = {}) {
     let willWaitForLocalServerStop = false;
 
     if (server.get('builtIn') && localServer.isStopping) {
-      willWaitForLocalServerStop = true;
-      const stoppingServer = app.serverConfigs
-        .findWhere({ walletCurrency: serverStartArgsToCoin() });
-      innerConnectNotify('waiting-for-local-server-stop', { stoppingServer });
-      innerLog('Waiting for the local server started with ' +
-        `"${localServer.lastStartCommandLineArgs}" to stop.`);
+      const dIndex = localServer.lastStartCommandLineArgs
+        .indexOf('-d');
+
+      if (dIndex !== -1) {
+        const dataDir = localServer.lastStartCommandLineArgs[dIndex + 1];
+
+        if (dataDir) {
+          // This scenario will only play out if you have multiple built-in nodes,
+          // which is only possible if you had them migrated from pre-multiwallet
+          // nodes.
+          willWaitForLocalServerStop = true;
+          const stoppingServer = app.serverConfigs
+            .findWhere({ dataDir });
+          innerConnectNotify('waiting-for-local-server-stop', { stoppingServer });
+          innerLog('Waiting for the local server started with ' +
+            `"${localServer.lastStartCommandLineArgs}" to stop.`);
+        }
+      }
     } else {
       if (willWaitForLocalServerStop) innerConnectNotify('local-server-stopped');
 
       // This is called when either the client Tor proxy has been set or once we've determined
       // it's not needed.
       const onClientTorProxyChecked = () => {
-        // This flag means that we want the server to be running in a certain tor mode
-        // (tor on or tor off), buts it's already running in the opposite mode.
-        const serverRunningIncompatibleWithTor = server.get('builtIn') &&
-          localServer.isRunning && (server.get('useTor') !==
-            (localServer.lastStartCommandLineArgs.indexOf('--tor') !== -1));
-
-        if (serverRunningIncompatibleWithTor) {
-          // The idea is you will probably be starting the server with multiple attempts. So
-          // if we stop the server now, on a subsequent attempt we'll re-start it in the
-          // desired mode.
-          localServer.stop();
-          innerConnectReject('incompatible-tor-mode');
-        }
-
         if (server.get('builtIn') && !localServer.isRunning) {
           const onTorChecked = () => {
             const onLocalServerStart = () => {
@@ -453,25 +428,6 @@ export default function connect(server, options = {}) {
                 });
             };
 
-            let commandLineArgs = ['-v'];
-
-            if (serverCurrency !== 'BTC') {
-              const serverCoinArg = serverCurStartArgMap[serverCurrency];
-
-              if (serverCoinArg) {
-                commandLineArgs.push(serverCoinArg);
-
-                if (serverCurrency === 'ZEC') {
-                  commandLineArgs.push(server.get('zcashBinaryPath'));
-                }
-              }
-            }
-
-            if (server.get('useTor')) commandLineArgs.push('--tor');
-            const torPw = server.get('torPassword');
-            if (torPw) {
-              commandLineArgs = commandLineArgs.concat(['--torpassword', torPw]);
-            }
             innerConnectNotify('starting-local-server');
             localServer.start(commandLineArgs);
 

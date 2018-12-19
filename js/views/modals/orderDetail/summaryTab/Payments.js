@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import app from '../../../../app';
 import {
   acceptingOrder,
   acceptOrder,
@@ -8,7 +9,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../../utils/order';
-import { getServerCurrency } from '../../../../data/cryptoCurrencies';
+import { getCurrencyByCode as getWalletCurByCode } from '../../../../data/walletCurrencies';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import baseVw from '../../../baseVw';
 import Payment from './Payment';
@@ -48,6 +49,12 @@ export default class extends baseVw {
     this.options = opts;
     this.orderId = this.options.orderId;
     this.payments = [];
+
+    try {
+      this.paymentCoinData = getWalletCurByCode(this.options.paymentCoin);
+    } catch (e) {
+      throw new Error(`No wallet currency data is available for ${this.options.paymentCoin}`);
+    }
 
     this.listenTo(this.collection, 'update', () => this.render());
     this.listenTo(orderEvents, 'cancelingOrder', this.onCancelingOrder);
@@ -166,7 +173,7 @@ export default class extends baseVw {
         .slice(0, index + 1)
         .reduce((total, model) => total + model.get('value'), 0);
       // round based on the coins base units
-      const cryptoBaseUnit = getServerCurrency().baseUnit;
+      const cryptoBaseUnit = this.paymentCoinData.baseUnit;
       paidSoFar = Math.round(paidSoFar * cryptoBaseUnit) / cryptoBaseUnit;
       const isMostRecentPayment = index === this.collection.length - 1;
       const paymentView = this.createPayment(payment, {
@@ -179,6 +186,9 @@ export default class extends baseVw {
           acceptInProgress: acceptingOrder(this.orderId),
           rejectInProgress: rejectingOrder(this.orderId),
           isCrypto: this.options.isCrypto,
+          paymentCoin: this.options.paymentCoin,
+          blockChainTxUrl: this.paymentCoinData
+            .getBlockChainTxUrl(payment.id, app.serverConfig.testnet),
         },
       });
 

@@ -59,7 +59,7 @@ export default class extends baseVw {
     loadTemplate('chat/convoMessage.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        ...this._state,
+        ...this.getState(),
         moment,
         message: this.model.get('message'),
         renderedTimeAgo: this.renderedTimeAgo,

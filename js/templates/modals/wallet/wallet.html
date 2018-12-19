@@ -1,31 +1,41 @@
 <div class="flexColRows gutterV">
   <div class="topControls flexRow">
-    <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn">
+    <div class="contentBox padSm clrP clrBr clrSh3 gutterHTn flexNoShrink">
       <div class="flexVCent walletIconWrap"><%= ob.walletIconTmpl() %></div>
       <span><%= ob.polyT('wallet.title') %></span>
       <a class="jsModalClose tx6 txU"><%= ob.polyT('wallet.closeLink') %></a>
     </div>
-    <div class="js-btcTickerContainer btcTickerContainer"></div>
+    <div class="js-tickerContainer tickerContainer flexHRight"></div>
   </div>
-  <div class="flexColRows gutterV">
-    <div class="contentBox padMd clrP clrBr clrSh3">
-      <div class="flexRow">
-        <div class="col3">
-          <div class="flexColRows">
-            <h2 class="h3"><%= ob.polyT('wallet.fundsHeader') %></h2>
-            <div class="statsWrap flexColRows clrBr">
-              <div class="js-walletStatsContainer"></div>
-              <div class="buttonWrap">
-                <a class="btn clrP clrBr clrSh2 btnReceiveMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnReceiveMoney') %></a>
-                <a class="btn clrP clrBr clrSh2 btnSendMoney js-toggleSendReceive"><%= ob.polyT('wallet.btnSendMoney') %></a>
-              </div>
+  <div class="flex gutterH">
+    <div class="col3">
+      <div class="flexColWide gutterV">
+        <div class="js-coinNavContainer"></div>
+        <div class="js-cryptoListingsTeaser border clrP clrBr clrSh3">
+          <%= ob.cryptoTeaserHtml %>
+        </div>
+      </div>
+    </div>
+    <div class="col9">
+      <div class="flexColWide gutterV">
+        <% if (ob.activeCoin) { %>
+          <div class="js-coinStatsContainer"></div>
+          <div>
+            <div class="flexColWide clrP clrSh3">
+              <div class="js-sendReceiveNavContainer rowMd"></div>
+              <div class="js-sendReceiveContainer sendReceiveContainer clrP"></div>
             </div>
           </div>
-        </div>
-        <div class="col9 sendReceiveContainer js-sendReceiveContainer"></div>
+          <div class="clrP clrSh3 posR">
+            <div class="js-transactionsContainer"></div>
+            <div class="js-reloadTransactionsContainer reloadTransactions"></div>
+          </div>
+        <% } else { %>
+          <div class="clrP clrSh3 clrBr border zeroSupportedCurs">
+            <div class="center"><%= ob.polyT('wallet.zeroSupportedCurs') %></div>
+          </div>
+        <% } %>
       </div>
     </div>
   </div>
-
-  <div class="contentBox clrP clrBr clrSh3 js-transactionContainer"></div>
 </div>

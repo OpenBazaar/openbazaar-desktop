@@ -232,6 +232,14 @@
         font-weight: bold;
       }
     }
+
+    .copied {
+      position: absolute;
+      top: 0;
+      right: 0;
+      opacity: 0;
+      pointer-events: none;
+    }
   }
 
   .summaryTab {
@@ -322,6 +330,14 @@
           &::before {
             padding-top: 6px;
             padding-left: 2px;
+          }
+        }
+
+        &.ion-ios-rewind {
+          font-size: 26px;
+
+          &::before {
+            padding-top: 4px;
           }
         }
       }

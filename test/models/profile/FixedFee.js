@@ -16,8 +16,7 @@ describe('the Fixed Fee model', () => {
     fixedFee.set({}, { validate: true });
     const valErr = fixedFee.validationError;
 
-    expect(valErr && valErr.feeType
-      && !!valErr.feeType.length || false).to.equal(true);
+    expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 
   it('fails validation if the amount is not a number', () => {
@@ -25,8 +24,7 @@ describe('the Fixed Fee model', () => {
     fixedFee.set({ amount: 'test' }, { validate: true });
     const valErr = fixedFee.validationError;
 
-    expect(valErr && valErr.feeType
-      && !!valErr.feeType.length || false).to.equal(true);
+    expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 
   it('fails validation if the currency code does not exist', () => {
@@ -35,8 +33,7 @@ describe('the Fixed Fee model', () => {
     fixedFee.set({}, { validate: true });
     const valErr = fixedFee.validationError;
 
-    expect(valErr && valErr.feeType
-      && !!valErr.feeType.length || false).to.equal(true);
+    expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 
   it('fails validation if the currency code is not a string', () => {
@@ -44,8 +41,11 @@ describe('the Fixed Fee model', () => {
     fixedFee.set({ currencyCode: 1 }, { validate: true });
     const valErr = fixedFee.validationError;
 
-    expect(valErr && valErr.feeType
-      && !!valErr.feeType.length || false).to.equal(true);
+    console.log('slick WILLY');
+    console.dir(fixedFee.validationError);
+    console.log('CHARLIE CHUCKLES');
+
+    expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 
   it('fails validation if the currency code is not a known code', () => {
@@ -53,7 +53,6 @@ describe('the Fixed Fee model', () => {
     fixedFee.set({ currencyCode: 'FOO' }, { validate: true });
     const valErr = fixedFee.validationError;
 
-    expect(valErr && valErr.feeType
-      && !!valErr.feeType.length || false).to.equal(true);
+    expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 });

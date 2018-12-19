@@ -254,8 +254,8 @@ export default class extends baseVw {
       this.messages.push(message);
       if (this.options.amActiveTab()) this.markConvoAsRead();
 
-      // We'll consider them to be done typing if an acutal message came
-      // in. If they re-start typing, we'll get another socket messsage.
+      // We'll consider them to be done typing if an actual message came
+      // in. If they re-start typing, we'll get another socket message.
       const messageSender = this.getChatters()
         .find(chatter => chatter.id === e.jsonData.message.peerId);
 
@@ -269,7 +269,7 @@ export default class extends baseVw {
         if (!typers.length) {
           this.hideTypingIndicator();
         } else {
-          // update it so it doesn show the message sender as typing
+          // update it so it doesn't show the message sender as typing
           this.setTypingIndicator();
         }
       }

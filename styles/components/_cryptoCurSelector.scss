@@ -1,0 +1,70 @@
+.curSelector {
+  .curRow {
+    display: flex;
+    align-items: center;
+    font-size: 1.5rem;
+
+    .curControlWrapper {
+      height: 42px;
+      cursor: pointer;
+      padding: 0 14px;
+      display: flex;
+      flex-grow: 1;
+      align-items: center;
+      overflow: hidden;
+    }
+
+    label {
+      overflow: hidden;
+      pointer-events: none; // The label is for display only, the wrapper takes the click event.
+    }
+
+    input {
+      cursor: pointer;
+      flex-shrink: 0;
+      pointer-events: none; // The input is for display only, the wrapper takes the click event.
+    }
+
+    input:checked + label {
+      font-weight: 700;
+    }
+
+    input[type="checkbox"] + label:before {
+      // Tweak the checkbox size so it centers correctly. Otherwise the
+      // anti-aliasing makes it too high or two low.
+      font-size: 24px;
+      font-weight: 400;
+    }
+
+    input[type="radio"] {
+      margin: 0 0.6em 0 0;
+
+      & + label {
+        display: flex;
+        align-items: center;
+      }
+    }
+
+    .cryptoIcon {
+      // add visual space for icons
+      margin-left: 0.2em;
+      margin-right: 0.5em;
+      // Center vertically
+      position: relative;
+      top: 0.05em;
+      flex-shrink: 0;
+    }
+
+    .curName {
+      // Bump text down to center it visually.
+      position: relative;
+      top: 0.1em;
+      margin-right: 2em;
+    }
+
+    .disabledMsg {
+      pointer-events: none;
+      padding-right: 14px;
+    }
+  }
+}

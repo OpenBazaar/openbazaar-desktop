@@ -4,7 +4,7 @@ import '../../../lib/select2';
 import app from '../../../app';
 import { getCurrentConnection } from '../../../utils/serverConnect';
 import { getTranslatedCountries } from '../../../data/countries';
-import { getTranslatedCurrencies } from '../../../data/currencies';
+import { getCurrencies } from '../../../data/currencies';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -28,7 +28,7 @@ export default class extends BaseModal {
     this.lastAvatarImageRotate = 0;
     this.avatarChanged = false;
     this.countryList = getTranslatedCountries();
-    this.currencyList = getTranslatedCurrencies();
+    this.currencyList = getCurrencies();
   }
 
   className() {
@@ -204,7 +204,7 @@ export default class extends BaseModal {
     this.clearCachedElementMap();
 
     loadTemplate('modals/onboarding/onboarding.html', t => {
-      loadTemplate('brandingBox.html', brandingBoxT => {
+      loadTemplate('components/brandingBox.html', brandingBoxT => {
         const state = this.getState();
 
         this.$el.html(t({

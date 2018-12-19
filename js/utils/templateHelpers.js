@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
+import { isFiatCur } from '../data/currencies';
 import {
   formatCurrency,
   convertAndFormatCurrency,
@@ -11,11 +12,11 @@ import {
   renderPairedCurrency,
 } from './currency';
 import {
-  getServerCurrency,
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
-  getCurrencyByCode as getCryptoCurByCode,
-} from '../data/cryptoCurrencies';
+  getCurrencyByCode as getWalletCurByCode,
+  supportedWalletCurs,
+  anySupportedByWallet,
+  ensureMainnetCode,
+} from '../data/walletCurrencies';
 import {
   renderCryptoIcon,
   renderCryptoTradingPair,
@@ -24,7 +25,7 @@ import {
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
-import { upToFixed } from './number';
+import { upToFixed, localizeNumber } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
@@ -55,8 +56,8 @@ function gracefulException(func, fallbackReturnVal = '') {
   });
 }
 
-export function polyT(...args) {
-  return app.polyglot.t(...args);
+export function polyT(key, options) {
+  return app.polyglot.t(key, options);
 }
 
 export function parseEmojis(text, className = '', attrs = {}) {
@@ -103,19 +104,20 @@ const currencyExport = {
   convertAndFormatCurrency,
   convertCurrency,
   getCurrencyValidity,
-  getServerCurrency,
-  getCryptoCurByCode,
   getExchangeRate,
   formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),
-  getBlockChainTxUrl,
-  getBlockChainAddressUrl,
+  isFiatCur,
 };
 
 const crypto = {
   cryptoIcon: gracefulException(renderCryptoIcon),
   tradingPair: gracefulException(renderCryptoTradingPair),
   cryptoPrice: gracefulException(renderCryptoPrice),
+  ensureMainnetCode,
+  supportedWalletCurs,
+  anySupportedByWallet,
+  getWalletCurByCode,
 };
 
 export {
@@ -126,6 +128,7 @@ export {
   isSmallHeight,
   getAvatarBgImage,
   getListingBgImage,
+  localizeNumber,
   upToFixed,
   splitIntoRows,
   is,

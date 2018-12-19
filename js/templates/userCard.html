@@ -24,10 +24,7 @@
       <div class="userControls flexHRight gutterHSm">
         <% if (!ob.ownGuid) { %>
           <%
-            const curSupported = ob.moderator && ob.moderatorInfo.acceptedCurrencies.includes(
-              ob.currencyMod.getServerCurrency().isTestnet ?   ob.currencyMod.getServerCurrency().testnetCode :   ob.currencyMod.getServerCurrency().code
-            );
-            if (curSupported) { %>
+            if (ob.moderator && ob.crypto.anySupportedByWallet(ob.moderatorInfo.acceptedCurrencies)) { %>
               <%= ob.processingButton({
               className: `iconBtnSm clrP clrBr toolTipNoWrap toolTipTop js-mod ${ob.ownMod ? 'active' : ''}`,
               btnText: '<i class="ion-briefcase"></i>',

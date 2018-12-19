@@ -54,6 +54,16 @@ export default class Profile extends BaseModel {
       !!this.get('moderatorInfo');
   }
 
+  get isVerified() {
+    return !!app.verifiedMods.get(this.id);
+  }
+
+  hasModCurrency(cur) {
+    const modInfo = this.get('moderatorInfo');
+    const acceptedCurs = modInfo ? modInfo.get('acceptedCurrencies') : [];
+    return Array.isArray(acceptedCurs) && acceptedCurs.includes(cur);
+  }
+
   get max() {
     return {
       locationLength: 100,

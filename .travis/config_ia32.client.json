@@ -9,7 +9,7 @@
   "src": "dist/openbazaar2client-linux-ia32/",
   "dest": "dist/linux32",
   "productDescription": "Decentralized Peer to Peer Marketplace for Bitcoin",
-  "intianOverrides": [
+  "lintianOverrides": [
     "changelog-file-missing-in-native-package",
     "executable-not-elf-or-script",
     "extra-license-file"
@@ -18,5 +18,9 @@
   "categories": [
     "Utility"
   ],
-  "priority": "optional"
+  "priority": "optional",
+  "depends": [
+    "libxss1",
+    "libgconf-2-4"
+  ]
 }

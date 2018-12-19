@@ -9,7 +9,7 @@
 <%
   let exchangeRateLine;
 
-  if (!ob.exchangeRateUnavailable) {
+  if (!ob.fromRateUnavailable && !ob.toRateUnavailable) {
     const formattedFromCurAmount = new Intl.NumberFormat(ob.localCurrency, {
       minimumFractionDigits: 0,
       maximumFractionDigits: 8,

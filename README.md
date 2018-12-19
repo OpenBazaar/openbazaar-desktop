@@ -29,6 +29,20 @@ This client uses Babel to compile [ES6 JavaScript](https://github.com/lukehoban/
 
 ** At this time, the app will not refresh on main.js (or other root folder JS changes). This would require the entire Electron app to refresh and BrowserSync is only refreshing our browser.
 
+### Linux Troubleshooting
+
+If you see an ENOSPC error after trying `npm start` and you are using Linux, you may need to do the following:
+
+1. Enter this on the command line:
+`echo fs.inotify.max_user_watches=524288 | sudo tee -a /etc/sysctl.conf && sudo sysctl -p`
+
+For Arch Linux add this line to /etc/sysctl.d/99-sysctl.conf:
+`fs.inotify.max_user_watches=524288`
+
+2. Execute: sysctl --system
+
+This will prevent your system from having errors due to too many files being watched.
+
 ### Linting
 
 `npm run lint` will run eslint on the JS files.

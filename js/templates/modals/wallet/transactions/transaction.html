@@ -1,4 +1,4 @@
-<% const serverCurCode = ob.currencyMod.getServerCurrency().code %>
+<% const serverCurCode = ob.walletCur.code %>
 <div class="flex gutterHSm clrT <% if (ob.status === 'CONFIRMED') print('confirmedTransaction') %>">
   <%
     let statusIcon = 'ion-ios-checkmark-empty';
@@ -30,10 +30,10 @@
 
       if (ob.value > 0) {
         infoLine = ob.polyT('wallet.transactions.transaction.incomingText', {
-          currencyPairing: `<span class="txB flexNoShrink margRTxt">${priceFrag}</span>`,
+          currencyPairing: `<span class="txB flexNoShrink margRTxt clrTEm">${priceFrag}</span>`,
         });
       } else {
-        const currencyPairing = `<span class="txB flexNoShrink margRTxt">${priceFrag}</span>`;
+        const currencyPairing = `<span class="txB flexNoShrink margRTxt clrTEm">${priceFrag}</span>`;
 
         if (ob.address) {
           infoLine = ob.polyT('wallet.transactions.transaction.outgoingText', {
@@ -57,7 +57,7 @@
       <div class="flexInline gutterH margR clrT2 tx6 floL">
         <div class="flexNoShrink"><%= timeAgoAndConfirmCount %></div>
         <div class="flexNoShrink" style="max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink"><%= ob.txid %></a></div>
+          <div class="noOverflow"><a class="clrT2 txU js-txidLink"><%= ob.txid %></a></div>
         </div>
       </div>
       <%
@@ -69,7 +69,7 @@
   <div class="col">
     <div class="flexHRight">
       <div class="btnStrip">
-        <a class="btn clrP clrBr clrSh2" href="<%= ob.currencyMod.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %><span class="ion-android-open"></span></a>
+        <a class="btn clrP clrBr clrSh2" href="<%= ob.walletCur.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
         <% if (ob.allowFeeBump) { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
@@ -85,8 +85,8 @@
   <div class="tx3 txB rowSm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.title') %></div>
   <% if (ob.fetchingEstimatedFee) { %>
     <%= ob.spinner({ className: 'txCtr spinnerMd' }) %>
-  <% } else if (ob.fetchFailed) { %>
-    <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchError || '' }) %></p>
+  <% } else if (ob.fetchFeeFailed) { %>
+    <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.fetchError', { err: ob.fetchFeeError || '' }) %></p>
     <a class="js-retryFeeFetch clrTEm"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.btnRetry') %></a>
   <% } else if (typeof ob.estimatedFee === 'number') {
     let estimatedFeeCombo = ob.currencyMod.pairedCurrency(
@@ -95,7 +95,7 @@
       ob.userCurrency
     );
 
-    insufficientFunds = ob.walletBalance.confirmed < ob.estimatedFee;
+    insufficientFunds = ob.walletBalance && ob.walletBalance.confirmed < ob.estimatedFee;
   %>
     <% if (!insufficientFunds) { %>
       <p class="clrT2 bodyText"><%= ob.polyT('wallet.transactions.transaction.retryPaymentConfirmBox.body', {

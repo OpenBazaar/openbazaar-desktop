@@ -127,7 +127,7 @@ export function showMetricsModal(opts) {
   return metricsModal;
 }
 
-export function recordEvent(key, segmentation) {
+export function recordEvent(key, segmentation = {}) {
   if (!key) throw new Error('Please provide a key');
   if (segmentation && !_.isObject(segmentation)) {
     throw new Error('please provide the segmentation as an object');
@@ -146,7 +146,7 @@ export function startAjaxEvent(key) {
   if (window.Countly) window.Countly.q.push(['start_event', key]);
 }
 
-export function endAjaxEvent(key, segmentation) {
+export function endAjaxEvent(key, segmentation = {}) {
   if (!key) throw new Error('Please provide a key');
   if (segmentation && !_.isObject(segmentation)) {
     throw new Error('please provide the segmentation as an object');

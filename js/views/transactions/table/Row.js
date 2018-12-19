@@ -3,7 +3,6 @@
 */
 
 import app from '../../../app';
-import _ from 'underscore';
 import moment from 'moment';
 import loadTemplate from '../../../utils/loadTemplate';
 import { recordEvent } from '../../../utils/metrics';
@@ -34,9 +33,6 @@ export default class extends baseVw {
     }
 
     this.type = opts.type;
-    this._state = {
-      ...opts.initialState || {},
-    };
 
     this.$el.toggleClass('unread', !this.model.get('read'));
     this.listenTo(this.model, 'change:read', (md, read) => {
@@ -106,27 +102,6 @@ export default class extends baseVw {
     recordEvent('Transactions_ClickOrder', {
       type: this.type,
     });
-  }
-
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
   }
 
   render() {

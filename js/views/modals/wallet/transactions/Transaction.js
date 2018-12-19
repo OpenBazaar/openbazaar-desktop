@@ -1,33 +1,57 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
-import { setTimeagoInterval } from '../../../utils/';
-import { getFees } from '../../../utils/fees';
-import { getServerCurrency } from '../../../data/cryptoCurrencies';
-import app from '../../../app';
-import { openSimpleMessage } from '../../modals/SimpleMessage';
-import loadTemplate from '../../../utils/loadTemplate';
-import baseVw from '../../baseVw';
+import { setTimeagoInterval } from '../../../../utils/';
+import { getFees } from '../../../../utils/fees';
+import {
+  getCurrencyByCode as getWalletCurByCode,
+} from '../../../../data/walletCurrencies';
+import app from '../../../../app';
+import { openSimpleMessage } from '../../../modals/SimpleMessage';
+import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
 
-export default class extends baseVw {
+export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    const opts = {
+      ...options,
+      initialState: {
+        retryConfirmOn: false,
+        retryInProgress: false,
+        copiedIndicatorOn: false,
+        fetchingEstimatedFee: false,
+        fetchFeeError: '',
+        fetchFeeFailed: false,
+        ...options.initialState,
+      },
+    };
+
+    super(opts);
+    this.options = opts;
 
     if (!this.model) {
       throw new Error('Please provide a Transaction model.');
     }
 
-    this._state = {
-      ...options.initialState || {},
-    };
+    if (typeof opts.coinType !== 'string') {
+      throw new Error('Please provide a coinType as a string.');
+    }
 
+    this.walletCur = getWalletCurByCode(opts.coinType);
     this.listenTo(this.model, 'change', () => this.render());
     this.timeAgoInterval = setTimeagoInterval(this.model.get('timestamp'), () => {
       const timeAgo = moment(this.model.get('timestamp')).fromNow();
       if (timeAgo !== this.renderedTimeAgo) this.render();
     });
+
+    if (opts.bumpFeeXhr) {
+      this.onPostBumpFee(opts.bumpFeeXhr, {
+        // These both will already happen since the fee bump was initiated from this
+        // view. Let's prevent them from happening a duplicate time.
+        triggerBumpFeeAttempt: false,
+        showErrorOnFail: false,
+      });
+    }
 
     this.boundDocClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocClick);
@@ -62,28 +86,59 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  onClickRetryConfirmed() {
+  onPostBumpFee(xhr, options = {}) {
+    const opts = {
+      triggerBumpFeeAttempt: true,
+      showErrorOnFail: true,
+      ...options,
+    };
+
+    if (
+      !xhr ||
+      typeof xhr.done !== 'function' &&
+      typeof xhr.fail !== 'function' &&
+      typeof xhr.always !== 'function'
+    ) {
+      throw new Error('Please provide a jQuery xhr');
+    }
+
     this.setState({
       retryInProgress: true,
       retryConfirmOn: false,
     });
 
-    this.retryPost = $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`))
-      .always(() => {
-        this.setState({
-          retryInProgress: false,
-        });
-      }).fail((xhr) => {
-        if (xhr.statusText === 'abort') return;
-        const failReason = xhr.responseJSON && xhr.responseJSON.reason || '';
+    xhr.always(() => {
+      this.setState({
+        retryInProgress: false,
+      });
+    }).fail(failXhr => {
+      if (opts.showErrorOnFail) {
+        if (failXhr.statusText === 'abort') return;
+        const failReason = failXhr.responseJSON && failXhr.responseJSON.reason || '';
         openSimpleMessage(
           app.polyglot.t('wallet.transactions.transaction.retryFailDialogTitle'),
           failReason);
-      })
-      .done(data => {
-        this.trigger('retrySuccess', { data });
-        this.model.set('feeBumped', true);
+      }
+    })
+    .done(data => {
+      this.trigger('bumpFeeSuccess', {
+        md: this.model,
+        data,
       });
+      this.model.set('feeBumped', true);
+    });
+
+    if (opts.triggerBumpFeeAttempt) {
+      this.trigger('bumpFeeAttempt', {
+        md: this.model,
+        xhr,
+      });
+    }
+  }
+
+  onClickRetryConfirmed() {
+    const post = $.post(app.getServerUrl(`wallet/bumpfee/${this.model.id}`));
+    this.onPostBumpFee(post);
   }
 
   onClickRetryPmt(e) {
@@ -114,49 +169,28 @@ export default class extends baseVw {
     }, 1000);
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (!_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   fetchFees() {
     this.setState({
       retryConfirmOn: true,
       fetchingEstimatedFee: true,
-      fetchError: '',
-      fetchFailed: false,
+      fetchFeeError: '',
+      fetchFeeFailed: false,
     });
 
-    getFees().done(fees => {
+    getFees(this.options.coinType).done(fees => {
       if (this.isRemoved()) return;
       this.setState({
         fetchingEstimatedFee: false,
         // server doubles the fee when bumping
-        estimatedFee: (getServerCurrency().feeBumpTransactionSize * fees.priority * 2) /
-          getServerCurrency().baseUnit,
+        estimatedFee: (this.walletCur.feeBumpTransactionSize * fees.priority * 2) /
+          this.walletCur.baseUnit,
       });
     }).fail(xhr => {
       if (this.isRemoved()) return;
       this.setState({
         fetchingEstimatedFee: false,
-        fetchFailed: true,
-        fetchError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+        fetchFeeFailed: true,
+        fetchFeeError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
       });
     });
   }
@@ -174,7 +208,6 @@ export default class extends baseVw {
   }
 
   remove() {
-    if (this.retryPost) this.retryPost.abort();
     $(document).off('click', this.boundDocClick);
     this.timeAgoInterval.cancel();
     clearTimeout(this.copiedIndicatorTimeout);
@@ -184,13 +217,15 @@ export default class extends baseVw {
   render() {
     this.renderedTimeAgo = moment(this.model.get('timestamp')).fromNow();
 
-    loadTemplate('modals/wallet/transaction.html', (t) => {
+    loadTemplate('modals/wallet/transactions/transaction.html', (t) => {
+      const walletBalance = app.walletBalances && app.walletBalances[this.options.coinType];
       this.$el.html(t({
         ...this.model.toJSON(),
         userCurrency: app.settings.get('localCurrency'),
         timeAgo: this.renderedTimeAgo,
         isTestnet: !!app.serverConfig.testnet,
-        walletBalance: app.walletBalance.toJSON(),
+        walletBalance: walletBalance && walletBalance.toJSON() || null,
+        walletCur: this.walletCur,
         ...this._state,
       }));
     });

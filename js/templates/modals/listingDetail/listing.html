@@ -106,26 +106,33 @@
               </div>
             <% }); %>
             <%
+              const priceCryptoCode = ob.crypto.getWalletCurByCode(ob.price.currencyCode);
               let tip;
               let buyNowClass = 'disabled';
               let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
                 'listingDetail.buyNow' :
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
-              const serverCur = ob.currencyMod.getServerCurrency();
-              const serverCurCode = serverCur.isTestnet ? serverCur.testnetCode : serverCur.code;
 
-              if (ob.metadata.acceptedCurrencies.indexOf(serverCurCode) === -1) {
+              if (!ob.crypto.anySupportedByWallet(ob.metadata.acceptedCurrencies)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
                   {
-                    acceptedCurrencies: ob.metadata.acceptedCurrencies.join(', '),
-                    serverCur: serverCurCode,
+                    acceptedCurs: ob.metadata.acceptedCurrencies.join(', '),
+                    walletCurs: ob.crypto.supportedWalletCurs()
+                      .join(', '),
                   });
               } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+                !(
+                  priceCryptoCode &&
+                  ob.crypto.anySupportedByWallet([priceCryptoCode.code, priceCryptoCode.testnetCode])
+                ) &&
                 ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
                 tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
-                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur') :
-                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur',
+                    { cur: ob.price.currencyCode }) :
+                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo', {
+                    cur: ob.price.currencyCode
+                  });
               } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
                 !ob.currencyMod.getExchangeRate(ob.price.currencyCode)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
@@ -134,7 +141,7 @@
                 unpurchaseable = false;
               }
 
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') } &nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-alert-circled clrTErr"></span></span></div>`;
+              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') }&nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-help-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT(buyNowTranslationKey) %>
@@ -175,18 +182,7 @@
           <% if(!ob.item.tags.length) { print(`<i class="clrT2">${ob.polyT('listingDetail.noTags')}</i>`) } %>
         </div>
         <h5><%= ob.polyT('listingDetail.paymentsAccepted') %></h5>
-        <ul class="unstyled row">
-          <% ob.metadata.acceptedCurrencies.forEach(cur => {
-            const curData = ob.currencyMod.getCryptoCurByCode(cur);
-            if (curData) { %>
-              <li class="flexVCent gutterHSm clrBr">
-                <span class="ion-ios-checkmark-empty clrTEm tx2"></span>
-                <%= ob.crypto.cryptoIcon({ code: curData.code }) %>
-                <div class="acceptedCurName"><%= ob.polyT(`cryptoCurrencies.${curData.code}`) %></div>
-              </li>
-            <% }
-          }) %>
-        </ul>
+        <div class="js-supportedCurrenciesList"></div>
         <% if (ob.hasVerifiedMods) { %>
           <div class="verifiedModBox clrBrAlert2 clrBAlert2Grad">
             <div class="flexVCent flexHCent gutterHTn rowSm">

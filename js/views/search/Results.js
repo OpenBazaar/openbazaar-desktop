@@ -4,7 +4,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
 import ListingCard from '../ListingCard';
 import UserCard from '../UserCard';
-import PageControls from '../components/PageControls';
+import PageControls from '../components/PageControlsTextStyle';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
@@ -56,6 +56,7 @@ export default class extends baseVw {
       const options = {
         listingBaseUrl: `${base}/store/`,
         reportsUrl: this.reportsUrl,
+        searchUrl: this.searchUrl,
         model,
         vendor,
         onStore: false,
@@ -70,10 +71,6 @@ export default class extends baseVw {
 
   renderCards(models) {
     const resultsFrag = document.createDocumentFragment();
-    const end = this.pageSize * (Number(this.serverPage) + 1) - (this.pageSize - models.length);
-    const total = models.total;
-    let start = 0;
-    if (total) start = this.pageSize * Number(this.serverPage) + 1;
 
     models.forEach(model => {
       const cardVw = this.createCardView(model);
@@ -84,12 +81,19 @@ export default class extends baseVw {
       }
     });
 
-    this.$el.toggleClass('noResults', total < 1);
+    this.$el.toggleClass('noResults', models.total < 1);
 
     this.$resultsGrid.html(resultsFrag);
+
     // update the page controls
-    // this.$displayText.html(app.polyglot.t('search.displaying', { start, end, total }));
-    this.pageControls.setState({ start, end, total });
+    const currentPage = Number(this.serverPage) + 1;
+    const lastPage = Math.ceil(models.total / this.pageSize);
+
+    this.pageControls.setState({
+      currentPage,
+      morePages: currentPage < lastPage,
+    });
+
     // hide the loading spinner
     this.$el.removeClass('loading');
     /*

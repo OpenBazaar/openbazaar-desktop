@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import { integerToDecimal } from '../../utils/currency';
-import { getServerCurrency } from '../../data/cryptoCurrencies';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
@@ -54,22 +53,50 @@ export default class extends BaseOrder {
     return this.contract.get('buyerOrder').payment.amount;
   }
 
+  /**
+   * Returns the order price in Satoshi. Useful if you intend to use it in
+   * arithmetic expression where you need to avoid floating point precision
+   * errors.
+   */
+  get rawOrderPrice() {
+    return this.rawResponse
+      .contract
+      .buyerOrder
+      .payment
+      .amount;
+  }
+
   get totalPaid() {
     return this.paymentsIn
       .reduce((total, transaction) => total + transaction.get('value'), 0);
   }
 
-  getBalanceRemaining() {
-    const balanceRemaining = this.orderPrice - this.totalPaid;
+  /**
+   * Returns the total paid in Satoshi. Useful if you intend to use it in
+   * arithmetic expression where you need to avoid floating point precision
+   * errors.
+   */
+  get rawTotalPaid() {
+    return this.rawPaymentsIn
+      .reduce((total, transaction) => total + transaction.value, 0);
+  }
 
-    // round based on the coins base units
-    const cryptoBaseUnit = getServerCurrency().baseUnit;
-    return Math.round(balanceRemaining * cryptoBaseUnit) / cryptoBaseUnit;
+  getBalanceRemaining(options = {}) {
+    const opts = {
+      convertFromSat: false,
+      ...options,
+    };
+
+    const balanceRemaining = this.rawOrderPrice - this.rawTotalPaid;
+
+    return opts.convertFromSat ?
+      integerToDecimal(balanceRemaining, this.paymentCoin) :
+      balanceRemaining;
   }
 
   get isPartiallyFunded() {
     const balanceRemaining = this.getBalanceRemaining();
-    return balanceRemaining > 0 && balanceRemaining < this.orderPrice;
+    return balanceRemaining > 0 && balanceRemaining < this.rawOrderPrice;
   }
 
   /**
@@ -96,7 +123,11 @@ export default class extends BaseOrder {
       .sort((a, b) => (a.get('height') - b.get('height')));
 
     _.every(models, (payment, pIndex) => {
-      if (this.getBalanceRemaining(new Transactions(models.slice(0, pIndex + 1))) <= 0) {
+      const transactions = new Transactions(
+        models.slice(0, pIndex + 1),
+        { paymentCoin: this.paymentCoin }
+      );
+      if (this.getBalanceRemaining(transactions) <= 0) {
         height = payment.get('height');
         return false;
       }
@@ -114,8 +145,21 @@ export default class extends BaseOrder {
   get paymentsIn() {
     return new Transactions(
       this.get('paymentAddressTransactions')
-        .filter(payment => (payment.get('value') > 0))
-      );
+        .filter(payment => (payment.get('value') > 0)),
+      { paymentCoin: this.paymentCoin }
+    );
+  }
+
+  /**
+   * Returns a modified version of the transactions by filtering out any negative payments
+   * (e.g. money moving from the multisig to the vendor, refunds). This differs from
+   * paymentsIn, in that it won't convert prices from Satoshi and rather than returning
+   * a Collection, flat data will be returned.
+   */
+  get rawPaymentsIn() {
+    return this.rawResponse
+      .paymentAddressTransactions
+      .filter(payment => payment.value > 0);
   }
 
   get isOrderCancelable() {
@@ -129,13 +173,13 @@ export default class extends BaseOrder {
     const orderState = this.get('state');
 
     if (this.buyerId === app.profile.id) {
-      return this.moderatorId &&
+      return !!this.moderatorId &&
         (
           ['AWAITING_FULFILLMENT', 'PENDING', 'FULFILLED'].includes(orderState) ||
           (orderState === 'PROCESSING_ERROR' && this.isFunded)
         );
     } else if (this.vendorId === app.profile.id) {
-      return this.moderatorId &&
+      return !!this.moderatorId &&
         ['PARTIALLY_FULFILLED', 'FULFILLED'].includes(orderState);
     }
 
@@ -143,17 +187,19 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    const serverCur = getServerCurrency();
+    const paymentCoin = BaseOrder.getPaymentCoin(response);
+    this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
 
     if (response.contract) {
       // Since we modify the data on parse (particularly in some nested models),
       // we'll store the original contract here.
-      response.rawContract = JSON.parse(JSON.stringify(response.contract)); // deep clone
+      response.rawContract = this.rawResponse.contract;
+
+      const payment = response.contract.buyerOrder.payment;
 
       // convert price fields
-      response.contract.buyerOrder.payment.amount =
-        integerToDecimal(response.contract.buyerOrder.payment.amount,
-          app.serverConfig.cryptoCurrency);
+      payment.amount =
+        integerToDecimal(payment.amount, payment.coin);
 
       // convert crypto listing quantities
       response.contract.buyerOrder.items.forEach((item, index) => {
@@ -183,30 +229,28 @@ export default class extends BaseOrder {
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.buyerOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
         response.contract.disputeResolution.payout.vendorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.vendorOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
         response.contract.disputeResolution.payout.moderatorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
-              app.serverConfig.cryptoCurrency);
+              paymentCoin);
       }
     }
 
     response.paymentAddressTransactions = response.paymentAddressTransactions || [];
 
     // Embed the payment type into each payment transaction.
-    // TODO: when multi wallet payment support is implemented, this will need to come
-    // from the server.
     const payments = [...response.paymentAddressTransactions];
 
     if (response.refundAddressTransaction) {
       payments.push(response.refundAddressTransaction);
     }
 
-    payments.forEach(pmt => (pmt.paymentCoin = serverCur.code));
+    payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
 
     return response;
   }

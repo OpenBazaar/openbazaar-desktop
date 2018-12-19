@@ -1,9 +1,0 @@
-<h2 class="h3"><%= ob.polyT('wallet.transactions.header') %></h2>
-<div class="posR">
-  <div class="popInMessageHolder js-popInMessages notFixed"></div>
-  <div class="js-transactionListContainer borderStacked contentBox clrBr padMdKids"></div>
-</div>
-<div class="js-transactionFetchStateWrap"></div>
-<% if (!ob.transactions.length && !ob.isFetching) { %>
-  <div class="center txCtr"><%= ob.polyT('wallet.transactions.noTransactionsPlaceholder') %></div>
-<% } %>

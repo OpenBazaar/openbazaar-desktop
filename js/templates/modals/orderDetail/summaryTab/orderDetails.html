@@ -161,7 +161,7 @@
                   <%=
                     ob.currencyMod.pairedCurrency(
                       ob.order.payment.amount,
-                      ob.currencyMod.getServerCurrency().code,
+                      ob.order.payment.coin,
                       ob.userCurrency
                     )
                   %>

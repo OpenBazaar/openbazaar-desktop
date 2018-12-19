@@ -8,126 +8,190 @@
     }
   }
 
-  .btcTickerContainer {
-    margin-left: auto;
+  .tickerContainer {
     margin-right: 40px;
 
-    .btcTicker {
+    .cryptoTicker {
       height: 100%;
     }
   }
 
-  .statsWrap {
-    border-right-width: 1px;
-    border-right-style: solid;
-    padding-right: $padMd;
+  .zeroSupportedCurs {
+    min-height: 250px;
+    text-align: center;
+    padding: $padMd;
+    font-size: $tx4;
+  }
 
-    .buttonWrap {
-      .btn {
-        width: 100%;
+  .coinNav {
+    .coinNavItem {
+      cursor: pointer;
+
+      .coinName {
+        // in case the name and/or balance are really long, don't let
+        // the name column get too small
+        min-width: 80px;
+        word-wrap: break-word;
       }
-    }
 
-    .transactionCount {
-      .spinner {
-        width: 30px;
-        margin-left: 10px;
+      .balanceText {
+        word-wrap: break-word;
+        max-width: 100px;
+      }
+
+      &.active {
+        cursor: default;
+        font-weight: bold;
+        outline: {
+          style: solid;
+          width: 1px;
+        }
+
+        .activeBalanceIcon {
+          font-size: 22px;
+          line-height: 1;
+          position: absolute;
+        }
+      }
+
+      &.clientUnsupported {
+        cursor: default;
+
+        .cryptoIcon, .coinName {
+          @include disabled();
+        }
       }
     }
   }
 
-  .receiveMoney, .btnSendMoney {
-    display: none;
+  .coinStats {
+    height: 102px;
+    padding: 20px;
+
+    .coinIcon {
+      position: absolute;
+      right: 0;
+      left: 0;
+      top: 0;
+      transform: translateY(calc(-50% + 1px));
+      text-align: center;
+
+      .cryptoIcon  {
+        width: 34px;
+        height: 34px;
+      }
+    }
+
+    .colWrap {
+      height: 100%;
+
+      .statCol {
+        padding-top: 25px;
+
+        &.displayCurCol {
+          height: 100%;
+          padding-top: 0;
+
+          .displayCurColContent {
+            padding-top: 25px;
+            border-right-width: 1px;
+            border-right-style: solid;
+            border-left-width: 1px;
+            border-left-style: solid;
+            justify-content: flex-start;
+            height: 100%;
+          }
+        }
+      }
+    }
   }
 
-  &.receiveModeOn {
-    .receiveMoney {
-      display: block;
-    }
-
-    .btnSendMoney {
-      display: inline-flex;
-    }
-
-    .sendMoney, .btnReceiveMoney {
-      display: none;
+  .sendReceiveNav {
+    .active, .btnFlx:hover, .btnFlx:focus {
+      font-weight: bold;
     }
   }
 
   .sendReceiveContainer {
     // So there's no jump when toggling between send / receive mode. If the larger
     // size changes, this may need to be updated.
-    height: 363px;
-    padding-top: 25px;
+    min-height: 320px;
 
     .receiveMoney {
       text-align: center;
       position: relative;
 
-      .codeAddressWrap {
-        height: 273px;
-        padding-left: $padMd;
+      .addressText {
+        max-width: 325px;
+        display: inline-block;
+        vertical-align: top;
+      }
 
-        .receiveAddressWrap {
-          display: inline-block;
-          position: relative;
-          width: 100%;
+      .receiveQrCodeWrap {
+        // needed so space is allocated when the qr code is not displayed
+        // during fetching
+        height: 208px;
+      }
 
-          .copiedText {
-            margin-bottom: 5px;
-            position: absolute;
-            top: -20px;
-            right: 0;
-          }
+      .copyTextWrap {
+        padding-left: 8px;
 
-          .receiveAddressLink {
-            border-width: 1px;
-            border-style: solid;
-            padding: 5px 10px;
-            display: inline-block;
-            min-width: 360px;
-            max-width: calc(100% - 30px);
-          }
-        }
-
-        .spinnerWrap {
+        .copyAddress, .copiedText {
           position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
-          bottom: 0;
+          max-width: 90px;
+          display: inline-block;
+          text-align: left;
+          word-wrap: break-word;
+        }
 
-          .spinner {
-            width: 100px;
-            @include center();
-          }
+        .copiedText {
+          left: 8px;
         }
       }
 
-      .cancelReceiveBtn {
+      .spinnerWrap {
         position: absolute;
+        top: 0;
+        left: 0;
         right: 0;
-        top: -25px;
-      }
+        bottom: 0;
 
-      .buttonsWrap {
-        position: relative;
-        left: calc($padMd / 2);
+        .spinner {
+          width: 100px;
+          @include center();
+        }
       }
     }
   }
 
   .walletTransactions {
-    padding: $padMd;
+    padding: $padLg;
     min-height: 335px;
     position: relative;
 
     .transaction {
       position: relative;
       font-size: $tx5;
+      padding: {
+        right: 0;
+        left: 0;
+      }
 
       .btn {
-        font-size: $tx6;
+        font-size: $tx5b;
+        font-weight: bold;
+        padding: {
+          right: 10px;
+          left: 10px;
+        }
+      }
+
+      &:last-child {
+        border-bottom: {
+          style: solid;
+          width: 1px;
+          color: inherit;
+        }
       }
 
       .statusIconCol {
@@ -187,9 +251,13 @@
     }
 
     .popInMessageHolder {
+      transform: translateX(4px);
+      top: 100px;
+
       &.notFixed {
         position: absolute;
         top: -65px;
+        transform: translateX(-50%);
       }
     }
 
@@ -210,12 +278,24 @@
         height: auto;
       }
     }
+
+    .transactionFetchState {
+      margin-top: 25px;
+    }
+  }
+
+  .reloadTransactions {
+    position: absolute;
+    top: 20px;
+    right: $padLg;
+    max-width: 200px;
   }
 }
 
 .spendConfirmBox {
   .sendConfirm {
     position: relative;
+    z-index: 2; // Position above the popInMessageHolder
 
     .spinner {
       position: relative;

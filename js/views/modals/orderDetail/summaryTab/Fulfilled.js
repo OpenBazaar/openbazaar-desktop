@@ -1,5 +1,4 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import moment from 'moment';
 import { clipboard } from 'electron';
 import '../../../../utils/lib/velocity';
@@ -9,21 +8,21 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      initialState: {
+        contractType: 'PHYSICAL_GOOD',
+        isLocalPickup: false,
+        showPassword: false,
+        noteFromLabel:
+          app.polyglot.t('orderDetail.summaryTab.fulfilled.noteFromVendorLabel'),
+        coinType: '',
+        ...options.initialState,
+      },
+    });
 
     if (!options.dataObject) {
       throw new Error('Please provide a vendorOrderFulfillment data object.');
     }
-
-    this._state = {
-      contractType: 'PHYSICAL_GOOD',
-      isLocalPickup: false,
-      showPassword: false,
-      noteFromLabel:
-        app.polyglot.t('orderDetail.summaryTab.fulfilled.noteFromVendorLabel'),
-      coinType: '',
-      ...options.initialState || {},
-    };
 
     this.dataObject = options.dataObject;
   }
@@ -51,27 +50,6 @@ export default class extends BaseVw {
       });
   }
 
-  getState() {
-    return this._state;
-  }
-
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   revealEscapeChars(input) {
     const output = input.replace(/[<>&\n"]/g, x => ({
       '<': '&amp;lt;',
@@ -91,8 +69,8 @@ export default class extends BaseVw {
 
     loadTemplate('modals/orderDetail/summaryTab/fulfilled.html', (t) => {
       this.$el.html(t({
-        ...this._state,
-        ...this.dataObject || {},
+        ...this.getState(),
+        ...this.dataObject,
         transactionID: transactionID.replace(/["]/g, '[!$quote$!]'),
         encodedTxId: this.revealEscapeChars(transactionID),
         moment,
