@@ -17,7 +17,7 @@
     "index:watch": "nodemon -w index.html -x \"npm run process-index\"",
     "browsersync": "browser-sync start --no-ui -f 'js, .tmp/**/*.css, .tmp/**/*.html, !.tmp/test/**/*'",
     "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js",
-    "process-index:build": "babel-node ./bin/processIndexForBuild.js",
+    "process-index:build": "cross-env BABEL_ENV=production babel-node ./bin/processIndexForBuild.js",
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
     "babel": "cross-env BABEL_ENV=production babel js --out-dir prod --ignore \"js/utils/workers/*\";cross-env BABEL_ENV=workers babel js/utils/workers --out-dir prod/utils/workers;cross-env cross-env BABEL_ENV=production babel main.js --out-file mainBuilt.js",
     "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders",
