@@ -1,9 +1,12 @@
 {
   "env": {
-    "prod": {
+    "development": {
        "presets": ["env", "stage-1"]
      },
-    "prodWorkers": {
+    "production": {
+       "presets": ["env", "stage-1"]
+     },     
+    "workers": {
       "presets": [["env", { "modules": false }], "stage-1"]
     }
   }
