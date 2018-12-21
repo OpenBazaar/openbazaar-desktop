@@ -149,7 +149,7 @@ export function getCurrenciesSortedByCode() {
   return currenciesSortedByCode;
 }
 
-const WORKER_PATH = `${__dirname}/../utils/cryptoListingCursWorker.js`;
+const WORKER_PATH = `${__dirname}/../utils/workers/cryptoListingCursWorker.js`;
 let getWorkerDeferred;
 
 function getWorker() {
