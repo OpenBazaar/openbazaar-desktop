@@ -19,7 +19,7 @@
     "process-index": "cross-env NODE_ENV=development babel-node ./bin/processIndex.js",
     "process-index:build": "babel-node ./bin/processIndexForBuild.js",
     "copy-js-subfolders": "copyfiles -u 1 'js/languages/**/*' 'js/templates/**/*' prod",
-    "babel": "babel js --out-dir prod; babel main.js --out-file mainBuilt.js",
+    "babel": "cross-env NODE_ENV=prod babel js --out-dir prod --ignore \"js/utils/workers/*\";cross-env NODE_ENV=prodWorkers babel js/utils/workers --out-dir prod/utils/workers;cross-env NODE_ENV=prod babel main.js --out-file mainBuilt.js",
     "build": "npm-run-all sass:build --parallel babel process-index:build --sequential copy-js-subfolders",
     "binaries": "./build.sh",
     "getCryptoData": "cross-env NODE_ENV=development babel-node ./bin/getCryptoData.js"
@@ -37,6 +37,7 @@
   "devDependencies": {
     "babel-cli": "6.26.0",
     "babel-eslint": "6.0.5",
+    "babel-preset-env": "1.7.0",
     "bluebird": "3.5.1",
     "browser-sync": "2.26.3",
     "chai": "3.5.0",
@@ -68,7 +69,6 @@
     "lint"
   ],
   "dependencies": {
-    "babel-preset-es2015": "6.24.1",
     "babel-preset-stage-1": "6.24.1",
     "babel-register": "6.26.0",
     "backbone": "1.3.3",
