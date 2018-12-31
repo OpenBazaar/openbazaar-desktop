@@ -142,7 +142,7 @@ crashReporter.start({
   productName: 'OpenBazaar 2',
   companyName: 'OpenBazaar',
   submitURL: 'http://104.131.17.128:1127/post',
-  autoSubmit: true,
+  uploadToServer: true,
   extra: {
     bundled: isBundledApp,
   },
@@ -389,7 +389,7 @@ function createWindow() {
   Menu.setApplicationMenu(menu);
 
   ipcMain.on('contextmenu-click', () => {
-    menu.popup();
+    menu.popup({});
   });
 
   // put logic here to set tray icon based on OS

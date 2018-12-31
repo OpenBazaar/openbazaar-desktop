@@ -35,7 +35,7 @@ Tag version (or release candidate) in git
 
 ### Push tag to initiate Travis binary build process
 
-Once a signed release tag has been pushed to the repository Travis will begin to build binaries for all operating systems
+Once a signed release tag has been pushed to the repository, Travis will begin to build binaries for all operating systems
 and upload them to proper GitHub release location.
 
 ### After Travis CI has successfully completed the build

@@ -1,3 +1,13 @@
 {
-  "presets": ["es2015", "stage-1"]
+  "env": {
+    "development": {
+       "presets": ["env", "stage-1"]
+     },
+    "production": {
+       "presets": ["env", "stage-1"]
+     },     
+    "workers": {
+      "presets": [["env", { "modules": false }], "stage-1"]
+    }
+  }
 }

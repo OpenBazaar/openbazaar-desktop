@@ -59,7 +59,7 @@ export default class extends baseVw {
       this.statusBarMessage.setState({
         status: 'connecting',
         msg: app.polyglot.t('connectionManagement.statusBar.waitForServerStopMsg', {
-          serverName: e.stoppingServer.get('name'),
+          serverName: e.stoppingServer && e.stoppingServer.get('name') || '',
         }),
       });
     });

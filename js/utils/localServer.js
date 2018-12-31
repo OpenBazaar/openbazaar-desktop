@@ -84,7 +84,7 @@ export default class LocalServer {
     }
 
     this._isRunning = true;
-    let serverStartArgs = ['start', ...commandLineArgs];
+    let serverStartArgs = ['start', '-t', ...commandLineArgs];
 
     // wire in our auth cookie
     if (global.authCookie) {

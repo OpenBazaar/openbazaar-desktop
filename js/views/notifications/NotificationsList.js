@@ -34,12 +34,12 @@ export default class extends BaseVw {
       this.$el.toggleClass('noNotifications', !this.collection.length);
 
       if (updateOpts.changes.added.length) {
-        // Expecting either a single new notifcation on the bottom (will
+        // Expecting either a single new notification on the bottom (will
         // be rendered on top) or a page of notifications on top (will be
         // rendered on the bottom).
         if (updateOpts.changes.added[updateOpts.changes.added.length - 1] ===
           this.collection.at(0)) {
-          // It's a page of notifcations at the bottom
+          // It's a page of notifications at the bottom
           this.renderNotifications(updateOpts.changes.added, 'append');
         } else {
           // New notification at top
@@ -114,7 +114,7 @@ export default class extends BaseVw {
   }
 
   /*
-   * isScrolledIntoView from util/dom.js is not accurataly returning a result for
+   * isScrolledIntoView from util/dom.js is not accurately returning a result for
    * a notification because the notifications menu markup is inside the very narrow
    * pageNav bar. Since the notification is outside the pageNav's "viewport", it thinks
    * nothing within the notif menu is ever in view. It's a unique enough case that we'll

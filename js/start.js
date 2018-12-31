@@ -711,22 +711,7 @@ app.connectionManagmentModal = new ConnectionManagement({
 
 // get the saved server configurations
 app.serverConfigs.fetch().done(() => {
-  // Migrate any old "built in" configurations containing the 'default' flag to
-  // use the new 'builtIn' flag.
-  app.serverConfigs.forEach(serverConfig => {
-    const isDefault = serverConfig.get('default');
-
-    if (typeof isDefault === 'boolean') {
-      serverConfig.unset('default');
-      const configSave = serverConfig.save({ builtIn: isDefault });
-
-      if (!configSave) {
-        // developer error or wonky data
-        console.error('There was an error migrating the server config, ' +
-          `${serverConfig.get('name')}, from the 'default' to the 'built-in' style.`);
-      }
-    }
-  });
+  app.serverConfigs.migrate();
 
   const isBundled = remote.getGlobal('isBundledApp');
   if (!app.serverConfigs.length) {
@@ -734,17 +719,24 @@ app.serverConfigs.fetch().done(() => {
     if (isBundled) {
       // for a bundled app, we'll create a
       // "default" one and try to connect
-      new ServerConfig({
+      const serverConfig = new ServerConfig({
         builtIn: true,
-      }).save({}, {
+        name: app.polyglot.t('connectionManagement.builtInServerName'),
+      });
+
+      serverConfig.save({}, {
         success: md => {
           setTimeout(() => {
-            app.serverConfigs.add(md);
-            app.serverConfigs.activeServer = md;
+            app.serverConfigs.activeServer = app.serverConfigs.add(md);
             connectToServer();
           });
         },
       });
+
+      if (serverConfig.validationError) {
+        console.error('There was an error creating the builtIn server config:');
+        console.dir(serverConfig.validationError);
+      }
     } else {
       app.connectionManagmentModal.open();
       serverConnectEvents.once('connected', () => {

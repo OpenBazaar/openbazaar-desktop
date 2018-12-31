@@ -5,7 +5,7 @@
 <% if (ob.displayRate) { %>
   <%
     const tip = ob.polyT('cryptoTicker.currentPrice', {
-      cur: ob.polyTFallback(`cryptoCurrencies.${ob.coinType}`, ob.coinType),
+      cur: ob.polyT(`cryptoCurrencies.${ob.coinType}`, { _: ob.coinType }),
     });
   %>
   <div class="flexVCent clrP clrBr clrSh3 contentBox padSm toolTipNoWrap" data-tip="<%= tip %>">
