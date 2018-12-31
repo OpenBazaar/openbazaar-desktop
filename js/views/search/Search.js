@@ -119,6 +119,8 @@ export default class extends baseVw {
       ...filterParams,
     };
 
+    this.formOverrides = {};
+
     this.processTerm(this.term);
   }
 
@@ -132,6 +134,8 @@ export default class extends baseVw {
       'change .js-sortBy': 'changeSortBy',
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
+      'click .js-filterWrapper .js-selectAll': 'changeFilterAll',
+      'click .js-filterWrapper .js-selectNone': 'changeFilterNone',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
@@ -178,7 +182,8 @@ export default class extends baseVw {
     const formData = this.getFormData(this.$filters);
     // keep any parameters that aren't present in the form on the page
     let filters = { ...this.defaultParams };
-    if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
+    if (!reset) filters = { ...filters, ...this.filterParams, ...formData, ...this.formOverrides };
+    this.formOverrides = {};
     filters = filters ? `&${$.param(filters, true)}` : '';
     const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     this.callSearchProvider(newURL);
@@ -449,6 +454,17 @@ export default class extends baseVw {
     this.serverPage = 0;
     this.processTerm(this.term);
     recordEvent('Discover_ChangeFilter');
+  }
+
+  changeFilterAll(e) {
+    const targ = $(e.target);
+    this.formOverrides[targ.prop('name')] = targ.data('val').split(',') || '';
+    this.changeFilter();
+  }
+
+  changeFilterNone(e) {
+    this.formOverrides[$(e.target).prop('name')] = '';
+    this.changeFilter();
   }
 
   onClickSuggestion(opts) {
