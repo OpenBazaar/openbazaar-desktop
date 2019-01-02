@@ -134,8 +134,8 @@ export default class extends baseVw {
       'change .js-sortBy': 'changeSortBy',
       'change .js-filterWrapper select': 'changeFilter',
       'change .js-filterWrapper input': 'changeFilter',
-      'click .js-filterWrapper .js-selectAll': 'changeFilterAll',
-      'click .js-filterWrapper .js-selectNone': 'changeFilterNone',
+      'click .js-filterWrapper .js-selectAll': 'clickFilterAll',
+      'click .js-filterWrapper .js-selectNone': 'clickFilterNone',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
@@ -456,14 +456,15 @@ export default class extends baseVw {
     recordEvent('Discover_ChangeFilter');
   }
 
-  changeFilterAll(e) {
+  clickFilterAll(e) {
     const targ = $(e.target);
-    this.formOverrides[targ.prop('name')] = targ.data('val').split(',') || '';
+    const val = targ.data('val');
+    this.formOverrides[targ.prop('name')] = typeof val === 'string' ? val.split(',') : [];
     this.changeFilter();
   }
 
-  changeFilterNone(e) {
-    this.formOverrides[$(e.target).prop('name')] = '';
+  clickFilterNone(e) {
+    this.formOverrides[$(e.target).prop('name')] = [];
     this.changeFilter();
   }
 
