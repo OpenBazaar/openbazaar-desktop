@@ -319,7 +319,7 @@ export default function connect(server, options = {}) {
   }
 
   if (newServerDataDir && typeof newServerDataDir === 'string') {
-    commandLineArgs = commandLineArgs.concat(['-d', `${newServerDataDir}-testnet`]);
+    commandLineArgs = commandLineArgs.concat(['-d', newServerDataDir]);
   }
 
   // If we're not connecting to the local bundled server or it's running with incompatible
