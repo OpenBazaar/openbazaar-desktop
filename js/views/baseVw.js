@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import sanitizeHtml from 'sanitize-html';
 import { setDeepValue } from '../utils/object';
 import { View } from 'backbone';
 
@@ -61,7 +62,7 @@ export default class baseVw extends View {
       const $field = $(field);
       const varType = $field.data('var-type');
 
-      let val = $field.val();
+      let val = sanitizeHtml($field.val());
 
       if (field.tagName.toUpperCase() === 'DIV') {
         val = field.innerHTML;
