@@ -79,22 +79,29 @@
                 <% }); %>
                 </div>
               <% } else if (val.type ==='checkbox') { %>
-                <div class="flexCol checkboxCol">
+                <div class="flexCol checkboxCol row">
                 <%
                   const anyChecked = val.options.filter(opt => opt.checked);
+                  const keyPostfix = val.options.length > 1 ? '[]' : '';
+                  const allVals = [];
                   val.options.forEach((option, index) => {
+                    allVals.push(option.value);
                     let checked = '';
                     // if none of the checkboxes have a checked value, use the default values
                     if (option.checked || !anyChecked.length && option.default) {
                       checked = 'checked';
                     }
                     var parsedLabel = ob.parseEmojis(option.label);
-                    print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}" value="${option.value}">`);
+                    print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}${keyPostfix}" value="${option.value}">`);
                     print(`<label for="${key + index}"><span>${parsedLabel}</span></label>`);
                   });
                 %>
                 </div>
-              <% } %>
+              <div class="flex tx5b">
+                <a class="flexExpand js-selectAll" name="<%= key %>" data-val="<%= allVals.join() %>">Select All</a>
+                <a class="flexExpand txRgt js-selectNone" name="<%= key %>">Select None</a>
+              </div>
+              <% } else { console.log(`Unrecognized filter type: ${val.type}`); } %>
             </div>
           <% }); %>
         </div>
