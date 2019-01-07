@@ -21,8 +21,9 @@
     }
 
     .selectBtn {
-
-      width: 76px;
+      min-width: 76px;
+      flex-shrink: 0;
+      flex-grow: 1;
 
       .showIfSelected {
         display: none;

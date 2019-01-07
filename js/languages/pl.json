@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "unlimited",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
       "unableToCalcTotalPrice": "Unable to calculate",
-      "unableToCalcTotalPriceTip": "Cena przedmiotu i prowizja muszą być liczbą. Dla liczby niecałkowitej użyj kropki jako separatora, np. 19.99."
+      "unableToCalcTotalPriceTip": "Cena przedmiotu i prowizja muszą być liczbą. Dla liczby niecałkowitej użyj kropki jako separatora, np. 19.99.",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "Na stanie",
+      "quantity": "Ilość"
     },
     "confirmCloseDialog": {
       "title": "You have unsaved changes",

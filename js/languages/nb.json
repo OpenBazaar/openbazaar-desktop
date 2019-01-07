@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "ubegrenset",
       "placeholderNeedMoreData": "Tabellen for variantinventar vil dukke opp når du har angitt minst en varient med minst ett valg.",
       "unableToCalcTotalPrice": "Kan ikke kalkulere",
-      "unableToCalcTotalPriceTip": "Både prisen og tilleggsavgift må være tall. Hvis desimaler skal være med så skal punktum brukes som skilletegn, for eksempel \"0.00\"."
+      "unableToCalcTotalPriceTip": "Både prisen og tilleggsavgift må være tall. Hvis desimaler skal være med så skal punktum brukes som skilletegn, for eksempel \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Antall"
     },
     "confirmCloseDialog": {
       "title": "Du har endringer som ikke er lagret",

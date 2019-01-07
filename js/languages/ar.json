@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "غير محدود",
       "placeholderNeedMoreData": "سوف يظهر جدول المخزون البديل عندما تعلن عن متغير واحد على الأقل له خيار واحد على الأقل.",
       "unableToCalcTotalPrice": "غير قادر على الحساب",
-      "unableToCalcTotalPriceTip": "يجب إعداد كل من سعر القائمة والرسوم الإضافية. إذا تضمنت العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\"."
+      "unableToCalcTotalPriceTip": "يجب إعداد كل من سعر القائمة والرسوم الإضافية. إذا تضمنت العلامة العشرية، فيجب توضيحها، على سبيل المثال \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "وحدة حفظ الأوراق المالية SKU",
+      "quantity": "كمية"
     },
     "confirmCloseDialog": {
       "title": "لم تحفظ التغييرات",

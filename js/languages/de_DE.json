@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "unbegrenzt",
       "placeholderNeedMoreData": "Die Tabelle mit dem Bestand von Varianten erscheint, wenn Sie mindestens eine Variante mit mindestens einer Auswahlmöglichkeit festgelegt haben.",
       "unableToCalcTotalPrice": "Kann nicht berechnet werden",
-      "unableToCalcTotalPriceTip": "Der Preis des Artikels und der Aufschlag müssen beides Zahlen sein. Falls eine Komma-zahl dabei ist, sollte ein Punkt als Trennzeichen benutzt werden, z.B. \"0.00\"."
+      "unableToCalcTotalPriceTip": "Der Preis des Artikels und der Aufschlag müssen beides Zahlen sein. Falls eine Komma-zahl dabei ist, sollte ein Punkt als Trennzeichen benutzt werden, z.B. \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Anzahl"
     },
     "confirmCloseDialog": {
       "title": "Sie haben nicht gespeicherte Änderungen.",

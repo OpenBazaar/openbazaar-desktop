@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "无限制",
       "placeholderNeedMoreData": "当至少有一个变体时，将显示变体库存表。",
       "unableToCalcTotalPrice": "无法计算",
-      "unableToCalcTotalPriceTip": "上架价格和附加费都必须是数字，如果包含小数，则应使用句点作为分隔符，例如“0.00”。"
+      "unableToCalcTotalPriceTip": "上架价格和附加费都必须是数字，如果包含小数，则应使用句点作为分隔符，例如“0.00”。",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "数量"
     },
     "confirmCloseDialog": {
       "title": "您有未保存的更改",

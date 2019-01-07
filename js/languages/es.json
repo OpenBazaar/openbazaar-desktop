@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "ilimitado",
       "placeholderNeedMoreData": "La tabla de inventario variante aparecerá cuando haya declarado al menos una variante con al menos una elección.",
       "unableToCalcTotalPrice": "No es posible calcular",
-      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+      "unableToCalcTotalPriceTip": "Both the listing price and the surcharge must numbers. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Cantidad"
     },
     "confirmCloseDialog": {
       "title": "Tiene mensajes no guardados",

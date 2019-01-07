@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "illimité",
       "placeholderNeedMoreData": "Le tableau d'inventaire des variantes apparaîtra lorsque vous aurez déclaré au moins une variante avec au moins un choix.",
       "unableToCalcTotalPrice": "Impossible de calculer",
-      "unableToCalcTotalPriceTip": "Le prix de l'annonce et le supplément doivent tous les deux être des nombres. Si vous incluez une décimale, un point doit être utilisé comme séparateur, par exemple \"0.00\"."
+      "unableToCalcTotalPriceTip": "Le prix de l'annonce et le supplément doivent tous les deux être des nombres. Si vous incluez une décimale, un point doit être utilisé comme séparateur, par exemple \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Quantité"
     },
     "confirmCloseDialog": {
       "title": "Vous avez des modifications non enregistrées",

@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "onbeperkt",
       "placeholderNeedMoreData": "De tabel voor uitvoeringsvoorraad wordt zichtbaar wanneer je de eerste uitvoering met keuzes hebt opgevoerd.",
       "unableToCalcTotalPrice": "Niet in staat om te berekenen",
-      "unableToCalcTotalPriceTip": "Zowel de artikelprijs als de toeslag moeten cijfers zijn. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\"."
+      "unableToCalcTotalPriceTip": "Zowel de artikelprijs als de toeslag moeten cijfers zijn. Als een decimaal wordt gebruikt, moet een punt als scheidingsteken worden gebruikt, bijvoorbeeld \"0.00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Hoeveelheid"
     },
     "confirmCloseDialog": {
       "title": "U heeft niet opgeslagen wijzigingen",

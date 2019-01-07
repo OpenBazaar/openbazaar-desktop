@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "ilimitado",
       "placeholderNeedMoreData": "A tabela do inventário de variantes será exibida quando você declarar pelo menos uma variante com pelo menos uma opção.",
       "unableToCalcTotalPrice": "Não foi possível calcular",
-      "unableToCalcTotalPriceTip": "Tanto o preço do anúncio quanto a sobretaxa devem ser números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00)."
+      "unableToCalcTotalPriceTip": "Tanto o preço do anúncio quanto a sobretaxa devem ser números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "Unidade de Manutenção de Estoque (SKU)",
+      "quantity": "Quantidade"
     },
     "confirmCloseDialog": {
       "title": "Você possui modificações não salvas",

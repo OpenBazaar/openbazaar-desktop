@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "illimitato",
       "placeholderNeedMoreData": "The variant inventory table will appear when you have declared at least one variant with at least one choice.",
       "unableToCalcTotalPrice": "Impossibile da calcolare",
-      "unableToCalcTotalPriceTip": "Sia il prezzo dell'annuncio che il sovrapprezzo devono essere numeri. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0,00\"."
+      "unableToCalcTotalPriceTip": "Sia il prezzo dell'annuncio che il sovrapprezzo devono essere numeri. Se si include un decimale, è necessario utilizzare un punto come separatore, ad esempio \"0,00\".",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "SKU",
+      "quantity": "Quantità"
     },
     "confirmCloseDialog": {
       "title": "Hai delle modifiche non salvate",
