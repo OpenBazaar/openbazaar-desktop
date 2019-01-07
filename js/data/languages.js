@@ -1070,10 +1070,10 @@ export const translationLangs = [
     code: 'ar',
     trumbowyg: 'ar',
   },
-  // {
-  //   name: '中文 (Chinese, S)',
-  //   code: 'zh-CN',
-  // },
+  {
+    name: '中文 (Chinese, S)',
+    code: 'zh_CN',
+  },
   // {
   //   name: 'Czech (Czech)',
   //   code: 'cs',

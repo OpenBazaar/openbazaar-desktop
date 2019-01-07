@@ -163,6 +163,8 @@
       border-radius: 3px;
       border-top-left-radius: 0;
       border-bottom-left-radius: 0;
+      flex-shrink: 0;
+      flex-grow: 1;
     }
   }
 
