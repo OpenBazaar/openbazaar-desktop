@@ -1,5 +1,5 @@
 <% if (!ob.inventory.length) { %>
-<div class="rowMd"><%= ob.polyT(`editListing.variantInventory.placeholderNeedMoreData`) %></div>
+<div class="rowMd"><%= ob.polyT('editListing.variantInventory.placeholderNeedMoreData') %></div>
 <% } else { %>
 <div class="inventoryTableWrap rowSm">
   <table>
@@ -7,12 +7,12 @@
       <% ob.columns.forEach(column => { %>
       <th class="clrBr"><%= column %></th>
       <% }) %>
-      <th class="clrBr">Surcharge</th>
-      <th class="clrBr">Total Price</th>
-      <th class="clrBr">Sku</th>
-      <th class="clrBr quantityCol">Quantity</th>
+      <th class="clrBr"><%= ob.polyT('editListing.variantInventory.surcharge') %></th>
+      <th class="clrBr"><%= ob.polyT('editListing.variantInventory.totalPrice') %></th>
+      <th class="clrBr"><%= ob.polyT('editListing.variantInventory.sku') %></th>
+      <th class="clrBr quantityCol"><%= ob.polyT('editListing.variantInventory.quantity') %></th>
     </tr>
   </table>
 </div>
-<div class="clrT2 txSm helper"><%= ob.polyT(`editListing.variantInventory.helperText`) %></div>
+<div class="clrT2 txSm helper"><%= ob.polyT('editListing.variantInventory.helperText') %></div>
 <% } %>

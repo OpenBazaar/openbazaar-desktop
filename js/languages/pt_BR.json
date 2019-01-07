@@ -144,7 +144,7 @@
         "title": "Não foi possível obter dados sobre quem você está seguindo."
       },
       "unableToGetWalletBalance": {
-        "title": "Unable to get wallet balances."
+        "title": "Não foi possível obter os saldos da carteira."
       },
       "unableToGetSearchProviders": {
         "title": "Não foi possível carregar os provedores de busca.",
@@ -404,7 +404,7 @@
     "failed": "Erro ao carregar as informações sobre esse moderador.",
     "invalid": "Esse usuário não é um moderador.",
     "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
-    "noPreferredSupport": "This moderator does not accept any of your preferred coins. They can only moderate transactions in the following currencies: %{coins}.",
+    "noPreferredSupport": "Este moderador não aceita nenhuma das suas moedas preferidas. Ele só modera transações nas seguintes moedas: %{coins}.",
     "languages": "%{lang} e %{smart_count} outro idioma. |||| %{lang} e %{smart_count} outros idiomas."
   },
   "moderatorDetails": {
@@ -422,7 +422,7 @@
     "disclaimer": "*O serviço de moderação só será cobrado se uma disputa for aberta.",
     "languages": "Idiomas",
     "currenciesSupported": "Formas de Pagamento",
-    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports."
+    "noCoinSupport": "Este moderador não aceita nenhuma das moedas que a sua carteira suporta."
   },
   "about": {
     "linkText": "Sobre o OpenBazaar",
@@ -440,10 +440,10 @@
       "sectionHeader": "Doações",
       "btnCopyAddress": "Copiar Endereço",
       "btnOpenInWallet": "Abrir na Carteira",
-      "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
-      "bannerTitleBCH": "Scan or send Bitcoin Cash (BCH) to this address",
-      "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
-      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address.",
+      "bannerTitleBTC": "Escaneie ou envie Bitcoin (BTC) para esse endereço",
+      "bannerTitleBCH": "Escaneie ou envie Bitcoin Cash (BCH) para esse endereço",
+      "BCHWarning": "Não envie Bitcoin (BTC) para esse endereço.",
+      "BTCWarning": "Não envie Bitcoin Cash (BCH) para esse endereço.",
       "unableToOpenInWallet": {
         "title": "Não foi possível abrir na carteira",
         "body": "Não foi possível abrir o endereço na carteira porque um pagamento está sendo efetuado nesse momento. Por favor, aguarde até que o pagamento seja realizado e tente novamente mais tarde."
@@ -623,11 +623,11 @@
         "blockDataHelper": "Exibir dados úteis para debugging",
         "blockDataBtn": "Exibir Dados de Bloco",
         "blockDataError": "Houve um erro e os seus dados de bloco não puderam ser adquiridos.",
-        "blockDataTitle": "Your Node's Current Block Data",
-        "blockBestHash": "Best Hash: %{hash}",
-        "blockHashUnknown": "The best hash is not available for this currency.",
-        "blockHeight": "Latest Known Block Height: %{height}",
-        "blockHeightUnknown": "The block height is not available for this currency.",
+        "blockDataTitle": "Os Dados de Bloco Atuais do Seu Nodo",
+        "blockBestHash": "Melhor Hash: %{hash}",
+        "blockHashUnknown": "O melhor hash não está disponível para essa moeda.",
+        "blockHeight": "Última Altura de Bloco Conhecida: %{height}",
+        "blockHeightUnknown": "A altura de bloco não está disponível para essa moeda.",
         "blockDataCopy": "Copiar para a Área de Transferência",
         "backupWalletLbl": "Fazer Backup da Semente (Seed) da Carteira",
         "backupWalletHelper": "Essa semente irá permitir que você recupere a sua carteira, caso o seu computador estrague.",
@@ -646,7 +646,7 @@
       "transaction": {
         "sectionName": "Transações",
         "saveMetadata": "Salvar Metadados",
-        "defaultFee": "Network Fee",
+        "defaultFee": "Taxa da Rede",
         "low": "Econômica",
         "medium": "Normal",
         "high": "Prioridade"
@@ -701,7 +701,7 @@
         "fail": "Houve um erro ao salvar as suas configurações de moderação."
       },
       "errors": {
-        "confirm": "To be a moderator, you must agree to both statements below.",
+        "confirm": "Para se tornar um moderador, você precisa aceitar as duas afirmações abaixo.",
         "save": "As configurações de moderação não foram salvas."
       }
     },
@@ -709,9 +709,9 @@
       "sectionName": "Loja",
       "storeStatus": "Loja",
       "storeStatusHelper": "Criar uma loja na sua página",
-      "currencies": "Currencies",
-      "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
-      "currenciesNote": "Accepting all currencies will attract the largest audience.",
+      "currencies": "Moedas",
+      "currenciesHelper": "Estas criptomoedas serão selecionadas automaticamente nos novos anúncios que você criar.",
+      "currenciesNote": "Aceite todas as moedas para atingir o maior número de pessoas.",
       "moderators": "Moderadores",
       "moderatorsHelper": "Escolha alguns moderadores para a sua loja",
       "selectedModerators": "Moderadores Escolhidos",
@@ -898,18 +898,18 @@
   "wallet": {
     "title": "Carteira",
     "closeLink": "Fechar carteira",
-    "zeroSupportedCurs": "None of the wallets provided by your server use currencies supported by this client.",
+    "zeroSupportedCurs": "Nenhuma das carteiras fornecidas pelo seu servidor utiliza as moedas suportadas por este cliente.",
     "coinStats": {
-      "balanceHeader": "Balance",
-      "unconfirmedBalance": "(%{amount} unconfirmed)",
-      "valueInDisplayCur": "Value in %{cur}",
+      "balanceHeader": "Saldo",
+      "unconfirmedBalance": "(%{amount} não confirmado)",
+      "valueInDisplayCur": "Valor em %{cur}",
       "transactionsHeader": "Transações"
     },
     "coinNav": {
-      "unsupportedCurTip": "This is currently an unsupported currency."
+      "unsupportedCurTip": "Essa moeda atualmente não é suportada."
     },
     "sendBtn": "Enviar",
-    "receiveBtn": "Receive",
+    "receiveBtn": "Receber",
     "sendMoney": {
       "toLabel": "Para",
       "toPlaceholder": "Insira um Endereço %{cur}",
@@ -922,7 +922,7 @@
       "errorInvalidAddress": "O endereço de pagamento não é válido."
     },
     "receiveMoney": {
-      "title": "Scan or send coins to this address"
+      "title": "Escaneia ou envie moedas para esse endereço"
     },
     "spendConfirmBox": {
       "heading": "Você tem certeza?",
@@ -958,8 +958,8 @@
         "retryFailInsufficientFunds": "Você não tem saldo suficiente para completar essa transação.",
         "feeBumpOf": "Taxa de incentivo (bump) de %{address}"
       },
-      "fetchFailedMsg": "Unable to obtain your transactions list.",
-      "noTransactionsPlaceholder": "No %{coinType} transactions found.",
+      "fetchFailedMsg": "Não foi possível obter a lista de suas transações.",
+      "noTransactionsPlaceholder": "Nenhuma transação de %{coinType} encontrada.",
       "newTransactionsPopin": "%{smart_count} nova transação |||| %{smart_count} novas transações",
       "backupWalletWarningTitle": "Fazer Backup da Semente de Recuperação da Carteira",
       "recoverySeedLink": "backup da semente de recuperação da sua carteira",
@@ -967,15 +967,15 @@
     },
     "reloadTransactionsWidget": {
       "resyncBtn": "Ressincronizar",
-      "resyncCompleteTitle": "%{cur} Resync Started",
+      "resyncCompleteTitle": "Ressincronização da %{cur} iniciada",
       "resyncComplete": "A sincronização de suas transações irá começar. Isso pode levar 5-10 minutos ou mais.",
       "syncUnavailable": "Você só pode recarregar as transações uma vez a cada hora."
     },
     "cryptoTeaser": {
-      "coinCount": "%{count}+ coins",
-      "bodyLine": "Trade %{coinCount} on OpenBazaar for free",
+      "coinCount": "%{count}+ moedas",
+      "bodyLine": "Negocie %{coinCount} gratuitamente no OpenBazaar",
       "btnCreateListing": "Criar Anúncio",
-      "linkViewCryptoListings": "View crypto listings"
+      "linkViewCryptoListings": "Ver anúncios de criptomoedas"
     }
   },
   "formats": {
@@ -1034,9 +1034,9 @@
     "returnToStore": "Voltar à loja",
     "goToStore": "Ir para a loja",
     "unableToPurchase": {
-      "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts [%{acceptedCurs}], whereas your wallet supports [%{walletCurs}].",
-      "unrecognizedCur": "The item is priced in an unrecognized currency (%{cur}).",
-      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable (%{cur}).",
+      "incompatibleCrypto": "Sua carteira não suporta pagamentos em nenhuma das moedas aceitas por este anúncio. O anúncio aceita [%{acceptedCurs}], mas a sua carteira suporta  apenas [%{walletCurs}].",
+      "unrecognizedCur": "Este item tem um preço em uma moeda não reconhecida (%{cur}).",
+      "noExchangeRateInfo": "O preço deste item está em uma moeda cuja cotação não está disponível atualmente  (%{cur}).",
       "unpurchaseable": "Esse anúncio não pode ser comprado"
     },
     "confirmDelete": {
@@ -1130,7 +1130,7 @@
       "coupons": "Cupons",
       "inventoryManagement": "Gerenciamento do Inventário (estoque)",
       "variantInventory": "Inventário de Variantes",
-      "acceptedCurrencies": "Accepted Currencies"
+      "acceptedCurrencies": "Moedas Aceitas"
     },
     "placeholderTitle": "Insira o seu título…",
     "placeholderSKU": "SKU, Número da Peça, ID, etc.",
@@ -1151,7 +1151,7 @@
     "helperReturnPolicy": "Se deixado em branco, o anúncio irá exibir o texto \"Sem política de devolução\"",
     "helperTerms": "Se deixado em branco, o anúncio irá exibir o texto \"Sem termos e condições\"",
     "helperPrice": "Defina o seu preço em Reais, Dólares, %{cur}, etc.",
-    "helperAcceptedCurrencies": "Accepting all coins will attract the largest audience",
+    "helperAcceptedCurrencies": "Aceite todas as moedas para atrair mais compradores",
     "createListingLabel": "Criar Anúncio",
     "editListingLabel": "Editar Anúncio",
     "title": "Título",
@@ -1180,10 +1180,10 @@
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperTypeCount": "1500+ cryptocurrencies",
-      "helperType": "Trade %{count} for free",
-      "helperCoinType": "The currency you’re offering for trade",
-      "helperReceive": "The currency you'll receive for the trade",
+      "helperTypeCount": "+1.500 criptomoedas",
+      "helperType": "Negocie %{count} gratuitamente",
+      "helperCoinType": "A moeda que você está oferencendo para negociação",
+      "helperReceive": "A moeda que você irá receber na negociação",
       "helperQuantity": "Os compradores podem comprar uma fração ou todo o estoque",
       "helperMarketValue": "Os compradores pagam o valor de mercado. O preço do anúncio irá refletir automaticamente o valor de mercado.",
       "marketValueLabel": "Valor de Mercado Atual",
@@ -1191,9 +1191,9 @@
       "coinType": "Trocar",
       "quantity": "Inventário",
       "priceModifier": "Modificador de Preço (+/-)",
-      "priceModifierPlaceholder": "0.00 (market rate)",
+      "priceModifierPlaceholder": "0.00 (preço de mercado)",
       "helperPriceModifier": "Deixe em branco para negociar a preço de mercado, ou especifique um desconto (ex:-10%) ou acréscimo (ex:+5%)",
-      "lblReceive": "Receive"
+      "lblReceive": "Receber"
     },
     "shippingOptions": {
       "optionHeading": "Opção de Frete #%{listPosition}",
@@ -1262,7 +1262,11 @@
       "unlimitedQuantityLabel": "ilimitado",
       "placeholderNeedMoreData": "A tabela do inventário de variantes será exibida quando você declarar pelo menos uma variante com pelo menos uma opção.",
       "unableToCalcTotalPrice": "Não foi possível calcular",
-      "unableToCalcTotalPriceTip": "Tanto o preço do anúncio quanto a sobretaxa devem ser números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00)."
+      "unableToCalcTotalPriceTip": "Tanto o preço do anúncio quanto a sobretaxa devem ser números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
+      "surcharge": "Surcharge",
+      "totalPrice": "Total Price",
+      "sku": "Unidade de Manutenção de Estoque (SKU)",
+      "quantity": "Quantidade"
     },
     "confirmCloseDialog": {
       "title": "Você possui modificações não salvas",
@@ -1288,7 +1292,7 @@
     "suggestions": "Sugestões",
     "resultsFound": "<b>%{smart_count} anúncio</b> encontrado para <b>\"%{term}\"</b> |||| <b>%{smart_count} anúncios</b> encontrados para <b>\"%{term}\"</b>",
     "resultsTotal": "%{smart_count} anúncio |||| %{smart_count} anúncios",
-    "resultsHelper": "Search providers may not display all results on the network. Spam, offensive, or unreachable listings may be omitted.",
+    "resultsHelper": "Os provedores de busca podem não exibir todos os resultados disponíveis na rede. Anúncios com problemas de conexão ou contendo spam e conteúdo ofensivo podem ser omitidos.",
     "sortBy": "Ordenar por",
     "changeProvider": "Fechar",
     "useDefault": "Buscar por \"%{term}\" usando %{defaultProvider}",
@@ -1335,7 +1339,7 @@
     "introScreen": {
       "connectionLbl": "Conexão:",
       "btnChange": "Modificar",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Cryptocurrency.",
+      "introLine": "Um mercado livre. Sem taxas. Sem restrições. Ganhe criptomoedas.",
       "tagLine": "Compra e Venda Livremente",
       "btnGetStarted": "Comece Agora"
     },
@@ -1361,7 +1365,7 @@
     "displaying": "Exibindo %{displayingCounts}"
   },
   "pageControlsTextStyle": {
-    "previous": "Previous",
+    "previous": "Prévio",
     "next": "Próximo"
   },
   "purchase": {
@@ -1370,7 +1374,7 @@
     "optional": "opcional",
     "shippingTitle": "Frete",
     "cryptoCurrencyTitle": "Moeda",
-    "cryptoCurrencyInvalid": "Not Accepted",
+    "cryptoCurrencyInvalid": "Não Aceito",
     "paymentTypeTitle": "Método de Pagamento",
     "moderatorTitle": "Moderador",
     "moderatorNote": "*A taxa do serviço de moderação só será cobrada se uma disputa for aberta.",
@@ -1485,24 +1489,24 @@
   },
   "moderators": {
     "moderatorsLoading": "Carregando moderadores…",
-    "moderatorsXofY": "Loading moderator %{current} of %{total}",
+    "moderatorsXofY": "Carregando moderador %{current} de %{total}",
     "moderatorsLoaded": "%{total} moderadores carregados.",
     "noModsMsg": {
       "noModerators": {
-        "title": "No Valid Moderators Are Available.",
+        "title": "Nenhum Moderador Válido está Disponível",
         "body": "Nenhum dos moderadores carregados é válido. O pedido será feito com pagamento direto."
       },
       "noVerifiedModerators": {
         "title": "Nenhum Moderador Válido Disponível",
-        "body": "Try viewing unverified moderators."
+        "body": "Tente visualizar moderadores não verificados."
       },
       "noMatchingModerators": {
-        "title": "No moderators that accept %{coin} are available.",
-        "body": "Moderators are available on one or more of the other currencies accepted by this listing."
+        "title": "Nenhum moderador que aceita %{coin} está disponível.",
+        "body": "Existem moderadores disponíveis para uma ou mais das outras criptomoedas aceitas nesse anúncio."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} are available.",
-        "body": "Try viewing unverified moderators."
+        "title": "Nenhum moederador verificado que aceita %{coin} está disponível.",
+        "body": "Tente visualizar moderadores não verificados."
       }
     },
     "showUnverified": "Exibir Moderadores Não Verificados",
@@ -1626,7 +1630,7 @@
       "vendorContractNotArrivedPotentialProcErr": "O contrato do vendedor ainda não chegou. O contrato do comprador indica que o vendedor teve um erro de processamento, mas isso não pode ser validado, pois o contrato do comprador possui erros de validação. Por favor, entre em contato com o vendedor para confirmar.",
       "contractHeadingVendor": "Contrato do vendedor:",
       "contractHeadingBuyer": "Contrato do comprador:",
-      "copyContract": "Copy Contract",
+      "copyContract": "Copiar Contrato",
       "copyContractDone": "Copiado"
     },
     "contractMenuItem": {
@@ -1779,9 +1783,9 @@
         "modInvalidContractData": "O contrato contém dados inválidos. Em função disso, não foi possível determinar o tempo que resta para você tomar uma decisão sobre a disputa.",
         "invalidContractData": "O contrato contém dados inválidos. Em função disso, não foi possível determinar o tempo que resta para que uma disputa possa ser aberta.",
         "disputedInvalidContractData": "O contrato contém dados inválidos. Em função disso, não foi possível determinar o tempo que resta para que o moderador possa tomar uma decisão sobre a disputa.",
-        "modDataUnavailable": "The data necessary to determine the time remaining for you to make a decision is not available at this time.",
-        "disputedDataUnavailable": "The data necessary to determine the time remaining for the moderator to make a decision on the dispute is not available at this time.",
-        "dataUnavailable": "The data necessary to determine the time remaining to open a dispute is not available at this time.",
+        "modDataUnavailable": "Os dados necessários para determinar o tempo restante para você tomar uma decisão não estão disponíveis no momento.",
+        "disputedDataUnavailable": "Os dados necessários para determinar o tempo restante para o moderador tomar uma decisão sobre a disputa não estão disponíveis no momento.",
+        "dataUnavailable": "Os dados necessários para determinar o tempo restante para se abrir uma disputa não estão disponíveis no momento.",
         "tipClaimAfterTimeoutBuyer": "Assim que o contador expirar, o vendedor poderá solicitar o pagamento e finalizar o pedido por conta própria, sem depender do moderador.",
         "tipClaimAfterTimeoutVendor": "Assim que o contator expirar, e desde que você tenha enviado o pedido, você poderá solicitar o pagamento e finalizar o pedido, sem depender do moderador.",
         "disputedModOnClock": "O pedido está em disputa. O moderador tem aproximadamente %{timeRemaining} para analisar a disputa e tomar uma decisão.",
@@ -1820,7 +1824,7 @@
         "procErrVendorNoMsg": "Houve um erro ao processar o pedido.",
         "procErrVendor": "Você não conseguiu processar o pedido devido ao seguintes erros:"
       },
-      "unableToShowPayments": "Unable to show the payment details. The order was paid for in a currency (%{cur}) this client does not currently support."
+      "unableToShowPayments": "Não foi possível exibir os detalhes do pagamento. O anúncio foi pago em uma moeda (%{cur}) que atualmente não é suportada neste cliente."
     },
     "fulfillOrderTab": {
       "heading": "Enviar Pedido",
@@ -1996,11 +2000,11 @@
     "providePriceModifier": "Por favor, forneça um modificador de preço",
     "numericPriceModifier": "Por favor, forneça o modificador de preço como um número.",
     "priceModifierRange": "O modificador de preço deve estar entre %{min} e %{max}",
-    "provideAcceptedCurrency": "Please select at least one accepted currency.",
-    "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
-    "provideCoinType": "Please select a coin to trade.",
-    "unsupportedAcceptedCur": "%{cur} is not supported by your wallet. Please select a different currency.",
-    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: ${curs}"
+    "provideAcceptedCurrency": "Escolha pelo menos uma moeda aceita.",
+    "provideAcceptedCurrencyCrypto": "Forneça uma moeda para recebimento.",
+    "provideCoinType": "Selecione uma moeda para negociar.",
+    "unsupportedAcceptedCur": "%{cur} não é suportada pela sua carteira. Por favor, selecione outra moeda.",
+    "unsupportedAcceptedCurs": "As seguintes moedas não são suportadas pela sua carteira: ${curs}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Por favor, forneça um código de cupom.",
@@ -2062,18 +2066,18 @@
     "provideAmountNumber": "Por favor, forneça a quantia em números. Se for incluir um decimal, use ponto como separador (ex: 2.00) ao invés de vírgula (ex: 2,00).",
     "amountGreaterThanZero": "A quantia deve ser maior do que zero.",
     "insufficientFunds": "Você não tem saldo suficiente para enviar essa quantia. Certifique-se de que você está considerando a taxa da transação.",
-    "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available between %{cur} and %{serverCur}. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
+    "missingExchangeRateData": "Não foi possível pagar em %{cur}, pois não há dados de cotação disponíveis entre %{cur} e %{serverCur}. Por favor, selecione outra moeda. Se não houver cotação disponível para nenhuma moeda, você sempre pode selecionar %{serverCur}.",
     "invalidAddress": "O endereço fornecido não parece ser um endereço %{cur} válido."
   },
   "orderModelErrors": {
-    "paymentCoinInvalid": "Please choose a valid cryptocurrency to pay with.",
+    "paymentCoinInvalid": "Selecione uma criptomoeda válida para realizar o pagamento.",
     "missingAddress": "Por favor, escolha um endereço de entrega válido.",
     "needsModerator": "Você precisa escolher um moderador para fazer um Pagamento Moderado.",
     "removeModerator": "Uma compra não moderada não pode ter um moderador."
   },
   "purchaseItemModelErrors": {
     "provideQuantity": "Por favor, forneça uma quantidade.",
-    "provideCryptoQuantity": "Please provide the amount of this currency you wish to purchase.",
+    "provideCryptoQuantity": "Por favor, forneça a quantia que você gostaria de comprar desta moeda.",
     "mustHaveQuantity": "A quantidade deve ser maior ou igual a 1",
     "quantityMustBeInteger": "A quantia precisa ser um número não-decimal válido",
     "quantityMustBeNumeric": "A quantia precisa ser um número.",
@@ -2144,7 +2148,7 @@
   "cryptoConversionPairing": "%{fromPairing} = %{toPairing} (%{fromCurAmount})",
   "cryptoTradingPair": {
     "cryptoConversionPairingNoToCurExchangeRate": "%{fromPairing} = %{icon}",
-    "tipMissingExchangeRate": "There is no exchange rate data available for %{coins}. If the data will not be available at the time of purchase, the listing will not be purchasable."
+    "tipMissingExchangeRate": "Não existem dados de cotação disponíveis para %{coins}. Se os dados não estiverem disponíveis no momento da compra, o anúncio não poderá ser comprado."
   },
   "cryptoPriceBelowMarket": "%{amount}% abaixo do mercado",
   "cryptoPriceAboveMarket": "%{amount}% acima do mercado",
@@ -2626,6 +2630,7 @@
     "AERM": "Aerium",
     "AGI": "SingularityNET",
     "AGLT": "Agrolot",
+    "AGVC": "AgaveCoin",
     "AHT": "Bowhead",
     "AI": "POLY AI",
     "AIB": "Advanced Internet Blocks",
@@ -2716,11 +2721,13 @@
     "AVH": "Animation Vision Cash",
     "AVINOC": "AVINOC",
     "AVT": "Aventus",
+    "AWC": "Atomic Wallet Coin",
     "AXIOM": "Axiom",
     "AXP": "aXpire",
     "AXPR": "aXpire",
     "AZART": "Azart",
     "B2B": "B2BX",
+    "B2N": "bitcoin2network",
     "B2X": "SegWit2x",
     "B@": "Bankcoin",
     "BAAS": "BaaSid",
@@ -2760,6 +2767,7 @@
     "BDL": "Bitdeal",
     "BDT": "BDT Token",
     "BEAT": "BEAT",
+    "BECN": "Beacon",
     "BEE": "Bee Token",
     "BEET": "Beetle Coin",
     "BELA": "Bela",
@@ -2843,6 +2851,7 @@
     "BQ": "bitqy",
     "BQT": "Blockchain Quotations Index Token",
     "BRAT": "BROTHER",
+    "BRC": "Baer Chain",
     "BRD": "Bread",
     "BRIA": "BriaCoin",
     "BRIT": "BritCoin",
@@ -3001,6 +3010,7 @@
     "CNNC": "Cannation",
     "CNO": "Coin(O)",
     "CNT": "Centurion",
+    "CNUS": "CoinUs",
     "CNX": "Cryptonex",
     "COAL": "BitCoal",
     "COB": "Cobinhood",
@@ -3019,6 +3029,7 @@
     "COU": "Couchain",
     "COUPE": "Coupecoin",
     "COV": "Covesting",
+    "COVA": "COVA",
     "COVAL": "Circuits of Value",
     "CPAY": "Cryptopay",
     "CPC": "CPChain",
@@ -3328,6 +3339,7 @@
     "FDZ": "Friendz",
     "FGC": "FantasyGold",
     "FID": "Fidelium",
+    "FIII": "Fiii",
     "FIL": "Filecoin [Futures]",
     "FJC": "FujiCoin",
     "FKX": "Knoxstertoken",
@@ -3370,6 +3382,7 @@
     "FTC": "Feathercoin",
     "FTI": "FansTime",
     "FTM": "Fantom",
+    "FTN": "Fountain",
     "FTO": "FuturoCoin",
     "FTT": "FarmaTrust",
     "FTX": "FintruX Network",
@@ -3480,8 +3493,11 @@
     "HDG": "Hedge",
     "HDLB": "HODL Bucks",
     "HEAT": "HEAT",
+    "HEDG": "HedgeTrade",
     "HELP": "GoHelpFund",
     "HER": "HeroNode",
+    "HERB": "Herbalist Token",
+    "HERC": "Hercules",
     "HERO": "Sovereign Hero",
     "HGT": "HelloGold",
     "HIGH": "High Gain",
@@ -3557,6 +3573,7 @@
     "IIC": "Intelligent Investment Chain",
     "ILC": "ILCoin",
     "IMP": "Ether Kingdoms Token",
+    "IMPL": "Impleum",
     "IMS": "Independent Money System",
     "IMT": "Moneytoken",
     "IMX": "Impact",
@@ -3663,6 +3680,7 @@
     "LA": "LATOKEN",
     "LABH": "Labh Coin",
     "LALA": "LALA World",
+    "LAMB": "Lambda",
     "LANA": "LanaCoin",
     "LATINO": "Latino Token",
     "LATX": "LatiumX",
@@ -3846,7 +3864,7 @@
     "MUSE": "MUSE",
     "MUSIC": "Musicoin",
     "MVC": "Maverick Chain",
-    "MVL": "Mass Vehicle Ledger",
+    "MVL": "MVL",
     "MVP": "Merculet",
     "MWAT": "Restart Energy MWAT",
     "MXC": "Machine Xchange Coin",
@@ -3883,6 +3901,7 @@
     "NEVA": "NevaCoin",
     "NEWOS": "NewsToken",
     "NEXO": "Nexo",
+    "NEXT": "Next.exchange",
     "NGC": "NAGA",
     "NIM": "Nimiq",
     "NIO": "Autonio",
@@ -3905,6 +3924,7 @@
     "NOTE": "DNotes",
     "NOX": "Nitro",
     "NPER": "NPER",
+    "NPLC": "Plus-Coin",
     "NPW": "New Power Coin",
     "NPX": "NaPoleonX",
     "NPXS": "Pundi X",
@@ -3986,7 +4006,7 @@
     "PAI": "PCHAIN",
     "PAK": "Pakcoin",
     "PAL": "Pal Network",
-    "PARETO": "Pareto Network",
+    "PARETO": "PARETO Rewards",
     "PART": "Particl",
     "PASC": "Pascal Coin",
     "PASL": "Pascal Lite",
@@ -4008,7 +4028,7 @@
     "PCS": "Pabyosi Coin (Special)",
     "PDX": "PayDay Coin",
     "PEDI": "Pedity",
-    "PENG": "Penguin Coin",
+    "PENG": "PENG",
     "PEPECASH": "Pepe Cash",
     "PEX": "PosEx",
     "PFR": "Payfair",
@@ -4087,6 +4107,7 @@
     "PROUD": "PROUD Money",
     "PRS": "PressOne",
     "PRTX": "Printex",
+    "PRX": "ProxyNode",
     "PSC": "PrimeStone",
     "PSM": "PRASM",
     "PST": "Primas",
@@ -4102,7 +4123,7 @@
     "PWR": "PWR Coin",
     "PWV": "Wavebase",
     "PXC": "Phoenixcoin",
-    "PXG": "PlayGame Token",
+    "PXG": "PlayGame",
     "PXI": "Prime-XI",
     "PYLNT": "Pylon Network",
     "PYN": "PAYCENT",
@@ -4130,6 +4151,7 @@
     "QTUM": "Qtum",
     "QUAN": "Quantis Network",
     "QUBE": "Qube",
+    "QUIN": "QUINADS",
     "QUN": "QunQun",
     "QURO": "Qurito",
     "QVT": "Qvolta",
@@ -4188,6 +4210,7 @@
     "ROBET": "RoBET",
     "ROCK": "Rocketcoin",
     "ROCK2": "ICE ROCK MINING",
+    "ROM": "ROMToken",
     "ROOFS": "Roofs",
     "ROX": "Robotina",
     "RPC": "RonPaulCoin",
@@ -4271,6 +4294,8 @@
     "SHOW": "Show",
     "SHP": "Sharpe Platform Token",
     "SHPING": "SHPING",
+    "SHVR": "Shivers",
+    "SHX": "Stronghold Token",
     "SIB": "SIBCoin",
     "SIC": "Swisscoin",
     "SIG": "Spectiv",
@@ -4494,6 +4519,7 @@
     "TURBO": "TurboCoin",
     "TUSD": "TrueUSD",
     "TV": "Ti-Value",
+    "TVNT": "TravelNote",
     "TWIST": "TWIST",
     "TX": "TransferCoin",
     "TYPE": "Typerium",
@@ -4607,6 +4633,7 @@
     "WBB": "Wild Beast Block",
     "WBL": "WIZBL",
     "WC": "WINCOIN",
+    "WCO": "Winco",
     "WCT": "Waves Community Token",
     "WDC": "WorldCoin",
     "WEB": "Webcoin",
@@ -4672,6 +4699,7 @@
     "XEM": "NEM",
     "XES": "Proxeus",
     "XET": "ETERNAL TOKEN",
+    "XFC": "Footballcoin",
     "XG": "GIGA",
     "XGOX": "XGOX",
     "XGS": "GenesisX",
