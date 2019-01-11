@@ -130,7 +130,7 @@ export default class extends BaseModal {
 
     const ob1ProviderData = defaultSearchProviders.find(provider => provider.id === 'ob1');
     this.viewCryptoListingsUrl = ob1ProviderData ?
-      `#search?providerQ=${ob1ProviderData.search}/listings?type=cryptocurrency` :
+      `#search?providerQ=${ob1ProviderData.listings}?type=cryptocurrency` :
       null;
 
     const serverSocket = getSocket();

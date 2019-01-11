@@ -286,7 +286,7 @@ export default class extends baseVw {
           data = JSON.parse(data);
           // make sure minimal data is present
           if (data.name && data.links) {
-            // if data about the provider is recieved, update the model
+            // if data about the provider is received, update the model
             const update = { name: data.name };
             const urlTypes = [];
             if (data.logo && is.url(data.logo)) update.logo = data.logo;
