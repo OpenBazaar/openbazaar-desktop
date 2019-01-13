@@ -24,7 +24,10 @@
       </div>
     </div>
   <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
-    <% const digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {}; %>  
+    <% let digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {};
+       // If urls don't have a protocol, add https to them so they open correctly when clicked.
+       if (digitalDelivery.url && !/^(?:f|ht)tps?:\/\//.test(digitalDelivery.url)) digitalDelivery.url = `https://${digitalDelivery.url}`;
+    %>
     <div class="flex gutterH clrT">
       <div class="statusIconCol clrT"><span class="clrBr ion-ios-folder"></span></div>
       <div class="flexExpand tx5">
@@ -38,10 +41,10 @@
         </div>
         <% if (ob.showPassword) { %>
         <div class="rowTn txB"><%= ob.polyT('orderDetail.summaryTab.fulfilled.passwordLabel') %></div>
-        <div class="row"><%= digitalDelivery.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div> 
+        <div class="row"><%= digitalDelivery.password || ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
         <% } %>
         <div class="rowTn txB"><%= ob.noteFromLabel %></div>
-        <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>      
+        <div><%= ob.note ? ob.parseEmojis(ob.note) : ob.polyT('orderDetail.summaryTab.notApplicable') %></div>
       </div>
     </div>
   <% } else if (ob.contractType === 'SERVICE') { %>
