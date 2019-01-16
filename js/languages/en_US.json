@@ -1490,6 +1490,7 @@
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
+    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator was not found. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators were not found.",
     "moderatorsLoaded": "%{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
@@ -1505,7 +1506,7 @@
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} are available.",
+        "title": "No verified moderators that accept %{coin} have been loaded.",
         "body": "Try viewing unverified moderators."
       }
     },

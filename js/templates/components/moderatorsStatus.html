@@ -3,13 +3,16 @@
     <%= ob.spinner({ className: 'spinnerTxt js-spinner' }) %>
   <% } %>
   <span class="clrT4">
-    <% if (ob.mode === 'loaded') { %>
-      <%= ob.polyT('moderators.moderatorsLoaded', { total: ob.total }) %>
-    <% } else if (ob.mode === 'loadingXofY') { %>
-      <%= ob.polyT('moderators.moderatorsXofY', { current: ob.loaded + 1, total: ob.total }) %>
-    <% } else { %>
-      <%= ob.polyT('moderators.moderatorsLoading') %>
-    <% } %>
+    <% if (ob.mode === 'loaded') {
+         print(ob.polyT('moderators.moderatorsLoaded', { total: ob.total }));
+       } else if (ob.mode === 'loadingXofY') {
+         print(ob.polyT('moderators.moderatorsXofY', { current: ob.loaded + 1, total: ob.total }));
+       } else if (ob.mode === 'loadingXofYTimedOut') {
+         const remainder = ob.total - ob.loaded;
+         print(ob.polyT('moderators.loadingXofYTimedOut', { loaded: ob.loaded, total: ob.total, remainder, smart_count: remainder }));
+       } else {
+         print(ob.polyT('moderators.moderatorsLoading'));
+    } %>
   </span>
   <% if (ob.showLoadBtn) { %>
       <button class="btnAsLink tx6 clrT2 browseMore js-browseMore <% if(ob.showSpinner) print('disabled') %>">

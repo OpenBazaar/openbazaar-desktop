@@ -37,17 +37,24 @@ export default class extends BaseVw {
     super.remove();
   }
 
+  setTimeout() {
+    if (!this.spinnerTimeout) {
+      this.spinnerTimeout = setTimeout(() => {
+        let mode = this.getState().mode;
+        if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';
+        this.setState({ showSpinner: false, mode });
+        clearTimeout(this.spinnerTimeout);
+      }, 10000);
+    }
+  }
+
   render() {
     loadTemplate('components/moderatorsStatus.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));
-      clearTimeout(this.spinnerTimeout);
       if (this._state.showSpinner && this._state.spinnerTimer) {
-        // hide the spinner after a delay if the parent doesn't hide it
-        this.spinnerTimeout = setTimeout(() => {
-          this.setState({ showSpinner: false });
-        }, 10000);
+        this.setTimeout();
       }
     });
 

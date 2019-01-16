@@ -197,7 +197,7 @@ export default class extends baseVw {
         hidden: false,
         loaded: this.modCount,
         total: IDs.length ? IDs.length : this.modCount,
-        showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
+        showSpinner: op.showSpinner, // unhides the spinner if it's been hidden.
       });
 
       const fetch = $.ajax({
@@ -273,6 +273,8 @@ export default class extends baseVw {
         loaded: this.fetchingMods.length - this.unfetchedMods.length, // not shown if open fetch
         total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
       });
+      // re-render to show the unverified moderators button if needed.
+      this.render();
     }
   }
 
@@ -397,6 +399,7 @@ export default class extends baseVw {
   }
 
   render() {
+    console.log("mods render")
     const state = this.getState();
     const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
     const unVerCount = this.modCards.filter(mod =>
