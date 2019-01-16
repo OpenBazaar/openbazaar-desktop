@@ -646,6 +646,7 @@ export default class extends BaseVw {
         'PARTIALLY_FULFILLED',
       ].indexOf(orderState) > -1,
       showFulfillButton: canFulfill,
+      paymentCoin: this.model.paymentCoin,
     };
 
     if (!this.model.isCase) {
@@ -672,7 +673,6 @@ export default class extends BaseVw {
     if (this.accepted) this.accepted.remove();
     this.accepted = this.createChild(Accepted, {
       orderId: this.model.id,
-      paymentCoin: this.model.paymentCoin,
       initialState,
     });
     this.listenTo(this.accepted, 'clickFulfillOrder',
