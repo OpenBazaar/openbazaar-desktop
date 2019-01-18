@@ -1490,7 +1490,7 @@
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
-    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator was not found. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators were not found.",
+    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
     "moderatorsLoaded": "%{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
