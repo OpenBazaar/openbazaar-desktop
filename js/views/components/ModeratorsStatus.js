@@ -9,11 +9,11 @@ export default class extends BaseVw {
       initialState: {
         hidden: true,
         showSpinner: true,
-        spinnerTimer: true,
         showLoadBtn: false,
         loaded: 0,
         total: 0,
         mode: 'loaded',
+        loading: false,
         ...(options.initialState || {}),
       },
     };
@@ -28,6 +28,20 @@ export default class extends BaseVw {
     };
   }
 
+  setState(state = {}, options = {}) {
+    const combinedState = { ...this.getState(), ...state };
+    // Any time the state is set to loading, set the spinner timer if needed.
+    if (state.loading && combinedState.showSpinner) {
+      this.spinnerTimeout = setTimeout(() => {
+        let mode = this.getState().mode;
+        if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';
+        this.setState({ showSpinner: false, mode });
+        clearTimeout(this.spinnerTimeout);
+      }, 10000);
+    }
+    super.setState(state, options);
+  }
+
   clickBrowseMore() {
     this.trigger('browseMore');
   }
@@ -37,25 +51,11 @@ export default class extends BaseVw {
     super.remove();
   }
 
-  setTimeout() {
-    if (!this.spinnerTimeout) {
-      this.spinnerTimeout = setTimeout(() => {
-        let mode = this.getState().mode;
-        if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';
-        this.setState({ showSpinner: false, mode });
-        clearTimeout(this.spinnerTimeout);
-      }, 10000);
-    }
-  }
-
   render() {
     loadTemplate('components/moderatorsStatus.html', (t) => {
       this.$el.html(t({
         ...this.getState(),
       }));
-      if (this._state.showSpinner && this._state.spinnerTimer) {
-        this.setTimeout();
-      }
     });
 
     return this;
