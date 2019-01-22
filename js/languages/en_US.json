@@ -1491,7 +1491,7 @@
     "moderatorsLoading": "Loading moderators…",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
     "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
-    "moderatorsLoaded": "%{total} moderators loaded.",
+    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
         "title": "No Valid Moderators Are Available.",

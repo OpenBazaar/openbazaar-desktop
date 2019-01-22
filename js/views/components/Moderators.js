@@ -414,7 +414,6 @@ export default class extends baseVw {
         placeholder: !showMods.length && (this.unfetchedMods.length || !totalIDs),
         purchase: this.options.purchase,
         totalShown: showMods.length,
-        totalPending: this.unfetchedMods.length,
         totalIDs,
         unVerCount,
         ...state,

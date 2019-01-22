@@ -4,7 +4,7 @@
   <% } %>
   <span class="clrT4">
     <% if (ob.mode === 'loaded') {
-         print(ob.polyT('moderators.moderatorsLoaded', { total: ob.total }));
+         print(ob.polyT('moderators.moderatorsLoaded', { total: ob.total, smart_count: ob.total }));
        } else if (ob.mode === 'loadingXofY') {
          print(ob.polyT('moderators.moderatorsXofY', { current: ob.loaded + 1, total: ob.toLoad }));
        } else if (ob.mode === 'loadingXofYTimedOut') {

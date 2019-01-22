@@ -11,6 +11,7 @@ export default class extends BaseVw {
         showSpinner: true,
         showLoadBtn: false,
         loaded: 0,
+        toLoad: 0,
         total: 0,
         mode: 'loaded',
         loading: false,
@@ -36,7 +37,6 @@ export default class extends BaseVw {
         let mode = this.getState().mode;
         if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';
         this.setState({ showSpinner: false, mode });
-        clearTimeout(this.spinnerTimeout);
       }, 10000);
     }
     super.setState(state, options);
