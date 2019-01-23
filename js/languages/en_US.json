@@ -712,6 +712,7 @@
       "currencies": "Currencies",
       "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
       "currenciesNote": "Accepting all currencies will attract the largest audience.",
+      "applyToCurrentButton": "Update All Current Listings",
       "moderators": "Moderators",
       "moderatorsHelper": "Select a few moderators for your Store.",
       "selectedModerators": "Selected Moderators",

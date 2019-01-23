@@ -46,12 +46,18 @@
         <div class="flexRow gutterH">
           <div class="col3">
             <label class="required"><%= ob.polyT('settings.storeTab.currencies') %></label>
-            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesHelper') %></div>
+            <div class="clrT2 txSm rowSm"><%= ob.polyT('settings.storeTab.currenciesHelper') %></div>
+            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesNote') %></div>
           </div>
           <div class="col9">
             <% if (ob.errors.currencies) print(ob.formErrorTmpl({ errors: ob.errors.currencies })) %>
             <div class="row js-currencySelector"></div>
-            <div class="clrT2 txSm"><%= ob.polyT('settings.storeTab.currenciesNote') %></div>
+            <div class="flexHRight txSm">
+              <%= ob.processingButton({
+              className: 'btn clrP clrBr clrT clrSh2  js-applyToCurrent',
+              btnText: ob.polyT('settings.storeTab.applyToCurrentButton')
+              }) %>
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +82,7 @@
                     class="btnHeight clrBr clrP clrSh2 js-submitModByIDInput"
                     placeholder="<%= ob.polyT('settings.storeTab.moderatorByIDPlaceholder') %>">
                 <%= ob.processingButton({
-                className: 'btn clrP clrBr flexNoShrink js-submitModByID ',
+                className: 'btn clrP clrBr clrSh2 flexNoShrink js-submitModByID ',
                 btnText: ob.polyT('settings.storeTab.moderatoryByIDSubmit')
                 }) %>
               </div>

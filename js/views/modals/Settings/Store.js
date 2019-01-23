@@ -6,6 +6,11 @@ import '../../../lib/whenAll.jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
+import {
+  bulkCoinUpdate,
+  isBulkCoinUpdating,
+  events as bulkUpdateEvents,
+} from '../../../utils/bulkListingCoinUpdate';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import Moderators from '../../components/Moderators';
 import CurrencySelector from '../../components/CryptoCurSelector';
@@ -16,6 +21,10 @@ export default class extends baseVw {
     const opts = {
       className: 'settingsStore',
       ...options,
+      initialState: {
+        isBulkCoinUpdating: isBulkCoinUpdating(),
+        ...options.initialState,
+      },
     };
     super(opts);
     this.options = opts;
@@ -118,6 +127,9 @@ export default class extends baseVw {
         }
       });
     });
+
+    this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkdUpdateFailed',
+      () => this.setState({ isBulkCoinUpdating: false }));
   }
 
   events() {
@@ -126,7 +138,13 @@ export default class extends baseVw {
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
       'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
+      'click .js-applyToCurrent': 'clickApplyToCurrent',
     };
+  }
+
+  clickApplyToCurrent() {
+    bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+    this.setState({ isBulkCoinUpdating: true });
   }
 
   noModsByIDFound(guids) {
