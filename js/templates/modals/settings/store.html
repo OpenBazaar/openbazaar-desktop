@@ -54,7 +54,7 @@
             <div class="row js-currencySelector"></div>
             <div class="flexHRight txSm">
               <%= ob.processingButton({
-              className: 'btn clrP clrBr clrT clrSh2  js-applyToCurrent',
+              className: `btn clrP clrBr clrT clrSh2 ${ob.isBulkCoinUpdating ? 'processing' : ''} js-applyToCurrent`,
               btnText: ob.polyT('settings.storeTab.applyToCurrentButton')
               }) %>
             </div>

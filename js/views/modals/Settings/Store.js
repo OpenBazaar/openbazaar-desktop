@@ -142,6 +142,21 @@ export default class extends baseVw {
     };
   }
 
+  setState(state = {}, options = {}) {
+    // Add a delay to ending the processing for the bulk upload, so it's visible to the user.
+    if (this.getState().isBulkCoinUpdating &&
+      state.hasOwnProperty('isBulkCoinUpdating') &&
+      !state.isBulkCoinUpdating &&
+      !this.bulkUploadTimer) {
+      delete state.isBulkCoinUpdating;
+      this.bulkUploadTimer = setTimeout(() => {
+        this.setState({ isBulkCoinUpdating: false });
+        this.bulkUploadTimer = null;
+      }, 1000);
+    }
+    super.setState(state, options);
+  }
+
   clickApplyToCurrent() {
     bulkCoinUpdate(this.currencySelector.getState().activeCurs);
     this.setState({ isBulkCoinUpdating: true });
@@ -354,6 +369,7 @@ export default class extends baseVw {
         },
         ...this.profile.toJSON(),
         ...this.settings.toJSON(),
+        ...this.getState(),
       }));
 
       this.currencySelector.delegateEvents();
