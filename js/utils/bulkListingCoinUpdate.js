@@ -24,8 +24,6 @@ export function bulkCoinUpdate(coins) {
     data: JSON.stringify({ currencies: newCoins }),
     dataType: 'json',
   }).done((data) => {
-    console.log('done')
-    console.log(data)
     events.trigger('bulkUpdateDone');
   }).fail((xhr) => {
     const title = 'There was an error or something'; //TODO translate to something good
