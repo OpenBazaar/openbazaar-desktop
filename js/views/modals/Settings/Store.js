@@ -162,7 +162,7 @@ export default class extends baseVw {
     super.setState(state, options);
   }
 
-  clickApplyToCurrentConfirm() {
+  clickApplyToCurrentCancel() {
     this.setState({ showBulkConfirm: false });
     return false;
   }
