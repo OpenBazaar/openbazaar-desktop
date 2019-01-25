@@ -712,9 +712,15 @@
       "currencies": "Currencies",
       "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
       "currenciesNote": "Accepting all currencies will attract the largest audience.",
-      "bulkListingCoinUpdateButton": "Update All Current Listings",
-      "bulkListingCoinUpdateErrorTitle": "There Was An Error When Updating Your Listings",
-      "bulkListingCoinUpdateErrorMessage": "One or more listings failed to update.",
+      "bulkListingCoinUpdate": {
+        "MainButton": "Update All Current Listings",
+        "ErrorTitle": "There Was An Error When Updating Your Listings",
+        "ErrorMessage": "One or more listings failed to update.",
+        "ConfirmTitle": "Are You Sure?",
+        "ConfirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "Cancel": "Cancel",
+        "Apply": "Apply"
+      },
       "moderators": "Moderators",
       "moderatorsHelper": "Select a few moderators for your Store.",
       "selectedModerators": "Selected Moderators",
