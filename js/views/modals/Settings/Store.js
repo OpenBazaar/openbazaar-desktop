@@ -130,6 +130,9 @@ export default class extends baseVw {
 
     this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkdUpdateFailed',
       () => this.setState({ isBulkCoinUpdating: false }));
+
+    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    $(document).on('click', this.boundOnDocClick);
   }
 
   events() {
@@ -139,6 +142,8 @@ export default class extends baseVw {
       'click .js-save': 'save',
       'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
       'click .js-applyToCurrent': 'clickApplyToCurrent',
+      'click .js-applyToCurrentConfirm': 'clickApplyToCurrentConfirm',
+      'click .js-applyToCurrentCancel': 'clickApplyToCurrentCancel',
     };
   }
 
@@ -157,9 +162,24 @@ export default class extends baseVw {
     super.setState(state, options);
   }
 
-  clickApplyToCurrent() {
+  clickApplyToCurrentConfirm() {
+    this.setState({ showBulkConfirm: false });
+    return false;
+  }
+
+  clickApplyToCurrentConfirm() {
     bulkCoinUpdate(this.currencySelector.getState().activeCurs);
-    this.setState({ isBulkCoinUpdating: true });
+    this.setState({ isBulkCoinUpdating: true, showBulkConfirm: false });
+    return false;
+  }
+
+  clickApplyToCurrent() {
+    this.setState({ showBulkConfirm: true });
+    return false;
+  }
+
+  onDocumentClick() {
+    this.setState({ showBulkConfirm: false });
   }
 
   noModsByIDFound(guids) {
@@ -354,6 +374,11 @@ export default class extends baseVw {
   set showVerifiedOnly(bool) {
     this._showVerifiedOnly = bool;
     this.modsAvailable.setState({ showVerifiedOnly: bool });
+  }
+
+  remove() {
+    $(document).off('click', this.boundOnDocClick);
+    super.remove();
   }
 
   render() {

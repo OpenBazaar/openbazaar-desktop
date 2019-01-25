@@ -52,11 +52,26 @@
           <div class="col9">
             <% if (ob.errors.currencies) print(ob.formErrorTmpl({ errors: ob.errors.currencies })) %>
             <div class="row js-currencySelector"></div>
-            <div class="flexHRight txSm">
+            <div class="flexHRight">
+              <div>
               <%= ob.processingButton({
               className: `btn clrP clrBr clrT clrSh2 ${ob.isBulkCoinUpdating ? 'processing' : ''} js-applyToCurrent`,
-              btnText: ob.polyT('settings.storeTab.applyToCurrentButton')
+              btnText: ob.polyT('settings.storeTab.bulkListingCoinUpdateButton')
               }) %>
+              <% if (ob.showBulkConfirm) {%>
+                <div class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1">
+                  <div class="tx3 txB rowSm">Are You Sure?</div>
+                  <div class="posR padSm">All of your current listings will be updated to accept the selected coins.</div>
+                  <hr class="clrBr row" />
+                  <div class="flexVCent gutterHLg">
+                    <div class="flexExpand">
+                      <a class="btnTxtOnly barBtn clrT2 txUnb js-applyToCurrentCancel">Cancel</a>
+                    </div>
+                    <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-applyToCurrentConfirm">Apply</a>
+                  </div>
+                </div>
+              <% } %>
+              </div>
             </div>
           </div>
         </div>

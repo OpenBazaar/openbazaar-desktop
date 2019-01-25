@@ -23,12 +23,14 @@ export function bulkCoinUpdate(coins) {
     url: app.getServerUrl('ob/bulkupdatecurrency'),
     data: JSON.stringify({ currencies: newCoins }),
     dataType: 'json',
-  }).done((data) => {
+  }).done(() => {
     events.trigger('bulkUpdateDone');
   }).fail((xhr) => {
-    const title = 'There was an error or something'; //TODO translate to something good
-    const message = xhr.responseJSON && xhr.responseJSON.reason || '';
-    openSimpleMessage(title, message);
+    const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdateErrorTitle');
+    const reason = xhr.responseJSON && xhr.responseJSON.reason || '';
+    const message = app.polyglot.t('settings.storeTab.bulkListingCoinUpdateErrorMessage');
+    const msg = `${message} ${reason ? `\n\n${reason}` : ''}`;
+    openSimpleMessage(title, msg);
     events.trigger('bulkUpdateFailed');
   });
 }
