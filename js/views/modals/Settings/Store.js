@@ -147,18 +147,26 @@ export default class extends baseVw {
     };
   }
 
-  setState(state = {}, options = {}) {
-    // Add a delay to ending the processing for the bulk upload, so it's visible to the user.
-    if (this.getState().isBulkCoinUpdating &&
-      state.hasOwnProperty('isBulkCoinUpdating') &&
-      !state.isBulkCoinUpdating &&
-      !this.bulkUploadTimer) {
-      delete state.isBulkCoinUpdating;
-      this.bulkUploadTimer = setTimeout(() => {
+  startProcessingTimer() {
+    if (!this.processingTimer) {
+      this.processingTimer = setTimeout(() => {
+        this.processingTimer = null;
         this.setState({ isBulkCoinUpdating: false });
-        this.bulkUploadTimer = null;
-      }, 1000);
+      }, 5000);
     }
+  }
+
+  setState(state = {}, options = {}) {
+    // When the state is set to processing, start a timer so it's visible even if it's very short.
+    if (state.isBulkCoinUpdating) this.startProcessingTimer();
+
+    // If the state is set to stop processing, let the timer finish.
+    if (state.hasOwnProperty('isBulkCoinUpdating') &&
+      !state.isBulkCoinUpdating &&
+      this.processingTimer) {
+      delete state.isBulkCoinUpdating;
+    }
+
     super.setState(state, options);
   }
 
