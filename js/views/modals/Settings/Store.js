@@ -128,7 +128,7 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkdUpdateFailed',
+    this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkUpdateFailed',
       () => this.setState({ isBulkCoinUpdating: false }));
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);

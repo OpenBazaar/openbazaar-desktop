@@ -9,7 +9,7 @@ const events = {
 
 export { events };
 
-let latestBulkCoinUpdateSave;
+let bulkCoinUpdateSave;
 
 export function bulkCoinUpdate(coins) {
   if (!coins || !Array.isArray(coins)) {
@@ -19,7 +19,7 @@ export function bulkCoinUpdate(coins) {
   // dedupe the list
   const newCoins = [...new Set(coins)];
 
-  latestBulkCoinUpdateSave = $.post({
+  bulkCoinUpdateSave = $.post({
     url: app.getServerUrl('ob/bulkupdatecurrency'),
     data: JSON.stringify({ currencies: newCoins }),
     dataType: 'json',
@@ -36,5 +36,5 @@ export function bulkCoinUpdate(coins) {
 }
 
 export function isBulkCoinUpdating() {
-  return latestBulkCoinUpdateSave && latestBulkCoinUpdateSave.state() === 'pending';
+  return bulkCoinUpdateSave && bulkCoinUpdateSave.state() === 'pending';
 }
