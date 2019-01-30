@@ -24,10 +24,7 @@
       </div>
     </div>
   <% } else if (ob.contractType === 'DIGITAL_GOOD') { %>
-    <% let digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {};
-       // If urls don't have a protocol, add https to them so they open correctly when clicked.
-       if (digitalDelivery.url && !/^(?:f|ht)tps?:\/\//.test(digitalDelivery.url)) digitalDelivery.url = `https://${digitalDelivery.url}`;
-    %>
+    <% const digitalDelivery = ob.digitalDelivery && ob.digitalDelivery[0] || {}; %>
     <div class="flex gutterH clrT">
       <div class="statusIconCol clrT"><span class="clrBr ion-ios-folder"></span></div>
       <div class="flexExpand tx5">
@@ -87,4 +84,4 @@
       </div>
     </div>
   <% } %>
-</div>
+</div
