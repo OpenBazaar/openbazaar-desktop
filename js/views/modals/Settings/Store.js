@@ -143,7 +143,6 @@ export default class extends baseVw {
       'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
       'click .js-applyToCurrent': 'clickApplyToCurrent',
       'click .js-applyToCurrentConfirm': 'clickApplyToCurrentConfirm',
-      'click .js-applyToCurrentCancel': 'clickApplyToCurrentCancel',
     };
   }
 
@@ -168,11 +167,6 @@ export default class extends baseVw {
     }
 
     super.setState(state, options);
-  }
-
-  clickApplyToCurrentCancel() {
-    this.setState({ showBulkConfirm: false });
-    return false;
   }
 
   clickApplyToCurrentConfirm() {
