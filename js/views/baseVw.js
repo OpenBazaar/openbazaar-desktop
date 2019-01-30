@@ -18,7 +18,7 @@ export default class baseVw extends View {
     const data = [];
 
     $fields.each((index, field) => {
-      if (field.checked) data.push(field.value);
+      if (field.checked) data.push(sanitizeHtml(field.value));
     });
 
     return data;
@@ -62,7 +62,7 @@ export default class baseVw extends View {
       const $field = $(field);
       const varType = $field.data('var-type');
 
-      let val = sanitizeHtml($field.val());
+      let val = $field.val();
 
       if (field.tagName.toUpperCase() === 'DIV') {
         val = field.innerHTML;
@@ -112,7 +112,7 @@ export default class baseVw extends View {
       } else if (field.type === 'checkbox') {
         data[name] = field.checked;
       } else {
-        data[name] = val;
+        data[name] = sanitizeHtml(val);
       }
     });
 
