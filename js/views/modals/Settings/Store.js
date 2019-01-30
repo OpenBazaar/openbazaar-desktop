@@ -152,7 +152,7 @@ export default class extends baseVw {
       this.processingTimer = setTimeout(() => {
         this.processingTimer = null;
         this.setState({ isBulkCoinUpdating: false });
-      }, 5000);
+      }, 500);
     }
   }
 
