@@ -74,6 +74,7 @@ export default class extends baseVw {
 
   onDocumentClick(e) {
     if (this.getState().showBulkConfirm &&
+      !$(e.target).hasClass('js-confirmBox') &&
       !($.contains(this.getCachedEl('.js-confirmBox')[0], e.target))) {
       this.setState({ showBulkConfirm: false });
     }
