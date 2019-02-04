@@ -11,6 +11,10 @@ export { events };
 
 let bulkCoinUpdateSave;
 
+export function isBulkCoinUpdating() {
+  return bulkCoinUpdateSave && bulkCoinUpdateSave.state() === 'pending';
+}
+
 export function bulkCoinUpdate(coins) {
   if (!Array.isArray(coins)) {
     throw new Error('Please provide an array of accepted cryptocurrency codes.');
@@ -19,11 +23,11 @@ export function bulkCoinUpdate(coins) {
   // dedupe the list
   const newCoins = [...new Set(coins)];
 
-  if (!bulkCoinUpdateSave || !this.isBulkCoinUpdating()) {
-    events.triger('bulkUpdateStarted');
+  if (!bulkCoinUpdateSave || !isBulkCoinUpdating()) {
+    events.trigger('bulkUpdateStarted');
     bulkCoinUpdateSave = $.post({
       url: app.getServerUrl('ob/bulkupdatecurrency'),
-      data: JSON.stringify({currencies: newCoins}),
+      data: JSON.stringify({ currencies: newCoins }),
       dataType: 'json',
     }).done(() => {
       events.trigger('bulkUpdateDone');
@@ -43,8 +47,4 @@ export function bulkCoinUpdate(coins) {
   }
 
   return bulkCoinUpdateSave;
-}
-
-export function isBulkCoinUpdating() {
-  return bulkCoinUpdateSave && bulkCoinUpdateSave.state() === 'pending';
 }
