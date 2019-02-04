@@ -3,7 +3,7 @@ import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import {
   isBulkCoinUpdating,
-  events as bulkUpdateEvents,
+  events as bulkCoinUpdateEvents,
 } from '../../../utils/bulkCoinUpdate';
 
 export default class extends baseVw {
@@ -18,7 +18,7 @@ export default class extends baseVw {
     };
     super(opts);
 
-    this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkUpdateFailed',
+    this.listenTo(bulkCoinUpdateEvents, 'bulkCoinUpdateDone bulkCoinUpdateFailed',
       () => this.setState({ isBulkCoinUpdating: false }));
 
     this.boundOnDocClick = this.onDocumentClick.bind(this);
@@ -37,7 +37,7 @@ export default class extends baseVw {
     if (!this.processingTimer) {
       this.processingTimer = setTimeout(() => {
         this.processingTimer = null;
-        this.setState({ isBulkCoinUpdating: false });
+        this.setState({ isBulkCoinUpdating: isBulkCoinUpdating() });
       }, 500);
     }
   }

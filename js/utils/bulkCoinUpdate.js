@@ -24,26 +24,26 @@ export function bulkCoinUpdate(coins) {
   const newCoins = [...new Set(coins)];
 
   if (!bulkCoinUpdateSave || !isBulkCoinUpdating()) {
-    events.trigger('bulkUpdateStarted');
+    events.trigger('bulkCoinUpdateStarted');
     bulkCoinUpdateSave = $.post({
       url: app.getServerUrl('ob/bulkupdatecurrency'),
       data: JSON.stringify({ currencies: newCoins }),
       dataType: 'json',
     }).done(() => {
-      events.trigger('bulkUpdateDone');
+      events.trigger('bulkCoinUpdateDone');
     }).fail((xhr) => {
       const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
       const reason = xhr.responseJSON && xhr.responseJSON.reason || '';
       const message = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorMessage');
       const msg = `${message} ${reason ? `\n\n${reason}` : ''}`;
       openSimpleMessage(title, msg);
-      events.trigger('bulkUpdateFailed');
+      events.trigger('bulkCoinUpdateFailed');
     });
   } else {
     const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
     const msg = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.InProgressError');
     openSimpleMessage(title, msg);
-    events.trigger('bulkUpdateFailed');
+    events.trigger('bulkCoinUpdateFailed');
   }
 
   return bulkCoinUpdateSave;
