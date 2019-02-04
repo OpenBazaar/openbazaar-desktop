@@ -15,6 +15,13 @@ export function isBulkCoinUpdating() {
   return bulkCoinUpdateSave && bulkCoinUpdateSave.state() === 'pending';
 }
 
+function showError(opts) {
+  events.trigger('bulkCoinUpdateFailed');
+  const title = opts.title || app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
+  const msg = opts.msg || app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorMessage');
+  openSimpleMessage(title, msg);
+}
+
 export function bulkCoinUpdate(coins) {
   if (!Array.isArray(coins)) {
     throw new Error('Please provide an array of accepted cryptocurrency codes.');
@@ -23,7 +30,11 @@ export function bulkCoinUpdate(coins) {
   // dedupe the list
   const newCoins = [...new Set(coins)];
 
-  if (!bulkCoinUpdateSave || !isBulkCoinUpdating()) {
+  if (!coins.length) {
+    showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.NoCoinsError') });
+  } else if (isBulkCoinUpdating()) {
+    showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.InProgressError') });
+  } else {
     events.trigger('bulkCoinUpdateStarted');
     bulkCoinUpdateSave = $.post({
       url: app.getServerUrl('ob/bulkupdatecurrency'),
@@ -32,18 +43,10 @@ export function bulkCoinUpdate(coins) {
     }).done(() => {
       events.trigger('bulkCoinUpdateDone');
     }).fail((xhr) => {
-      const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
-      const reason = xhr.responseJSON && xhr.responseJSON.reason || '';
+      const reason = xhr.responseJSON && xhr.responseJSON.reason || xhr.statusText || '';
       const message = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorMessage');
-      const msg = `${message} ${reason ? `\n\n${reason}` : ''}`;
-      openSimpleMessage(title, msg);
-      events.trigger('bulkCoinUpdateFailed');
+      showError({ msg: `${message} ${reason ? `\n\n${reason}` : ''}` });
     });
-  } else {
-    const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
-    const msg = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.InProgressError');
-    openSimpleMessage(title, msg);
-    events.trigger('bulkCoinUpdateFailed');
   }
 
   return bulkCoinUpdateSave;

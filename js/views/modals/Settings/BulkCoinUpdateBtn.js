@@ -83,7 +83,7 @@ export default class extends baseVw {
 
   remove() {
     $(document).off('click', this.boundOnDocClick);
-    this.processingTimer = null;
+    clearTimeout(this.processingTimer);
     super.remove();
   }
 

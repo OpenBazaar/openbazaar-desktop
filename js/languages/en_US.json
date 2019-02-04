@@ -717,6 +717,7 @@
         "ErrorTitle": "There Was An Error When Updating Your Listings",
         "ErrorMessage": "One or more listings failed to update.",
         "InProgressError": "A bulk update is in progress, you cannot start a new one until it is finished.",
+        "NoCoinsError": "You must select at least one coin when updating your listings.",
         "ConfirmTitle": "Are You Sure?",
         "ConfirmMessage": "All of your current listings will be updated to accept the selected coins.",
         "Cancel": "Cancel",
