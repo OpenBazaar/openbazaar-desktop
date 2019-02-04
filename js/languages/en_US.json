@@ -716,6 +716,7 @@
         "MainButton": "Update All Current Listings",
         "ErrorTitle": "There Was An Error When Updating Your Listings",
         "ErrorMessage": "One or more listings failed to update.",
+        "InProgressError": "A bulk update is in progress, you cannot start a new one until it is finished.",
         "ConfirmTitle": "Are You Sure?",
         "ConfirmMessage": "All of your current listings will be updated to accept the selected coins.",
         "Cancel": "Cancel",

@@ -6,12 +6,8 @@ import '../../../lib/whenAll.jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
-import {
-  bulkCoinUpdate,
-  isBulkCoinUpdating,
-  events as bulkUpdateEvents,
-} from '../../../utils/bulkListingCoinUpdate';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
+import BulkCoinUpdateBtn from './BulkCoinUpdateBtn';
 import Moderators from '../../components/Moderators';
 import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
@@ -21,10 +17,6 @@ export default class extends baseVw {
     const opts = {
       className: 'settingsStore',
       ...options,
-      initialState: {
-        isBulkCoinUpdating: isBulkCoinUpdating(),
-        ...options.initialState,
-      },
     };
     super(opts);
     this.options = opts;
@@ -128,11 +120,7 @@ export default class extends baseVw {
       });
     });
 
-    this.listenTo(bulkUpdateEvents, 'bulkUpdateDone bulkUpdateFailed',
-      () => this.setState({ isBulkCoinUpdating: false }));
-
-    this.boundOnDocClick = this.onDocumentClick.bind(this);
-    $(document).on('click', this.boundOnDocClick);
+    this.bulkCoinUpdateBtn = new BulkCoinUpdateBtn();
   }
 
   events() {
@@ -141,47 +129,7 @@ export default class extends baseVw {
       'click .js-submitModByID': 'clickSubmitModByID',
       'click .js-save': 'save',
       'click .js-storeVerifiedOnly': 'onClickVerifiedOnly',
-      'click .js-applyToCurrent': 'clickApplyToCurrent',
-      'click .js-applyToCurrentConfirm': 'clickApplyToCurrentConfirm',
     };
-  }
-
-  startProcessingTimer() {
-    if (!this.processingTimer) {
-      this.processingTimer = setTimeout(() => {
-        this.processingTimer = null;
-        this.setState({ isBulkCoinUpdating: false });
-      }, 500);
-    }
-  }
-
-  setState(state = {}, options = {}) {
-    // When the state is set to processing, start a timer so it's visible even if it's very short.
-    if (state.isBulkCoinUpdating) this.startProcessingTimer();
-
-    // If the state is set to stop processing, let the timer finish.
-    if (state.hasOwnProperty('isBulkCoinUpdating') &&
-      !state.isBulkCoinUpdating &&
-      this.processingTimer) {
-      delete state.isBulkCoinUpdating;
-    }
-
-    super.setState(state, options);
-  }
-
-  clickApplyToCurrentConfirm() {
-    bulkCoinUpdate(this.currencySelector.getState().activeCurs);
-    this.setState({ isBulkCoinUpdating: true, showBulkConfirm: false });
-    return false;
-  }
-
-  clickApplyToCurrent() {
-    this.setState({ showBulkConfirm: true });
-    return false;
-  }
-
-  onDocumentClick() {
-    this.setState({ showBulkConfirm: false });
   }
 
   noModsByIDFound(guids) {
@@ -378,11 +326,6 @@ export default class extends baseVw {
     this.modsAvailable.setState({ showVerifiedOnly: bool });
   }
 
-  remove() {
-    $(document).off('click', this.boundOnDocClick);
-    super.remove();
-  }
-
   render() {
     super.render();
 
@@ -396,7 +339,6 @@ export default class extends baseVw {
         },
         ...this.profile.toJSON(),
         ...this.settings.toJSON(),
-        ...this.getState(),
       }));
 
       this.currencySelector.delegateEvents();
@@ -417,6 +359,9 @@ export default class extends baseVw {
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);
+
+      this.bulkCoinUpdateBtn.delegateEvents();
+      this.getCachedEl('.js-bulkCoinUpdateBtn').append(this.bulkCoinUpdateBtn.render().el);
     });
 
     return this;
