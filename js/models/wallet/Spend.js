@@ -72,7 +72,7 @@ class Spend extends BaseModel {
           addError('address', app.polyglot.t('spendModelErrors.provideAddress'));
         } else if (typeof walletCur.isValidAddress === 'function' &&
           !walletCur.isValidAddress(attrs.address)) {
-          const cur = app.polylgot.t(
+          const cur = app.polyglot.t(
             `cryptoCurrencies.${walletCurCode}`,
             { _: walletCurCode }
           );
