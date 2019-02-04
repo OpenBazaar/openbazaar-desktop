@@ -470,6 +470,7 @@
     hr {
       margin-left: $padLg;
       margin-right: $padLg;
+      width: calc(100% - #{$padLg * 2})
     }
 
     .buttonBar {
