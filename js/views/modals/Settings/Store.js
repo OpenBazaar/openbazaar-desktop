@@ -6,6 +6,7 @@ import '../../../lib/whenAll.jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
+import { bulkCoinUpdate } from '../../../utils/bulkCoinUpdate';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import BulkCoinUpdateBtn from './BulkCoinUpdateBtn';
 import Moderators from '../../components/Moderators';
@@ -121,6 +122,9 @@ export default class extends baseVw {
     });
 
     this.bulkCoinUpdateBtn = new BulkCoinUpdateBtn();
+    this.listenTo(this.bulkCoinUpdateBtn, 'bulkCoinUpdateConfirm', () => {
+      bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+    });
   }
 
   events() {

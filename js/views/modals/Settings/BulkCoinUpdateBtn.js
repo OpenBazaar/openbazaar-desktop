@@ -2,7 +2,6 @@ import $ from 'jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import {
-  bulkCoinUpdate,
   isBulkCoinUpdating,
   events as bulkUpdateEvents,
 } from '../../../utils/bulkCoinUpdate';
@@ -68,7 +67,7 @@ export default class extends baseVw {
   }
 
   clickApplyToCurrentConfirm() {
-    bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+    this.trigger('bulkCoinUpdateConfirm');
     this.setState({ isBulkCoinUpdating: true, showBulkConfirm: false });
     return false;
   }
