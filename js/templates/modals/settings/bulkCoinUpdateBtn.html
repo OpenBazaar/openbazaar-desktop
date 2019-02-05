@@ -2,7 +2,7 @@
 className: `btn clrP clrBr clrT clrSh2 ${ob.isBulkCoinUpdating ? 'processing' : ''} js-applyToCurrent`,
 btnText: ob.polyT('settings.storeTab.bulkListingCoinUpdate.MainButton'),
 }) %>
-<% if (ob.showBulkConfirm) {%>
+<% if (ob.showConfirmTooltip) {%>
 <div class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 js-confirmBox">
   <div class="tx3 txB rowSm"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.ConfirmTitle') %></div>
   <div class="posR padSm"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.ConfirmMessage') %></div>

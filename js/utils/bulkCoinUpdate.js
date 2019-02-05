@@ -30,7 +30,7 @@ export function bulkCoinUpdate(coins) {
   // dedupe the list
   const newCoins = [...new Set(coins)];
 
-  if (!coins.length) {
+  if (!newCoins.length) {
     showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.NoCoinsError') });
   } else if (isBulkCoinUpdating()) {
     showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.InProgressError') });

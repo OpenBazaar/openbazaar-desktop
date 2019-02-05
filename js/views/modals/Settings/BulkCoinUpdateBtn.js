@@ -9,7 +9,6 @@ import {
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
-      className: 'bulkCoinUpdate',
       ...options,
       initialState: {
         isBulkCoinUpdating: isBulkCoinUpdating(),
@@ -57,26 +56,26 @@ export default class extends baseVw {
   }
 
   clickApplyToCurrent() {
-    this.setState({ showBulkConfirm: true });
+    this.setState({ showConfirmTooltip: true });
     return false;
   }
 
   clickApplyToCurrentCancel() {
-    this.setState({ showBulkConfirm: false });
+    this.setState({ showConfirmTooltip: false });
     return false;
   }
 
   clickApplyToCurrentConfirm() {
     this.trigger('bulkCoinUpdateConfirm');
-    this.setState({ isBulkCoinUpdating: true, showBulkConfirm: false });
+    this.setState({ isBulkCoinUpdating: true, showConfirmTooltip: false });
     return false;
   }
 
   onDocumentClick(e) {
-    if (this.getState().showBulkConfirm &&
+    if (this.getState().showConfirmTooltip &&
       !$(e.target).hasClass('js-confirmBox') &&
       !($.contains(this.getCachedEl('.js-confirmBox')[0], e.target))) {
-      this.setState({ showBulkConfirm: false });
+      this.setState({ showConfirmTooltip: false });
     }
   }
 
