@@ -49,7 +49,6 @@ export default class extends baseVw {
     // models can be listings or nodes
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
-      vendor.avatar = vendor.avatarHashes;
       const base = vendor.handle ?
         `@${vendor.handle}` : vendor.peerID;
 

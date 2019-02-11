@@ -10,7 +10,7 @@
   <% if (ob.vendor) { %>
   <div class="contentBox clrP clrSh3 clrBr clrT">
     <div class="padSm gutterHSm overflowAuto margRSm flexVCent">
-      <a class="clrBr2 clrSh1 discTn flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendor.avatar) %>"></a>
+      <a class="clrBr2 clrSh1 discTn flexNoShrink" style="<%= ob.getAvatarBgImage(ob.vendor.avatarHashes) %>"></a>
       <p class="txUnl tx3 clamp"><%= ob.vendor.name %></p>
       <a class="link flexNoShrink tx6 js-goToListing"><% print(ob.polyT('purchase.returnToListing')) %></a>
     </div>
