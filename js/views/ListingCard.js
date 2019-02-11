@@ -134,9 +134,9 @@ export default class extends baseVw {
     this.listingImage.src = listingImageSrc;
 
     const vendor = this.model.get('vendor');
-    if (vendor && vendor.avatarHashes) {
+    if (vendor && vendor.avatar) {
       const avatarImageSrc = app.getServerUrl(
-        `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
+        `ob/images/${isHiRez() ? vendor.avatar.small : vendor.avatar.tiny}`
       );
 
       this.avatarImage = new Image();
