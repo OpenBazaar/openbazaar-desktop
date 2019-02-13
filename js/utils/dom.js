@@ -107,7 +107,7 @@ export function handleLinks(el) {
     const openExternally = $a.data('openExternal') !== undefined;
     let href = $a.attr('href');
 
-    // Anchor without href is likely being handled programatically.
+    // Anchor without href is likely being handled programmatically.
     if (!href) return;
 
     const link = document.createElement('a');
@@ -117,7 +117,7 @@ export function handleLinks(el) {
       if (link.protocol === 'ob:' && !openExternally) {
         Backbone.history.navigate(href.slice(5), true);
       } else {
-        openExternal(link.protocol === 'file:' ? `http://${link.href}` : link.href);
+        openExternal(link.protocol === 'file:' ? `http://${href}` : link.href);
       }
     } else {
       if (!href.startsWith('#')) {
