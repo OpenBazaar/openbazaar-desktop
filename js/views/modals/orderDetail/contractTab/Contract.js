@@ -37,7 +37,7 @@ export default class extends BaseVw {
   }
 
   onClickCopyContract() {
-    clipboard.writeText(JSON.stringify(this.contract));
+    clipboard.writeText(JSON.stringify(this.contract, null, 2));
     // Fade the link and make it unclickable, but maintain its position in the DOM.
     this.getCachedEl('.js-copyContract')
       .addClass('unclickable')
