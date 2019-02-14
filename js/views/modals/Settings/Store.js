@@ -7,7 +7,7 @@ import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
-import Moderators from '../../components/Moderators';
+import Moderators from '../../components/moderators/Moderators';
 import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
 

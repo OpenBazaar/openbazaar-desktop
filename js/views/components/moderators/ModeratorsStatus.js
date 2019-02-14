@@ -1,5 +1,5 @@
-import BaseVw from '../baseVw';
-import loadTemplate from '../../utils/loadTemplate';
+import BaseVw from '../../baseVw';
+import loadTemplate from '../../../utils/loadTemplate';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -33,6 +33,7 @@ export default class extends BaseVw {
     const combinedState = { ...this.getState(), ...state };
     // Any time the state is set to loading, set the spinner timer if needed.
     if (state.loading && combinedState.showSpinner) {
+      clearTimeout(this.spinnerTimeout);
       this.spinnerTimeout = setTimeout(() => {
         let mode = this.getState().mode;
         if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';

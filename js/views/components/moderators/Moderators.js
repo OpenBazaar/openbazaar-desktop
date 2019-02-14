@@ -1,13 +1,13 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import app from '../../app';
-import { anySupportedByWallet } from '../../data/walletCurrencies';
-import loadTemplate from '../../utils/loadTemplate';
-import { getSocket } from '../../utils/serverConnect';
-import Moderators from '../../collections/Moderators';
-import Moderator from '../../models/profile/Profile';
-import baseVw from '../baseVw';
-import { openSimpleMessage } from '../modals/SimpleMessage';
+import app from '../../../app';
+import { anySupportedByWallet } from '../../../data/walletCurrencies';
+import loadTemplate from '../../../utils/loadTemplate';
+import { getSocket } from '../../../utils/serverConnect';
+import Moderators from '../../../collections/Moderators';
+import Moderator from '../../../models/profile/Profile';
+import baseVw from '../../baseVw';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
 import ModCard from './ModeratorCard';
 import ModeratorsStatus from './ModeratorsStatus';
 
