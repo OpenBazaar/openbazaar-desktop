@@ -15,37 +15,33 @@ export function isBulkCoinUpdating() {
   return bulkCoinUpdateSave && bulkCoinUpdateSave.state() === 'pending';
 }
 
-function showError(opts) {
-  events.trigger('bulkCoinUpdateFailed');
-  const title = opts.title || app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorTitle');
-  const msg = opts.msg || app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorMessage');
-  openSimpleMessage(title, msg);
-}
-
 export function bulkCoinUpdate(coins) {
-  if (!Array.isArray(coins)) {
+  if (!Array.isArray(coins) || !coins.length) {
     throw new Error('Please provide an array of accepted cryptocurrency codes.');
   }
 
   // dedupe the list
   const newCoins = [...new Set(coins)];
 
-  if (!newCoins.length) {
-    showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.NoCoinsError') });
-  } else if (isBulkCoinUpdating()) {
-    showError({ msg: app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.InProgressError') });
+  if (isBulkCoinUpdating()) {
+    throw new Error('An update is in process, new updates must wait until it is finished.');
   } else {
-    events.trigger('bulkCoinUpdateStarted');
+    events.trigger('bulkCoinUpdating');
     bulkCoinUpdateSave = $.post({
-      url: app.getServerUrl('ob/bulkupdatecurrency'),
+      url: app.getServerUrl('ob/xxxbulkupdatecurrency'),
       data: JSON.stringify({ currencies: newCoins }),
       dataType: 'json',
     }).done(() => {
       events.trigger('bulkCoinUpdateDone');
     }).fail((xhr) => {
       const reason = xhr.responseJSON && xhr.responseJSON.reason || xhr.statusText || '';
-      const message = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.ErrorMessage');
-      showError({ msg: `${message} ${reason ? `\n\n${reason}` : ''}` });
+      const message = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.errors.errorMessage');
+      const title = app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.errors.errorTitle');
+      const reasonMsg =
+        app.polyglot.t('settings.storeTab.bulkListingCoinUpdate.errors.reasonForError', { reason });
+      const msg = `${message} ${reason ? `<br>${reasonMsg}` : ''}`;
+      openSimpleMessage(title, msg);
+      events.trigger('bulkCoinUpdateFailed');
     });
   }
 

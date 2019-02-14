@@ -10,8 +10,10 @@ export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       ...options,
+      className: 'bulkCoinUpdateBtn flex gutterH',
       initialState: {
         isBulkCoinUpdating: isBulkCoinUpdating(),
+        error: '',
         ...options.initialState,
       },
     };
@@ -36,7 +38,8 @@ export default class extends baseVw {
     if (!this.processingTimer) {
       this.processingTimer = setTimeout(() => {
         this.processingTimer = null;
-        this.setState({ isBulkCoinUpdating: isBulkCoinUpdating() });
+        // If the update is still pending, let it set the isBulkCoinUpdating state.
+        if (!isBulkCoinUpdating()) this.setState({ isBulkCoinUpdating: false });
       }, 500);
     }
   }
@@ -67,7 +70,6 @@ export default class extends baseVw {
 
   clickApplyToCurrentConfirm() {
     this.trigger('bulkCoinUpdateConfirm');
-    this.setState({ isBulkCoinUpdating: true, showConfirmTooltip: false });
     return false;
   }
 

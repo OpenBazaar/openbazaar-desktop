@@ -123,7 +123,21 @@ export default class extends baseVw {
 
     this.bulkCoinUpdateBtn = new BulkCoinUpdateBtn();
     this.listenTo(this.bulkCoinUpdateBtn, 'bulkCoinUpdateConfirm', () => {
-      bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+      const newCoins = this.currencySelector.getState().activeCurs;
+      if (newCoins.length) {
+        bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+        this.bulkCoinUpdateBtn.setState({
+          isBulkCoinUpdating: true,
+          showConfirmTooltip: false,
+          error: '',
+        });
+      } else {
+        this.bulkCoinUpdateBtn.setState({
+          isBulkCoinUpdating: false,
+          showConfirmTooltip: false,
+          error: 'NoCoinsError',
+        });
+      }
     });
   }
 
