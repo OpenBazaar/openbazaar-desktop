@@ -28,7 +28,7 @@ export function bulkCoinUpdate(coins) {
   } else {
     events.trigger('bulkCoinUpdating');
     bulkCoinUpdateSave = $.post({
-      url: app.getServerUrl('ob/xxxbulkupdatecurrency'),
+      url: app.getServerUrl('ob/bulkupdatecurrency'),
       data: JSON.stringify({ currencies: newCoins }),
       dataType: 'json',
     }).done(() => {
