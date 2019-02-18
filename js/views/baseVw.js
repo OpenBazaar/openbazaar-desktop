@@ -18,7 +18,7 @@ export default class baseVw extends View {
     const data = [];
 
     $fields.each((index, field) => {
-      const val = typeof field.value !== 'number' ? sanitizeHtml(field.value) : field.value;
+      const val = typeof field.value === 'string' ? sanitizeHtml(field.value) : field.value;
       if (field.checked) data.push(val);
     });
 
@@ -113,7 +113,7 @@ export default class baseVw extends View {
       } else if (field.type === 'checkbox') {
         data[name] = field.checked;
       } else {
-        data[name] = typeof val !== 'number' ? sanitizeHtml(val) : val;
+        data[name] = typeof val === 'string' ? sanitizeHtml(val) : val;
       }
     });
 
