@@ -123,7 +123,7 @@ export default class extends BaseVw {
 
     const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
 
-    loadTemplate('components/moderatorCard.html', (t) => {
+    loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,

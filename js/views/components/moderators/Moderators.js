@@ -8,8 +8,8 @@ import Moderators from '../../../collections/Moderators';
 import Moderator from '../../../models/profile/Profile';
 import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
-import ModCard from './ModeratorCard';
-import ModeratorsStatus from './ModeratorsStatus';
+import ModCard from './Card';
+import ModeratorsStatus from './Status';
 
 export default class extends baseVw {
   /**
@@ -270,7 +270,7 @@ export default class extends baseVw {
     } else {
       // Either ids are still fetching, or this is an open fetch with no set ids.
       this.moderatorsStatus.setState({
-        loaded: this.fetchingMods.length - this.unfetchedMods.length, // not shown if open fetch
+        loaded: this.moderatorsCol.length, // not shown if open fetch
         toLoad: this.fetchingMods.length, // not shown if open fetch
         total: this.modCount,
       });
@@ -408,7 +408,7 @@ export default class extends baseVw {
     clearTimeout(this.renderTimer);
     this.renderTimer = null;
 
-    loadTemplate('components/moderators.html', t => {
+    loadTemplate('components/moderators/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
         placeholder: !showMods.length && (this.unfetchedMods.length || !totalIDs),
