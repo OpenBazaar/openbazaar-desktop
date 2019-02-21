@@ -214,6 +214,7 @@ export default class extends baseVw {
   deleteProvider(md = this.sProvider) {
     if (md.get('locked')) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
+      recordEvent('Discover_DeleteLocked');
     } else {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
@@ -421,6 +422,8 @@ export default class extends baseVw {
       initCol: this.resultsCol,
       viewType,
     });
+
+    recordEvent('Discover_Results', { total: data.results ? data.results.total : 0 });
 
     this.$resultsWrapper.html(resultsView.render().el);
 
