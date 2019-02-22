@@ -423,7 +423,11 @@ export default class extends baseVw {
       viewType,
     });
 
-    recordEvent('Discover_Results', { total: data.results ? data.results.total : 0 });
+    recordEvent('Discover_Results', {
+      total: data.results ? data.results.total : 0,
+      provider: this.sProvider.get('name'),
+      page: this.serverPage + 1,
+    });
 
     this.$resultsWrapper.html(resultsView.render().el);
 
