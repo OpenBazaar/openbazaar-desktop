@@ -61,7 +61,10 @@ export default class extends baseVw {
       recordEvent('Discover_InvalidDefaultProvider', { url: this.providerUrl });
     }
 
-    if (options.query) recordEvent('Discover_SearchFromAddressBar');
+    if (options.query) {
+      recordEvent('Discover_SearchFromAddressBar');
+      recordEvent('Discover_Search', { type: 'addressBar' });
+    }
 
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
@@ -440,6 +443,7 @@ export default class extends baseVw {
     this.serverPage = 0;
     this.processTerm(this.$searchInput.val());
     recordEvent('Discover_ClickSearch');
+    recordEvent('Discover_Search', { type: 'click' });
   }
 
   onKeyupSearchInput(e) {
@@ -447,6 +451,7 @@ export default class extends baseVw {
       this.serverPage = 0;
       this.processTerm(this.$searchInput.val());
       recordEvent('Discover_EnterKeySearch');
+      recordEvent('Discover_Search', { type: 'enterKey' });
     }
   }
 
@@ -478,6 +483,7 @@ export default class extends baseVw {
   onClickSuggestion(opts) {
     this.processTerm(opts.suggestion);
     recordEvent('Discover_ClickSuggestion');
+    recordEvent('Discover_Search', { type: 'suggestion' });
   }
 
   scrollToTop() {
