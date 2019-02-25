@@ -217,7 +217,10 @@ export default class extends baseVw {
   deleteProvider(md = this.sProvider) {
     if (md.get('locked')) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
-      recordEvent('Discover_DeleteLocked');
+      recordEvent('Discover_DeleteLocked', {
+        provider: md.get('name') || 'unknown',
+        url: md.get('listings'),
+      });
     } else {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
@@ -231,8 +234,11 @@ export default class extends baseVw {
   }
 
   clickDeleteProvider() {
+    recordEvent('Discover_DeleteProvider', {
+      provider: this.sProvider.get('name') || 'unknown',
+      url: this.sProvider.get('listings'),
+    });
     this.deleteProvider();
-    recordEvent('Discover_DeleteProvider');
   }
 
   makeDefaultProvider() {
@@ -246,7 +252,10 @@ export default class extends baseVw {
 
   clickMakeDefaultProvider() {
     this.makeDefaultProvider();
-    recordEvent('Discover_MakeDefaultProvider');
+    recordEvent('Discover_MakeDefaultProvider', {
+      provider: this.sProvider.get('name') || 'unknown',
+      url: this.sProvider.get('listings'),
+    });
   }
 
   addQueryProvider() {
@@ -394,8 +403,8 @@ export default class extends baseVw {
 
     recordEvent('Discover_SearchError', {
       error: msg || 'unknown error',
-      provider: this.sProvider.get('name'),
-      searchURL: this.sProvider.get('listings'),
+      provider: this.sProvider.get('name') || 'unknown',
+      url: this.sProvider.get('listings'),
     });
   }
 
@@ -428,7 +437,8 @@ export default class extends baseVw {
 
     recordEvent('Discover_Results', {
       total: data.results ? data.results.total : 0,
-      provider: this.sProvider.get('name'),
+      provider: this.sProvider.get('name') || 'unknown',
+      url: this.sProvider.get('listings'),
       page: this.serverPage + 1,
     });
 
