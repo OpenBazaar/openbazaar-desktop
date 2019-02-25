@@ -40,8 +40,8 @@ export function userStats() {
 
   return {
     vendor: p ? p.get('vendor') : pErr,
-    listingCount: p ? p.get('stats').get('listingCount') : pErr,
-    ratingCount: p ? p.get('stats').get('ratingCount') : pErr,
+    listingCount: p ? p.get('stats').get('listingCount') : 0,
+    ratingCount: p ? p.get('stats').get('ratingCount') : 0,
     moderator: p ? p.get('moderator') : pErr,
     crypto: p ? p.get('currencies') : pErr,
     displayCurrency: app.settings ? app.settings.get('localCurrency') : 'Settings Not Available',
