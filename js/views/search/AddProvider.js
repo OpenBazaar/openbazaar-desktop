@@ -55,7 +55,7 @@ export default class extends BaseView {
       if (save) {
         // when saved successfully this view will be removed when the search is rerendered
         save.done(() => {
-          recordEvent('Discover_AddProviderSaved', { errors: 'none' });
+          recordEvent('Discover_AddProviderSaved', { errors: 'none', url: URL });
           app.searchProviders.add(this.model);
           this.trigger('newProviderSaved', this.model);
         })
