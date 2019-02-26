@@ -6,8 +6,10 @@ import '../../../lib/whenAll.jquery';
 import baseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
+import { bulkCoinUpdate } from '../../../utils/bulkCoinUpdate';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import Moderators from '../../components/moderators/Moderators';
+import BulkCoinUpdateBtn from './BulkCoinUpdateBtn';
 import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
 
@@ -117,6 +119,25 @@ export default class extends baseVw {
           obj.view.render();
         }
       });
+    });
+
+    this.bulkCoinUpdateBtn = new BulkCoinUpdateBtn();
+    this.listenTo(this.bulkCoinUpdateBtn, 'bulkCoinUpdateConfirm', () => {
+      const newCoins = this.currencySelector.getState().activeCurs;
+      if (newCoins.length) {
+        bulkCoinUpdate(this.currencySelector.getState().activeCurs);
+        this.bulkCoinUpdateBtn.setState({
+          isBulkCoinUpdating: true,
+          showConfirmTooltip: false,
+          error: '',
+        });
+      } else {
+        this.bulkCoinUpdateBtn.setState({
+          isBulkCoinUpdating: false,
+          showConfirmTooltip: false,
+          error: 'NoCoinsError',
+        });
+      }
     });
   }
 
@@ -356,6 +377,9 @@ export default class extends baseVw {
       this.getCachedEl('.js-modListAvailable')
         .append(this.modsAvailable.render().el)
         .toggleClass('hide', !this.modsAvailable.allIDs.length);
+
+      this.bulkCoinUpdateBtn.delegateEvents();
+      this.getCachedEl('.js-bulkCoinUpdateBtn').append(this.bulkCoinUpdateBtn.render().el);
     });
 
     return this;

@@ -1,0 +1,23 @@
+<% if (ob.error) { %>
+  <span class="clrTErr"><%= ob.polyT(`settings.storeTab.bulkListingCoinUpdate.errors.${ob.error}`) %></span>
+<% } %>
+<div class="flexNoShrink" style="width: 240px">
+  <%= ob.processingButton({
+    className: `btn clrP clrBr clrT clrSh2 ${ob.isBulkCoinUpdating ? 'processing' : ''} js-applyToCurrent`,
+    btnText: ob.polyT('settings.storeTab.bulkListingCoinUpdate.mainButton'),
+  }) %>
+  <% if (ob.showConfirmTooltip) { %>
+  <div class="confirmBox arrowBoxTop clrBr clrP clrT clrSh1 js-confirmBox">
+    <div class="tx3 txB rowSm"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.confirmTitle') %></div>
+    <div class="posR padSm"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.confirmMessage') %></div>
+    <hr class="clrBr row" />
+    <div class="flexVCent gutterHLg">
+      <div class="flexExpand">
+        <% // The cancel button is just cosmetic, cancelling is handled by the click on the document %>
+        <a class="clrT2 js-applyToCurrentCancel"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.cancel') %></a>
+      </div>
+      <a class="btn clrBAttGrad clrBrDec1 clrTOnEmph js-applyToCurrentConfirm"><%= ob.polyT('settings.storeTab.bulkListingCoinUpdate.apply') %></a>
+    </div>
+  </div>
+  <% } %>
+</div>

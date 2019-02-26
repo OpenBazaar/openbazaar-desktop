@@ -27,7 +27,7 @@ export default class extends baseVw {
     this._followsYou = false;
 
     if (this.model.id === app.profile.id) {
-      this.listenTo(app.profile, 'change:name, change:location', () => this.render());
+      this.listenTo(app.profile, 'change:name change:location', () => this.render());
       this.listenTo(app.profile.get('avatarHashes'), 'change', () => this.render());
     } else {
       if (opts.fetchFollowsYou) {

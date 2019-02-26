@@ -16,7 +16,7 @@ export function followsYou(guid) {
 }
 
 export function followUnfollow(guid, type = 'follow') {
-  if (typeof guid !== 'string' || !guid.toLowerCase().startsWith('qm')) {
+  if (typeof guid !== 'string') {
     throw new Error('You must provide a valid guid.');
   }
 

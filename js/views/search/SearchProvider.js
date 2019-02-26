@@ -26,7 +26,8 @@ export default class extends BaseView {
   onClickProvider() {
     this.trigger('click', this.model);
     recordEvent('Discover_ChangeProvider', {
-      name: this.model.get('name'),
+      name: this.model.get('name') || 'unknown',
+      url: this.model.get('listings'),
     });
   }
 

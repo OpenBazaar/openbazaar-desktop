@@ -49,7 +49,6 @@ export default class extends baseVw {
     // models can be listings or nodes
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
-      vendor.avatar = vendor.avatarHashes;
       const base = vendor.handle ?
         `@${vendor.handle}` : vendor.peerID;
 
@@ -148,13 +147,13 @@ export default class extends baseVw {
   clickPagePrev() {
     this.serverPage--;
     this.loadPage(this.serverPage);
-    recordEvent('Discover_PrevPage');
+    recordEvent('Discover_PrevPage', { fromPage: this.serverPage });
   }
 
   clickPageNext() {
     this.serverPage++;
     this.loadPage(this.serverPage);
-    recordEvent('Discover_NextPage');
+    recordEvent('Discover_NextPage', { fromPage: this.serverPage });
   }
 
   removeCardViews() {

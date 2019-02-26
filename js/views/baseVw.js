@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import sanitizeHtml from 'sanitize-html';
 import { setDeepValue } from '../utils/object';
 import { View } from 'backbone';
 
@@ -17,7 +18,8 @@ export default class baseVw extends View {
     const data = [];
 
     $fields.each((index, field) => {
-      if (field.checked) data.push(field.value);
+      const val = typeof field.value === 'string' ? sanitizeHtml(field.value) : field.value;
+      if (field.checked) data.push(val);
     });
 
     return data;
@@ -111,7 +113,7 @@ export default class baseVw extends View {
       } else if (field.type === 'checkbox') {
         data[name] = field.checked;
       } else {
-        data[name] = val;
+        data[name] = typeof val === 'string' ? sanitizeHtml(val) : val;
       }
     });
 
