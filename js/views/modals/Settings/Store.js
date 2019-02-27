@@ -8,8 +8,8 @@ import loadTemplate from '../../../utils/loadTemplate';
 import { isMultihash } from '../../../utils';
 import { bulkCoinUpdate } from '../../../utils/bulkCoinUpdate';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
+import Moderators from '../../components/moderators/Moderators';
 import BulkCoinUpdateBtn from './BulkCoinUpdateBtn';
-import Moderators from '../../components/Moderators';
 import CurrencySelector from '../../components/CryptoCurSelector';
 import { openSimpleMessage } from '../SimpleMessage';
 
