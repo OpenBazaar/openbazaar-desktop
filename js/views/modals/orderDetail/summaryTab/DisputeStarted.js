@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import moment from 'moment';
 import {
   events as orderEvents,
@@ -8,14 +7,17 @@ import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    super(options);
-
-    this._state = {
+    const opts = {
       disputerName: '',
       claim: '',
       showResolveButton: false,
-      ...options.initialState || {},
+      ...options,
+      initialState: {
+        ...options.initialState,
+      },
     };
+
+    super(opts);
 
     this.listenTo(orderEvents, 'resolveDisputeComplete', () => {
       this.setState({
@@ -38,27 +40,11 @@ export default class extends BaseVw {
     this.trigger('clickResolveDispute');
   }
 
-  setState(state, replace = false, renderOnChange = true) {
-    let newState;
-
-    if (replace) {
-      this._state = {};
-    } else {
-      newState = _.extend({}, this._state, state);
-    }
-
-    if (renderOnChange && !_.isEqual(this._state, newState)) {
-      this._state = newState;
-      this.render();
-    }
-
-    return this;
-  }
-
   render() {
+    const state = this.getState();
     loadTemplate('modals/orderDetail/summaryTab/disputeStarted.html', (t) => {
       this.$el.html(t({
-        ...this._state,
+        ...state,
         moment,
       }));
     });

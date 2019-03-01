@@ -1732,7 +1732,10 @@
         "reviewLabel": "%{name}'s Review:"
       },
       "disputeStarted": {
+        "buyer": "Buyer",
+        "seller": "Seller",
         "heading": "Dispute Started",
+        "modHeading": "Dispute Started by %{openedBy}",
         "partyIsDisputing": "%{name} is disputing the order:",
         "resolveBtn": "Resolve Dispute",
         "genericIsDisputed": "The order is being disputed:",

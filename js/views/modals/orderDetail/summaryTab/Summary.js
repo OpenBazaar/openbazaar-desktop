@@ -799,9 +799,14 @@ export default class extends BaseVw {
   }
 
   renderDisputeStartedView() {
+    const buyerOpened = this.model.get('buyerOpened');
+
     const data = this.model.isCase ? {
       timestamp: this.model.get('timestamp'),
       claim: this.model.get('claim'),
+      buyerOpened,
+      buyerID: this.buyer.id,
+      sellerID: this.vendor.id,
     } : this.contract.get('dispute');
 
     if (!data) {
@@ -819,7 +824,6 @@ export default class extends BaseVw {
     });
 
     // this is only set on the Case.
-    const buyerOpened = this.model.get('buyerOpened');
     if (typeof buyerOpened !== 'undefined') {
       const disputeOpener = buyerOpened ? this.buyer : this.vendor;
       disputeOpener.getProfile()

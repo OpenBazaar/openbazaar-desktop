@@ -1,6 +1,12 @@
-<h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputeStarted.heading') %></h2>
+<% if (ob.buyerOpened !== undefined) {
+    const openedBy = ob.polyT(`orderDetail.summaryTab.disputeStarted.${ob.buyerOpened ? 'buyer' : 'seller'}`);
+%>
+  <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputeStarted.modHeading', { openedBy }) %></h2>
+<% } else { %>
+  <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputeStarted.heading') %></h2>
+<% } %>
 <% if (ob.timestamp) { %>
-<span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
+  <span class="clrT2 tx5b"><%= ob.moment(ob.timestamp).format('lll') %></span>
 <% } %>
 
 <div class="border clrBr padMd">
@@ -13,7 +19,17 @@
           ob.polyT('orderDetail.summaryTab.disputeStarted.genericIsDisputed');
       %>
       <div class="rowTn txB"><%= introLine %></div>
-      <div><%= ob.claim || ob.polyT('orderDetail.summaryTab.disputeStarted.noReasonProvided') %></div>
+      <div class="rowMd" ><%= ob.claim || ob.polyT('orderDetail.summaryTab.disputeStarted.noReasonProvided') %></div>
+      <% if (ob.buyerID) { %>
+        <div class="rowSm">
+          Buyer: <a href="ob://<%= ob.buyerID %>"><%= ob.buyerID %></a>
+        </div>
+      <% } %>
+      <% if (ob.sellerID) { %>
+        <div>
+          Seller: <a href="ob://<%= ob.sellerID %>"><%= ob.sellerID %></a>
+        </div>
+      <% }%>
     </div>
   </div>
 </div>
