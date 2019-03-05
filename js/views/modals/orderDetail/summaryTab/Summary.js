@@ -809,12 +809,21 @@ export default class extends BaseVw {
         'data object has not been set.');
     }
 
+    let paymentCoinData;
+
+    try {
+      paymentCoinData = getWalletCurByCode(this.model.paymentCoin);
+    } catch (e) {
+      // pass
+    }
+
     if (this.disputeStarted) this.disputeStarted.remove();
     this.disputeStarted = this.createChild(DisputeStarted, {
       initialState: {
         ...data,
         showResolveButton: this.model.get('state') === 'DISPUTED' &&
-          this.moderator.id === app.profile.id,
+          this.model.isCase &&
+           (!paymentCoinData || !paymentCoinData.supportsEscrowTimeout),
       },
     });
 
@@ -826,6 +835,9 @@ export default class extends BaseVw {
         .done(profile =>
           this.disputeStarted.setState({ disputerName: profile.get('name') }));
     }
+
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputeStarted.render().el);
   }
@@ -857,9 +869,6 @@ export default class extends BaseVw {
         this.disputePayout.setState(state);
       });
     });
-
-    this.listenTo(this.disputeStarted, 'clickResolveDispute',
-      () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputePayout.render().el);
   }
