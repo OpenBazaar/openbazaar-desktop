@@ -809,12 +809,21 @@ export default class extends BaseVw {
         'data object has not been set.');
     }
 
+    let paymentCoinData;
+
+    try {
+      paymentCoinData = getWalletCurByCode(this.model.paymentCoin);
+    } catch (e) {
+      // pass
+    }
+
     if (this.disputeStarted) this.disputeStarted.remove();
     this.disputeStarted = this.createChild(DisputeStarted, {
       initialState: {
         ...data,
         showResolveButton: this.model.get('state') === 'DISPUTED' &&
-          this.model.isCase,
+          this.model.isCase &&
+          (!paymentCoinData || !paymentCoinData.supportsEscrowTimeout),
       },
     });
 
