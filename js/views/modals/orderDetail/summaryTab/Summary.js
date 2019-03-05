@@ -823,7 +823,7 @@ export default class extends BaseVw {
         ...data,
         showResolveButton: this.model.get('state') === 'DISPUTED' &&
           this.model.isCase &&
-          (!paymentCoinData || !paymentCoinData.supportsEscrowTimeout),
+           (!paymentCoinData || !paymentCoinData.supportsEscrowTimeout),
       },
     });
 
