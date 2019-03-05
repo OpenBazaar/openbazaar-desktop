@@ -20,7 +20,7 @@ import Listing from '../../../models/listing/Listing';
 import BaseModal from '../BaseModal';
 import { openSimpleMessage } from '../SimpleMessage';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
-import Moderators from '../../components/Moderators';
+import Moderators from '../../components/moderators/Moderators';
 import FeeChange from '../../components/FeeChange';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
 import CryptoCurSelector from '../../components/CryptoCurSelector';

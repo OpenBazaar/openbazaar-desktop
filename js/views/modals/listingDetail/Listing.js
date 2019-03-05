@@ -56,16 +56,11 @@ export default class extends BaseModal {
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
     if (opts.profile) {
-      const avatarHashes = opts.profile.get('avatarHashes');
-
       this.vendor = {
         peerID: opts.profile.id,
         name: opts.profile.get('name'),
         handle: opts.profile.get('handle'),
-        avatar: {
-          tiny: avatarHashes.get('tiny'),
-          small: avatarHashes.get('small'),
-        },
+        avatarHashes: opts.profile.get('avatarHashes').toJSON(),
       };
     }
 

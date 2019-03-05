@@ -1,13 +1,13 @@
 import _ from 'underscore';
-import BaseVw from '../baseVw';
-import loadTemplate from '../../utils/loadTemplate';
-import app from '../../app';
-import Profile from '../../models/profile/Profile';
-import VerifiedMod, { getModeratorOptions } from './VerifiedMod';
-import { handleLinks } from '../../utils/dom';
-import { launchModeratorDetailsModal } from '../../utils/modalManager';
-import { anySupportedByWallet } from '../../data/walletCurrencies';
-import { getLangByCode } from '../../data/languages';
+import BaseVw from '../../baseVw';
+import loadTemplate from '../../../utils/loadTemplate';
+import app from '../../../app';
+import Profile from '../../../models/profile/Profile';
+import VerifiedMod, { getModeratorOptions } from '../VerifiedMod';
+import { handleLinks } from '../../../utils/dom';
+import { launchModeratorDetailsModal } from '../../../utils/modalManager';
+import { anySupportedByWallet } from '../../../data/walletCurrencies';
+import { getLangByCode } from '../../../data/languages';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -123,7 +123,7 @@ export default class extends BaseVw {
 
     const verifiedMod = app.verifiedMods.get(this.model.get('peerID'));
 
-    loadTemplate('components/moderatorCard.html', (t) => {
+    loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
         displayCurrency: app.settings.get('localCurrency'),
         valid: this.model.isModerator,

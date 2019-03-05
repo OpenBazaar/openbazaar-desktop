@@ -1,15 +1,15 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import app from '../../app';
-import { anySupportedByWallet } from '../../data/walletCurrencies';
-import loadTemplate from '../../utils/loadTemplate';
-import { getSocket } from '../../utils/serverConnect';
-import Moderators from '../../collections/Moderators';
-import Moderator from '../../models/profile/Profile';
-import baseVw from '../baseVw';
-import { openSimpleMessage } from '../modals/SimpleMessage';
-import ModCard from './ModeratorCard';
-import ModeratorsStatus from './ModeratorsStatus';
+import app from '../../../app';
+import { anySupportedByWallet } from '../../../data/walletCurrencies';
+import loadTemplate from '../../../utils/loadTemplate';
+import { getSocket } from '../../../utils/serverConnect';
+import Moderators from '../../../collections/Moderators';
+import Moderator from '../../../models/profile/Profile';
+import baseVw from '../../baseVw';
+import { openSimpleMessage } from '../../modals/SimpleMessage';
+import ModCard from './Card';
+import ModeratorsStatus from './Status';
 
 export default class extends baseVw {
   /**
@@ -113,8 +113,6 @@ export default class extends baseVw {
     this.moderatorsStatus = this.createChild(ModeratorsStatus, {
       initialState: {
         mode: opts.method === 'GET' ? 'loaded' : 'loadingXofY',
-        loaded: 0,
-        total: this.options.moderatorIDs.length,
         showLoadBtn: opts.showLoadBtn,
         showSpinner: opts.showSpinner,
       },
@@ -195,9 +193,10 @@ export default class extends baseVw {
     if (IDs.length || op.method === 'GET') {
       this.moderatorsStatus.setState({
         hidden: false,
-        loaded: this.modCount,
-        total: IDs.length ? IDs.length : this.modCount,
-        showSpinner: op.showSpinner, //unhides the spinner if it's been hidden by the timer
+        loaded: 0,
+        toLoad: IDs.length,
+        total: this.modCount,
+        loading: true,
       });
 
       const fetch = $.ajax({
@@ -262,6 +261,7 @@ export default class extends baseVw {
     if (this.unfetchedMods.length === 0 && this.fetchingMods.length) {
       // All ids have been fetched and ids existed to fetch.
       this.moderatorsStatus.setState({
+        loading: false,
         hidden: true,
       });
       this.setState({
@@ -270,9 +270,12 @@ export default class extends baseVw {
     } else {
       // Either ids are still fetching, or this is an open fetch with no set ids.
       this.moderatorsStatus.setState({
-        loaded: this.fetchingMods.length - this.unfetchedMods.length, // not shown if open fetch
-        total: this.fetchingMods.length ? this.fetchingMods.length : this.modCount,
+        loaded: this.moderatorsCol.length, // not shown if open fetch
+        toLoad: this.fetchingMods.length, // not shown if open fetch
+        total: this.modCount,
       });
+      // re-render to show the unverified moderators button if needed.
+      this.render();
     }
   }
 
@@ -405,13 +408,12 @@ export default class extends baseVw {
     clearTimeout(this.renderTimer);
     this.renderTimer = null;
 
-    loadTemplate('components/moderators.html', t => {
+    loadTemplate('components/moderators/moderators.html', t => {
       this.$el.html(t({
         wrapperClasses: this.options.wrapperClasses,
         placeholder: !showMods.length && (this.unfetchedMods.length || !totalIDs),
         purchase: this.options.purchase,
         totalShown: showMods.length,
-        totalPending: this.unfetchedMods.length,
         totalIDs,
         unVerCount,
         ...state,

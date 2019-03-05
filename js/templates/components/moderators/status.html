@@ -1,0 +1,22 @@
+<div class="moderatorsStatus flexCent gutterHTn tx6 clrBr clrP <% if(ob.hidden) print('hide') %>">
+  <% if (ob.showSpinner && ob.loading) { %>
+    <%= ob.spinner({ className: 'spinnerTxt js-spinner' }) %>
+  <% } %>
+  <span class="clrT4">
+    <% if (ob.mode === 'loaded') {
+         print(ob.polyT('moderators.moderatorsLoaded', { total: ob.total, smart_count: ob.total }));
+       } else if (ob.mode === 'loadingXofY') {
+         print(ob.polyT('moderators.moderatorsXofY', { current: ob.loaded + 1, total: ob.toLoad }));
+       } else if (ob.mode === 'loadingXofYTimedOut') {
+         const remainder = ob.toLoad - ob.loaded;
+         print(ob.polyT('moderators.loadingXofYTimedOut', { loaded: ob.loaded, total: ob.toLoad, remainder, smart_count: remainder }));
+       } else {
+         print(ob.polyT('moderators.moderatorsLoading'));
+    } %>
+  </span>
+  <% if (ob.showLoadBtn) { %>
+      <button class="btnAsLink tx6 clrT2 browseMore js-browseMore <% if(ob.showSpinner) print('disabled') %>">
+        <%= ob.polyT('moderators.browseMoreModerators') %>
+      </button>
+  <% } %>
+</div>
