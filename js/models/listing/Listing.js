@@ -24,6 +24,20 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
+  static getIpnsUrl(guid, slug) {
+    if (typeof guid !== 'string' || !guid) {
+      throw new Error('Please provide a guid as a non-empty ' +
+        'string.');
+    }
+
+    if (typeof slug !== 'string' || !slug) {
+      throw new Error('Please provide a slug as a non-empty ' +
+        'string.');
+    }
+
+    return app.getServerUrl(`ob/listing/${guid}/${slug}`);
+  }
+
   getIpnsUrl() {
     const slug = this.get('slug');
 
@@ -32,20 +46,20 @@ export default class extends BaseModel {
         + 'set as a model attribute.');
     }
 
-    return this.ownListing ?
-      app.getServerUrl(`ob/listing/${slug}`) :
-      app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
+    return this.constructor.getIpnsUrl(this.guid, slug);
   }
 
-  getIpfsUrl() {
-    const hash = this.hash;
-
-    if (hash) {
-      throw new Error('In order to fetch a listing via IPFS, a hash must be '
-        + 'set on this model. It is settable via model.hash = <hash>.');
+  static getIpfsUrl(hash) {
+    if (typeof hash !== 'string' || !hash) {
+      throw new Error('Please provide a hash as a non-empty ' +
+        'string.');
     }
 
     return app.getServerUrl(`ob/listing/${hash}`);
+  }
+
+  getIpfsUrl() {
+    return this.constructor.getIpfsUrl(this.hash);
   }
 
   defaults() {
@@ -268,18 +282,10 @@ export default class extends BaseModel {
 
       options.url = options.url ||
         (
-          options.hash ?
+          typeof options.hash === 'string' && options.hash ?
             this.getIpfsUrl(options.hash) :
             this.getIpnsUrl(slug)
-        )
-
-      if (this.isOwnListing) {
-        options.url = options.url ||
-          app.getServerUrl(`ob/listing/${slug}`);
-      } else {
-        options.url = options.url ||
-          app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
-      }
+        );
     } else {
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');

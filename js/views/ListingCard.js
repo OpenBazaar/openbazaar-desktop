@@ -261,27 +261,107 @@ export default class extends baseVw {
         searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
       };
 
-      const listingFetch = this.fetchFullListing({ showErrorOnFetchFail: false });
+      // fetch listing model via hash
+      // fetch ipns seperataly
+
+      // hashFetch.done =>
+      //   continue with flow
+      //   .error =>
+      //     same error handling as now
+
+      // ipnsFetch.done =>
+      //   if hashFetch done
+      //     check if hash is up to date
+      //       if yes, do nothin
+      //       if no, messaging to reload...
+      //   if hashFetch not done
+      //     cancel hashfetch
+      //     messaging to reload
+
+      // messaging to reload
+      //   if
+
+      let storeName = `${this.ownerGuid.slice(0, 8)}…`;
+      let avatarHashes;
+      let title = this.model.get('title');
+      title = title.length > 25 ?
+        `${title.slice(0, 25)}…` : title;
+
+      if (this.options.profile) {
+        storeName = this.options.profile.get('name');
+        avatarHashes = this.options.profile.get('avatarHashes')
+          .toJSON();
+      } else if (this.options.vendor) {
+        storeName = this.options.vendor.name;
+        avatarHashes = this.options.vendor.avatarHashes;
+      }
+
+      if (storeName.length > 40) {
+        storeName = `${storeName.slice(0, 40)}…`;
+      }
+
+      const setUserLoadingModalFailedState = () => {
+        this.userLoadingModal.setState({
+          contentText: app.polyglot.t('userPage.loading.failTextListing', {
+            listing: `<b>${title}</b>`,
+          }),
+          isProcessing: false,
+        });
+      };
+
+      const showListingDetail = () => {
+        const listingDetail = new ListingDetail({
+          model: this.fullListing,
+          profile: this.options.profile,
+          vendor: this.options.vendor,
+          closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
+          modelContentClass: 'modalContent',
+          openedFromStore: !!this.options.onStore,
+          checkNsfw: !this._userClickedShowNsfw,
+          //
+        }).render()
+          .open();
+
+        const onListingDetailClose = () => app.router.navigate(routeOnOpen);
+
+        this.listenTo(listingDetail, 'close', onListingDetailClose);
+        this.listenTo(listingDetail, 'modal-will-remove',
+          () => this.stopListening(null, null, onListingDetailClose));
+        this.trigger('listingDetailOpened');
+        this.userLoadingModal.remove();
+        app.loadingModal.close();
+      };
+
+      const handleOutdatedHash = () => {
+        // if not on purchase
+        //   show close-able listing detail to reload
+        //   disable Buy Now button on listing detail with tooltip
+        // if on purchase
+        //   show purchase specific message
+        //   disable Purchase button with tooltip
+      };
+
       const loadListing = () => {
-        let storeName = `${this.ownerGuid.slice(0, 8)}…`;
-        let avatarHashes;
-        let title = this.model.get('title');
-        title = title.length > 25 ?
-          `${title.slice(0, 25)}…` : title;
+        const listingHash = this.model.get('hash');
+        let ipnsFetch = null;
+        let ipfsFetch = null;
 
-        if (this.options.profile) {
-          storeName = this.options.profile.get('name');
-          avatarHashes = this.options.profile.get('avatarHashes')
-            .toJSON();
-        } else if (this.options.vendor) {
-          storeName = this.options.vendor.name;
-          avatarHashes = this.options.vendor.avatarHashes;
+        if (listingHash) {
+          ipfsFetch = this.fullListing.fetch({
+            hash: listingHash,
+            showErrorOnFetchFail: false,
+          });
+          ipnsFetch = $.ajax(
+            Listing.getIpnsUrl(
+              this.ownerGuid,
+              this.model.get('slug')
+            )
+          );
+        } else {
+          ipnsFetch = this.fullListing.fetch({ showErrorOnFetchFail: false });
         }
 
-        if (storeName.length > 40) {
-          storeName = `${storeName.slice(0, 40)}…`;
-        }
-
+        // <user loading modal funk>
         if (this.userLoadingModal) this.userLoadingModal.remove();
         this.userLoadingModal = new UserLoadingModal({
           initialState: {
@@ -296,7 +376,8 @@ export default class extends baseVw {
 
         this.listenTo(this.userLoadingModal, 'clickCancel',
           () => {
-            listingFetch.abort();
+            ipnsFetch.abort();
+            if (ipfsFetch) ipfsFetch.abort();
             this.userLoadingModal.remove();
             app.router.navigate(routeOnOpen);
           });
@@ -309,50 +390,46 @@ export default class extends baseVw {
 
         this.userLoadingModal.render()
           .open();
+        // END: <user loading modal funk>
 
-        listingFetch.done(jqXhr => {
-          endAjaxEvent('Listing_LoadFromCard', {
-            ...segmentation,
-          });
-          if (jqXhr.statusText === 'abort' || this.isRemoved()) return;
+        ipnsFetch.done((data, textStatus, xhr) => {
+          if (xhr.statusText === 'abort' || this.isRemoved()) return;
 
-          const listingDetail = new ListingDetail({
-            model: this.fullListing,
-            profile: this.options.profile,
-            vendor: this.options.vendor,
-            closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
-            modelContentClass: 'modalContent',
-            openedFromStore: !!this.options.onStore,
-            checkNsfw: !this._userClickedShowNsfw,
-          }).render()
-            .open();
+          if (
+            ipfsFetch &&
+            ['pending', 'rejected'].includes(ipfsFetch.state())
+          ) {
+            ipfsFetch.abort();
+            this.fullListing.set(this.fullListing.parse(data));
+          }
 
-          const onListingDetailClose = () => app.router.navigate(routeOnOpen);
-
-          this.listenTo(listingDetail, 'close', onListingDetailClose);
-          this.listenTo(listingDetail, 'modal-will-remove',
-            () => this.stopListening(null, null, onListingDetailClose));
-          this.trigger('listingDetailOpened');
-          this.userLoadingModal.remove();
-          app.loadingModal.close();
-        })
-        .fail(xhr => {
-          let err = xhr.responseJSON && xhr.responseJSON.reason || xhr.statusText ||
-              'unknown error';
-          // Consolidate and remove specific data from no link errors.
-          if (err.startsWith('no link named')) err = 'no link named under hash';
-          endAjaxEvent('Listing_LoadFromCard', {
-            ...segmentation,
-            errors: err,
-          });
+          if (ipfsFetch && ipfsFetch.state() === 'resolved') {
+            if (listingHash !== data.hash) {
+              // handleOutdatedHash();
+            }
+          } else {
+            showListingDetail();
+          }
+        }).fail(xhr => {
           if (xhr.statusText === 'abort') return;
-          this.userLoadingModal.setState({
-            contentText: app.polyglot.t('userPage.loading.failTextListing', {
-              listing: `<b>${title}</b>`,
-            }),
-            isProcessing: false,
-          });
+
+          if (
+            ipfsFetch &&
+            ['pending', 'resolved'].includes(ipfsFetch.state())
+          ) return;
+
+          setUserLoadingModalFailedState();
         });
+
+        if (ipfsFetch) {
+          ipfsFetch.done((data, textStatus, xhr) => {
+            if (xhr.statusText === 'abort' || this.isRemoved()) return;
+            showListingDetail();
+          }).fail(xhr => {
+            if (xhr.statusText === 'abort') return;
+            setUserLoadingModalFailedState();
+          });
+        }
       };
 
       if (isBlocked(this.ownerGuid) && !isUnblocking(this.ownerGuid)) {
