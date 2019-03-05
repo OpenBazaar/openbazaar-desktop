@@ -827,6 +827,9 @@ export default class extends BaseVw {
           this.disputeStarted.setState({ disputerName: profile.get('name') }));
     }
 
+    this.listenTo(this.disputeStarted, 'clickResolveDispute',
+      () => this.trigger('clickResolveDispute'));
+
     this.$subSections.prepend(this.disputeStarted.render().el);
   }
 
@@ -857,9 +860,6 @@ export default class extends BaseVw {
         this.disputePayout.setState(state);
       });
     });
-
-    this.listenTo(this.disputeStarted, 'clickResolveDispute',
-      () => this.trigger('clickResolveDispute'));
 
     this.$subSections.prepend(this.disputePayout.render().el);
   }
