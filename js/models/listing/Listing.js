@@ -24,6 +24,30 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
+  getIpnsUrl() {
+    const slug = this.get('slug');
+
+    if (!slug) {
+      throw new Error('In order to fetch a listing via IPNS, a slug must be '
+        + 'set as a model attribute.');
+    }
+
+    return this.ownListing ?
+      app.getServerUrl(`ob/listing/${slug}`) :
+      app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
+  }
+
+  getIpfsUrl() {
+    const hash = this.hash;
+
+    if (hash) {
+      throw new Error('In order to fetch a listing via IPFS, a hash must be '
+        + 'set on this model. It is settable via model.hash = <hash>.');
+    }
+
+    return app.getServerUrl(`ob/listing/${hash}`);
+  }
+
   defaults() {
     return {
       termsAndConditions: '',
@@ -213,6 +237,21 @@ export default class extends BaseModel {
     return undefined;
   }
 
+  fetch(options = {}) {
+    if (
+      options.hash !== undefined &&
+      (
+        typeof options.hash !== 'string' ||
+        !options.hash
+      )
+    ) {
+      throw new Error('If providing the options.hash, it must be a ' +
+        'non-empty string.');
+    }
+
+    return super.fetch(options);
+  }
+
   sync(method, model, options) {
     let returnSync = 'will-set-later';
 
@@ -226,6 +265,13 @@ export default class extends BaseModel {
       if (!slug) {
         throw new Error('In order to fetch a listing, a slug must be set as a model attribute.');
       }
+
+      options.url = options.url ||
+        (
+          options.hash ?
+            this.getIpfsUrl(options.hash) :
+            this.getIpnsUrl(slug)
+        )
 
       if (this.isOwnListing) {
         options.url = options.url ||
