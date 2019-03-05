@@ -814,7 +814,7 @@ export default class extends BaseVw {
       initialState: {
         ...data,
         showResolveButton: this.model.get('state') === 'DISPUTED' &&
-          this.mode.isCase,
+          this.model.isCase,
       },
     });
 
