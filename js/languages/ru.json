@@ -24,7 +24,7 @@
   },
   "feeChangeWidget": {
     "btnChange": "изменить",
-    "label": "Network fee:"
+    "label": "Комиссия сети:"
   },
   "blockButton": {
     "tipBlock": "Заблокировать этого пользователя",
@@ -48,8 +48,8 @@
     "btnProceed": "Да, продолжать"
   },
   "setValidCurDialog": {
-    "title": "Invalid Local Currency",
-    "body": "Your local currency is currently set to %{currency}, which is not supported on this client. Please select and save a different currency in %{settingsLink}.",
+    "title": "Неверная местная валюта",
+    "body": "Ваша местная валюта в настоящее время установлена как %{currency}, и она не поддерживается в этом клиенте. Пожалуйста, выберите и сохраните другую валюту в %{settingsLink}.",
     "settingsLink": "Настройки"
   },
   "consoleWarning": {
@@ -58,10 +58,10 @@
     "line2": "Пожалуйста, закройте это окно."
   },
   "serverVersionWarning": {
-    "title": "Warning: Incompatible Server Version",
-    "message": "You are connected to a server using version %{serverVersion} of the server software. This client requires version %{expectedVersion}. You should update your server to the correct version.",
-    "clientLink": "Download a new bundled version of the app, with the correct server version.",
-    "serverLink": "Download only the server (use this if you are using a remote server)."
+    "title": "Предупреждение: несовместимая версия сервера",
+    "message": "Вы подключены к серверу, используя версию %{serverVersion} серверного программного обеспечения. Для этого клиента требуется версия %{expectedVersion}. Обновитесь до совместимой версии.",
+    "clientLink": "Загрузите новую версию приложения с актуальной версией сервера.",
+    "serverLink": "Загрузите только сервер (используйте это, если вы используете удаленный сервер)."
   },
   "block": {
     "errorModal": {
@@ -91,7 +91,7 @@
     "install": "Установить Сейчас"
   },
   "formattedCurrency": {
-    "unrecognizedCurrencyTip": "Unable to provide price information because it's priced in an unrecognized currency (%{cur})."
+    "unrecognizedCurrencyTip": "Невозможно отобразить ценник, так как цена указана в неподдерживаемой валюте (%{cur})."
   },
   "addressBarPlaceholder": "Напишите @handle, OpenBazaar ID или ищите по ключевому слову",
   "testnet": "Режим Тестирования",
@@ -144,7 +144,7 @@
         "title": "Невозможно получить информацию о том кого Вы просматриваете"
       },
       "unableToGetWalletBalance": {
-        "title": "Unable to get wallet balances."
+        "title": "Невозможно получить баланс кошелька."
       },
       "unableToGetSearchProviders": {
         "title": "Невозможно загрузить поставщиков поиска.",
@@ -154,7 +154,7 @@
         "title": "Невозможно загрузить верифицированных модераторов.",
         "btnRetry": "Обновить",
         "btnClose": "Продолжить",
-        "msg": "Click Retry to try again, or Continue to skip loading the verified moderators. Reason for failure: %{reason}"
+        "msg": "Нажмите «Повторить», чтобы повторить попытку, или «Продолжить», чтобы пропустить загрузку проверенных модераторов. Причина сбоя: %{reason}"
       }
     },
     "connectMessaging": {
@@ -183,15 +183,15 @@
       "follow": "%{name} подписался на Вас.",
       "moderatorAdd": "%{name} добавил Вас в качестве модератора.",
       "moderatorRemove": "%{name} удалил Вас из списка модераторов.",
-      "vendorDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
-      "vendorDisputeTimeoutExpired": "Order %{orderLink} has expired. Once fulfilled, you may claim your payment.",
-      "buyerDisputeTimeout": "%{timeRemaining} left to dispute order %{orderLink}.",
-      "buyerDisputeTimeoutExpired": "Order %{orderLink} has expired. The vendor may claim payment.",
-      "buyerDisputeExpiry": "The moderator has %{timeRemaining} left to make a decision on order %{orderLink}.",
-      "buyerDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
-      "moderatorDisputeExpiry": "You have %{timeRemaining} left to make a decision on order %{orderLink}.",
-      "moderatorDisputeExpiryExpired": "The dispute for order %{orderLink} has expired. The vendor may claim payment.",
-      "vendorFinalizedPayment": "The vendor has claimed the payment for order %{orderLink}."
+      "vendorDisputeTimeout": "%{timeRemaining} осталось, чтобы оспорить ордер %{orderLink}.",
+      "vendorDisputeTimeoutExpired": "Ордер %{orderLink} истёк После выполнения вы можете требовать оплаты.",
+      "buyerDisputeTimeout": "%{timeRemaining} осталось, чтобы оспорить ордер %{orderLink}.",
+      "buyerDisputeTimeoutExpired": "Срок действия ордера %{orderLink} истек. Продавец может потребовать оплату.",
+      "buyerDisputeExpiry": "У модератора осталось %{timeRemaining} чтобы принять решение по заказу %{orderLink}.",
+      "buyerDisputeExpiryExpired": "Спор для заказа %{orderLink} истек. Продавец может потребовать оплату.",
+      "moderatorDisputeExpiry": "У вас осталось %{timeRemaining} чтобы принять решение по заказу %{orderLink}.",
+      "moderatorDisputeExpiryExpired": "Спор для заказа %{orderLink} истек. Продавец может потребовать оплату.",
+      "vendorFinalizedPayment": "Поставщик потребовал оплату заказа %{orderLink}."
     },
     "errorHeading": "Ошибка при получении уведомлений.",
     "btnRetry": "Обновить",
@@ -244,7 +244,7 @@
       "typingIndicator": "%{user} печатает... ",
       "deleteConvoErrorTitle": "Не удается удалить разговор",
       "deletingOverlayText": "Удаление разговора...",
-      "blockingOverlayText": "Blocking…"
+      "blockingOverlayText": "Блокировка..."
     }
   },
   "userPage": {
@@ -341,14 +341,14 @@
     },
     "blockedUserOverlayText": "Вы заблокировали этого пользователя",
     "loading": {
-      "connecting": "Connecting…",
-      "failedToConnect": "Failed to connect",
-      "loadingText": "Just a minute, loading %{name} from somewhere on this global, peer-to-peer network for you…",
-      "failTextStore": "There was an issue connecting to %{store}. Please try again.",
-      "failTextListing": "There was an issue retrieving %{listing}. Please try again.",
-      "failTextListingLink": "store",
-      "failTextListingWithLink": "There was an issue retrieving %{listing}. Please try again or browse other listings in the %{link}.",
-      "socialHeading": "OpenBazaar News & Discussions:",
+      "connecting": "Соединение...",
+      "failedToConnect": "Не удалось подключиться",
+      "loadingText": "Минутку, загрузка %{name} откуда-то из этой глобальной одноранговой сети для вас...",
+      "failTextStore": "Возникла проблема с подключением к %{store}. Пожалуйста, попробуйте еще раз.",
+      "failTextListing": "При получении %{listing} произошла ошибка. Пожалуйста, попробуйте еще раз.",
+      "failTextListingLink": "магазин",
+      "failTextListingWithLink": "При получении %{listing} произошла ошибка. Пожалуйста, попробуйте еще раз или посмотрите другие списки в %{link}.",
+      "socialHeading": "Новости и обсуждения OpenBazaar:",
       "btnCancel": "Отмена",
       "btnTryAgain": "Попробуй еще раз"
     }
@@ -356,7 +356,7 @@
   "reputation": {
     "averageRating": "общая оценка",
     "totalReviews": "review |||| reviews",
-    "noTitle": "Listing title not found"
+    "noTitle": "Заголовок списка не найден"
   },
   "userShort": {
     "userLoading": "Загрузка...",
@@ -374,13 +374,13 @@
       "titleShort": "Верифицирован",
       "titleLong": "Проверенный модератор",
       "link": "Узнать больше",
-      "tipBody": "This moderator is verified by %{name}. %{link}"
+      "tipBody": "Этот модератор проверен %{name}. %{link}"
     },
     "modUnverified": {
       "titleShort": "Не верифицирован",
       "titleLong": "Непроверенный модератор",
       "not": "НЕТ",
-      "tipBody": "This moderator is %{not} verified by %{name}. Proceed with caution or choose a verified moderator.",
+      "tipBody": "Этот модератор %{not} проверен %{name}. Действуйте с осторожностью или выберите проверенного модератора.",
       "tipBodyOrderDetail": "This moderator is %{not} verified by %{name}."
     },
     "listingVerified": {
@@ -403,8 +403,8 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "Информация о этом модераторе не удалось загрузить.",
     "invalid": "Этот пользователь сейчас не является модератором.",
-    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
-    "noPreferredSupport": "This moderator does not accept any of your preferred coins. They can only moderate transactions in the following currencies: %{coins}.",
+    "noCoinSupport": "Этот модератор не принимает ни одну из валют, которые поддерживает ваш кошелек.",
+    "noPreferredSupport": "Этот модератор не принимает используемые вами валюты. Он может модерировать транзакции только в следующих валютах: %{coins}.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
   },
   "moderatorDetails": {
@@ -422,7 +422,7 @@
     "disclaimer": "*The moderator service charge only applies when a dispute arises.",
     "languages": "Языки",
     "currenciesSupported": "Поддерживаемые валюты",
-    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports."
+    "noCoinSupport": "Этот модератор не принимает ни одну из валют, которые поддерживает ваш кошелек."
   },
   "about": {
     "linkText": "Об OpenBazaar",
@@ -514,7 +514,7 @@
       "statusSaveFailed": "Не удалось сохранить основные настройки.",
       "saveErrorAlertTitle": "Не удалось сохранить основные настройки.",
       "verifiedMods": "Проверенные модераторы",
-      "verifiedModsHelper": "Lower your risk by using a list of verified moderators. Moderators with verified identities, and listings that have verified moderators available, will be marked with a badge.",
+      "verifiedModsHelper": "Снизьте свой риск, используя список проверенных модераторов. Модераторы с подтвержденными личностями и списки, в которых есть подтвержденные модераторы, будут помечены значком.",
       "restoreDefault": "Сброс настроек"
     },
     "pageTab": {
@@ -646,7 +646,7 @@
       "transaction": {
         "sectionName": "Операции",
         "saveMetadata": "Сохранить метаданные",
-        "defaultFee": "Network Fee",
+        "defaultFee": "Комиссия сети",
         "low": "Экономичная",
         "medium": "Обычная",
         "high": "Приоритет"
@@ -660,7 +660,7 @@
       },
       "integrations": {
         "sectionName": "Интеграция",
-        "sharing": "Data Sharing",
+        "sharing": "Обмен Данными",
         "sharingHelper": "Anonymous data is shared with the development team.",
         "changeBtn": "Change Sharing Settings"
       },
@@ -709,9 +709,22 @@
       "sectionName": "Магазин",
       "storeStatus": "Магазин",
       "storeStatusHelper": "Добавьте магазин на Вашу страницу",
-      "currencies": "Currencies",
-      "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
-      "currenciesNote": "Accepting all currencies will attract the largest audience.",
+      "currencies": "Валюты",
+      "currenciesHelper": "Эти валюты будут автоматически выбираться при создании новых списков.",
+      "currenciesNote": "Прием всех валют привлечет наибольшую аудиторию.",
+      "bulkListingCoinUpdate": {
+        "mainButton": "Update All Current Listings",
+        "confirmTitle": "Are You Sure?",
+        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "cancel": "Отмена",
+        "apply": "Применить",
+        "errors": {
+          "errorTitle": "There Was An Error When Updating Your Listings",
+          "errorMessage": "One or more listings failed to update.",
+          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "reasonForError": "Причина: %{reason}"
+        }
+      },
       "moderators": "Модераторы",
       "moderatorsHelper": "Выберите несколько модераторов для Вашего магазина.",
       "selectedModerators": "Выбранные модераторы",
@@ -1180,9 +1193,9 @@
       "btnOk": "ОК"
     },
     "cryptoCurrencyType": {
-      "helperTypeCount": "1500+ cryptocurrencies",
-      "helperType": "Trade %{count} for free",
-      "helperCoinType": "The currency you’re offering for trade",
+      "helperTypeCount": "1500+ криптовалют",
+      "helperType": "Торгуйте %{count} бесплатно",
+      "helperCoinType": "Валюта, которую вы предлагаете для торговли",
       "helperReceive": "The currency you'll receive for the trade",
       "helperQuantity": "Buyer(s) can purchase a fraction or full amount",
       "helperMarketValue": "Buyer(s) pay market value. The listing price will automatically reflect the market value.",
@@ -1490,7 +1503,8 @@
   "moderators": {
     "moderatorsLoading": "Loading moderators…",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
-    "moderatorsLoaded": "%{total} moderators loaded.",
+    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
+    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
         "title": "No Valid Moderators Are Available.",
@@ -1505,7 +1519,7 @@
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} are available.",
+        "title": "No verified moderators that accept %{coin} have been loaded.",
         "body": "Try viewing unverified moderators."
       }
     },
@@ -1682,7 +1696,7 @@
         "buyerOrderAccepted": "Спасибо за покупку!",
         "modOrderAccepted": "The vendor order has accepted the order.",
         "refundBtn": "Возврат",
-        "fulfillBtn": "Fulfill Order",
+        "fulfillBtn": "Выполнить заказ",
         "refundConfirm": {
           "title": "Вы уверены?",
           "body": "The original amount in %{cur} will be returned to the buyer",
@@ -1822,13 +1836,13 @@
         "youMayDispute": "You may open a dispute to ask the moderator to award the funds back to you.",
         "procErrBuyer": "The vendor was unable to process the order due to the following errors:",
         "procErrVendorNoMsg": "При обработке заказа произошла ошибка.",
-        "procErrVendor": "You were unable to process the order due to the following errors:"
+        "procErrVendor": "Вы не смогли обработать заказ из-за следующих ошибок:"
       },
-      "unableToShowPayments": "Unable to show the payment details. The order was paid for in a currency (%{cur}) this client does not currently support."
+      "unableToShowPayments": "Невозможно показать детали платежа. Заказ был оплачен в валюте (%{cur}), которую этот клиент в настоящее время не поддерживает."
     },
     "fulfillOrderTab": {
-      "heading": "Fulfill Order",
-      "shippingCarrierLabel": "Shipping Carrier",
+      "heading": "Выполнить заказ",
+      "shippingCarrierLabel": "Перевозчик",
       "shippingCarrierPlaceholder": "UPS, FedEx, DHL, etc",
       "trackingLabel": "Tracking #",
       "trackingPlaceholder": "необязательно",
@@ -1836,21 +1850,21 @@
       "fileUrlPlaceholder": "Ссылка на файл(ы)",
       "passwordLabel": "Пароль",
       "passwordPlaceholder": "Пароль к файлу (необязательно)",
-      "transactionIdLabel": "Transaction ID",
-      "transactionIdPlaceholder": "Paste the Transaction ID",
+      "transactionIdLabel": "ID платежа",
+      "transactionIdPlaceholder": "Укажите ID платежа",
       "noteLabel": "Заметка",
       "notePlaceholder": "необязательно",
-      "noteHelperTextDigital": "The buyer will receive a notification containing the file information",
+      "noteHelperTextDigital": "Покупатель получит уведомление, содержащее файл с информацией",
       "btnCancel": "Отмена",
       "btnSubmit": "Подтвердить"
     },
     "resolveDisputeTab": {
-      "heading": "Resolve Dispute",
-      "buyerAmountLabel": "Buyer Amount",
-      "vendorAmountLabel": "Vendor Amount",
-      "vendorContractUnavailable": "You cannot award any funds to the vendor because their contract hasn't arrived.",
-      "vendorContractUnavailableTip": "The vendor hasn't provided their contract. It will be sent over the next time they come online.",
-      "vendorContractUnavailableProcErr": "You cannot award any funds to the vendor because they were unable to process the order due to a processing error.",
+      "heading": "Разрешить Спор",
+      "buyerAmountLabel": "Количество покупателей",
+      "vendorAmountLabel": "Количество поставщиков",
+      "vendorContractUnavailable": "Вы не можете присуждать какие-либо средства поставщику, потому что заказ не прибыл.",
+      "vendorContractUnavailableTip": "Продавец не предоставил свой договор. Это будет отправлено в следующий раз, когда он появится в сети.",
+      "vendorContractUnavailableProcErr": "Вы не можете предоставить средства поставщику, поскольку он не смог обработать этот заказ из-за ошибки.",
       "buyerContractUnavailable": "You cannot award any funds to the buyer because their contract hasn't arrived.",
       "buyerContractUnavailableTip": "The buyer hasn't provided their contract. It will be sent over the next time they come online.",
       "commentLabel": "Комментарий",

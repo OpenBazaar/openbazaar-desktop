@@ -712,6 +712,19 @@
       "currencies": "Currencies",
       "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
       "currenciesNote": "Accepting all currencies will attract the largest audience.",
+      "bulkListingCoinUpdate": {
+        "mainButton": "Update All Current Listings",
+        "confirmTitle": "Are You Sure?",
+        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "cancel": "Abbrechen",
+        "apply": "Übernehmen",
+        "errors": {
+          "errorTitle": "There Was An Error When Updating Your Listings",
+          "errorMessage": "One or more listings failed to update.",
+          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "reasonForError": "Grund: %{reason}"
+        }
+      },
       "moderators": "Moderatoren",
       "moderatorsHelper": "Wählen Sie ein paar Moderatoren für Ihren Shop aus.",
       "selectedModerators": "Ausgewählte Moderatoren",
@@ -1490,7 +1503,8 @@
   "moderators": {
     "moderatorsLoading": "Lade Moderatorenliste...",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
-    "moderatorsLoaded": "%{total} Moderatoren geladen.",
+    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
+    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
         "title": "No Valid Moderators Are Available.",
@@ -1505,7 +1519,7 @@
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} are available.",
+        "title": "No verified moderators that accept %{coin} have been loaded.",
         "body": "Try viewing unverified moderators."
       }
     },

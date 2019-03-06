@@ -11,8 +11,8 @@
     "body": "Le serveur intégré va s’arrêter. Cela peut prendre quelques minutes. Pendant l'arrêt, des tâches de nettoyage importantes sont effectuées. Il est important de ne pas interrompre ce processus. Lorsque le processus sera terminé, l'application se fermera."
   },
   "follow": {
-    "typeFollow": "following",
-    "typeUnfollow": "unfollowing",
+    "typeFollow": "suivi",
+    "typeUnfollow": "supprimé",
     "followErrorTitle": "Erreur de %{type} pour %{user}.",
     "followBtn": "Suivre",
     "unfollowBtn": "Ne plus suivre"
@@ -24,7 +24,7 @@
   },
   "feeChangeWidget": {
     "btnChange": "modifier",
-    "label": "Network fee:"
+    "label": "Frais de transaction:"
   },
   "blockButton": {
     "tipBlock": "Bloquer cet utilisateur",
@@ -144,7 +144,7 @@
         "title": "Impossible d'obtenir les données sur ce que vous suivez."
       },
       "unableToGetWalletBalance": {
-        "title": "Unable to get wallet balances."
+        "title": "Impossible de récupérer le solde du portefeuille."
       },
       "unableToGetSearchProviders": {
         "title": "Impossible de charger les fournisseurs de recherche.",
@@ -403,8 +403,8 @@
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "L'information pour ce modérateur n'a pas pu être chargée.",
     "invalid": "Cet utilisateur n'est pas actuellement modérateur.",
-    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
-    "noPreferredSupport": "This moderator does not accept any of your preferred coins. They can only moderate transactions in the following currencies: %{coins}.",
+    "noCoinSupport": "Ce modérateur n'accepte aucune des monnaies supportées par votre portefeuille.",
+    "noPreferredSupport": "Ce modérateur n'accepte aucune de vos monnaies favorites. Il ne peut arbitrer que des transactions dans les monnaies suivantes: %{coins}.",
     "languages": "%{lang}, et %{smart_count} autre langue. |||| %{lang}, et %{smart_count} autres langues."
   },
   "moderatorDetails": {
@@ -422,7 +422,7 @@
     "disclaimer": "* Les frais de service du modérateur ne s'appliquent qu'après un litige.",
     "languages": "Langues",
     "currenciesSupported": "Monnaies prises en charge",
-    "noCoinSupport": "This moderator does not accept any of the coins your wallet supports."
+    "noCoinSupport": "Ce modérateur n'accepte aucune des monnaies supportées par votre portefeuille."
   },
   "about": {
     "linkText": "À propos d'OpenBazaar",
@@ -440,10 +440,10 @@
       "sectionHeader": "Dons",
       "btnCopyAddress": "Copier l'adresse",
       "btnOpenInWallet": "Ouvrir dans le portefeuille",
-      "bannerTitleBTC": "Scan or send Bitcoin (BTC) to this address",
-      "bannerTitleBCH": "Scan or send Bitcoin Cash (BCH) to this address",
-      "BCHWarning": "Do not send Bitcoin (BTC) to this address.",
-      "BTCWarning": "Do not send Bitcoin Cash (BCH) to this address.",
+      "bannerTitleBTC": "Scannez ou envoyez du Bitcoin (BTC) à cette adresse",
+      "bannerTitleBCH": "Scannez ou envoyez du Bitcoin Cash (BCH) à cette adresse",
+      "BCHWarning": "N'envoyez pas de Bitcoin (BTC) à cette adresse.",
+      "BTCWarning": "N'envoyez pas de Bitcoin Cash (BCH) à cette adresse.",
       "unableToOpenInWallet": {
         "title": "L'ouverture du portefeuille a échoué",
         "body": "Impossible d'ouvrir l'adresse dans le portefeuille car un paiement est en cours d'envoi. Attendez que l'envoi se termine et réessayez."
@@ -646,7 +646,7 @@
       "transaction": {
         "sectionName": "Transactions",
         "saveMetadata": "Sauvegarder les métadonnées",
-        "defaultFee": "Network Fee",
+        "defaultFee": "Frais de transaction",
         "low": "Économiques ",
         "medium": "Normaux",
         "high": "Prioritaires"
@@ -701,7 +701,7 @@
         "fail": "Une erreur s'est produite lors de la sauvegarde des paramètres de modération."
       },
       "errors": {
-        "confirm": "To be a moderator, you must agree to both statements below.",
+        "confirm": "Pour devenir modérateur vous devez accepter les deux engagements ci-dessous.",
         "save": "Les paramètres de modération n'ont pas pu être sauvegardés."
       }
     },
@@ -709,9 +709,22 @@
       "sectionName": "Boutique",
       "storeStatus": "Boutique",
       "storeStatusHelper": "Ajoutez une boutique à votre page",
-      "currencies": "Currencies",
-      "currenciesHelper": "These currencies will be auto-selected on new listings you create.",
-      "currenciesNote": "Accepting all currencies will attract the largest audience.",
+      "currencies": "Monnaies",
+      "currenciesHelper": "Ces monnaies seront sélectionnées automatiquement sur les annonces que vous créerez.",
+      "currenciesNote": "Accepter toutes les monnaies vous donnera le plus grand nombre de clients possible.",
+      "bulkListingCoinUpdate": {
+        "mainButton": "Update All Current Listings",
+        "confirmTitle": "Are You Sure?",
+        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "cancel": "Annuler",
+        "apply": "Appliquer",
+        "errors": {
+          "errorTitle": "There Was An Error When Updating Your Listings",
+          "errorMessage": "One or more listings failed to update.",
+          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "reasonForError": "Raison : %{reason}"
+        }
+      },
       "moderators": "Modérateurs",
       "moderatorsHelper": "Choisissez quelques modérateurs pour votre boutique.",
       "selectedModerators": "Modérateurs sélectionnés",
@@ -898,18 +911,18 @@
   "wallet": {
     "title": "Portefeuille",
     "closeLink": "Fermer le portefeuille",
-    "zeroSupportedCurs": "None of the wallets provided by your server use currencies supported by this client.",
+    "zeroSupportedCurs": "Aucun des portefeuilles fournis par votre serveur n'est supporté par ce client.",
     "coinStats": {
-      "balanceHeader": "Balance",
-      "unconfirmedBalance": "(%{amount} unconfirmed)",
+      "balanceHeader": "Solde",
+      "unconfirmedBalance": "(%{amount} non confirmé)",
       "valueInDisplayCur": "Value in %{cur}",
       "transactionsHeader": "Transactions"
     },
     "coinNav": {
-      "unsupportedCurTip": "This is currently an unsupported currency."
+      "unsupportedCurTip": "Cette monnaie n'est pas encore supportée."
     },
     "sendBtn": "Envoyer",
-    "receiveBtn": "Receive",
+    "receiveBtn": "Recevoir",
     "sendMoney": {
       "toLabel": "À",
       "toPlaceholder": "Entrez une adresse %{cur}",
@@ -922,7 +935,7 @@
       "errorInvalidAddress": "L'adresse de paiement n'est pas valide."
     },
     "receiveMoney": {
-      "title": "Scan or send coins to this address"
+      "title": "Scannez ou envoyez à cette adresse"
     },
     "spendConfirmBox": {
       "heading": "Êtes-vous sûr ?",
@@ -958,7 +971,7 @@
         "retryFailInsufficientFunds": "Vous n'avez pas les fonds suffisants pour terminer cette transaction.",
         "feeBumpOf": "Augmentation des frais de %{adresse}"
       },
-      "fetchFailedMsg": "Unable to obtain your transactions list.",
+      "fetchFailedMsg": "Impossible de récupérer la liste de vos transactions.",
       "noTransactionsPlaceholder": "No %{coinType} transactions found.",
       "newTransactionsPopin": "%{smart_count} nouvelle transaction |||| %{smart_count} nouvelles transactions",
       "backupWalletWarningTitle": "Sauvegarder la phrase de récupération du portefeuille",
@@ -1180,7 +1193,7 @@
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperTypeCount": "1500+ cryptocurrencies",
+      "helperTypeCount": "Plus de 1500 cryptomonnaies",
       "helperType": "Trade %{count} for free",
       "helperCoinType": "The currency you’re offering for trade",
       "helperReceive": "The currency you'll receive for the trade",
@@ -1193,7 +1206,7 @@
       "priceModifier": "Modificateur de prix (+/-)",
       "priceModifierPlaceholder": "0.00 (market rate)",
       "helperPriceModifier": "Échangez au prix du marché, ou spécifiez une variation.",
-      "lblReceive": "Receive"
+      "lblReceive": "Recevoir"
     },
     "shippingOptions": {
       "optionHeading": "Option d'expédition #%{listPosition}",
@@ -1263,8 +1276,8 @@
       "placeholderNeedMoreData": "Le tableau d'inventaire des variantes apparaîtra lorsque vous aurez déclaré au moins une variante avec au moins un choix.",
       "unableToCalcTotalPrice": "Impossible de calculer",
       "unableToCalcTotalPriceTip": "Le prix de l'annonce et le supplément doivent tous les deux être des nombres. Si vous incluez une décimale, un point doit être utilisé comme séparateur, par exemple \"0.00\".",
-      "surcharge": "Surcharge",
-      "totalPrice": "Total Price",
+      "surcharge": "Supplément",
+      "totalPrice": "Total",
       "sku": "SKU",
       "quantity": "Quantité"
     },
@@ -1292,7 +1305,7 @@
     "suggestions": "Suggestions",
     "resultsFound": "<b>%{smart_count} annonce</b> trouvée pour <b>\"%{term}\"</b> |||| <b>%{smart_count} annonces</b> trouvées pour <b>\"%{term}\"</b>",
     "resultsTotal": "%{smart_count} annonce |||| %{smart_count} annonces",
-    "resultsHelper": "Search providers may not display all results on the network. Spam, offensive, or unreachable listings may be omitted.",
+    "resultsHelper": "Les fournisseurs de recherche peuvent ne pas afficher tous les résultats présents sur le réseau. Le spam, les annonces illégales ou inatteignable peuvent être omises.",
     "sortBy": "Trier par",
     "changeProvider": "Fermer et choisir un nouveau fournisseur de recherche",
     "useDefault": "Recherche pour \"%{term}\" en utilisant %{defaultProvider}",
@@ -1339,7 +1352,7 @@
     "introScreen": {
       "connectionLbl": "Connexion :",
       "btnChange": "Modifier",
-      "introLine": "A free marketplace. No fees. No restrictions. Earn Cryptocurrency.",
+      "introLine": "Une place de marché libre. Pas de frais. Pas de restrictions. Gagnez des crypto.",
       "tagLine": "Achetez et vendez librement",
       "btnGetStarted": "Commencer"
     },
@@ -1365,7 +1378,7 @@
     "displaying": "Affiche %{displayingCounts} annonces"
   },
   "pageControlsTextStyle": {
-    "previous": "Previous",
+    "previous": "Précédent",
     "next": "Suivant"
   },
   "purchase": {
@@ -1374,7 +1387,7 @@
     "optional": "optionnel",
     "shippingTitle": "Expédition",
     "cryptoCurrencyTitle": "Devise",
-    "cryptoCurrencyInvalid": "Not Accepted",
+    "cryptoCurrencyInvalid": "Non accepté",
     "paymentTypeTitle": "Type de paiement",
     "moderatorTitle": "Modérateur",
     "moderatorNote": "* Les frais de service de modération ne s'appliquent qu'après un litige.",
@@ -1490,10 +1503,11 @@
   "moderators": {
     "moderatorsLoading": "Chargement des modérateurs...",
     "moderatorsXofY": "Loading moderator %{current} of %{total}",
-    "moderatorsLoaded": "%{total} modérateurs chargés.",
+    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
+    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
-        "title": "No Valid Moderators Are Available.",
+        "title": "Aucun modérateur valide n'est disponible.",
         "body": "Aucun des modérateurs chargés n'est valide. Cette commande sera un paiement direct."
       },
       "noVerifiedModerators": {
@@ -1505,7 +1519,7 @@
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} are available.",
+        "title": "No verified moderators that accept %{coin} have been loaded.",
         "body": "Try viewing unverified moderators."
       }
     },
@@ -1677,7 +1691,7 @@
       "accepted": {
         "heading": "Accepté",
         "orderAccepted": "Commande acceptée",
-        "vendorCanFulfill": "Vous avez reçu la commande et pouvez la réaliser quand vous serez prêt.",
+        "vendorCanFulfill": "Vous avez reçu la commande et pouvez l'honorer quand vous êtes prêt en cliquant sur \"Réaliser la commande\".",
         "vendorReceived": "Vous avez reçu la commande.",
         "buyerOrderAccepted": "Merci pour votre achat !",
         "modOrderAccepted": "Le vendeur a accepté la commande.",
@@ -2070,7 +2084,7 @@
     "invalidAddress": "L'adresse fournie ne semble pas être une adresse %{cur} valide."
   },
   "orderModelErrors": {
-    "paymentCoinInvalid": "Please choose a valid cryptocurrency to pay with.",
+    "paymentCoinInvalid": "Merci de choisir une cryptomonnaie valable pour payer.",
     "missingAddress": "Vous devez choisir une adresse valide.",
     "needsModerator": "Vous devez choisir un modérateur pour faire un paiement modéré.",
     "removeModerator": "Un achat non modéré ne peut pas avoir de modérateur."

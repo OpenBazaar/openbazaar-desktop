@@ -327,7 +327,7 @@
         "heading": "Tipo",
         "showMore": "mais %{smart_count} categoria… |||| mais %{smart_count} categorias…",
         "showLess": "menos",
-        "all": "Todos os países"
+        "all": "Todos"
       },
       "toolTip": {
         "contentView": "Mudar visualização"
@@ -712,6 +712,19 @@
       "currencies": "Moedas",
       "currenciesHelper": "Estas criptomoedas serão selecionadas automaticamente nos novos anúncios que você criar.",
       "currenciesNote": "Aceite todas as moedas para atingir o maior número de pessoas.",
+      "bulkListingCoinUpdate": {
+        "mainButton": "Atualizar Todos os Anúncios",
+        "confirmTitle": "Você tem certeza?",
+        "confirmMessage": "Todos os seus anúncios serão atualizados para aceitar as moedas selecionadas.",
+        "cancel": "Cancelar",
+        "apply": "Aplicar",
+        "errors": {
+          "errorTitle": "Houve um erro ao atualizar seus anúncios",
+          "errorMessage": "Erro ao atualizar um ou mais anúncios",
+          "noCoinsError": "Você precisa selecionar pelo menos uma moeda ao atualizar seus anúncios.",
+          "reasonForError": "Motivo: %{reason}"
+        }
+      },
       "moderators": "Moderadores",
       "moderatorsHelper": "Escolha alguns moderadores para a sua loja",
       "selectedModerators": "Moderadores Escolhidos",
@@ -812,7 +825,7 @@
     }
   },
   "connectionManagement": {
-    "builtInServerName": "Servidor Embutido",
+    "builtInServerName": "Servidor Integrado",
     "statusBar": {
       "errorPreface": "Erro:",
       "needHelpLink": "Precisa de ajuda?",
@@ -972,7 +985,7 @@
       "syncUnavailable": "Você só pode recarregar as transações uma vez a cada hora."
     },
     "cryptoTeaser": {
-      "coinCount": "mais de %{count} moedas",
+      "coinCount": "+ de %{count} moedas",
       "bodyLine": "Negocie %{coinCount} gratuitamente no OpenBazaar",
       "btnCreateListing": "Criar Anúncio",
       "linkViewCryptoListings": "Ver anúncios de criptomoedas"
@@ -1180,7 +1193,7 @@
       "btnOk": "OK"
     },
     "cryptoCurrencyType": {
-      "helperTypeCount": "mais de 1.500 criptomoedas",
+      "helperTypeCount": "+ de 1.500 criptomoedas",
       "helperType": "Negocie %{count} gratuitamente",
       "helperCoinType": "A moeda que você está oferencendo para negociação",
       "helperReceive": "A moeda que você irá receber na negociação",
@@ -1490,7 +1503,8 @@
   "moderators": {
     "moderatorsLoading": "Carregando moderadores…",
     "moderatorsXofY": "Carregando moderador %{current} de %{total}",
-    "moderatorsLoaded": "%{total} moderadores carregados.",
+    "loadingXofYTimedOut": "%{loaded} de %{total} moderadores carregados. %{remainder} moderador não foi carregado. |||| %{loaded} de %{total} moderadores carregados. %{remainder} moderadores não foram carregados.",
+    "moderatorsLoaded": "%{total} moderador carregado |||| %{total} moderadores carregados.",
     "noModsMsg": {
       "noModerators": {
         "title": "Nenhum Moderador Válido está Disponível",
@@ -1505,7 +1519,7 @@
         "body": "Existem moderadores disponíveis para uma ou mais das outras criptomoedas aceitas nesse anúncio."
       },
       "noMatchingVerifiedModerators": {
-        "title": "Nenhum moederador verificado que aceita %{coin} está disponível.",
+        "title": "Nenhum moderador verificado que aceite %{coin} foi carregado.",
         "body": "Tente visualizar moderadores não verificados."
       }
     },
@@ -1787,7 +1801,7 @@
         "disputedDataUnavailable": "Os dados necessários para determinar o tempo restante para o moderador tomar uma decisão sobre a disputa não estão disponíveis no momento.",
         "dataUnavailable": "Os dados necessários para determinar o tempo restante para se abrir uma disputa não estão disponíveis no momento.",
         "tipClaimAfterTimeoutBuyer": "Assim que o contador expirar, o vendedor poderá solicitar o pagamento e finalizar o pedido por conta própria, sem depender do moderador.",
-        "tipClaimAfterTimeoutVendor": "Assim que o contator expirar, e desde que você tenha enviado o pedido, você poderá solicitar o pagamento e finalizar o pedido, sem depender do moderador.",
+        "tipClaimAfterTimeoutVendor": "Assim que o contador expirar, e desde que você tenha enviado o pedido, você poderá solicitar o pagamento e finalizar o pedido, sem depender do moderador.",
         "disputedModOnClock": "O pedido está em disputa. O moderador tem aproximadamente %{timeRemaining} para analisar a disputa e tomar uma decisão.",
         "disputedTipBuyer": "Assim que uma disputa for aberta, o moderador tem aproximadamente %{totalTime} para tomar uma decisão. Se o contador expirar, o vendedor poderá solicitar o pagamento e finalizar o pedido.",
         "disputedTipVendor": "Assim que uma disputa for aberta, o moderador terá aproximadamente %{totalTime} para tomar uma decisão. Se o contador expirar, você poderá solicitar o dinheiro e finalizar o pedido.",
@@ -2403,7 +2417,7 @@
     "ZIMBABWE": "Zimbábue"
   },
   "regions": {
-    "ALL": "Todos os países",
+    "ALL": "Todos",
     "EUROPEAN_UNION": "União Europeia",
     "EUROPEAN_ECONOMIC_AREA": "Espaço Econômico Europeu"
   },
