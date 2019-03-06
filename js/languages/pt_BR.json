@@ -713,15 +713,15 @@
       "currenciesHelper": "Estas criptomoedas serão selecionadas automaticamente nos novos anúncios que você criar.",
       "currenciesNote": "Aceite todas as moedas para atingir o maior número de pessoas.",
       "bulkListingCoinUpdate": {
-        "mainButton": "Update All Current Listings",
-        "confirmTitle": "Are You Sure?",
-        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "mainButton": "Atualizar Todos os Anúncios",
+        "confirmTitle": "Você tem certeza?",
+        "confirmMessage": "Todos os seus anúncios serão atualizados para aceitar as moedas selecionadas.",
         "cancel": "Cancelar",
         "apply": "Aplicar",
         "errors": {
-          "errorTitle": "There Was An Error When Updating Your Listings",
-          "errorMessage": "One or more listings failed to update.",
-          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "errorTitle": "Houve um erro ao atualizar seus anúncios",
+          "errorMessage": "Erro ao atualizar um ou mais anúncios",
+          "noCoinsError": "Você precisa selecionar pelo menos uma moeda ao atualizar seus anúncios.",
           "reasonForError": "Motivo: %{reason}"
         }
       },
@@ -1503,8 +1503,8 @@
   "moderators": {
     "moderatorsLoading": "Carregando moderadores…",
     "moderatorsXofY": "Carregando moderador %{current} de %{total}",
-    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
-    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
+    "loadingXofYTimedOut": "%{loaded} de %{total} moderadores carregados. %{remainder} moderador não foi carregado. |||| %{loaded} de %{total} moderadores carregados. %{remainder} moderadores não foram carregados.",
+    "moderatorsLoaded": "%{total} moderador carregado |||| %{total} moderadores carregados.",
     "noModsMsg": {
       "noModerators": {
         "title": "Nenhum Moderador Válido está Disponível",
@@ -1519,7 +1519,7 @@
         "body": "Existem moderadores disponíveis para uma ou mais das outras criptomoedas aceitas nesse anúncio."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} have been loaded.",
+        "title": "Nenhum moderador verificado que aceite %{coin} foi carregado.",
         "body": "Tente visualizar moderadores não verificados."
       }
     },
