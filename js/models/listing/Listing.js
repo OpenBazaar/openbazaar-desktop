@@ -55,11 +55,11 @@ export default class extends BaseModel {
         'string.');
     }
 
-    return app.getServerUrl(`ob/listing/${hash}`);
+    return app.getServerUrl(`ob/listing/ipfs/${hash}`);
   }
 
-  getIpfsUrl() {
-    return this.constructor.getIpfsUrl(this.hash);
+  getIpfsUrl(hash) {
+    return this.constructor.getIpfsUrl(hash);
   }
 
   defaults() {
@@ -286,6 +286,9 @@ export default class extends BaseModel {
             this.getIpfsUrl(options.hash) :
             this.getIpnsUrl(slug)
         );
+
+      console.log(`the options hash is ${options.hash}`);
+      console.log(`the options url is ${options.url}`);
     } else {
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');

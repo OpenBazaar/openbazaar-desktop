@@ -2,7 +2,7 @@ import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
-import ListingCard from '../ListingCard';
+import ListingCard from '../components/listingCard/ListingCard';
 import UserCard from '../UserCard';
 import PageControls from '../components/PageControlsTextStyle';
 import ListingCardModel from '../../models/listing/ListingShort';

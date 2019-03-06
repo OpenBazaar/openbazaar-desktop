@@ -114,7 +114,7 @@
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
 
-              if (!ob.crypto.anySupportedByWallet(ob.metadata.acceptedCurrencies)) {
+              if (!ob.crypto.anySupportedByWallet(ob.metadata.acceptedCurrencies) || true) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
                   {
                     acceptedCurs: ob.metadata.acceptedCurrencies.join(', '),
@@ -141,12 +141,15 @@
                 unpurchaseable = false;
               }
 
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') }&nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-help-circled clrTErr"></span></span></div>`;
+              unpurchasableMarkup = ob.purchaseErrorTipT({ tip });
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT(buyNowTranslationKey) %>
             </button>
-            <%= unpurchaseable ? unpurchasableMarkup : '' %>
+            <div class="flexHRight flexVCent js-purchaseErrorWrap">
+              <%= unpurchaseable ? unpurchasableMarkup : '' %>
+            </div>
+
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
               <% if (ob.shipsFreeToMe) { %>

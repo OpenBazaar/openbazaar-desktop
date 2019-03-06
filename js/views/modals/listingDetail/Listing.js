@@ -52,6 +52,7 @@ export default class extends BaseModal {
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
     this.totalPrice = this.model.get('item').get('price');
+    this._purchaseModal = null;
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -196,6 +197,48 @@ export default class extends BaseModal {
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
+    this._outdatedHashState = null;
+    this.purchaseErrorTipT = null;
+
+    loadTemplate('modals/listingDetail/purchaseError.html', t => {
+      this.purchaseErrorTipT = t;
+    });
+  }
+
+  renderOutdatedHash() {
+    const state = this._outdatedHashState;
+
+    if (state) {
+      this.getCachedEl('.js-purchaseBtn')
+        .addClass('disabled');
+
+      const $tip = $(
+        this.purchaseErrorTipT({
+          tip: state.tooltip || '',
+        })
+      );
+
+      if (state.tooltipView) {
+        $('.js-tipContent', $tip).html(state.tooltipView.render().el);
+      }
+
+      this.getCachedEl('.js-purchaseErrorWrap')
+        .html($tip);
+    }
+  }
+
+  outdateHash(state) {
+    // todo: doc me up and put in some validations
+
+    // const validState = {
+    //   tooltip: 'no soup for you',
+    //   tooltipView: '<view-instance>',
+    // };
+
+    if (!_.isEqual(state, this._outdatedHashState)) {
+      this._outdatedHashState = state;
+      this.renderOutdatedHash();
+    }
   }
 
   className() {
@@ -525,6 +568,32 @@ export default class extends BaseModal {
     });
   }
 
+  static get PURCHASE_MODAL_CREATE() {
+    return 'PURCHASE_MODAL_CREATE';
+  }
+
+  static get PURCHASE_MODAL_DESTROY() {
+    return 'PURCHASE_MODAL_DESTROY';
+  }
+
+  /**
+   * Returns a promise that will fire progress notifications when a purchase modal
+   * is created. Will also fire a notifications when one is destroyed.
+   */
+  get purchaseModal() {
+    this._purchaseModalDeferred =
+      this._purchaseModalDeferred || $.Deferred();
+
+    if (this._purchaseModal) {
+      this._purchaseModalDeferred.notify({
+        type: this.constructor.PURCHASE_MODAL_CREATE,
+        view: this._purchaseModal,
+      });
+    }
+
+    return this._purchaseModalDeferred.promise();
+  }
+
   startPurchase() {
     if (!this.model.isCrypto) {
       if (this.totalPrice <= 0) {
@@ -549,9 +618,9 @@ export default class extends BaseModal {
       selectedVariants.push(variant);
     });
 
-    if (this.purchaseModal) this.purchaseModal.remove();
+    if (this._purchaseModal) this._purchaseModal.remove();
 
-    this.purchaseModal = new Purchase({
+    this._purchaseModal = new Purchase({
       listing: this.model,
       variants: selectedVariants,
       vendor: this.vendor,
@@ -563,8 +632,21 @@ export default class extends BaseModal {
       .render()
       .open();
 
-    this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
-    this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
+    if (this._purchaseModalDeferred) {
+      this._purchaseModalDeferred.notify({
+        type: this.constructor.PURCHASE_MODAL_CREATE,
+        view: this._purchaseModal,
+      });
+    }
+
+    this._purchaseModal.on('modal-will-remove', () => {
+      this._purchaseModal = null;
+      this._purchaseModalDeferred.notify({
+        type: this.constructor.PURCHASE_MODAL_DESTROY,
+      });
+    });
+
+    this.listenTo(this._purchaseModal, 'closeBtnPressed', () => this.close());
     recordEvent('Purchase_Start', { ownListing: this.model.isOwnListing });
   }
 
@@ -631,7 +713,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.editModal) this.editModal.remove();
-    if (this.purchaseModal) this.purchaseModal.remove();
+    if (this._purchaseModal) this._purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
@@ -679,6 +761,7 @@ export default class extends BaseModal {
         defaultBadge,
         isCrypto: this.model.isCrypto,
         _: { sortBy: _.sortBy },
+        purchaseErrorTipT: this.purchaseErrorTipT,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -742,6 +825,7 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
+      this.renderOutdatedHash();
 
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');

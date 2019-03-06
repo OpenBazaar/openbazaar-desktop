@@ -1,23 +1,26 @@
 import $ from 'jquery';
-import app from '../app';
-import loadTemplate from '../utils/loadTemplate';
-import { abbrNum } from '../utils';
-import { launchEditListingModal } from '../utils/modalManager';
-import { isBlocked, isUnblocking, events as blockEvents } from '../utils/block';
-import { isHiRez } from '../utils/responsive';
-import { startAjaxEvent, endAjaxEvent, recordEvent } from '../utils/metrics';
-import Listing from '../models/listing/Listing';
-import ListingShort from '../models/listing/ListingShort';
-import { events as listingEvents } from '../models/listing/';
-import baseVw from './baseVw';
-import { openSimpleMessage } from '../views/modals/SimpleMessage';
-import ListingDetail from './modals/listingDetail/Listing';
-import Report from './modals/Report';
-import BlockedWarning from './modals/BlockedWarning';
-import ReportBtn from './components/ReportBtn';
-import BlockBtn from './components/BlockBtn';
-import VerifiedMod, { getListingOptions } from './components/VerifiedMod';
-import UserLoadingModal from '../views/userPage/Loading';
+import app from '../../../app';
+import loadTemplate from '../../../utils/loadTemplate';
+import { abbrNum } from '../../../utils';
+import { launchEditListingModal } from '../../../utils/modalManager';
+import { isBlocked, isUnblocking, events as blockEvents } from '../../../utils/block';
+import { isHiRez } from '../../../utils/responsive';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../../utils/metrics';
+import { getNewerHash, outdateHash } from '../../../utils/outdatedListingHashes';
+import Listing from '../../../models/listing/Listing';
+import ListingShort from '../../../models/listing/ListingShort';
+import { events as listingEvents } from '../../../models/listing/';
+import baseVw from '../../baseVw';
+import { openSimpleMessage } from '../../../views/modals/SimpleMessage';
+import Dialog from '../../../views/modals/Dialog';
+import ListingDetail from '../../modals/listingDetail/Listing';
+import Report from '../../modals/Report';
+import BlockedWarning from '../../modals/BlockedWarning';
+import ReportBtn from '../../components/ReportBtn';
+import BlockBtn from '../../components/BlockBtn';
+import VerifiedMod, { getListingOptions } from '../../components/VerifiedMod';
+import OutdatedHashTip from './OutdatedHashTip';
+import UserLoadingModal from '../../../views/userPage/Loading';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -261,26 +264,8 @@ export default class extends baseVw {
         searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
       };
 
-      // fetch listing model via hash
-      // fetch ipns seperataly
-
-      // hashFetch.done =>
-      //   continue with flow
-      //   .error =>
-      //     same error handling as now
-
-      // ipnsFetch.done =>
-      //   if hashFetch done
-      //     check if hash is up to date
-      //       if yes, do nothin
-      //       if no, messaging to reload...
-      //   if hashFetch not done
-      //     cancel hashfetch
-      //     messaging to reload
-
-      // messaging to reload
-      //   if
-
+      let listingDetail = null;
+      let purchaseModal = null;
       let storeName = `${this.ownerGuid.slice(0, 8)}…`;
       let avatarHashes;
       let title = this.model.get('title');
@@ -310,7 +295,7 @@ export default class extends baseVw {
       };
 
       const showListingDetail = () => {
-        const listingDetail = new ListingDetail({
+        listingDetail = new ListingDetail({
           model: this.fullListing,
           profile: this.options.profile,
           vendor: this.options.vendor,
@@ -318,11 +303,19 @@ export default class extends baseVw {
           modelContentClass: 'modalContent',
           openedFromStore: !!this.options.onStore,
           checkNsfw: !this._userClickedShowNsfw,
-          //
         }).render()
           .open();
 
         const onListingDetailClose = () => app.router.navigate(routeOnOpen);
+
+        listingDetail.purchaseModal
+          .progress(getPurchaseE => {
+            if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_CREATE) {
+              purchaseModal = getPurchaseE.view;
+            } else if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_DESTROY) {
+              purchaseModal = null;
+            }
+          });
 
         this.listenTo(listingDetail, 'close', onListingDetailClose);
         this.listenTo(listingDetail, 'modal-will-remove',
@@ -332,17 +325,84 @@ export default class extends baseVw {
         app.loadingModal.close();
       };
 
-      const handleOutdatedHash = () => {
-        // if not on purchase
-        //   show close-able listing detail to reload
-        //   disable Buy Now button on listing detail with tooltip
-        // if on purchase
-        //   show purchase specific message
-        //   disable Purchase button with tooltip
+      const handleOutdatedHash = (listingData = {}, hashData) => {
+        const { oldHash, newHash } = hashData;
+
+        if (typeof listingData !== 'object') {
+          throw new Error('Please provide the listing data as an object.');
+        }
+
+        if (typeof oldHash !== 'string' || !oldHash) {
+          throw new Error('Please provide an oldHash as a non-empty string.');
+        }
+
+        if (typeof newHash !== 'string' || !newHash) {
+          throw new Error('Please provide an newHash as a non-empty string.');
+        }
+
+        this.fullListing.set(this.fullListing.parse(listingData));
+
+        // push mapping to outdatedHashes collection
+        outdateHash(oldHash, newHash);
+
+        const dialogTitle = 'Outdated Listing';
+        let dialogBody = 'A new version of this listing is available. You will ' +
+          'be unable to purchase the version your are viewing.';
+
+        const unableToPurchaseTip = this.createChild(OutdatedHashTip);
+
+        // consider just showing the data-changed-pop-up here
+
+        // handle purchase in progress or purchased
+        
+        if (purchaseModal) {
+          // make the reason a component
+          purchaseModal.setPurchaseable(false, unableToPurchaseTip);
+          dialogBody = 'A newer version of the listing is available. You will be unable ' +
+            'to purchase this version of the listing. Unfortunately, you will need to ' +
+            're-start the purchase process.';
+        }
+
+        const outdatedListingPurchaseDialog = new Dialog({
+          title: dialogTitle,
+          message: dialogBody,
+          buttons: [
+            {
+              text: 'Load New Version',
+              fragment: 'reload',
+            },
+          ],
+        });
+
+        const onReloadClick = () => {
+          listingDetail.close();
+          if (purchaseModal) purchaseModal.close();
+          outdatedListingPurchaseDialog.remove();
+          app.router.navigate(routeOnOpen);
+          showListingDetail();
+        };
+
+        this.listenTo(outdatedListingPurchaseDialog, 'click-reload', onReloadClick);
+        this.listenTo(unableToPurchaseTip, 'click-reload', onReloadClick);
+
+        outdatedListingPurchaseDialog.render().open();
+
+        listingDetail.outdateHash({
+          tooltipView: unableToPurchaseTip,
+        });
       };
 
       const loadListing = () => {
-        const listingHash = this.model.get('hash');
+        let listingHash = this.model.get('hash');
+        listingHash = 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR';
+
+        // todo test a newhash scenario, including a newer newer hash.
+        // const newerHash = !!listingHash && getNewerHash(listingHash);
+        // listingHash = !!newerHash ? newerHash : listingHash;
+
+        // cancel these two if
+        // - this view is removed
+        // - listing detail closed
         let ipnsFetch = null;
         let ipfsFetch = null;
 
@@ -405,7 +465,10 @@ export default class extends baseVw {
 
           if (ipfsFetch && ipfsFetch.state() === 'resolved') {
             if (listingHash !== data.hash) {
-              // handleOutdatedHash();
+              handleOutdatedHash(data, {
+                oldHash: listingHash,
+                newHash: data.hash
+              });
             }
           } else {
             showListingDetail();
@@ -583,7 +646,7 @@ export default class extends baseVw {
   render() {
     super.render();
 
-    loadTemplate('listingCard.html', (t) => {
+    loadTemplate('components/listingCard/listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ownListing: this.ownListing,
