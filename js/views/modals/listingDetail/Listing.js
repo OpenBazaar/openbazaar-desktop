@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import { Collection } from 'backbone';
+import { Collection, View } from 'backbone';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -87,6 +87,8 @@ export default class extends BaseModal {
           this.shipsFreeToMe = this.model.shipsFreeToMe;
         }
       });
+
+    this.listenTo(this.model, 'someChange', () => this.showDataChangedMessage());
 
     if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, e) => {
@@ -198,47 +200,33 @@ export default class extends BaseModal {
 
     this.rendered = false;
     this._outdatedHashState = null;
-    this.purchaseErrorTipT = null;
-
-    loadTemplate('modals/listingDetail/purchaseError.html', t => {
-      this.purchaseErrorTipT = t;
-    });
   }
 
-  renderOutdatedHash() {
-    const state = this._outdatedHashState;
-
-    if (state) {
-      this.getCachedEl('.js-purchaseBtn')
-        .addClass('disabled');
-
-      const $tip = $(
-        this.purchaseErrorTipT({
-          tip: state.tooltip || '',
-        })
-      );
-
-      if (state.tooltipView) {
-        $('.js-tipContent', $tip).html(state.tooltipView.render().el);
-      }
-
-      this.getCachedEl('.js-purchaseErrorWrap')
-        .html($tip);
+  // todo: move me to a better place
+  // this will not last beyond a render so you really want to also set the
+  // model with the new content.
+  outdatedHash(onReload) {
+    if (typeof onReload !== 'function') {
+      throw new Error('Please provide an onReload handler ' +
+        'as a function.');
     }
+
+    this.onReloadOutdated = onReload;
+
+    // translate me dog
+    this.getCachedEl('.js-tipContent').html(
+      ```
+      <p>
+        You are viewing an outdated version of the listing. In order to purchase
+        this listing, please <a class="js-reloadOutdated">load the latest version</a>.
+      </p>
+      ```
+    );
   }
 
-  outdateHash(state) {
-    // todo: doc me up and put in some validations
-
-    // const validState = {
-    //   tooltip: 'no soup for you',
-    //   tooltipView: '<view-instance>',
-    // };
-
-    if (!_.isEqual(state, this._outdatedHashState)) {
-      this._outdatedHashState = state;
-      this.renderOutdatedHash();
-    }
+  onClickReloadOutdated() {
+    this.onReloadOutdated();
+    // this.trigger('click-reload-outdated');
   }
 
   className() {
@@ -263,6 +251,7 @@ export default class extends BaseModal {
       'click .js-purchaseBtn': 'startPurchase',
       'click .js-rating': 'clickRating',
       'change .js-variantSelect': 'onChangeVariantSelect',
+      'click .js-reloadOutdated': 'onClickReloadOutdated',
       ...super.events(),
     };
   }
@@ -761,7 +750,6 @@ export default class extends BaseModal {
         defaultBadge,
         isCrypto: this.model.isCrypto,
         _: { sortBy: _.sortBy },
-        purchaseErrorTipT: this.purchaseErrorTipT,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -825,7 +813,12 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
-      this.renderOutdatedHash();
+      if (
+        this._outdatedHashState &&
+        this._outdatedHashState.newHash !== this.model.get('hash')
+      ) {
+        this.renderOutdatedHash();
+      }
 
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');

@@ -286,9 +286,6 @@ export default class extends BaseModel {
             this.getIpfsUrl(options.hash) :
             this.getIpnsUrl(slug)
         );
-
-      console.log(`the options hash is ${options.hash}`);
-      console.log(`the options url is ${options.url}`);
     } else {
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');

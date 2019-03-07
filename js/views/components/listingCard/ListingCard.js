@@ -345,51 +345,46 @@ export default class extends baseVw {
         // push mapping to outdatedHashes collection
         outdateHash(oldHash, newHash);
 
-        const dialogTitle = 'Outdated Listing';
-        let dialogBody = 'A new version of this listing is available. You will ' +
-          'be unable to purchase the version your are viewing.';
-
         const unableToPurchaseTip = this.createChild(OutdatedHashTip);
 
         // consider just showing the data-changed-pop-up here
-
-        // handle purchase in progress or purchased
-        
-        if (purchaseModal) {
-          // make the reason a component
-          purchaseModal.setPurchaseable(false, unableToPurchaseTip);
-          dialogBody = 'A newer version of the listing is available. You will be unable ' +
-            'to purchase this version of the listing. Unfortunately, you will need to ' +
-            're-start the purchase process.';
-        }
-
-        const outdatedListingPurchaseDialog = new Dialog({
-          title: dialogTitle,
-          message: dialogBody,
-          buttons: [
-            {
-              text: 'Load New Version',
-              fragment: 'reload',
-            },
-          ],
-        });
-
         const onReloadClick = () => {
           listingDetail.close();
           if (purchaseModal) purchaseModal.close();
-          outdatedListingPurchaseDialog.remove();
+          if (this.outdatedListingPurchaseDialog) {
+            this.outdatedListingPurchaseDialog.remove();
+          }
           app.router.navigate(routeOnOpen);
           showListingDetail();
         };
 
-        this.listenTo(outdatedListingPurchaseDialog, 'click-reload', onReloadClick);
-        this.listenTo(unableToPurchaseTip, 'click-reload', onReloadClick);
+        // handle purchase in progress or purchased
+        if (purchaseModal) {
+          purchaseModal.setPurchaseable(false, unableToPurchaseTip);
 
-        outdatedListingPurchaseDialog.render().open();
+          // const remove me on view remove
+          if (this.outdatedListingPurchaseDialog) {
+            this.outdatedListingPurchaseDialog.remove();
+          }
 
-        listingDetail.outdateHash({
-          tooltipView: unableToPurchaseTip,
-        });
+          this.outdatedListingPurchaseDialog = new Dialog({
+            title: 'Outdated Listing',
+            message: 'A newer version of the listing is available. You will be unable ' +
+              'to purchase this version of the listing. Please Click Load New Version ' +
+              'to view the newer version. You will need to re-start the purchase process.',
+            buttons: [
+              {
+                text: 'Load New Version',
+                fragment: 'reload',
+              },
+            ],
+          });
+
+          this.listenTo(this.outdatedListingPurchaseDialog, 'click-reload', onReloadClick);
+          this.outdatedListingPurchaseDialog.render().open();
+        }
+
+        listingDetail.outdateHash(() => listingDetail.render());
       };
 
       const loadListing = () => {
@@ -467,7 +462,7 @@ export default class extends baseVw {
             if (listingHash !== data.hash) {
               handleOutdatedHash(data, {
                 oldHash: listingHash,
-                newHash: data.hash
+                newHash: data.hash,
               });
             }
           } else {
