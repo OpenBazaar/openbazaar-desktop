@@ -19,7 +19,6 @@ import BlockedWarning from '../../modals/BlockedWarning';
 import ReportBtn from '../../components/ReportBtn';
 import BlockBtn from '../../components/BlockBtn';
 import VerifiedMod, { getListingOptions } from '../../components/VerifiedMod';
-import OutdatedHashTip from './OutdatedHashTip';
 import UserLoadingModal from '../../../views/userPage/Loading';
 
 export default class extends baseVw {
@@ -248,267 +247,237 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
+  loadListingDetail(hash = this.model.get('hash')) {
+    const routeOnOpen = location.hash.slice(1);
+    app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
+      this.ownerGuid);
+
+    startAjaxEvent('Listing_LoadFromCard');
+    const segmentation = {
+      ownListing: !!this.ownListing,
+      openedFromStore: !!this.options.onStore,
+      searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
+    };
+
+    let listingDetail = null;
+    let purchaseModal = null;
+    let storeName = `${this.ownerGuid.slice(0, 8)}…`;
+    let avatarHashes;
+    let title = this.model.get('title');
+    title = title.length > 25 ?
+      `${title.slice(0, 25)}…` : title;
+
+    if (this.options.profile) {
+      storeName = this.options.profile.get('name');
+      avatarHashes = this.options.profile.get('avatarHashes')
+        .toJSON();
+    } else if (this.options.vendor) {
+      storeName = this.options.vendor.name;
+      avatarHashes = this.options.vendor.avatarHashes;
+    }
+
+    if (storeName.length > 40) {
+      storeName = `${storeName.slice(0, 40)}…`;
+    }
+
+    const setUserLoadingModalFailedState = () => {
+      this.userLoadingModal.setState({
+        contentText: app.polyglot.t('userPage.loading.failTextListing', {
+          listing: `<b>${title}</b>`,
+        }),
+        isProcessing: false,
+      });
+    };
+
+    const showListingDetail = () => {
+      listingDetail = new ListingDetail({
+        model: this.fullListing,
+        profile: this.options.profile,
+        vendor: this.options.vendor,
+        closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
+        modelContentClass: 'modalContent',
+        openedFromStore: !!this.options.onStore,
+        checkNsfw: !this._userClickedShowNsfw,
+      }).render()
+        .open();
+
+      const onListingDetailClose = () => app.router.navigate(routeOnOpen);
+
+      listingDetail.purchaseModal
+        .progress(getPurchaseE => {
+          if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_CREATE) {
+            purchaseModal = getPurchaseE.view;
+          } else if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_DESTROY) {
+            purchaseModal = null;
+          }
+        });
+
+      this.listenTo(listingDetail, 'close', onListingDetailClose);
+      this.listenTo(listingDetail, 'modal-will-remove',
+        () => this.stopListening(null, null, onListingDetailClose));
+      this.listenTo(listingDetail, 'clickReloadOutdated',
+        e => {
+          // Since the model will already have been updated by
+          // handleOutdated, we could just re-render here.
+          listingDetail.render();
+          e.preventDefault();
+        });
+
+      this.trigger('listingDetailOpened');
+      this.userLoadingModal.remove();
+      app.loadingModal.close();
+    };
+
+    const handleOutdatedHash = (listingData = {}, hashData) => {
+      const { oldHash, newHash } = hashData;
+
+      if (typeof listingData !== 'object') {
+        throw new Error('Please provide the listing data as an object.');
+      }
+
+      if (typeof oldHash !== 'string' || !oldHash) {
+        throw new Error('Please provide an oldHash as a non-empty string.');
+      }
+
+      if (typeof newHash !== 'string' || !newHash) {
+        throw new Error('Please provide an newHash as a non-empty string.');
+      }
+
+      this.fullListing.set(this.fullListing.parse(listingData));
+
+      // push mapping to outdatedHashes collection
+      outdateHash(oldHash, newHash);
+    };
+
+    const loadListing = () => {
+      let listingHash = hash || this.model.get('hash');
+      listingHash = 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR';
+
+      // todo test a newhash scenario, including a newer newer hash.
+      listingHash = !!listingHash && getNewerHash(listingHash);
+
+      // cancel these two if
+      // - this view is removed
+      // - listing detail closed
+      let ipnsFetch = null;
+      let ipfsFetch = null;
+
+      if (listingHash) {
+        ipfsFetch = this.fullListing.fetch({
+          hash: listingHash,
+          showErrorOnFetchFail: false,
+        });
+        ipnsFetch = $.ajax(
+          Listing.getIpnsUrl(
+            this.ownerGuid,
+            this.model.get('slug')
+          )
+        );
+      } else {
+        ipnsFetch = this.fullListing.fetch({ showErrorOnFetchFail: false });
+      }
+
+      // <user loading modal funk>
+      if (this.userLoadingModal) this.userLoadingModal.remove();
+      this.userLoadingModal = new UserLoadingModal({
+        initialState: {
+          userName: avatarHashes ? storeName : undefined,
+          userAvatarHashes: avatarHashes,
+          contentText: app.polyglot.t('userPage.loading.loadingText', {
+            name: `<b>${title}</b>`,
+          }),
+          isProcessing: true,
+        },
+      });
+
+      this.listenTo(this.userLoadingModal, 'clickCancel',
+        () => {
+          ipnsFetch.abort();
+          if (ipfsFetch) ipfsFetch.abort();
+          this.userLoadingModal.remove();
+          app.router.navigate(routeOnOpen);
+        });
+
+      this.listenTo(this.userLoadingModal, 'clickRetry',
+        () => {
+          app.router.navigate(routeOnOpen);
+          this.loadListingDetail(hash);
+        });
+
+      this.userLoadingModal.render()
+        .open();
+      // END: <user loading modal funk>
+
+      ipnsFetch.done((data, textStatus, xhr) => {
+        if (xhr.statusText === 'abort' || this.isRemoved()) return;
+
+        if (
+          ipfsFetch &&
+          ['pending', 'rejected'].includes(ipfsFetch.state())
+        ) {
+          ipfsFetch.abort();
+          this.fullListing.set(this.fullListing.parse(data));
+        }
+
+        if (ipfsFetch && ipfsFetch.state() === 'resolved') {
+          if (listingHash !== data.hash) {
+            handleOutdatedHash(data, {
+              oldHash: listingHash,
+              newHash: data.hash,
+            });
+          }
+        } else {
+          showListingDetail();
+        }
+      }).fail(xhr => {
+        if (xhr.statusText === 'abort') return;
+
+        if (
+          ipfsFetch &&
+          ['pending', 'resolved'].includes(ipfsFetch.state())
+        ) return;
+
+        setUserLoadingModalFailedState();
+      });
+
+      if (ipfsFetch) {
+        ipfsFetch.done((data, textStatus, xhr) => {
+          if (xhr.statusText === 'abort' || this.isRemoved()) return;
+          showListingDetail();
+        }).fail(xhr => {
+          if (xhr.statusText === 'abort') return;
+          setUserLoadingModalFailedState();
+        });
+      }
+    };
+
+    if (isBlocked(this.ownerGuid) && !isUnblocking(this.ownerGuid)) {
+      const blockedWarningModal = new BlockedWarning({ peerId: this.ownerGuid })
+        .render()
+        .open();
+
+      this.listenTo(blockedWarningModal, 'canceled', () => {
+        app.router.navigate(routeOnOpen);
+      });
+
+      const onUnblock = () => loadListing();
+
+      this.listenTo(blockEvents, 'unblocking unblocked', onUnblock);
+
+      this.listenTo(blockedWarningModal, 'close', () => {
+        this.stopListening(null, null, onUnblock);
+      });
+    } else {
+      loadListing();
+    }
+  }
+
   onClick(e) {
     if (this.deleteConfirmOn) return;
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
-      const routeOnOpen = location.hash.slice(1);
-      app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
-        this.ownerGuid);
-
-      startAjaxEvent('Listing_LoadFromCard');
-      const segmentation = {
-        ownListing: !!this.ownListing,
-        openedFromStore: !!this.options.onStore,
-        searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
-      };
-
-      let listingDetail = null;
-      let purchaseModal = null;
-      let storeName = `${this.ownerGuid.slice(0, 8)}…`;
-      let avatarHashes;
-      let title = this.model.get('title');
-      title = title.length > 25 ?
-        `${title.slice(0, 25)}…` : title;
-
-      if (this.options.profile) {
-        storeName = this.options.profile.get('name');
-        avatarHashes = this.options.profile.get('avatarHashes')
-          .toJSON();
-      } else if (this.options.vendor) {
-        storeName = this.options.vendor.name;
-        avatarHashes = this.options.vendor.avatarHashes;
-      }
-
-      if (storeName.length > 40) {
-        storeName = `${storeName.slice(0, 40)}…`;
-      }
-
-      const setUserLoadingModalFailedState = () => {
-        this.userLoadingModal.setState({
-          contentText: app.polyglot.t('userPage.loading.failTextListing', {
-            listing: `<b>${title}</b>`,
-          }),
-          isProcessing: false,
-        });
-      };
-
-      const showListingDetail = () => {
-        listingDetail = new ListingDetail({
-          model: this.fullListing,
-          profile: this.options.profile,
-          vendor: this.options.vendor,
-          closeButtonClass: 'cornerTR iconBtn clrP clrBr clrSh3 toolTipNoWrap',
-          modelContentClass: 'modalContent',
-          openedFromStore: !!this.options.onStore,
-          checkNsfw: !this._userClickedShowNsfw,
-        }).render()
-          .open();
-
-        const onListingDetailClose = () => app.router.navigate(routeOnOpen);
-
-        listingDetail.purchaseModal
-          .progress(getPurchaseE => {
-            if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_CREATE) {
-              purchaseModal = getPurchaseE.view;
-            } else if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_DESTROY) {
-              purchaseModal = null;
-            }
-          });
-
-        this.listenTo(listingDetail, 'close', onListingDetailClose);
-        this.listenTo(listingDetail, 'modal-will-remove',
-          () => this.stopListening(null, null, onListingDetailClose));
-        this.trigger('listingDetailOpened');
-        this.userLoadingModal.remove();
-        app.loadingModal.close();
-      };
-
-      const handleOutdatedHash = (listingData = {}, hashData) => {
-        const { oldHash, newHash } = hashData;
-
-        if (typeof listingData !== 'object') {
-          throw new Error('Please provide the listing data as an object.');
-        }
-
-        if (typeof oldHash !== 'string' || !oldHash) {
-          throw new Error('Please provide an oldHash as a non-empty string.');
-        }
-
-        if (typeof newHash !== 'string' || !newHash) {
-          throw new Error('Please provide an newHash as a non-empty string.');
-        }
-
-        this.fullListing.set(this.fullListing.parse(listingData));
-
-        // push mapping to outdatedHashes collection
-        outdateHash(oldHash, newHash);
-
-        const unableToPurchaseTip = this.createChild(OutdatedHashTip);
-
-        // consider just showing the data-changed-pop-up here
-        const onReloadClick = () => {
-          listingDetail.close();
-          if (purchaseModal) purchaseModal.close();
-          if (this.outdatedListingPurchaseDialog) {
-            this.outdatedListingPurchaseDialog.remove();
-          }
-          app.router.navigate(routeOnOpen);
-          showListingDetail();
-        };
-
-        // handle purchase in progress or purchased
-        if (purchaseModal) {
-          purchaseModal.setPurchaseable(false, unableToPurchaseTip);
-
-          // const remove me on view remove
-          if (this.outdatedListingPurchaseDialog) {
-            this.outdatedListingPurchaseDialog.remove();
-          }
-
-          this.outdatedListingPurchaseDialog = new Dialog({
-            title: 'Outdated Listing',
-            message: 'A newer version of the listing is available. You will be unable ' +
-              'to purchase this version of the listing. Please Click Load New Version ' +
-              'to view the newer version. You will need to re-start the purchase process.',
-            buttons: [
-              {
-                text: 'Load New Version',
-                fragment: 'reload',
-              },
-            ],
-          });
-
-          this.listenTo(this.outdatedListingPurchaseDialog, 'click-reload', onReloadClick);
-          this.outdatedListingPurchaseDialog.render().open();
-        }
-
-        listingDetail.outdateHash(() => listingDetail.render());
-      };
-
-      const loadListing = () => {
-        let listingHash = this.model.get('hash');
-        listingHash = 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR';
-
-        // todo test a newhash scenario, including a newer newer hash.
-        // const newerHash = !!listingHash && getNewerHash(listingHash);
-        // listingHash = !!newerHash ? newerHash : listingHash;
-
-        // cancel these two if
-        // - this view is removed
-        // - listing detail closed
-        let ipnsFetch = null;
-        let ipfsFetch = null;
-
-        if (listingHash) {
-          ipfsFetch = this.fullListing.fetch({
-            hash: listingHash,
-            showErrorOnFetchFail: false,
-          });
-          ipnsFetch = $.ajax(
-            Listing.getIpnsUrl(
-              this.ownerGuid,
-              this.model.get('slug')
-            )
-          );
-        } else {
-          ipnsFetch = this.fullListing.fetch({ showErrorOnFetchFail: false });
-        }
-
-        // <user loading modal funk>
-        if (this.userLoadingModal) this.userLoadingModal.remove();
-        this.userLoadingModal = new UserLoadingModal({
-          initialState: {
-            userName: avatarHashes ? storeName : undefined,
-            userAvatarHashes: avatarHashes,
-            contentText: app.polyglot.t('userPage.loading.loadingText', {
-              name: `<b>${title}</b>`,
-            }),
-            isProcessing: true,
-          },
-        });
-
-        this.listenTo(this.userLoadingModal, 'clickCancel',
-          () => {
-            ipnsFetch.abort();
-            if (ipfsFetch) ipfsFetch.abort();
-            this.userLoadingModal.remove();
-            app.router.navigate(routeOnOpen);
-          });
-
-        this.listenTo(this.userLoadingModal, 'clickRetry',
-          () => {
-            app.router.navigate(routeOnOpen);
-            this.onClick(e);
-          });
-
-        this.userLoadingModal.render()
-          .open();
-        // END: <user loading modal funk>
-
-        ipnsFetch.done((data, textStatus, xhr) => {
-          if (xhr.statusText === 'abort' || this.isRemoved()) return;
-
-          if (
-            ipfsFetch &&
-            ['pending', 'rejected'].includes(ipfsFetch.state())
-          ) {
-            ipfsFetch.abort();
-            this.fullListing.set(this.fullListing.parse(data));
-          }
-
-          if (ipfsFetch && ipfsFetch.state() === 'resolved') {
-            if (listingHash !== data.hash) {
-              handleOutdatedHash(data, {
-                oldHash: listingHash,
-                newHash: data.hash,
-              });
-            }
-          } else {
-            showListingDetail();
-          }
-        }).fail(xhr => {
-          if (xhr.statusText === 'abort') return;
-
-          if (
-            ipfsFetch &&
-            ['pending', 'resolved'].includes(ipfsFetch.state())
-          ) return;
-
-          setUserLoadingModalFailedState();
-        });
-
-        if (ipfsFetch) {
-          ipfsFetch.done((data, textStatus, xhr) => {
-            if (xhr.statusText === 'abort' || this.isRemoved()) return;
-            showListingDetail();
-          }).fail(xhr => {
-            if (xhr.statusText === 'abort') return;
-            setUserLoadingModalFailedState();
-          });
-        }
-      };
-
-      if (isBlocked(this.ownerGuid) && !isUnblocking(this.ownerGuid)) {
-        const blockedWarningModal = new BlockedWarning({ peerId: this.ownerGuid })
-          .render()
-          .open();
-
-        this.listenTo(blockedWarningModal, 'canceled', () => {
-          app.router.navigate(routeOnOpen);
-        });
-
-        const onUnblock = () => loadListing();
-
-        this.listenTo(blockEvents, 'unblocking unblocked', onUnblock);
-
-        this.listenTo(blockedWarningModal, 'close', () => {
-          this.stopListening(null, null, onUnblock);
-        });
-      } else {
-        loadListing();
-      }
+      this.loadListingDetail();
     }
   }
 

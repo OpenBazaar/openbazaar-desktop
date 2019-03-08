@@ -1,10 +1,7 @@
 // TODO: doc me up
 // TODO: unit test me
 
-// import $ from 'jquery';
-// import _ from 'underscore';
 import { Events } from 'backbone';
-// import Listing from '../models/listing/Listing';
 
 const events = {
   ...Events,
@@ -20,47 +17,6 @@ try {
   // pass
 }
 
-// const boom1 = {
-//   prevHashes: {},
-//   outdated: {},
-// };
-
-// outdateHash('aaa', 'ccc');
-
-// const boom2 = {
-//   prevHashes: {
-//     ccc: [aaa],
-//   },
-//   outdated: {
-//     aaa: 'ccc'
-//   },
-// };
-
-// outdateHash('ccc', 'ddd');
-
-// const boom3 = {
-//   prevHashes: {
-//     ddd: [ccc, aaa],
-//   },
-//   outdated: {
-//     aaa: 'ddd',
-//     ccc: 'ddd',
-//   },
-// };
-
-// outdateHash('ddd', 'eee');
-
-// const boom4 = {
-//   prevHashes: {
-//     eee: [aaa, ccc, ddd],
-//   },
-//   outdated: {
-//     aaa: 'eee',
-//     ccc: 'eee',
-//     ddd: 'eee',
-//   },
-// };
-
 const prevHashes = {
   ...(lsData && lsData.prevHashes || {}),
 };
@@ -69,39 +25,7 @@ const outdated = {
   ...(lsData && lsData.outdated || {}),
 };
 
-// const getListings = {};
-
-// const getListing = hash => {
-//   let request;
-//   let requestors = [];
-
-//   if (getListings[hash]) {
-//     request = getListings[hash].request;
-//     requestors = getListings[hash].requestors;
-//   } else {
-//     request = $.get(Listing.getIpfsUrl(hash));
-
-//     getListings[hash] = {
-//       request,
-//       requestors,
-//     };
-
-//     request._getRequest = id => {
-//       requestors.push(id);
-//       request.abort = () => {
-//         requestors.splice(requestors.indexOf(id), 1);
-//         if (!requestors.length) request.abort();
-//       };
-//       return request;
-//     };
-//   }
-
-//   return request._getRequest(_.uniqueId());
-// };
-
-export function outdateHash(oldHash, newHash, newData) {
-  // new Data optional object with listing data
-
+export function outdateHash(oldHash, newHash) {
   if (typeof oldHash !== 'string' || !oldHash) {
     throw new Error('Please provide an oldHash as a non-empty string.');
   }
@@ -118,6 +42,11 @@ export function outdateHash(oldHash, newHash, newData) {
 
   if (outdated[oldHash] !== newHash) {
     outdated[oldHash] = newHash;
+    prevHashes[newHash] = prevHashes[newHash] || [];
+    if (!prevHashes[newHash].includes(oldHash)) {
+      prevHashes[newHash].push(oldHash);
+    }
+
     changed = true;
     events.trigger('newHash', {
       oldHash,
@@ -127,8 +56,7 @@ export function outdateHash(oldHash, newHash, newData) {
 
   const oldHashPrevHashes = prevHashes[oldHash];
 
-  (oldHashPrevHashes || [])
-    .push(newHash)
+  (oldHashPrevHashes || []).concat(newHash)
     .forEach(prevHash => {
       if (prevHash !== newHash) {
         outdated[prevHash] = newHash;
@@ -136,7 +64,6 @@ export function outdateHash(oldHash, newHash, newData) {
         events.trigger('newHash', {
           oldHash: prevHash,
           newHash,
-          // getListing: () => getListing(newHash),
         });
       }
     });

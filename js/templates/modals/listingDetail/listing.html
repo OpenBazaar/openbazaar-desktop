@@ -144,19 +144,13 @@
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT(buyNowTranslationKey) %>
             </button>
-            <div class="flexHRight flexVCent">
-              <%= unpurchaseable ? unpurchasableMarkup : '' %>
-              <div class="clrTErr">
-                <%= ob.polyT('listingDetail.unableToPurchase.unpurchaseable') %>&nbsp;
-              </div>
-              <div class="arrowBoxTipWrap">
-                <div class="clrTErr">
-                  <span class="ion-help-circled clrTErr"></span>
-                </div>              
-                <div class="arrowBox arrowBoxCenteredTop clrP clrBr js-tipContent">
-                  <%= tip %>
-                </div>
-              </div>              
+
+            <div class="js-purchaseErrorWrap">
+              <%
+                if (unpurchaseable) {
+                  print(ob.purchaseErrorT({ tip }));
+                }
+              %>
             </div>
 
             <div class="flexHCent gutterH">

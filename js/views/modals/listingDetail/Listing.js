@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import { Collection, View } from 'backbone';
+import Backbone, { Collection } from 'backbone';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -18,6 +18,7 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
+import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -53,6 +54,7 @@ export default class extends BaseModal {
     this.activePhotoIndex = 0;
     this.totalPrice = this.model.get('item').get('price');
     this._purchaseModal = null;
+    this._latestHash = this.model.get('hash');
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -128,6 +130,9 @@ export default class extends BaseModal {
       }
     });
 
+    this.listenTo(outdatedListingHashesEvents, 'newHash',
+      e => this.outdateHash(e.newHash));
+
     this.rating = this.createChild(Rating);
 
     // get the ratings data, if any
@@ -200,33 +205,10 @@ export default class extends BaseModal {
 
     this.rendered = false;
     this._outdatedHashState = null;
-  }
 
-  // todo: move me to a better place
-  // this will not last beyond a render so you really want to also set the
-  // model with the new content.
-  outdatedHash(onReload) {
-    if (typeof onReload !== 'function') {
-      throw new Error('Please provide an onReload handler ' +
-        'as a function.');
-    }
-
-    this.onReloadOutdated = onReload;
-
-    // translate me dog
-    this.getCachedEl('.js-tipContent').html(
-      ```
-      <p>
-        You are viewing an outdated version of the listing. In order to purchase
-        this listing, please <a class="js-reloadOutdated">load the latest version</a>.
-      </p>
-      ```
-    );
-  }
-
-  onClickReloadOutdated() {
-    this.onReloadOutdated();
-    // this.trigger('click-reload-outdated');
+    this.purchaseErrorT = null;
+    loadTemplate('modals/listingDetail/purchaseError.html',
+      t => (this.purchaseErrorT = t));
   }
 
   className() {
@@ -535,6 +517,38 @@ export default class extends BaseModal {
     }
   }
 
+  outdateHash(newHash = this._latestHash) {
+    if (newHash === this._latestHash) return;
+
+    this._latestHash = newHash;
+
+    // translate me dog
+    const tipContent = `
+      <p>
+        You are viewing an outdated version of the listing. In order to purchase
+        this listing, please <a class="js-reloadOutdated">load the latest version</a>.
+      </p>
+    `;
+    this.getCachedEl('.js-purchaseErrorWrap').html(
+      this.purchaseErrorT({ tip: tipContent })
+    );
+    this.getCachedEl('.js-purchaseBtn').addClass('disabled');
+  }
+
+  onClickReloadOutdated() {
+    let defaultPrevented = false;
+
+    this.trigger('clickReloadOutdated', {
+      preventDefault: () => (defaultPrevented = true),
+    });
+
+    setTimeout(() => {
+      if (!defaultPrevented) {
+        Backbone.history.loadUrl();
+      }
+    });
+  }
+
   onSetShippingDestination(e) {
     this.renderShippingDestinations($(e.target).val());
   }
@@ -750,6 +764,7 @@ export default class extends BaseModal {
         defaultBadge,
         isCrypto: this.model.isCrypto,
         _: { sortBy: _.sortBy },
+        purchaseErrorT: this.purchaseErrorT,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -758,6 +773,10 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (this._latestHash !== this.model.get('hash')) {
+        this.outdateHash();
+      }
 
       if (this.supportedCurrenciesList) this.supportedCurrenciesList.remove();
       this.supportedCurrenciesList = this.createChild(SupportedCurrenciesList, {
