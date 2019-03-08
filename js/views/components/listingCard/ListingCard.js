@@ -12,7 +12,6 @@ import ListingShort from '../../../models/listing/ListingShort';
 import { events as listingEvents } from '../../../models/listing/';
 import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../../../views/modals/SimpleMessage';
-import Dialog from '../../../views/modals/Dialog';
 import ListingDetail from '../../modals/listingDetail/Listing';
 import Report from '../../modals/Report';
 import BlockedWarning from '../../modals/BlockedWarning';
@@ -259,8 +258,6 @@ export default class extends baseVw {
       searchUrl: this.options.searchUrl && this.options.searchUrl.hostname || 'none',
     };
 
-    let listingDetail = null;
-    let purchaseModal = null;
     let storeName = `${this.ownerGuid.slice(0, 8)}…`;
     let avatarHashes;
     let title = this.model.get('title');
@@ -290,7 +287,7 @@ export default class extends baseVw {
     };
 
     const showListingDetail = () => {
-      listingDetail = new ListingDetail({
+      const listingDetail = new ListingDetail({
         model: this.fullListing,
         profile: this.options.profile,
         vendor: this.options.vendor,
@@ -306,9 +303,14 @@ export default class extends baseVw {
       listingDetail.purchaseModal
         .progress(getPurchaseE => {
           if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_CREATE) {
-            purchaseModal = getPurchaseE.view;
+            const purchaseModal = getPurchaseE.view;
+            this.listenTo(purchaseModal, 'clickReloadOutdated', e => {
+              e.preventDefault();
+              listingDetail.render();
+              purchaseModal.remove();
+            });
           } else if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_DESTROY) {
-            purchaseModal = null;
+            // stoplistening
           }
         });
 
@@ -350,11 +352,9 @@ export default class extends baseVw {
     };
 
     const loadListing = () => {
-      let listingHash = hash || this.model.get('hash');
-      listingHash = 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR';
-
-      // todo test a newhash scenario, including a newer newer hash.
-      listingHash = !!listingHash && getNewerHash(listingHash);
+      // this.fullListing.set('hash', 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR');
+      // this.model.set('hash', 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR');
+      const listingHash = getNewerHash(hash || this.model.get('hash'));
 
       // cancel these two if
       // - this view is removed

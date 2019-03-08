@@ -1,11 +1,30 @@
 <div class="posR">
-  <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
-    <% const initPay = ob.listing.shippingOptions && ob.listing.shippingOptions.length ? 'disabled' : ''; %>
-    <%= ob.processingButton({
-      className: `btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ${initPay} ${ob.phase}`,
-      btnText: ob.polyT('purchase.pay')
-    }) %>
-  <% } else if (ob.phase ==='pending') { %>
+  <% if (ob.phase === 'pay' || ob.phase === 'processing') {
+      const showOutdatedHashErr = ob.phase === 'pay' && ob.outdatedHash;
+      const initPay =
+        (ob.listing.shippingOptions && ob.listing.shippingOptions.length) ||
+        showOutdatedHashErr ?
+        'disabled' : '';
+      print(
+        ob.processingButton({
+          className: 'btn width100 clrBAttGrad clrBrDec1 clrTOnEmph js-payBtn ' +
+            `${initPay} ${ob.phase} ${ob.outdatedHash ? 'row' : ''}`,
+          btnText: ob.polyT('purchase.pay')
+        })
+      );
+
+      if (showOutdatedHashErr) {
+        // TODO: trans don't be late
+        const tip = `
+          <p>
+            You are viewing an outdated version of the listing. In order to purchase
+            the listing, please <a class="js-reloadOutdated">load the latest version</a>
+            and re-start the purchase process.
+          </p>
+        `;
+        print(`<div class="txRgt rowSm">${ob.purchaseErrT({ tip })}</div>`);
+      }
+     } else if (ob.phase ==='pending') { %>
     <div class="btn width100 clrBAttGrad clrBrDec1 clrTOnEmph pendingBtn">
       <%= ob.polyT('purchase.pending') %>
     </div>

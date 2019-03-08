@@ -1,13 +1,9 @@
-<div class="flexHRight flexVCent">
-  <div class="clrTErr">
-    <%= ob.polyT('listingDetail.unableToPurchase.unpurchaseable') %>&nbsp;
+<span class="clrTErr"><%= ob.polyT('listingDetail.unableToPurchase.unpurchaseable') %></span>
+<span class="arrowBoxTipWrap">
+  <span class="clrTErr">
+    <span class="ion-help-circled clrTErr"></span>
+  </span>              
+  <div class="arrowBox arrowBoxCenteredTop clrP clrBr js-tipContent">
+    <%= ob.tip %>
   </div>
-  <div class="arrowBoxTipWrap">
-    <div class="clrTErr">
-      <span class="ion-help-circled clrTErr"></span>
-    </div>              
-    <div class="arrowBox arrowBoxCenteredTop clrP clrBr js-tipContent">
-      <%= ob.tip %>
-    </div>
-  </div>              
-</div>
+</span>

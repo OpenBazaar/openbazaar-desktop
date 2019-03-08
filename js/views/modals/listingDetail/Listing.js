@@ -55,6 +55,7 @@ export default class extends BaseModal {
     this.totalPrice = this.model.get('item').get('price');
     this._purchaseModal = null;
     this._latestHash = this.model.get('hash');
+    this._renderedHash = null;
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -130,8 +131,10 @@ export default class extends BaseModal {
       }
     });
 
-    this.listenTo(outdatedListingHashesEvents, 'newHash',
-      e => this.outdateHash(e.newHash));
+    this.listenTo(outdatedListingHashesEvents, 'newHash', e => {
+      this._latestHash = e.newHash;
+      if (e.oldHash === this._renderedHash) this.outdateHash();
+    });
 
     this.rating = this.createChild(Rating);
 
@@ -517,20 +520,16 @@ export default class extends BaseModal {
     }
   }
 
-  outdateHash(newHash = this._latestHash) {
-    if (newHash === this._latestHash) return;
-
-    this._latestHash = newHash;
-
+  outdateHash() {
     // translate me dog
-    const tipContent = `
+    const tip = `
       <p>
         You are viewing an outdated version of the listing. In order to purchase
         this listing, please <a class="js-reloadOutdated">load the latest version</a>.
       </p>
     `;
     this.getCachedEl('.js-purchaseErrorWrap').html(
-      this.purchaseErrorT({ tip: tipContent })
+      this.purchaseErrorT({ tip })
     );
     this.getCachedEl('.js-purchaseBtn').addClass('disabled');
   }
@@ -644,9 +643,11 @@ export default class extends BaseModal {
 
     this._purchaseModal.on('modal-will-remove', () => {
       this._purchaseModal = null;
-      this._purchaseModalDeferred.notify({
-        type: this.constructor.PURCHASE_MODAL_DESTROY,
-      });
+      if (this._purchaseModalDeferred) {
+        this._purchaseModalDeferred.notify({
+          type: this.constructor.PURCHASE_MODAL_DESTROY,
+        });
+      }
     });
 
     this.listenTo(this._purchaseModal, 'closeBtnPressed', () => this.close());
@@ -832,12 +833,6 @@ export default class extends BaseModal {
       this.renderShippingDestinations(this.defaultCountry);
       this.setSelectedPhoto(this.activePhotoIndex);
       this.setActivePhotoThumbnail(this.activePhotoIndex);
-      if (
-        this._outdatedHashState &&
-        this._outdatedHashState.newHash !== this.model.get('hash')
-      ) {
-        this.renderOutdatedHash();
-      }
 
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');
@@ -878,6 +873,7 @@ export default class extends BaseModal {
     });
 
     this.rendered = true;
+    this._renderedHash = this.model.get('hash');
 
     return this;
   }
