@@ -12,7 +12,9 @@ if (!fs.existsSync(tmpFolderPath)) {
 }
 
 const indexPage = fs.readFileSync(`${__dirname}/../index.html`);
-const dom = new JSDOM(indexPage);
+const dom = new JSDOM(indexPage, {
+  url: 'http://localhost', // needed so LocalStorage is accesible to JSDOM
+});
 
 global.document = dom.window.document;
 global.window = dom.window;

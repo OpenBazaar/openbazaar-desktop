@@ -36,6 +36,8 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
+    this.model.set('hash', 'QmdoY2bg8fYhoGB8wZBoCaUc45Sjfet6QbFB9zLki6LV2f');
+
     // Any provided profile model or vendor info object will also be passed into the
     // listing detail modal.
     if (opts.profile) {
@@ -352,9 +354,8 @@ export default class extends baseVw {
     };
 
     const loadListing = () => {
-      // this.fullListing.set('hash', 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR');
-      // this.model.set('hash', 'zb2rhbHqyEa21ZZjBLgEAk9m7R5tZu43dhny1w1Z5LRPojVaR');
       const listingHash = getNewerHash(hash || this.model.get('hash'));
+      console.log(`the hash cake is ${listingHash}`);
 
       // cancel these two if
       // - this view is removed
