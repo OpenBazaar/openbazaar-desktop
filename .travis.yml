@@ -12,12 +12,16 @@ node_js:
 addons:
   apt:
     packages:
-      - fakeroot
+    - fakeroot
 before_script:
-- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in .travis/cert.p12.enc -d -a -out ./.travis/cert.p12; fi
-- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc; fi
-- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk; fi
-- if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
+- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$ENCRYPTION_SECRET" -in
+  .travis/cert.p12.enc -d -a -out ./.travis/cert.p12; fi
+- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc
+  -d -a -out ./.travis/ob1.cert.spc; fi
+- if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc
+  -d -a -out ./.travis/ob1.pvk; fi
+- if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh";
+  fi ; fi
 script:
 - npm run lint
 - npm run test
@@ -27,17 +31,17 @@ deploy:
   api_key: "$GITHUB_TOKEN"
   file_glob: true
   file:
-    - "dist/win32/*.exe"
-    - "dist/win32/*.nupkg"
-    - "dist/win32/RELEASES"
-    - "dist/win64/*.exe"
-    - "dist/win64/*.nupkg"
-    - "dist/osx/*.dmg"
-    - "dist/osx/*.zip"
-    - "dist/linux32/*.deb"
-    - "dist/linux64/*.deb"
-    - "dist/linux32/*.rpm"
-    - "dist/linux64/*.rpm"
+  - dist/win32/*.exe
+  - dist/win32/*.nupkg
+  - dist/win32/RELEASES
+  - dist/win64/*.exe
+  - dist/win64/*.nupkg
+  - dist/osx/*.dmg
+  - dist/osx/*.zip
+  - dist/linux32/*.deb
+  - dist/linux64/*.deb
+  - dist/linux32/*.rpm
+  - dist/linux64/*.rpm
   skip_cleanup: true
   all_branches: true
   on:
@@ -49,3 +53,4 @@ env:
   - secure: fQ4K2OvSakz0Fk+9X/WWFpPOFoK7IjpI7vAqhEhbH7X2q0iXQUZv1476e3wVQWYlwzks8NlLP4oPXzJm6xooh+1ftxh3q1qlyQlowZKvyqDx/IjOVlZXZoaivqCEwXSmkxH2MG5OL3hjhZr2MG8cai2nbcXPXiUDktGVZm4rJRtbvknPK5TZUMjs9YttvDKy35fa28gdFcXWzKOFerqHIibNzE4CtmAbBhJLgSxopJp3yUrhKhnwEnOA4A3xwFZTARmT02Kfu8y4hOwwylbmysDNT1zWZ9+aNRaB2jvw9DEIevtzcyrmYfTZdbY18nj3O+9Wg8qYPo7YrrSA0pK5NwO9qf5ldxKU4ThfNSMONHgAzZDibXKg9q+axr49PBgNze0YO6T3/ktMIqpP9UPuchrsDMBk54msyqH02drJhQ3FyNLX63Ljt5w20kUks2mQdd/az/NSNGcjH26hDiKUROd7SXTr+cPOOXd0vi/VN1F3AouGVeoaaLm62N0UIv/w+npxn/XDKJE9InHfiGc77KUpysEaA9ydOJ7+WnNSzdGv45pIo87z+/zm6m9yeI/G8IPgo54IHSyLEshLD4azo/egzBkihYPkztX0z2SnMgL9+ph6908R0oy9GV1HgfFzMvwFfR8a4iY/mSkQtaSb5xoAUz1MxxwFel3cQGKXOgU=
   - secure: i9WollMSh2QLEneqifPXPEvOX8Ec6Fb2l1zd+QJwEn0PlHgbDAlY5a0WECPyBYhK6ldRCYZU73MC3goH2bzK4W2i8+jaWXEIIfEh+gx5Hp1V8TmLzkegSWl4A4/+Z5OHw5zbowwYRIKtTvxoT4zpPfuiwfS8GJyn1VIxJ7tD4RyBf/ruM6p0hLeiml4tVt+JCx0hvR5qhZDOEz/Dysa/e/3PzotYmUtofxHBQg4ItzMVtiQSBDdxN6GGXVYYvTHJ/+WqeKepziojajhleHL6Yufp+iIrT5+moAU1CKCir1uI3kVIyqMT27q/14Qh9EikBEarnhM+dv9z9XZQ2hs7eHZhKVBx0rAIoR0VReiU+bPqXQBc6to8b7xaW3WpTRD5l6kSE9nhO8c1/u27nHqH9REFh2wqzQPRgTMkaNe7TX+MV0VxDkqLLKS5LNzxzW8jjI+m6RXs+OIg4NesKOAqLCS6vD8Z6gRmvQqEMBe7wCUH1W71E3U2CuGOuqdnxPvOabc48ojX0fGtmaKmINIgOBcru9V7SXeDabrmFbVLlbSSUePnGoC32LO2MgiroiiIlzr9TRkDauCZB4fWfS7YGS6IMYdgPUWvEViLCDlNIDudJLfEGZgaBELMHUJSGO7A6Zi4JHWEhwZ12WsZnwEfUUBspQzkh3Nt6OofQYn7Bbw=
   - secure: JvB92ziCZhA5o1nrw/DxmFWnCcdVnpR+7UcAAMuV7+UdLk5cUFryuEo2BJ7YN1BWXpDgQ7iPULPAWAZRO7vKny7LVJYlo9vFIcsSdbnS+rl5Z1OTtuto8KPNIEPISzBEL8iTH25hXvT1jgbyovf4q1Xl+nUW/3BjBAttktZrP7jnpQZBfWnLxPrZ+lRfBeoIp7cxzB/BEg1hG6/YkRfvBu7Ov/erA3L0IOXehcjgXZvg10raOGUSxgSvHS4Va4lX5E1N6k4qtD79LhS6SV7e4QOi1Dhd4aeeUZtYBrSo/AqsXsrULGtbePeFJMH+Y1M3zjIRBOWQcWMjgxlNh5H/StVJSzsODU6++ubZ6zqB3sQTaT1jQYXJUmoSgnykp6H+ikufSlasWZWvTm5gyJ5nd3Kn1CsP2iB2SCV+w6l7eUnjsyb2R9CPG8j/5m1wYx5iGC/9Ot2lAVCwrPRYuw6gLUOO6BVCV3Kz+tBPFtdAP7jpfl6jhlKCtmkovRY+As3zKU+uEHGqB26J5kIp/apiU6czHvHTa4pRbaXgULhegpDE2ccT62Q8Z8O1U3bmZG5cVEGQHhjMrYW1Y3HchfdJ/jhIRSQopFK4WE+BJV0YP1qiMh3WqCFdhCyQrRGGGWBqrfkNuTyNjMCBmThLTIE+kd3XZyXeokFbfxcDSf7Wu90=
+  - secure: gNED9gvvH75rY/S/WfzkxlIaaa5msrIbaxVY9M62bLUtbvLcz/X0P9s7gjlRP3DfUDybeoikpKsBIwKx+OJpQcVuoxJ+QVEL2oDvNy+2OSedh44o59LnPxSidu36CNM3M73m2LO0OGcr4FYlUDAxQ7GNL+9zWmFaQJTvzH5JFISfuUUykym6UQlIaqdV7hxa9u1jJTeJ8WxJfi2TjVi52ZXvzSJDsfM1F2OtpipR3ZmYkRZAE0LKKaWpkyG4j/7rX4b6oR9mh7XIlKZpL6Ln4bdJ2VLovPjMnhAEgHzjH8R6sIri4atrKkt0WE4yMglLF2RcO0QZvRr2ikmNxp4k0bHAjLE93RgnWK8/os673smisIe+HlJkgQWgRaWcFWP36OS3K6E2ruDEtTsLxLhnfPT1al950VE1w1VIxgcNdaIUYFX05Mp2CXKMuR9D1JPDZeJ3RUwPjLERImhW0jXmgZ5rRCrggEQ155CaMAMINBJtvbLLRodVzwMBN14OI4zNKxwVLf0nmE0ULhWhy2YukFfAAs4KJ7IuWQS6OWNAIkjbHm2/RVjCFEUrp8/QdHOYgy/bjDydis8xHN46Ev7xsry3s6kf+3WbS+CmTC1wxqLlO/9gnQKi5b7dDLrWvesowQcHsXL2V4qByuZJhyFYQ88On+WSTtM7UnHNCc56T7M=
