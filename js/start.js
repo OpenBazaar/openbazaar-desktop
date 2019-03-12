@@ -21,6 +21,7 @@ import { addFeedback } from './utils/feedback';
 import { addMetrics, showMetricsModal, isNewerVersion } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
+import { persist as persistOutdatedListingHashes } from './utils/outdatedListingHashes.js';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -882,6 +883,9 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 });
 
 ipcRenderer.on('close-attempt', (e) => {
+  persistOutdatedListingHashes();
+
+  // If on the bundled app, do not let the app shutdown until server shuts down.
   const localServer = remote.getGlobal('localServer');
 
   if (localServer && localServer.isRunning) {

@@ -1,7 +1,7 @@
 import BaseVw from '../../baseVw';
 import loadTemplate from '../../../utils/loadTemplate';
 import ListingShort from '../../../models/listing/ListingShort';
-import ListingCard from '../../components/listingCard/ListingCard';
+import ListingCard from '../../components/ListingCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {

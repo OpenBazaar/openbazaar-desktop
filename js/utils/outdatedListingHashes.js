@@ -1,3 +1,4 @@
+
 import sizeof from 'object-sizeof';
 import { Events } from 'backbone';
 
@@ -15,34 +16,29 @@ try {
   // pass
 }
 
-const prevHashes = new Map(data && data.prevHashes || []);
-const outdated = new Map(data && data.outdated || []);
+data = {
+  prevHashes: new Map(data && data.prevHashes || []),
+  outdated: new Map(data && data.outdated || []),
+};
 
 // Maximum size of lsData. We don't want to clog up localStorage with just this
 // data, so if an outdateHash call taks us over the limit, we'll prune some
 // older data.
-const MAX_BYTES = '100000';
+const MAX_BYTES = '200000';
 
-const getPersistData = () => ({
-  prevHashes: Array.from(prevHashes.entries()),
-  outdated: Array.from(outdated.entries()),
+const dataToJSON = () => ({
+  outdated: Array.from(data.outdated.entries()),
+  prevHashes: Array.from(data.prevHashes.entries()),
 });
 
-
 const pruneData = () => {
-  const persistData = getPersistData();
-
-  // console.log(`the max is ${MAX_BYTES}`);
-  // console.log(`the cur size is ${sizeof(persistData)}`);
-  while (sizeof(persistData) > MAX_BYTES) {
-    const keys = [...outdated.keys()];
-
+  while (sizeof(dataToJSON()) > MAX_BYTES) {
+    const keys = [...data.outdated.keys()];
     if (keys[0]) {
-      outdated.delete(keys[0]);
-      prevHashes.delete(keys[0]);
+      data.prevHashes.delete(data.outdated.get(keys[0]));
+      data.outdated.delete(keys[0]);
     }
   }
-  // console.log(`size after is ${sizeof(persistData)}`);
 };
 
 /**
@@ -51,7 +47,7 @@ const pruneData = () => {
  */
 export function persist() {
   window.localStorage.setItem('outdatedListingHashes',
-    JSON.stringify(getPersistData()));
+    JSON.stringify(dataToJSON()));
 }
 
 /**
@@ -77,10 +73,10 @@ export function outdateHash(oldHash, newHash) {
     throw new Error('The old hash should not equal the new hash.');
   }
 
-  const prev = prevHashes.get(newHash) || [];
+  const prev = data.prevHashes.get(newHash) || [];
 
-  if (outdated.get(oldHash) !== newHash) {
-    outdated.set(oldHash, newHash);
+  if (data.outdated.get(oldHash) !== newHash) {
+    data.outdated.set(oldHash, newHash);
     prev.push(oldHash);
 
     events.trigger('newHash', {
@@ -89,12 +85,11 @@ export function outdateHash(oldHash, newHash) {
     });
   }
 
-  const oldHashPrevHashes = prevHashes.get(oldHash);
+  const oldHashPrevHashes = data.prevHashes.get(oldHash);
 
-  // (oldHashPrevHashes || []).concat(newHash)
   (oldHashPrevHashes || [])
     .forEach(prevHash => {
-      outdated.set(prevHash, newHash);
+      data.outdated.set(prevHash, newHash);
       prev.push(prevHash);
       events.trigger('newHash', {
         oldHash: prevHash,
@@ -103,7 +98,7 @@ export function outdateHash(oldHash, newHash) {
     });
 
   if (prev.length) {
-    prevHashes.set(newHash, [...new Set(prev)]);
+    data.prevHashes.set(newHash, [...new Set(prev)]);
   }
 
   pruneData();
@@ -122,5 +117,5 @@ export function getNewerHash(hash) {
     throw new Error('Please provide an hash as a non-empty string.');
   }
 
-  return outdated.get(hash) || hash;
+  return data.outdated.get(hash) || hash;
 }

@@ -30,7 +30,8 @@ describe('the outdatedListingHashes utility module', () => {
     expect(getNewerHash(newHash)).to.equal(newerHash);
   });
 
-  it('theres moo on your shoo', () => {
+  it('will properly associate an old hash with a newer hash when it\'s new ' +
+    'hash becomes outdated several times over.', () => {
     const oldHash = 'aaaaa';
     const newHash = 'bbbbb';
     const newerHash = 'cccccc';
@@ -49,3 +50,6 @@ describe('the outdatedListingHashes utility module', () => {
     expect(getNewerHash(newestHash)).to.equal(newestHash);
   });
 });
+
+// todo: write test of prune functionality and that it's being
+// pruned via the outdate call when needed.

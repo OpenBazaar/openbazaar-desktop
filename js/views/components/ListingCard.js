@@ -1,24 +1,24 @@
 import $ from 'jquery';
-import app from '../../../app';
-import loadTemplate from '../../../utils/loadTemplate';
-import { abbrNum } from '../../../utils';
-import { launchEditListingModal } from '../../../utils/modalManager';
-import { isBlocked, isUnblocking, events as blockEvents } from '../../../utils/block';
-import { isHiRez } from '../../../utils/responsive';
-import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../../utils/metrics';
-import { getNewerHash, outdateHash } from '../../../utils/outdatedListingHashes';
-import Listing from '../../../models/listing/Listing';
-import ListingShort from '../../../models/listing/ListingShort';
-import { events as listingEvents } from '../../../models/listing/';
-import baseVw from '../../baseVw';
-import { openSimpleMessage } from '../../../views/modals/SimpleMessage';
-import ListingDetail from '../../modals/listingDetail/Listing';
-import Report from '../../modals/Report';
-import BlockedWarning from '../../modals/BlockedWarning';
-import ReportBtn from '../../components/ReportBtn';
-import BlockBtn from '../../components/BlockBtn';
-import VerifiedMod, { getListingOptions } from '../../components/VerifiedMod';
-import UserLoadingModal from '../../../views/userPage/Loading';
+import app from '../../app';
+import loadTemplate from '../../utils/loadTemplate';
+import { abbrNum } from '../../utils';
+import { launchEditListingModal } from '../../utils/modalManager';
+import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
+import { isHiRez } from '../../utils/responsive';
+import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../utils/metrics';
+import { getNewerHash, outdateHash } from '../../utils/outdatedListingHashes';
+import Listing from '../../models/listing/Listing';
+import ListingShort from '../../models/listing/ListingShort';
+import { events as listingEvents } from '../../models/listing/';
+import baseVw from '../baseVw';
+import { openSimpleMessage } from '../../views/modals/SimpleMessage';
+import ListingDetail from '../modals/listingDetail/Listing';
+import Report from '../modals/Report';
+import BlockedWarning from '../modals/BlockedWarning';
+import ReportBtn from '../components/ReportBtn';
+import BlockBtn from '../components/BlockBtn';
+import VerifiedMod, { getListingOptions } from '../components/VerifiedMod';
+import UserLoadingModal from '../../views/userPage/Loading';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -36,7 +36,23 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    this.model.set('hash', 'QmdoY2bg8fYhoGB8wZBoCaUc45Sjfet6QbFB9zLki6LV2f');
+    // const moo = [
+    //   'QmdoY2bg8fYhoGB8wZBoCaUc45Sjfet6QbFB9zLki6LV2f',
+    //   'zb2rhiNhMhNNTaQHqyPSn8nwFK8ZsCz7hPbbm8U2qD2H1rt4f',
+    //   'zb2rhoFmxLBvUGhwFRJZFjMfpAAzdrv52ehDAWZif3fUddUXd',
+    //   'zb2rhfRpgxvFExbWoM68w19QGkzBBtWJ4Tm3uPR3AWnWapPB9',
+    //   'zb2rhhJouQB1HpEPJUWax9Ru1vkcGq8t41RnAmnyQ1AKiE7e4',
+    //   'zb2rhYVH6QGY45hdsqiW2nvjyYPDC72YQo3t325LmPfvCo4b7',
+    //   'zb2rhhfF7G3NhWKrczqbrp55zgCjXeki8Ew7Auz7xnvEBnCvR',
+    //   'zb2rhgedZtsvdf64fnpLBMbXpkzxm6AwFuqsvBAj3NGAEvx2A',
+    //   'zb2rhXxH6SZwAjTVJF35Xz3Ykfurg62Beu6YaM626Ti3xX2DP',
+    //   'zb2rhhVdCRfagTvkRbknJ6kmjhjw62Pu9g8CsHCshcNdmVKc6',
+    //   'zb2rhd8mSgp2CFocNVbikhLaUGqGcWYhHwrTU1dcZ65WpE6EP',
+    // ];
+
+    // const mooIndex = Math.floor(Math.random() * (moo.length - 1));
+
+    // this.model.set('hash', moo[mooIndex]);
 
     // Any provided profile model or vendor info object will also be passed into the
     // listing detail modal.
@@ -355,7 +371,6 @@ export default class extends baseVw {
 
     const loadListing = () => {
       const listingHash = getNewerHash(hash || this.model.get('hash'));
-      console.log(`the hash cake is ${listingHash}`);
 
       // cancel these two if
       // - this view is removed
@@ -611,7 +626,7 @@ export default class extends baseVw {
   render() {
     super.render();
 
-    loadTemplate('components/listingCard/listingCard.html', (t) => {
+    loadTemplate('components/listingCard.html', (t) => {
       this.$el.html(t({
         ...this.model.toJSON(),
         ownListing: this.ownListing,
