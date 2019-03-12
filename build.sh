@@ -225,10 +225,10 @@ case "$TRAVIS_OS_NAME" in
     mv dist/win64/OpenBazaar2ClientSetup.exe dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
     echo 'Sign the installer'
-    // signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
-    // signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaarClient $PACKAGE_VERSION" dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
-    osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass $ENCRYPTION_SECRET -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
-    osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass $ENCRYPTION_SECRET -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
+    # signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaar $PACKAGE_VERSION" dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
+    # signcode -t http://timestamp.digicert.com -a sha1 -spc .travis/ob1.cert.spc -pvk .travis/ob1.pvk -n "OpenBazaarClient $PACKAGE_VERSION" dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
+    osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass "$CERT_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
+    osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass "$CERT_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
     mv dist/RELEASES dist/win32/RELEASES
 
