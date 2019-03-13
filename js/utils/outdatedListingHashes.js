@@ -1,3 +1,9 @@
+/*
+ * The purpose of this module is so you can associate a new hash with an old hash
+ * so a subsequent fetch of the old hash can be avoided. It's mainly to account
+ * for re-visiting a listing via a search provider that has not updated the hash.
+ * If we already know there's a newer one, we could just bypass the old one.
+ */
 
 import sizeof from 'object-sizeof';
 import { Events } from 'backbone';
@@ -15,6 +21,20 @@ try {
 } catch (e) {
   // pass
 }
+
+// prevHashes will allow us to account for the following scenario:
+//
+// outdated: {
+//   a: 'b',
+// }
+//
+// outdate('b', 'c');
+//
+// outdated: {
+//   a: 'c', // without prev hashes we wouldn't be able to update
+//           // this guy
+//   b: 'c',
+// }
 
 data = {
   prevHashes: new Map(data && data.prevHashes || []),
