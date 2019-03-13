@@ -295,16 +295,36 @@ export default class extends baseVw {
       storeName = `${storeName.slice(0, 40)}…`;
     }
 
-    const setUserLoadingModalFailedState = () => {
+    let ipnsFetch = this.ipnsFetch = null;
+    let ipfsFetch = this.ipfsFetch = null;
+
+    const onFailedListingFetch = xhr => {
+      if (typeof xhr !== 'object') {
+        throw new Error('Please provide the failed xhr.');
+      }
+
       this.userLoadingModal.setState({
         contentText: app.polyglot.t('userPage.loading.failTextListing', {
           listing: `<b>${title}</b>`,
         }),
         isProcessing: false,
       });
+
+      let err = xhr.responseJSON && xhr.responseJSON.reason || xhr.statusText ||
+          'unknown error';
+      // Consolidate and remove specific data from no link errors.
+      if (err.startsWith('no link named')) err = 'no link named under hash';
+      endAjaxEvent('Listing_LoadFromCard', {
+        ...segmentation,
+        errors: err,
+      });
     };
 
     const showListingDetail = () => {
+      endAjaxEvent('Listing_LoadFromCard', {
+        ...segmentation,
+      });
+
       const listingDetail = new ListingDetail({
         model: this.fullListing,
         profile: this.options.profile,
@@ -316,7 +336,11 @@ export default class extends baseVw {
       }).render()
         .open();
 
-      const onListingDetailClose = () => app.router.navigate(routeOnOpen);
+      const onListingDetailClose = () => {
+        app.router.navigate(routeOnOpen);
+        if (ipfsFetch) ipfsFetch.abort();
+        ipnsFetch.abort();
+      };
 
       listingDetail.purchaseModal
         .progress(getPurchaseE => {
@@ -363,6 +387,8 @@ export default class extends baseVw {
         throw new Error('Please provide an newHash as a non-empty string.');
       }
 
+      recordEvent('Lisitng_OutdatedHashFromCard', segmentation);
+
       this.fullListing.set(this.fullListing.parse(listingData));
 
       // push mapping to outdatedHashes collection
@@ -371,12 +397,6 @@ export default class extends baseVw {
 
     const loadListing = () => {
       const listingHash = getNewerHash(hash || this.model.get('hash'));
-
-      // cancel these two if
-      // - this view is removed
-      // - listing detail closed
-      let ipnsFetch = null;
-      let ipfsFetch = null;
 
       if (listingHash && this.ownerGuid !== app.profile.id) {
         ipfsFetch = this.fullListing.fetch({
@@ -393,7 +413,6 @@ export default class extends baseVw {
         ipnsFetch = this.fullListing.fetch({ showErrorOnFetchFail: false });
       }
 
-      // <user loading modal funk>
       if (this.userLoadingModal) this.userLoadingModal.remove();
       this.userLoadingModal = new UserLoadingModal({
         initialState: {
@@ -422,7 +441,6 @@ export default class extends baseVw {
 
       this.userLoadingModal.render()
         .open();
-      // END: <user loading modal funk>
 
       ipnsFetch.done((data, textStatus, xhr) => {
         if (xhr.statusText === 'abort' || this.isRemoved()) return;
@@ -453,7 +471,7 @@ export default class extends baseVw {
           ['pending', 'resolved'].includes(ipfsFetch.state())
         ) return;
 
-        setUserLoadingModalFailedState();
+        onFailedListingFetch(xhr);
       });
 
       if (ipfsFetch) {
@@ -462,7 +480,7 @@ export default class extends baseVw {
           showListingDetail();
         }).fail(xhr => {
           if (xhr.statusText === 'abort') return;
-          setUserLoadingModalFailedState();
+          onFailedListingFetch(xhr);
         });
       }
     };
@@ -620,6 +638,8 @@ export default class extends baseVw {
     if (this.destroyRequest) this.destroyRequest.abort();
     $(document).off('click', this.boundDocClick);
     if (this.userLoadingModal) this.userLoadingModal.remove();
+    if (this.ipnsFetch) this.ipnsFetch.abort();
+    if (this.ipfsFetch) this.ipfsFetch.abort();
     super.remove();
   }
 
