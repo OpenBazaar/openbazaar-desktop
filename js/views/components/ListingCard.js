@@ -378,7 +378,7 @@ export default class extends baseVw {
       let ipnsFetch = null;
       let ipfsFetch = null;
 
-      if (listingHash) {
+      if (listingHash && this.ownerGuid !== app.profile.id) {
         ipfsFetch = this.fullListing.fetch({
           hash: listingHash,
           showErrorOnFetchFail: false,
