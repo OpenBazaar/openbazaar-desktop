@@ -36,24 +36,6 @@ export default class extends baseVw {
       throw new Error('Please provide a ListingShort model.');
     }
 
-    // const moo = [
-    //   'QmdoY2bg8fYhoGB8wZBoCaUc45Sjfet6QbFB9zLki6LV2f',
-    //   'zb2rhiNhMhNNTaQHqyPSn8nwFK8ZsCz7hPbbm8U2qD2H1rt4f',
-    //   'zb2rhoFmxLBvUGhwFRJZFjMfpAAzdrv52ehDAWZif3fUddUXd',
-    //   'zb2rhfRpgxvFExbWoM68w19QGkzBBtWJ4Tm3uPR3AWnWapPB9',
-    //   'zb2rhhJouQB1HpEPJUWax9Ru1vkcGq8t41RnAmnyQ1AKiE7e4',
-    //   'zb2rhYVH6QGY45hdsqiW2nvjyYPDC72YQo3t325LmPfvCo4b7',
-    //   'zb2rhhfF7G3NhWKrczqbrp55zgCjXeki8Ew7Auz7xnvEBnCvR',
-    //   'zb2rhgedZtsvdf64fnpLBMbXpkzxm6AwFuqsvBAj3NGAEvx2A',
-    //   'zb2rhXxH6SZwAjTVJF35Xz3Ykfurg62Beu6YaM626Ti3xX2DP',
-    //   'zb2rhhVdCRfagTvkRbknJ6kmjhjw62Pu9g8CsHCshcNdmVKc6',
-    //   'zb2rhd8mSgp2CFocNVbikhLaUGqGcWYhHwrTU1dcZ65WpE6EP',
-    // ];
-
-    // const mooIndex = Math.floor(Math.random() * (moo.length - 1));
-
-    // this.model.set('hash', moo[mooIndex]);
-
     // Any provided profile model or vendor info object will also be passed into the
     // listing detail modal.
     if (opts.profile) {
