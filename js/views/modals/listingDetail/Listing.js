@@ -521,13 +521,10 @@ export default class extends BaseModal {
   }
 
   outdateHash() {
-    // translate me dog
-    const tip = `
-      <p>
-        You are viewing an outdated version of the listing. In order to purchase
-        this listing, please <a class="js-reloadOutdated">load the latest version</a>.
-      </p>
-    `;
+    const tip = app.polyglot.t('listingDetail.errors.outdatedHash', {
+      reloadLink: '<a class="js-reloadOutdated">' +
+        `${app.polyglot.t('listingDetail.errors.reloadOutdatedHash')}<a>`,
+    });
     this.getCachedEl('.js-purchaseErrorWrap').html(
       this.purchaseErrorT({ tip })
     );

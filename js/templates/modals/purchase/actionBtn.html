@@ -14,14 +14,9 @@
       );
 
       if (showOutdatedHashErr) {
-        // TODO: trans don't be late
-        const tip = `
-          <p>
-            You are viewing an outdated version of the listing. In order to purchase
-            the listing, please <a class="js-reloadOutdated">load the latest version</a>
-            and re-start the purchase process.
-          </p>
-        `;
+        const tip = app.polyglot.t('purchase.errors.outdatedHash', {
+          reloadLink: '<a class="js-reloadOutdated">' + `${app.polyglot.t('purchase.errors.reloadOutdatedHash')}<a>`,
+        });
         print(`<div class="txRgt rowSm">${ob.purchaseErrT({ tip })}</div>`);
       }
      } else if (ob.phase ==='pending') { %>

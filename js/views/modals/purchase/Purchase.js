@@ -424,20 +424,6 @@ export default class extends BaseModal {
     this.actionBtn.setState({ outdatedHash: true });
   }
 
-  // onClickReloadOutdated() {
-  //   let defaultPrevented = false;
-
-  //   this.trigger('clickReloadOutdated', {
-  //     preventDefault: () => (defaultPrevented = true),
-  //   });
-
-  //   setTimeout(() => {
-  //     if (!defaultPrevented) {
-  //       Backbone.history.loadUrl();
-  //     }
-  //   });
-  // }
-
   purchaseListing() {
     // Clear any old errors.
     const allErrContainers = this.$('div[class $="-errors"]');
