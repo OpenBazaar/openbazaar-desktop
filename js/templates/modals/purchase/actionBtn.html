@@ -14,8 +14,8 @@
       );
 
       if (showOutdatedHashErr) {
-        const tip = app.polyglot.t('purchase.errors.outdatedHash', {
-          reloadLink: '<a class="js-reloadOutdated">' + `${app.polyglot.t('purchase.errors.reloadOutdatedHash')}<a>`,
+        const tip = ob.polyT('purchase.errors.outdatedHash', {
+          reloadLink: '<a class="js-reloadOutdated">' + `${ob.polyT('purchase.errors.reloadOutdatedHash')}</a>`,
         });
         print(`<div class="txRgt rowSm">${ob.purchaseErrT({ tip })}</div>`);
       }
