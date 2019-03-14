@@ -310,7 +310,7 @@ export default class extends BaseModal {
 
   setModelQuantity(quantity, cur = this.cryptoAmountCurrency) {
     if (this.listing.isCrypto && (typeof cur !== 'string' || !cur)) {
-      throw new Error('Please provide the currency code as a string.');
+      throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
 
     let mdQuantity = quantity;
