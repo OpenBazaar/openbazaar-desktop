@@ -49,11 +49,11 @@ export function updateReady(opts = {}) {
     buttons: [{
       text: app.polyglot.t('update.cancel'),
       fragment: 'cancelInstall',
-      className: 'txU',
+      className: 'txU btnFlx',
     }, {
       text: app.polyglot.t('update.install'),
       fragment: 'installUpdate',
-      className: 'btn clrP clrBAttGrad clrBrDec1 clrTOnEmph',
+      className: 'btnFlx clrP clrBAttGrad clrBrDec1 clrTOnEmph',
     }],
   }).on('click-installUpdate', () => ipcRenderer.send('installUpdate'))
     .on('click-cancelInstall', () => updateReadyDialog.close())
