@@ -81,15 +81,11 @@ export default class extends BaseOrder {
     contract.buyerOrder.items.forEach((item, index) => {
       const listing = contract.vendorListings[index];
 
-      // standardize the quantity field
-      item.quantity = item.quantity === 0 ?
-        item.quantity64 : item.quantity;
-
       if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
         const coinDivisibility = listing.metadata
           .coinDivisibility;
 
-        item.quantity = item.quantity / coinDivisibility;
+        item.quantity = item.quantity64 / coinDivisibility;
       }
     });
 
