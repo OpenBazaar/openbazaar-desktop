@@ -77,9 +77,13 @@ export default class extends BaseOrder {
     return false;
   }
 
-  convertCryptoQuantity(contract = {}) {
+  convertQuantity(contract = {}) {
     contract.buyerOrder.items.forEach((item, index) => {
       const listing = contract.vendorListings[index];
+
+      // standardize the quantity field
+      item.quantity = item.quantity === 0 ?
+        item.quantity64 : item.quantity;
 
       if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
         const coinDivisibility = listing.metadata
@@ -120,7 +124,7 @@ export default class extends BaseOrder {
         integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
           paymentCoin);
 
-      response.buyerContract = this.convertCryptoQuantity(response.buyerContract);
+      response.buyerContract = this.convertQuantity(response.buyerContract);
     }
 
     if (response.vendorContract) {
@@ -133,6 +137,8 @@ export default class extends BaseOrder {
       response.vendorContract.buyerOrder.payment.amount =
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
           paymentCoin);
+
+      response.vendorContract = this.convertQuantity(response.vendorContract);
     }
 
     if (response.resolution) {
