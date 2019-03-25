@@ -15,5 +15,13 @@
       <div class="rowTn txB"><%= introLine %></div>
       <div><%= ob.claim || ob.polyT('orderDetail.summaryTab.disputeStarted.noReasonProvided') %></div>
     </div>
+    <% if (ob.showResolveButton) { %>
+      <div class="col">
+          <%= ob.processingButton({
+            className: `btn clrBAttGrad clrBrDec1 clrTOnEmph tx5b js-resolveDispute`,
+            btnText: ob.polyT('orderDetail.summaryTab.disputeStarted.resolveBtn')
+          }) %>
+      </div>
+    <% } %>    
   </div>
 </div>

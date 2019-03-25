@@ -11,17 +11,6 @@ const defaultSearchProviders = [
     torlistings: 'http://my7nrnmkscxr32zo.onion/listings/search',
     locked: true,
   },
-  {
-    id: 'blockbooth',
-    name: 'Block Booth',
-    logo: '../imgs/blockboothLogo.png',
-    localLogo: '../imgs/blockboothLogo.png',
-    search: '',
-    listings: 'https://search.blockbooth.com/api/',
-    torsearch: 'http://vnjzhvm5gkctyldn.onion/api/',
-    torlistings: 'http://vnjzhvm5gkctyldn.onion/api/',
-    locked: true,
-  },
 ];
 
 export default defaultSearchProviders;
