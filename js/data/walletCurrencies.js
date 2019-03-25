@@ -68,12 +68,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/address/${address}` :
-        `https://blockdozer.com/address/${address}`
+        `https://blockchair.com/bitcoin-cash/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tBCC/tx/${txid}` :
-        `https://blockdozer.com/tx/${txid}`
+        `https://blockchair.com/bitcoin-cash/transaction/${txid}`
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
@@ -90,12 +90,12 @@ const currencies = [
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
         `https://www.blocktrail.com/tLTC/address/${address}` :
-        `https://live.blockcypher.com/ltc/address/${address}`
+        `https://blockchair.com/litecoin/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
         `https://chain.so/tx/LTCTEST/${txid}` :
-        `https://live.blockcypher.com/ltc/tx/${txid}`
+        `https://blockchair.com/litecoin/transaction/${txid}`
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 2.5,
