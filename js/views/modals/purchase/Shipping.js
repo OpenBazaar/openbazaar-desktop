@@ -161,7 +161,9 @@ export default class extends baseView {
     this.listenTo(this.shippingOptions, 'shippingOptionSelected',
         opts => (this.selectedOption = opts));
 
-    this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
+    if (userAddresses.length) {
+      this.$('.js-shippingOptionsWrapper').append(this.shippingOptions.render().el);
+    }
 
     return this;
   }
