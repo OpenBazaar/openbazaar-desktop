@@ -330,7 +330,8 @@
     // see styleSheet.html for example usage.
     // use for buttons in the new 'flex' style with more padding and use css flex.
     @extend .btn;
-    padding: 25px;
+    min-height: 48px;
+    height: auto;
     border-radius: 0px;
     border-width: 1px;
     border-style: solid;
@@ -355,8 +356,6 @@
     .btnFlx {
       border-radius: 0;
       border-top: none;
-      padding: 0;
-      height: 48px;
       display: inline-flex;
       align-items: center;
       font-weight: 400;
