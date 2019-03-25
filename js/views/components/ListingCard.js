@@ -333,8 +333,6 @@ export default class extends baseVw {
               listingDetail.render();
               purchaseModal.remove();
             });
-          } else if (getPurchaseE.type === ListingDetail.PURCHASE_MODAL_DESTROY) {
-            // stoplistening
           }
         });
 
