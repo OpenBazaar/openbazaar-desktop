@@ -128,7 +128,7 @@ export function outdateHash(oldHash, newHash) {
  * Before fetching a listing via a hash, call this method to see if a newer hash
  * is available.
  *
- * @param {string} hash - The hash you want to use to a feetch a listing with.
+ * @param {string} hash - The hash you want to use to a fetch a listing with.
  * @returns {string} If there is a newer hash associated with the hash you pass in,
  *   it will be returned. Otherwise, the hash you passed in will be returned.
  */
