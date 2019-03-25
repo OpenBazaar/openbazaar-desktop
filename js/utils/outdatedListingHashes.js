@@ -61,10 +61,6 @@ const pruneData = () => {
   }
 };
 
-setTimeout(() => {
-  outdateHash('QmdoY2bg8fYhoGB8wZBoCaUc45Sjfet6QbFB9zLki6LV2f', 'milly');
-}, 5000);
-
 /**
  * Will persist the mapping data to localStorage. For performance, the idea is to call
  * this method infrequently (maybe just on app close).
