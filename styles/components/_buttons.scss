@@ -336,10 +336,15 @@
     border-width: 1px;
     border-style: solid;
     flex-grow: 1;
+    flex-basis: 0; // calculate the width independent of the content
     margin: 0 -1px -1px -1px;
 
     & + .btnFlx {
       margin-left: 0;
+    }
+
+    &:hover, &:focus {
+      z-index: 1; // make sure the themed border between buttons is stacked to be visible
     }
   }
 

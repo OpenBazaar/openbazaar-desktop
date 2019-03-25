@@ -550,7 +550,6 @@ input[type=range][class~="clrS"] {
 
   &:hover, &:focus {
     @include borderColor($border, $border3);
-    z-index: 1;
   }
 
   &.underlineOnly:hover,
