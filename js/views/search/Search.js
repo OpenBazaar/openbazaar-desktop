@@ -214,8 +214,12 @@ export default class extends baseVw {
     this.processTerm(this.term, true);
   }
 
+  providerIsADefault(id) {
+    return !!_.findWhere(defaultSearchProviders, { id });
+  }
+
   deleteProvider(md = this.sProvider) {
-    if (md.get('locked')) {
+    if (this.providerIsADefault(md.id)) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
       recordEvent('Discover_DeleteLocked', {
         provider: md.get('name') || 'unknown',
@@ -328,7 +332,7 @@ export default class extends baseVw {
               }
             }
             // update the defaults but do not save them
-            if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
+            if (!this.providerIsADefault(this.sProvider.id)) {
               this.sProvider.save(update, { urlTypes });
             } else {
               this.sProvider.set(update, { urlTypes });
@@ -537,7 +541,7 @@ export default class extends baseVw {
         filterParams: this.filterParams,
         errTitle,
         errMsg,
-        providerLocked: this.sProvider.get('locked'),
+        providerLocked: this.providerIsADefault(this.sProvider.id),
         isQueryProvider: this.queryProvider,
         isDefaultProvider,
         emptyData,
