@@ -20,12 +20,12 @@ const currencies = [
     url: 'https://bitcoin.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tBTC/address/${address}` :
+        `https://chain.so/address/BTCTEST/${address}` :
         `https://blockchair.com/bitcoin/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tBTC/tx/${txid}` :
+        `https://chain.so/tx/BTCTEST/${txid}` :
         `https://blockchair.com/bitcoin/transaction/${txid}`
     ),
     isValidAddress: address => {
@@ -67,12 +67,12 @@ const currencies = [
     url: 'https://bitcoincash.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tBCC/address/${address}` :
+        `https://explorer.bitcoin.com/tbch/address/bchtest:${address}` :
         `https://blockchair.com/bitcoin-cash/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tBCC/tx/${txid}` :
+        `https://explorer.bitcoin.com/tbch/tx/${txid}` :
         `https://blockchair.com/bitcoin-cash/transaction/${txid}`
     ),
     supportsEscrowTimeout: true,
@@ -89,7 +89,7 @@ const currencies = [
     url: 'https://litecoin.org/',
     getBlockChainAddressUrl: (address, isTestnet) => (
       isTestnet ?
-        `https://www.blocktrail.com/tLTC/address/${address}` :
+        `https://chain.so/address/LTCTEST/${address}` :
         `https://blockchair.com/litecoin/address/${address}`
     ),
     getBlockChainTxUrl: (txid, isTestnet) => (
