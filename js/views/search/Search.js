@@ -52,8 +52,7 @@ export default class extends baseVw {
     // in the future there may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
-    this.sProvider = app.searchProviders[`default${this.torString}Provider`];
-    this.queryProvider = false;
+    this.sProvider = this.currentDefaultProvider;
 
     // if the  provider returns a bad URL, the user must select a provider
     if (is.not.url(this.providerUrl)) {
@@ -70,26 +69,23 @@ export default class extends baseVw {
     const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
 
-    // if a url with parameters was in the query in, use the parameters in it instead.
+    // if a url with parameters was in the query, use the parameters in it instead.
     if (queryParams.get('providerQ')) {
       const subURL = new URL(queryParams.get('providerQ'));
       queryParams = subURL.searchParams;
       const base = `${subURL.origin}${subURL.pathname}`;
-      const matchedProvider =
-        app.searchProviders.filter(p =>
-          base === p.get('listings') || base === p.get('torlistings'));
       /* if the query provider doesn't exist, create a temporary provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
          clear url if it has one. The opposite is also true.
        */
-      if (!matchedProvider.length) {
+      const matchedProvider = app.searchProviders.getProviderByURL(base);
+      if (!matchedProvider) {
         const queryOpts = {};
         queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
-        this.queryProvider = true;
         this.sProvider = new ProviderMd(queryOpts);
       } else {
-        this.sProvider = matchedProvider[0];
+        this.sProvider = matchedProvider;
       }
     }
 
@@ -166,11 +162,6 @@ export default class extends baseVw {
     return currentProvider && currentProvider.get(this.urlType);
   }
 
-  getCurrentProviderID() {
-    // if the user must select a default, or the provider is from the query, return no id
-    return this.queryProvider || !this.currentDefaultProvider ? '' : this.sProvider.id;
-  }
-
   /**
    * This will create a url with the term and other query parameters
    * @param {string} term - the term to search for
@@ -206,7 +197,6 @@ export default class extends baseVw {
       throw new Error('The provider must be in the collection.');
     }
     this.sProvider = md;
-    this.queryProvider = false;
     this.serverPage = 0;
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
     this.processTerm(this.term, true);
@@ -261,8 +251,10 @@ export default class extends baseVw {
   }
 
   addQueryProvider() {
-    if (this.queryProvider) app.searchProviders.add(this.sProvider);
-    this.activateProvider(this.sProvider);
+    if (!app.searchProviders.getProviderByURL(this.sProvider.get(this.urlType))) {
+      app.searchProviders.add(this.sProvider);
+      this.render();
+    }
   }
 
   clickAddQueryProvider() {
@@ -380,7 +372,7 @@ export default class extends baseVw {
         text: app.polyglot.t('search.useDefault',
           {
             term: this.term,
-            defaultProvider: app.searchProviders[`default${this.torString}Provider`],
+            defaultProvider: this.currentDefaultProvider,
           }),
         fragment: 'useDefault',
       });
@@ -535,7 +527,7 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.providerIsADefault(this.sProvider.id),
-        isQueryProvider: this.queryProvider,
+        isExistingProvider: app.searchProviders.getProviderByURL(this.sProvider.get(this.urlType)),
         isDefaultProvider: this.sProvider === this.currentDefaultProvider,
         emptyData,
         ...state,
@@ -568,7 +560,7 @@ export default class extends baseVw {
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
       urlType: this.urlType,
-      currentID: this.getCurrentProviderID(),
+      currentID: this.sProvider.id,
       selecting: !this.currentDefaultProvider,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));

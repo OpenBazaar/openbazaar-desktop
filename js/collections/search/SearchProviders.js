@@ -41,6 +41,16 @@ export default class extends Collection {
     this.setProvider(md, true);
   }
 
+  getProviderByURL(url) {
+    const tempUrl = new URL(url);
+    const trimSlash = (str) => str.replace(/\/$/, '');
+    const base = trimSlash(`${tempUrl.origin}${tempUrl.pathname}`);
+    const matches = this.models.find(p => base === trimSlash(p.get('listings')) ||
+      base === trimSlash(p.get('torlistings')));
+
+    return matches;
+  }
+
   setProvider(md, tor = false) {
     if (!md instanceof Provider) {
       throw new Error('Please provide a model as a Provider instance.');
