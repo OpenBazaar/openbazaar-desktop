@@ -47,6 +47,8 @@ export default class extends baseVw {
         'Music',
       ];
 
+    this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+
     // in the future there may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
@@ -57,7 +59,6 @@ export default class extends baseVw {
     if (is.not.url(this.providerUrl)) {
       // use the first default temporarily to construct the tempUrl below
       this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
-      this.mustSelectDefault = true;
       recordEvent('Discover_InvalidDefaultProvider', { url: this.providerUrl });
     }
 
@@ -146,12 +147,12 @@ export default class extends baseVw {
     };
   }
 
-  get usingOriginal() {
-    return this.sProvider.id === defaultSearchProviders[0].id;
+  get currentDefaultProvider() {
+    return app.searchProviders.defaultProvider;
   }
 
-  get usingTor() {
-    return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+  get usingOriginal() {
+    return this.sProvider.id === defaultSearchProviders[0].id;
   }
 
   get torString() {
@@ -167,7 +168,7 @@ export default class extends baseVw {
 
   getCurrentProviderID() {
     // if the user must select a default, or the provider is from the query, return no id
-    return this.queryProvider || this.mustSelectDefault ? '' : this.sProvider.id;
+    return this.queryProvider || !this.currentDefaultProvider ? '' : this.sProvider.id;
   }
 
   /**
@@ -207,10 +208,7 @@ export default class extends baseVw {
     this.sProvider = md;
     this.queryProvider = false;
     this.serverPage = 0;
-    if (this.mustSelectDefault) {
-      this.mustSelectDefault = false;
-      this.makeDefaultProvider();
-    }
+    if (!this.currentDefaultProvider) this.makeDefaultProvider();
     this.processTerm(this.term, true);
   }
 
@@ -277,95 +275,93 @@ export default class extends baseVw {
 
     this.setState({
       fetching: true,
-      selecting: this.mustSelectDefault,
+      selecting: !this.currentDefaultProvider,
       data: '',
       searchUrl,
       xhr: '',
     });
 
-    if (!this.mustSelectDefault) {
-      // query the search provider
-      this.callSearch = $.get({
-        url: searchUrl,
-        dataType: 'json',
-      })
-        .done((pData, status, xhr) => {
-          let data = JSON.stringify(pData, (key, val) => {
-            // sanitize the data from any dangerous characters
-            if (typeof val === 'string') {
-              return sanitizeHtml(val, {
-                allowedTags: [],
-                allowedAttributes: [],
-              });
-            }
-            return val;
-          });
-          data = JSON.parse(data);
-          // make sure minimal data is present
-          if (data.name && data.links) {
-            // if data about the provider is received, update the model
-            const update = { name: data.name };
-            const urlTypes = [];
-            if (data.logo && is.url(data.logo)) update.logo = data.logo;
-            if (data.links) {
-              if (is.url(data.links.search)) {
-                update.search = data.links.search;
-                urlTypes.push('search');
-              }
-              if (is.url(data.links.listings)) {
-                update.listings = data.links.listings;
-                urlTypes.push('listings');
-              }
-              if (is.url(data.links.reports)) {
-                update.reports = data.links.reports;
-                urlTypes.push('reports');
-              }
-              if (data.links.tor) {
-                if (is.url(data.links.tor.search)) {
-                  update.torsearch = data.links.tor.search;
-                  urlTypes.push('torsearch');
-                }
-                if (is.url(data.links.tor.listings)) {
-                  update.torlistings = data.links.tor.listings;
-                  urlTypes.push('torlistings');
-                }
-              }
-            }
-            // update the defaults but do not save them
-            if (!this.providerIsADefault(this.sProvider.id)) {
-              this.sProvider.save(update, { urlTypes });
-            } else {
-              this.sProvider.set(update, { urlTypes });
-            }
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data,
-              searchUrl,
-              xhr: '',
-            });
-          } else {
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data: '',
-              searchUrl,
-              xhr,
+    // query the search provider
+    this.callSearch = $.get({
+      url: searchUrl,
+      dataType: 'json',
+    })
+      .done((pData, status, xhr) => {
+        let data = JSON.stringify(pData, (key, val) => {
+          // sanitize the data from any dangerous characters
+          if (typeof val === 'string') {
+            return sanitizeHtml(val, {
+              allowedTags: [],
+              allowedAttributes: [],
             });
           }
-        })
-        .fail((xhr) => {
-          if (xhr.statusText !== 'abort') {
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data: '',
-              searchUrl,
-              xhr,
-            });
-          }
+          return val;
         });
-    }
+        data = JSON.parse(data);
+        // make sure minimal data is present
+        if (data.name && data.links) {
+          // if data about the provider is received, update the model
+          const update = { name: data.name };
+          const urlTypes = [];
+          if (data.logo && is.url(data.logo)) update.logo = data.logo;
+          if (data.links) {
+            if (is.url(data.links.search)) {
+              update.search = data.links.search;
+              urlTypes.push('search');
+            }
+            if (is.url(data.links.listings)) {
+              update.listings = data.links.listings;
+              urlTypes.push('listings');
+            }
+            if (is.url(data.links.reports)) {
+              update.reports = data.links.reports;
+              urlTypes.push('reports');
+            }
+            if (data.links.tor) {
+              if (is.url(data.links.tor.search)) {
+                update.torsearch = data.links.tor.search;
+                urlTypes.push('torsearch');
+              }
+              if (is.url(data.links.tor.listings)) {
+                update.torlistings = data.links.tor.listings;
+                urlTypes.push('torlistings');
+              }
+            }
+          }
+          // update the defaults but do not save them
+          if (!this.providerIsADefault(this.sProvider.id)) {
+            this.sProvider.save(update, { urlTypes });
+          } else {
+            this.sProvider.set(update, { urlTypes });
+          }
+          this.setState({
+            fetching: false,
+            selecting: false,
+            data,
+            searchUrl,
+            xhr: '',
+          });
+        } else {
+          this.setState({
+            fetching: false,
+            selecting: false,
+            data: '',
+            searchUrl,
+            xhr,
+          });
+        }
+      })
+      .fail((xhr) => {
+        if (xhr.statusText !== 'abort') {
+          this.setState({
+            fetching: false,
+            selecting: false,
+            data: '',
+            searchUrl,
+            xhr,
+          });
+        }
+      });
   }
 
   showSearchError(xhr = {}) {
@@ -576,7 +572,7 @@ export default class extends baseVw {
     this.searchProviders = this.createChild(Providers, {
       urlType: this.urlType,
       currentID: this.getCurrentProviderID(),
-      selecting: this.mustSelectDefault,
+      selecting: !this.currentDefaultProvider,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
