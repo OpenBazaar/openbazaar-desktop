@@ -49,16 +49,20 @@ export default class extends baseVw {
 
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
-    // in the future there may be more possible types
+    // In the future there may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
 
+    // If there is only one provider and it isn't the default, just set it to be such.
+    if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
+      app.searchProviders[`default${this.torString}Provider`] =
+        app.searchProviders.get(defaultSearchProviders[0].id);
+    }
     this.sProvider = this.currentDefaultProvider;
 
-    // if the  provider returns a bad URL, the user must select a provider
-    if (is.not.url(this.providerUrl)) {
-      // use the first default temporarily to construct the tempUrl below
+    // if the  provider returns a bad URL, change to a known good default provider
+    if (is.not.url(this.sProvider.get(this.urlType))) {
       this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
-      recordEvent('Discover_InvalidDefaultProvider', { url: this.providerUrl });
+      recordEvent('Discover_InvalidDefaultProvider', { url: this.sProvider.get(this.urlType) });
     }
 
     if (options.query) {
@@ -66,7 +70,7 @@ export default class extends baseVw {
       recordEvent('Discover_Search', { type: 'addressBar' });
     }
 
-    const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
+    const tempUrl = new URL(`${this.sProvider.get(this.urlType)}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
 
     // if a url with parameters was in the query, use the parameters in it instead.
@@ -74,7 +78,7 @@ export default class extends baseVw {
       const subURL = new URL(queryParams.get('providerQ'));
       queryParams = subURL.searchParams;
       const base = `${subURL.origin}${subURL.pathname}`;
-      /* if the query provider doesn't exist, create a temporary provider model for it.
+      /* if the query provider doesn't exist, create a provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
          clear url if it has one. The opposite is also true.
@@ -162,13 +166,6 @@ export default class extends baseVw {
     return this.usingTor ? 'Tor' : '';
   }
 
-  get providerUrl() {
-    // if a provider was created by the address bar query, use it instead.
-    // return false if no provider is available
-    const currentProvider = this.sProvider;
-    return currentProvider && currentProvider.get(this.urlType);
-  }
-
   /**
    * This will create a url with the term and other query parameters
    * @param {string} term - the term to search for
@@ -187,7 +184,8 @@ export default class extends baseVw {
     if (!reset) filters = { ...filters, ...this.filterParams, ...formData, ...this.formOverrides };
     this.formOverrides = {};
     filters = filters ? `&${$.param(filters, true)}` : '';
-    const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
+    const providerUrl = this.sProvider.get(this.urlType);
+    const newURL = new URL(`${providerUrl}?${query}${network}${sortBy}${page}${filters}`);
     this.callSearchProvider(newURL);
   }
 
@@ -274,7 +272,6 @@ export default class extends baseVw {
 
     this.setState({
       fetching: true,
-      selecting: !this.currentDefaultProvider,
       data: '',
       searchUrl,
       xhr: '',
@@ -335,7 +332,6 @@ export default class extends baseVw {
           }
           this.setState({
             fetching: false,
-            selecting: false,
             data,
             searchUrl,
             xhr: '',
@@ -343,7 +339,6 @@ export default class extends baseVw {
         } else {
           this.setState({
             fetching: false,
-            selecting: false,
             data: '',
             searchUrl,
             xhr,
@@ -354,7 +349,6 @@ export default class extends baseVw {
         if (xhr.statusText !== 'abort') {
           this.setState({
             fetching: false,
-            selecting: false,
             data: '',
             searchUrl,
             xhr,
@@ -516,16 +510,13 @@ export default class extends baseVw {
     let errTitle;
     let errMsg;
 
-    // check to see if the call to the provider failed, or returned an empty result
-    const emptyData = $.isEmptyObject(data);
-
     if (state.xhr) {
       errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: state.searchUrl });
       const failReason = state.xhr.responseJSON ? state.xhr.responseJSON.reason : '';
       errMsg = failReason ?
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
-
+    
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
@@ -535,8 +526,8 @@ export default class extends baseVw {
         errMsg,
         providerLocked: this.providerIsADefault(this.sProvider.id),
         isExistingProvider: this.doesProviderURLExist(this.sProvider),
-        isDefaultProvider: this.sProvider === this.currentDefaultProvider,
-        emptyData,
+        showMakeDefault: this.sProvider !== this.currentDefaultProvider,
+        emptyData: $.isEmptyObject(data),
         ...state,
         ...this.sProvider,
         ...data,

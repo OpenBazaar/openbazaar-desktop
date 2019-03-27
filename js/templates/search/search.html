@@ -12,7 +12,7 @@
           <% if (!ob.providerLocked) { %>
             <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
           <% } %>
-          <% if (!ob.isDefaultProvider) { %>
+          <% if (ob.showMakeDefault) { %>
             <div>
               <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
                 <%= ob.polyT('search.makeDefaultBtn') %>
@@ -168,7 +168,5 @@
     <% } %>
   </div>
 <% } else { %>
-  <% if (!ob.selecting) { %>
-    <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
-  <% } %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
 <% } %>
