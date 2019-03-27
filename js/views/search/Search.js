@@ -148,7 +148,7 @@ export default class extends baseVw {
   }
 
   get currentDefaultProvider() {
-    return app.searchProviders.defaultProvider;
+    return app.searchProviders[`default${this.torString}Provider`];
   }
 
   get usingOriginal() {
@@ -208,7 +208,7 @@ export default class extends baseVw {
     this.sProvider = md;
     this.queryProvider = false;
     this.serverPage = 0;
-    if (!this.currentDefaultProvider) this.makeDefaultProvider();
+    if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
     this.processTerm(this.term, true);
   }
 
@@ -243,17 +243,17 @@ export default class extends baseVw {
     this.deleteProvider();
   }
 
-  makeDefaultProvider() {
-    if (app.searchProviders.indexOf(this.sProvider) === -1) {
+  makeDefaultProvider(md) {
+    if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider to be made the default must be in the collection.');
     }
 
-    app.searchProviders[`default${this.torString}Provider`] = this.sProvider;
-    this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
+    app.searchProviders[`default${this.torString}Provider`] = md;
+    this.render();
   }
 
   clickMakeDefaultProvider() {
-    this.makeDefaultProvider();
+    this.makeDefaultProvider(this.sProvider);
     recordEvent('Discover_MakeDefaultProvider', {
       provider: this.sProvider.get('name') || 'unknown',
       url: this.sProvider.get('listings'),
@@ -527,9 +527,6 @@ export default class extends baseVw {
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
 
-    const isDefaultProvider =
-      this.sProvider === app.searchProviders[`default${this.torString}Provider`];
-
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
@@ -539,7 +536,7 @@ export default class extends baseVw {
         errMsg,
         providerLocked: this.providerIsADefault(this.sProvider.id),
         isQueryProvider: this.queryProvider,
-        isDefaultProvider,
+        isDefaultProvider: this.sProvider === this.currentDefaultProvider,
         emptyData,
         ...state,
         ...this.sProvider,
