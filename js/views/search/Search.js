@@ -143,6 +143,13 @@ export default class extends baseVw {
     };
   }
 
+  doesProviderURLExist(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+    return !!app.searchProviders.getProviderByURL(md.get(this.urlType));
+  }
+
   get currentDefaultProvider() {
     return app.searchProviders[`default${this.torString}Provider`];
   }
@@ -251,7 +258,7 @@ export default class extends baseVw {
   }
 
   addQueryProvider() {
-    if (!app.searchProviders.getProviderByURL(this.sProvider.get(this.urlType))) {
+    if (!this.doesProviderURLExist(this.sProvider)) {
       app.searchProviders.add(this.sProvider);
       this.render();
     }
@@ -527,7 +534,7 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.providerIsADefault(this.sProvider.id),
-        isExistingProvider: app.searchProviders.getProviderByURL(this.sProvider.get(this.urlType)),
+        isExistingProvider: this.doesProviderURLExist(this.sProvider),
         isDefaultProvider: this.sProvider === this.currentDefaultProvider,
         emptyData,
         ...state,
@@ -569,7 +576,8 @@ export default class extends baseVw {
     if (this.suggestions) this.suggestions.remove();
     this.suggestions = this.createChild(Suggestions, {
       initialState: {
-        suggestions: Array.isArray(data.suggestions) ? data.suggestions : this.defaultSuggestions,
+        suggestions: data && Array.isArray(data.suggestions) ?
+          data.suggestions : this.defaultSuggestions,
       },
     });
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
