@@ -1,6 +1,6 @@
 import app from '../../app';
 import BaseVw from '../baseVw';
-import ListingCard from '../ListingCard';
+import ListingCard from '../components/ListingCard';
 
 export default class extends BaseVw {
   constructor(options = {}) {

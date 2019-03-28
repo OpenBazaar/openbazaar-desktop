@@ -713,15 +713,15 @@
       "currenciesHelper": "这些货币可以在您创建的商品信息上自动选择。",
       "currenciesNote": "接受所有货币将吸引最多的用户。",
       "bulkListingCoinUpdate": {
-        "mainButton": "Update All Current Listings",
-        "confirmTitle": "Are You Sure?",
-        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "mainButton": "升级所有的现金列表",
+        "confirmTitle": "你确定？",
+        "confirmMessage": "您当前所有列表都将更新为接受所选货币。",
         "cancel": "取消",
         "apply": "应用",
         "errors": {
-          "errorTitle": "There Was An Error When Updating Your Listings",
-          "errorMessage": "One or more listings failed to update.",
-          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "errorTitle": "升级列表时发生一个错误",
+          "errorMessage": "一个或者多个列表升级失败",
+          "noCoinsError": "更新商品时，您必须至少选择一种货币。",
           "reasonForError": "原因：%{reason}"
         }
       },
@@ -1503,8 +1503,8 @@
   "moderators": {
     "moderatorsLoading": "加载仲裁人...",
     "moderatorsXofY": "正在加载仲裁人 %{current}/%{total}",
-    "loadingXofYTimedOut": "%{loaded} of %{total} moderators loaded. %{remainder} moderator has not loaded. |||| %{loaded} of %{total} moderators loaded. %{remainder} moderators have not loaded.",
-    "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
+    "loadingXofYTimedOut": "已加载％{加载}％{total}版主。 ％{remainder}版主未加载。|||| 已加载％{加载}％{total}版主。 ％{remainder}版主未加载。",
+    "moderatorsLoaded": "％{total}版主加载了|||| 已加载％{total}版主。",
     "noModsMsg": {
       "noModerators": {
         "title": "没有有效的仲裁人可用。",
@@ -1519,7 +1519,7 @@
         "body": "仲裁人可以使用此商品接受的一种或多种其他货币。"
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} have been loaded.",
+        "title": "尚未加载已接受％{coin}验证的版主。",
         "body": "尝试查看未经验证的仲裁人。"
       }
     },

@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import loadTemplate from '../../../utils/loadTemplate';
-import baseView from '../../baseVw';
 import Listing from '../../../models/listing/Listing';
+import baseView from '../../baseVw';
 
 export default class extends baseView {
   constructor(options = {}) {
@@ -14,6 +14,7 @@ export default class extends baseView {
       initialState: {
         phase: 'pay',
         confirmOpen: false,
+        outdatedHash: false,
         ...options.initialState || {},
       },
     };
@@ -21,7 +22,7 @@ export default class extends baseView {
     super(opts);
     this.options = opts;
 
-    this.boundOnDocClick = this.onDocumentClick.bind(this);
+    this.boundOnDocClick = this.documentClick.bind(this);
     $(document).on('click', this.boundOnDocClick);
   }
 
@@ -35,10 +36,11 @@ export default class extends baseView {
       'click .js-confirmPayConfirm': 'clickConfirmBtn',
       'click .js-confirmPayCancel': 'closeConfirmPay',
       'click .js-closeBtn': 'clickCloseBtn',
+      'click .js-reloadOutdated': 'clickReloadOutdated',
     };
   }
 
-  onDocumentClick(e) {
+  documentClick(e) {
     if (this.getState().confirmOpen &&
       !($.contains(this.getCachedEl('.js-confirmPay')[0], e.target))) {
       this.setState({ confirmOpen: false });
@@ -62,6 +64,10 @@ export default class extends baseView {
     this.trigger('close');
   }
 
+  clickReloadOutdated() {
+    this.trigger('reloadOutdated');
+  }
+
   remove() {
     $(document).off('click', this.boundOnDocClick);
     super.remove();
@@ -69,11 +75,22 @@ export default class extends baseView {
 
   render() {
     super.render();
-    loadTemplate('modals/purchase/actionBtn.html', t => {
-      this.$el.html(t({
-        ...this.getState(),
-        listing: this.options.listing,
-      }));
+    const state = this.getState();
+
+    const loadPurchasErrTemplIfNeeded = (tPath, func) => {
+      if (state.outdatedHash) return loadTemplate(tPath, func);
+      func(null);
+      return undefined;
+    };
+
+    loadPurchasErrTemplIfNeeded('modals/listingDetail/purchaseError.html', purchaseErrT => {
+      loadTemplate('modals/purchase/actionBtn.html', t => {
+        this.$el.html(t({
+          ...state,
+          listing: this.options.listing,
+          purchaseErrT,
+        }));
+      });
     });
 
     return this;

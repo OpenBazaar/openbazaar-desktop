@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import { Collection } from 'backbone';
+import Backbone, { Collection } from 'backbone';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -18,6 +18,7 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
+import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -52,6 +53,9 @@ export default class extends BaseModal {
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
     this.totalPrice = this.model.get('item').get('price');
+    this._purchaseModal = null;
+    this._latestHash = this.model.get('hash');
+    this._renderedHash = null;
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -86,6 +90,8 @@ export default class extends BaseModal {
           this.shipsFreeToMe = this.model.shipsFreeToMe;
         }
       });
+
+    this.listenTo(this.model, 'someChange', () => this.showDataChangedMessage());
 
     if (this.model.isOwnListing) {
       this.listenTo(listingEvents, 'saved', (md, e) => {
@@ -123,6 +129,11 @@ export default class extends BaseModal {
         this.hasVerifiedMods = newHasVerifiedMods;
         this.showDataChangedMessage();
       }
+    });
+
+    this.listenTo(outdatedListingHashesEvents, 'newHash', e => {
+      this._latestHash = e.newHash;
+      if (e.oldHash === this._renderedHash) this.outdateHash();
     });
 
     this.rating = this.createChild(Rating);
@@ -196,6 +207,11 @@ export default class extends BaseModal {
     $(document).on('click', this.boundDocClick);
 
     this.rendered = false;
+    this._outdatedHashState = null;
+
+    this.purchaseErrorT = null;
+    loadTemplate('modals/listingDetail/purchaseError.html',
+      t => (this.purchaseErrorT = t));
   }
 
   className() {
@@ -220,6 +236,7 @@ export default class extends BaseModal {
       'click .js-purchaseBtn': 'startPurchase',
       'click .js-rating': 'clickRating',
       'change .js-variantSelect': 'onChangeVariantSelect',
+      'click .js-reloadOutdated': 'onClickReloadOutdated',
       ...super.events(),
     };
   }
@@ -503,6 +520,31 @@ export default class extends BaseModal {
     }
   }
 
+  outdateHash() {
+    const tip = app.polyglot.t('listingDetail.errors.outdatedHash', {
+      reloadLink: '<a class="js-reloadOutdated">' +
+        `${app.polyglot.t('listingDetail.errors.reloadOutdatedHash')}<a>`,
+    });
+    this.getCachedEl('.js-purchaseErrorWrap').html(
+      this.purchaseErrorT({ tip })
+    );
+    this.getCachedEl('.js-purchaseBtn').addClass('disabled');
+  }
+
+  onClickReloadOutdated() {
+    let defaultPrevented = false;
+
+    this.trigger('clickReloadOutdated', {
+      preventDefault: () => (defaultPrevented = true),
+    });
+
+    setTimeout(() => {
+      if (!defaultPrevented) {
+        Backbone.history.loadUrl();
+      }
+    });
+  }
+
   onSetShippingDestination(e) {
     this.renderShippingDestinations($(e.target).val());
   }
@@ -523,6 +565,32 @@ export default class extends BaseModal {
         pricingCurrency: this.model.get('metadata').get('pricingCurrency'),
       }));
     });
+  }
+
+  static get PURCHASE_MODAL_CREATE() {
+    return 'PURCHASE_MODAL_CREATE';
+  }
+
+  static get PURCHASE_MODAL_DESTROY() {
+    return 'PURCHASE_MODAL_DESTROY';
+  }
+
+  /**
+   * Returns a promise that will fire progress notifications when a purchase modal
+   * is created. Will also fire a notifications when one is destroyed.
+   */
+  get purchaseModal() {
+    this._purchaseModalDeferred =
+      this._purchaseModalDeferred || $.Deferred();
+
+    if (this._purchaseModal) {
+      this._purchaseModalDeferred.notify({
+        type: this.constructor.PURCHASE_MODAL_CREATE,
+        view: this._purchaseModal,
+      });
+    }
+
+    return this._purchaseModalDeferred.promise();
   }
 
   startPurchase() {
@@ -549,9 +617,9 @@ export default class extends BaseModal {
       selectedVariants.push(variant);
     });
 
-    if (this.purchaseModal) this.purchaseModal.remove();
+    if (this._purchaseModal) this._purchaseModal.remove();
 
-    this.purchaseModal = new Purchase({
+    this._purchaseModal = new Purchase({
       listing: this.model,
       variants: selectedVariants,
       vendor: this.vendor,
@@ -563,8 +631,23 @@ export default class extends BaseModal {
       .render()
       .open();
 
-    this.purchaseModal.on('modal-will-remove', () => (this.purchaseModal = null));
-    this.listenTo(this.purchaseModal, 'closeBtnPressed', () => this.close());
+    if (this._purchaseModalDeferred) {
+      this._purchaseModalDeferred.notify({
+        type: this.constructor.PURCHASE_MODAL_CREATE,
+        view: this._purchaseModal,
+      });
+    }
+
+    this._purchaseModal.on('modal-will-remove', () => {
+      this._purchaseModal = null;
+      if (this._purchaseModalDeferred) {
+        this._purchaseModalDeferred.notify({
+          type: this.constructor.PURCHASE_MODAL_DESTROY,
+        });
+      }
+    });
+
+    this.listenTo(this._purchaseModal, 'closeBtnPressed', () => this.close());
     recordEvent('Purchase_Start', { ownListing: this.model.isOwnListing });
   }
 
@@ -631,7 +714,7 @@ export default class extends BaseModal {
 
   remove() {
     if (this.editModal) this.editModal.remove();
-    if (this.purchaseModal) this.purchaseModal.remove();
+    if (this._purchaseModal) this._purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
@@ -679,6 +762,7 @@ export default class extends BaseModal {
         defaultBadge,
         isCrypto: this.model.isCrypto,
         _: { sortBy: _.sortBy },
+        purchaseErrorT: this.purchaseErrorT,
       }));
 
       if (nsfwWarning) this.$el.addClass('hide');
@@ -687,6 +771,10 @@ export default class extends BaseModal {
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
+
+      if (this._latestHash !== this.model.get('hash')) {
+        this.outdateHash();
+      }
 
       if (this.supportedCurrenciesList) this.supportedCurrenciesList.remove();
       this.supportedCurrenciesList = this.createChild(SupportedCurrenciesList, {
@@ -782,6 +870,7 @@ export default class extends BaseModal {
     });
 
     this.rendered = true;
+    this._renderedHash = this.model.get('hash');
 
     return this;
   }

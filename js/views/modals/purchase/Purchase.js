@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import _ from 'underscore';
+import Backbone from 'backbone';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
 import app from '../../../app';
@@ -13,6 +14,7 @@ import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
+import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
@@ -97,8 +99,21 @@ export default class extends BaseModal {
     this.actionBtn = this.createChild(ActionBtn, {
       listing: this.listing,
     });
-    this.listenTo(this.actionBtn, 'purchase', (() => this.purchaseListing()));
-    this.listenTo(this.actionBtn, 'close', (() => this.close()));
+    this.listenTo(this.actionBtn, 'purchase', () => this.purchaseListing());
+    this.listenTo(this.actionBtn, 'close', () => this.close());
+    this.listenTo(this.actionBtn, 'reloadOutdated', () => {
+      let defaultPrevented = false;
+
+      this.trigger('clickReloadOutdated', {
+        preventDefault: () => (defaultPrevented = true),
+      });
+
+      setTimeout(() => {
+        if (!defaultPrevented) {
+          Backbone.history.loadUrl();
+        }
+      });
+    });
 
     this.receipt = this.createChild(Receipt, {
       model: this.order,
@@ -206,6 +221,14 @@ export default class extends BaseModal {
         this.hasVerifiedMods = newHasVerifiedMods;
         this.showDataChangedMessage();
       }
+    });
+
+    this._latestHash = this.listing.get('hash');
+    this._renderedHash = null;
+
+    this.listenTo(outdatedListingHashesEvents, 'newHash', e => {
+      this._latestHash = e.oldHash;
+      if (e.oldHash === this._renderedHash) this.outdateHash();
     });
   }
 
@@ -395,6 +418,10 @@ export default class extends BaseModal {
     // Set the shipping option.
     this.order.get('items').at(0).get('shipping')
       .set(this.shipping.selectedOption);
+  }
+
+  outdateHash() {
+    this.actionBtn.setState({ outdatedHash: true });
   }
 
   purchaseListing() {
@@ -699,6 +726,8 @@ export default class extends BaseModal {
         this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
       }
     });
+
+    this._renderedHash = this.listing.get('hash');
 
     return this;
   }
