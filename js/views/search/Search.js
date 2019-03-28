@@ -8,6 +8,7 @@ import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
 import Suggestions from './Suggestions';
+import Filters from './Filters';
 import Dialog from '../modals/Dialog';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import ResultsCol from '../../collections/Results';
@@ -107,8 +108,6 @@ export default class extends baseVw {
       ...filterParams,
     };
 
-    this.formOverrides = {};
-
     this.processTerm(this.term);
   }
 
@@ -120,10 +119,6 @@ export default class extends baseVw {
     return {
       'click .js-searchBtn': 'clickSearchBtn',
       'change .js-sortBy': 'changeSortBy',
-      'change .js-filterWrapper select': 'changeFilter',
-      'change .js-filterWrapper input': 'changeFilter',
-      'click .js-filterWrapper .js-selectAll': 'clickFilterAll',
-      'click .js-filterWrapper .js-selectNone': 'clickFilterNone',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
@@ -174,11 +169,10 @@ export default class extends baseVw {
     const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
     const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
     const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    const formData = this.getFormData(this.$filters);
+    const formData = this.filters ? this.filters.retrieveFormData() : {};
     // keep any parameters that aren't present in the form on the page
     let filters = { ...this.defaultParams };
-    if (!reset) filters = { ...filters, ...this.filterParams, ...formData, ...this.formOverrides };
-    this.formOverrides = {};
+    if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
     filters = filters ? `&${$.param(filters, true)}` : '';
     const providerUrl = this.sProvider.get(this.urlType);
     const newURL = new URL(`${providerUrl}?${query}${network}${sortBy}${page}${filters}`);
@@ -457,22 +451,10 @@ export default class extends baseVw {
     recordEvent('Discover_ChangeSortBy');
   }
 
-  changeFilter() {
+  onFilterChanged() {
     this.serverPage = 0;
     this.processTerm(this.term);
     recordEvent('Discover_ChangeFilter');
-  }
-
-  clickFilterAll(e) {
-    const targ = $(e.target);
-    const val = targ.data('val');
-    this.formOverrides[targ.prop('name')] = typeof val === 'string' ? val.split(',') : [];
-    this.changeFilter();
-  }
-
-  clickFilterNone(e) {
-    this.formOverrides[$(e.target).prop('name')] = [];
-    this.changeFilter();
   }
 
   onClickSuggestion(opts) {
@@ -513,7 +495,6 @@ export default class extends baseVw {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
         sortBySelected: this.sortBySelected,
-        filterParams: this.filterParams,
         errTitle,
         errMsg,
         providerLocked: this.providerIsADefault(this.sProvider.id),
@@ -560,6 +541,11 @@ export default class extends baseVw {
     this.suggestions = this.createChild(Suggestions);
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
+
+    if (this.filters) this.filters.remove();
+    this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
+    this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
+    this.$('.js-filterWrapper').append(this.filters.render().el);
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, state.searchUrl);
