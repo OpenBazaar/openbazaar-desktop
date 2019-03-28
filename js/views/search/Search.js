@@ -32,21 +32,6 @@ export default class extends baseVw {
     super(opts);
     this.options = opts;
 
-    this.defaultSuggestions = this.options.defaultSuggestions ||
-      [
-        'Books',
-        'Art',
-        'Clothing',
-        'Bitcoin',
-        'Crypto',
-        'Handmade',
-        'Health',
-        'Toys',
-        'Electronics',
-        'Games',
-        'Music',
-      ];
-
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
     // In the future there may be more possible types
@@ -516,7 +501,7 @@ export default class extends baseVw {
       errMsg = failReason ?
         app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
     }
-    
+
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
         term: this.term === '*' ? '' : this.term,
@@ -565,12 +550,7 @@ export default class extends baseVw {
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     if (this.suggestions) this.suggestions.remove();
-    this.suggestions = this.createChild(Suggestions, {
-      initialState: {
-        suggestions: data && Array.isArray(data.suggestions) ?
-          data.suggestions : this.defaultSuggestions,
-      },
-    });
+    this.suggestions = this.createChild(Suggestions);
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 

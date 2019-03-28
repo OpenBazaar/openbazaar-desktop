@@ -6,7 +6,19 @@ export default class extends BaseView {
   constructor(options = {}) {
     const opts = {
       initialState: {
-        suggestions: [],
+        suggestions: [
+          'Books',
+          'Art',
+          'Clothing',
+          'Bitcoin',
+          'Crypto',
+          'Handmade',
+          'Health',
+          'Toys',
+          'Electronics',
+          'Games',
+          'Music',
+        ],
         ...options.initialState || {},
       },
       ...options,
