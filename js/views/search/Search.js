@@ -39,14 +39,13 @@ export default class extends baseVw {
 
     // If there is only one provider and it isn't the default, just set it to be such.
     if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
-      app.searchProviders[`default${this.torString}Provider`] =
-        app.searchProviders.get(defaultSearchProviders[0].id);
+      this.currentDefaultProvider = app.searchProviders.at(0);
     }
     this.sProvider = this.currentDefaultProvider;
 
     // if the  provider returns a bad URL, change to a known good default provider
     if (is.not.url(this.sProvider.get(this.urlType))) {
-      this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
+      this.sProvider = app.searchProviders.at(0);
       recordEvent('Discover_InvalidDefaultProvider', { url: this.sProvider.get(this.urlType) });
     }
 
@@ -143,8 +142,16 @@ export default class extends baseVw {
     return app.searchProviders[`default${this.torString}Provider`];
   }
 
+  set currentDefaultProvider(provider) {
+    app.searchProviders[`default${this.torString}Provider`] = provider;
+  }
+
   get usingOriginal() {
     return this.sProvider.id === defaultSearchProviders[0].id;
+  }
+
+  providerIsADefault(id) {
+    return !!_.findWhere(defaultSearchProviders, { id });
   }
 
   get torString() {
@@ -192,10 +199,6 @@ export default class extends baseVw {
     this.processTerm(this.term, true);
   }
 
-  providerIsADefault(id) {
-    return !!_.findWhere(defaultSearchProviders, { id });
-  }
-
   deleteProvider(md = this.sProvider) {
     if (this.providerIsADefault(md.id)) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
@@ -228,7 +231,7 @@ export default class extends baseVw {
       throw new Error('The provider to be made the default must be in the collection.');
     }
 
-    app.searchProviders[`default${this.torString}Provider`] = md;
+    this.currentDefaultProvider = md;
     this.render();
   }
 
