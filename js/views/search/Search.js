@@ -418,8 +418,8 @@ export default class extends baseVw {
       data.options.type.options &&
       data.options.type.options.length) {
       if (data.options.type.options.find(
-        op => op.value === 'cryptocurrency' && op.checked
-      )) {
+          op => op.value === 'cryptocurrency' && op.checked) &&
+        data.options.type.options.filter(op => op.checked).length === 1) {
         viewType = 'cryptoList';
       }
     }
