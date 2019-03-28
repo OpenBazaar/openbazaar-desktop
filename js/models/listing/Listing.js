@@ -24,6 +24,44 @@ export default class extends BaseModel {
     return 'use-sync';
   }
 
+  static getIpnsUrl(guid, slug) {
+    if (typeof guid !== 'string' || !guid) {
+      throw new Error('Please provide a guid as a non-empty ' +
+        'string.');
+    }
+
+    if (typeof slug !== 'string' || !slug) {
+      throw new Error('Please provide a slug as a non-empty ' +
+        'string.');
+    }
+
+    return app.getServerUrl(`ob/listing/${guid}/${slug}`);
+  }
+
+  getIpnsUrl() {
+    const slug = this.get('slug');
+
+    if (!slug) {
+      throw new Error('In order to fetch a listing via IPNS, a slug must be '
+        + 'set as a model attribute.');
+    }
+
+    return this.constructor.getIpnsUrl(this.guid, slug);
+  }
+
+  static getIpfsUrl(hash) {
+    if (typeof hash !== 'string' || !hash) {
+      throw new Error('Please provide a hash as a non-empty ' +
+        'string.');
+    }
+
+    return app.getServerUrl(`ob/listing/ipfs/${hash}`);
+  }
+
+  getIpfsUrl(hash) {
+    return this.constructor.getIpfsUrl(hash);
+  }
+
   defaults() {
     return {
       termsAndConditions: '',
@@ -213,6 +251,21 @@ export default class extends BaseModel {
     return undefined;
   }
 
+  fetch(options = {}) {
+    if (
+      options.hash !== undefined &&
+      (
+        typeof options.hash !== 'string' ||
+        !options.hash
+      )
+    ) {
+      throw new Error('If providing the options.hash, it must be a ' +
+        'non-empty string.');
+    }
+
+    return super.fetch(options);
+  }
+
   sync(method, model, options) {
     let returnSync = 'will-set-later';
 
@@ -227,13 +280,12 @@ export default class extends BaseModel {
         throw new Error('In order to fetch a listing, a slug must be set as a model attribute.');
       }
 
-      if (this.isOwnListing) {
-        options.url = options.url ||
-          app.getServerUrl(`ob/listing/${slug}`);
-      } else {
-        options.url = options.url ||
-          app.getServerUrl(`ob/listing/${this.guid}/${slug}`);
-      }
+      options.url = options.url ||
+        (
+          typeof options.hash === 'string' && options.hash ?
+            this.getIpfsUrl(options.hash) :
+            this.getIpnsUrl(slug)
+        );
     } else {
       if (method !== 'delete') {
         options.url = options.url || app.getServerUrl('ob/listing/');

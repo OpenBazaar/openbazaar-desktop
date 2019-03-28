@@ -140,13 +140,19 @@
                 buyNowClass = '';
                 unpurchaseable = false;
               }
-
-              let unpurchasableMarkup = `<div class="flexHRight clrTErr">${ob.polyT('listingDetail.unableToPurchase.unpurchaseable') }&nbsp;<span class="toolTip"   data-tip="${tip}" style="text-align: left"><span class="ion-help-circled clrTErr"></span></span></div>`;
             %>
             <button class="btnHg clrBAttGrad clrBrDec1 clrTOnEmph js-purchaseBtn <%= buyNowClass %>">
               <%= ob.polyT(buyNowTranslationKey) %>
             </button>
-            <%= unpurchaseable ? unpurchasableMarkup : '' %>
+
+            <div class="js-purchaseErrorWrap">
+              <%
+                if (unpurchaseable) {
+                  print(ob.purchaseErrorT({ tip }));
+                }
+              %>
+            </div>
+
             <div class="flexHCent gutterH">
               <div class="tx6 js-rating rating"></div>
               <% if (ob.shipsFreeToMe) { %>

@@ -40,11 +40,6 @@ describe('the Fixed Fee model', () => {
     const fixedFee = new FixedFee();
     fixedFee.set({ currencyCode: 1 }, { validate: true });
     const valErr = fixedFee.validationError;
-
-    console.log('slick WILLY');
-    console.dir(fixedFee.validationError);
-    console.log('CHARLIE CHUCKLES');
-
     expect(valErr && valErr.feeType && !!valErr.feeType.length).to.equal(true);
   });
 
