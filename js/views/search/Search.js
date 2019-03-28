@@ -70,7 +70,7 @@ export default class extends baseVw {
       const matchedProvider = app.searchProviders.getProviderByURL(base);
       if (!matchedProvider) {
         const queryOpts = {};
-        queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
+        queryOpts[`${this.urlType}`] = `${subURL.origin}${subURL.pathname}`;
         this.sProvider = new ProviderMd(queryOpts);
       } else {
         this.sProvider = matchedProvider;
@@ -138,12 +138,20 @@ export default class extends baseVw {
     return !!app.searchProviders.getProviderByURL(md.get(this.urlType));
   }
 
-  get currentDefaultProvider() {
-    return app.searchProviders[`default${this.torString}Provider`];
+  get torString() {
+    return `default${this.usingTor ? 'Tor' : ''}Provider`;
   }
 
-  set currentDefaultProvider(provider) {
-    app.searchProviders[`default${this.torString}Provider`] = provider;
+  get currentDefaultProvider() {
+    return app.searchProviders[this.torString];
+  }
+
+  set currentDefaultProvider(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+
+    app.searchProviders[this.torString] = md;
   }
 
   get usingOriginal() {
@@ -152,10 +160,6 @@ export default class extends baseVw {
 
   providerIsADefault(id) {
     return !!_.findWhere(defaultSearchProviders, { id });
-  }
-
-  get torString() {
-    return this.usingTor ? 'Tor' : '';
   }
 
   /**
