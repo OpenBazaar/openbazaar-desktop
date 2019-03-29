@@ -129,7 +129,7 @@ export default class extends baseVw {
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
-      'click .js-addQueryProvider': 'clickAddQueryProvider',
+      'click .js-addQueryProvider': 'clickAddProvider',
     };
   }
 
@@ -165,7 +165,7 @@ export default class extends baseVw {
   }
 
   /**
-   * This will create a url with the term and other query parameters
+   * This will retrieve search results.
    * @param {string} term - the term to search for
    * @param {boolean} reset - reset the filters
    */
@@ -297,15 +297,15 @@ export default class extends baseVw {
     });
   }
 
-  addQueryProvider() {
+  addProvider() {
     if (!this.doesProviderURLExist(this.sProvider)) {
       app.searchProviders.add(this.sProvider);
       this.render();
     }
   }
 
-  clickAddQueryProvider() {
-    this.addQueryProvider();
+  clickAddProvider() {
+    this.addProvider();
   }
 
   showSearchError(xhr = {}) {
