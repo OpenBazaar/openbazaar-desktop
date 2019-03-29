@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
-import sanitizeHtml from 'sanitize-html';
 import '../../lib/select2';
 import app from '../../app';
 import baseVw from '../baseVw';
@@ -19,6 +18,12 @@ import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import {
+  createSearchURL,
+  fetchSearchResults,
+  sanitizeResults,
+  buildProviderUpdate,
+} from '../../utils/search';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -71,7 +76,7 @@ export default class extends baseVw {
       const matchedProvider = app.searchProviders.getProviderByURL(base);
       if (!matchedProvider) {
         const queryOpts = {};
-        queryOpts[`${this.urlType}`] = `${subURL.origin}${subURL.pathname}`;
+        queryOpts[`${this.urlType}`] = base;
         this.sProvider = new ProviderMd(queryOpts);
       } else {
         this.sProvider = matchedProvider;
@@ -107,6 +112,8 @@ export default class extends baseVw {
       ...this.defaultParams,
       ...filterParams,
     };
+
+    this.searchFetches = [];
 
     this.processTerm(this.term);
   }
@@ -164,19 +171,68 @@ export default class extends baseVw {
    */
   processTerm(term, reset) {
     this.term = term || '';
-    // if term is false, search for *
-    const query = `q=${encodeURIComponent(term || '*')}`;
-    const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
-    const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
+    const providerUrl = this.sProvider.get(this.urlType);
     const formData = this.filters ? this.filters.retrieveFormData() : {};
     // keep any parameters that aren't present in the form on the page
     let filters = { ...this.defaultParams };
     if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
-    filters = filters ? `&${$.param(filters, true)}` : '';
-    const providerUrl = this.sProvider.get(this.urlType);
-    const newURL = new URL(`${providerUrl}?${query}${network}${sortBy}${page}${filters}`);
-    this.callSearchProvider(newURL);
+
+    const opts = {
+      providerUrl,
+      query: term,
+      page: this.serverPage,
+      pageSize: this.pageSize,
+      sortBy: this.sortBySelected,
+      filters,
+    };
+    const searchUrl = createSearchURL(opts);
+
+    this.removeFetches();
+
+    this.setState({
+      fetching: true,
+      searchUrl,
+      xhr: '',
+    });
+
+    const searchFetch = fetchSearchResults(searchUrl)
+      .done((pData, status, xhr) => {
+        const data = JSON.parse(sanitizeResults(pData));
+
+        // make sure minimal data is present. If it isn't, it's probably an invalid endpoint.
+        if (data.name && data.links) {
+          const dataUpdate = buildProviderUpdate(data);
+
+          // update the defaults but do not save them
+          if (!this.providerIsADefault(this.sProvider.id)) {
+            this.sProvider.save(dataUpdate.update, {urlTypes: dataUpdate.urlTypes});
+          } else {
+            this.sProvider.set(dataUpdate.update, {urlTypes: dataUpdate.urlTypes});
+          }
+
+          this.setState({
+            fetching: false,
+            data,
+          });
+        } else {
+          this.setState({
+            fetching: false,
+            data: '',
+            xhr,
+          });
+        }
+      })
+      .fail((xhr) => {
+        if (xhr.statusText !== 'abort') {
+          this.setState({
+            fetching: false,
+            data: '',
+            xhr,
+          });
+        }
+      });
+
+    this.searchFetches.push(searchFetch);
   }
 
   /**
@@ -250,97 +306,6 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
-  }
-
-  callSearchProvider(searchUrl) {
-    // remove a pending search if it exists
-    if (this.callSearch) this.callSearch.abort();
-
-    this.setState({
-      fetching: true,
-      data: '',
-      searchUrl,
-      xhr: '',
-    });
-
-    // query the search provider
-    this.callSearch = $.get({
-      url: searchUrl,
-      dataType: 'json',
-    })
-      .done((pData, status, xhr) => {
-        let data = JSON.stringify(pData, (key, val) => {
-          // sanitize the data from any dangerous characters
-          if (typeof val === 'string') {
-            return sanitizeHtml(val, {
-              allowedTags: [],
-              allowedAttributes: [],
-            });
-          }
-          return val;
-        });
-        data = JSON.parse(data);
-        // make sure minimal data is present
-        if (data.name && data.links) {
-          // if data about the provider is received, update the model
-          const update = { name: data.name };
-          const urlTypes = [];
-          if (data.logo && is.url(data.logo)) update.logo = data.logo;
-          if (data.links) {
-            if (is.url(data.links.search)) {
-              update.search = data.links.search;
-              urlTypes.push('search');
-            }
-            if (is.url(data.links.listings)) {
-              update.listings = data.links.listings;
-              urlTypes.push('listings');
-            }
-            if (is.url(data.links.reports)) {
-              update.reports = data.links.reports;
-              urlTypes.push('reports');
-            }
-            if (data.links.tor) {
-              if (is.url(data.links.tor.search)) {
-                update.torsearch = data.links.tor.search;
-                urlTypes.push('torsearch');
-              }
-              if (is.url(data.links.tor.listings)) {
-                update.torlistings = data.links.tor.listings;
-                urlTypes.push('torlistings');
-              }
-            }
-          }
-          // update the defaults but do not save them
-          if (!this.providerIsADefault(this.sProvider.id)) {
-            this.sProvider.save(update, { urlTypes });
-          } else {
-            this.sProvider.set(update, { urlTypes });
-          }
-          this.setState({
-            fetching: false,
-            data,
-            searchUrl,
-            xhr: '',
-          });
-        } else {
-          this.setState({
-            fetching: false,
-            data: '',
-            searchUrl,
-            xhr,
-          });
-        }
-      })
-      .fail((xhr) => {
-        if (xhr.statusText !== 'abort') {
-          this.setState({
-            fetching: false,
-            data: '',
-            searchUrl,
-            xhr,
-          });
-        }
-      });
   }
 
   showSearchError(xhr = {}) {
@@ -467,8 +432,12 @@ export default class extends baseVw {
     this.$el[0].scrollIntoView();
   }
 
+  removeFetches() {
+    this.searchFetches.forEach(fetch => fetch.abort());
+  }
+
   remove() {
-    if (this.callSearch) this.callSearch.abort();
+    this.removeFetches();
     super.remove();
   }
 
@@ -543,9 +512,11 @@ export default class extends baseVw {
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
     if (this.filters) this.filters.remove();
-    this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
-    this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
-    this.$('.js-filterWrapper').append(this.filters.render().el);
+    if (data && data.options) {
+      this.filters = this.createChild(Filters, {initialState: {filters: data.options}});
+      this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
+      this.$('.js-filterWrapper').append(this.filters.render().el);
+    }
 
     // use the initial set of results data to create the results view
     if (data) this.createResults(data, state.searchUrl);
