@@ -18,6 +18,7 @@ import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
 import { getCurrentConnection } from '../../utils/serverConnect';
+import { capitalize } from '../../utils/string';
 import {
   createSearchURL,
   fetchSearchResults,
@@ -37,6 +38,9 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+    this._search = {
+      urlType: opts.urlType || 'listingsUrl',
+    };
 
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
@@ -47,12 +51,13 @@ export default class extends baseVw {
     if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
       this.currentDefaultProvider = app.searchProviders.at(0);
     }
-    this.sProvider = this.currentDefaultProvider;
+    this._search.provider = this.currentDefaultProvider;
 
     // if the  provider returns a bad URL, change to a known good default provider
-    if (is.not.url(this.sProvider.get(this.urlType))) {
-      this.sProvider = app.searchProviders.at(0);
-      recordEvent('Discover_InvalidDefaultProvider', { url: this.sProvider.get(this.urlType) });
+    if (is.not.url(this.currentBaseUrl)) {
+      this._search.provider = app.searchProviders.at(0);
+      recordEvent('Discover_InvalidDefaultProvider',
+        { url: this.currentBaseUrl });
     }
 
     if (options.query) {
@@ -60,7 +65,7 @@ export default class extends baseVw {
       recordEvent('Discover_Search', { type: 'addressBar' });
     }
 
-    const tempUrl = new URL(`${this.sProvider.get(this.urlType)}?${options.query || ''}`);
+    const tempUrl = new URL(`${this.currentBaseUrl}?${options.query || ''}`);
     let queryParams = tempUrl.searchParams;
 
     // if a url with parameters was in the query, use the parameters in it instead.
@@ -76,10 +81,11 @@ export default class extends baseVw {
       const matchedProvider = app.searchProviders.getProviderByURL(base);
       if (!matchedProvider) {
         const queryOpts = {};
-        queryOpts[`${this.urlType}`] = base;
-        this.sProvider = new ProviderMd(queryOpts);
+        queryOpts[`${this.usingTor ? 'tor' : ''}${capitalize(this.search.urlType)}`] = base;
+        // TODO: add model validation here? What would the user see if there is an error?
+        this._search.provider = new ProviderMd(queryOpts);
       } else {
-        this.sProvider = matchedProvider;
+        this._search.provider = matchedProvider;
       }
     }
 
@@ -137,7 +143,7 @@ export default class extends baseVw {
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
     }
-    return !!app.searchProviders.getProviderByURL(md.get(this.urlType));
+    return !!app.searchProviders.getProviderByURL(md[this._search.urlType]);
   }
 
   get torString() {
@@ -156,8 +162,12 @@ export default class extends baseVw {
     app.searchProviders[this.torString] = md;
   }
 
+  get currentBaseUrl() {
+    return this._search.provider[this._search.urlType];
+  }
+
   get usingOriginal() {
-    return this.sProvider.id === defaultSearchProviders[0].id;
+    return this._search.provider.id === defaultSearchProviders[0].id;
   }
 
   providerIsADefault(id) {
@@ -171,15 +181,15 @@ export default class extends baseVw {
    */
   processTerm(term, reset) {
     this.term = term || '';
-    const providerUrl = this.sProvider.get(this.urlType);
+    const baseUrl = this.currentBaseUrl;
     const formData = this.filters ? this.filters.retrieveFormData() : {};
     // keep any parameters that aren't present in the form on the page
     let filters = { ...this.defaultParams };
     if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
 
     const opts = {
-      providerUrl,
-      query: term,
+      baseUrl,
+      term,
       page: this.serverPage,
       pageSize: this.pageSize,
       sortBy: this.sortBySelected,
@@ -204,10 +214,10 @@ export default class extends baseVw {
           const dataUpdate = buildProviderUpdate(data);
 
           // update the defaults but do not save them
-          if (!this.providerIsADefault(this.sProvider.id)) {
-            this.sProvider.save(dataUpdate.update, {urlTypes: dataUpdate.urlTypes});
+          if (!this.providerIsADefault(this._search.provider.id)) {
+            this._search.provider.save(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
           } else {
-            this.sProvider.set(dataUpdate.update, {urlTypes: dataUpdate.urlTypes});
+            this._search.provider.set(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
           }
 
           this.setState({
@@ -247,13 +257,13 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this.sProvider = md;
+    this._search.provider = md;
     this.serverPage = 0;
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
     this.processTerm(this.term, true);
   }
 
-  deleteProvider(md = this.sProvider) {
+  deleteProvider(md = this._search.provider) {
     if (this.providerIsADefault(md.id)) {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
       recordEvent('Discover_DeleteLocked', {
@@ -274,8 +284,8 @@ export default class extends baseVw {
 
   clickDeleteProvider() {
     recordEvent('Discover_DeleteProvider', {
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
     });
     this.deleteProvider();
   }
@@ -290,16 +300,16 @@ export default class extends baseVw {
   }
 
   clickMakeDefaultProvider() {
-    this.makeDefaultProvider(this.sProvider);
+    this.makeDefaultProvider(this._search.provider);
     recordEvent('Discover_MakeDefaultProvider', {
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
     });
   }
 
   addProvider() {
-    if (!this.doesProviderURLExist(this.sProvider)) {
-      app.searchProviders.add(this.sProvider);
+    if (!this.doesProviderURLExist(this._search.provider)) {
+      app.searchProviders.add(this._search.provider);
       this.render();
     }
   }
@@ -309,7 +319,8 @@ export default class extends baseVw {
   }
 
   showSearchError(xhr = {}) {
-    const title = app.polyglot.t('search.errors.searchFailTitle', { provider: this.sProvider });
+    const provider = this._search.provider.get('name') || this.currentBaseUrl;
+    const title = app.polyglot.t('search.errors.searchFailTitle', { provider });
     const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
     const msg = failReason ?
                 app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
@@ -347,8 +358,8 @@ export default class extends baseVw {
 
     recordEvent('Discover_SearchError', {
       error: msg || 'unknown error',
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this._search.provider.listings,
     });
   }
 
@@ -370,7 +381,7 @@ export default class extends baseVw {
 
     const resultsView = this.createChild(Results, {
       searchUrl,
-      reportsUrl: this.sProvider.get('reports') || '',
+      reportsUrl: this._search.provider.reports || '',
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
       serverPage: this.serverPage,
@@ -381,8 +392,8 @@ export default class extends baseVw {
 
     recordEvent('Discover_Results', {
       total: data.results ? data.results.total : 0,
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
       page: this.serverPage + 1,
     });
 
@@ -466,12 +477,12 @@ export default class extends baseVw {
         sortBySelected: this.sortBySelected,
         errTitle,
         errMsg,
-        providerLocked: this.providerIsADefault(this.sProvider.id),
-        isExistingProvider: this.doesProviderURLExist(this.sProvider),
-        showMakeDefault: this.sProvider !== this.currentDefaultProvider,
+        providerLocked: this.providerIsADefault(this._search.provider.id),
+        isExistingProvider: this.doesProviderURLExist(this._search.provider),
+        showMakeDefault: this._search.provider !== this.currentDefaultProvider,
         emptyData: $.isEmptyObject(data),
         ...state,
-        ...this.sProvider,
+        ...this._search.provider,
         ...data,
       }));
     });
@@ -500,7 +511,7 @@ export default class extends baseVw {
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
       urlType: this.urlType,
-      currentID: this.sProvider.id,
+      currentID: this._search.provider.id,
       selecting: !this.currentDefaultProvider,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));

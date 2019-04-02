@@ -10,7 +10,7 @@ const events = {
 
 /** Create a search query URL.
  *
- * @param {string} options.providerUrl - The url endpoint to use, without any parameters.
+ * @param {string} options.baseUrl - The url endpoint to use, without any parameters.
  * @param {string} options.term - The term(s) to search for.
  * @param {string} options.page - The page to returns results for.
  * @param {string} options.pageSize - The number of results per page.
@@ -20,12 +20,11 @@ const events = {
  * @returns {xhr}
  */
 export function createSearchURL(options = {}) {
-  if (!options.providerUrl || is.not.url(options.providerUrl)) {
+  if (!options.baseUrl || is.not.url(options.baseUrl)) {
     throw new Error('Please provide a base url for the search endpoint.');
   }
 
   const opts = {
-    providerUrl: '',
     term: '*',
     page: 0,
     pageSize: 66,
@@ -41,7 +40,8 @@ export function createSearchURL(options = {}) {
   const page = `&p=${opts.page}&ps=${opts.pageSize}`;
   const filters = opts.filters ? `&${$.param(opts.filters, true)}` : '';
 
-  return new URL(`${opts.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
+
+  return new URL(`${opts.baseUrl}?${query}${network}${sortBy}${page}${filters}`);
 }
 
 /** Create a search query and return the results.
@@ -92,9 +92,9 @@ export function buildProviderUpdate(data) {
   if (data.name && is.string(data.name)) update.name = data.name;
   if (data.logo && is.url(data.logo)) update.logo = data.logo;
   if (data.links) {
-    if (is.url(data.links.search)) {
-      update.search = data.links.search;
-      urlTypes.push('search');
+    if (is.url(data.links.vendors)) {
+      update.vendors = data.links.vendors;
+      urlTypes.push('vendors');
     }
     if (is.url(data.links.listings)) {
       update.listings = data.links.listings;
@@ -105,13 +105,17 @@ export function buildProviderUpdate(data) {
       urlTypes.push('reports');
     }
     if (data.links.tor) {
-      if (is.url(data.links.tor.search)) {
-        update.torsearch = data.links.tor.search;
-        urlTypes.push('torsearch');
-      }
       if (is.url(data.links.tor.listings)) {
-        update.torlistings = data.links.tor.listings;
+        update.torListings = data.links.tor.listings;
         urlTypes.push('torlistings');
+      }
+      if (is.url(data.links.tor.vendors)) {
+        update.torVendors = data.links.tor.vendors;
+        urlTypes.push('torVendors');
+      }
+      if (is.url(data.links.tor.reports)) {
+        update.torReports = data.links.tor.reports;
+        urlTypes.push('torReports');
       }
     }
   }

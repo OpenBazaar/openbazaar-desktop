@@ -1,6 +1,7 @@
 import app from '../../app';
 import is from 'is_js';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
+import { getCurrentConnection } from '../../utils/serverConnect';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -8,10 +9,12 @@ export default class extends BaseModel {
     return {
       name: '',
       logo: '',
-      search: '', // currently not used, this searches vendors and listings
       listings: '',
-      torsearch: '', // currently not used, this searches vendors and listings
       torlistings: '',
+      vendors: '',
+      torVendors: '',
+      reports: '',
+      torReports: '',
     };
   }
 
@@ -21,6 +24,22 @@ export default class extends BaseModel {
 
   sync(...args) {
     return LocalStorageSync.sync.apply(this, args);
+  }
+
+  get usingTor() {
+    return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+  }
+
+  get listingsUrl() {
+    return this.get(`${this.usingTor ? 'tor' : ''}listings`);
+  }
+
+  get vendorsUrl() {
+    return this.get(`${this.usingTor ? 'tor' : ''}vendors`);
+  }
+
+  get reportsUr() {
+    return this.get(`${this.usingTor ? 'tor' : ''}reports`);
   }
 
   validate(attrs, options) {
@@ -39,6 +58,7 @@ export default class extends BaseModel {
       addError('logo', app.polyglot.t('searchProviderModelErrors.invalidLogo'));
     }
 
+    // TODO reverse to check only the urlTypes passed in
     // a provider can be created with less than all of the urls. The view is expected to retrieve
     // and save the missing urls when the search api is called
     urlTypes.forEach(urlType => {
