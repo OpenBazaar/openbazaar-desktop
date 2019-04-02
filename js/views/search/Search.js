@@ -465,10 +465,12 @@ export default class extends baseVw {
     let errMsg;
 
     if (state.xhr) {
-      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: state.searchUrl });
+      const provider = this._search.provider.get('name') || this.currentBaseUrl;
+      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider });
       const failReason = state.xhr.responseJSON ? state.xhr.responseJSON.reason : '';
       errMsg = failReason ?
-        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
+        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) :
+        app.polyglot.t('search.errors.searchFailData');
     }
 
     loadTemplate('search/search.html', (t) => {

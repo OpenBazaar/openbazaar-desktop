@@ -1340,6 +1340,7 @@
     "errors": {
       "searchFailTitle": "The search query to %{provider} has failed. Choose another provider above.",
       "searchFailReason": "The search provider returned the following message: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "You are no longer connected to your node. Reconnect to continue searching",
       "addError": "This provider cannot be added. Check your data and try again.",
       "locked": "Default search providers can't be deleted.",
