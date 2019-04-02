@@ -25,7 +25,6 @@ export function createSearchURL(options = {}) {
   }
 
   const opts = {
-    term: '*',
     page: 0,
     pageSize: 66,
     network: !!app.serverConfig.testnet ? 'testnet' : 'mainnet',
@@ -34,7 +33,7 @@ export function createSearchURL(options = {}) {
     ...options,
   };
 
-  const query = `q=${encodeURIComponent(opts.term)}`;
+  const query = `q=${encodeURIComponent(opts.term || '*')}`;
   const network = `&network=${opts.network}`;
   const sortBy = opts.sortBy ? `&sortBy=${encodeURIComponent(opts.sortBy)}` : '';
   const page = `&p=${opts.page}&ps=${opts.pageSize}`;
