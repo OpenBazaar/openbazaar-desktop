@@ -173,7 +173,7 @@
                 inventory: '<span class="js-cryptoInventory"></span>'
               }) %>
             </div>
-          <% } else if (ob.metadata.type === 'PHYSICAL_GOOD') { %>
+          <% } else if (ob.metadata.contractType === 'PHYSICAL_GOOD') { %>
             <div>
               <%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`)}</b>` }) %>
             </div>
