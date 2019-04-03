@@ -7,8 +7,8 @@ import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
 import Suggestions from './Suggestions';
+import SortBy from './SortBy';
 import Filters from './Filters';
-import Dialog from '../modals/Dialog';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import ResultsCol from '../../collections/Results';
 import ProviderMd from '../../models/search/SearchProvider';
@@ -130,7 +130,6 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-searchBtn': 'clickSearchBtn',
-      'change .js-sortBy': 'changeSortBy',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
@@ -253,7 +252,7 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this.setSearch({ provider: md, page: 0 });
+    this.setSearch({ provider: md, p: 0 });
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
   }
 
@@ -340,7 +339,7 @@ export default class extends baseVw {
       page: this._search.page + 1,
     });
 
-    this.$resultsWrapper.html(resultsView.render().el);
+    this.getCachedEl('.js-resultsWrapper').html(resultsView.render().el);
 
     this.listenTo(resultsView, 'searchError', (xhr) => {
       this.setState({
@@ -354,26 +353,26 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.setSearch({ q: this.$searchInput.val(), page: 0 });
+    this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 });
     recordEvent('Discover_ClickSearch');
     recordEvent('Discover_Search', { type: 'click' });
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.setSearch({ q: this.$searchInput.val(), page: 0 });
+      this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 });
       recordEvent('Discover_EnterKeySearch');
       recordEvent('Discover_Search', { type: 'enterKey' });
     }
   }
 
-  changeSortBy(e) {
-    this.setSearch({ sortBy: $(e.target).val(), page: 0 });
+  changeSortBy(opts) {
+    this.setSearch({ ...opts, p: 0 });
     recordEvent('Discover_ChangeSortBy');
   }
 
   onFilterChanged() {
-    this.setSearch({ filters: this.filters.retrieveFormData(), page: 0 });
+    this.setSearch({ filters: this.filters.retrieveFormData(), p: 0 });
     recordEvent('Discover_ChangeFilter');
   }
 
@@ -400,6 +399,7 @@ export default class extends baseVw {
     super.render();
     const state = this.getState();
     const data = state.data;
+    const term = this._search.q === '*' ? '' : this._search.q;
 
     let errTitle;
     let errMsg;
@@ -415,8 +415,7 @@ export default class extends baseVw {
 
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
-        term: this._search.q === '*' ? '' : this._search.q,
-        sortBySelected: this.sortBySelected,
+        term,
         errTitle,
         errMsg,
         providerLocked: this.providerIsADefault(this._search.provider.id),
@@ -428,26 +427,12 @@ export default class extends baseVw {
         ...data,
       }));
     });
-    this.$sortBy = this.$('#sortBy');
-    this.$sortBy.select2({
-      // disables the search box
-      minimumResultsForSearch: Infinity,
-      templateResult: selectEmojis,
-      templateSelection: selectEmojis,
-    });
-    const filterWrapper = this.$('.js-filterWrapper');
-    filterWrapper.find('select').select2({
-      minimumResultsForSearch: 10,
-      templateResult: selectEmojis,
-      templateSelection: selectEmojis,
-    });
-    this.$filters = filterWrapper.find('select, input');
-    this.$resultsWrapper = this.$('.js-resultsWrapper');
-    this.$searchInput = this.$('.js-searchInput');
-    this.$searchLogo = this.$('.js-searchLogo');
 
-    this.$searchLogo.find('img').on('error', () => {
-      this.$searchLogo.addClass('loadError');
+    const $filterWrapper = this.$('.js-filterWrapper');
+    const $searchLogo = this.$('.js-searchLogo');
+
+    $searchLogo.find('img').on('error', () => {
+      $searchLogo.addClass('loadError');
     });
 
     if (this.searchProviders) this.searchProviders.remove();
@@ -464,15 +449,36 @@ export default class extends baseVw {
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
-    if (this.filters) this.filters.remove();
-    if (data && data.options) {
-      this.filters = this.createChild(Filters, {initialState: {filters: data.options}});
-      this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
-      this.$('.js-filterWrapper').append(this.filters.render().el);
+    // if data was passed in, construct a post-data retrieved experience
+    if (data) {
+      if (this.filters) this.filters.remove();
+      if (data.options) {
+        this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
+        this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
+        $filterWrapper.append(this.filters.render().el);
+
+        $filterWrapper.find('select').select2({
+          minimumResultsForSearch: 10,
+          templateResult: selectEmojis,
+          templateSelection: selectEmojis,
+        });
+      }
+
+      if (this.sortBy) this.sortBy.remove();
+      this.sortBy = this.createChild(SortBy, { initialState: {
+        term,
+        results: data.results,
+        sortBy: data.sortBy,
+        sortBySelected: this._search.sortBy,
+      } });
+      this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
+      this.$('.js-sortByWrapper').append(this.sortBy.render().el);
+
+      // use the initial set of results data to create the results view
+      this.createResults(data, this._search);
     }
 
-    // use the initial set of results data to create the results view
-    if (data) this.createResults(data, this._search);
+    this.$filters = $filterWrapper.find('select, input');
 
     return this;
   }
