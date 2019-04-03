@@ -5,103 +5,103 @@
 <% if (!ob.fetching) { %>
   <div class="pageContent">
     <% if (!ob.emptyData) { %>
-    <div class="flexColRows row">
-      <div class="flexVBase gutterH">
-        <h3 class="txUnl rowSm"><%= ob.name %></h3>
-        <% if (ob.isExistingProvider) { %>
-          <% if (!ob.providerLocked) { %>
-            <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
-          <% } %>
-          <% if (ob.showMakeDefault) { %>
-            <div>
-              <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
-                <%= ob.polyT('search.makeDefaultBtn') %>
-                <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
-                  <i class="ion-help-circled"></i>
-                </span>
-              </button>
-            </div>
-          <% } %>
-        <% } else { %>
-          <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
-        <% } %>
-      </div>
-      <div class="searchBar row clrP clrBr clrSh2">
-        <% if (ob.logo) { %>
-        <div class="searchLogo js-searchLogo">
-          <img src="<%= ob.logo %>"></img>
-        </div>
-        <% } %>
-        <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>"
-               type="text"
-               placeholder="<%= ob.polyT('search.searchPlaceholder') %>"
-               value="<%= ob.term %>">
-        <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
-      </div>
-      <div class="js-suggestions"></div>
-      <hr class="clrBr">
-    </div>
-    <div class="flexRow gutterHLg">
-      <div class="col3 filterWrapper js-filterWrapper"></div>
-      <div class="col9">
-        <div class="flexCol">
-          <div class="width100">
-            <div class="row flexVBase gutterH">
-              <div class="tx5 flexExpand">
-                <% if (ob.results) { %>
-                  <% if (ob.term) { %>
-                    <%= ob.polyT('search.resultsFound', {
-                      term: ob.parseEmojis(ob.term),
-                      smart_count: ob.localizeNumber(ob.results.total),
-                    }) %>
-                  <% } else { %>
-                  <b>
-                    <%= ob.polyT('search.resultsTotal', {
-                      smart_count: ob.localizeNumber(ob.results.total),
-                    }) %>
-                  </b>
-                  <% } %>
-                <% } %>
-                <span class="toolTip" data-tip="<%= ob.polyT('search.resultsHelper') %>">
-                  <i class="ion-information-circled clrT2"></i>
-                </span>
+      <div class="flexColRows row">
+        <div class="flexVBase gutterH">
+          <h3 class="txUnl rowSm"><%= ob.name %></h3>
+          <% if (ob.isExistingProvider) { %>
+            <% if (!ob.providerLocked) { %>
+              <button class="btnTxtOnly txb txU txUnb js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+            <% } %>
+            <% if (ob.showMakeDefault) { %>
+              <div>
+                <button class="btnTxtOnly txb txU txUnb js-makeDefaultProvider">
+                  <%= ob.polyT('search.makeDefaultBtn') %>
+                  <span class="toolTip" data-tip="<%= ob.polyT('search.makeDefaultBtnHelper') %>">
+                    <i class="ion-help-circled"></i>
+                  </span>
+                </button>
               </div>
-              <% if (ob.sortBy) { %>
-                <div class="tx5b">
-                  <%= ob.polyT('search.sortBy') %>
-                </div>
-                <div class="col4">
-                  <select id="sortBy" class="select2Small js-sortBy">
-                    <% _.each(ob.sortBy, function(val, key) {
-                    let selected = '';
-                    if (ob.sortBySelected) {
-                      selected = key === ob.sortBySelected ? 'selected' : '';
-                    } else {
-                      selected = val.default ? 'selected' : '';
-                    }
-                    print(`<option value="${key}" ${selected}>${val.label}</option>`);
-                    }); %>
-                  </select>
-                </div>
-              <% } %>
-            </div>
+            <% } %>
+          <% } else { %>
+            <button class="btnTxtOnly txb txU txUnb js-addQueryProvider"><%= ob.polyT('search.addQueryProviderBtn') %></button>
+          <% } %>
+        </div>
+        <div class="searchBar row clrP clrBr clrSh2">
+          <% if (ob.logo) { %>
+          <div class="searchLogo js-searchLogo">
+            <img src="<%= ob.logo %>"></img>
           </div>
-          <div class="width100 js-resultsWrapper">
-             <% // the results are added here %>
+          <% } %>
+          <input class="clrP clrBr searchInput js-searchInput <% if (ob.logo) print('withLogo') %>"
+                 type="text"
+                 placeholder="<%= ob.polyT('search.searchPlaceholder') %>"
+                 value="<%= ob.term %>">
+          <button class="btn clrP clrBr searchBtn js-searchBtn"><%= ob.polyT('search.searchBtn') %></button>
+        </div>
+        <div class="js-suggestions"></div>
+        <hr class="clrBr">
+      </div>
+      <div class="flexRow gutterHLg">
+        <div class="col3 filterWrapper js-filterWrapper"></div>
+        <div class="col9">
+          <div class="flexCol">
+            <div class="width100">
+              <div class="row flexVBase gutterH">
+                <div class="tx5 flexExpand">
+                  <% if (ob.results) { %>
+                    <% if (ob.term) { %>
+                      <%= ob.polyT('search.resultsFound', {
+                        term: ob.parseEmojis(ob.term),
+                        smart_count: ob.localizeNumber(ob.results.total),
+                      }) %>
+                    <% } else { %>
+                    <b>
+                      <%= ob.polyT('search.resultsTotal', {
+                        smart_count: ob.localizeNumber(ob.results.total),
+                      }) %>
+                    </b>
+                    <% } %>
+                  <% } %>
+                  <span class="toolTip" data-tip="<%= ob.polyT('search.resultsHelper') %>">
+                    <i class="ion-information-circled clrT2"></i>
+                  </span>
+                </div>
+                <% if (ob.sortBy) { %>
+                  <div class="tx5b">
+                    <%= ob.polyT('search.sortBy') %>
+                  </div>
+                  <div class="col4">
+                    <select id="sortBy" class="select2Small js-sortBy">
+                      <% _.each(ob.sortBy, function(val, key) {
+                      let selected = '';
+                      if (ob.sortBySelected) {
+                        selected = key === ob.sortBySelected ? 'selected' : '';
+                      } else {
+                        selected = val.default ? 'selected' : '';
+                      }
+                      print(`<option value="${key}" ${selected}>${val.label}</option>`);
+                      }); %>
+                    </select>
+                  </div>
+                <% } %>
+              </div>
+            </div>
+            <div class="width100 js-resultsWrapper">
+               <% // the results are added here %>
+            </div>
           </div>
         </div>
       </div>
-    </div>
     <% } else { %>
-    <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
-      <h2 class="rowLg"><%= ob.errTitle %></h2>
-      <p><%= ob.errMsg %></p>
-      <% if(!ob.providerLocked) { %>
-        <div class="flexHCent">
-          <button class="btn clrP clrBr js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
-        </div>
-      <% } %>
-    </div>
+      <div class="contentBox padLg flexColRows flexHCent clrP clrBr">
+        <h2 class="rowLg"><%= ob.errTitle %></h2>
+        <p><%= ob.errMsg %></p>
+        <% if(!ob.providerLocked) { %>
+          <div class="flexHCent">
+            <button class="btn clrP clrBr js-deleteProvider"><%= ob.polyT('search.deleteProviderBtn') %></button>
+          </div>
+        <% } %>
+      </div>
     <% } %>
   </div>
 <% } else { %>

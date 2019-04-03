@@ -69,54 +69,58 @@ export default class extends baseVw {
     }
     this._search.provider = this.currentDefaultProvider;
 
+    // If a query was passed in from the router, extract the data from it.
     if (options.query) {
       recordEvent('Discover_SearchFromAddressBar');
       recordEvent('Discover_Search', { type: 'addressBar' });
-    }
 
-    let queryParams = (new URL(`${this.currentBaseUrl}?${options.query || ''}`)).searchParams;
+      let queryParams = (new URL(`${this.currentBaseUrl}?${options.query || ''}`)).searchParams;
 
-    // if a url with parameters was in the query, use the parameters in it instead.
-    if (queryParams.get('providerQ')) {
-      const subURL = new URL(queryParams.get('providerQ'));
-      queryParams = subURL.searchParams;
-      const base = `${subURL.origin}${subURL.pathname}`;
-      /* if the query provider doesn't exist, create a provider model for it.
+      // If the query had a providerQ parameter, use that as the provider URL instead.
+      if (queryParams.get('providerQ')) {
+        const subURL = new URL(queryParams.get('providerQ'));
+        queryParams = subURL.searchParams;
+        const base = `${subURL.origin}${subURL.pathname}`;
+        /* if the query provider model doesn't already exist, create a new provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
          clear url if it has one. The opposite is also true.
-       */
-      const matchedProvider = app.searchProviders.getProviderByURL(base);
-      if (!matchedProvider) {
-        const queryOpts = {};
-        queryOpts[`${this.usingTor ? 'tor' : ''}${capitalize(this.search.urlType)}`] = base;
-        // TODO: add model validation here? What would the user see if there is an error?
-        this._search.provider = new ProviderMd(queryOpts);
-      } else {
-        this._search.provider = matchedProvider;
+         */
+        const matchedProvider = app.searchProviders.getProviderByURL(base);
+        if (!matchedProvider) {
+          const queryOpts = {};
+          queryOpts[`${this.usingTor ? 'tor' : ''}${capitalize(this.search.urlType)}`] = base;
+          // TODO: add model validation here? What would the user see if there is an error?
+          this._search.provider = new ProviderMd(queryOpts);
+        } else {
+          this._search.provider = matchedProvider;
+        }
       }
+
+      const params = {};
+
+      for (const key of queryParams.keys()) {
+        // checkbox params are represented by the same key multiple times. Convert them into a
+        // single key with an array of values
+        const val = queryParams.getAll(key);
+        params[key] = val.length === 1 ? val[0] : val;
+      }
+
+      // set the params in the search object
+      const filters = _.omit(params, [...queryKeys]);
+
+      // if the  provider returns a bad URL, change to a known good default provider
+      if (is.not.url(this.currentBaseUrl)) {
+        this._search.provider = app.searchProviders.at(0);
+        recordEvent('Discover_InvalidDefaultProvider',
+          { url: this.currentBaseUrl });
+      }
+
+      this.setSearch({ ..._.pick(params, ...queryKeys), filters });
+    } else {
+      // show discover version here
+      this.fetchSearch(this._search);
     }
-
-    // if the  provider returns a bad URL, change to a known good default provider
-    if (is.not.url(this.currentBaseUrl)) {
-      this._search.provider = app.searchProviders.at(0);
-      recordEvent('Discover_InvalidDefaultProvider',
-        { url: this.currentBaseUrl });
-    }
-
-    const params = {};
-
-    for (const key of queryParams.keys()) {
-      // checkbox params are represented by the same key multiple times. Convert them into a
-      // single key with an array of values
-      const val = queryParams.getAll(key);
-      params[key] = val.length === 1 ? val[0] : val;
-    }
-
-    // set the params in the search object
-    const filters = _.omit(params, [...queryKeys]);
-
-    this.setSearch({ ..._.pick(params, ...queryKeys), filters });
   }
 
   className() {
@@ -183,11 +187,11 @@ export default class extends baseVw {
 
     if (!_.isEqual(this._search, newSearch)) {
       this._search = newSearch;
-      this.processTerm(this._search);
+      this.fetchSearch(this._search);
     }
   }
 
-  processTerm(opts = {}) {
+  fetchSearch(opts = {}) {
     opts.baseUrl = opts.baseUrl || this.currentBaseUrl;
 
     this.removeFetches();
