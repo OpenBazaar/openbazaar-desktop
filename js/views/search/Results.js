@@ -8,11 +8,7 @@ import PageControls from '../components/PageControlsTextStyle';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
-import {
-  createSearchURL,
-  fetchSearchResults,
-  sanitizeResults,
-} from '../../utils/search';
+import { createSearchURL } from '../../utils/search';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -121,11 +117,9 @@ export default class extends baseVw {
     // if page exists, reuse it
     if (this.pageCollections[opts.p]) {
       this.renderCards(this.pageCollections[opts.p]);
-      // update the address bar
       app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
         { replace: this.firstRender });
     } else {
-      // show the loading spinner
       this.$el.addClass('loading');
 
       const newPageCol = new ResultsCol();
@@ -138,7 +132,6 @@ export default class extends baseVw {
       })
         .done(() => {
           this.renderCards(newPageCol);
-          // update the address bar
           app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
             { replace: this.firstRender });
         })
