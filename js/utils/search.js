@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
 import sanitizeHtml from 'sanitize-html';
@@ -25,22 +26,17 @@ export function createSearchURL(options = {}) {
   }
 
   const opts = {
-    page: 0,
-    pageSize: 66,
+    p: 0,
+    ps: 66,
     network: !!app.serverConfig.testnet ? 'testnet' : 'mainnet',
-    sortBy: '',
     filters: {},
     ...options,
   };
 
-  const query = `q=${encodeURIComponent(opts.term || '*')}`;
-  const network = `&network=${opts.network}`;
-  const sortBy = opts.sortBy ? `&sortBy=${encodeURIComponent(opts.sortBy)}` : '';
-  const page = `&p=${opts.page}&ps=${opts.pageSize}`;
-  const filters = opts.filters ? `&${$.param(opts.filters, true)}` : '';
+  const query = { ..._.pick(opts, ['q', 'p', 'ps', 'sortBy', 'network']) };
+  query.q = query.q || '*';
 
-
-  return new URL(`${opts.baseUrl}?${query}${network}${sortBy}${page}${filters}`);
+  return new URL(`${opts.baseUrl}?${$.param(query, true)}&${$.param(opts.filters, true)}`);
 }
 
 /** Create a search query and return the results.

@@ -38,9 +38,25 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
-    this._search = {
-      urlType: opts.urlType || 'listingsUrl',
+    const queryKeys = ['q', 'p', 'ps', 'sortBy', 'network'];
+
+    this._defaultSearch = {
+      urlType: 'listingsUrl',
+      q: '*',
+      p: 0,
+      ps: 66,
+      filters: {
+        nsfw: String(app.settings.get('showNsfw')),
+        acceptedCurrencies: supportedWalletCurs(),
+      },
     };
+
+    this._search = {
+      ...this._defaultSearch,
+      ..._.pick(opts, [...queryKeys, 'urlType', 'filters']),
+    };
+
+    this.searchFetches = [];
 
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
@@ -53,20 +69,12 @@ export default class extends baseVw {
     }
     this._search.provider = this.currentDefaultProvider;
 
-    // if the  provider returns a bad URL, change to a known good default provider
-    if (is.not.url(this.currentBaseUrl)) {
-      this._search.provider = app.searchProviders.at(0);
-      recordEvent('Discover_InvalidDefaultProvider',
-        { url: this.currentBaseUrl });
-    }
-
     if (options.query) {
       recordEvent('Discover_SearchFromAddressBar');
       recordEvent('Discover_Search', { type: 'addressBar' });
     }
 
-    const tempUrl = new URL(`${this.currentBaseUrl}?${options.query || ''}`);
-    let queryParams = tempUrl.searchParams;
+    let queryParams = (new URL(`${this.currentBaseUrl}?${options.query || ''}`)).searchParams;
 
     // if a url with parameters was in the query, use the parameters in it instead.
     if (queryParams.get('providerQ')) {
@@ -89,6 +97,13 @@ export default class extends baseVw {
       }
     }
 
+    // if the  provider returns a bad URL, change to a known good default provider
+    if (is.not.url(this.currentBaseUrl)) {
+      this._search.provider = app.searchProviders.at(0);
+      recordEvent('Discover_InvalidDefaultProvider',
+        { url: this.currentBaseUrl });
+    }
+
     const params = {};
 
     for (const key of queryParams.keys()) {
@@ -98,30 +113,10 @@ export default class extends baseVw {
       params[key] = val.length === 1 ? val[0] : val;
     }
 
-    // use the parameters from the query unless they were overridden in the options
-    this.serverPage = options.serverPage || params.p || 0;
-    this.pageSize = options.pageSize || params.ps || 66;
-    this.term = options.term || params.q || '';
-    this.sortBySelected = options.sortBySelected || params.sortBy || '';
+    // set the params in the search object
+    const filters = _.omit(params, [...queryKeys]);
 
-    // all parameters not specified above are assumed to be filters
-    const filterParams = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
-
-    // set an initial set of filters for the first query
-    // if not passed in, set the user's values for nsfw and the currency
-    this.defaultParams = {
-      nsfw: String(app.settings.get('showNsfw')),
-      acceptedCurrencies: supportedWalletCurs(),
-    };
-
-    this.filterParams = {
-      ...this.defaultParams,
-      ...filterParams,
-    };
-
-    this.searchFetches = [];
-
-    this.processTerm(this.term);
+    this.setSearch({ ..._.pick(params, ...queryKeys), filters });
   }
 
   className() {
@@ -174,27 +169,26 @@ export default class extends baseVw {
     return !!_.findWhere(defaultSearchProviders, { id });
   }
 
-  /**
-   * This will retrieve search results.
-   * @param {string} term - the term to search for
-   * @param {boolean} reset - reset the filters
+  /** Handles updates to the search.
+   *
+   * @param {object} search - The new state.
+   * @param {boolean} [options.searchOnChange = true] - Set to false to avoid firing a new
+   *   search request after changing the search object.
    */
-  processTerm(term, reset) {
-    this.term = term || '';
-    const baseUrl = this.currentBaseUrl;
-    const formData = this.filters ? this.filters.retrieveFormData() : {};
-    // keep any parameters that aren't present in the form on the page
-    let filters = { ...this.defaultParams };
-    if (!reset) filters = { ...filters, ...this.filterParams, ...formData };
-
-    const opts = {
-      baseUrl,
-      term,
-      page: this.serverPage,
-      pageSize: this.pageSize,
-      sortBy: this.sortBySelected,
-      filters,
+  setSearch(search = {}) {
+    const newSearch = {
+      ...this._search,
+      ...search,
     };
+
+    if (!_.isEqual(this._search, newSearch)) {
+      this._search = newSearch;
+      this.processTerm(this._search);
+    }
+  }
+
+  processTerm(opts = {}) {
+    opts.baseUrl = opts.baseUrl || this.currentBaseUrl;
     const searchUrl = createSearchURL(opts);
 
     this.removeFetches();
@@ -257,10 +251,8 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this._search.provider = md;
-    this.serverPage = 0;
+    this.setSearch({ provider: md, page: 0 });
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
-    this.processTerm(this.term, true);
   }
 
   deleteProvider(md = this._search.provider) {
@@ -277,9 +269,7 @@ export default class extends baseVw {
   }
 
   resetSearch() {
-    this.serverPage = 0;
-    this.filterParams = '';
-    this.processTerm('', true);
+    this.setSearch(this._defaultSearch);
   }
 
   clickDeleteProvider() {
@@ -334,7 +324,7 @@ export default class extends baseVw {
       buttons.push({
         text: app.polyglot.t('search.useDefault',
           {
-            term: this.term,
+            term: this._search.q,
             defaultProvider: this.currentDefaultProvider,
           }),
         fragment: 'useDefault',
@@ -384,7 +374,7 @@ export default class extends baseVw {
       reportsUrl: this._search.provider.reports || '',
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
-      serverPage: this.serverPage,
+      serverPage: this._search.page,
       pageSize: this.pageSize,
       initCol: this.resultsCol,
       viewType,
@@ -394,7 +384,7 @@ export default class extends baseVw {
       total: data.results ? data.results.total : 0,
       provider: this._search.provider.get('name') || 'unknown',
       url: this.currentBaseUrl,
-      page: this.serverPage + 1,
+      page: this._search.page + 1,
     });
 
     this.$resultsWrapper.html(resultsView.render().el);
@@ -405,36 +395,31 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.serverPage = 0;
-    this.processTerm(this.$searchInput.val());
+    this.setSearch({ q: this.$searchInput.val(), page: 0 });
     recordEvent('Discover_ClickSearch');
     recordEvent('Discover_Search', { type: 'click' });
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.serverPage = 0;
-      this.processTerm(this.$searchInput.val());
+      this.setSearch({ q: this.$searchInput.val(), page: 0 });
       recordEvent('Discover_EnterKeySearch');
       recordEvent('Discover_Search', { type: 'enterKey' });
     }
   }
 
   changeSortBy(e) {
-    this.sortBySelected = $(e.target).val();
-    this.serverPage = 0;
-    this.processTerm(this.term);
+    this.setSearch({ sortBy: $(e.target).val(), page: 0 });
     recordEvent('Discover_ChangeSortBy');
   }
 
   onFilterChanged() {
-    this.serverPage = 0;
-    this.processTerm(this.term);
+    this.setSearch({ filters: this.filters.retrieveFormData(), page: 0 });
     recordEvent('Discover_ChangeFilter');
   }
 
   onClickSuggestion(opts) {
-    this.processTerm(opts.suggestion);
+    this.setSearch({ q: opts.suggestion });
     recordEvent('Discover_ClickSuggestion');
     recordEvent('Discover_Search', { type: 'suggestion' });
   }
@@ -475,7 +460,7 @@ export default class extends baseVw {
 
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
-        term: this.term === '*' ? '' : this.term,
+        term: this._search.q === '*' ? '' : this._search.q,
         sortBySelected: this.sortBySelected,
         errTitle,
         errMsg,
