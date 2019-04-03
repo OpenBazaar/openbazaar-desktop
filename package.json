@@ -47,7 +47,7 @@
     "cross-env": "1.0.8",
     "draftlog": "1.0.12",
     "electron": "4.1.1",
-    "electron-winstaller": "^2.7.0",
+    "electron-winstaller": "^2.5.2",
     "eslint": "2.13.1",
     "eslint-config-airbnb": "9.0.1",
     "eslint-config-defaults": "9.0.0",
