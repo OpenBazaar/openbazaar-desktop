@@ -189,17 +189,15 @@ export default class extends baseVw {
 
   processTerm(opts = {}) {
     opts.baseUrl = opts.baseUrl || this.currentBaseUrl;
-    const searchUrl = createSearchURL(opts);
 
     this.removeFetches();
 
     this.setState({
       fetching: true,
-      searchUrl,
       xhr: '',
     });
 
-    const searchFetch = fetchSearchResults(searchUrl)
+    const searchFetch = fetchSearchResults(createSearchURL(opts))
       .done((pData, status, xhr) => {
         const data = JSON.parse(sanitizeResults(pData));
 
@@ -353,7 +351,7 @@ export default class extends baseVw {
     });
   }
 
-  createResults(data, searchUrl) {
+  createResults(data, search) {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
 
@@ -362,20 +360,16 @@ export default class extends baseVw {
     if (data && data.options && data.options.type &&
       data.options.type.options &&
       data.options.type.options.length) {
-      if (data.options.type.options.find(
-        op => op.value === 'cryptocurrency' && op.checked
-      )) {
+      if (data.options.type.options.find(op => op.value === 'cryptocurrency' && op.checked) &&
+        data.options.type.options.filter(op => op.checked).length === 1) {
         viewType = 'cryptoList';
       }
     }
 
     const resultsView = this.createChild(Results, {
-      searchUrl,
-      reportsUrl: this._search.provider.reports || '',
+      search,
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
-      serverPage: this._search.page,
-      pageSize: this.pageSize,
       initCol: this.resultsCol,
       viewType,
     });
@@ -441,10 +435,6 @@ export default class extends baseVw {
     super.render();
     const state = this.getState();
     const data = state.data;
-
-    if (data && !state.searchUrl) {
-      throw new Error('Please provide the search URL along with the data.');
-    }
 
     let errTitle;
     let errMsg;
@@ -517,7 +507,7 @@ export default class extends baseVw {
     }
 
     // use the initial set of results data to create the results view
-    if (data) this.createResults(data, state.searchUrl);
+    if (data) this.createResults(data, this._search);
 
     return this;
   }

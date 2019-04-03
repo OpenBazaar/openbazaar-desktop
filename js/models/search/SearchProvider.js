@@ -38,7 +38,7 @@ export default class extends BaseModel {
     return this.get(`${this.usingTor ? 'tor' : ''}vendors`);
   }
 
-  get reportsUr() {
+  get reportsUrl() {
     return this.get(`${this.usingTor ? 'tor' : ''}reports`);
   }
 

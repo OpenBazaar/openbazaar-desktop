@@ -4,6 +4,7 @@ import $ from 'jquery';
 import sanitizeHtml from 'sanitize-html';
 import is from 'is_js';
 import { Events } from 'backbone';
+import ProviderMd from '../models/search/SearchProvider';
 
 const events = {
   ...Events,
@@ -11,7 +12,8 @@ const events = {
 
 /** Create a search query URL.
  *
- * @param {string} options.baseUrl - The url endpoint to use, without any parameters.
+ * @param {object} options.provider - The provider model.
+ * @param {string} options.urlType - The type of endpoint to use.
  * @param {string} options.term - The term(s) to search for.
  * @param {string} options.page - The page to returns results for.
  * @param {string} options.pageSize - The number of results per page.
@@ -21,8 +23,11 @@ const events = {
  * @returns {xhr}
  */
 export function createSearchURL(options = {}) {
-  if (!options.baseUrl || is.not.url(options.baseUrl)) {
-    throw new Error('Please provide a base url for the search endpoint.');
+  if (!options.provider || !(options.provider instanceof ProviderMd)) {
+    throw new Error('Please provide a provider model.');
+  }
+  if (!options.urlType || is.not.string(options.urlType)) {
+    throw new Error('Please provide an urlType for the search endpoint.');
   }
 
   const opts = {
@@ -33,10 +38,12 @@ export function createSearchURL(options = {}) {
     ...options,
   };
 
+  const baseUrl = opts.provider[opts.urlType];
+
   const query = { ..._.pick(opts, ['q', 'p', 'ps', 'sortBy', 'network']) };
   query.q = query.q || '*';
 
-  return new URL(`${opts.baseUrl}?${$.param(query, true)}&${$.param(opts.filters, true)}`);
+  return new URL(`${baseUrl}?${$.param(query, true)}&${$.param(opts.filters, true)}`);
 }
 
 /** Create a search query and return the results.
