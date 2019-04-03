@@ -1,5 +1,6 @@
 import { Collection } from 'backbone';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
+import { sanitizeResults } from '../../utils/search';
 import Provider from '../../models/search/SearchProvider';
 
 export default class extends Collection {
@@ -67,5 +68,11 @@ export default class extends Collection {
       this[idString] = md.id;
       localStorage[storageString] = md.id;
     }
+  }
+
+  fetch(options = {}) {
+    return super.fetch({
+      data: sanitizeResults(options.data || {}),
+    });
   }
 }
