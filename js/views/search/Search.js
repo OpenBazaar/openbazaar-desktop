@@ -306,51 +306,6 @@ export default class extends baseVw {
     this.addProvider();
   }
 
-  showSearchError(xhr = {}) {
-    const provider = this._search.provider.get('name') || this.currentBaseUrl;
-    const title = app.polyglot.t('search.errors.searchFailTitle', { provider });
-    const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
-    const msg = failReason ?
-                app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
-    const buttons = [];
-    if (this.usingOriginal) {
-      buttons.push({
-        text: app.polyglot.t('search.changeProvider'),
-        fragment: 'changeProvider',
-      });
-    } else {
-      buttons.push({
-        text: app.polyglot.t('search.useDefault',
-          {
-            term: this._search.q,
-            defaultProvider: this.currentDefaultProvider,
-          }),
-        fragment: 'useDefault',
-      });
-    }
-
-    const errorDialog = new Dialog({
-      title,
-      msg,
-      buttons,
-      showCloseButton: false,
-      removeOnClose: true,
-    }).render().open();
-    this.listenTo(errorDialog, 'click-changeProvider', () => {
-      errorDialog.close();
-    });
-    this.listenTo(errorDialog, 'click-useDefault', () => {
-      this.activateProvider(app.searchProviders.at(0));
-      errorDialog.close();
-    });
-
-    recordEvent('Discover_SearchError', {
-      error: msg || 'unknown error',
-      provider: this._search.provider.get('name') || 'unknown',
-      url: this._search.provider.listings,
-    });
-  }
-
   createResults(data, search) {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
@@ -383,7 +338,13 @@ export default class extends baseVw {
 
     this.$resultsWrapper.html(resultsView.render().el);
 
-    this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
+    this.listenTo(resultsView, 'searchError', (xhr) => {
+      this.setState({
+        fetching: false,
+        data: '',
+        xhr,
+      });
+    });
     this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
     this.listenTo(resultsView, 'resetSearch', () => this.resetSearch());
   }
