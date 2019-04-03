@@ -8,26 +8,28 @@ import PageControls from '../components/PageControlsTextStyle';
 import ListingCardModel from '../../models/listing/ListingShort';
 import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
+import {
+  createSearchURL,
+  fetchSearchResults,
+  sanitizeResults,
+} from '../../utils/search';
 
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
     this.options = options;
+    this._search = {
+      p: 0,
+      ps: 66,
+      ...options.search,
+    };
 
-    this.searchUrl = options.searchUrl;
-    if (!this.searchUrl) {
-      throw new Error('Please provide a search provider URL.');
-    }
-
-    this.serverPage = this.options.serverPage || 0;
-    this.pageSize = this.options.pageSize || 24;
-    this.reportsUrl = this.options.reportsUrl || '';
     this.viewType = this.options.viewType || 'grid';
 
     this.cardViews = [];
     this.pageCollections = {};
     // if an initial collection was passed in, add it
-    if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
+    if (options.initCol) this.pageCollections[this._search.p] = (options.initCol);
     this.firstRender = true;
   }
 
@@ -54,7 +56,7 @@ export default class extends baseVw {
 
       const options = {
         listingBaseUrl: `${base}/store/`,
-        reportsUrl: this.reportsUrl,
+        reportsUrl: this._search.provider.reportsUrl || '',
         searchUrl: this.searchUrl,
         model,
         vendor,
@@ -85,8 +87,8 @@ export default class extends baseVw {
     this.$resultsGrid.html(resultsFrag);
 
     // update the page controls
-    const currentPage = Number(this.serverPage) + 1;
-    const lastPage = Math.ceil(models.total / this.pageSize);
+    const currentPage = Number(this._search.p) + 1;
+    const lastPage = Math.ceil(models.total / this._search.ps);
 
     this.pageControls.setState({
       currentPage,
@@ -104,56 +106,58 @@ export default class extends baseVw {
     */
   }
 
-  loadPage(page = this.serverPage, size = this.pageSize) {
+  loadPage(options) {
     this.removeCardViews();
-    // get the new page
-    const url = new URL(this.searchUrl);
-    const params = new URLSearchParams(url.search);
-    params.set('p', page);
-    params.set('ps', size);
-    const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
+
+    const opts = {
+      ...this._search,
+      ...options,
+    };
+
+    const newUrl = createSearchURL(opts);
+
     this.trigger('loadingPage');
 
     // if page exists, reuse it
-    if (this.pageCollections[page]) {
-      this.renderCards(this.pageCollections[page]);
+    if (this.pageCollections[opts.p]) {
+      this.renderCards(this.pageCollections[opts.p]);
       // update the address bar
-      app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
+      app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
         { replace: this.firstRender });
     } else {
       // show the loading spinner
       this.$el.addClass('loading');
 
       const newPageCol = new ResultsCol();
-      this.pageCollections[page] = newPageCol;
+      this.pageCollections[opts.p] = newPageCol;
 
       if (this.newPageFetch) this.newPageFetch.abort();
 
       this.newPageFetch = newPageCol.fetch({
-        url: newURL,
+        url: newUrl,
       })
-          .done(() => {
-            this.renderCards(newPageCol);
-            // update the address bar
-            app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
-              { replace: this.firstRender });
-          })
-          .fail((xhr) => {
-            if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
-          });
+        .done(() => {
+          this.renderCards(newPageCol);
+          // update the address bar
+          app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
+            { replace: this.firstRender });
+        })
+        .fail((xhr) => {
+          if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
+        });
     }
   }
 
   clickPagePrev() {
-    this.serverPage--;
-    this.loadPage(this.serverPage);
-    recordEvent('Discover_PrevPage', { fromPage: this.serverPage });
+    this._search.p--;
+    this.loadPage();
+    recordEvent('Discover_PrevPage', { fromPage: this._search.p });
   }
 
   clickPageNext() {
-    this.serverPage++;
-    this.loadPage(this.serverPage);
-    recordEvent('Discover_NextPage', { fromPage: this.serverPage });
+    this._search.p++;
+    this.loadPage();
+    recordEvent('Discover_NextPage', { fromPage: this._search.p });
   }
 
   removeCardViews() {
