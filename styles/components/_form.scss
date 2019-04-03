@@ -189,10 +189,13 @@ label {
   }
 }
 
-.required::after {
-  content: '*';
-  position: absolute;
-  font-size: 130%;
+.required {
+  display: inline-flex;
+
+  &::after {
+    content: '*';
+    font-size: 130%;
+  }
 }
 
 // By default, using width values appropriate for currency codes.
