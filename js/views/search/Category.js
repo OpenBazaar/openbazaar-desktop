@@ -9,22 +9,18 @@ import { createSearchURL } from '../../utils/search';
 export default class extends baseVw {
   constructor(options = {}) {
     super(options);
-    this.options = options;
+
+    this.viewType = options.viewType || 'grid';
+
     this._search = {
       ...options.search,
     };
-
-    this.viewType = this.options.viewType || 'grid';
 
     this.cardViews = [];
   }
 
   className() {
     return 'searchCategory searchResults flexColRow';
-  }
-
-  attributes() {
-    return { style: 'margin-bottom: 50px' };
   }
 
   events() {
@@ -45,7 +41,7 @@ export default class extends baseVw {
     const options = {
       listingBaseUrl: `${base}/store/`,
       reportsUrl: this._search.provider.reportsUrl || '',
-      searchUrl: this.searchUrl,
+      searchUrl: this._search.provider[this._search.urlType],
       model,
       vendor,
       onStore: false,
@@ -67,15 +63,12 @@ export default class extends baseVw {
       }
     });
 
-    this.$el.toggleClass('noResults', models.total < 1);
-
     this.getCachedEl('.js-resultsGrid').html(resultsFrag);
 
-    // hide the loading spinner
     this.$el.removeClass('loading');
   }
 
-  loadPage(options) {
+  loadCategory(options) {
     this.removeCardViews();
 
     const opts = {
@@ -85,19 +78,17 @@ export default class extends baseVw {
 
     const newUrl = createSearchURL(opts);
 
-    this.trigger('loadingPage');
-
     this.$el.addClass('loading');
 
-    const newPageCol = new ResultsCol();
+    const catCol = new ResultsCol();
 
-    if (this.newPageFetch) this.newPageFetch.abort();
+    if (this.categoryFetch) this.categoryFetch.abort();
 
-    this.newPageFetch = newPageCol.fetch({
+    this.categoryFetch = catCol.fetch({
       url: newUrl,
     })
       .done(() => {
-        this.renderCards(newPageCol);
+        this.renderCards(catCol);
       })
       .fail((xhr) => {
         if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
@@ -111,7 +102,7 @@ export default class extends baseVw {
 
   remove() {
     this.removeCardViews();
-    if (this.newPageFetch) this.newPageFetch.abort();
+    if (this.categoryFetch) this.categoryFetch.abort();
     super.remove();
   }
 
@@ -126,7 +117,7 @@ export default class extends baseVw {
       }));
 
       this.removeCardViews();
-      this.loadPage();
+      this.loadCategory();
     });
 
     return this;

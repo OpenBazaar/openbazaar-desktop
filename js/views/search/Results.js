@@ -53,7 +53,7 @@ export default class extends baseVw {
       const options = {
         listingBaseUrl: `${base}/store/`,
         reportsUrl: this._search.provider.reportsUrl || '',
-        searchUrl: this.searchUrl,
+        searchUrl: this._search.provider[this._search.urlType],
         model,
         vendor,
         onStore: false,

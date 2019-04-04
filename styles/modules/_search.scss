@@ -210,7 +210,7 @@
 
       .spinner {
         position: absolute;
-        top: 150px;
+        top: calc(50% - #{$spinnerLg/2});
       }
 
       .listingsGrid {
@@ -234,6 +234,20 @@
       .pageControls,
       .listingGrid {
         display: none;
+      }
+    }
+
+    &.searchCategory {
+      position: relative;
+
+      .cryptoListViewHeader {
+        padding: 15px 30px;
+        font-size: 1.4rem;
+      }
+
+      .listingsGrid.listingsGridCryptoListView  .listingCard {
+        padding: 6px 30px;
+        font-size: 1.6rem;
       }
     }
   }
