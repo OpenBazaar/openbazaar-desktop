@@ -130,3 +130,11 @@ export function handleLinks(el) {
     e.preventDefault();
   });
 }
+
+/**
+ * This will scroll the pageContainer to the top of the contentFrame. Use this when calling
+ * scrollIntoView on a page view's root element doesn't scroll the pageContainer to zero.
+ */
+export function scrollPageIntoView() {
+  document.getElementById('pageContainer').scrollIntoView();
+}

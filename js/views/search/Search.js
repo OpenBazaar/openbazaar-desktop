@@ -20,6 +20,7 @@ import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import { capitalize } from '../../utils/string';
+import { scrollPageIntoView } from '../../utils/dom';
 import {
   createSearchURL,
   fetchSearchResults,
@@ -348,7 +349,10 @@ export default class extends baseVw {
     this.getCachedEl('.js-categoryWrapper').append(category.render().el);
 
     // TODO put see all button listener here
-    this.listenTo(category, 'seeAllCategory', (opts) => this.setSearch(opts));
+    this.listenTo(category, 'seeAllCategory', (opts) => {
+      scrollPageIntoView();
+      this.setSearch(opts);
+    });
 
     return category;
   }
@@ -393,7 +397,7 @@ export default class extends baseVw {
         xhr,
       });
     });
-    this.listenTo(this.resultsView, 'loadingPage', () => this.scrollToTop());
+    this.listenTo(this.resultsView, 'loadingPage', () => scrollPageIntoView());
     this.listenTo(this.resultsView, 'resetSearch', () => this.resetSearch());
   }
 
@@ -425,10 +429,6 @@ export default class extends baseVw {
     this.setSearch({ q: opts.suggestion });
     recordEvent('Discover_ClickSuggestion');
     recordEvent('Discover_Search', { type: 'suggestion' });
-  }
-
-  scrollToTop() {
-    this.$el[0].scrollIntoView();
   }
 
   removeFetches() {
