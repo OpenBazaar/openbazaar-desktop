@@ -173,7 +173,6 @@ export default class extends baseVw {
       }));
 
       this.$resultsGrid = this.$('.js-resultsGrid');
-      this.$displayText = this.$('.js-displayingText');
       this.removeCardViews();
 
       if (this.pageControls) this.pageControls.remove();

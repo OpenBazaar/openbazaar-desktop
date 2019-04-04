@@ -2,12 +2,12 @@
    the store and search results views. Make sure to check both when making changes to this file.
  */
 
-$crytoListViewTradeFromWidth: 57px;
-$crytoListViewTradeToWidth: 104px;
-$crytoListViewTradeArrowWidth: 48px;
-$crytoListViewVendorWidth: 185px;
-$crytoListViewPriceWidth: 125px;
-$crytoListViewInventoryMaxWidth: 138px;
+$crytoListViewTradeFromWidth: 9%;
+$crytoListViewTradeToWidth: 16%;
+$crytoListViewTradeArrowWidth: 7%;
+$crytoListViewVendorWidth: 28%;
+$crytoListViewPriceWidth: 19%;
+$crytoListViewInventoryMaxWidth: 21%;
 
 .listingsGrid {
   flex-wrap: wrap;
@@ -46,8 +46,6 @@ $crytoListViewInventoryMaxWidth: 138px;
         right: 8px;
         left: auto;
       }
-
-
 
       .userControls {
         bottom: auto;
@@ -116,6 +114,7 @@ $crytoListViewInventoryMaxWidth: 138px;
   }
 
   &.listingsGridCryptoListView {
+
     .tradeFromCol {
       width: $crytoListViewTradeFromWidth;
       margin-right: 0;
@@ -139,7 +138,7 @@ $crytoListViewInventoryMaxWidth: 138px;
     }
 
     .inventoryCol {
-      max-width: $crytoListViewInventoryMaxWidth;
+      width: $crytoListViewInventoryMaxWidth;
     }
   }
 
@@ -195,5 +194,18 @@ $crytoListViewInventoryMaxWidth: 138px;
 
   .toolTip {
     text-transform: none;
+  }
+}
+
+.searchCategory {
+
+  .cryptoListViewHeader {
+    padding: 15px 30px;
+    font-size: 1.4rem;
+  }
+
+  .listingsGrid.listingsGridCryptoListView  .listingCard {
+    padding: 6px 30px;
+    font-size: 1.6rem;
   }
 }

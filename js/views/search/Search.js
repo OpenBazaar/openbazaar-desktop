@@ -7,6 +7,7 @@ import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
 import Suggestions from './Suggestions';
+import Category from './Category';
 import SortBy from './SortBy';
 import Filters from './Filters';
 import { openSimpleMessage } from '../modals/SimpleMessage';
@@ -31,6 +32,7 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         fetching: false,
+        showHome: false,
         ...options.initialState,
       },
       ...options,
@@ -56,18 +58,47 @@ export default class extends baseVw {
       ..._.pick(opts, [...queryKeys, 'urlType', 'filters']),
     };
 
+    // If there is only one provider and it isn't the default, just set it to be such.
+    if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
+      this.currentDefaultProvider = app.searchProviders.at(0);
+    }
+    this._search.provider = this.currentDefaultProvider;
+
+    this._categories = [
+      'Art',
+      'Music',
+      'Toys',
+      'Crypto',
+      'Books',
+      'Health',
+      'Games',
+      'Handmade',
+      'Clothing',
+      'Electronics',
+      'Bitcoin',
+    ];
+
+    this._categorySearch = {
+      ...this._search,
+      ps: 8,
+    };
+
+    this._cryptoSearch = {
+      ...this._categorySearch,
+      ps: 5,
+      filters: {
+        type: 'cryptocurrency',
+      },
+    };
+
+    this.categorySearches = [];
+
     this.searchFetches = [];
 
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
     // In the future there may be more possible types
     this.urlType = this.usingTor ? 'torlistings' : 'listings';
-
-    // If there is only one provider and it isn't the default, just set it to be such.
-    if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
-      this.currentDefaultProvider = app.searchProviders.at(0);
-    }
-    this._search.provider = this.currentDefaultProvider;
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
@@ -119,7 +150,7 @@ export default class extends baseVw {
       this.setSearch({ ..._.pick(params, ...queryKeys), filters });
     } else {
       // show discover version here
-      this.fetchSearch(this._search);
+      this.setState({ showHome: true });
     }
   }
 
@@ -175,8 +206,6 @@ export default class extends baseVw {
   /** Handles updates to the search.
    *
    * @param {object} search - The new state.
-   * @param {boolean} [options.searchOnChange = true] - Set to false to avoid firing a new
-   *   search request after changing the search object.
    */
   setSearch(search = {}) {
     const newSearch = {
@@ -196,6 +225,7 @@ export default class extends baseVw {
     this.removeFetches();
 
     this.setState({
+      showHome: false,
       fetching: true,
       xhr: '',
     });
@@ -309,6 +339,20 @@ export default class extends baseVw {
     this.addProvider();
   }
 
+  createCategory(search) {
+    const category = this.createChild(Category, {
+      search,
+      viewType: search.filters.type === 'cryptocurrency' ? 'cryptoList' : 'grid',
+    });
+
+    this.getCachedEl('.js-categoryWrapper').append(category.render().el);
+
+    // TODO put see all button listener here
+    this.listenTo(category, 'seeAllCategory', (opts) => this.setSearch(opts));
+
+    return category;
+  }
+
   createResults(data, search) {
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
@@ -324,7 +368,8 @@ export default class extends baseVw {
       }
     }
 
-    const resultsView = this.createChild(Results, {
+    if (this.resultsView) this.resultsView.remove();
+    this.resultsView = this.createChild(Results, {
       search,
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
@@ -339,17 +384,17 @@ export default class extends baseVw {
       page: this._search.page + 1,
     });
 
-    this.getCachedEl('.js-resultsWrapper').html(resultsView.render().el);
+    this.getCachedEl('.js-resultsWrapper').html(this.resultsView.render().el);
 
-    this.listenTo(resultsView, 'searchError', (xhr) => {
+    this.listenTo(this.resultsView, 'searchError', (xhr) => {
       this.setState({
         fetching: false,
         data: '',
         xhr,
       });
     });
-    this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
-    this.listenTo(resultsView, 'resetSearch', () => this.resetSearch());
+    this.listenTo(this.resultsView, 'loadingPage', () => this.scrollToTop());
+    this.listenTo(this.resultsView, 'resetSearch', () => this.resetSearch());
   }
 
   clickSearchBtn() {
@@ -398,7 +443,7 @@ export default class extends baseVw {
   render() {
     super.render();
     const state = this.getState();
-    const data = state.data;
+    const data = state.data || {};
     const term = this._search.q === '*' ? '' : this._search.q;
 
     let errTitle;
@@ -421,7 +466,7 @@ export default class extends baseVw {
         providerLocked: this.providerIsADefault(this._search.provider.id),
         isExistingProvider: this.doesProviderURLExist(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
-        emptyData: $.isEmptyObject(data),
+        emptyData: $.isEmptyObject(data) && !state.showHome,
         ...state,
         ...this._search.provider,
         ...data,
@@ -449,8 +494,19 @@ export default class extends baseVw {
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
+    this.categorySearches.forEach(cat => cat.remove());
+
     // if data was passed in, construct a post-data retrieved experience
-    if (data) {
+    if (state.showHome) {
+      const categorySearches = [this._cryptoSearch]; // crypto doesn't have a  search term.
+      this._categories.forEach(cat => {
+        categorySearches.push({ ...this._categorySearch, q: cat });
+      });
+      categorySearches.forEach(search => {
+        const newCategory = this.createCategory(search);
+        this.categorySearches.push(newCategory);
+      });
+    } else {
       if (this.filters) this.filters.remove();
       if (data.options) {
         this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
@@ -465,14 +521,18 @@ export default class extends baseVw {
       }
 
       if (this.sortBy) this.sortBy.remove();
-      this.sortBy = this.createChild(SortBy, { initialState: {
-        term,
-        results: data.results,
-        sortBy: data.sortBy,
-        sortBySelected: this._search.sortBy,
-      } });
-      this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
-      this.$('.js-sortByWrapper').append(this.sortBy.render().el);
+      if (data.sortBy) {
+        this.sortBy = this.createChild(SortBy, {
+          initialState: {
+            term,
+            results: data.results,
+            sortBy: data.sortBy,
+            sortBySelected: this._search.sortBy,
+          },
+        });
+        this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
+        this.$('.js-sortByWrapper').append(this.sortBy.render().el);
+      }
 
       // use the initial set of results data to create the results view
       this.createResults(data, this._search);

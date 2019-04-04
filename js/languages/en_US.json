@@ -1327,6 +1327,9 @@
       "transactions": "Transactions",
       "myPage": "My Page"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Trade",
       "colTradeTo": "For",
