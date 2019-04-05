@@ -10,8 +10,8 @@ const events = {
   ...Events,
 };
 
-/** Create a search query URL.
- *
+/**
+ * Create a search query URL.
  * @param {object} options.provider - The provider model.
  * @param {string} options.urlType - The type of endpoint to use.
  * @param {string} options.term - The term(s) to search for.
@@ -46,8 +46,8 @@ export function createSearchURL(options = {}) {
   return new URL(`${baseUrl}?${$.param(query, true)}&${$.param(opts.filters, true)}`);
 }
 
-/** Create a search query and return the results.
- *
+/**
+ * Create a search query and return the results.
  * @param {string} url - The url endpoint to use.
  *
  * @returns {xhr}
@@ -63,8 +63,8 @@ export function fetchSearchResults(url) {
   return xhr;
 }
 
-/** Sanitize search results.
- *
+/**
+ * Sanitize search results.
  * @param {object} data - Data object returned from a search query.
  *
  * @returns {object} - The same object, but with sanitized strings.
@@ -82,8 +82,8 @@ export function sanitizeResults(data) {
   });
 }
 
-/** Creates an object for updating search providers with new data returned from a query.
- *
+/**
+ * Creates an object for updating search providers with new data returned from a query.
  * @param {object} data - Provider object from a search query.
  * @returns {{data: *, urlTypes: Array}}
  */
