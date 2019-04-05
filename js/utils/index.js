@@ -3,6 +3,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import is from 'is_js';
 import app from '../app';
 import multihashes from 'multihashes';
 import twemoji from 'twemoji';
@@ -206,4 +207,19 @@ export function deparam(queryStr = '') {
   }
 
   return parsed;
+}
+
+/**
+ * Returns the URL minus any query parameters.
+ * @param {string} url - A URL.
+ * @returns {string}
+ */
+export function baseUrl(url, removePrefix) {
+  if (!url || is.not.url(url)) throw new Error('Please provide a valid URL.');
+
+  const tempUrl = new URL(url);
+
+  if (removePrefix) return (`${tempUrl.host}`).replace(/\/$/, '');
+
+  return (`${tempUrl.origin}`).replace(/\/$/, '');
 }

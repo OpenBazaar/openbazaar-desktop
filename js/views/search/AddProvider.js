@@ -9,7 +9,18 @@ import { recordEvent } from '../../utils/metrics';
 
 export default class extends BaseView {
   constructor(options = {}) {
-    super(options);
+    if (!options.urlType) throw new Error('Please provide an urlType.');
+
+    const opts = {
+      urlType: '',
+      initialState: {
+        showExistsError: false,
+        ...options.initialState,
+      },
+      ...options,
+    };
+
+    super(opts);
     this.options = options;
 
     this.model = new ProviderMd();
@@ -41,6 +52,11 @@ export default class extends BaseView {
     // if the user doesn't type http:// or https://, add http:// for them
     if (!/^https?:\/\//i.test(URL)) {
       URL = `http://${URL}`;
+    }
+
+    if (app.searchProviders.getProviderByURL(URL)) {
+      this.setState({ showExistsError: true });
+      return;
     }
 
     const opts = {};
@@ -99,6 +115,7 @@ export default class extends BaseView {
           ...(this.model.validationError || {}),
         },
         ...this.options,
+        ...this.getState(),
       }));
     });
     setTimeout(() => {

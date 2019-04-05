@@ -19,7 +19,6 @@ import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
 import { getCurrentConnection } from '../../utils/serverConnect';
-import { capitalize } from '../../utils/string';
 import { scrollPageIntoView } from '../../utils/dom';
 import {
   createSearchURL,
@@ -103,7 +102,7 @@ export default class extends baseVw {
 
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
-    // In the future there may be more possible types
+    // In the future there may be more possible types, like vendors.
     this.searchType = this.usingTor ? 'torlistings' : 'listings';
 
     // If a query was passed in from the router, extract the data from it.
@@ -186,7 +185,7 @@ export default class extends baseVw {
     };
   }
 
-  doesProviderURLExist(md) {
+  isExistingProvider(md) {
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
     }
@@ -347,9 +346,13 @@ export default class extends baseVw {
   }
 
   addProvider() {
-    if (!this.doesProviderURLExist(this._search.provider)) {
+    console.log("add provider")
+    if (!this.isExistingProvider(this._search.provider)) {
+      console.log('exists')
       app.searchProviders.add(this._search.provider);
       this.render();
+    } else {
+      console.log('doesnt exist')
     }//TODO should there be an error shown for existing providers? Or just activate them?
   }
 
@@ -491,7 +494,7 @@ export default class extends baseVw {
         errTitle,
         errMsg,
         providerLocked: this.providerIsADefault(this._search.provider.id),
-        isExistingProvider: this.doesProviderURLExist(this._search.provider),
+        isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
         emptyData: $.isEmptyObject(data) && !state.showHome,
         showFilters: data.options,

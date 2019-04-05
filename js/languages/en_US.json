@@ -1346,6 +1346,7 @@
       "searchFailData": "The search provider did not return compatible data.",
       "connection": "You are no longer connected to your node. Reconnect to continue searching",
       "addError": "This provider cannot be added. Check your data and try again.",
+      "existsError": "This provider has already been added.",
       "locked": "Default search providers can't be deleted.",
       "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }

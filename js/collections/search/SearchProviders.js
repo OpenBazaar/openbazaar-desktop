@@ -1,5 +1,6 @@
 import { Collection } from 'backbone';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
+import { baseUrl } from '../../utils';
 import { sanitizeResults } from '../../utils/search';
 import Provider from '../../models/search/SearchProvider';
 
@@ -43,13 +44,14 @@ export default class extends Collection {
   }
 
   getProviderByURL(url) {
-    const tempUrl = new URL(url);
-    const trimSlash = (str) => str.replace(/\/$/, '');
-    const base = trimSlash(`${tempUrl.origin}${tempUrl.pathname}`);
-    const matches = this.models.find(p => base === trimSlash(p.get('listings')) ||
-      base === trimSlash(p.get('torlistings')));
-
-    return matches;
+    return this.models.find(md => {
+      let match = false;
+      ['listings', 'torListings', 'vendors', 'torVendors'].forEach(type => {
+        const typeUrl = md.get(type) && baseUrl(md.get(type), true);
+        if (typeUrl && baseUrl(url, true) === typeUrl) match = true;
+      });
+      return match;
+    });
   }
 
   setProvider(md, tor = false) {
