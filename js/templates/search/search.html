@@ -43,8 +43,12 @@
       </div>
       <div class="js-categoryWrapper"></div>
       <div class="flexRow gutterHLg">
+        <% if (ob.showFilters) { %>
         <div class="col3 filterWrapper js-filterWrapper"></div>
         <div class="col9">
+        <% } else { %>
+        <div class="col12">
+        <%}%>
           <div class="flexCol">
             <div class="width100 js-sortByWrapper"></div>
             <div class="width100 js-resultsWrapper"></div>

@@ -65,7 +65,7 @@ export default class extends baseVw {
     }
     this._search.provider = this.currentDefaultProvider;
 
-    this._categories = [
+    this._categoryTerms = [
       'Art',
       'Music',
       'Toys',
@@ -92,7 +92,12 @@ export default class extends baseVw {
       },
     };
 
-    this.categorySearches = [];
+    this._categorySearches = [this._cryptoSearch];
+    this._categoryTerms.forEach(cat => {
+      this._categorySearches.push({ ...this._categorySearch, q: cat });
+    });
+
+    this.categories = [];
 
     this.searchFetches = [];
 
@@ -150,8 +155,13 @@ export default class extends baseVw {
 
       this.setSearch({ ..._.pick(params, ...queryKeys), filters });
     } else {
-      // show discover version here
-      this.setState({ showHome: true });
+      // If the user has OB1 set as default, show the Discover default UX. If they don't, show a
+      // default search using their default provider.
+      if (this.usingOriginal) {
+        this.setState({ showHome: true });
+      } else {
+        this.fetchSearch(this._search);
+      }
     }
   }
 
@@ -333,28 +343,38 @@ export default class extends baseVw {
     if (!this.doesProviderURLExist(this._search.provider)) {
       app.searchProviders.add(this._search.provider);
       this.render();
-    }
+    }//TODO should there be an error shown for existing providers? Or just activate them?
   }
 
   clickAddProvider() {
     this.addProvider();
   }
 
-  createCategory(search) {
+  /**
+   * This will add the categories one by one, with the next one triggered by the last one being
+   * fetched. this._categorySearchesToAdd should be filled with search objects when calling this.
+   */
+  addNextCategory() {
+    if (!Array.isArray(this._categorySearchesToAdd)) {
+      throw new Error('this._categorySearchesToAdd should be a valid array of search objects.');
+    }
+
+    if (!this._categorySearchesToAdd[0]) return;
+
+    const search = this._categorySearchesToAdd.shift();
     const category = this.createChild(Category, {
       search,
       viewType: search.filters.type === 'cryptocurrency' ? 'cryptoList' : 'grid',
     });
+    this.categories.push(category);
 
     this.getCachedEl('.js-categoryWrapper').append(category.render().el);
 
-    // TODO put see all button listener here
     this.listenTo(category, 'seeAllCategory', (opts) => {
       scrollPageIntoView();
       this.setSearch(opts);
     });
-
-    return category;
+    this.listenTo(category, 'fetchComplete', () => this.addNextCategory());
   }
 
   createResults(data, search) {
@@ -467,6 +487,7 @@ export default class extends baseVw {
         isExistingProvider: this.doesProviderURLExist(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
         emptyData: $.isEmptyObject(data) && !state.showHome,
+        showFilters: data.options,
         ...state,
         ...this._search.provider,
         ...data,
@@ -494,18 +515,12 @@ export default class extends baseVw {
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
-    this.categorySearches.forEach(cat => cat.remove());
+    this.categories.forEach(cat => cat.remove());
 
-    // if data was passed in, construct a post-data retrieved experience
     if (state.showHome) {
-      const categorySearches = [this._cryptoSearch]; // crypto doesn't have a  search term.
-      this._categories.forEach(cat => {
-        categorySearches.push({ ...this._categorySearch, q: cat });
-      });
-      categorySearches.forEach(search => {
-        const newCategory = this.createCategory(search);
-        this.categorySearches.push(newCategory);
-      });
+      // Create a disposable copy to be shifted by the addNextCategory function.
+      this._categorySearchesToAdd = [...this._categorySearches];
+      this.addNextCategory();
     } else {
       if (this.filters) this.filters.remove();
       if (data.options) {

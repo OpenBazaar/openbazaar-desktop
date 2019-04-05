@@ -16,6 +16,10 @@ export default class extends baseVw {
       ...options.search,
     };
 
+    if (this._search.filters.type === 'cryptocurrency' && this._search.q === '*') {
+      this.cryptoTitle = 'Trade';
+    }
+
     this.cardViews = [];
   }
 
@@ -30,8 +34,7 @@ export default class extends baseVw {
   }
 
   clickSeeAll() {
-    const category = this._search.filters ? 'cryptolisting' : this._search.q;
-    recordEvent('Discover_SeeAllCategory', { category });
+    recordEvent('Discover_SeeAllCategory', { category: this.cryptoTitle || this._search.q });
     this.trigger('seeAllCategory', { q: this._search.q, filters: this._search.filters });
   }
 
@@ -88,9 +91,11 @@ export default class extends baseVw {
       url: newUrl,
     })
       .done(() => {
+        this.trigger('fetchComplete');
         this.renderCards(catCol);
       })
       .fail((xhr) => {
+      // TODO change this to an in-template error display
         if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
       });
   }
@@ -113,7 +118,7 @@ export default class extends baseVw {
         viewTypeClass: this.viewType === 'grid' ?
           '' : `listingsGrid${capitalize(this.viewType)}View`,
         viewType: this.viewType,
-        title: this._search.filters.type === 'cryptocurrency' ? 'Trade' : this._search.q,
+        title: this.cryptoTitle || this._search.q,
       }));
 
       this.removeCardViews();
