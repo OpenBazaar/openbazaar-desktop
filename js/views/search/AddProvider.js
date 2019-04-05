@@ -54,6 +54,12 @@ export default class extends BaseView {
       URL = `http://${URL}`;
     }
 
+    /*
+       If the exact same path as an existing provider is added, don't save. Note that if a base URL
+       is added, like search.ob1.io, it won't be matched to provider URLs, since they include the
+       full paths. This is to allow multiple providers on the same domain such as one at
+       foo.com/shoeSearch and another at foo.com/hatSearch.
+     */
     if (app.searchProviders.getProviderByURL(URL)) {
       this.setState({ showExistsError: true });
       return;
