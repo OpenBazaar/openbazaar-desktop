@@ -125,10 +125,8 @@ export default class extends baseVw {
          */
         const matchedProvider = app.searchProviders.getProviderByURL(base);
         if (!matchedProvider) {
-          const queryOpts = {};
-          queryOpts[`${this.usingTor ? 'tor' : ''}${capitalize(this.search.urlType)}`] = base;
-          // TODO: add model validation here? What would the user see if there is an error?
-          this._search.provider = new ProviderMd(queryOpts);
+          this._search.provider = new ProviderMd();
+          this._search.provider.set(this.urlType, base);
         } else {
           this._search.provider = matchedProvider;
         }
@@ -152,7 +150,7 @@ export default class extends baseVw {
         recordEvent('Discover_InvalidDefaultProvider',
           { url: this.currentBaseUrl });
       }
-
+      
       this.setSearch({ ..._.pick(params, ...queryKeys), filters });
     } else {
       // If the user has OB1 set as default, show the Discover default UX. If they don't, show a

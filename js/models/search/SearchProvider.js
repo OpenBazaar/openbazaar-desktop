@@ -58,11 +58,10 @@ export default class extends BaseModel {
       addError('logo', app.polyglot.t('searchProviderModelErrors.invalidLogo'));
     }
 
-    // TODO reverse to check only the urlTypes passed in
     // a provider can be created with less than all of the urls. The view is expected to retrieve
     // and save the missing urls when the search api is called
     urlTypes.forEach(urlType => {
-      if (is.not.url(attrs[urlType])) {
+      if (attrs[urlType] && is.not.url(attrs[urlType])) {
         addError(urlType, app.polyglot.t(`searchProviderModelErrors.invalid${urlType}`));
       }
     });

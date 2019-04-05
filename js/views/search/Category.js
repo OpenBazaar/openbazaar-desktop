@@ -95,7 +95,6 @@ export default class extends baseVw {
         this.renderCards(catCol);
       })
       .fail((xhr) => {
-      // TODO change this to an in-template error display
         if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
       });
   }
