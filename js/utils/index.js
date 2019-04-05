@@ -219,7 +219,7 @@ export function baseUrl(url, removePrefix) {
 
   const tempUrl = new URL(url);
 
-  if (removePrefix) return (`${tempUrl.host}`).replace(/\/$/, '');
+  if (removePrefix) return (`${tempUrl.host}${tempUrl.pathname}`).replace(/\/$/, '');
 
-  return (`${tempUrl.origin}`).replace(/\/$/, '');
+  return (`${tempUrl.origin}${tempUrl.pathname}`).replace(/\/$/, '');
 }
