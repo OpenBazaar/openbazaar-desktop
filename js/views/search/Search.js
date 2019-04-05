@@ -104,7 +104,7 @@ export default class extends baseVw {
     this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
     // In the future there may be more possible types
-    this.urlType = this.usingTor ? 'torlistings' : 'listings';
+    this.searchType = this.usingTor ? 'torlistings' : 'listings';
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
@@ -118,15 +118,21 @@ export default class extends baseVw {
         const subURL = new URL(queryParams.get('providerQ'));
         queryParams = subURL.searchParams;
         const base = `${subURL.origin}${subURL.pathname}`;
-        /* if the query provider model doesn't already exist, create a new provider model for it.
-         One quirk to note: if a tor url is passed in while the user is in clear mode, and an
-         existing provider has that tor url, that provider will be activated but will use its
-         clear url if it has one. The opposite is also true.
+        /*
+           If the query provider model doesn't already exist, create a new provider model for it.
+           One quirk to note: if a tor url is passed in while the user is in clear mode, and an
+           existing provider has that tor url, that provider will be activated but will use its
+           clear url if it has one. The opposite is also true.
          */
         const matchedProvider = app.searchProviders.getProviderByURL(base);
         if (!matchedProvider) {
           this._search.provider = new ProviderMd();
-          this._search.provider.set(this.urlType, base);
+          /*
+             We don't actually know what type of search the url is for, we'll assume for example a
+             tor user is only pasting in a tor url. If there is a mismatch, the correct values
+             will be saved after the endpoint returns them.
+           */
+          this._search.provider.set(this.searchType, base);
           if (!this._search.provider.isValid()) {
             this._search.provider = app.searchProviders.at(0);
             recordEvent('Discover_InvalidQueryProvider', { url: base });
@@ -504,7 +510,7 @@ export default class extends baseVw {
 
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
-      urlType: this.urlType,
+      urlType: this.searchType,
       currentID: this._search.provider.id,
       selecting: !this.currentDefaultProvider,
     });
