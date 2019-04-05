@@ -127,6 +127,10 @@ export default class extends baseVw {
         if (!matchedProvider) {
           this._search.provider = new ProviderMd();
           this._search.provider.set(this.urlType, base);
+          if (!this._search.provider.isValid()) {
+            this._search.provider = app.searchProviders.at(0);
+            recordEvent('Discover_InvalidQueryProvider', { url: base });
+          }
         } else {
           this._search.provider = matchedProvider;
         }
@@ -147,10 +151,9 @@ export default class extends baseVw {
       // if the  provider returns a bad URL, change to a known good default provider
       if (is.not.url(this.currentBaseUrl)) {
         this._search.provider = app.searchProviders.at(0);
-        recordEvent('Discover_InvalidDefaultProvider',
-          { url: this.currentBaseUrl });
+        recordEvent('Discover_InvalidDefaultProvider', { url: this.currentBaseUrl });
       }
-      
+
       this.setSearch({ ..._.pick(params, ...queryKeys), filters });
     } else {
       // If the user has OB1 set as default, show the Discover default UX. If they don't, show a
