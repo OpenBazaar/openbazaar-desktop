@@ -58,7 +58,10 @@ export default class extends BaseView {
        If the exact same path as an existing provider is added, don't save. Note that if a base URL
        is added, like search.ob1.io, it won't be matched to provider URLs, since they include the
        full paths. This is to allow multiple providers on the same domain such as one at
-       foo.com/shoeSearch and another at foo.com/hatSearch.
+       foo.com/shoeSearch and another at foo.com/hatSearch. This can be a little confusing, due to
+       the self-healing mechanism where the endpoint returns search urls and those replace the urls
+       the user enters, ie: entering "search.ob1.io" creates a provider that updates to use the
+       returned listing endpoint, which is the same as the default OB1 search.
      */
     if (app.searchProviders.getProviderByURL(URL)) {
       this.setState({ showExistsError: true });
