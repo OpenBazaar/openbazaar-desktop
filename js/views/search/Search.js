@@ -41,10 +41,10 @@ export default class extends baseVw {
     const queryKeys = ['q', 'p', 'ps', 'sortBy', 'network'];
 
     this._defaultSearch = {
-      urlType: 'listingsUrl',
       q: '*',
       p: 0,
       ps: 66,
+      searchType: 'listings',
       filters: {
         nsfw: String(app.settings.get('showNsfw')),
         acceptedCurrencies: supportedWalletCurs(),
@@ -53,7 +53,7 @@ export default class extends baseVw {
 
     this._search = {
       ...this._defaultSearch,
-      ..._.pick(opts, [...queryKeys, 'urlType', 'filters']),
+      ..._.pick(opts, [...queryKeys, 'filters']),
     };
 
     // If there is only one provider and it isn't the default, just set it to be such.
@@ -98,10 +98,8 @@ export default class extends baseVw {
 
     this.searchFetches = [];
 
-    this.usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+    this.onTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
-    // In the future there may be more possible types, like vendors.
-    this.searchType = this.usingTor ? 'torlistings' : 'listings';
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
@@ -129,7 +127,7 @@ export default class extends baseVw {
              tor user is only pasting in a tor url. If there is a mismatch, the correct values
              will be saved after the endpoint returns them.
            */
-          this._search.provider.set(this.searchType, base);
+          this._search.provider.set(`${this.onTor ? 'tor' : ''}${this._search.searchType}`, base);
           if (!this._search.provider.isValid()) {
             this._search.provider = app.searchProviders.at(0);
             recordEvent('Discover_InvalidQueryProvider', { url: base });
@@ -187,15 +185,11 @@ export default class extends baseVw {
     if (!md || !(md instanceof ProviderMd)) {
       throw new Error('Please provide a search provider model.');
     }
-    return !!app.searchProviders.getProviderByURL(md[this._search.urlType]);
-  }
-
-  get torString() {
-    return `default${this.usingTor ? 'Tor' : ''}Provider`;
+    return !!app.searchProviders.getProviderByURL(md[`${this._search.searchType}Url`]);
   }
 
   get currentDefaultProvider() {
-    return app.searchProviders[this.torString];
+    return app.searchProviders[`default${this.onTor ? 'Tor' : ''}Provider`];
   }
 
   set currentDefaultProvider(md) {
@@ -203,11 +197,11 @@ export default class extends baseVw {
       throw new Error('Please provide a search provider model.');
     }
 
-    app.searchProviders[this.torString] = md;
+    app.searchProviders[`default${this.onTor ? 'Tor' : ''}Provider`] = md;
   }
 
   get currentBaseUrl() {
-    return this._search.provider[this._search.urlType];
+    return this._search.provider[`${this._search.searchType}Url`];
   }
 
   get usingOriginal() {
@@ -355,7 +349,7 @@ export default class extends baseVw {
       openSimpleMessage(app.polyglot.t('search.errors.locked'));
       recordEvent('Discover_DeleteLocked', {
         provider: md.get('name') || 'unknown',
-        url: md.get('listings'),
+        url: md.listingsUrl,
       });
     } else {
       md.destroy();
@@ -393,14 +387,10 @@ export default class extends baseVw {
   }
 
   addProvider() {
-    console.log("add provider")
     if (!this.isExistingProvider(this._search.provider)) {
-      console.log('exists')
       app.searchProviders.add(this._search.provider);
       this.render();
-    } else {
-      console.log('doesnt exist')
-    }//TODO should there be an error shown for existing providers? Or just activate them?
+    }
   }
 
   clickAddProvider() {
@@ -560,7 +550,7 @@ export default class extends baseVw {
 
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
-      urlType: this.searchType,
+      searchType: this._search.searchType,
       currentID: this._search.provider.id,
       selecting: !this.currentDefaultProvider,
     });

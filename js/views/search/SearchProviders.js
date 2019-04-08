@@ -1,14 +1,17 @@
+import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
+import { recordEvent } from '../../utils/metrics';
+import { getCurrentConnection } from '../../utils/serverConnect';
+import { searchTypes } from '../../utils/search';
 import BaseView from '../baseVw';
 import Provider from './SearchProvider';
-import app from '../../app';
 import AddProvider from './AddProvider';
-import { recordEvent } from '../../utils/metrics';
+
 
 export default class extends BaseView {
   constructor(options = {}) {
-    if (!options.urlType) {
-      throw new Error('An urlType is required.');
+    if (!searchTypes.includes(options.searchType)) {
+      throw new Error('Please include a valid searchType.');
     }
     super(options);
     this.options = options;
@@ -47,8 +50,7 @@ export default class extends BaseView {
   createAddBox() {
     if (this.addProvider) this.addProvider.remove();
     this.addProvider = this.createChild(AddProvider, {
-      urlType: this.options.urlType,
-      usingTor: this.options.usingTor,
+      searchType: this.options.searchType,
     });
     this.getCachedEl('.js-addWrapper').append(this.addProvider.render().$el);
     this.listenTo(this.addProvider, 'newProviderSaved', (md) => {
@@ -84,11 +86,13 @@ export default class extends BaseView {
 
       const providerFrag = document.createDocumentFragment();
 
+      const usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+
       app.searchProviders.forEach(provider => {
         const view = this.createProviderView(provider);
         if (view) {
           this.providerViews.push(view);
-          if (provider.get(this.options.urlType)) {
+          if (provider.get(`${usingTor ? 'tor' : ''}${this.options.searchType}`)) {
             // if the provider is the wrong type, don't add it to the DOM
             view.render().$el.appendTo(providerFrag);
           }

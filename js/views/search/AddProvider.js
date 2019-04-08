@@ -1,18 +1,21 @@
 import $ from 'jquery';
-import loadTemplate from '../../utils/loadTemplate';
-import BaseView from '../baseVw';
 import app from '../../app';
-import ProviderMd from '../../models/search/SearchProvider';
-import { openSimpleMessage } from '../modals/SimpleMessage';
+import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-
+import { getCurrentConnection } from '../../utils/serverConnect';
+import { searchTypes } from '../../utils/search';
+import BaseView from '../baseVw';
+import { openSimpleMessage } from '../modals/SimpleMessage';
+import ProviderMd from '../../models/search/SearchProvider';
 
 export default class extends BaseView {
   constructor(options = {}) {
-    if (!options.urlType) throw new Error('Please provide an urlType.');
+    if (!searchTypes.includes(options.searchType)) {
+      throw new Error('Please provide a valid search type.');
+    }
 
     const opts = {
-      urlType: '',
+      searchType: '',
       initialState: {
         showExistsError: false,
         ...options.initialState,
@@ -69,7 +72,8 @@ export default class extends BaseView {
     }
 
     const opts = {};
-    const urlType = this.options.urlType;
+    const usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+    const urlType = `${usingTor ? 'tor' : ''}${this.options.searchType}`;
     opts[urlType] = URL;
 
     // pass the type of url to validate to the model

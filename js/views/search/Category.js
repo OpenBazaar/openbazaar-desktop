@@ -14,9 +14,6 @@ export default class extends baseVw {
     if (!options.search.provider || !(options.search.provider instanceof ProviderMd)) {
       throw new Error('Please provide a provider model.');
     }
-    if (!options.search.urlType || is.not.string(options.search.urlType)) {
-      throw new Error('Please provide an urlType for the search endpoint.');
-    }
 
     super(options);
 
@@ -54,7 +51,7 @@ export default class extends baseVw {
     const options = {
       listingBaseUrl: `${base}/store/`,
       reportsUrl: this._search.provider.reportsUrl || '',
-      searchUrl: this._search.provider[this._search.urlType],
+      searchUrl: this._search.provider.listingsUrl,
       model,
       vendor,
       onStore: false,

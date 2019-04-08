@@ -2,13 +2,13 @@ import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
 import sanitizeHtml from 'sanitize-html';
-import is from 'is_js';
 import ProviderMd from '../models/search/SearchProvider';
+
+export const searchTypes = ['listings', 'vendors'];
 
 /**
  * Create a search query URL.
  * @param {object} options.provider - The provider model.
- * @param {string} options.urlType - The type of endpoint to use.
  * @param {string} options.term - The term(s) to search for.
  * @param {string} options.page - The page to returns results for.
  * @param {string} options.pageSize - The number of results per page.
@@ -21,8 +21,8 @@ export function createSearchURL(options = {}) {
   if (!options.provider || !(options.provider instanceof ProviderMd)) {
     throw new Error('Please provide a provider model.');
   }
-  if (!options.urlType || is.not.string(options.urlType)) {
-    throw new Error('Please provide an urlType for the search endpoint.');
+  if (!searchTypes.includes(options.searchType)) {
+    throw new Error('Please provide a valid search type.');
   }
 
   const opts = {
@@ -36,7 +36,7 @@ export function createSearchURL(options = {}) {
   const query = { ..._.pick(opts, ['q', 'p', 'ps', 'sortBy', 'network']), ...opts.filters };
   query.q = query.q || '*';
 
-  return new URL(`${opts.provider[opts.urlType]}?${$.param(query, true)}`);
+  return new URL(`${opts.provider[`${options.searchType}Url`]}?${$.param(query, true)}`);
 }
 
 /**
