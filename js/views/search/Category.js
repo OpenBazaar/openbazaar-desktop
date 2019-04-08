@@ -1,13 +1,23 @@
+import is from 'is_js';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
-import ListingCard from '../components/ListingCard';
-import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
 import { createSearchURL } from '../../utils/search';
+import ListingCard from '../components/ListingCard';
+import ResultsCol from '../../collections/Results';
+import ProviderMd from '../../models/search/SearchProvider';
 
 export default class extends baseVw {
   constructor(options = {}) {
+    if (!options.search) throw new Error('Please provide a search object.');
+    if (!options.search.provider || !(options.search.provider instanceof ProviderMd)) {
+      throw new Error('Please provide a provider model.');
+    }
+    if (!options.search.urlType || is.not.string(options.search.urlType)) {
+      throw new Error('Please provide an urlType for the search endpoint.');
+    }
+
     super(options);
 
     this.viewType = options.viewType || 'grid';
@@ -73,22 +83,13 @@ export default class extends baseVw {
 
   loadCategory(options) {
     this.removeCardViews();
-
-    const opts = {
-      ...this._search,
-      ...options,
-    };
-
-    const newUrl = createSearchURL(opts);
-
     this.$el.addClass('loading');
-
     const catCol = new ResultsCol();
 
     if (this.categoryFetch) this.categoryFetch.abort();
 
     this.categoryFetch = catCol.fetch({
-      url: newUrl,
+      url: createSearchURL(options),
     })
       .done(() => {
         this.trigger('fetchComplete');
@@ -121,7 +122,7 @@ export default class extends baseVw {
       }));
 
       this.removeCardViews();
-      this.loadCategory();
+      this.loadCategory(this._search);
     });
 
     return this;

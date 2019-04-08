@@ -22,9 +22,7 @@ import { getCurrentConnection } from '../../utils/serverConnect';
 import { scrollPageIntoView } from '../../utils/dom';
 import {
   createSearchURL,
-  fetchSearchResults,
   sanitizeResults,
-  buildProviderUpdate,
 } from '../../utils/search';
 
 export default class extends baseVw {
@@ -236,6 +234,52 @@ export default class extends baseVw {
     }
   }
 
+  /**
+   * Creates an object for updating search providers with new data returned from a query.
+   * @param {object} data - Provider object from a search query.
+   * @returns {{data: *, urlTypes: Array}}
+   */
+  buildProviderUpdate(data) {
+    const update = {};
+    const urlTypes = [];
+
+    if (data.name && is.string(data.name)) update.name = data.name;
+    if (data.logo && is.url(data.logo)) update.logo = data.logo;
+    if (data.links) {
+      if (is.url(data.links.vendors)) {
+        update.vendors = data.links.vendors;
+        urlTypes.push('vendors');
+      }
+      if (is.url(data.links.listings)) {
+        update.listings = data.links.listings;
+        urlTypes.push('listings');
+      }
+      if (is.url(data.links.reports)) {
+        update.reports = data.links.reports;
+        urlTypes.push('reports');
+      }
+      if (data.links.tor) {
+        if (is.url(data.links.tor.listings)) {
+          update.torListings = data.links.tor.listings;
+          urlTypes.push('torlistings');
+        }
+        if (is.url(data.links.tor.vendors)) {
+          update.torVendors = data.links.tor.vendors;
+          urlTypes.push('torVendors');
+        }
+        if (is.url(data.links.tor.reports)) {
+          update.torReports = data.links.tor.reports;
+          urlTypes.push('torReports');
+        }
+      }
+    }
+
+    return {
+      update,
+      urlTypes,
+    };
+  }
+
   fetchSearch(opts = {}) {
     opts.baseUrl = opts.baseUrl || this.currentBaseUrl;
 
@@ -247,13 +291,16 @@ export default class extends baseVw {
       xhr: '',
     });
 
-    const searchFetch = fetchSearchResults(createSearchURL(opts))
+    const searchFetch = $.get({
+      url: createSearchURL(opts),
+      dataType: 'json',
+    })
       .done((pData, status, xhr) => {
         const data = JSON.parse(sanitizeResults(pData));
 
         // make sure minimal data is present. If it isn't, it's probably an invalid endpoint.
         if (data.name && data.links) {
-          const dataUpdate = buildProviderUpdate(data);
+          const dataUpdate = this.buildProviderUpdate(data);
 
           // update the defaults but do not save them
           if (!this.providerIsADefault(this._search.provider.id)) {
