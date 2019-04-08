@@ -24,7 +24,7 @@ export default class extends BaseView {
     };
 
     super(opts);
-    this.options = options;
+    this.options = opts;
 
     this.model = new ProviderMd();
 

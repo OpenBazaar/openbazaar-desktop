@@ -37,7 +37,6 @@ export default class extends baseVw {
     };
 
     super(opts);
-    this.options = opts;
     const queryKeys = ['q', 'p', 'ps', 'sortBy', 'network'];
 
     this._defaultSearch = {
