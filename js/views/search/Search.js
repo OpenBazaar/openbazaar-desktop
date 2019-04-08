@@ -123,11 +123,12 @@ export default class extends baseVw {
           this._search.provider = new ProviderMd();
           /*
              We don't actually know what type of search the url is for, we'll assume for example a
-             tor user is only pasting in a tor url. If there is a mismatch, the correct values
-             will be saved after the endpoint returns them.
+             user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
+             values will be saved after the endpoint returns them.
            */
           this._search.provider.set(`${this.onTor ? 'tor' : ''}${this._search.searchType}`, base);
           if (!this._search.provider.isValid()) {
+            // TODO show a message to the user.
             this._search.provider = app.searchProviders.at(0);
             recordEvent('Discover_InvalidQueryProvider', { url: base });
           }
@@ -330,7 +331,7 @@ export default class extends baseVw {
   /**
    * This will activate a provider. If no default is set, the activated provider will be set as the
    * the default. If the user is currently in Tor mode, the default Tor provider will be set.
-   * @param md the search provider model
+   * @param {object} md - the search provider model
    */
   activateProvider(md) {
     if (!md || !(md instanceof ProviderMd)) {
@@ -551,7 +552,7 @@ export default class extends baseVw {
     this.searchProviders = this.createChild(Providers, {
       searchType: this._search.searchType,
       currentID: this._search.provider.id,
-      selecting: !this.currentDefaultProvider,
+      showSelectDefault: !this.currentDefaultProvider,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);

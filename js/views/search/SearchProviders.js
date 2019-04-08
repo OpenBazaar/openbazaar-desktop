@@ -62,7 +62,7 @@ export default class extends BaseView {
     const view = this.createChild(Provider, {
       model,
       active: this.options.currentID === model.id,
-      selecting: this.options.selecting,
+      showSelectDefault: this.options.showSelectDefault,
     });
 
     this.listenTo(view, 'click', (md) => {
