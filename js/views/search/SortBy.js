@@ -37,8 +37,7 @@ export default class extends baseVw {
         ...this.getState(),
       }));
 
-      this.$sortBy = this.$('#sortBy');
-      this.$sortBy.select2({
+      this.$('#sortBy').select2({
         minimumResultsForSearch: Infinity, // disables the search box
         templateResult: selectEmojis,
         templateSelection: selectEmojis,
