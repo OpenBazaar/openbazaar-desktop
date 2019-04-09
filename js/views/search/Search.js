@@ -516,7 +516,7 @@ export default class extends baseVw {
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
         showDataError: $.isEmptyObject(data) && !state.showHome,
-        showFilters: data.options,
+        showFilters: data.options && !$.isEmptyObject(data),
         ...state,
         ...data,
       }));
