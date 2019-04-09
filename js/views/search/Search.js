@@ -333,13 +333,8 @@ export default class extends baseVw {
   }
 
   deleteProvider(md = this._search.provider) {
-    if (this.providerIsADefault(md.id)) {
-      openSimpleMessage(app.polyglot.t('search.errors.locked'));
-      recordEvent('Discover_DeleteLocked', {
-        provider: md.get('name') || 'unknown',
-        url: md.listingsUrl,
-      });
-    } else {
+    // Default providers shouldn't show an option to trigger this.
+    if (!this.providerIsADefault(md.id)) {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
     }
