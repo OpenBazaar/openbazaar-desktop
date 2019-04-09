@@ -74,8 +74,6 @@ export default class extends baseVw {
     });
 
     this.getCachedEl('.js-resultsGrid').html(resultsFrag);
-
-    this.$el.removeClass('loading');
   }
 
   loadCategory(options) {
@@ -92,8 +90,11 @@ export default class extends baseVw {
         this.trigger('fetchComplete');
         this.renderCards(catCol);
       })
-      .fail((xhr) => {
+      .fail(xhr => {
         if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
+      })
+      .always(() => {
+        this.$el.removeClass('loading');
       });
   }
 
@@ -118,7 +119,6 @@ export default class extends baseVw {
         title: this.cryptoTitle || this._search.q,
       }));
 
-      this.removeCardViews();
       this.loadCategory(this._search);
     });
 
