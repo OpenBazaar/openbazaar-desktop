@@ -1,4 +1,3 @@
-import is from 'is_js';
 import baseVw from '../baseVw';
 import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
