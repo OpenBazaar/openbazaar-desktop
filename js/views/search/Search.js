@@ -199,7 +199,7 @@ export default class extends baseVw {
     return !!_.findWhere(defaultSearchProviders, { id });
   }
 
-  /** Handles updates to the search.
+  /** Updates the search object. If updated, triggers a search fetch.
    *
    * @param {object} search - The new state.
    */
@@ -262,8 +262,6 @@ export default class extends baseVw {
   }
 
   fetchSearch(opts = {}) {
-    opts.baseUrl = opts.baseUrl || this.currentBaseUrl;
-
     this.removeFetches();
 
     this.setState({
