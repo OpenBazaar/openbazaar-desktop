@@ -4,7 +4,7 @@
 
 <% if (!ob.fetching) { %>
   <div class="pageContent">
-    <% if (!ob.emptyData) { %>
+    <% if (!ob.showDataError) { %>
       <div class="flexColRows row">
         <div class="flexVBase gutterH">
           <h3 class="txUnl rowSm"><%= ob.name %></h3>

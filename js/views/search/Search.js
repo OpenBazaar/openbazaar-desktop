@@ -439,7 +439,7 @@ export default class extends baseVw {
 
     this.getCachedEl('.js-resultsWrapper').html(this.resultsView.render().el);
 
-    this.listenTo(this.resultsView, 'searchError', (xhr) => {
+    this.listenTo(this.resultsView, 'searchError', xhr => {
       this.setState({
         fetching: false,
         data: '',
@@ -515,7 +515,7 @@ export default class extends baseVw {
         providerLocked: this.providerIsADefault(this._search.provider.id),
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
-        emptyData: $.isEmptyObject(data) && !state.showHome,
+        showDataError: $.isEmptyObject(data) && !state.showHome,
         showFilters: data.options,
         ...state,
         ...this._search.provider,
