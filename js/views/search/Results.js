@@ -142,15 +142,15 @@ export default class extends baseVw {
   }
 
   clickPagePrev() {
+    recordEvent('Discover_PrevPage', { fromPage: this._search.p });
     this._search.p--;
     this.loadPage();
-    recordEvent('Discover_PrevPage', { fromPage: this._search.p });
   }
 
   clickPageNext() {
+    recordEvent('Discover_NextPage', { fromPage: this._search.p });
     this._search.p++;
     this.loadPage();
-    recordEvent('Discover_NextPage', { fromPage: this._search.p });
   }
 
   removeCardViews() {
