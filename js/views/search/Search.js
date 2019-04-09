@@ -518,7 +518,6 @@ export default class extends baseVw {
         showDataError: $.isEmptyObject(data) && !state.showHome,
         showFilters: data.options,
         ...state,
-        ...this._search.provider,
         ...data,
       }));
     });
