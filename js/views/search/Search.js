@@ -494,6 +494,7 @@ export default class extends baseVw {
     const state = this.getState();
     const data = state.data || {};
     const term = this._search.q === '*' ? '' : this._search.q;
+    const hasFilters = data.options && !$.isEmptyObject(data);
 
     let errTitle;
     let errMsg;
@@ -516,7 +517,7 @@ export default class extends baseVw {
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
         showDataError: $.isEmptyObject(data) && !state.showHome,
-        showFilters: data.options && !$.isEmptyObject(data),
+        hasFilters,
         ...state,
         ...data,
       }));
@@ -551,7 +552,7 @@ export default class extends baseVw {
       this.addNextCategory();
     } else {
       if (this.filters) this.filters.remove();
-      if (data.options) {
+      if (hasFilters) {
         this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
         this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
         $filterWrapper.append(this.filters.render().el);
