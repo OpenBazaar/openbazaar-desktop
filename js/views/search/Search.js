@@ -168,7 +168,7 @@ export default class extends baseVw {
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
-      'click .js-addQueryProvider': 'clickAddProvider',
+      'click .js-addQueryProvider': 'clickAddQueryProvider',
     };
   }
 
@@ -349,6 +349,9 @@ export default class extends baseVw {
   }
 
   makeDefaultProvider(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider to be made the default must be in the collection.');
     }
@@ -358,22 +361,22 @@ export default class extends baseVw {
   }
 
   clickMakeDefaultProvider() {
-    this.makeDefaultProvider(this._search.provider);
     recordEvent('Discover_MakeDefaultProvider', {
       provider: this._search.provider.get('name') || 'unknown',
       url: this.currentBaseUrl,
     });
+    this.makeDefaultProvider(this._search.provider);
   }
 
-  addProvider() {
+  addQueryProvider() {
     if (!this.isExistingProvider(this._search.provider)) {
       app.searchProviders.add(this._search.provider);
       this.render();
     }
   }
 
-  clickAddProvider() {
-    this.addProvider();
+  clickAddQueryProvider() {
+    this.addQueryProvider();
   }
 
   /**
