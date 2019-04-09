@@ -150,7 +150,7 @@ export default class extends baseVw {
     } else {
       // If the user has OB1 set as default, show the Discover default UX. If they don't, show a
       // default search using their default provider.
-      if (this.usingOriginal) {
+      if (this._search.provider.id === defaultSearchProviders[0].id) {
         this.setState({ showHome: true });
       } else {
         this.fetchSearch(this._search);
@@ -193,10 +193,6 @@ export default class extends baseVw {
 
   get currentBaseUrl() {
     return this._search.provider[`${this._search.searchType}Url`];
-  }
-
-  get usingOriginal() {
-    return this._search.provider.id === defaultSearchProviders[0].id;
   }
 
   providerIsADefault(id) {
