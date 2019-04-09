@@ -434,7 +434,7 @@ export default class extends baseVw {
       total: data.results ? data.results.total : 0,
       provider: this._search.provider.get('name') || 'unknown',
       url: this.currentBaseUrl,
-      page: this._search.page + 1,
+      page: this._search.p + 1,
     });
 
     this.getCachedEl('.js-resultsWrapper').html(this.resultsView.render().el);
