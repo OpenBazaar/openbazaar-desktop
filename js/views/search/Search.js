@@ -340,10 +340,6 @@ export default class extends baseVw {
     }
   }
 
-  resetSearch() {
-    this.setSearch(this._defaultSearch);
-  }
-
   clickDeleteProvider() {
     recordEvent('Discover_DeleteProvider', {
       provider: this._search.provider.get('name') || 'unknown',
@@ -448,7 +444,7 @@ export default class extends baseVw {
       });
     });
     this.listenTo(this.resultsView, 'loadingPage', () => scrollPageIntoView());
-    this.listenTo(this.resultsView, 'resetSearch', () => this.resetSearch());
+    this.listenTo(this.resultsView, 'resetSearch', () => this.setSearch(this._defaultSearch));
   }
 
   clickSearchBtn() {
