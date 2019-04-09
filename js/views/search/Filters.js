@@ -63,12 +63,11 @@ export default class extends baseVw {
 
     loadTemplate('search/filters.html', (t) => {
       this.$el.html(t({
-        formOverrides: this.formOverrides,
         ...this.getState(),
       }));
     });
 
-    this.$el.find('select').select2({
+    this.$('select').select2({
       minimumResultsForSearch: 10,
       templateResult: selectEmojis,
       templateSelection: selectEmojis,
