@@ -28,13 +28,13 @@ export function createSearchURL(options = {}) {
   const opts = {
     p: 0,
     ps: 66,
-    network: !!app.serverConfig.testnet ? 'testnet' : 'mainnet',
     filters: {},
     ...options,
   };
 
-  const query = { ..._.pick(opts, ['q', 'p', 'ps', 'sortBy', 'network']), ...opts.filters };
+  const query = { ..._.pick(opts, ['q', 'p', 'ps', 'sortBy']), ...opts.filters };
   query.q = query.q || '*';
+  query.network = !!app.serverConfig.testnet ? 'testnet' : 'mainnet';
 
   return new URL(`${opts.provider[`${options.searchType}Url`]}?${$.param(query, true)}`);
 }
