@@ -61,6 +61,8 @@ export default class extends Collection {
    * @returns {object} - A search provider model.
    */
   getProviderByURL(url) {
+    if (!url || is.not.url(url)) throw new Error('Please provide a valid URL.');
+
     return this.models.find(md => {
       let match = false;
       ['listings', 'torListings', 'vendors', 'torVendors'].forEach(type => {
