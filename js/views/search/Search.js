@@ -545,13 +545,14 @@ export default class extends baseVw {
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
     this.categoryViews.forEach(cat => cat.remove());
+    if (this.filters) this.filters.remove();
+    if (this.sortBy) this.sortBy.remove();
 
     if (state.showHome) {
       // Create a disposable copy to be shifted by the addNextCategory function.
       this._categorySearchesToAdd = [...this._categorySearches];
       this.addNextCategory();
     } else {
-      if (this.filters) this.filters.remove();
       if (hasFilters) {
         this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
         this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
@@ -564,7 +565,6 @@ export default class extends baseVw {
         });
       }
 
-      if (this.sortBy) this.sortBy.remove();
       if (data.sortBy) {
         this.sortBy = this.createChild(SortBy, {
           initialState: {
