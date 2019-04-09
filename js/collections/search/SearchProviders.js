@@ -48,13 +48,18 @@ export default class extends Collection {
   }
 
   set defaultProvider(md) {
-    this.setProvider(md);
+    this.setDefaultProvider(md);
   }
 
   set defaultTorProvider(md) {
-    this.setProvider(md, true);
+    this.setDefaultProvider(md, true);
   }
 
+  /**
+   * This will retrieve the first provider that has the given URL for one of it's endpoints.
+   * @param {string} url - The endpoint URL being looked for.
+   * @returns {object} - A search provider model.
+   */
   getProviderByURL(url) {
     return this.models.find(md => {
       let match = false;
@@ -67,7 +72,12 @@ export default class extends Collection {
     });
   }
 
-  setProvider(md, tor = false) {
+  /**
+   * This will set the default provider for clear or Tor mode.
+   * @param {object} md - A provider model.
+   * @param {boolean} tor - Whether to save the default for clear or Tor mode.
+   */
+  setDefaultProvider(md, tor = false) {
     if (!md instanceof Provider) {
       throw new Error('Please provide a model as a Provider instance.');
     }
