@@ -565,18 +565,16 @@ export default class extends baseVw {
         });
       }
 
-      if (data.sortBy) {
-        this.sortBy = this.createChild(SortBy, {
-          initialState: {
-            term,
-            results: data.results,
-            sortBy: data.sortBy,
-            sortBySelected: this._search.sortBy,
-          },
-        });
-        this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
-        this.$('.js-sortByWrapper').append(this.sortBy.render().el);
-      }
+      this.sortBy = this.createChild(SortBy, {
+        initialState: {
+          term,
+          results: data.results,
+          sortBy: data.sortBy,
+          sortBySelected: this._search.sortBy,
+        },
+      });
+      this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
+      this.$('.js-sortByWrapper').append(this.sortBy.render().el);
 
       // use the initial set of results data to create the results view
       this.createResults(data, this._search);
