@@ -7,7 +7,7 @@ import Provider from '../../models/search/SearchProvider';
 /**
  * Returns the URL minus any query parameters.
  * @param {string} url - A URL.
- * @returns {string} - The URL domain and pathname.
+ * @returns {string} - The URL domain and pathname without any trailing slashes.
  */
 function baseUrl(url) {
   if (!url || is.not.url(url)) throw new Error('Please provide a valid URL.');
@@ -62,6 +62,7 @@ export default class extends Collection {
         const typeUrl = md.get(type) && baseUrl(md.get(type));
         if (typeUrl && baseUrl(url) === typeUrl) match = true;
       });
+
       return match;
     });
   }
