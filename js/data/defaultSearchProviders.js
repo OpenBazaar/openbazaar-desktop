@@ -7,7 +7,9 @@ const defaultSearchProviders = [
     listings: 'https://search.ob1.io/listings/search',
     torlistings: 'http://my7nrnmkscxr32zo.onion/listings/search',
     vendors: 'https://search.ob1.io/profiles/search?type=vendor',
+    torVendors: 'http://my7nrnmkscxr32zo.onion/profiles/search?type=vendor',
     reports: 'https://search.ob1.io/reports',
+    torReports: 'http://my7nrnmkscxr32zo.onion/reports',
   },
 ];
 
