@@ -144,13 +144,7 @@ export default class extends baseVw {
       }
 
       // set the params in the search object
-      const filters = _.omit(params, [...queryKeys]);
-
-      // if the  provider returns a bad URL, change to a known good default provider
-      if (is.not.url(this.currentBaseUrl)) {
-        this._search.provider = app.searchProviders.at(0);
-        recordEvent('Discover_InvalidDefaultProvider', { url: this.currentBaseUrl });
-      }
+      const filters = { ...this._search.filters, ..._.omit(params, [...queryKeys]) };
 
       this.setSearch({ ..._.pick(params, ...queryKeys), filters });
     } else {
