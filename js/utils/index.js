@@ -3,7 +3,6 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
-import is from 'is_js';
 import app from '../app';
 import multihashes from 'multihashes';
 import twemoji from 'twemoji';
