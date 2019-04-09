@@ -196,6 +196,9 @@ export default class extends baseVw {
   }
 
   providerIsADefault(id) {
+    if (!id || !(typeof id === 'string')) {
+      throw new Error('Please provide a valid provider ID.');
+    }
     return !!_.findWhere(defaultSearchProviders, { id });
   }
 
