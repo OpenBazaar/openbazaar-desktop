@@ -1,8 +1,20 @@
 import { Collection } from 'backbone';
+import is from 'is_js';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { baseUrl } from '../../utils';
 import { sanitizeResults } from '../../utils/search';
 import Provider from '../../models/search/SearchProvider';
+
+/**
+ * Returns the URL minus any query parameters.
+ * @param {string} url - A URL.
+ * @returns {string} - The URL domain and pathname.
+ */
+function baseUrl(url) {
+  if (!url || is.not.url(url)) throw new Error('Please provide a valid URL.');
+
+  const tempUrl = new URL(url);
+  return (`${tempUrl.host}${tempUrl.pathname}`).replace(/\/$/, '');
+}
 
 export default class extends Collection {
   localStorage() {
@@ -47,8 +59,8 @@ export default class extends Collection {
     return this.models.find(md => {
       let match = false;
       ['listings', 'torListings', 'vendors', 'torVendors'].forEach(type => {
-        const typeUrl = md.get(type) && baseUrl(md.get(type), true);
-        if (typeUrl && baseUrl(url, true) === typeUrl) match = true;
+        const typeUrl = md.get(type) && baseUrl(md.get(type));
+        if (typeUrl && baseUrl(url) === typeUrl) match = true;
       });
       return match;
     });

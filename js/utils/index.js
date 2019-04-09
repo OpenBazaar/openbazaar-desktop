@@ -208,18 +208,3 @@ export function deparam(queryStr = '') {
 
   return parsed;
 }
-
-/**
- * Returns the URL minus any query parameters.
- * @param {string} url - A URL.
- * @returns {string}
- */
-export function baseUrl(url, removePrefix) {
-  if (!url || is.not.url(url)) throw new Error('Please provide a valid URL.');
-
-  const tempUrl = new URL(url);
-
-  if (removePrefix) return (`${tempUrl.host}${tempUrl.pathname}`).replace(/\/$/, '');
-
-  return (`${tempUrl.origin}${tempUrl.pathname}`).replace(/\/$/, '');
-}
