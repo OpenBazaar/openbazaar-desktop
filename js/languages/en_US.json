@@ -1347,6 +1347,7 @@
       "connection": "You are no longer connected to your node. Reconnect to continue searching",
       "addError": "This provider cannot be added. Check your data and try again.",
       "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Default search providers can't be deleted.",
       "resetToOriginal": "Your search provider's URL is invalid. We'll use the original default provider instead."
     }

@@ -81,7 +81,7 @@ export default class extends baseVw {
     };
 
     this._cryptoSearch = {
-      ...this._categorySearch,
+      ...this._search,
       ps: 5,
       filters: {
         type: 'cryptocurrency',
@@ -93,19 +93,16 @@ export default class extends baseVw {
       this._categorySearches.push({ ...this._categorySearch, q: cat });
     });
 
-    this.categories = [];
-
+    this.categoryViews = [];
     this.searchFetches = [];
-
     this.onTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
-
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
       recordEvent('Discover_SearchFromAddressBar');
       recordEvent('Discover_Search', { type: 'addressBar' });
 
-      let queryParams = (new URL(`${this.currentBaseUrl}?${options.query || ''}`)).searchParams;
+      let queryParams = (new URL(`${this.currentBaseUrl}?${options.query}`)).searchParams;
 
       // If the query had a providerQ parameter, use that as the provider URL instead.
       if (queryParams.get('providerQ')) {
@@ -118,7 +115,7 @@ export default class extends baseVw {
            existing provider has that tor url, that provider will be activated but will use its
            clear url if it has one. The opposite is also true.
          */
-        const matchedProvider = app.searchProviders.getProviderByURL(base);
+        const matchedProvider = is.url(base) ? app.searchProviders.getProviderByURL(base) : '';
         if (!matchedProvider) {
           this._search.provider = new ProviderMd();
           /*
@@ -128,7 +125,7 @@ export default class extends baseVw {
            */
           this._search.provider.set(`${this.onTor ? 'tor' : ''}${this._search.searchType}`, base);
           if (!this._search.provider.isValid()) {
-            // TODO show a message to the user.
+            openSimpleMessage(app.polyglot.t('search.errors.invalidUrl'));
             this._search.provider = app.searchProviders.at(0);
             recordEvent('Discover_InvalidQueryProvider', { url: base });
           }
@@ -409,19 +406,19 @@ export default class extends baseVw {
     if (!this._categorySearchesToAdd[0]) return;
 
     const search = this._categorySearchesToAdd.shift();
-    const category = this.createChild(Category, {
+    const categoryVw = this.createChild(Category, {
       search,
       viewType: search.filters.type === 'cryptocurrency' ? 'cryptoList' : 'grid',
     });
-    this.categories.push(category);
+    this.categoryViews.push(categoryVw);
 
-    this.getCachedEl('.js-categoryWrapper').append(category.render().el);
+    this.getCachedEl('.js-categoryWrapper').append(categoryVw.render().el);
 
-    this.listenTo(category, 'seeAllCategory', (opts) => {
+    this.listenTo(categoryVw, 'seeAllCategory', (opts) => {
       scrollPageIntoView();
       this.setSearch(opts);
     });
-    this.listenTo(category, 'fetchComplete', () => this.addNextCategory());
+    this.listenTo(categoryVw, 'fetchComplete', () => this.addNextCategory());
   }
 
   createResults(data, search) {
@@ -562,7 +559,7 @@ export default class extends baseVw {
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
-    this.categories.forEach(cat => cat.remove());
+    this.categoryViews.forEach(cat => cat.remove());
 
     if (state.showHome) {
       // Create a disposable copy to be shifted by the addNextCategory function.
