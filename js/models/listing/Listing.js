@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
+import { getCurrencyByCode } from '../../data/currencies';
 import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
@@ -267,8 +268,6 @@ export default class extends BaseModel {
   }
 
   sync(method, model, options) {
-    // set coinDivisibility if not set and pass to decimalToInteger
-
     let returnSync = 'will-set-later';
 
     if (method === 'read') {
@@ -294,38 +293,70 @@ export default class extends BaseModel {
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
+        const isCrypto = options.attrs.metadata.contractType === 'CRYPTOCURRENCY';
+        const pricingCurrency = options.attrs.metadata.pricingCurrency;
+        let coinDivisibility = options.attrs.metadata.coinDivisibility;
+        let curData;
+
+        if (typeof coinDivisibility !== 'number') {
+          try {
+            curData = getCurrencyByCode(pricingCurrency);
+          } catch (e) {
+            // pass
+          }
+
+          if (!curData) {
+            if (!isCrypto) {
+              // todo todo todo defaultQuantityBaseUnit should not include quantity
+              // in the name
+              // also make it the server exponent style
+              console.warn(
+                `The listing has an unrecognized pricing currency of ${pricingCurrency}.` +
+                `Will use a default base units of ${defaultQuantityBaseUnit}.`
+              );
+            }
+
+            coinDivisibility = Math.log10(defaultQuantityBaseUnit);
+          } else {
+            coinDivisibility = Math.log10(
+              getCryptoCurrencyByCode(pricingCurrency) ?
+                curData.baseUnit : 100
+            );
+          }
+        }
+
+        options.attrs.metadata.coinDivisibility = coinDivisibility;
+
         // convert price fields
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
-          options.attrs.item.price = decimalToInteger(price,
-            options.attrs.metadata.pricingCurrency);
+          options.attrs.item.price = decimalToInteger(price, coinDivisibility);
         }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
             if (typeof service.price === 'number') {
-              service.price = decimalToInteger(service.price,
-                options.attrs.metadata.pricingCurrency);
+              service.price = decimalToInteger(service.price, coinDivisibility);
             }
 
             if (typeof service.additionalItemPrice === 'number') {
-              service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
-                options.attrs.metadata.pricingCurrency);
+              service.additionalItemPrice =
+                decimalToInteger(service.additionalItemPrice, coinDivisibility);
             }
           });
         });
 
         options.attrs.coupons.forEach(coupon => {
           if (typeof coupon.priceDiscount === 'number') {
-            coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency);
+            coupon.priceDiscount =
+              decimalToInteger(coupon.priceDiscount, coinDivisibility);
           }
         });
 
         const baseUnit = options.attrs.metadata.coinDivisibility =
           options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
 
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+        if (isCrypto) {
           // round to ensure integer
           options.attrs.item.cryptoQuantity =
             Math.round(options.attrs.item.cryptoQuantity * baseUnit);
@@ -342,7 +373,7 @@ export default class extends BaseModel {
         if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
-          if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+          if (isCrypto) {
             dummySku.quantity = options.attrs.item.cryptoQuantity;
             delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
@@ -360,8 +391,8 @@ export default class extends BaseModel {
         } else {
           options.attrs.item.skus.forEach(sku => {
             if (typeof sku.surcharge === 'number') {
-              sku.surcharge = decimalToInteger(sku.surcharge,
-                options.attrs.metadata.pricingCurrency);
+              sku.surcharge =
+                decimalToInteger(sku.surcharge, coinDivisibility);
             }
           });
         }
@@ -392,7 +423,7 @@ export default class extends BaseModel {
 
         // Update the crypto title based on the accepted currency and
         // coin type.
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+        if (isCrypto) {
           const coinType = options.attrs.metadata.coinType;
           let fromCur = options.attrs.metadata.acceptedCurrencies &&
             options.attrs.metadata.acceptedCurrencies[0];

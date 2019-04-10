@@ -53,6 +53,7 @@ UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
  * // todo: doc me up + params
  * // note most times you'll want to provide a code not the divisibility.
  * // --- simplify by not making cur and divsibility nested???
+ * //note divisiblity in exponent format
  */
 export function decimalToInteger(value, divisibility) {
   if (typeof value !== 'number') {
