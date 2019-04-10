@@ -196,10 +196,8 @@ export default class extends baseVw {
   }
 
   providerIsADefault(id) {
-    if (!id || !(typeof id === 'string')) {
-      throw new Error('Please provide a valid provider ID.');
-    }
-    return !!_.findWhere(defaultSearchProviders, { id });
+    // Non-default providers probably don't have an id, especially if they don't return a name.
+    return id && !!_.findWhere(defaultSearchProviders, { id });
   }
 
   /** Updates the search object. If updated, triggers a search fetch.

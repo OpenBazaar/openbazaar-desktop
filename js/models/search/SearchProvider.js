@@ -18,6 +18,10 @@ export default class extends BaseModel {
     };
   }
 
+  get idAttribute() {
+    return 'name';
+  }
+
   localStorage() {
     return new LocalStorageSync('__searchProviders');
   }
