@@ -180,7 +180,7 @@ export default class extends baseVw {
   }
 
   get currentDefaultProvider() {
-    return app.searchProviders[`default${this.onTor ? 'Tor' : ''}Provider`];
+    return app.searchProviders.defaultProvider;
   }
 
   set currentDefaultProvider(md) {
