@@ -3,7 +3,8 @@ import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
 import { getCurrencyByCode } from '../../data/currencies';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
+// TODO TODO TDO is this guy below still used anywhere?
+// import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
@@ -13,7 +14,6 @@ export default class extends BaseModel {
       format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
-      coinDivisibility: defaultQuantityBaseUnit,
       acceptedCurrencies: [
         ...(app && app.profile && app.profile.get('currencies') || []),
       ],

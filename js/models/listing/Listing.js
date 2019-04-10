@@ -267,6 +267,8 @@ export default class extends BaseModel {
   }
 
   sync(method, model, options) {
+    // set coinDivisibility if not set and pass to decimalToInteger
+
     let returnSync = 'will-set-later';
 
     if (method === 'read') {

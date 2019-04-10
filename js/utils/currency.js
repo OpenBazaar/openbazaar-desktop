@@ -2,6 +2,7 @@ import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
+import bigInt from 'big-integer';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode, isFiatCur } from '../data/currencies';
@@ -12,6 +13,9 @@ import {
 } from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
+
+console.log('big');
+window.big = bigInt;
 
 const events = {
   ...Events,
@@ -45,53 +49,32 @@ UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
 UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
 
 /**
- * Converts the amount from a decimal to an integer. If the currency code is a crypto currency,
- * it will convert to its base units.
+ * Converts the amount from a decimal to an integer based on...
+ * // todo: doc me up + params
+ * // note most times you'll want to provide a code not the divisibility.
+ * // --- simplify by not making cur and divsibility nested???
  */
-export function decimalToInteger(amount, currency, options = {}) {
-  const opts = {
-    returnUndefinedOnError: true,
-    ...options,
-  };
-
-  let returnVal;
-
-  try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
-    }
-
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
-    }
-
-    const curData = getCurrencyByCode(currency);
-
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
-    } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Math.round(amount * curData.baseUnit);
-      } else {
-        returnVal = Math.round(amount * 100);
-      }
-    }
-  } catch (e) {
-    if (!opts.returnUndefinedOnError) {
-      throw e;
-    }
+export function decimalToInteger(value, divisibility) {
+  if (typeof value !== 'number') {
+    throw new Error('The value must be provided as a number');
   }
 
-  return returnVal;
+  if (typeof divisibility !== 'number') {
+    throw new Error('The divisibility must be provided as a number.');
+  }
+
+  return String(
+    bigInt(value)
+      .multiply(Math.pow(10, divisibility))
+      .value
+  );
 }
 
 /**
- * Converts the amount from an integer to a decimal, rounding to 2 decimal places. If the
- * currency code is for a crypto currency, it will convert from its base units.
+ * Converts the amount from an integer to a decimal based on data.divisibility.
+ * // todo: doc me up + params
  */
-export function integerToDecimal(amount, currency, options = {}) {
+export function integerToDecimal(data, options = {}) {
   const opts = {
     returnUndefinedOnError: true,
     ...options,
@@ -100,26 +83,34 @@ export function integerToDecimal(amount, currency, options = {}) {
   let returnVal;
 
   try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
+    if (typeof data !== 'object') {
+      throw new Error('The data must be provided as an object.');
     }
 
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
+    if (
+      !(['string', 'number'].includes(typeof data.value))
+    ) {
+      throw new Error('data.value must be provided as a string or ' +
+        'number');
     }
 
-    const curData = getCurrencyByCode(currency);
+    if (typeof data.currency !== 'object') {
+      throw new Error('data.currency must be provided as an object.');
+    }
 
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
+    if (typeof data.currency.divisibility !== 'number') {
+      throw new Error('data.currency.divisibility must be provided as a ' +
+        'number.');
+    }
+
+    const baseUnit = Math.log10(data.currency.divisibility);
+    const dividedValue = bigInt(data.value)
+      .divide(baseUnit);
+
+    if (dividedValue.isSmall) {
+      returnVal = dividedValue.value;
     } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Number(amount / curData.baseUnit);
-      } else {
-        returnVal = Number(amount / 100);
-      }
+      throw new Error('The resulting value is a bigInt.');
     }
   } catch (e) {
     if (!opts.returnUndefinedOnError) {
