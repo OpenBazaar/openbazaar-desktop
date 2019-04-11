@@ -239,6 +239,7 @@
 
     &.searchCategory {
       position: relative;
+      margin-top: 50px;
 
       .cryptoListViewHeader {
         padding: 15px 30px;
@@ -248,6 +249,14 @@
       .listingsGrid.listingsGridCryptoListView  .listingCard {
         padding: 6px 30px;
         font-size: 1.6rem;
+      }
+
+      &:first-child {
+        margin-top: 20px;
+      }
+
+      &:last-child .categoryRow {
+        display: none;
       }
     }
   }
