@@ -2,12 +2,20 @@
    the store and search results views. Make sure to check both when making changes to this file.
  */
 
+/* These are the values to use if the inventory column is turned back on.
 $crytoListViewTradeFromWidth: 9%;
 $crytoListViewTradeToWidth: 16%;
 $crytoListViewTradeArrowWidth: 7%;
 $crytoListViewVendorWidth: 28%;
 $crytoListViewPriceWidth: 19%;
 $crytoListViewInventoryMaxWidth: 21%;
+*/
+
+$crytoListViewTradeFromWidth: 10%;
+$crytoListViewTradeArrowWidth: 5%;
+$crytoListViewTradeToWidth: 15%;
+$crytoListViewVendorWidth: 38%;
+$crytoListViewPriceWidth: 32%;
 
 .listingsGrid {
   flex-wrap: wrap;
@@ -137,9 +145,11 @@ $crytoListViewInventoryMaxWidth: 21%;
       width: $crytoListViewPriceWidth;
     }
 
+    /* Commented out until inventory is working again.
     .inventoryCol {
       width: $crytoListViewInventoryMaxWidth;
     }
+    */
   }
 
   &:empty {
@@ -187,10 +197,12 @@ $crytoListViewInventoryMaxWidth: 21%;
     }
   }
 
+  /* Commented out until inventory is working again.
   .inventoryCol {
     text-align: right;
     max-width: $crytoListViewInventoryMaxWidth;
   }
+  */
 
   .toolTip {
     text-transform: none;
