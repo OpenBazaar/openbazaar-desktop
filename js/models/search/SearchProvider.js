@@ -56,7 +56,7 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
     const urlTypes = options.urlTypes ||
-      ['vendors', 'listings', 'torvendors', 'torlistings', 'reports', 'torReports'];
+      ['listings', 'torlistings', 'vendors', 'torvendors', 'reports', 'torReports'];
 
     if (attrs.name && is.not.string(attrs.name)) {
       addError('name', app.polyglot.t('searchProviderModelErrors.invalidName'));
