@@ -12,9 +12,9 @@ export default class extends BaseModel {
       listings: '',
       torlistings: '',
       vendors: '',
-      torVendors: '',
+      torvendors: '',
       reports: '',
-      torReports: '',
+      torreports: '',
     };
   }
 
@@ -52,7 +52,7 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
     const urlTypes = options.urlTypes ||
-      ['listings', 'torlistings', 'vendors', 'torvendors', 'reports', 'torReports'];
+      ['listings', 'torlistings', 'vendors', 'torvendors', 'reports', 'torreports'];
 
     if (attrs.name && is.not.string(attrs.name)) {
       addError('name', app.polyglot.t('searchProviderModelErrors.invalidName'));
