@@ -211,6 +211,7 @@ export default class extends baseVw {
 
     if (!_.isEqual(this._search, newSearch)) {
       this._search = newSearch;
+      scrollPageIntoView();
       this.fetchSearch(this._search);
     }
   }
@@ -397,7 +398,6 @@ export default class extends baseVw {
     this.getCachedEl('.js-categoryWrapper').append(categoryVw.render().el);
 
     this.listenTo(categoryVw, 'seeAllCategory', (opts) => {
-      scrollPageIntoView();
       this.setSearch(opts);
     });
     this.listenTo(categoryVw, 'fetchComplete', () => this.addNextCategory());
