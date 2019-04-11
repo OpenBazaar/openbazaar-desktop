@@ -59,7 +59,7 @@ export default class extends baseVw {
     if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
       this.currentDefaultProvider = app.searchProviders.at(0);
     }
-    this._search.provider = this.currentDefaultProvider;
+    this._search.provider = this.currentDefaultProvider || app.searchProviders.at(0);
 
     this._categoryTerms = [
       'Art',
