@@ -31,6 +31,7 @@ export default class extends baseVw {
       initialState: {
         fetching: false,
         showHome: false,
+        xhr: null,
         ...options.initialState,
       },
       ...options,
@@ -270,7 +271,7 @@ export default class extends baseVw {
     this.setState({
       showHome: false,
       fetching: true,
-      xhr: '',
+      xhr: null,
     });
 
     const searchFetch = $.get({
@@ -298,7 +299,7 @@ export default class extends baseVw {
         } else {
           this.setState({
             fetching: false,
-            data: '',
+            data: {},
             xhr,
           });
         }
@@ -307,7 +308,7 @@ export default class extends baseVw {
         if (xhr.statusText !== 'abort') {
           this.setState({
             fetching: false,
-            data: '',
+            data: {},
             xhr,
           });
         }
@@ -441,7 +442,7 @@ export default class extends baseVw {
     this.listenTo(this.resultsView, 'searchError', xhr => {
       this.setState({
         fetching: false,
-        data: '',
+        data: {},
         xhr,
       });
     });
