@@ -146,15 +146,10 @@ export default class extends baseVw {
       // set the params in the search object
       const filters = { ...this._search.filters, ..._.omit(params, [...queryKeys]) };
 
-      this.setSearch({ ..._.pick(params, ...queryKeys), filters });
+      this.setSearch({ ..._.pick(params, ...queryKeys), filters }, { force: true });
     } else {
-      // If the user has OB1 set as default, show the Discover default UX. If they don't, show a
-      // default search using their default provider.
-      if (this._search.provider.id === defaultSearchProviders[0].id) {
-        this.setState({ showHome: true });
-      } else {
-        this.fetchSearch(this._search);
-      }
+      // Trigger a general search, with showHome set to true.
+      this.setSearch({}, { showHome: true });
     }
   }
 
@@ -202,17 +197,24 @@ export default class extends baseVw {
   /** Updates the search object. If updated, triggers a search fetch.
    *
    * @param {object} search - The new state.
+   * @param {boolean} opts.showHome - Should the OB1 home experience be shown?
+   * @param {boolean} opts.force - Should search be fired even if nothing changed?
    */
-  setSearch(search = {}) {
+  setSearch(search = {}, opts = {}) {
     const newSearch = {
       ...this._search,
       ...search,
     };
 
-    if (!_.isEqual(this._search, newSearch)) {
+    if (!_.isEqual(this._search, newSearch) || opts.force || opts.showHome) {
       this._search = newSearch;
       scrollPageIntoView();
-      this.fetchSearch(this._search);
+      // Show the OB1 home experience if requested and the provider is OB1.
+      if (opts.showHome && newSearch.provider.id === defaultSearchProviders[0].id) {
+        this.setState({ showHome: true });
+      } else {
+        this.fetchSearch(this._search);
+      }
     }
   }
 
@@ -326,7 +328,7 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this.setSearch({ provider: md, p: 0 });
+    this.setSearch({ provider: md, p: 0 }, { showHome: true });
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
   }
 
