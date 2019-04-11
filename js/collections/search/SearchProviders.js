@@ -1,8 +1,10 @@
 import { Collection } from 'backbone';
 import is from 'is_js';
+import app from '../../app';
+import Provider from '../../models/search/SearchProvider';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
 import { sanitizeResults } from '../../utils/search';
-import Provider from '../../models/search/SearchProvider';
+import { getCurrentConnection } from '../../utils/serverConnect';
 
 /**
  * Returns the URL minus any query parameters.
@@ -39,12 +41,13 @@ export default class extends Collection {
     return 8;
   }
 
-  get defaultProvider() {
-    return this.get(this._defaultId);
+  get tor() {
+    return app.serverConfig.tor && getCurrentConnection().server.get('useTor') ? 'Tor' : '';
   }
 
-  get defaultTorProvider() {
-    return this.get(this._defaultTorId);
+  get defaultProvider() {
+    // Fall back to the clearnet endpoint if no Tor endpoint exists.
+    return this.get(this[`_default${this.tor}Id`]) || this.get(this._defaultId);
   }
 
   set defaultProvider(md) {

@@ -26,20 +26,23 @@ export default class extends BaseModel {
     return LocalStorageSync.sync.apply(this, args);
   }
 
-  get usingTor() {
-    return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+  get tor() {
+    return app.serverConfig.tor && getCurrentConnection().server.get('useTor') ? 'tor' : '';
   }
 
   get listingsUrl() {
-    return this.get(`${this.usingTor ? 'tor' : ''}listings`);
+    // Fall back to clear endpoint on tor if no tor endpoint exists.
+    return this.get(`${this.tor}listings`) || this.get('listings');
   }
 
   get vendorsUrl() {
-    return this.get(`${this.usingTor ? 'tor' : ''}vendors`);
+    // Fall back to clear endpoint on tor if no tor endpoint exists.
+    return this.get(`${this.tor}vendors`) || this.get('vendors');
   }
 
   get reportsUrl() {
-    return this.get(`${this.usingTor ? 'tor' : ''}reports`);
+    // Fall back to clear endpoint on tor if no tor endpoint exists.
+    return this.get(`${this.tor}reports`) || this.get('reports');
   }
 
   validate(attrs, options) {
@@ -48,7 +51,8 @@ export default class extends BaseModel {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
-    const urlTypes = options.urlTypes || ['vendors', 'listings', 'torvendors', 'torlistings'];
+    const urlTypes = options.urlTypes ||
+      ['listings', 'torlistings', 'vendors', 'torvendors', 'reports', 'torReports'];
 
     if (attrs.name && is.not.string(attrs.name)) {
       addError('name', app.polyglot.t('searchProviderModelErrors.invalidName'));

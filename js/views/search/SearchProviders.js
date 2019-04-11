@@ -1,7 +1,6 @@
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-import { getCurrentConnection } from '../../utils/serverConnect';
 import { searchTypes } from '../../utils/search';
 import BaseView from '../baseVw';
 import Provider from './SearchProvider';
@@ -86,14 +85,11 @@ export default class extends BaseView {
 
       const providerFrag = document.createDocumentFragment();
 
-      const usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
-
       app.searchProviders.forEach(provider => {
         const view = this.createProviderView(provider);
         if (view) {
           this.providerViews.push(view);
-          if (provider.get(`${usingTor ? 'tor' : ''}${this.options.searchType}`)) {
-            // if the provider is the wrong type, don't add it to the DOM
+          if (provider.get(this.options.searchType)) {
             view.render().$el.appendTo(providerFrag);
           }
         }
