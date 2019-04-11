@@ -450,14 +450,14 @@ export default class extends baseVw {
   }
 
   clickSearchBtn() {
-    this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 });
+    this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 }, { force: true });
     recordEvent('Discover_ClickSearch');
     recordEvent('Discover_Search', { type: 'click' });
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 });
+      this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 }, { force: true });
       recordEvent('Discover_EnterKeySearch');
       recordEvent('Discover_Search', { type: 'enterKey' });
     }
