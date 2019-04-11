@@ -50,6 +50,10 @@
 
           .providerBtn {
             padding: 0;
+            
+            &:focus, &:hover {
+              outline: none;
+            }
 
             .providerInner {
               opacity: .35;
