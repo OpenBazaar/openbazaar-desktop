@@ -1,6 +1,5 @@
 const defaultSearchProviders = [
   {
-    id: 'ob1',
     name: 'OB1',
     logo: '../imgs/ob1searchLogo.png',
     localLogo: '../imgs/ob1searchLogo.png',
