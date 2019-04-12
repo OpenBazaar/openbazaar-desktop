@@ -24,4 +24,6 @@
 <div class="listingsGrid <%= ob.viewTypeClass %> flex js-resultsGrid"></div>
 <div class="pageControls js-pageControlsContainer"></div>
 <hr class="clrBr">
-<div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% if (ob.loading) { %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>

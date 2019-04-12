@@ -21,4 +21,6 @@
   <button class="btn clrP clrT clrBr clrSh1 js-seeAll"><%= ob.polyT('search.categories.seeAllBtn') %></button>
 </div>
 <hr class="clrBr row categoryRow">
-<div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% if (ob.loading) { %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>

@@ -13,12 +13,20 @@ export default class extends baseVw {
     if (!options.search.provider || !(options.search.provider instanceof ProviderMd)) {
       throw new Error('Please provide a provider model.');
     }
+    const opts = {
+      viewType: 'grid',
+      ...options,
+      initialState: {
+        loading: false,
+        ...options,
+      },
+    };
 
-    super(options);
-
-    this.viewType = options.viewType || 'grid';
-
+    super(opts);
+    this.options = opts;
     this._search = {
+      p: 0,
+      ps: 8,
       ...options.search,
     };
 
@@ -27,6 +35,7 @@ export default class extends baseVw {
     }
 
     this.cardViews = [];
+    this.loadCategory();
   }
 
   className() {
@@ -54,16 +63,16 @@ export default class extends baseVw {
       model,
       vendor,
       onStore: false,
-      viewType: this.viewType,
+      viewType: this.options.viewType,
     };
 
     return this.createChild(ListingCard, options);
   }
 
-  renderCards(models) {
+  renderCards(collection = []) {
     const resultsFrag = document.createDocumentFragment();
 
-    models.forEach(model => {
+    collection.forEach(model => {
       const cardVw = this.createCardView(model);
 
       if (cardVw) {
@@ -77,23 +86,29 @@ export default class extends baseVw {
 
   loadCategory(options) {
     this.removeCardViews();
-    this.$el.addClass('loading');
-    const catCol = new ResultsCol();
+    this.setState({ loading: true });
+
+    const opts = {
+      ...this._search,
+      ...options,
+    };
+
+    if (this.catCol) this.catCol.reset();
+    else this.catCol = new ResultsCol();
 
     if (this.categoryFetch) this.categoryFetch.abort();
 
-    this.categoryFetch = catCol.fetch({
-      url: createSearchURL(options),
+    this.categoryFetch = this.catCol.fetch({
+      url: createSearchURL(opts),
     })
       .done(() => {
         this.trigger('fetchComplete');
-        this.renderCards(catCol);
       })
       .fail(xhr => {
         if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
       })
       .always(() => {
-        this.$el.removeClass('loading');
+        this.setState({ loading: false });
       });
   }
 
@@ -112,13 +127,12 @@ export default class extends baseVw {
     super.render();
     loadTemplate('search/category.html', (t) => {
       this.$el.html(t({
-        viewTypeClass: this.viewType === 'grid' ?
-          '' : `listingsGrid${capitalize(this.viewType)}View`,
-        viewType: this.viewType,
+        viewTypeClass: this.options.viewType === 'grid' ?
+          '' : `listingsGrid${capitalize(this.options.viewType)}View`,
+        viewType: this.options.viewType,
         title: this.cryptoTitle || this._search.q,
       }));
-
-      this.loadCategory(this._search);
+      if (this.catCol && this.catCol.length) this.renderCards(this.catCol);
     });
 
     return this;

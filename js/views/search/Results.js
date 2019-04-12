@@ -2,31 +2,44 @@ import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
-import ListingCard from '../components/ListingCard';
-import UserCard from '../UserCard';
-import PageControls from '../components/PageControlsTextStyle';
-import ListingCardModel from '../../models/listing/ListingShort';
-import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
 import { createSearchURL } from '../../utils/search';
+import UserCard from '../UserCard';
+import ListingCard from '../components/ListingCard';
+import PageControls from '../components/PageControlsTextStyle';
+import ResultsCol from '../../collections/Results';
+import ListingCardModel from '../../models/listing/ListingShort';
+import ProviderMd from '../../models/search/SearchProvider';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
+    if (!options.search) throw new Error('Please provide a search object.');
+    if (!options.search.provider || !(options.search.provider instanceof ProviderMd)) {
+      throw new Error('Please provide a provider model.');
+    }
+
+    const opts = {
+      viewType: 'grid',
+      ...options,
+      initialState: {
+        loading: false,
+        ...options,
+      },
+    };
+
+    super(opts);
+    this.options = opts;
     this._search = {
       p: 0,
       ps: 66,
       ...options.search,
     };
 
-    this.viewType = this.options.viewType || 'grid';
-
     this.cardViews = [];
-    this.pageCollections = {};
+    this.pageCols = {};
     // if an initial collection was passed in, add it
-    if (options.initCol) this.pageCollections[this._search.p] = (options.initCol);
-    this.firstRender = true;
+    if (options.initCol) this.pageCols[this._search.p] = (options.initCol);
+    this.loadPage();
   }
 
   className() {
@@ -44,12 +57,10 @@ export default class extends baseVw {
   }
 
   createCardView(model) {
-    // models can be listings or nodes
+    // models can be listings or nodes, even though nodes aren't being used yet
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
-      const base = vendor.handle ?
-        `@${vendor.handle}` : vendor.peerID;
-
+      const base = vendor.handle ? `@${vendor.handle}` : vendor.peerID;
       const options = {
         listingBaseUrl: `${base}/store/`,
         reportsUrl: this._search.provider.reportsUrl || '',
@@ -57,7 +68,7 @@ export default class extends baseVw {
         model,
         vendor,
         onStore: false,
-        viewType: this.viewType,
+        viewType: this.options.viewType,
       };
 
       return this.createChild(ListingCard, options);
@@ -66,10 +77,10 @@ export default class extends baseVw {
     return this.createChild(UserCard, { model });
   }
 
-  renderCards(models) {
+  renderCards(pageCol = []) {
     const resultsFrag = document.createDocumentFragment();
 
-    models.forEach(model => {
+    pageCol.forEach(model => {
       const cardVw = this.createCardView(model);
 
       if (cardVw) {
@@ -78,32 +89,13 @@ export default class extends baseVw {
       }
     });
 
-    this.$el.toggleClass('noResults', models.total < 1);
-
-    this.$resultsGrid.html(resultsFrag);
-
-    // update the page controls
-    const currentPage = Number(this._search.p) + 1;
-    const lastPage = Math.ceil(models.total / this._search.ps);
-
-    this.pageControls.setState({
-      currentPage,
-      morePages: currentPage < lastPage,
-    });
-
-    // hide the loading spinner
-    this.$el.removeClass('loading');
-    /*
-    // disabled until an enter handler to added to the listing card
-    // move focus to the first result. The timeout orders it after other operations.
-    setTimeout(() => {
-      this.$resultsGrid.find('.listingCard').filter(':first').focus();
-    });
-    */
+    this.getCachedEl('.js-resultsGrid').html(resultsFrag);
   }
 
   loadPage(options) {
     this.removeCardViews();
+    this.trigger('loadingPage');
+    this.setState({ loading: true });
 
     const opts = {
       ...this._search,
@@ -112,18 +104,13 @@ export default class extends baseVw {
 
     const newUrl = createSearchURL(opts);
 
-    this.trigger('loadingPage');
-
     // if page exists, reuse it
-    if (this.pageCollections[opts.p]) {
-      this.renderCards(this.pageCollections[opts.p]);
-      app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
-        { replace: this.firstRender });
+    if (this.pageCols[opts.p]) {
+      app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`);
+      this.setState({ loading: false });
     } else {
-      this.$el.addClass('loading');
-
       const newPageCol = new ResultsCol();
-      this.pageCollections[opts.p] = newPageCol;
+      this.pageCols[opts.p] = newPageCol;
 
       if (this.newPageFetch) this.newPageFetch.abort();
 
@@ -131,12 +118,13 @@ export default class extends baseVw {
         url: newUrl,
       })
         .done(() => {
-          this.renderCards(newPageCol);
-          app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`,
-            { replace: this.firstRender });
+          app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`);
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
+        })
+        .always(() => {
+          this.setState({ loading: false });
         });
     }
   }
@@ -165,25 +153,34 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+    const currentPage = Number(this._search.p) + 1;
+    const pageCol = this.pageCols[this._search.p];
+
     loadTemplate('search/results.html', (t) => {
       this.$el.html(t({
-        viewTypeClass: this.viewType === 'grid' ?
-          '' : `listingsGrid${capitalize(this.viewType)}View`,
-        viewType: this.viewType,
+        viewTypeClass: this.options.viewType === 'grid' ?
+          '' : `listingsGrid${capitalize(this.options.viewType)}View`,
+        viewType: this.options.viewType,
+        ...this.getState(),
       }));
 
-      this.$resultsGrid = this.$('.js-resultsGrid');
-      this.removeCardViews();
-
       if (this.pageControls) this.pageControls.remove();
-      this.pageControls = this.createChild(PageControls);
-      this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
-      this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
-      this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
 
-      this.loadPage();
+      if (pageCol && pageCol.length) {
+        this.renderCards(pageCol);
+
+        this.pageControls = this.createChild(PageControls, {
+          initialState: {
+            currentPage,
+            morePages: currentPage < Math.ceil(pageCol.total / this._search.ps),
+          },
+        });
+        this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
+        this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
+        this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
+      }
     });
-    this.firstRender = false;
 
     return this;
   }

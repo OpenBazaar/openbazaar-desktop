@@ -50,7 +50,7 @@
 
           .providerBtn {
             padding: 0;
-            
+
             &:focus, &:hover {
               outline: none;
             }
@@ -206,15 +206,11 @@
     }
 
     .loadingSearch {
-      display: none;
-    }
-
-    &.loading .loadingSearch {
       display: flex;
 
       .spinner {
         position: absolute;
-        top: calc(50% - #{$spinnerLg/2});
+        top: calc(25% - #{$spinnerLg/2});
       }
 
       .listingsGrid {
