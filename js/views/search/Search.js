@@ -21,6 +21,7 @@ import { recordEvent } from '../../utils/metrics';
 import { getCurrentConnection } from '../../utils/serverConnect';
 import { scrollPageIntoView } from '../../utils/dom';
 import {
+  searchTypes,
   createSearchURL,
   sanitizeResults,
 } from '../../utils/search';
@@ -40,11 +41,15 @@ export default class extends baseVw {
     super(opts);
     const queryKeys = ['q', 'p', 'ps', 'sortBy'];
 
+    // Allow router to pass in a search type for future use with vendor searches.
+    const searchType = searchTypes.includes(opts.initialState.tab) ?
+      opts.initialState.tab : 'listings';
+
     this._defaultSearch = {
       q: '*',
       p: 0,
       ps: 66,
-      searchType: 'listings',
+      searchType,
       filters: {
         nsfw: String(app.settings.get('showNsfw')),
         acceptedCurrencies: supportedWalletCurs(),
