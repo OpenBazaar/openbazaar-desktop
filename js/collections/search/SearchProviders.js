@@ -3,7 +3,6 @@ import is from 'is_js';
 import app from '../../app';
 import Provider from '../../models/search/SearchProvider';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { sanitizeResults } from '../../utils/search';
 import { getCurrentConnection } from '../../utils/serverConnect';
 
 /**
@@ -98,11 +97,5 @@ export default class extends Collection {
       this[idString] = md.id;
       localStorage[storageString] = md.id;
     }
-  }
-
-  fetch(options = {}) {
-    return super.fetch({
-      data: sanitizeResults(options.data || {}),
-    });
   }
 }

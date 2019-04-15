@@ -23,7 +23,6 @@ import { scrollPageIntoView } from '../../utils/dom';
 import {
   searchTypes,
   createSearchURL,
-  sanitizeResults,
 } from '../../utils/search';
 
 export default class extends baseVw {
@@ -281,9 +280,7 @@ export default class extends baseVw {
       url: createSearchURL(opts),
       dataType: 'json',
     })
-      .done((pData, status, xhr) => {
-        const data = JSON.parse(sanitizeResults(pData));
-
+      .done((data, status, xhr) => {
         // make sure minimal data is present. If it isn't, it's probably an invalid endpoint.
         if (data.name && data.links) {
           const dataUpdate = this.buildProviderUpdate(data);

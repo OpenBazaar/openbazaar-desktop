@@ -38,22 +38,3 @@ export function createSearchURL(options = {}) {
 
   return new URL(`${opts.provider[`${options.searchType}Url`]}?${$.param(query, true)}`);
 }
-
-/**
- * Sanitize search results.
- * @param {object} data - Data object returned from a search query.
- *
- * @returns {object} - The same object, but with sanitized strings.
- */
-export function sanitizeResults(data) {
-  return JSON.stringify(data, (key, val) => {
-    // sanitize the data from any dangerous characters
-    if (typeof val === 'string') {
-      return sanitizeHtml(val, {
-        allowedTags: [],
-        allowedAttributes: [],
-      });
-    }
-    return val;
-  });
-}
