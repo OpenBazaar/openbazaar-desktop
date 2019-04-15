@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
-import sanitizeHtml from 'sanitize-html';
 import ProviderMd from '../models/search/SearchProvider';
 
 export const searchTypes = ['listings', 'vendors'];

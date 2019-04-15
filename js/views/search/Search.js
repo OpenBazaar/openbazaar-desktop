@@ -127,7 +127,8 @@ export default class extends baseVw {
            user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
            values will be saved after the endpoint returns them.
            */
-          this._search.provider.set(`${getCurConnTor() ? 'tor' : ''}${this._search.searchType}`, base);
+          const searchAttribute = `${getCurConnTor() ? 'tor' : ''}${this._search.searchType}`;
+          this._search.provider.set(searchAttribute, base);
           if (!this._search.provider.isValid()) {
             openSimpleMessage(app.polyglot.t('search.errors.invalidUrl'));
             this._search.provider = app.searchProviders.at(0);
