@@ -111,18 +111,18 @@ export default class extends baseVw {
         queryParams = subURL.searchParams;
         const base = `${subURL.origin}${subURL.pathname}`;
         /*
-           If the query provider model doesn't already exist, create a new provider model for it.
-           One quirk to note: if a tor url is passed in while the user is in clear mode, and an
-           existing provider has that tor url, that provider will be activated but will use its
-           clear url if it has one. The opposite is also true.
+         If the query provider model doesn't already exist, create a new provider model for it.
+         One quirk to note: if a tor url is passed in while the user is in clear mode, and an
+         existing provider has that tor url, that provider will be activated but will use its
+         clear url if it has one. The opposite is also true.
          */
         const matchedProvider = is.url(base) ? app.searchProviders.getProviderByURL(base) : '';
         if (!matchedProvider) {
           this._search.provider = new ProviderMd();
           /*
-             We don't actually know what type of search the url is for, we'll assume for example a
-             user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
-             values will be saved after the endpoint returns them.
+           We don't actually know what type of search the url is for, we'll assume for example a
+           user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
+           values will be saved after the endpoint returns them.
            */
           this._search.provider.set(`${this.onTor ? 'tor' : ''}${this._search.searchType}`, base);
           if (!this._search.provider.isValid()) {
@@ -149,8 +149,11 @@ export default class extends baseVw {
 
       this.setSearch({ ..._.pick(params, ...queryKeys), filters }, { force: true });
     } else {
-      // Trigger a general search, with showHome set to true.
-      this.setSearch({}, { showHome: true });
+      if (this._search.provider.id === defaultSearchProviders[0].id && this.getState().showHome) {
+        this.buildCategories();
+      } else {
+        this.setSearch({}, { force: true });
+      }
     }
   }
 
@@ -198,7 +201,6 @@ export default class extends baseVw {
   /** Updates the search object. If updated, triggers a search fetch.
    *
    * @param {object} search - The new state.
-   * @param {boolean} opts.showHome - Should the OB1 home experience be shown?
    * @param {boolean} opts.force - Should search be fired even if nothing changed?
    */
   setSearch(search = {}, opts = {}) {
@@ -207,15 +209,10 @@ export default class extends baseVw {
       ...search,
     };
 
-    if (!_.isEqual(this._search, newSearch) || opts.force || opts.showHome) {
+    if (!_.isEqual(this._search, newSearch) || opts.force) {
       this._search = newSearch;
       scrollPageIntoView();
-      // Show the OB1 home experience if requested and the provider is OB1.
-      if (opts.showHome && newSearch.provider.id === defaultSearchProviders[0].id) {
-        this.setState({ showHome: true });
-      } else {
-        this.fetchSearch(this._search);
-      }
+      this.fetchSearch(this._search);
     }
   }
 
@@ -329,8 +326,14 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this.setSearch({ provider: md, p: 0 }, { showHome: true });
+
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
+
+    if (md.id === defaultSearchProviders[0].id) {
+      this.buildCategories();
+    } else {
+      this.setSearch({ provider: md, p: 0 });
+    }
   }
 
   deleteProvider(md = this._search.provider) {
@@ -358,7 +361,6 @@ export default class extends baseVw {
     }
 
     this.currentDefaultProvider = md;
-    this.render();
   }
 
   clickMakeDefaultProvider() {
@@ -367,6 +369,7 @@ export default class extends baseVw {
       url: this.currentBaseUrl,
     });
     this.makeDefaultProvider(this._search.provider);
+    this.render();
   }
 
   addQueryProvider() {
@@ -381,38 +384,47 @@ export default class extends baseVw {
   }
 
   /**
-   * This will add the categories one by one, with the next one triggered by the last one being
-   * fetched. this._categorySearchesToAdd should be filled with search objects when calling this.
+   * This will add the categories one by one in a loop.
    */
-  addNextCategory() {
-    if (!Array.isArray(this._categorySearchesToAdd)) {
-      throw new Error('this._categorySearchesToAdd should be a valid array of search objects.');
+  buildCategories() {
+    if (!Array.isArray(this._categorySearches)) {
+      throw new Error('this._categorySearches should be a valid array of search objects.');
     }
 
-    if (!this._categorySearchesToAdd[0]) return;
+    if (this.categoryViews.length === this._categorySearches.length) {
+      app.router.navigate('search/home');
+      this._search.provider = app.searchProviders.at(0);
+      // The state may not be changed here, so always fire a render.
+      this.setState({ showHome: true }, { renderOnChange: false });
+      this.render();
+      return;
+    }
 
-    const search = this._categorySearchesToAdd.shift();
+    const search = this._categorySearches[this.categoryViews.length];
     const categoryVw = this.createChild(Category, {
       search,
       viewType: search.filters.type === 'cryptocurrency' ? 'cryptoList' : 'grid',
     });
     this.categoryViews.push(categoryVw);
 
-    this.getCachedEl('.js-categoryWrapper').append(categoryVw.render().el);
-
-    this.listenTo(categoryVw, 'seeAllCategory', (opts) => {
-      this.setSearch(opts);
-    });
-    this.listenTo(categoryVw, 'fetchComplete', () => this.addNextCategory());
+    this.listenTo(categoryVw, 'seeAllCategory', (opts) => this.setSearch(opts));
+    this.buildCategories();
   }
 
-  createResults(data, search) {
+  /**
+   * This will create a results view from the provided search data.
+   * @param {object} data - JSON results from a search endpoint.
+   * @param {object} search - A valid search object.
+   */
+  createResults(data = {}, search) {
+    if (!search || $.isEmptyObject(search)) throw new Error('Please provide a search object.');
+
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
 
     let viewType = 'grid';
 
-    if (data && data.options && data.options.type &&
+    if (data.options && data.options.type &&
       data.options.type.options &&
       data.options.type.options.length) {
       if (data.options.type.options.find(op => op.value === 'cryptocurrency' && op.checked) &&
@@ -486,7 +498,18 @@ export default class extends baseVw {
 
   remove() {
     this.removeFetches();
+    this.categoryViews.forEach(cat => cat.remove());
     super.remove();
+  }
+
+  renderCategories() {
+    const catsFrag = document.createDocumentFragment();
+
+    this.categoryViews.forEach(catVw => {
+      catVw.render().$el.appendTo(catsFrag);
+    });
+
+    this.getCachedEl('.js-categoryWrapper').html(catsFrag);
   }
 
   render() {
@@ -544,14 +567,11 @@ export default class extends baseVw {
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
-    this.categoryViews.forEach(cat => cat.remove());
     if (this.filters) this.filters.remove();
     if (this.sortBy) this.sortBy.remove();
 
     if (state.showHome) {
-      // Create a disposable copy to be shifted by the addNextCategory function.
-      this._categorySearchesToAdd = [...this._categorySearches];
-      this.addNextCategory();
+      this.renderCategories();
     } else {
       if (hasFilters) {
         this.filters = this.createChild(Filters, { initialState: { filters: data.options } });

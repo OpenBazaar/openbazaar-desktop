@@ -131,6 +131,7 @@ export default class extends baseVw {
           '' : `listingsGrid${capitalize(this.options.viewType)}View`,
         viewType: this.options.viewType,
         title: this.cryptoTitle || this._search.q,
+        ...this.getState(),
       }));
       if (this.catCol && this.catCol.length) this.renderCards(this.catCol);
     });

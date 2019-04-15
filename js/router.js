@@ -43,6 +43,7 @@ export default class ObRouter extends Router {
       ['(ob://)transactions/:tab(/)', 'transactions'],
       ['(ob://)connected-peers(/)', 'connectedPeers'],
       ['(ob://)search(?query)', 'search'],
+      ['(ob://)search/home', 'searchHome'],
       ['(ob://)*path', 'pageNotFound'],
     ];
 
@@ -632,6 +633,12 @@ export default class ObRouter extends Router {
   search(query) {
     this.loadPage(
       new Search({ query })
+    );
+  }
+
+  searchHome() {
+    this.loadPage(
+      new Search({ initialState:{ showHome: true } })
     );
   }
 
