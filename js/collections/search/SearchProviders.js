@@ -1,9 +1,8 @@
 import { Collection } from 'backbone';
 import is from 'is_js';
-import app from '../../app';
 import Provider from '../../models/search/SearchProvider';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getCurConnTor } from '../../utils/serverConnect';
 
 /**
  * Returns the URL minus any query parameters.
@@ -41,7 +40,7 @@ export default class extends Collection {
   }
 
   get tor() {
-    return app.serverConfig.tor && getCurrentConnection().server.get('useTor') ? 'Tor' : '';
+    return getCurConnTor() ? 'Tor' : '';
   }
 
   get defaultProvider() {

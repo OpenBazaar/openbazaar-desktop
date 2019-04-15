@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getCurConnTor } from '../../utils/serverConnect';
 import { searchTypes } from '../../utils/search';
 import BaseView from '../baseVw';
 import { openSimpleMessage } from '../modals/SimpleMessage';
@@ -72,8 +72,7 @@ export default class extends BaseView {
     }
 
     const opts = {};
-    const usingTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
-    const urlType = `${usingTor ? 'tor' : ''}${this.options.searchType}`;
+    const urlType = `${getCurConnTor() ? 'tor' : ''}${this.options.searchType}`;
     opts[urlType] = URL;
 
     // pass the type of url to validate to the model

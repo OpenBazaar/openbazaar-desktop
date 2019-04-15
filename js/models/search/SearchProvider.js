@@ -1,7 +1,7 @@
 import app from '../../app';
 import is from 'is_js';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getCurConnTor } from '../../utils/serverConnect';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -27,7 +27,7 @@ export default class extends BaseModel {
   }
 
   get tor() {
-    return app.serverConfig.tor && getCurrentConnection().server.get('useTor') ? 'tor' : '';
+    return getCurConnTor() ? 'tor' : '';
   }
 
   get listingsUrl() {

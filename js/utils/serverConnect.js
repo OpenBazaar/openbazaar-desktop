@@ -75,6 +75,10 @@ export function getServer() {
   return curCon.server;
 }
 
+export function getCurConnTor() {
+  return getServer().get('useTor') && app.serverConfig.tor;
+}
+
 /**
  * Call this method to obtain the socket instance in order to bind socket events.
  * If we are not currently connected to a server, this method will return false.

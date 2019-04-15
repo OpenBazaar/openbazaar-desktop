@@ -18,7 +18,7 @@ import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { getCurConnTor } from '../../utils/serverConnect';
 import { scrollPageIntoView } from '../../utils/dom';
 import {
   searchTypes,
@@ -100,7 +100,6 @@ export default class extends baseVw {
 
     this.categoryViews = [];
     this.searchFetches = [];
-    this.onTor = app.serverConfig.tor && getCurrentConnection().server.get('useTor');
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
@@ -128,7 +127,7 @@ export default class extends baseVw {
            user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
            values will be saved after the endpoint returns them.
            */
-          this._search.provider.set(`${this.onTor ? 'tor' : ''}${this._search.searchType}`, base);
+          this._search.provider.set(`${getCurConnTor() ? 'tor' : ''}${this._search.searchType}`, base);
           if (!this._search.provider.isValid()) {
             openSimpleMessage(app.polyglot.t('search.errors.invalidUrl'));
             this._search.provider = app.searchProviders.at(0);
@@ -192,7 +191,7 @@ export default class extends baseVw {
       throw new Error('Please provide a search provider model.');
     }
 
-    app.searchProviders[`default${this.onTor ? 'Tor' : ''}Provider`] = md;
+    app.searchProviders[`default${getCurConnTor() ? 'Tor' : ''}Provider`] = md;
   }
 
   get currentBaseUrl() {
