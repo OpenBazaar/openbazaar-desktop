@@ -35,6 +35,7 @@ export default class extends baseVw {
     }
 
     this.cardViews = [];
+    this.catCol = new ResultsCol();
     this.loadCategory();
   }
 
@@ -93,10 +94,8 @@ export default class extends baseVw {
       ...options,
     };
 
-    if (this.catCol) this.catCol.reset();
-    else this.catCol = new ResultsCol();
-
     if (this.categoryFetch) this.categoryFetch.abort();
+    if (this.catCol.length) this.catCol.reset();
 
     this.categoryFetch = this.catCol.fetch({
       url: createSearchURL(opts),
