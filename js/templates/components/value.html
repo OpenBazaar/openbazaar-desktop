@@ -1,0 +1,32 @@
+<% console.dir(ob); %>
+
+<%
+  if (ob.formattedAmount) {
+    if (ob.tipAmount) {
+      const tipWrapClass = `${ob.tipWrapBaseClass} ${ob.tipWrapClass}`;
+      const tipClass = `${ob.tipBaseClass} ${ob.tipClass}`;
+      let tipContent = ob.tipAmount;
+
+      // todo:
+      // put max-width on tip
+      // copied indicator
+      // copy to clipboard
+      // invisible copied to make sure width is at least that and no jumpy jumpers
+
+      if (ob.copyableTipAmount) {
+        tipContent = `
+          <div class="rowSm">${ob.tipAmount}</div>
+          <hr />
+          <div class="flexHRight">
+            <button className="js-copyTipAmount">Copy</button>
+          </div>
+        `;
+      }
+%>
+      <span class="<%= tipWrapClass %>"><%= ob.formattedAmount %><span class="<%= tipClass %>"><%= tipContent %></span></span>
+<%   
+    } else {
+      print(ob.formattedAmount)
+    }
+  }
+%>

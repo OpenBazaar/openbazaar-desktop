@@ -117,9 +117,7 @@
         <%= ob.formatRating(5, 19896) %>
       </div>
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
-        <div>
-          <%= ob.priceContent %>
-        </div>
+        <div class="js-priceContainer"></div>
       <% } else { %>
         <%=
           ob.crypto.cryptoPrice({
@@ -180,20 +178,18 @@
       </div>
       <% } %>
       <div class="priceCol flexNoShrink clamp4">
-        <span>
+        <span className="<%= ob.contractType !== 'CRYPTOCURRENCY' ? 'js-priceContainer' : '' %>">
           <%
-            if (ob.contractType !== 'CRYPTOCURRENCY') { %>
-              <%= ob.priceContent %>
-          <% } else { %>
-            <%=
-              ob.crypto.cryptoPrice({
-                priceAmount: ob.price.amount,
-                priceCurrencyCode: ob.price.currencyCode,
-                displayCurrency: ob.displayCurrency,
-                priceModifier: ob.price.modifier,
-                wrappingClass: '',
-              })
-            %>
+            if (ob.contractType === 'CRYPTOCURRENCY') { %>
+              <%=
+                ob.crypto.cryptoPrice({
+                  priceAmount: ob.price.amount,
+                  priceCurrencyCode: ob.price.currencyCode,
+                  displayCurrency: ob.displayCurrency,
+                  priceModifier: ob.price.modifier,
+                  wrappingClass: '',
+                })
+              %>
           <% } %>
         </span>
       </div>

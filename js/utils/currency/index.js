@@ -14,9 +14,6 @@ import {
 import { getCurrencies as getCryptoListingCurs } from '../../data/cryptoListingCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
 
-console.log('big');
-window.big = bigNumber;
-
 const events = {
   ...Events,
 };
@@ -252,7 +249,7 @@ export function formatCurrency(amount, currency, options = {}) {
     useCryptoSymbol: true,
     // If you just want to format a number representing a crypto currency amount
     // but don't want any code or symbol used, set to false.
-    includeCryptoCurIdentifier: true,
+    // includeCryptoCurIdentifier: true,
     // Defaults to 2 for fiat and 0 for crypto.
     // minDisplayDecimals: undefined,
     minDisplayDecimals: 2,
@@ -269,6 +266,14 @@ export function formatCurrency(amount, currency, options = {}) {
     // This value defaults to 4 on fiat and 8 for crypto.
     // maxDisplayDecimalsOnZero: undefined,
     maxDisplayDecimalsOnZero: 6,
+    // more and more and more and more
+    // and more and more and more and more and more
+    // and more and more and more and more
+    // and more validations / doccage
+    tooltipOnTruncatedZero: true,
+    truncatedZeroTooltipBaseClass: 'toolTipNoWrap',
+    truncatedZeroTooltipClass: 'toolTipTop',
+    style: 'currency',
     ...(
       typeof options === 'object' ?
         options : {}
@@ -358,7 +363,8 @@ export function formatCurrency(amount, currency, options = {}) {
       ),
     }).format(amt);
 
-    if (opts.includeCryptoCurIdentifier) {
+    // if (opts.includeCryptoCurIdentifier) {
+    if (opts.style === 'currency') {
       const translationSubKey = curSymbol === walletCur.symbol ?
         'curSymbolAmount' : 'curCodeAmount';
       formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
@@ -376,7 +382,8 @@ export function formatCurrency(amount, currency, options = {}) {
       ),
     }).format(amount);
 
-    if (opts.includeCryptoCurIdentifier) {
+    // if (opts.includeCryptoCurIdentifier) {
+    if (opts.style === 'currency') {
       formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
         amount: formattedAmount,
         code: cur.length > 8 ?
@@ -385,7 +392,7 @@ export function formatCurrency(amount, currency, options = {}) {
     }
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
-      style: 'currency',
+      style: opts.style,
       currency,
       minimumFractionDigits: opts.minDisplayDecimals,
       maximumFractionDigits: getMaxDisplayDigits(
@@ -670,13 +677,9 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
       convertedAmt = amount;
       outputFormat = fromCur;
     } else {
-      console.error(e);
       throw e;
     }
   }
-
-  console.log(`the mount is ${amount} ${fromCur}`);
-  console.log(`the convert is ${convertedAmt} ${toCur}`);
 
   return formatCurrency(convertedAmt, outputFormat, opts.formatOptions);
 }

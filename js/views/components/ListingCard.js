@@ -2,7 +2,6 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { abbrNum } from '../../utils';
-import { convertAndFormatCurrency } from '../../utils/currency';
 import { shortAndSweet } from '../../utils/currency/formatConfigs';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
@@ -20,6 +19,7 @@ import BlockedWarning from '../modals/BlockedWarning';
 import ReportBtn from '../components/ReportBtn';
 import BlockBtn from '../components/BlockBtn';
 import VerifiedMod, { getListingOptions } from '../components/VerifiedMod';
+import Value from '../components/Value';
 import UserLoadingModal from '../../views/userPage/Loading';
 
 export default class extends baseVw {
@@ -490,6 +490,8 @@ export default class extends baseVw {
 
   onClick(e) {
     if (this.deleteConfirmOn) return;
+    if ($(e.target).hasClass('js-formatCurTip') ||
+      $(e.target).closest('.js-formatCurTip', this.el)) return;
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
@@ -630,18 +632,6 @@ export default class extends baseVw {
 
     const flatModel = this.model.toJSON();
     const displayCurrency = app.settings.get('localCurrency');
-    let priceContent;
-
-    // consider a getPrice method where all the pricepermutations could
-    // be made there rather than some in the template and some in the view.
-    if (!this.model.isCrypto) {
-      priceContent = convertAndFormatCurrency(
-        flatModel.price.amount,
-        flatModel.price.currencyCode,
-        displayCurrency,
-        { formatOptions: shortAndSweet }
-      );
-    }
 
     loadTemplate('components/listingCard.html', (t) => {
       this.$el.html(t({
@@ -657,12 +647,26 @@ export default class extends baseVw {
         vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
           this.avatarImage.src || '',
         abbrNum,
-        priceContent,
       }));
     });
 
     this._$btnEdit = null;
     this._$btnDelete = null;
+
+    // consider a getPrice method where all the pricepermutations could
+    // be made there rather than some in the template and some in the view.
+    if (!this.model.isCrypto) {
+      const price = this.createChild(Value, {
+        initialState: {
+          amount: flatModel.price.amount,
+          fromCur: flatModel.price.currencyCode,
+          toCur: displayCurrency,
+          ...shortAndSweet,
+        },
+      });
+      this.getCachedEl('.js-priceContainer')
+        .html(price.render().el);
+    }
 
     this.setBlockedClass();
     this.setHideNsfwClass();

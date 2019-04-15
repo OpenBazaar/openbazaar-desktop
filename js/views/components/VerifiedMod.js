@@ -22,7 +22,7 @@ export default class extends BaseVw {
         titleWrapperClass: 'flexCent rowSm gutterHTn',
         tipBody: '',
         tipBodyClass: '',
-        arrowClass: 'arrowBoxCenteredTop',
+        arrowClass: 'arrowBoxTipCenteredBot',
         badgeUrl: '',
         wrapInfoIcon: options.initialState &&
           options.initialState.text || false,

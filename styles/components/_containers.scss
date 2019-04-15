@@ -374,8 +374,21 @@
   position: relative;
   cursor: pointer;
 
-  .arrowBoxCenteredTop,
-  .arrowBoxRightTop {
+  .arrowBoxTipCenteredBot {
+    // This is a little confusing, but the idea is that in a standard
+    // arrow box, the positioning class semantically is realtive to the
+    // position of the arrow to the box. In the case of a tip however,
+    // it's relative to the position of the tip to it's trigger element.
+    @extend .arrowBoxCenteredTop;
+  }
+
+  .arrowBoxTipRightBot {
+    // See comment above.
+    @extend .arrowBoxRightTop;
+  }
+
+  .arrowBoxTipCenteredBot,
+  .arrowBoxTipRightBot {
     display: none;
     border-width: 1px;
     border-style: solid;
@@ -386,25 +399,27 @@
     z-index: 1;
     text-align: center;
     font-weight: normal;
+    cursor: default;
   }
 
   &:hover {
-    .arrowBoxCenteredTop,
-    .arrowBoxRightTop {
+    .arrowBoxTipCenteredBot,
+    .arrowBoxTipRightBot {
       display: block;
     }
   }
 
-  .arrowBoxCenteredTop,
-  .arrowBoxRightTop {
-    margin-top: 15px;
+  .arrowBoxTipCenteredBot,
+  .arrowBoxTipRightBot {
+    margin-top: 18px;
   }
 
-  .unconstrainedWidth {
+  &.unconstrainedWidth {
     // use if your tip is likely to be short in text
-    .arrowBoxCenteredTop,
-    .arrowBoxRightTop {
+    .arrowBoxTipCenteredBot,
+    .arrowBoxTipRightBot {
       min-width: 0;
+      width: auto;
     }
   }
 }
