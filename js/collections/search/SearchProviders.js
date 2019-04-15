@@ -59,7 +59,7 @@ export default class extends Collection {
   }
 
   /**
-   * This will retrieve the first provider that has the given URL for one of it's endpoints.
+   * This will retrieve the first provider that has the given URL for one of its endpoints.
    * @param {string} url - The endpoint URL being looked for.
    * @returns {object} - A search provider model.
    */
