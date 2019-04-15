@@ -395,6 +395,7 @@ export default class extends baseVw {
     if (this.categoryViews.length === this._categorySearches.length) {
       app.router.navigate('search/home');
       this._search.provider = app.searchProviders.at(0);
+      scrollPageIntoView();
       // The state may not be changed here, so always fire a render.
       this.setState({ tab: 'home' }, { renderOnChange: false });
       this.render();
