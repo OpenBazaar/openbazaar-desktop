@@ -106,7 +106,7 @@ export default class extends baseVw {
 
     // if page exists, reuse it
     if (this.pageCols[opts.p]) {
-      app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`);
+      app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
       this.setState({ loading: false });
     } else {
       const newPageCol = new ResultsCol();
@@ -118,7 +118,7 @@ export default class extends baseVw {
         url: newUrl,
       })
         .done(() => {
-          app.router.navigate(`search?providerQ=${encodeURIComponent(newUrl)}`);
+          app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);

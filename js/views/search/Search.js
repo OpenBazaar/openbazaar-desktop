@@ -30,7 +30,7 @@ export default class extends baseVw {
     const opts = {
       initialState: {
         fetching: false,
-        showHome: false,
+        tab: 'listings',
         xhr: null,
         ...options.initialState,
       },
@@ -149,7 +149,8 @@ export default class extends baseVw {
 
       this.setSearch({ ..._.pick(params, ...queryKeys), filters }, { force: true });
     } else {
-      if (this._search.provider.id === defaultSearchProviders[0].id && this.getState().showHome) {
+      if (this._search.provider.id === defaultSearchProviders[0].id &&
+        this.getState().tab === 'home') {
         this.buildCategories();
       } else {
         this.setSearch({}, { force: true });
@@ -266,7 +267,7 @@ export default class extends baseVw {
     this.removeFetches();
 
     this.setState({
-      showHome: false,
+      tab: 'listings',
       fetching: true,
       xhr: null,
     });
@@ -395,7 +396,7 @@ export default class extends baseVw {
       app.router.navigate('search/home');
       this._search.provider = app.searchProviders.at(0);
       // The state may not be changed here, so always fire a render.
-      this.setState({ showHome: true }, { renderOnChange: false });
+      this.setState({ tab: 'home' }, { renderOnChange: false });
       this.render();
       return;
     }
@@ -539,7 +540,7 @@ export default class extends baseVw {
         providerLocked: this.providerIsADefault(this._search.provider.id),
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
-        showDataError: $.isEmptyObject(data) && !state.showHome,
+        showDataError: $.isEmptyObject(data) && state.tab === 'listings',
         hasFilters,
         ...state,
         ...data,
@@ -570,9 +571,9 @@ export default class extends baseVw {
     if (this.filters) this.filters.remove();
     if (this.sortBy) this.sortBy.remove();
 
-    if (state.showHome) {
+    if (state.tab === 'home') {
       this.renderCategories();
-    } else {
+    } else if (state.tab === 'listings') {
       if (hasFilters) {
         this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
         this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
