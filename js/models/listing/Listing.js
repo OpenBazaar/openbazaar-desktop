@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import is from 'is_js';
 import app from '../../app';
-import { getCurrencyByCode } from '../../data/currencies';
+// import { getCurrencyByCode } from '../../data/currencies';
 import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
@@ -289,46 +289,50 @@ export default class extends BaseModel {
         );
     } else {
       if (method !== 'delete') {
+        options.attrs.item.price = 0.000000000000000001;
+        options.attrs.metadata.pricingCurrency = "ZEC";
+        options.attrs.metadata.coinDivisibility = 18;
+
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
         const isCrypto = options.attrs.metadata.contractType === 'CRYPTOCURRENCY';
-        const pricingCurrency = options.attrs.metadata.pricingCurrency;
-        let coinDivisibility = options.attrs.metadata.coinDivisibility;
-        let curData;
+        // const pricingCurrency = options.attrs.metadata.pricingCurrency;
+        const coinDivisibility = options.attrs.metadata.coinDivisibility;
+        // let curData;
 
-        if (typeof coinDivisibility !== 'number') {
-          try {
-            curData = getCurrencyByCode(pricingCurrency);
-          } catch (e) {
-            // pass
-          }
+        // if (typeof coinDivisibility !== 'number') {
+        //   try {
+        //     curData = getCurrencyByCode(pricingCurrency);
+        //   } catch (e) {
+        //     // pass
+        //   }
 
-          if (!curData) {
-            if (!isCrypto) {
-              // todo todo todo defaultQuantityBaseUnit should not include quantity
-              // in the name
-              // also make it the server exponent style
-              console.warn(
-                `The listing has an unrecognized pricing currency of ${pricingCurrency}.` +
-                `Will use a default base units of ${defaultQuantityBaseUnit}.`
-              );
-            }
+        //   if (!curData) {
+        //     if (!isCrypto) {
+        //       // todo todo todo defaultQuantityBaseUnit should not include quantity
+        //       // in the name
+        //       // also make it the server exponent style
+        //       console.warn(
+        //         `The listing has an unrecognized pricing currency of ${pricingCurrency}.` +
+        //         `Will use a default base units of ${defaultQuantityBaseUnit}.`
+        //       );
+        //     }
 
-            coinDivisibility = Math.log10(defaultQuantityBaseUnit);
-          } else {
-            coinDivisibility = Math.log10(
-              getCryptoCurrencyByCode(pricingCurrency) ?
-                curData.baseUnit : 100
-            );
-          }
-        }
+        //     coinDivisibility = Math.log10(defaultQuantityBaseUnit);
+        //   } else {
+        //     coinDivisibility = Math.log10(
+        //       getCryptoCurrencyByCode(pricingCurrency) ?
+        //         curData.baseUnit : 100
+        //     );
+        //   }
+        // }
 
-        options.attrs.metadata.coinDivisibility = coinDivisibility;
+        // options.attrs.metadata.coinDivisibility = coinDivisibility;
 
         // convert price fields
-        if (options.attrs.item.price) {
+        if (typeof options.attrs.item.price === 'number') {
           const price = options.attrs.item.price;
           options.attrs.item.price = decimalToInteger(price, coinDivisibility);
         }
@@ -496,17 +500,27 @@ export default class extends BaseModel {
       const isCrypto = parsedResponse.metadata &&
         parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';
 
+      let coinDivisibility;
+
+      try {
+        coinDivisibility = parsedResponse
+          .metadata
+          .coinDivisibility;
+      } catch (e) {
+        // pass
+      }
+
       // set the hash
       parsedResponse.hash = response.hash;
 
       // convert price fields
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;
-        const cur = parsedResponse.metadata &&
-          parsedResponse.metadata.pricingCurrency;
+        // const cur = parsedResponse.metadata &&
+        //   parsedResponse.metadata.pricingCurrency;
 
         if (price) {
-          parsedResponse.item.price = integerToDecimal(price, cur);
+          parsedResponse.item.price = integerToDecimal(price, coinDivisibility);
         }
       }
 
@@ -531,7 +545,8 @@ export default class extends BaseModel {
               const price2 = service.additionalItemPrice;
               if (typeof price2 === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, cur);
+                  .services[serviceIndex].additionalItemPrice =
+                    integerToDecimal(price2, coinDivisibility);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178

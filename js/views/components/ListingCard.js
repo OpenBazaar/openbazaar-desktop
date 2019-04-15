@@ -2,6 +2,8 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { abbrNum } from '../../utils';
+import { convertAndFormatCurrency } from '../../utils/currency';
+import { shortAndSweet } from '../../utils/currency/formatConfigs';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
@@ -626,13 +628,28 @@ export default class extends baseVw {
   render() {
     super.render();
 
+    const flatModel = this.model.toJSON();
+    const displayCurrency = app.settings.get('localCurrency');
+    let priceContent;
+
+    // consider a getPrice method where all the pricepermutations could
+    // be made there rather than some in the template and some in the view.
+    if (!this.model.isCrypto) {
+      priceContent = convertAndFormatCurrency(
+        flatModel.price.amount,
+        flatModel.price.currencyCode,
+        displayCurrency,
+        { formatOptions: shortAndSweet }
+      );
+    }
+
     loadTemplate('components/listingCard.html', (t) => {
       this.$el.html(t({
-        ...this.model.toJSON(),
+        ...flatModel,
         ownListing: this.ownListing,
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
-        displayCurrency: app.settings.get('localCurrency'),
+        displayCurrency,
         isBlocked,
         isUnblocking,
         listingImageSrc: this.listingImage.loaded &&
@@ -640,6 +657,7 @@ export default class extends baseVw {
         vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
           this.avatarImage.src || '',
         abbrNum,
+        priceContent,
       }));
     });
 

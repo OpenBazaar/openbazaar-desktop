@@ -62,7 +62,10 @@ export default class extends BaseModel {
       const priceObj = parsedResponse.price;
       parsedResponse.price = {
         ...priceObj,
-        amount: integerToDecimal(priceObj.amount, priceObj.currencyCode),
+        currencyCode: 'ZEC',
+        // amount: integerToDecimal(priceObj.amount, 18),
+        // amount: integerToDecimal('4.99e18', 18),
+        amount: integerToDecimal('10', 8),
       };
     }
 

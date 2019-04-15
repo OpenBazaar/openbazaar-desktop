@@ -114,20 +114,11 @@
     </div>
     <div class="flex">
       <div class="flexExpand tx5b ratingStrip">
-        <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
+        <%= ob.formatRating(5, 19896) %>
       </div>
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
         <div>
-          <%=
-            ob.currencyMod.formattedCurrency(
-              ob.price.amount,
-              ob.price.currencyCode,
-              ob.displayCurrency,
-              {
-                toolTipClass: 'toolTipTop',
-              }
-            )
-          %>
+          <%= ob.priceContent %>
         </div>
       <% } else { %>
         <%=
@@ -192,16 +183,7 @@
         <span>
           <%
             if (ob.contractType !== 'CRYPTOCURRENCY') { %>
-            <%=
-              ob.currencyMod.formattedCurrency(
-                ob.price.amount,
-                ob.price.currencyCode,
-                ob.displayCurrency,
-                {
-                  toolTipClass: 'toolTipTop',
-                }
-              )
-            %>
+              <%= ob.priceContent %>
           <% } else { %>
             <%=
               ob.crypto.cryptoPrice({
