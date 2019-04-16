@@ -18,7 +18,7 @@ export default class extends baseVw {
       ...options,
       initialState: {
         loading: false,
-        ...options,
+        ...options.initialState,
       },
     };
 

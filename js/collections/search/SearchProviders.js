@@ -2,7 +2,7 @@ import { Collection } from 'backbone';
 import is from 'is_js';
 import Provider from '../../models/search/SearchProvider';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { getCurConnTor } from '../../utils/serverConnect';
+import { curConnOnTor } from '../../utils/serverConnect';
 
 /**
  * Returns the URL minus any query parameters.
@@ -40,7 +40,7 @@ export default class extends Collection {
   }
 
   get tor() {
-    return getCurConnTor() ? 'Tor' : '';
+    return curConnOnTor() ? 'Tor' : '';
   }
 
   get defaultProvider() {

@@ -20,15 +20,17 @@ export default class extends baseVw {
 
     const opts = {
       viewType: 'grid',
+      setHistory: true,
       ...options,
       initialState: {
         loading: false,
-        ...options,
+        ...options.initialState,
       },
     };
 
     super(opts);
     this.options = opts;
+    this._setHistory = opts.setHistory;
     this._search = {
       p: 0,
       ps: 66,
@@ -106,7 +108,9 @@ export default class extends baseVw {
 
     // if page exists, reuse it
     if (this.pageCols[opts.p]) {
-      app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+      if (this._setHistory) {
+        app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+      }
       this.setState({ loading: false });
     } else {
       const newPageCol = new ResultsCol();
@@ -118,7 +122,9 @@ export default class extends baseVw {
         url: newUrl,
       })
         .done(() => {
-          app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+          if (this._setHistory) {
+            app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+          }
         })
         .fail((xhr) => {
           if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
@@ -132,12 +138,14 @@ export default class extends baseVw {
   clickPagePrev() {
     recordEvent('Discover_PrevPage', { fromPage: this._search.p });
     this._search.p--;
+    this._setHistory = true;
     this.loadPage();
   }
 
   clickPageNext() {
     recordEvent('Discover_NextPage', { fromPage: this._search.p });
     this._search.p++;
+    this._setHistory = true;
     this.loadPage();
   }
 

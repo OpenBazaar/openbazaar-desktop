@@ -1,7 +1,7 @@
 import app from '../../app';
 import is from 'is_js';
 import LocalStorageSync from '../../utils/lib/backboneLocalStorage';
-import { getCurConnTor } from '../../utils/serverConnect';
+import { curConnOnTor } from '../../utils/serverConnect';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -27,7 +27,7 @@ export default class extends BaseModel {
   }
 
   get tor() {
-    return getCurConnTor() ? 'tor' : '';
+    return curConnOnTor() ? 'tor' : '';
   }
 
   get listingsUrl() {

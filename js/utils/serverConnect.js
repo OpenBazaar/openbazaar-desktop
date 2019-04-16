@@ -75,8 +75,9 @@ export function getServer() {
   return curCon.server;
 }
 
-export function getCurConnTor() {
-  return getServer().get('useTor') && app.serverConfig.tor;
+export function curConnOnTor() {
+  const server = getServer();
+  return !!server && getServer().get('useTor') && app.serverConfig.tor;
 }
 
 /**

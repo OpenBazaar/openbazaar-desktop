@@ -18,7 +18,7 @@ import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-import { getCurConnTor } from '../../utils/serverConnect';
+import { curConnOnTor } from '../../utils/serverConnect';
 import { scrollPageIntoView } from '../../utils/dom';
 import {
   searchTypes,
@@ -100,6 +100,7 @@ export default class extends baseVw {
 
     this.categoryViews = [];
     this.searchFetches = [];
+    this._setHistory = false; // The router has already set the history.
 
     // If a query was passed in from the router, extract the data from it.
     if (options.query) {
@@ -127,7 +128,7 @@ export default class extends baseVw {
            user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
            values will be saved after the endpoint returns them.
            */
-          const searchAttribute = `${getCurConnTor() ? 'tor' : ''}${this._search.searchType}`;
+          const searchAttribute = `${curConnOnTor() ? 'tor' : ''}${this._search.searchType}`;
           this._search.provider.set(searchAttribute, base);
           if (!this._search.provider.isValid()) {
             openSimpleMessage(app.polyglot.t('search.errors.invalidUrl'));
@@ -153,8 +154,7 @@ export default class extends baseVw {
 
       this.setSearch({ ..._.pick(params, ...queryKeys), filters }, { force: true });
     } else {
-      if (this._search.provider.id === defaultSearchProviders[0].id &&
-        this.getState().tab === 'home') {
+      if (this._search.provider.id === defaultSearchProviders[0].id) {
         this.buildCategories();
       } else {
         this.setSearch({}, { force: true });
@@ -192,7 +192,7 @@ export default class extends baseVw {
       throw new Error('Please provide a search provider model.');
     }
 
-    app.searchProviders[`default${getCurConnTor() ? 'Tor' : ''}Provider`] = md;
+    app.searchProviders[`default${curConnOnTor() ? 'Tor' : ''}Provider`] = md;
   }
 
   get currentBaseUrl() {
@@ -296,6 +296,8 @@ export default class extends baseVw {
             fetching: false,
             data,
           });
+          // After either the first search or the first category load completes, set the history.
+          this._setHistory = true;
         } else {
           this.setState({
             fetching: false,
@@ -395,7 +397,9 @@ export default class extends baseVw {
     }
 
     if (this.categoryViews.length === this._categorySearches.length) {
-      app.router.navigate('search/home');
+      app.router.navigate('search');
+      // After either the first search or the first category load completes, set the history.
+      this._setHistory = true;
       this._search = { ...this._defaultSearch, provider: app.searchProviders.at(0) };
       scrollPageIntoView();
       // The state may not be changed here, so always fire a render.
@@ -419,8 +423,9 @@ export default class extends baseVw {
    * This will create a results view from the provided search data.
    * @param {object} data - JSON results from a search endpoint.
    * @param {object} search - A valid search object.
+   * @param {boolean} setHistory - Whether the results should save the query to history.
    */
-  createResults(data = {}, search) {
+  createResults(data = {}, search, setHistory = true) {
     if (!search || $.isEmptyObject(search)) throw new Error('Please provide a search object.');
 
     this.resultsCol = new ResultsCol();
@@ -444,6 +449,7 @@ export default class extends baseVw {
       morePages: data.results ? data.results.morePages : false,
       initCol: this.resultsCol,
       viewType,
+      setHistory,
     });
 
     recordEvent('Discover_Results', {
@@ -600,8 +606,8 @@ export default class extends baseVw {
       this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
       this.$('.js-sortByWrapper').append(this.sortBy.render().el);
 
-      // use the initial set of results data to create the results view
-      this.createResults(data, this._search);
+      // Use the initial set of results data to create the results view.
+      this.createResults(data, this._search, this._setHistory);
     }
 
     this.$filters = $filterWrapper.find('select, input');
