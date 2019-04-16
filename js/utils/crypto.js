@@ -77,6 +77,11 @@ export function renderCryptoTradingPair(options = {}) {
   return rendered;
 }
 
+// todo: will this be needed anymore
+// todo: will this be needed anymore
+// todo: will this be needed anymore
+// todo: will this be needed anymore
+// todo: will this be needed anymore
 export function renderCryptoPrice(options = {}) {
   if (typeof options.priceAmount !== 'number') {
     throw new Error('Please provide a price amount as a number.');

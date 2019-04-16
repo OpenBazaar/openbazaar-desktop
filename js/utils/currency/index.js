@@ -134,6 +134,14 @@ export function integerToDecimal(value, divisibility, options = {}) {
  * It is more useful for <input>'s because we are not localizing the numbers in them.
  *
  */
+
+ // is this needed anymore?
+ // is this needed anymore?
+ // is this needed anymore?
+ // is this needed anymore?
+ // is this needed anymore?
+ // is this needed anymore?
+
 export function formatPrice(price, currency) {
   if (typeof price !== 'number') {
     throw new Error('Please provide a price as a number');
@@ -156,7 +164,10 @@ export function formatPrice(price, currency) {
   if (cryptoCur) {
     // Format crypto price so it has up to the max decimal places (as specified in the crypto
     // config), but without any trailing zeros
-    convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+    // convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+    // convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+    // convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+    convertedPrice = upToFixed(price, 8);
   } else {
     convertedPrice = price.toFixed(2);
   }

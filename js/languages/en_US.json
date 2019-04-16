@@ -3,6 +3,9 @@
     "truncatedValue": {
       "message": "%{value}%{ellipse}",
       "description": "When a value (usually a price) needs to be truncated, this translation key determines the position of the ellipses, e.g. $0.00…"
+    },
+    "cryptoPrice": {
+      "priceMarketRelativitiyPairing": "%{price}&nbsp;%{symbol}"
     }
   },
   "publish": {

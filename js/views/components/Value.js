@@ -38,13 +38,17 @@ export default class extends baseVw {
         tooltipOnTruncatedZero: true,
         tipWrapBaseClass: 'arrowBoxTipWrap',
         tipWrapClass: 'unconstrainedWidth',
-        tipBaseClass: 'js-formatCurTip',
-        tipClass: 'arrowBoxTipCenteredBot clrP clrBr',
+        tipBaseClass: 'js-formatCurTip formatCurTip',
+        tipClass: 'arrowBoxTipCenteredBot clrP clrBr clrT',
         ...options.initialState,
       },
     };
 
     super(opts);
+  }
+
+  get tagName() {
+    return 'span';
   }
 
   events() {
@@ -125,20 +129,35 @@ export default class extends baseVw {
     );
 
     let tipAmount;
+    const isResultZero =
+      this.isResultZero(state.amount, state.maxDisplayDecimals);
 
     if (
-      this.isResultZero(state.amount, state.maxDisplayDecimals) ||
+      isResultZero ||
       (
         typeof state.truncateAfterChars === 'number' &&
         formattedAmount.length > state.truncateAfterChars
       )
     ) {
+      if (isResultZero) {
+        formattedAmount = convertAndFormatCurrency(
+          state.amount,
+          state.fromCur,
+          state.toCur,
+          {
+            formatOptions: {
+              ...this.getFormatOptions(),
+              minDisplayDecimals: 2,
+            },
+          }
+        );
+      }
+
       tipAmount = convertAndFormatCurrency(
         state.amount,
         state.fromCur,
         state.toCur,
         {
-          // should this really be seperate
           formatOptions: {
             ...this.getFormatOptions(),
             minDisplayDecimals: 2,

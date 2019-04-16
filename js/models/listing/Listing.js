@@ -289,9 +289,10 @@ export default class extends BaseModel {
         );
     } else {
       if (method !== 'delete') {
-        options.attrs.item.price = 0.000000000000000001;
-        options.attrs.metadata.pricingCurrency = "ZEC";
-        options.attrs.metadata.coinDivisibility = 18;
+        // options.attrs.item.price = 0.000000000000000001;
+        // options.attrs.metadata.pricingCurrency = "ZEC";
+        // options.attrs.metadata.coinDivisibility = 8;
+        options.attrs.metadata.coinDivisibility = 100000000;
 
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update

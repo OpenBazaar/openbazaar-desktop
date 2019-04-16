@@ -64,8 +64,7 @@ export default class extends BaseModel {
         ...priceObj,
         currencyCode: 'ZEC',
         // amount: integerToDecimal(priceObj.amount, 18),
-        // amount: integerToDecimal('4.99e18', 18),
-        amount: integerToDecimal('100000000000000000000', 8),
+        amount: integerToDecimal('1', 8),
       };
     }
 

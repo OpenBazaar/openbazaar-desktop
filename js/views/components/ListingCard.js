@@ -20,6 +20,7 @@ import ReportBtn from '../components/ReportBtn';
 import BlockBtn from '../components/BlockBtn';
 import VerifiedMod, { getListingOptions } from '../components/VerifiedMod';
 import Value from '../components/Value';
+import CryptoPrice from '../components/value/CryptoPrice';
 import UserLoadingModal from '../../views/userPage/Loading';
 
 export default class extends baseVw {
@@ -627,19 +628,64 @@ export default class extends baseVw {
     super.remove();
   }
 
+  renderPrice() {
+    // todo: remove previous children views
+    // todo: remove previous children views
+    // todo: remove previous children views
+    // todo: remove previous children views
+
+    const flatModel = this.model.toJSON();
+    const fromCur = flatModel.price.currencyCode;
+    const amount = flatModel.price.amount;
+    const toCur = app.settings.get('localCurrency');
+    const shortFormatConfig = short(fromCur, toCur);
+
+    // consider a getPrice method where all the pricepermutations could
+    // be made there rather than some in the template and some in the view.
+    if (!this.model.isCrypto) {
+      const price = this.createChild(Value, {
+        initialState: {
+          ...shortFormatConfig,
+          amount,
+          fromCur,
+          toCur,
+        },
+      });
+      this.getCachedEl('.js-priceContainer')
+        .html(price.render().el);
+    } else {
+      const price = this.createChild(CryptoPrice, {
+        initialState: {
+          // todo: test this don't blow up if this is missing or bs val
+          // todo: test this don't blow up if this is missing or bs val
+          // todo: test this don't blow up if this is missing or bs val
+          // todo: test this don't blow up if this is missing or bs val
+          priceModifier: flatModel && flatModel.price &&
+            flatModel.price.modifier,
+          wrappingClass: '',
+          marketRelativityClass: 'hide',
+          valueOptions: {
+            ...shortFormatConfig,
+            amount: 87654321,
+            fromCur,
+            toCur,
+          },
+        },
+      });
+      this.getCachedEl('.js-priceContainer')
+        .html(price.render().el);
+    }
+  }
+
   render() {
     super.render();
 
-    const flatModel = this.model.toJSON();
-    const displayCurrency = app.settings.get('localCurrency');
-
     loadTemplate('components/listingCard.html', (t) => {
       this.$el.html(t({
-        ...flatModel,
+        ...this.model.toJSON(),
         ownListing: this.ownListing,
         shipsFreeToMe: this.model.shipsFreeToMe,
         viewType: this.viewType,
-        displayCurrency,
         isBlocked,
         isUnblocking,
         listingImageSrc: this.listingImage.loaded &&
@@ -653,24 +699,7 @@ export default class extends baseVw {
     this._$btnEdit = null;
     this._$btnDelete = null;
 
-    // consider a getPrice method where all the pricepermutations could
-    // be made there rather than some in the template and some in the view.
-    if (!this.model.isCrypto) {
-      const fromCur = flatModel.price.currencyCode;
-      const toCur = displayCurrency;
-
-      const price = this.createChild(Value, {
-        initialState: {
-          ...short(fromCur, toCur),
-          amount: flatModel.price.amount,
-          fromCur,
-          toCur,
-        },
-      });
-      this.getCachedEl('.js-priceContainer')
-        .html(price.render().el);
-    }
-
+    this.renderPrice();
     this.setBlockedClass();
     this.setHideNsfwClass();
     this.$el.toggleClass('isNsfw', this.model.get('nsfw'));
