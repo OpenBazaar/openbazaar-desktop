@@ -11,13 +11,14 @@
       // copy to clipboard
       // invisible copied to make sure width is at least that and no jumpy jumpers
 
-      if (ob.copyableTipAmount) {
+      if (ob.tipAmount) {
         tipContent = `
           <div class="rowSm">${ob.tipAmount}</div>
           <hr />
-          <div class="flexHRight">
+          <div class="flexHRight flexVCent" style="min-height: 16px">
+            <span class="clrT2 hide js-copiedIndicator">Copied</span>
             <button
-              class="js-copyTipAmount"
+              class="js-copyTipAmount btnAsLink"
               data-amount="${ob.copyAmount}">
               Copy
             </button>

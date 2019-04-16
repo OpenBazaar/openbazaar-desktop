@@ -37,7 +37,6 @@ export default class extends baseVw {
         tipWrapClass: 'unconstrainedWidth',
         tipBaseClass: 'js-formatCurTip',
         tipClass: 'arrowBoxTipCenteredBot clrP clrBr',
-        copyableTipAmount: true,
         ...options.initialState,
       },
     };
@@ -64,6 +63,23 @@ export default class extends baseVw {
     clipboard.writeText(
       toStandardNotation(amount, { maxDisplayDecimals: 20 })
     );
+
+    // <span class="clrT2 hide js-copiedIndicator">Copied</span>
+    // <button
+    //   class="js-copyTipAmount btnAsLink"
+
+    this.getCachedEl('.js-copiedIndicator')
+      .show();
+    this.getCachedEl('.js-copyTipAmount')
+      .hide();
+
+    clearTimeout(this.copiedTimeout);
+    this.copiedTimeout = setTimeout(() => {
+      this.getCachedEl('.js-copiedIndicator')
+        .hide();
+      this.getCachedEl('.js-copyTipAmount')
+        .show();
+    }, 2000);
   }
 
   getFormatOptionsFromState() {
@@ -75,6 +91,7 @@ export default class extends baseVw {
       'tipWrapClass',
       'tipBaseClass',
       'tipClass',
+      'copiedIndicatorOn',
     ];
 
     return _.omit(this.getState(), nonFormatKeys);
@@ -83,6 +100,11 @@ export default class extends baseVw {
   // doc me up
   isResultZero(amount, maxDecimals) {
     return amount < parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`);
+  }
+
+  remove() {
+    clearTimeout(this.copiedTimeout);
+    super.remove();
   }
 
   render() {
