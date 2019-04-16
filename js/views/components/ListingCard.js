@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { abbrNum } from '../../utils';
-import { shortAndSweet } from '../../utils/currency/formatConfigs';
+import { short } from '../../utils/currency/formatConfigs';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
@@ -656,12 +656,15 @@ export default class extends baseVw {
     // consider a getPrice method where all the pricepermutations could
     // be made there rather than some in the template and some in the view.
     if (!this.model.isCrypto) {
+      const fromCur = flatModel.price.currencyCode;
+      const toCur = displayCurrency;
+
       const price = this.createChild(Value, {
         initialState: {
+          ...short(fromCur, toCur),
           amount: flatModel.price.amount,
-          fromCur: flatModel.price.currencyCode,
-          toCur: displayCurrency,
-          ...shortAndSweet,
+          fromCur,
+          toCur,
         },
       });
       this.getCachedEl('.js-priceContainer')

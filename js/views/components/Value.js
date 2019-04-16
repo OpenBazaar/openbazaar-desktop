@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { clipboard } from 'electron';
 import { toStandardNotation } from '../../utils/number';
 import {
@@ -14,13 +13,9 @@ export default class extends baseVw {
     const opts = {
       ...options,
       initialState: {
-        // Most of these options map to the options in formatCurrency and/or
-        // convertCurrency of util/currency and are documented there.
-        // valiudate to be number
+        // These are documented in utils/currency/index.js in
         amount: undefined,
-        // validate to be string
         fromCur: 'USD',
-        // validate to be string
         toCur: 'USD',
         locale: app && app.localSettings &&
           app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -30,8 +25,16 @@ export default class extends baseVw {
         minDisplayDecimals: 2,
         maxDisplayDecimals: 2,
         maxDisplayDecimalsOnZero: 6,
-        // false or a number of chars
-        truncateAfterChars: false,
+        formatConfig: false,
+        // END - These are documented in utils/currency/index.js in
+
+        // Will truncate and offer a tooltip if the formattedValue is
+        // greater than this number of characters. Pass in false if you
+        // don't want any truncation to occur.
+        truncateAfterChars: 25,
+        // If true, will offer the full price in a tooltip if the formatted
+        // price displays as a zero. This would happen if the amount is smaller
+        // than the minimum number thee given maxDecimals could account for.
         tooltipOnTruncatedZero: true,
         tipWrapBaseClass: 'arrowBoxTipWrap',
         tipWrapClass: 'unconstrainedWidth',
@@ -64,10 +67,6 @@ export default class extends baseVw {
       toStandardNotation(amount, { maxDisplayDecimals: 20 })
     );
 
-    // <span class="clrT2 hide js-copiedIndicator">Copied</span>
-    // <button
-    //   class="js-copyTipAmount btnAsLink"
-
     this.getCachedEl('.js-copiedIndicator')
       .show();
     this.getCachedEl('.js-copyTipAmount')
@@ -82,22 +81,29 @@ export default class extends baseVw {
     }, 2000);
   }
 
-  getFormatOptionsFromState() {
-    // todo: should this enumerate the ones to include rather than exclude?
-    const nonFormatKeys = [
-      'truncateAfterChars',
-      'tooltipOnTruncatedZero',
-      'tipWrapBaseClass',
-      'tipWrapClass',
-      'tipBaseClass',
-      'tipClass',
-      'copiedIndicatorOn',
-    ];
+  /*
+   * Will pluck the format options out of the state.
+   */
+  getFormatOptions() {
+    const state = this.getState();
 
-    return _.omit(this.getState(), nonFormatKeys);
+    return {
+      amount: state.amount,
+      fromCur: state.fromCur,
+      toCur: state.toCur,
+      locale: state.locale,
+      btcUnit: state.btcUnit,
+      useCryptoSymbol: state.useCryptoSymbol,
+      minDisplayDecimals: state.minDisplayDecimals,
+      maxDisplayDecimals: state.maxDisplayDecimals,
+      maxDisplayDecimalsOnZero: state.maxDisplayDecimalsOnZero,
+    };
   }
 
-  // doc me up
+  /*
+   * Returns true if the amount would display as zero given the
+   * provided max decimals.
+   */
   isResultZero(amount, maxDecimals) {
     return amount < parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`);
   }
@@ -114,9 +120,7 @@ export default class extends baseVw {
       state.fromCur,
       state.toCur,
       {
-        // should this really be seperate
-        formatOptions:
-          this.getFormatOptionsFromState(),
+        formatOptions: this.getFormatOptions(),
       }
     );
 
@@ -136,7 +140,7 @@ export default class extends baseVw {
         {
           // should this really be seperate
           formatOptions: {
-            ...this.getFormatOptionsFromState(),
+            ...this.getFormatOptions(),
             minDisplayDecimals: 2,
             maxDisplayDecimals: 20,
             maxDisplayDecimalsOnZero: 20,
@@ -144,9 +148,10 @@ export default class extends baseVw {
         }
       );
 
-      // todo: placement of the ellipse and maybe ven the ellipse should be in
-      // the translation file
-      formattedAmount = `${formattedAmount}`;
+      formattedAmount = app.polyglot.t('value.truncatedValue.message', {
+        value: `${formattedAmount.slice(0, state.truncateAfterChars + 1)}`,
+        ellipse: '…',
+      });
     }
 
     loadTemplate('components/value.html', (t) => {

@@ -5,12 +5,6 @@
       const tipClass = `${ob.tipBaseClass} ${ob.tipClass}`;
       let tipContent = ob.tipAmount;
 
-      // todo:
-      // put max-width on tip
-      // copied indicator
-      // copy to clipboard
-      // invisible copied to make sure width is at least that and no jumpy jumpers
-
       if (ob.tipAmount) {
         tipContent = `
           <div class="rowSm">${ob.tipAmount}</div>
@@ -26,7 +20,7 @@
         `;
       }
 %>
-      <span class="<%= tipWrapClass %>"><%= ob.formattedAmount %><span class="<%= tipClass %>"><%= tipContent %></span></span>
+      <span class="<%= tipWrapClass %>"><%= ob.formattedAmount %><span class="<%= tipClass %>" style="max-width: 250px"><%= tipContent %></span></span>
 <%   
     } else {
       print(ob.formattedAmount)

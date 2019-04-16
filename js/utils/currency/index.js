@@ -1,5 +1,5 @@
-import _ from 'underscore';
 import app from '../../app';
+import _ from 'underscore';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
@@ -122,54 +122,6 @@ export function integerToDecimal(value, divisibility, options = {}) {
 }
 
 /**
- * Will increase the desired number of decimal places to display if the
- * desired amount would render a poorly represented price. For example,
- * having a USD amount of 0.001, would result in a price of $0.00 with
- * the desired max being 2 decimal places for fiat currency. This function
- * would have returned 3, which would leave the price represented as $0.001.
- *
- * It also helps with crypto currencies so in most places we could display
- * them with 4 decimal places and it will increase that number if the
- * resulting price would be zero.
- *
- */
-// TODO: unit test this
-// function getSmartMaxDisplayDigits(amount, desiredMax) {
-//   console.log(`they call me with ${amount} and ${desiredMax}`);
-//   if (typeof amount !== 'number') {
-//     throw new Error('Please provide the amount as a number.');
-//   }
-
-//   if (typeof desiredMax !== 'number') {
-//     throw new Error('Please provide the desiredMax as a number.');
-//   }
-
-//   let max = desiredMax;
-
-//   if (amount < 0.0000000005) {
-//     max = 10;
-//   } else if (amount < 0.000000005) {
-//     max = 9;
-//   } else if (amount < 0.00000005) {
-//     max = 8;
-//   } else if (amount < 0.0000005) {
-//     max = 7;
-//   } else if (amount < 0.000005) {
-//     max = 6;
-//   } else if (amount < 0.00005) {
-//     max = 5;
-//   } else if (amount < 0.0005) {
-//     max = 4;
-//   } else if (amount < 0.005) {
-//     max = 3;
-//   }
-
-//   console.log(`i return ${max > desiredMax ? max : desiredMax}`);
-
-//   return max > desiredMax ? max : desiredMax;
-// }
-
-/**
  * Will take a number and return a string version of the number with the appropriate number of
  * decimal places based on whether the number represents a crypto or fiat price.
  *
@@ -239,45 +191,69 @@ function getMaxDisplayDigits(amount, desiredMax, maxOnZero = desiredMax) {
     zeroMax : desiredMax;
 }
 
+/**
+ * Will return information about a currency including it's currency
+ * data, if available.
+ */
+function _getCurMeta(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const cur = currency.toUpperCase();
+  const curData = getCurrencyByCode(cur, {
+    includeWalletCurs: false,
+  });
+
+  const walletCur = getWalletCurByCode(cur);
+
+  // If we don't recognize the currency, we'll assume it's a crypto
+  // listing cur.
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
+    (!walletCur && !curData);
+
+  return {
+    isFiat: !!curData,
+    isWalletCur: !!walletCur,
+    isCryptoListingCur,
+    curData: curData || walletCur,
+  };
+}
+
+export const getCurMeta = _.memoize(_getCurMeta);
+
+/**
+ * Will format an amount in the given currency into the format appropriate for the given
+ * locale. In most cases, instead of using this method directly, you may want to use
+ * the views/components/Value view which will truncate if necessary and show the full
+ * value in a tooltip.
+ */
+ // todo: unit test the shiznit out of me!
+ // todo: unit test the shiznit out of me!
+ // todo: unit test the shiznit out of me!
+ // todo: unit test the shiznit out of me!
+ // todo: unit test the shiznit out of me!
+ // todo: unit test the shiznit out of me!
 export function formatCurrency(amount, currency, options = {}) {
-  let opts = {
+  const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings &&
       app.localSettings.get('bitcoinUnit') || 'BTC',
     // For wallet currencies, if a symbol is specified in the cryptoCurrencies data
     // module, it will be displayed in liu of the currency code.
     useCryptoSymbol: true,
-    // If you just want to format a number representing a crypto currency amount
-    // but don't want any code or symbol used, set to false.
-    // includeCryptoCurIdentifier: true,
-    // Defaults to 2 for fiat and 0 for crypto.
-    // minDisplayDecimals: undefined,
     minDisplayDecimals: 2,
-    // TODO: honor those defaults.
-    // Defaults to 2 for fiat, based on base units for wallet currencies and 8
-    // for crypto currencies without a known base unit. An unrecognized currency
-    // is assumed to be a crypto currency.
-    // maxDisplayDecimals: undefined,
     maxDisplayDecimals: 2,
     // If the resulting amount based on maxDisplayDecimals would be 0, then this
     // value is how much further you're willing to go to not show a zero. For
     // example if the amount is .0001 and your maxDisplayDecimals is 2, but
     // your maxDisplayDecimalsOnZero is 4, then .0001 would be shown.
-    // This value defaults to 4 on fiat and 8 for crypto.
-    // maxDisplayDecimalsOnZero: undefined,
     maxDisplayDecimalsOnZero: 6,
-    // more and more and more and more
-    // and more and more and more and more and more
-    // and more and more and more and more
-    // and more validations / doccage
-    tooltipOnTruncatedZero: true,
-    truncatedZeroTooltipBaseClass: 'toolTipNoWrap',
-    truncatedZeroTooltipClass: 'toolTipTop',
+    // This is passed into Intl.NumberFormat. If you just want to format a number
+    // in a localized way, but not as a currency, pass in 'decimal'. For more
+    // info look at the Intl.NumberFormat docs.
     style: 'currency',
-    ...(
-      typeof options === 'object' ?
-        options : {}
-    ),
+    ...options,
   };
 
   if (typeof amount !== 'number' || isNaN(amount)) {
@@ -301,37 +277,16 @@ export function formatCurrency(amount, currency, options = {}) {
   }
 
   const cur = currency.toUpperCase();
-  const curData = getCurrencyByCode(cur, {
-    includeWalletCurs: false,
-  });
-
-  const walletCur = getWalletCurByCode(cur);
-
-  // If we don't recognize the currency, we'll assume it's a crypto
-  // listing cur.
-  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-    (!walletCur && !curData);
-
-  if (typeof options === 'function') {
-    opts = {
-      ...opts,
-      ...(
-        options({
-          amount,
-          currency,
-          isFiat: !!curData,
-          isWalletCur: !!walletCur,
-          isCryptoListingCur,
-          curData: curData || walletCur,
-        })
-      ),
-    };
-  }
+  const {
+    isWalletCur,
+    isCryptoListingCur,
+    curData,
+  } = getCurMeta(cur);
 
   let formattedCurrency;
 
-  if (walletCur) {
-    let curSymbol = opts.useCryptoSymbol && walletCur.symbol || cur;
+  if (isWalletCur) {
+    let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
     let bitcoinConvertUnit;
     let amt = amount;
 
@@ -363,13 +318,12 @@ export function formatCurrency(amount, currency, options = {}) {
       ),
     }).format(amt);
 
-    // if (opts.includeCryptoCurIdentifier) {
     if (opts.style === 'currency') {
-      const translationSubKey = curSymbol === walletCur.symbol ?
+      const translationSubKey = curSymbol === curData.symbol ?
         'curSymbolAmount' : 'curCodeAmount';
       formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
         amount: formattedAmount,
-        [curSymbol === walletCur.symbol ? 'symbol' : 'code']: curSymbol,
+        [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
       });
     }
   } else if (isCryptoListingCur) {
@@ -382,7 +336,6 @@ export function formatCurrency(amount, currency, options = {}) {
       ),
     }).format(amount);
 
-    // if (opts.includeCryptoCurIdentifier) {
     if (opts.style === 'currency') {
       formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
         amount: formattedAmount,
@@ -405,129 +358,6 @@ export function formatCurrency(amount, currency, options = {}) {
 
   return formattedCurrency;
 }
-
-/**
- * Will format an amount in the given currency into the format appropriate for the given locale.
- * In many cases, instead of using this method directly, you may want to use
- * renderFormattedCurrency() from this module or its corresponding template helper,
- * formattedCurrency, since those will more robustly handle (via tooltips and icons)
- * unrecognized currency codes and/or conversion problems due to unavailable exchange
- * rate data.
- */
-// export function formatCurrency(amount, currency, options) {
-//   const opts = {
-//     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
-//     btcUnit: app && app.localSettings &&
-//       app.localSettings.get('bitcoinUnit') || 'BTC',
-//     // For crypto currencies, if a symbol is specified in the cryptoCurrencies data
-//     // module, it will be displayed in liu of the currency code.
-//     useCryptoSymbol: true,
-//     // If you just want to format a number representing a crypto currency amount
-//     // but don't want any code or symbol used, set to false.
-//     includeCryptoCurIdentifier: true,
-//     ...options,
-//   };
-
-//   if (typeof amount !== 'number' || isNaN(amount)) {
-//     return '';
-//   }
-
-//   if (typeof opts.locale !== 'string') {
-//     throw new Error('Please provide a locale as a string');
-//   }
-
-//   if (typeof currency !== 'string') {
-//     throw new Error('Please provide a currency as a string');
-//   }
-
-//   const cur = currency.toUpperCase();
-//   const curData = getCurrencyByCode(cur);
-
-//   let formattedCurrency;
-//   const cryptoCur = getWalletCurByCode(cur);
-
-//   // If we don't recognize the currency, we'll assume it's a crypto
-//   // listing cur.
-//   const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-//     (!cryptoCur && !curData);
-
-//   if (cryptoCur || isCryptoListingCur) {
-//     opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
-//       opts.minDisplayDecimals : 0;
-//     opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-//       opts.maxDisplayDecimals : 8;
-//   } else {
-//     opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
-//       opts.minDisplayDecimals : 2;
-//     opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-//       opts.maxDisplayDecimals : 2;
-//   }
-
-//   if (cryptoCur) {
-//     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
-//     let bitcoinConvertUnit;
-//     let amt = amount;
-
-//     if (cur === 'BTC' || cur === 'TBTC') {
-//       switch (opts.btcUnit) {
-//         case 'MBTC':
-//           bitcoinConvertUnit = curSymbol = 'mBTC';
-//           break;
-//         case 'UBTC':
-//           bitcoinConvertUnit = curSymbol = 'μBTC';
-//           break;
-//         case 'SATOSHI':
-//           curSymbol = 'sat';
-//           bitcoinConvertUnit = 'Satoshi';
-//           break;
-//         default:
-//           bitcoinConvertUnit = 'BTC';
-//       }
-
-//       amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
-//     }
-
-//     const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
-//       minimumFractionDigits: opts.minDisplayDecimals,
-//       maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-//     }).format(amt);
-
-//     if (opts.includeCryptoCurIdentifier) {
-//       const translationSubKey = curSymbol === curData.symbol ?
-//         'curSymbolAmount' : 'curCodeAmount';
-//       formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
-//         amount: formattedAmount,
-//         [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
-//       });
-//     }
-//   } else if (isCryptoListingCur) {
-//     const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
-//       minimumFractionDigits: opts.minDisplayDecimals,
-//       maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-//     }).format(amount);
-
-//     if (opts.includeCryptoCurIdentifier) {
-//       formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
-//         amount: formattedAmount,
-//         code: cur.length > 8 ?
-//           `${cur.slice(0, 8)}…` : cur,
-//       });
-//     }
-//   } else {
-//     console.log('hey boo');
-//     console.log(`for ${amount}, my maxxer is ${getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals)}`);
-//     formattedCurrency = new Intl.NumberFormat(opts.locale, {
-//       style: 'currency',
-//       currency,
-//       minimumFractionDigits: opts.minDisplayDecimals,
-//       maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-//     }).format(amount);
-
-//     console.log(`which results in ${formattedCurrency}`);
-//   }
-
-//   return formattedCurrency;
-// }
 
 let exchangeRates = {};
 
@@ -706,6 +536,12 @@ export function getCurrencyValidity(cur) {
   return returnVal;
 }
 
+// TODO: will this be needed anymore.
+// TODO: will this be needed anymore.
+// TODO: will this be needed anymore.
+// TODO: will this be needed anymore.
+// TODO: will this be needed anymore.
+// TODO: will this be needed anymore.
 // TODO: will this be needed anymore.
 /**
  * Will render a formattedCurrency template. The main function of the template is that it will
