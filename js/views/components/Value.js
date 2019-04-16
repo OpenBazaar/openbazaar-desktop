@@ -1,6 +1,11 @@
 import _ from 'underscore';
+import { clipboard } from 'electron';
+import { toStandardNotation } from '../../utils/number';
+import {
+  convertAndFormatCurrency,
+  convertCurrency,
+} from '../../utils/currency';
 import app from '../../app';
-import { convertAndFormatCurrency } from '../../utils/currency';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
@@ -42,12 +47,24 @@ export default class extends baseVw {
 
   events() {
     return {
-      // 'click .js-block': 'onClickBlock',
+      'click .js-copyTipAmount': 'onClickCopyTip',
     };
   }
 
-  // onClickBlock(e) {
-  // }
+  onClickCopyTip() {
+    const state = this.getState();
+    let amount = state.amount;
+
+    try {
+      amount = convertCurrency(amount, state.fromCur, state.toCur);
+    } catch (e) {
+      // pass
+    }
+
+    clipboard.writeText(
+      toStandardNotation(amount, { maxDisplayDecimals: 20 })
+    );
+  }
 
   getFormatOptionsFromState() {
     // todo: should this enumerate the ones to include rather than exclude?
@@ -80,6 +97,7 @@ export default class extends baseVw {
           this.getFormatOptionsFromState(),
       }
     );
+
     let tipAmount;
 
     if (
@@ -98,9 +116,6 @@ export default class extends baseVw {
           formatOptions: {
             ...this.getFormatOptionsFromState(),
             minDisplayDecimals: 2,
-            // if greater than zero, this should be 2 on fiat and
-            // base units on crypto.
-            // if zero, this should be 20.
             maxDisplayDecimals: 20,
             maxDisplayDecimalsOnZero: 20,
           },

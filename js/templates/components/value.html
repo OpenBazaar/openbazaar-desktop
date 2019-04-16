@@ -1,5 +1,3 @@
-<% console.dir(ob); %>
-
 <%
   if (ob.formattedAmount) {
     if (ob.tipAmount) {
@@ -18,7 +16,11 @@
           <div class="rowSm">${ob.tipAmount}</div>
           <hr />
           <div class="flexHRight">
-            <button className="js-copyTipAmount">Copy</button>
+            <button
+              class="js-copyTipAmount"
+              data-amount="${ob.copyAmount}">
+              Copy
+            </button>
           </div>
         `;
       }
