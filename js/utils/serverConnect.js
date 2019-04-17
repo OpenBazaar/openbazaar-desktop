@@ -76,8 +76,9 @@ export function getServer() {
 }
 
 /**
- * Returns a boolean indicating whether the server is currently using Tor or not. If no server is
- * available will return false.
+ * Returns a boolean indicating whether the server is currently using Tor and the client connection
+ * is configured to use Tor. This means all server and client traffic should be running through a
+ * Tor proxy. If no server is available, will return false, take that into account.
  * @returns {boolean}
  */
 export function curConnOnTor() {
