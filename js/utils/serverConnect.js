@@ -75,6 +75,11 @@ export function getServer() {
   return curCon.server;
 }
 
+/**
+ * Returns a boolean indicating whether the server is currently using Tor or not. If no server is
+ * available will return false.
+ * @returns {boolean}
+ */
 export function curConnOnTor() {
   const server = getServer();
   return !!server && getServer().get('useTor') && app.serverConfig.tor;
