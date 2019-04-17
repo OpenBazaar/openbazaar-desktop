@@ -5,7 +5,7 @@
 %>
 
 <button
-    class="clrP clrBr clrSh2 providerBtn <% if (ob.selecting) print('selecting') %> <% if (ob.name) print('toolTipNoWrap') %> js-provider" data-tip="<%= ob.name %>">
+    class="clrP clrBr clrSh2 providerBtn <% if (ob.showSelectDefault) print('showSelectDefault') %> <% if (ob.name) print('toolTipNoWrap') %> js-provider" data-tip="<%= ob.name %>">
   <div class="thumb providerInner" style="background-image: <%= bkg %>"></div>
 </button>
 

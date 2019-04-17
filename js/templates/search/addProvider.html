@@ -4,6 +4,7 @@
     <%
       const plhdr = ob.polyT(`${ob.usingTor ? 'search.addTorPlaceholder' : 'search.addPlaceholder'}`);
       if (ob.errors[ob.urlType]) print(ob.formErrorTmpl({ errors: ob.errors[ob.urlType] }));
+      if (ob.showExistsError) print(ob.formErrorTmpl({ errors: [ob.polyT('search.errors.existsError')] }));
     %>
     <input type="url" class="clrP clrBr clrSh2 js-addProviderInput" placeholder="<%= plhdr %>">
     <div class="flexHRight flexVCent gutterH">

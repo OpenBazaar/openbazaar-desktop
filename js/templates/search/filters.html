@@ -1,0 +1,60 @@
+<form class="flexColWide gutterV">
+  <% _.each(ob.filters, function(filter, key) { %>
+  <div class="contentBox pad clrP clrBr clrSh2">
+    <div class="rowSm txB tx5b"><%= filter.label %></div>
+    <% if (filter.type ==='dropdown') { %>
+    <select name="<%= key %>" class="select2Small">
+      <%
+      // if any option has a selected value use the first one. Otherwise use the first default.
+      let selectedIndex = filter.options.findIndex(opt => opt.checked);
+      selectedIndex = selectedIndex === -1 ? filter.options.findIndex(opt => opt.default) : selectedIndex;
+      _.each(filter.options, function(option, ind) {
+      const selected = selectedIndex === ind ? 'selected' : '';
+      // parsing the label for emojis isn't needed here because the select list is replaced by select2.js
+      print(`<option ${selected} value="${option.value}">${option.label}</option>`);
+      });
+      %>
+    </select>
+    <% } else if (filter.type ==='radio') { %>
+    <div class="flexCol">
+      <%
+      // if any options has a checked value, check the first one. Otherwise use the first default.
+      let checkedIndex = filter.options.findIndex(opt => opt.checked);
+      checkedIndex = checkedIndex === -1 ? filter.options.findIndex(opt => opt.default) : checkedIndex;
+      _.each(filter.options, function(option, ind) {
+      %>
+      <div class="btnRadio clrBr">
+        <%
+        const checked = checkedIndex === ind ? 'checked' : '';
+        var parsedLabel = ob.parseEmojis(option.label);
+        print(`<input type="radio" name="${key}" id="${key + ind}" ${checked} value="${option.value}">`);
+        print(`<label for="${key + ind}"><span>${parsedLabel}</span></label>`);
+        %>
+      </div>
+      <% }); %>
+    </div>
+    <% } else if (filter.type ==='checkbox') { %>
+    <div class="flexCol checkboxCol row">
+      <%
+      const anyChecked = filter.options.filter(opt => opt.checked);
+      const keyPostfix = filter.options.length > 1 ? '[]' : '';
+      filter.options.forEach((option, index) => {
+      let checked = '';
+      // if none of the checkboxes have a checked value, use the default values
+      if (option.checked || !anyChecked.length && option.default) {
+      checked = 'checked';
+      }
+      var parsedLabel = ob.parseEmojis(option.label);
+      print(`<input type="checkbox" ${checked} id="${key + index}" name="${key}${keyPostfix}" value="${option.value}">`);
+      print(`<label for="${key + index}"><span>${parsedLabel}</span></label>`);
+      });
+      %>
+    </div>
+    <div class="flex tx5b">
+      <a class="flexExpand js-selectAll" name="<%= key %>">Select All</a>
+      <a class="flexExpand txRgt js-selectNone" name="<%= key %>">Select None</a>
+    </div>
+    <% } else { console.log(`Unrecognized filter type: ${filter.type}`); } %>
+  </div>
+  <% }); %>
+</form>

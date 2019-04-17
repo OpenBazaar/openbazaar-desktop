@@ -1,14 +1,15 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
-import sanitizeHtml from 'sanitize-html';
 import '../../lib/select2';
 import app from '../../app';
 import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
 import Suggestions from './Suggestions';
-import Dialog from '../modals/Dialog';
+import Category from './Category';
+import SortBy from './SortBy';
+import Filters from './Filters';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import ResultsCol from '../../collections/Results';
 import ProviderMd from '../../models/search/SearchProvider';
@@ -17,114 +18,148 @@ import defaultSearchProviders from '../../data/defaultSearchProviders';
 import { selectEmojis } from '../../utils';
 import loadTemplate from '../../utils/loadTemplate';
 import { recordEvent } from '../../utils/metrics';
-import { getCurrentConnection } from '../../utils/serverConnect';
+import { curConnOnTor } from '../../utils/serverConnect';
+import { scrollPageIntoView } from '../../utils/dom';
+import {
+  searchTypes,
+  createSearchURL,
+} from '../../utils/search';
 
 export default class extends baseVw {
   constructor(options = {}) {
     const opts = {
       initialState: {
         fetching: false,
+        tab: 'listings',
+        xhr: null,
         ...options.initialState,
       },
       ...options,
     };
 
     super(opts);
-    this.options = opts;
+    const queryKeys = ['q', 'p', 'ps', 'sortBy'];
 
-    this.defaultSuggestions = this.options.defaultSuggestions ||
-      [
-        'Books',
-        'Art',
-        'Clothing',
-        'Bitcoin',
-        'Crypto',
-        'Handmade',
-        'Health',
-        'Toys',
-        'Electronics',
-        'Games',
-        'Music',
-      ];
+    // Allow router to pass in a search type for future use with vendor searches.
+    const searchType = searchTypes.includes(opts.initialState.tab) ?
+      opts.initialState.tab : 'listings';
 
-    // in the future there may be more possible types
-    this.urlType = this.usingTor ? 'torlistings' : 'listings';
+    this._defaultSearch = {
+      q: '*',
+      p: 0,
+      ps: 66,
+      searchType,
+      filters: {
+        nsfw: String(app.settings.get('showNsfw')),
+        acceptedCurrencies: supportedWalletCurs(),
+      },
+    };
 
-    this.sProvider = app.searchProviders[`default${this.torString}Provider`];
-    this.queryProvider = false;
+    this._search = {
+      ...this._defaultSearch,
+      ..._.pick(opts, [...queryKeys, 'filters']),
+    };
 
-    // if the  provider returns a bad URL, the user must select a provider
-    if (is.not.url(this.providerUrl)) {
-      // use the first default temporarily to construct the tempUrl below
-      this.sProvider = app.searchProviders.get(defaultSearchProviders[0].id);
-      this.mustSelectDefault = true;
-      recordEvent('Discover_InvalidDefaultProvider', { url: this.providerUrl });
+    // If there is only one provider and it isn't the default, just set it to be such.
+    if (!this.currentDefaultProvider && app.searchProviders.length === 1) {
+      this.currentDefaultProvider = app.searchProviders.at(0);
     }
+    this._search.provider = this.currentDefaultProvider || app.searchProviders.at(0);
 
+    this._categoryTerms = [
+      'Art',
+      'Music',
+      'Toys',
+      'Crypto',
+      'Books',
+      'Health',
+      'Games',
+      'Handmade',
+      'Clothing',
+      'Electronics',
+      'Bitcoin',
+    ];
+
+    this._categorySearch = {
+      ...this._search,
+      ps: 8,
+    };
+
+    this._cryptoSearch = {
+      ...this._search,
+      ps: 5,
+      filters: {
+        type: 'cryptocurrency',
+      },
+    };
+
+    this._categorySearches = [this._cryptoSearch];
+    this._categoryTerms.forEach(cat => {
+      this._categorySearches.push({ ...this._categorySearch, q: cat });
+    });
+
+    this.categoryViews = [];
+    this.searchFetches = [];
+    this._setHistory = false; // The router has already set the history.
+
+    // If a query was passed in from the router, extract the data from it.
     if (options.query) {
       recordEvent('Discover_SearchFromAddressBar');
       recordEvent('Discover_Search', { type: 'addressBar' });
-    }
 
-    const tempUrl = new URL(`${this.providerUrl}?${options.query || ''}`);
-    let queryParams = tempUrl.searchParams;
+      let queryParams = (new URL(`${this.currentBaseUrl}?${options.query}`)).searchParams;
 
-    // if a url with parameters was in the query in, use the parameters in it instead.
-    if (queryParams.get('providerQ')) {
-      const subURL = new URL(queryParams.get('providerQ'));
-      queryParams = subURL.searchParams;
-      const base = `${subURL.origin}${subURL.pathname}`;
-      const matchedProvider =
-        app.searchProviders.filter(p =>
-          base === p.get('listings') || base === p.get('torlistings'));
-      /* if the query provider doesn't exist, create a temporary provider model for it.
+      // If the query had a providerQ parameter, use that as the provider URL instead.
+      if (queryParams.get('providerQ')) {
+        const subURL = new URL(queryParams.get('providerQ'));
+        queryParams = subURL.searchParams;
+        const base = `${subURL.origin}${subURL.pathname}`;
+        /*
+         If the query provider model doesn't already exist, create a new provider model for it.
          One quirk to note: if a tor url is passed in while the user is in clear mode, and an
          existing provider has that tor url, that provider will be activated but will use its
          clear url if it has one. The opposite is also true.
-       */
-      if (!matchedProvider.length) {
-        const queryOpts = {};
-        queryOpts[`${this.usingTor ? 'tor' : ''}listings`] = `${subURL.origin}${subURL.pathname}`;
-        this.queryProvider = true;
-        this.sProvider = new ProviderMd(queryOpts);
+         */
+        const matchedProvider = is.url(base) ? app.searchProviders.getProviderByURL(base) : '';
+        if (!matchedProvider) {
+          this._search.provider = new ProviderMd();
+          /*
+           We don't actually know what type of search the url is for, we'll assume for example a
+           user in tor mode is only pasting in a tor url. If there is a mismatch, the correct
+           values will be saved after the endpoint returns them.
+           */
+          const searchAttribute = `${curConnOnTor() ? 'tor' : ''}${this._search.searchType}`;
+          this._search.provider.set(searchAttribute, base);
+          if (!this._search.provider.isValid()) {
+            openSimpleMessage(app.polyglot.t('search.errors.invalidUrl'));
+            this._search.provider = app.searchProviders.at(0);
+            recordEvent('Discover_InvalidQueryProvider', { url: base });
+          }
+        } else {
+          this._search.provider = matchedProvider;
+        }
+      }
+
+      const params = {};
+
+      for (const key of queryParams.keys()) {
+        // checkbox params are represented by the same key multiple times. Convert them into a
+        // single key with an array of values
+        const val = queryParams.getAll(key);
+        params[key] = val.length === 1 ? val[0] : val;
+      }
+
+      // set the params in the search object
+      const filters = { ...this._search.filters, ..._.omit(params, [...queryKeys]) };
+
+      this.setSearch({ ..._.pick(params, ...queryKeys), filters }, { force: true });
+    } else {
+      if (this._search.provider.id === defaultSearchProviders[0].id) {
+        this.buildCategories();
       } else {
-        this.sProvider = matchedProvider[0];
+        this.setSearch({}, { force: true });
       }
     }
-
-    const params = {};
-
-    for (const key of queryParams.keys()) {
-      // checkbox params are represented by the same key multiple times. Convert them into a
-      // single key with an array of values
-      const val = queryParams.getAll(key);
-      params[key] = val.length === 1 ? val[0] : val;
-    }
-
-    // use the parameters from the query unless they were overridden in the options
-    this.serverPage = options.serverPage || params.p || 0;
-    this.pageSize = options.pageSize || params.ps || 66;
-    this.term = options.term || params.q || '';
-    this.sortBySelected = options.sortBySelected || params.sortBy || '';
-
-    // all parameters not specified above are assumed to be filters
-    const filterParams = _.omit(params, ['q', 'p', 'ps', 'sortBy', 'providerQ', 'network']);
-
-    // set an initial set of filters for the first query
-    // if not passed in, set the user's values for nsfw and the currency
-    this.defaultParams = {
-      nsfw: String(app.settings.get('showNsfw')),
-      acceptedCurrencies: supportedWalletCurs(),
-    };
-
-    this.filterParams = {
-      ...this.defaultParams,
-      ...filterParams,
-    };
-
-    this.formOverrides = {};
-
-    this.processTerm(this.term);
   }
 
   className() {
@@ -134,11 +169,6 @@ export default class extends baseVw {
   events() {
     return {
       'click .js-searchBtn': 'clickSearchBtn',
-      'change .js-sortBy': 'changeSortBy',
-      'change .js-filterWrapper select': 'changeFilter',
-      'change .js-filterWrapper input': 'changeFilter',
-      'click .js-filterWrapper .js-selectAll': 'clickFilterAll',
-      'click .js-filterWrapper .js-selectNone': 'clickFilterNone',
       'keyup .js-searchInput': 'onKeyupSearchInput',
       'click .js-deleteProvider': 'clickDeleteProvider',
       'click .js-makeDefaultProvider': 'clickMakeDefaultProvider',
@@ -146,56 +176,153 @@ export default class extends baseVw {
     };
   }
 
-  get usingOriginal() {
-    return this.sProvider.id === defaultSearchProviders[0].id;
+  isExistingProvider(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+    return !!app.searchProviders.getProviderByURL(md[`${this._search.searchType}Url`]);
   }
 
-  get usingTor() {
-    return app.serverConfig.tor && getCurrentConnection().server.get('useTor');
+  get currentDefaultProvider() {
+    return app.searchProviders.defaultProvider;
   }
 
-  get torString() {
-    return this.usingTor ? 'Tor' : '';
+  set currentDefaultProvider(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+
+    app.searchProviders[`default${curConnOnTor() ? 'Tor' : ''}Provider`] = md;
   }
 
-  get providerUrl() {
-    // if a provider was created by the address bar query, use it instead.
-    // return false if no provider is available
-    const currentProvider = this.sProvider;
-    return currentProvider && currentProvider.get(this.urlType);
+  get currentBaseUrl() {
+    return this._search.provider[`${this._search.searchType}Url`];
   }
 
-  getCurrentProviderID() {
-    // if the user must select a default, or the provider is from the query, return no id
-    return this.queryProvider || this.mustSelectDefault ? '' : this.sProvider.id;
+  providerIsADefault(id) {
+    return !!_.findWhere(defaultSearchProviders, { id });
+  }
+
+  /** Updates the search object. If updated, triggers a search fetch.
+   *
+   * @param {object} search - The new state.
+   * @param {boolean} opts.force - Should search be fired even if nothing changed?
+   */
+  setSearch(search = {}, opts = {}) {
+    const newSearch = {
+      ...this._search,
+      ...search,
+    };
+
+    if (!_.isEqual(this._search, newSearch) || opts.force) {
+      this._search = newSearch;
+      scrollPageIntoView();
+      this.fetchSearch(this._search);
+    }
   }
 
   /**
-   * This will create a url with the term and other query parameters
-   * @param {string} term - the term to search for
-   * @param {boolean} reset - reset the filters
+   * Creates an object for updating search providers with new data returned from a query.
+   * @param {object} data - Provider object from a search query.
+   * @returns {{data: *, urlTypes: Array}}
    */
-  processTerm(term, reset) {
-    this.term = term || '';
-    // if term is false, search for *
-    const query = `q=${encodeURIComponent(term || '*')}`;
-    const page = `&p=${this.serverPage}&ps=${this.pageSize}`;
-    const sortBy = this.sortBySelected ? `&sortBy=${encodeURIComponent(this.sortBySelected)}` : '';
-    const network = `&network=${!!app.serverConfig.testnet ? 'testnet' : 'mainnet'}`;
-    const formData = this.getFormData(this.$filters);
-    // keep any parameters that aren't present in the form on the page
-    let filters = { ...this.defaultParams };
-    if (!reset) filters = { ...filters, ...this.filterParams, ...formData, ...this.formOverrides };
-    this.formOverrides = {};
-    filters = filters ? `&${$.param(filters, true)}` : '';
-    const newURL = new URL(`${this.providerUrl}?${query}${network}${sortBy}${page}${filters}`);
-    this.callSearchProvider(newURL);
+  buildProviderUpdate(data) {
+    const update = {};
+    const urlTypes = [];
+
+    if (data.name && is.string(data.name)) update.name = data.name;
+    if (data.logo && is.url(data.logo)) update.logo = data.logo;
+    if (data.links) {
+      if (is.url(data.links.vendors)) {
+        update.vendors = data.links.vendors;
+        urlTypes.push('vendors');
+      }
+      if (is.url(data.links.listings)) {
+        update.listings = data.links.listings;
+        urlTypes.push('listings');
+      }
+      if (is.url(data.links.reports)) {
+        update.reports = data.links.reports;
+        urlTypes.push('reports');
+      }
+      if (data.links.tor) {
+        if (is.url(data.links.tor.listings)) {
+          update.torListings = data.links.tor.listings;
+          urlTypes.push('torlistings');
+        }
+        if (is.url(data.links.tor.vendors)) {
+          update.torVendors = data.links.tor.vendors;
+          urlTypes.push('torVendors');
+        }
+        if (is.url(data.links.tor.reports)) {
+          update.torReports = data.links.tor.reports;
+          urlTypes.push('torReports');
+        }
+      }
+    }
+
+    return {
+      update,
+      urlTypes,
+    };
+  }
+
+  fetchSearch(opts = {}) {
+    this.removeFetches();
+
+    this.setState({
+      tab: 'listings',
+      fetching: true,
+      xhr: null,
+    });
+
+    const searchFetch = $.get({
+      url: createSearchURL(opts),
+      dataType: 'json',
+    })
+      .done((data, status, xhr) => {
+        // make sure minimal data is present. If it isn't, it's probably an invalid endpoint.
+        if (data.name && data.links) {
+          const dataUpdate = this.buildProviderUpdate(data);
+
+          // update the defaults but do not save them
+          if (!this.providerIsADefault(this._search.provider.id)) {
+            this._search.provider.save(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
+          } else {
+            this._search.provider.set(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
+          }
+
+          this.setState({
+            fetching: false,
+            data,
+          });
+          // After either the first search or the first category load completes, set the history.
+          this._setHistory = true;
+        } else {
+          this.setState({
+            fetching: false,
+            data: {},
+            xhr,
+          });
+        }
+      })
+      .fail((xhr) => {
+        if (xhr.statusText !== 'abort') {
+          this.setState({
+            fetching: false,
+            data: {},
+            xhr,
+          });
+        }
+      });
+
+    this.searchFetches.push(searchFetch);
   }
 
   /**
    * This will activate a provider. If no default is set, the activated provider will be set as the
    * the default. If the user is currently in Tor mode, the default Tor provider will be set.
-   * @param md the search provider model
+   * @param {object} md - the search provider model
    */
   activateProvider(md) {
     if (!md || !(md instanceof ProviderMd)) {
@@ -204,390 +331,286 @@ export default class extends baseVw {
     if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider must be in the collection.');
     }
-    this.sProvider = md;
-    this.queryProvider = false;
-    this.serverPage = 0;
-    if (this.mustSelectDefault) {
-      this.mustSelectDefault = false;
-      this.makeDefaultProvider();
+
+    if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
+
+    if (md.id === defaultSearchProviders[0].id) {
+      this.buildCategories();
+    } else {
+      this.setSearch({ provider: md, p: 0 });
     }
-    this.processTerm(this.term, true);
   }
 
-  deleteProvider(md = this.sProvider) {
-    if (md.get('locked')) {
-      openSimpleMessage(app.polyglot.t('search.errors.locked'));
-      recordEvent('Discover_DeleteLocked', {
-        provider: md.get('name') || 'unknown',
-        url: md.get('listings'),
-      });
-    } else {
+  deleteProvider(md = this._search.provider) {
+    // Default providers shouldn't show an option to trigger this.
+    if (!this.providerIsADefault(md.id)) {
       md.destroy();
       if (app.searchProviders.length) this.activateProvider(app.searchProviders.at(0));
     }
   }
 
-  resetSearch() {
-    this.serverPage = 0;
-    this.filterParams = '';
-    this.processTerm('', true);
-  }
-
   clickDeleteProvider() {
     recordEvent('Discover_DeleteProvider', {
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
     });
     this.deleteProvider();
   }
 
-  makeDefaultProvider() {
-    if (app.searchProviders.indexOf(this.sProvider) === -1) {
+  makeDefaultProvider(md) {
+    if (!md || !(md instanceof ProviderMd)) {
+      throw new Error('Please provide a search provider model.');
+    }
+    if (app.searchProviders.indexOf(md) === -1) {
       throw new Error('The provider to be made the default must be in the collection.');
     }
 
-    app.searchProviders[`default${this.torString}Provider`] = this.sProvider;
-    this.getCachedEl('.js-makeDefaultProvider').addClass('hide');
+    this.currentDefaultProvider = md;
   }
 
   clickMakeDefaultProvider() {
-    this.makeDefaultProvider();
     recordEvent('Discover_MakeDefaultProvider', {
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
     });
+    this.makeDefaultProvider(this._search.provider);
+    this.render();
   }
 
   addQueryProvider() {
-    if (this.queryProvider) app.searchProviders.add(this.sProvider);
-    this.activateProvider(this.sProvider);
+    if (!this.isExistingProvider(this._search.provider)) {
+      app.searchProviders.add(this._search.provider);
+      this.render();
+    }
   }
 
   clickAddQueryProvider() {
     this.addQueryProvider();
   }
 
-  callSearchProvider(searchUrl) {
-    // remove a pending search if it exists
-    if (this.callSearch) this.callSearch.abort();
-
-    this.setState({
-      fetching: true,
-      selecting: this.mustSelectDefault,
-      data: '',
-      searchUrl,
-      xhr: '',
-    });
-
-    if (!this.mustSelectDefault) {
-      // query the search provider
-      this.callSearch = $.get({
-        url: searchUrl,
-        dataType: 'json',
-      })
-        .done((pData, status, xhr) => {
-          let data = JSON.stringify(pData, (key, val) => {
-            // sanitize the data from any dangerous characters
-            if (typeof val === 'string') {
-              return sanitizeHtml(val, {
-                allowedTags: [],
-                allowedAttributes: [],
-              });
-            }
-            return val;
-          });
-          data = JSON.parse(data);
-          // make sure minimal data is present
-          if (data.name && data.links) {
-            // if data about the provider is received, update the model
-            const update = { name: data.name };
-            const urlTypes = [];
-            if (data.logo && is.url(data.logo)) update.logo = data.logo;
-            if (data.links) {
-              if (is.url(data.links.search)) {
-                update.search = data.links.search;
-                urlTypes.push('search');
-              }
-              if (is.url(data.links.listings)) {
-                update.listings = data.links.listings;
-                urlTypes.push('listings');
-              }
-              if (is.url(data.links.reports)) {
-                update.reports = data.links.reports;
-                urlTypes.push('reports');
-              }
-              if (data.links.tor) {
-                if (is.url(data.links.tor.search)) {
-                  update.torsearch = data.links.tor.search;
-                  urlTypes.push('torsearch');
-                }
-                if (is.url(data.links.tor.listings)) {
-                  update.torlistings = data.links.tor.listings;
-                  urlTypes.push('torlistings');
-                }
-              }
-            }
-            // update the defaults but do not save them
-            if (!_.findWhere(defaultSearchProviders, { id: this.sProvider.id })) {
-              this.sProvider.save(update, { urlTypes });
-            } else {
-              this.sProvider.set(update, { urlTypes });
-            }
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data,
-              searchUrl,
-              xhr: '',
-            });
-          } else {
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data: '',
-              searchUrl,
-              xhr,
-            });
-          }
-        })
-        .fail((xhr) => {
-          if (xhr.statusText !== 'abort') {
-            this.setState({
-              fetching: false,
-              selecting: false,
-              data: '',
-              searchUrl,
-              xhr,
-            });
-          }
-        });
-    }
-  }
-
-  showSearchError(xhr = {}) {
-    const title = app.polyglot.t('search.errors.searchFailTitle', { provider: this.sProvider });
-    const failReason = xhr.responseJSON ? xhr.responseJSON.reason : '';
-    const msg = failReason ?
-                app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
-    const buttons = [];
-    if (this.usingOriginal) {
-      buttons.push({
-        text: app.polyglot.t('search.changeProvider'),
-        fragment: 'changeProvider',
-      });
-    } else {
-      buttons.push({
-        text: app.polyglot.t('search.useDefault',
-          {
-            term: this.term,
-            defaultProvider: app.searchProviders[`default${this.torString}Provider`],
-          }),
-        fragment: 'useDefault',
-      });
+  /**
+   * This will add the categories one by one in a loop.
+   */
+  buildCategories() {
+    if (!Array.isArray(this._categorySearches)) {
+      throw new Error('this._categorySearches should be a valid array of search objects.');
     }
 
-    const errorDialog = new Dialog({
-      title,
-      msg,
-      buttons,
-      showCloseButton: false,
-      removeOnClose: true,
-    }).render().open();
-    this.listenTo(errorDialog, 'click-changeProvider', () => {
-      errorDialog.close();
-    });
-    this.listenTo(errorDialog, 'click-useDefault', () => {
-      this.activateProvider(app.searchProviders.at(0));
-      errorDialog.close();
-    });
+    if (this.categoryViews.length === this._categorySearches.length) {
+      app.router.navigate('search');
+      // After either the first search or the first category load completes, set the history.
+      this._setHistory = true;
+      this._search = { ...this._defaultSearch, provider: app.searchProviders.at(0) };
+      scrollPageIntoView();
+      // The state may not be changed here, so always fire a render.
+      this.setState({ tab: 'home' }, { renderOnChange: false });
+      this.render();
+      return;
+    }
 
-    recordEvent('Discover_SearchError', {
-      error: msg || 'unknown error',
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
+    const search = this._categorySearches[this.categoryViews.length];
+    const categoryVw = this.createChild(Category, {
+      search,
+      viewType: search.filters.type === 'cryptocurrency' ? 'cryptoList' : 'grid',
     });
+    this.categoryViews.push(categoryVw);
+
+    this.listenTo(categoryVw, 'seeAllCategory', (opts) => this.setSearch(opts));
+    this.buildCategories();
   }
 
-  createResults(data, searchUrl) {
+  /**
+   * This will create a results view from the provided search data.
+   * @param {object} data - JSON results from a search endpoint.
+   * @param {object} search - A valid search object.
+   * @param {boolean} setHistory - Whether the results should save the query to history.
+   */
+  createResults(data = {}, search, setHistory = true) {
+    if (!search || $.isEmptyObject(search)) throw new Error('Please provide a search object.');
+
     this.resultsCol = new ResultsCol();
     this.resultsCol.add(this.resultsCol.parse(data));
 
     let viewType = 'grid';
 
-    if (data && data.options && data.options.type &&
+    if (data.options && data.options.type &&
       data.options.type.options &&
       data.options.type.options.length) {
-      if (data.options.type.options.find(
-        op => op.value === 'cryptocurrency' && op.checked
-      )) {
+      if (data.options.type.options.find(op => op.value === 'cryptocurrency' && op.checked) &&
+        data.options.type.options.filter(op => op.checked).length === 1) {
         viewType = 'cryptoList';
       }
     }
 
-    const resultsView = this.createChild(Results, {
-      searchUrl,
-      reportsUrl: this.sProvider.get('reports') || '',
+    if (this.resultsView) this.resultsView.remove();
+    this.resultsView = this.createChild(Results, {
+      search,
       total: data.results ? data.results.total : 0,
       morePages: data.results ? data.results.morePages : false,
-      serverPage: this.serverPage,
-      pageSize: this.pageSize,
       initCol: this.resultsCol,
       viewType,
+      setHistory,
     });
 
     recordEvent('Discover_Results', {
       total: data.results ? data.results.total : 0,
-      provider: this.sProvider.get('name') || 'unknown',
-      url: this.sProvider.get('listings'),
-      page: this.serverPage + 1,
+      provider: this._search.provider.get('name') || 'unknown',
+      url: this.currentBaseUrl,
+      page: this._search.p + 1,
     });
 
-    this.$resultsWrapper.html(resultsView.render().el);
+    this.getCachedEl('.js-resultsWrapper').html(this.resultsView.render().el);
 
-    this.listenTo(resultsView, 'searchError', (xhr) => this.showSearchError(xhr));
-    this.listenTo(resultsView, 'loadingPage', () => this.scrollToTop());
-    this.listenTo(resultsView, 'resetSearch', () => this.resetSearch());
+    this.listenTo(this.resultsView, 'searchError', xhr => {
+      this.setState({
+        fetching: false,
+        data: {},
+        xhr,
+      });
+    });
+    this.listenTo(this.resultsView, 'loadingPage', () => scrollPageIntoView());
+    this.listenTo(this.resultsView, 'resetSearch', () => this.setSearch(this._defaultSearch));
   }
 
   clickSearchBtn() {
-    this.serverPage = 0;
-    this.processTerm(this.$searchInput.val());
+    this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 }, { force: true });
     recordEvent('Discover_ClickSearch');
     recordEvent('Discover_Search', { type: 'click' });
   }
 
   onKeyupSearchInput(e) {
     if (e.which === 13) {
-      this.serverPage = 0;
-      this.processTerm(this.$searchInput.val());
+      this.setSearch({ q: this.getCachedEl('.js-searchInput').val(), p: 0 }, { force: true });
       recordEvent('Discover_EnterKeySearch');
       recordEvent('Discover_Search', { type: 'enterKey' });
     }
   }
 
-  changeSortBy(e) {
-    this.sortBySelected = $(e.target).val();
-    this.serverPage = 0;
-    this.processTerm(this.term);
+  changeSortBy(opts) {
+    this.setSearch({ ...opts, p: 0 });
     recordEvent('Discover_ChangeSortBy');
   }
 
-  changeFilter() {
-    this.serverPage = 0;
-    this.processTerm(this.term);
+  onFilterChanged() {
+    this.setSearch({ filters: this.filters.retrieveFormData(), p: 0 });
     recordEvent('Discover_ChangeFilter');
   }
 
-  clickFilterAll(e) {
-    const targ = $(e.target);
-    const val = targ.data('val');
-    this.formOverrides[targ.prop('name')] = typeof val === 'string' ? val.split(',') : [];
-    this.changeFilter();
-  }
-
-  clickFilterNone(e) {
-    this.formOverrides[$(e.target).prop('name')] = [];
-    this.changeFilter();
-  }
-
   onClickSuggestion(opts) {
-    this.processTerm(opts.suggestion);
+    this.setSearch({ q: opts.suggestion, p: 0 });
     recordEvent('Discover_ClickSuggestion');
     recordEvent('Discover_Search', { type: 'suggestion' });
   }
 
-  scrollToTop() {
-    this.$el[0].scrollIntoView();
+  removeFetches() {
+    this.searchFetches.forEach(fetch => fetch.abort());
   }
 
   remove() {
-    if (this.callSearch) this.callSearch.abort();
+    this.removeFetches();
+    this.categoryViews.forEach(cat => cat.remove());
     super.remove();
+  }
+
+  renderCategories() {
+    const catsFrag = document.createDocumentFragment();
+
+    this.categoryViews.forEach(catVw => {
+      catVw.render().$el.appendTo(catsFrag);
+    });
+
+    this.getCachedEl('.js-categoryWrapper').html(catsFrag);
   }
 
   render() {
     super.render();
     const state = this.getState();
-    const data = state.data;
-
-    if (data && !state.searchUrl) {
-      throw new Error('Please provide the search URL along with the data.');
-    }
+    const data = state.data || {};
+    const term = this._search.q === '*' ? '' : this._search.q;
+    const hasFilters = data.options && !$.isEmptyObject(data);
 
     let errTitle;
     let errMsg;
 
-    // check to see if the call to the provider failed, or returned an empty result
-    const emptyData = $.isEmptyObject(data);
-
     if (state.xhr) {
-      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider: state.searchUrl });
+      const provider = this._search.provider.get('name') || this.currentBaseUrl;
+      errTitle = app.polyglot.t('search.errors.searchFailTitle', { provider });
       const failReason = state.xhr.responseJSON ? state.xhr.responseJSON.reason : '';
       errMsg = failReason ?
-        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) : '';
+        app.polyglot.t('search.errors.searchFailReason', { error: failReason }) :
+        app.polyglot.t('search.errors.searchFailData');
     }
-
-    const isDefaultProvider =
-      this.sProvider === app.searchProviders[`default${this.torString}Provider`];
 
     loadTemplate('search/search.html', (t) => {
       this.$el.html(t({
-        term: this.term === '*' ? '' : this.term,
-        sortBySelected: this.sortBySelected,
-        filterParams: this.filterParams,
+        term,
         errTitle,
         errMsg,
-        providerLocked: this.sProvider.get('locked'),
-        isQueryProvider: this.queryProvider,
-        isDefaultProvider,
-        emptyData,
+        providerLocked: this.providerIsADefault(this._search.provider.id),
+        isExistingProvider: this.isExistingProvider(this._search.provider),
+        showMakeDefault: this._search.provider !== this.currentDefaultProvider,
+        showDataError: $.isEmptyObject(data) && state.tab === 'listings',
+        hasFilters,
         ...state,
-        ...this.sProvider,
         ...data,
       }));
     });
-    this.$sortBy = this.$('#sortBy');
-    this.$sortBy.select2({
-      // disables the search box
-      minimumResultsForSearch: Infinity,
-      templateResult: selectEmojis,
-      templateSelection: selectEmojis,
-    });
-    const filterWrapper = this.$('.js-filterWrapper');
-    filterWrapper.find('select').select2({
-      minimumResultsForSearch: 10,
-      templateResult: selectEmojis,
-      templateSelection: selectEmojis,
-    });
-    this.$filters = filterWrapper.find('select, input');
-    this.$resultsWrapper = this.$('.js-resultsWrapper');
-    this.$searchInput = this.$('.js-searchInput');
-    this.$searchLogo = this.$('.js-searchLogo');
 
-    this.$searchLogo.find('img').on('error', () => {
-      this.$searchLogo.addClass('loadError');
+    const $filterWrapper = this.$('.js-filterWrapper');
+    const $searchLogo = this.$('.js-searchLogo');
+
+    $searchLogo.find('img').on('error', () => {
+      $searchLogo.addClass('loadError');
     });
 
     if (this.searchProviders) this.searchProviders.remove();
     this.searchProviders = this.createChild(Providers, {
-      urlType: this.urlType,
-      currentID: this.getCurrentProviderID(),
-      selecting: this.mustSelectDefault,
+      searchType: this._search.searchType,
+      currentID: this._search.provider.id,
+      showSelectDefault: !this.currentDefaultProvider,
     });
     this.listenTo(this.searchProviders, 'activateProvider', pOpts => this.activateProvider(pOpts));
     this.$('.js-searchProviders').append(this.searchProviders.render().el);
 
     if (this.suggestions) this.suggestions.remove();
-    this.suggestions = this.createChild(Suggestions, {
-      initialState: {
-        suggestions: Array.isArray(data.suggestions) ? data.suggestions : this.defaultSuggestions,
-      },
-    });
+    this.suggestions = this.createChild(Suggestions);
     this.listenTo(this.suggestions, 'clickSuggestion', opts => this.onClickSuggestion(opts));
     this.$('.js-suggestions').append(this.suggestions.render().el);
 
-    // use the initial set of results data to create the results view
-    if (data) this.createResults(data, state.searchUrl);
+    if (this.filters) this.filters.remove();
+    if (this.sortBy) this.sortBy.remove();
+
+    if (state.tab === 'home') {
+      this.renderCategories();
+    } else if (state.tab === 'listings') {
+      if (hasFilters) {
+        this.filters = this.createChild(Filters, { initialState: { filters: data.options } });
+        this.listenTo(this.filters, 'filterChanged', opts => this.onFilterChanged(opts));
+        $filterWrapper.append(this.filters.render().el);
+
+        $filterWrapper.find('select').select2({
+          minimumResultsForSearch: 10,
+          templateResult: selectEmojis,
+          templateSelection: selectEmojis,
+        });
+      }
+
+      this.sortBy = this.createChild(SortBy, {
+        initialState: {
+          term,
+          results: data.results,
+          sortBy: data.sortBy,
+          sortBySelected: this._search.sortBy,
+        },
+      });
+      this.listenTo(this.sortBy, 'changeSortBy', opts => this.changeSortBy(opts));
+      this.$('.js-sortByWrapper').append(this.sortBy.render().el);
+
+      // Use the initial set of results data to create the results view.
+      this.createResults(data, this._search, this._setHistory);
+    }
+
+    this.$filters = $filterWrapper.find('select, input');
 
     return this;
   }

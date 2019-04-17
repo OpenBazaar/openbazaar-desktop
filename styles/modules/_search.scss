@@ -51,11 +51,15 @@
           .providerBtn {
             padding: 0;
 
+            &:focus, &:hover {
+              outline: none;
+            }
+
             .providerInner {
               opacity: .35;
             }
 
-            &.selecting .providerInner {
+            &.showSelectDefault .providerInner {
               opacity: 1;
             }
           }
@@ -202,15 +206,11 @@
     }
 
     .loadingSearch {
-      display: none;
-    }
-
-    &.loading .loadingSearch {
       display: flex;
 
       .spinner {
         position: absolute;
-        top: 150px;
+        top: calc(25% - #{$spinnerLg/2});
       }
 
       .listingsGrid {
@@ -233,6 +233,29 @@
 
       .pageControls,
       .listingGrid {
+        display: none;
+      }
+    }
+
+    &.searchCategory {
+      position: relative;
+      margin-top: 50px;
+
+      .cryptoListViewHeader {
+        padding: 15px 30px;
+        font-size: 1.4rem;
+      }
+
+      .listingsGrid.listingsGridCryptoListView  .listingCard {
+        padding: 6px 30px;
+        font-size: 1.6rem;
+      }
+
+      &:first-child {
+        margin-top: 20px;
+      }
+
+      &:last-child .categoryRow {
         display: none;
       }
     }

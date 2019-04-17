@@ -8,8 +8,8 @@
   </div>
 </div>
 <div class="providersBar flexExpand">
-  <div class="providerWrapper gutterH <% if(!ob.selecting) print('margR') %> js-providerWrapper">
-    <% if (ob.selecting) { %>
+  <div class="providerWrapper gutterH <% if(!ob.showSelectDefault) print('margR') %> js-providerWrapper">
+    <% if (ob.showSelectDefault) { %>
       <div class="selectingBox confirmBox arrowBoxTop clrP clrBr clrSh1">
         <h2><%= ob.polyT('search.chooseDefaultTitle') %></h2>
         <p class="tx5"><%= ob.polyT('search.chooseDefaultMsg') %></p>

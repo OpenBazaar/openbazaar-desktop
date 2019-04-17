@@ -2,33 +2,46 @@ import baseVw from '../baseVw';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { capitalize } from '../../utils/string';
-import ListingCard from '../components/ListingCard';
-import UserCard from '../UserCard';
-import PageControls from '../components/PageControlsTextStyle';
-import ListingCardModel from '../../models/listing/ListingShort';
-import ResultsCol from '../../collections/Results';
 import { recordEvent } from '../../utils/metrics';
+import { createSearchURL } from '../../utils/search';
+import UserCard from '../UserCard';
+import ListingCard from '../components/ListingCard';
+import PageControls from '../components/PageControlsTextStyle';
+import ResultsCol from '../../collections/Results';
+import ListingCardModel from '../../models/listing/ListingShort';
+import ProviderMd from '../../models/search/SearchProvider';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
-    this.options = options;
-
-    this.searchUrl = options.searchUrl;
-    if (!this.searchUrl) {
-      throw new Error('Please provide a search provider URL.');
+    if (!options.search) throw new Error('Please provide a search object.');
+    if (!options.search.provider || !(options.search.provider instanceof ProviderMd)) {
+      throw new Error('Please provide a provider model.');
     }
 
-    this.serverPage = this.options.serverPage || 0;
-    this.pageSize = this.options.pageSize || 24;
-    this.reportsUrl = this.options.reportsUrl || '';
-    this.viewType = this.options.viewType || 'grid';
+    const opts = {
+      viewType: 'grid',
+      setHistory: true,
+      ...options,
+      initialState: {
+        loading: false,
+        ...options.initialState,
+      },
+    };
+
+    super(opts);
+    this.options = opts;
+    this._setHistory = opts.setHistory;
+    this._search = {
+      p: 0,
+      ps: 66,
+      ...options.search,
+    };
 
     this.cardViews = [];
-    this.pageCollections = {};
+    this.pageCols = {};
     // if an initial collection was passed in, add it
-    if (options.initCol) this.pageCollections[this.serverPage] = (options.initCol);
-    this.firstRender = true;
+    if (options.initCol) this.pageCols[this._search.p] = (options.initCol);
+    this.loadPage();
   }
 
   className() {
@@ -46,20 +59,18 @@ export default class extends baseVw {
   }
 
   createCardView(model) {
-    // models can be listings or nodes
+    // models can be listings or nodes, even though nodes aren't being used yet
     if (model instanceof ListingCardModel) {
       const vendor = model.get('vendor') || {};
-      const base = vendor.handle ?
-        `@${vendor.handle}` : vendor.peerID;
-
+      const base = vendor.handle ? `@${vendor.handle}` : vendor.peerID;
       const options = {
         listingBaseUrl: `${base}/store/`,
-        reportsUrl: this.reportsUrl,
-        searchUrl: this.searchUrl,
+        reportsUrl: this._search.provider.reportsUrl || '',
+        searchUrl: this._search.provider[this._search.urlType],
         model,
         vendor,
         onStore: false,
-        viewType: this.viewType,
+        viewType: this.options.viewType,
       };
 
       return this.createChild(ListingCard, options);
@@ -68,10 +79,10 @@ export default class extends baseVw {
     return this.createChild(UserCard, { model });
   }
 
-  renderCards(models) {
+  renderCards(pageCol = []) {
     const resultsFrag = document.createDocumentFragment();
 
-    models.forEach(model => {
+    pageCol.forEach(model => {
       const cardVw = this.createCardView(model);
 
       if (cardVw) {
@@ -80,80 +91,62 @@ export default class extends baseVw {
       }
     });
 
-    this.$el.toggleClass('noResults', models.total < 1);
-
-    this.$resultsGrid.html(resultsFrag);
-
-    // update the page controls
-    const currentPage = Number(this.serverPage) + 1;
-    const lastPage = Math.ceil(models.total / this.pageSize);
-
-    this.pageControls.setState({
-      currentPage,
-      morePages: currentPage < lastPage,
-    });
-
-    // hide the loading spinner
-    this.$el.removeClass('loading');
-    /*
-    // disabled until an enter handler to added to the listing card
-    // move focus to the first result. The timeout orders it after other operations.
-    setTimeout(() => {
-      this.$resultsGrid.find('.listingCard').filter(':first').focus();
-    });
-    */
+    this.getCachedEl('.js-resultsGrid').html(resultsFrag);
   }
 
-  loadPage(page = this.serverPage, size = this.pageSize) {
+  loadPage(options) {
     this.removeCardViews();
-    // get the new page
-    const url = new URL(this.searchUrl);
-    const params = new URLSearchParams(url.search);
-    params.set('p', page);
-    params.set('ps', size);
-    const newURL = `${url.origin}${url.pathname}?${params.toString()}`;
     this.trigger('loadingPage');
+    this.setState({ loading: true });
+
+    const opts = {
+      ...this._search,
+      ...options,
+    };
+
+    const newUrl = createSearchURL(opts);
 
     // if page exists, reuse it
-    if (this.pageCollections[page]) {
-      this.renderCards(this.pageCollections[page]);
-      // update the address bar
-      app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
-        { replace: this.firstRender });
+    if (this.pageCols[opts.p]) {
+      if (this._setHistory) {
+        app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+      }
+      this.setState({ loading: false });
     } else {
-      // show the loading spinner
-      this.$el.addClass('loading');
-
       const newPageCol = new ResultsCol();
-      this.pageCollections[page] = newPageCol;
+      this.pageCols[opts.p] = newPageCol;
 
       if (this.newPageFetch) this.newPageFetch.abort();
 
       this.newPageFetch = newPageCol.fetch({
-        url: newURL,
+        url: newUrl,
       })
-          .done(() => {
-            this.renderCards(newPageCol);
-            // update the address bar
-            app.router.navigate(`search?providerQ=${encodeURIComponent(newURL)}`,
-              { replace: this.firstRender });
-          })
-          .fail((xhr) => {
-            if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
-          });
+        .done(() => {
+          if (this._setHistory) {
+            app.router.navigate(`search/listings?providerQ=${encodeURIComponent(newUrl)}`);
+          }
+        })
+        .fail((xhr) => {
+          if (xhr.statusText !== 'abort') this.trigger('searchError', xhr);
+        })
+        .always(() => {
+          this.setState({ loading: false });
+        });
     }
   }
 
   clickPagePrev() {
-    this.serverPage--;
-    this.loadPage(this.serverPage);
-    recordEvent('Discover_PrevPage', { fromPage: this.serverPage });
+    recordEvent('Discover_PrevPage', { fromPage: this._search.p });
+    this._search.p--;
+    this._setHistory = true;
+    this.loadPage();
   }
 
   clickPageNext() {
-    this.serverPage++;
-    this.loadPage(this.serverPage);
-    recordEvent('Discover_NextPage', { fromPage: this.serverPage });
+    recordEvent('Discover_NextPage', { fromPage: this._search.p });
+    this._search.p++;
+    this._setHistory = true;
+    this.loadPage();
   }
 
   removeCardViews() {
@@ -168,26 +161,34 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+    const currentPage = Number(this._search.p) + 1;
+    const pageCol = this.pageCols[this._search.p];
+
     loadTemplate('search/results.html', (t) => {
       this.$el.html(t({
-        viewTypeClass: this.viewType === 'grid' ?
-          '' : `listingsGrid${capitalize(this.viewType)}View`,
-        viewType: this.viewType,
+        viewTypeClass: this.options.viewType === 'grid' ?
+          '' : `listingsGrid${capitalize(this.options.viewType)}View`,
+        viewType: this.options.viewType,
+        ...this.getState(),
       }));
 
-      this.$resultsGrid = this.$('.js-resultsGrid');
-      this.$displayText = this.$('.js-displayingText');
-      this.removeCardViews();
-
       if (this.pageControls) this.pageControls.remove();
-      this.pageControls = this.createChild(PageControls);
-      this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
-      this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
-      this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
 
-      this.loadPage();
+      if (pageCol && pageCol.length) {
+        this.renderCards(pageCol);
+
+        this.pageControls = this.createChild(PageControls, {
+          initialState: {
+            currentPage,
+            morePages: currentPage < Math.ceil(pageCol.total / this._search.ps),
+          },
+        });
+        this.listenTo(this.pageControls, 'clickNext', this.clickPageNext);
+        this.listenTo(this.pageControls, 'clickPrev', this.clickPagePrev);
+        this.$('.js-pageControlsContainer').html(this.pageControls.render().el);
+      }
     });
-    this.firstRender = false;
 
     return this;
   }

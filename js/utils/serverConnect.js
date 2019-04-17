@@ -76,6 +76,17 @@ export function getServer() {
 }
 
 /**
+ * Returns a boolean indicating whether the server is currently using Tor and the client connection
+ * is configured to use Tor. This means all server and client traffic should be running through a
+ * Tor proxy. If no server is available, will return false, take that into account.
+ * @returns {boolean}
+ */
+export function curConnOnTor() {
+  const server = getServer();
+  return !!server && getServer().get('useTor') && app.serverConfig.tor;
+}
+
+/**
  * Call this method to obtain the socket instance in order to bind socket events.
  * If we are not currently connected to a server, this method will return false.
  * For the most part, you could no-op in that case since as it is now the

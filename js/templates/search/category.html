@@ -1,0 +1,26 @@
+<a class="clrT js-seeAll"><h2><%= ob.title %></h2></a>
+<% if (ob.viewType === 'cryptoList') { %>
+<div class="flexVCent txB clrBr clrP gutterH cryptoListViewHeader">
+  <div class="tradeFromCol"><%= ob.polyT('search.cryptoListViewHeader.colTradeFrom') %></div>
+  <div class="tradeArrowCol"></div>
+  <div class="tradeToCol"><%= ob.polyT('search.cryptoListViewHeader.colTradeTo') %></div>
+  <div class="vendorCol"><%= ob.polyT('search.cryptoListViewHeader.colVendor') %></div>
+  <div class="priceCol">
+    <%= ob.polyT('search.cryptoListViewHeader.colPrice',
+    { subText: `<span class="subText clrT2">${ob.polyT('search.cryptoListViewHeader.colPriceSubText')}</span>` }) %>
+  </div>
+  <% /* This is being commented out until inventory is functional. %>
+  <div class="inventoryCol flexExpand">
+    <%= ob.polyT('search.cryptoListViewHeader.colInventory') %> <span class="toolTip txCtr" data-tip="<%= ob.polyT('search.cryptoListViewHeader.tipInventory') %>"><i class="ion-information-circled clrT2"></i></span>
+  </div>
+  <% */ %>
+</div>
+<% } %>
+<div class="listingsGrid <%= ob.viewTypeClass %> flex js-resultsGrid"></div>
+<div class="flexCent rowLg">
+  <button class="btn clrP clrT clrBr clrSh1 js-seeAll"><%= ob.polyT('search.categories.seeAllBtn') %></button>
+</div>
+<hr class="clrBr row categoryRow">
+<% if (ob.loading) { %>
+  <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>
