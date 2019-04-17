@@ -629,19 +629,16 @@ export default class extends baseVw {
   }
 
   renderPrice() {
-    // todo: remove previous children views
-    // todo: remove previous children views
-    // todo: remove previous children views
-    // todo: remove previous children views
-
     const flatModel = this.model.toJSON();
     const fromCur = flatModel.price.currencyCode;
     const amount = flatModel.price.amount;
     const toCur = app.settings.get('localCurrency');
     const shortFormatConfig = short(fromCur, toCur);
 
+    if (this.priceVw) this.priceVw.remove();
+
     if (!this.model.isCrypto) {
-      const price = this.createChild(Value, {
+      this.priceVw = this.createChild(Value, {
         initialState: {
           ...shortFormatConfig,
           amount,
@@ -650,28 +647,25 @@ export default class extends baseVw {
         },
       });
       this.getCachedEl('.js-priceContainer')
-        .html(price.render().el);
+        .html(this.priceVw.render().el);
     } else {
-      const price = this.createChild(CryptoListingPrice, {
+      this.priceVw = this.createChild(CryptoListingPrice, {
         initialState: {
-          // todo: test this don't blow up if this is missing or bs val
-          // todo: test this don't blow up if this is missing or bs val
-          // todo: test this don't blow up if this is missing or bs val
-          // todo: test this don't blow up if this is missing or bs val
-          priceModifier: flatModel && flatModel.price &&
-            flatModel.price.modifier,
+          priceModifier: flatModel && flatModel.price ?
+            flatModel.price.modifier : null,
           wrappingClass: '',
           marketRelativityClass: 'hide',
           valueOptions: {
             ...shortFormatConfig,
-            amount: 87654321,
+            amount: flatModel && flatModel.price ?
+              flatModel.price.amount : null,
             fromCur,
             toCur,
           },
         },
       });
       this.getCachedEl('.js-priceContainer')
-        .html(price.render().el);
+        .html(this.priceVw.render().el);
     }
   }
 

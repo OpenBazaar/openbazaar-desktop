@@ -59,14 +59,6 @@ export default class extends BaseModel {
         // represent properly.
         delete parsedResponse.totalInventoryQuantity;
       }
-    } else {
-      const priceObj = parsedResponse.price;
-      parsedResponse.price = {
-        ...priceObj,
-        currencyCode: 'ZEC',
-        // amount: integerToDecimal(priceObj.amount, 18),
-        amount: integerToDecimal('1', 8),
-      };
     }
 
     return parsedResponse;

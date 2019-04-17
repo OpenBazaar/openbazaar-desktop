@@ -23,57 +23,62 @@ export default class extends baseVw {
     return 'span';
   }
 
-  setState(state, options) {
-    const newState = {
-      ...this.getState(),
-      ...state,
-    };
+  isValidData() {
+    const state = this.getState();
+    let isValid = true;
 
-    if (typeof newState.valueOptions !== 'object') {
-      throw new Error('state.valueOptions must be provided as an object.');
+    try {
+      if (typeof state.valueOptions !== 'object') {
+        throw new Error('state.valueOptions must be provided as an object.');
+      }
+
+      if (typeof state.valueOptions.amount !== 'number') {
+        throw new Error('state.valueOptions.priceAmount must be provided as ' +
+          'a number.');
+      }
+
+      if (typeof state.valueOptions.fromCur !== 'string' ||
+        !state.valueOptions.fromCur) {
+        throw new Error('state.valueOptions.fromCur must be provided as ' +
+          'a non-empty string.');
+      }
+
+      if (typeof state.valueOptions.toCur !== 'string' ||
+        !state.valueOptions.toCur) {
+        throw new Error('state.valueOptions.toCur must be provided as ' +
+          'a non-empty string.');
+      }
+
+      if (typeof state.priceModifier !== 'number') {
+        throw new Error('state.priceModifier must be provided as ' +
+          'a number');
+      }
+    } catch (e) {
+      isValid = false;
     }
 
-    if (typeof newState.valueOptions.amount !== 'number') {
-      throw new Error('state.valueOptions.priceAmount must be provided as ' +
-        'a number.');
-    }
-
-    if (typeof newState.valueOptions.fromCur !== 'string' ||
-      !newState.valueOptions.fromCur) {
-      throw new Error('state.valueOptions.fromCur must be provided as ' +
-        'a non-empty string.');
-    }
-
-    if (typeof newState.valueOptions.toCur !== 'string' ||
-      !newState.valueOptions.toCur) {
-      throw new Error('state.valueOptions.toCur must be provided as ' +
-        'a non-empty string.');
-    }
-
-    if (typeof newState.priceModifier !== 'number') {
-      throw new Error('state.priceModifier must be provided as ' +
-        'a number');
-    }
-
-    return super.setState(state, options);
+    return isValid;
   }
 
   render() {
     const state = this.getState();
 
-    loadTemplate('components/value/cryptoListingPrice.html', (t) => {
-      this.$el.html(t({
-        ...state,
-      }));
+    // If we have invalid data, we'll gracefully fail by not rendering anything.
+    if (this.isValidData()) {
+      loadTemplate('components/value/cryptoListingPrice.html', (t) => {
+        this.$el.html(t({
+          ...state,
+        }));
 
-      if (this.cryptoPrice) this.cryptoPrice.remove();
-      this.cryptoPrice = this.createChild(Value, {
-        initialState: { ...state.valueOptions },
+        if (this.cryptoPrice) this.cryptoPrice.remove();
+        this.cryptoPrice = this.createChild(Value, {
+          initialState: { ...state.valueOptions },
+        });
+
+        this.getCachedEl('.js-priceContainer')
+          .html(this.cryptoPrice.render().el);
       });
-
-      this.getCachedEl('.js-priceContainer')
-        .html(this.cryptoPrice.render().el);
-    });
+    }
 
     return this;
   }
