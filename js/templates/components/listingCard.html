@@ -164,21 +164,8 @@
         <span class="clrE1 clrTOnEmph clamp4 phraseBox"><%= ob.polyT('listingCard.freeShippingBanner') %></span>
       </div>
       <% } %>
-      <div class="priceCol flexNoShrink clamp4">
-        <span className="<%= ob.contractType !== 'CRYPTOCURRENCY' ? 'js-priceContainer' : '' %>">
-          <%
-            if (ob.contractType === 'CRYPTOCURRENCY') { %>
-              <%=
-                ob.crypto.cryptoPrice({
-                  priceAmount: ob.price.amount,
-                  priceCurrencyCode: ob.price.currencyCode,
-                  displayCurrency: ob.displayCurrency,
-                  priceModifier: ob.price.modifier,
-                  wrappingClass: '',
-                })
-              %>
-          <% } %>
-        </span>
+      <div class="priceCol flexNoShrink">
+        <div class="js-priceContainer"></div>
       </div>
     </div>
   </div>
@@ -240,15 +227,7 @@
       </div>
     </div>
     <div class="priceCol">
-      <%=
-        ob.crypto.cryptoPrice({
-          priceAmount: ob.price.amount,
-          priceCurrencyCode: ob.price.currencyCode,
-          displayCurrency: ob.displayCurrency,
-          priceModifier: ob.price.modifier,
-          wrappingClass: 'txB',
-        })
-      %>
+      <div class="js-priceContainer"></div>
     </div>
     <%
       let inventory = ob.polyT('cryptoAmountIconPairing', {

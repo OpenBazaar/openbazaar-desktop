@@ -1,4 +1,3 @@
-// import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Value from '../Value';
@@ -19,12 +18,6 @@ export default class extends baseVw {
 
     super(opts);
   }
-
-  // events() {
-  //   return {
-  //     'click .js-copyTipAmount': 'onClickCopyTip',
-  //   };
-  // }
 
   get tagName() {
     return 'span';
@@ -68,7 +61,7 @@ export default class extends baseVw {
   render() {
     const state = this.getState();
 
-    loadTemplate('components/value/cryptoPrice.html', (t) => {
+    loadTemplate('components/value/cryptoListingPrice.html', (t) => {
       this.$el.html(t({
         ...state,
       }));

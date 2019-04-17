@@ -58,7 +58,7 @@ export default class extends BaseVw {
   }
 
   set viewType(type) {
-    if (['list', 'grid'].indexOf(type) === '-1') {
+    if (['list', 'grid', 'cryptoList'].indexOf(type) === '-1') {
       throw new Error('The type provided is not one of the available types.');
     }
 

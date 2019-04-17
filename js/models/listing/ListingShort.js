@@ -7,6 +7,7 @@ export default class extends BaseModel {
   defaults() {
     return {
       freeShipping: [],
+      vendor: {},
     };
   }
 

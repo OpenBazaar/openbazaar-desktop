@@ -20,7 +20,7 @@ import ReportBtn from '../components/ReportBtn';
 import BlockBtn from '../components/BlockBtn';
 import VerifiedMod, { getListingOptions } from '../components/VerifiedMod';
 import Value from '../components/Value';
-import CryptoPrice from '../components/value/CryptoPrice';
+import CryptoListingPrice from '../components/value/CryptoListingPrice';
 import UserLoadingModal from '../../views/userPage/Loading';
 
 export default class extends baseVw {
@@ -640,8 +640,6 @@ export default class extends baseVw {
     const toCur = app.settings.get('localCurrency');
     const shortFormatConfig = short(fromCur, toCur);
 
-    // consider a getPrice method where all the pricepermutations could
-    // be made there rather than some in the template and some in the view.
     if (!this.model.isCrypto) {
       const price = this.createChild(Value, {
         initialState: {
@@ -654,7 +652,7 @@ export default class extends baseVw {
       this.getCachedEl('.js-priceContainer')
         .html(price.render().el);
     } else {
-      const price = this.createChild(CryptoPrice, {
+      const price = this.createChild(CryptoListingPrice, {
         initialState: {
           // todo: test this don't blow up if this is missing or bs val
           // todo: test this don't blow up if this is missing or bs val

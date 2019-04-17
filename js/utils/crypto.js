@@ -9,29 +9,44 @@ import { ensureMainnetCode } from '../data/walletCurrencies';
  */
 export function renderCryptoIcon(options = {}) {
   const baseIconPath = '../imgs/cryptoIcons/';
-
-  if (typeof options.code !== 'string' && options.code !== '') {
-    throw new Error('Please provide a crypto currency code.');
-  }
-
-  const opts = {
+  let opts = {
     className: '',
     attrs: {},
     defaultIcon: `${baseIconPath}default-coin-icon.png`,
+    returnUndefinedOnError: true,
     ...options,
-    code: ensureMainnetCode(options.code),
   };
+  let attrs;
+  let style;
 
-  const attrs = Object.keys(opts.attrs).reduce(
-    (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
-  );
-  const iconUrl = opts.code ?
-    `url(${baseIconPath}${opts.code}-icon.png),` :
-    '';
-  const defaultIcon = opts.defaultIcon ?
-    `url(${opts.defaultIcon})` :
-    '';
-  const style = `style="background-image: ${iconUrl}${defaultIcon}"`;
+  try {
+    if (typeof options.code !== 'string' && options.code !== '') {
+      throw new Error('Please provide a crypto currency code.');
+    }
+
+    opts = {
+      ...opts,
+      code: ensureMainnetCode(options.code),
+    };
+
+    attrs = Object.keys(opts.attrs).reduce(
+      (attrString, key) => `${attrString} ${key}="${opts.attrs[key]}"`, ''
+    );
+    const iconUrl = opts.code ?
+      `url(${baseIconPath}${opts.code}-icon.png),` :
+      '';
+    const defaultIcon = opts.defaultIcon ?
+      `url(${opts.defaultIcon})` :
+      '';
+    style = `style="background-image: ${iconUrl}${defaultIcon}"`;
+  } catch (e) {
+    if (!opts.returnUndefinedOnError) {
+      throw e;
+    }
+
+    return undefined;
+  }
+
   return `<i class="cryptoIcon ${opts.className}" ${attrs} ${style}></i>`;
 }
 

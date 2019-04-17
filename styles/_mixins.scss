@@ -71,10 +71,16 @@
     color: $col2;
   }
 
-  .btn, .listItem, &.btn, &.btnAsLink, &.listItem {
+  .btn, .listItem, &.btn, &.listItem {
     /* btnTxt and iconBtn are included automatically because they extend .btn */
     color: $col1;
   }
+
+  &.btn, &.listItem {
+    &.forceColor {
+      color: $col1;
+    }
+  }  
 
   @at-root {
     a#{&} {
