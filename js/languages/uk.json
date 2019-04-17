@@ -1071,7 +1071,9 @@
       "loadReview": "Ой, не вдалося відкрити %{id} трапилася помилка %{error}",
       "noPurchaseTitle": "Цей товар не можливо придбати",
       "zeroPriceMsg": "Ви не можете купити товар з ціною менше нуля. ",
-      "outOfStock": "Ви не можете купити товар, тому що наразі його немає у наявності."
+      "outOfStock": "Ви не можете купити товар, тому що наразі його немає у наявності.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "Транзакції",
       "myPage": "Моя сторінка"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Обмін",
       "colTradeTo": "За",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "Не вдалося виконати пошуковий запит %{provider}. Виберіть іншого постачальника вище.",
       "searchFailReason": "Постачальник пошуку повернув таке повідомлення: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "Ви більше не підключені до вашого вузла. Необхідно провести повторне з'єднання для продовження пошуку.",
       "addError": "Цей провайдер не може бути доданий. Перевірте свої дані та повторіть спробу.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Стандартний пошуковий провайдер не може бути видалений.",
       "resetToOriginal": "Ваша URL-адреса постачальника пошуку недійсна. Замість цього ми використовуватимемо оригінальний постачальник за замовчуванням."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "Ой! Дані модератора не завантажились.",
-      "moderatorsMsg": "Цей список має доступних модераторів, але їх не можна завантажити.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Ваше замовлення, не може бути оброблено, через наступні помилки.",
       "ownIDTitle": "Ви не можете купувати з власних списків",
       "ownIDMsg": "Ви можете переглянути процес придбання для власних списків, але їх не можна придбати в самого себе.",
       "paymentFailed": "Оплата не могла бути завершена",
       "zeroPrice": "Ви не можете купувати зі списків де загальна вартість має значення \"0\".",
       "insufficientInventoryTitle": "Недостатньо інвентарю",
-      "insufficientInventoryBody": "У продавця недостатній інвентар для завершення покупки. Залишилось: %{remainingInventory}. |||| У продавця недостатній інвентар для завершення покупки. Залишилось: %{remainingInventory}."
+      "insufficientInventoryBody": "У продавця недостатній інвентар для завершення покупки. Залишилось: %{remainingInventory}. |||| У продавця недостатній інвентар для завершення покупки. Залишилось: %{remainingInventory}.",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {

@@ -1071,7 +1071,9 @@
       "loadReview": "المراجعة %{id} فشلت بسبب %{error}",
       "noPurchaseTitle": "لا يمكن شراء هذه القائمة.",
       "zeroPriceMsg": "لا يمكنك إجراء عملية شراء بسعر صفر أو أقل.",
-      "outOfStock": "لا يمكنك إجراء عملية شراء لأن البضاعة غير متوفر حاليًا."
+      "outOfStock": "لا يمكنك إجراء عملية شراء لأن البضاعة غير متوفر حاليًا.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "العمليات التجارية",
       "myPage": "صفحتي"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "تجارة",
       "colTradeTo": "الى",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "استعلام البحث ل %{provider} فشل. اختر موفر آخر أعلاه.",
       "searchFailReason": "رد موفر البحث بالرسالة التالية: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "أنت لم تعد متصلاً بالعقدة الخاصة بك. أعد الاتصال لإتمام البحث",
       "addError": "لا يمكن إضافة هذا المزود. تأكد من بياناتك وحاول مرة أخرى.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "لايمكن حذف مزودات البحث الافتراضية",
       "resetToOriginal": "رابط مزود البحث الخاص بك غير صالح. سنستخدم المزود الافتراضي بدلاً عنه."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "إخفاق في تحميل بيانات الإشراف",
-      "moderatorsMsg": "تحتوي هذه القائمة على مشرفين، ولكن تعذر تحميلها.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "لايمكن معالجة طلبك نظرا للأخطاء التالية.",
       "ownIDTitle": "لا يمكنك شراء القوائم الخاصة بك",
       "ownIDMsg": "يمكنك معاينة عملية الشراء لقوائمك الخاصة، ولكن لا يمكنك شرائها.",
       "paymentFailed": "تعذر إتمام الدفع",
       "zeroPrice": "لا يمكنك شراء قائمة بسعر إجمالي قدره صفر.",
       "insufficientInventoryTitle": "جرد غير كاف",
-      "insufficientInventoryBody": "ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. |||| ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. "
+      "insufficientInventoryBody": "ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. |||| ليس لدى البائع المخزون الكافي لإتمام عملية البيع. فقط %{remainingInventory} بقي من البضاعة. ",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {
