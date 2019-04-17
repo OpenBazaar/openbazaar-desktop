@@ -1071,7 +1071,9 @@
       "loadReview": "L'évaluation %{id} a échoué à cause de l'erreur %{error}",
       "noPurchaseTitle": "Vous ne pouvez pas acheter cette annonce",
       "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins.",
-      "outOfStock": "Vous ne pouvez pas effectuer d'achat car l'article est actuellement en rupture de stock."
+      "outOfStock": "Vous ne pouvez pas effectuer d'achat car l'article est actuellement en rupture de stock.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "Transactions",
       "myPage": "Ma page"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Échanger",
       "colTradeTo": "Pour",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "La requête de recherche vers %{provider} a échoué. Choisissez un autre fournisseur ci-dessus.",
       "searchFailReason": "Le fournisseur de recherche a renvoyé le message suivant : %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "Vous n'êtes plus connecté à votre nœud. Reconnectez-vous pour continuer la recherche",
       "addError": "Ce fournisseur ne peut pas être ajouté. Vérifiez vos données et réessayez.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Les fournisseurs de recherche par défaut ne peuvent pas être supprimés.",
       "resetToOriginal": "L'URL de votre fournisseur de recherche est invalide. Nous utiliserons le fournisseur par défaut."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "Les données de modérateur ont échoué à charger",
-      "moderatorsMsg": "Cette annonce a des modérateurs disponibles, mais ils n'ont pas pu être chargés.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Votre commande ne peut pas être traitée en raison des erreurs suivantes.",
       "ownIDTitle": "Vous ne pouvez pas acheter vos propres annonces",
       "ownIDMsg": "Vous pouvez prévisualiser le processus d'achat pour vos propres annonces, mais vous ne pouvez pas les acheter.",
       "paymentFailed": "Le paiement n'a pas pu s'achever",
       "zeroPrice": "Vous ne pouvez pas acheter une annonce avec un prix total de zéro.",
       "insufficientInventoryTitle": "Inventaire insuffisant",
-      "insufficientInventoryBody": "Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} article. |||| Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} articles."
+      "insufficientInventoryBody": "Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} article. |||| Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} articles.",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {

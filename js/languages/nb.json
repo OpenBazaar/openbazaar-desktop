@@ -1071,7 +1071,9 @@
       "loadReview": "Anmeldelse %{id} feilet på grunn av %{error}",
       "noPurchaseTitle": "Denne oppføringen kan ikke kjøpes",
       "zeroPriceMsg": "Du kan ikke utføre et kjøp med en pris som er null eller mindre.",
-      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "Transaksjoner",
       "myPage": "Min Side"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Trade",
       "colTradeTo": "For",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "Søket til %{provider} har feilet. Velg en annen leverandør over.",
       "searchFailReason": "Søkeleverandøren returnerte følgende melding: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "Du er ikke lenger tilkoblet noden din. Koble til på nytt for å fortsette søk",
       "addError": "Denne leverandøren kan ikke legges til. Sjekk dataene og prøv igjen.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Søkeleverandører angitt som standard kan ikke slettes.",
       "resetToOriginal": "Din søkeleverandørs URL er ugyldig. Vi vil bruke den originale standardleverandøren istedenfor."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "Moderatordata kunne ikke lastes",
-      "moderatorsMsg": "Denne oppføringen har tilgjengelige moderatorer, men de kunne ikke lastes.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Din bestilling kunne ikke prosesseres på grunn av følgende feil.",
       "ownIDTitle": "Du kan ikke kjøpe dine egne oppføringer",
       "ownIDMsg": "Du kan se en forhåndsvisning av kjøpeprosessen for dine egne oppføringer, men du kan ikke kjøpe dem.",
       "paymentFailed": "Betalingen kunne ikke fullføres",
       "zeroPrice": "Du kan ikke kjøpe noe med totalpris null.",
       "insufficientInventoryTitle": "Insufficient Inventory",
-      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {

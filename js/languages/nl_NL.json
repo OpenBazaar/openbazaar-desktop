@@ -1071,7 +1071,9 @@
       "loadReview": "Beoordeling %{id} mislukt vanwege %{error}",
       "noPurchaseTitle": "Dit artikel kan niet worden gekocht",
       "zeroPriceMsg": "Je kunt geen aankoop doen met een prijs van 0 of minder.",
-      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "Transactions",
       "myPage": "Mijn Pagina"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Trade",
       "colTradeTo": "For",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "De zoekopdarcht bij %{provider} is mislukt. Kies een andere search provider.",
       "searchFailReason": "De search provider geeft de volgende foutmelding terug: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "Je bent niet langer verbonden met je node. Maak opnieuw contact om het zoeken te vervolgen.",
       "addError": "Deze provider kan niet worden toegevoegd. Controleer je gegevens en probeer opnieuw.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Default search providers kunnen niet worden verwijderd.",
       "resetToOriginal": "De URL van je search provider is niet geldig. De originele default provider zal in plaats hiervan gebruikt worden."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "Moderator data kon niet geladen worden",
-      "moderatorsMsg": "Dit artikel heeft moderators beschikbaar, maar ze konden niet geladen worden.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Je order kan niet verwerkt worden vanwege de volgende fouten.",
       "ownIDTitle": "Je kunt niet je eigen artikelen aanschaffen",
       "ownIDMsg": "Je kunt het verkoopproces voor je eigen artikelen zien, maar je kunt ze niet aanschaffen.",
       "paymentFailed": "De betaling kon niet worden afgerond.",
       "zeroPrice": "Je kunt een artikel met een prijs van nul niet aanschaffen.",
       "insufficientInventoryTitle": "Insufficient Inventory",
-      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {

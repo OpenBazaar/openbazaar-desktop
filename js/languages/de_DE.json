@@ -1071,7 +1071,9 @@
       "loadReview": "Rezension %{id} konnte aufgrund von %{error} nicht geladen werden",
       "noPurchaseTitle": "Dieser Artikel kann nicht gekauft werden.",
       "zeroPriceMsg": "Sie können keinen Kauf mit einem Preis von null oder weniger tätigen.",
-      "outOfStock": "You cannot make a purchase because the item is currently out of stock."
+      "outOfStock": "You cannot make a purchase because the item is currently out of stock.",
+      "reloadOutdatedHash": "try reloading the listing",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1325,6 +1327,9 @@
       "transactions": "Transaktionen",
       "myPage": "Meine Seite"
     },
+    "categories": {
+      "seeAllBtn": "See All"
+    },
     "cryptoListViewHeader": {
       "colTradeFrom": "Handel",
       "colTradeTo": "For",
@@ -1338,8 +1343,11 @@
     "errors": {
       "searchFailTitle": "Die Suchanfrage an %{provider} ist fehlgeschlagen. Wählen Sie einen anderen Anbieter oberhalb.",
       "searchFailReason": "Der Suchanbieter hat folgende Nachricht zurückgegeben: %{error}",
+      "searchFailData": "The search provider did not return compatible data.",
       "connection": "Sie sind nicht mehr mit ihrem Knoten verbunden. Verbinden Sie sich neu, um weiter zu suchen.",
       "addError": "Dieser Anbieter kann nicht hinzugefügt werden. Überprüfen Sie Ihre Daten und versuchen Sie es erneut.",
+      "existsError": "This provider has already been added.",
+      "invalidUrl":"The provided URL not valid. The default search provider has been used instead.",
       "locked": "Standard Such Anbieter können nicht gelöscht werden.",
       "resetToOriginal": "Die URL Ihres Suchanbieters ist ungültig. Wir werden stattdessen den ursprünglichen Standardanbieter benutzen."
     }
@@ -1490,14 +1498,16 @@
     },
     "errors": {
       "moderatorsTitle": "Die Daten des Moderators konnten nicht geladen werden",
-      "moderatorsMsg": "Dieser Artikel hat verfügbare Moderatoren, diese konnten jedoch nicht geladen werden.",
+      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
       "orderError": "Ihre Bestellung konnte aufgrund der folgenden Fehler nicht verarbeitet werden.",
       "ownIDTitle": "Sie können Ihre eigenen Artikel nicht kaufen.",
       "ownIDMsg": "Sie können eine Vorschau des Kaufprozesses für Ihre eigenen Artikel sehen, diese jedoch nicht kaufen.",
       "paymentFailed": "Der Zahlungsvorgang konnte nicht abgeschlossen werden.",
       "zeroPrice": "Sie können keinen Artikel mit dem Gesamtpreis von null kaufen.",
       "insufficientInventoryTitle": "Insufficient Inventory",
-      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain."
+      "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
+      "reloadOutdatedHash": "load the latest version",
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
   "moderators": {
