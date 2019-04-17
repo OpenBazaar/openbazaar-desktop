@@ -207,3 +207,27 @@ export function deparam(queryStr = '') {
 
   return parsed;
 }
+
+// todo: doc me up
+export function swallowException(fn, options = {}) {
+  if (typeof fn !== 'function') {
+    throw new Error('fn must be provided as a function.');
+  }
+
+  const opts = {
+    // todo:todo:todo
+    // todo:todo:todo
+    // todo:todo:todo
+    // todo: in development default to true.
+    log: false,
+    ...options,
+  };
+
+  try {
+    fn();
+  } catch (e) {
+    if (opts && opts.log) {
+      console.error(e);
+    }
+  }
+}

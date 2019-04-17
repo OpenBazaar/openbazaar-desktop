@@ -1,6 +1,6 @@
 import app from '../../app';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { integerToDecimal } from '../../utils/currency';
+import { integerToDecimal, getCurMeta } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -59,6 +59,18 @@ export default class extends BaseModel {
         // represent properly.
         delete parsedResponse.totalInventoryQuantity;
       }
+    } else {
+      const priceObj = parsedResponse.price;
+      const { isFiat } = getCurMeta(priceObj.currencyCode);
+      parsedResponse.price = {
+        ...priceObj,
+        // amount: integerToDecimal(priceObj.amount, priceObj.currencyCode),
+        // todo Temp Code
+        // todo Temp Code
+        // todo Temp Code
+        // todo Temp Code
+        amount: integerToDecimal(priceObj.amount, isFiat ? 2 : 8),
+      };
     }
 
     return parsedResponse;

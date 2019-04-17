@@ -64,6 +64,10 @@ export default class extends baseVw {
     const state = this.getState();
 
     // If we have invalid data, we'll gracefully fail by not rendering anything.
+    // no no no: views should handle or swallow exceptions. be tough in here son
+    // no no no: views should handle or swallow exceptions. be tough in here son
+    // no no no: views should handle or swallow exceptions. be tough in here son
+    // no no no: views should handle or swallow exceptions. be tough in here son
     if (this.isValidData()) {
       loadTemplate('components/value/cryptoListingPrice.html', (t) => {
         this.$el.html(t({

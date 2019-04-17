@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
-import { abbrNum } from '../../utils';
+import { abbrNum, swallowException } from '../../utils';
 import { short } from '../../utils/currency/formatConfigs';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
@@ -492,7 +492,7 @@ export default class extends baseVw {
   onClick(e) {
     if (this.deleteConfirmOn) return;
     if ($(e.target).hasClass('js-formatCurTip') ||
-      $(e.target).closest('.js-formatCurTip', this.el)) return;
+      $(e.target).closest('.js-formatCurTip', this.el).length) return;
     if (!this.ownListing ||
         (e.target !== this.$btnEdit[0] && e.target !== this.$btnDelete[0] &&
          !$.contains(this.$btnEdit[0], e.target) && !$.contains(this.$btnDelete[0], e.target))) {
@@ -638,17 +638,23 @@ export default class extends baseVw {
     if (this.priceVw) this.priceVw.remove();
 
     if (!this.model.isCrypto) {
-      this.priceVw = this.createChild(Value, {
-        initialState: {
-          ...shortFormatConfig,
-          amount,
-          fromCur,
-          toCur,
-        },
+      swallowException(() => {
+        this.priceVw = this.createChild(Value, {
+          initialState: {
+            ...shortFormatConfig,
+            amount,
+            fromCur,
+            toCur,
+          },
+        });
+        this.getCachedEl('.js-priceContainer')
+          .html(this.priceVw.render().el);
       });
-      this.getCachedEl('.js-priceContainer')
-        .html(this.priceVw.render().el);
     } else {
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
       this.priceVw = this.createChild(CryptoListingPrice, {
         initialState: {
           priceModifier: flatModel && flatModel.price ?

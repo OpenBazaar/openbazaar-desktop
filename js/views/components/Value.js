@@ -8,9 +8,50 @@ import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import baseVw from '../baseVw';
 
+export function setCurs(options = {}) {
+  if (typeof options !== 'object') {
+    throw new Error('Please provide the options as an object.');
+  }
+
+  ['fromCur', 'toCur']
+    .forEach(field => {
+      if (
+        options[field] !== undefined &&
+        (
+          typeof options[field] !== 'string' ||
+          !options[field]
+        )
+      ) {
+        throw new Error(`If provided, the ${field} must be a non-empty string.`);
+      }
+    });
+
+  if (
+    (
+      typeof options.fromCur !== 'string' ||
+      !options.fromCur
+    ) && (
+      typeof options.toCur !== 'string' ||
+      !options.toCur
+    )
+  ) {
+    throw new Error('Either a fromCur or toCur must be provided as a non-empty string.');
+  }
+
+  const opts = { ...options };
+
+  if (opts.fromCur && !opts.toCur) {
+    opts.toCur = opts.fromCur;
+  } else if (opts.toCur && !opts.fromCur) {
+    opts.fromCur = opts.toCur;
+  }
+
+  return opts;
+}
+
 export default class extends baseVw {
   constructor(options = {}) {
-    const opts = {
+    let opts = {
       ...options,
       initialState: {
         // These are documented in utils/currency/index.js in
@@ -43,6 +84,17 @@ export default class extends baseVw {
         ...options.initialState,
       },
     };
+
+    opts = {
+      ...options,
+      initialState: setCurs(opts.initialState),
+    };
+
+    // What happens if one cur is good and other wrong type?
+    // What happens if one cur is good and other wrong type?
+    // What happens if one cur is good and other wrong type?
+    // What happens if one cur is good and other wrong type?
+    // What happens if one cur is good and other wrong type?
 
     super(opts);
   }
