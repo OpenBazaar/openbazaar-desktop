@@ -1,12 +1,12 @@
 import { clipboard } from 'electron';
-import { toStandardNotation } from '../../utils/number';
+import { toStandardNotation } from '../../../utils/number';
 import {
   convertAndFormatCurrency,
   convertCurrency,
-} from '../../utils/currency';
-import app from '../../app';
-import loadTemplate from '../../utils/loadTemplate';
-import baseVw from '../baseVw';
+} from '../../../utils/currency';
+import app from '../../../app';
+import loadTemplate from '../../../utils/loadTemplate';
+import baseVw from '../../baseVw';
 
 export function setCurs(options = {}) {
   if (typeof options !== 'object') {
@@ -80,13 +80,13 @@ export default class extends baseVw {
         tipWrapBaseClass: 'arrowBoxTipWrap',
         tipWrapClass: 'unconstrainedWidth',
         tipBaseClass: 'js-formatCurTip formatCurTip',
-        tipClass: 'arrowBoxTipCenteredBot clrP clrBr clrT',
+        tipClass: 'arrowBoxTipCenteredBot tx6 clrP clrBr clrT',
         ...options.initialState,
       },
     };
 
     opts = {
-      ...options,
+      ...opts,
       initialState: setCurs(opts.initialState),
     };
 
@@ -220,8 +220,8 @@ export default class extends baseVw {
       );
 
       formattedAmount = app.polyglot.t('value.truncatedValue.message', {
-        value: `${formattedAmount.slice(0, state.truncateAfterChars + 1)}`,
-        ellipse: '…',
+        value: `${formattedAmount.slice(0, state.truncateAfterChars)}`,
+        tipIcon: '<i class="ion-help-circled tipIcon"></i>',
       });
     }
 

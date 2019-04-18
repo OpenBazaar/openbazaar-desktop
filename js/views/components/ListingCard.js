@@ -2,7 +2,6 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { abbrNum, swallowException } from '../../utils';
-import { short } from '../../utils/currency/formatConfigs';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
@@ -19,7 +18,8 @@ import BlockedWarning from '../modals/BlockedWarning';
 import ReportBtn from '../components/ReportBtn';
 import BlockBtn from '../components/BlockBtn';
 import VerifiedMod, { getListingOptions } from '../components/VerifiedMod';
-import Value from '../components/Value';
+import Value from '../components/value/Value';
+import { short } from '../components/value/valueConfigs';
 import CryptoListingPrice from '../components/value/CryptoListingPrice';
 import UserLoadingModal from '../../views/userPage/Loading';
 
@@ -633,46 +633,50 @@ export default class extends baseVw {
     const fromCur = flatModel.price.currencyCode;
     const amount = flatModel.price.amount;
     const toCur = app.settings.get('localCurrency');
-    const shortFormatConfig = short(fromCur, toCur);
+    let shortValConfig;
+
+    swallowException(() => (
+      shortValConfig = short(fromCur, toCur)
+    ));
 
     if (this.priceVw) this.priceVw.remove();
 
-    if (!this.model.isCrypto) {
-      swallowException(() => {
-        this.priceVw = this.createChild(Value, {
-          initialState: {
-            ...shortFormatConfig,
-            amount,
-            fromCur,
-            toCur,
-          },
-        });
-        this.getCachedEl('.js-priceContainer')
-          .html(this.priceVw.render().el);
-      });
-    } else {
-      // todo; swallow this exception and remove graveful handling code from view
-      // todo; swallow this exception and remove graveful handling code from view
-      // todo; swallow this exception and remove graveful handling code from view
-      // todo; swallow this exception and remove graveful handling code from view
-      this.priceVw = this.createChild(CryptoListingPrice, {
-        initialState: {
-          priceModifier: flatModel && flatModel.price ?
-            flatModel.price.modifier : null,
-          wrappingClass: '',
-          marketRelativityClass: 'hide',
-          valueOptions: {
-            ...shortFormatConfig,
-            amount: flatModel && flatModel.price ?
-              flatModel.price.amount : null,
-            fromCur,
-            toCur,
-          },
-        },
-      });
-      this.getCachedEl('.js-priceContainer')
-        .html(this.priceVw.render().el);
-    }
+    // if (!this.model.isCrypto) {
+    //   swallowException(() => {
+    //     this.priceVw = this.createChild(Value, {
+    //       initialState: {
+    //         ...shortValConfig,
+    //         amount,
+    //         fromCur,
+    //         toCur,
+    //       },
+    //     });
+    //     this.getCachedEl('.js-priceContainer')
+    //       .html(this.priceVw.render().el);
+    //   });
+    // } else {
+    //   // todo; swallow this exception and remove graveful handling code from view
+    //   // todo; swallow this exception and remove graveful handling code from view
+    //   // todo; swallow this exception and remove graveful handling code from view
+    //   // todo; swallow this exception and remove graveful handling code from view
+    //   this.priceVw = this.createChild(CryptoListingPrice, {
+    //     initialState: {
+    //       priceModifier: flatModel && flatModel.price ?
+    //         flatModel.price.modifier : null,
+    //       wrappingClass: '',
+    //       marketRelativityClass: 'hide',
+    //       valueOptions: {
+    //         ...shortValConfig,
+    //         amount: flatModel && flatModel.price ?
+    //           flatModel.price.amount : null,
+    //         fromCur,
+    //         toCur,
+    //       },
+    //     },
+    //   });
+    //   this.getCachedEl('.js-priceContainer')
+    //     .html(this.priceVw.render().el);
+    // }
   }
 
   render() {

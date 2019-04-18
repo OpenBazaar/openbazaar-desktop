@@ -1,6 +1,6 @@
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
-import Value from '../Value';
+import Value from './Value';
 
 export default class extends baseVw {
   constructor(options = {}) {

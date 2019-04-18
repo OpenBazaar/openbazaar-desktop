@@ -19,6 +19,7 @@ import {
 } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
+import { swallowException } from '../../../utils/';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -34,6 +35,8 @@ import NsfwWarning from '../NsfwWarning';
 import MoreListings from './MoreListings';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
 import SupportedCurrenciesList from '../../components/SupportedCurrenciesList';
+import Value from '../../components/value/Value';
+import { full } from '../../components/value/valueConfigs';
 
 export default class extends BaseModal {
   constructor(options = {}) {
@@ -723,6 +726,48 @@ export default class extends BaseModal {
     super.remove();
   }
 
+  renderPrice() {
+    if (this.price) this.price.remove();
+    const flatModel = this.model.toJSON();
+    const {
+      fromCur,
+      toCur,
+      amount,
+      fullValConfig,
+    } = swallowException(() => {
+      const fromCurrency = flatModel.metadata.pricingCurrency;
+      const toCurrency = app.settings.get('localCurrency');
+
+      return {
+        // fromCur: fromCurrency,
+        // toCur: toCurrency,
+        toCur: 'USD',
+        // amount: flatModel.item.price,
+        amount: 0.000100001000000000003,
+        fullValConfig: full({
+          // fromCur: fromCurrency,
+          // toCur: toCurrency,
+          toCur: 'USD',
+        }),
+      };
+    }, { returnValOnError: {} });
+
+    if (flatModel.metadata.contractType !== 'CRYPTOCURRENCY') {
+      swallowException(() => {
+        this.price = this.createChild(Value, {
+          initialState: {
+            ...fullValConfig,
+            amount,
+            fromCur,
+            toCur,
+          },
+        });
+        this.getCachedEl('.js-price')
+          .html(this.price.render().el);
+      });
+    }
+  }
+
   render() {
     if (this.dataChangePopIn) this.dataChangePopIn.remove();
 
@@ -768,6 +813,7 @@ export default class extends BaseModal {
       if (nsfwWarning) this.$el.addClass('hide');
       super.render();
 
+      this.renderPrice();
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);

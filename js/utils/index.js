@@ -215,19 +215,18 @@ export function swallowException(fn, options = {}) {
   }
 
   const opts = {
-    // todo:todo:todo
-    // todo:todo:todo
-    // todo:todo:todo
-    // todo: in development default to true.
-    log: false,
+    log: process.env.NODE_ENV === 'development',
+    returnValOnError: undefined,
     ...options,
   };
 
   try {
-    fn();
+    return fn();
   } catch (e) {
     if (opts && opts.log) {
       console.error(e);
     }
+
+    return opts.returnValOnError;
   }
 }

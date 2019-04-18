@@ -8,9 +8,14 @@
 import {
   getCurMeta,
   getExchangeRates,
-} from './';
-import { setCurs } from '../../views/components/Value';
+} from '../../../utils/currency';
+import { setCurs } from './Value';
 
+// todo: be consistent with the "full" format below
+// todo: be consistent with the "full" format below
+// todo: be consistent with the "full" format below
+// todo: be consistent with the "full" format below
+// todo: be consistent with the "full" format below
 export function short(fromCur, toCur, options = {}) {
   // validate args
   // toCur optional, put in options
@@ -52,11 +57,14 @@ export function full(options = {}) {
     truncateAfterChars: 25,
     tooltipOnTruncatedZero: true,
     minDisplayDecimals: isFiat ? 2 : 0,
-    // should beecome base units for crypto
-    // should beecome base units for crypto
-    // should beecome base units for crypto
+    // should become base units for crypto
+    // should become base units for crypto
+    // should become base units for crypto
     maxDisplayDecimals: isFiat ? 2 : 8,
-    maxDisplayDecimalsOnZero: 20,
+    // should become base units for crypto, 6 for fiat
+    // should become base units for crypto, 6 for fiat
+    // should become base units for crypto, 6 for fiat
+    maxDisplayDecimalsOnZero: 8,
     ...options,
   };
 }

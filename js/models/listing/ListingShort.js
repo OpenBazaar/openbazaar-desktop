@@ -7,7 +7,10 @@ export default class extends BaseModel {
   defaults() {
     return {
       freeShipping: [],
-      vendor: {},
+      // test scenario where vendor is missing
+      // test scenario where vendor is missing
+      // test scenario where vendor is missing
+      // test scenario where vendor is missing
     };
   }
 

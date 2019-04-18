@@ -1,18 +1,18 @@
-import app from '../../app';
+import app from '../app';
 import _ from 'underscore';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
-import { upToFixed } from '../number';
+import { upToFixed, preciseRound } from './number';
 import { Events } from 'backbone';
-import { getCurrencyByCode, isFiatCur } from '../../data/currencies';
+import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
   getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
   supportedWalletCurs,
-} from '../../data/walletCurrencies';
-import { getCurrencies as getCryptoListingCurs } from '../../data/cryptoListingCurrencies';
-import loadTemplate from '../../utils/loadTemplate';
+} from '../data/walletCurrencies';
+import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
+import loadTemplate from '../utils/loadTemplate';
 
 const events = {
   ...Events,
@@ -61,14 +61,12 @@ export function decimalToInteger(value, divisibility) {
     throw new Error('The divisibility must be provided as a number.');
   }
 
-  const moo = bigNumber(value)
+  return bigNumber(value)
     .multipliedBy(
       bigNumber(10)
         .pow(divisibility)
     )
     .toString();
-
-  return moo;
 }
 
 /**
@@ -177,6 +175,7 @@ export function formatPrice(price, currency) {
 
 // todo: todo: todo: unit test me like a bandit
 // todo: doc me up
+// note about first sig dig on zero
 function getMaxDisplayDigits(amount, desiredMax, maxOnZero = desiredMax) {
   if (typeof amount !== 'number') {
     throw new Error('Please provide the amount as a number.');
@@ -198,9 +197,29 @@ function getMaxDisplayDigits(amount, desiredMax, maxOnZero = desiredMax) {
   const zeroMax = maxOnZero > desiredMax ?
     maxOnZero : desiredMax;
 
-  return amount < parseFloat(`.${'0'.repeat(desiredMax - 1)}1`) ?
-    zeroMax : desiredMax;
+  let max = desiredMax;
+  const getFloatToCheck = m => {
+    const rounded = preciseRound(
+      parseFloat(`.${'0'.repeat(m - 1)}1`),
+      m
+    );
+
+    console.log(rounded);
+    return rounded;
+  };
+
+  while (
+    amount < getFloatToCheck(max) &&
+    max < zeroMax
+  ) {
+    max++;
+  }
+
+  return max;
 }
+
+console.log('boo');
+window.boo = getMaxDisplayDigits;
 
 /**
  * Will return information about a currency including it's currency
@@ -259,6 +278,10 @@ export function formatCurrency(amount, currency, options = {}) {
     // value is how much further you're willing to go to not show a zero. For
     // example if the amount is .0001 and your maxDisplayDecimals is 2, but
     // your maxDisplayDecimalsOnZero is 4, then .0001 would be shown.
+    // -- goes up to first significant digit
+    // -- goes up to first significant digit
+    // -- goes up to first significant digit
+    // -- goes up to first significant digit
     maxDisplayDecimalsOnZero: 6,
     // This is passed into Intl.NumberFormat. If you just want to format a number
     // in a localized way, but not as a currency, pass in 'decimal'. For more
@@ -355,6 +378,8 @@ export function formatCurrency(amount, currency, options = {}) {
       });
     }
   } else {
+    console.log(`${amount} - ${opts.maxDisplayDecimals} - ${opts.maxDisplayDecimalsOnZero}`);
+
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
       style: opts.style,
       currency,

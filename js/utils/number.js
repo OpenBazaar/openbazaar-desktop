@@ -71,3 +71,16 @@ export function localizeNumber(number,
   return new Intl.NumberFormat(lang).format(number);
 }
 
+// todo: doc and put in out style
+// todo: doc and put in out style
+// todo: doc and put in out style
+// todo: doc and put in out style
+// https://stackoverflow.com/a/7343013/632806
+export function preciseRound(value, precision) {
+  const multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}
+
+console.log('round');
+window.round = preciseRound;
+
