@@ -3,6 +3,7 @@ import { toStandardNotation } from '../../../utils/number';
 import {
   convertAndFormatCurrency,
   convertCurrency,
+  isFormattedResultZero,
 } from '../../../utils/currency';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -156,14 +157,6 @@ export default class extends baseVw {
     };
   }
 
-  /*
-   * Returns true if the amount would display as zero given the
-   * provided max decimals.
-   */
-  isResultZero(amount, maxDecimals) {
-    return amount < parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`);
-  }
-
   remove() {
     clearTimeout(this.copiedTimeout);
     super.remove();
@@ -181,8 +174,16 @@ export default class extends baseVw {
     );
 
     let tipAmount;
+    const maxZero =
+      state.maxDisplayDecimalsOnZero > state.maxDisplayDecimals ?
+        state.maxDisplayDecimalsOnZero : state.maxDisplayDecimals;
+    console.log(`\n`);
+    console.log('is');
+    window.is = isFormattedResultZero;
     const isResultZero =
-      this.isResultZero(state.amount, state.maxDisplayDecimals);
+      isFormattedResultZero(state.amount, maxZero);
+    console.log(`${state.amount} - ${maxZero} - ${isResultZero}`);
+    console.log(`\n`);
 
     if (
       isResultZero ||

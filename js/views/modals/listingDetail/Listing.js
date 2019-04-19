@@ -743,7 +743,7 @@ export default class extends BaseModal {
         // toCur: toCurrency,
         toCur: 'USD',
         // amount: flatModel.item.price,
-        amount: 0.000100001000000000003,
+        amount: 13847633838449383.0000000010000004,
         fullValConfig: full({
           // fromCur: fromCurrency,
           // toCur: toCurrency,
