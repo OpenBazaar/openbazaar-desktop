@@ -641,42 +641,42 @@ export default class extends baseVw {
 
     if (this.priceVw) this.priceVw.remove();
 
-    // if (!this.model.isCrypto) {
-    //   swallowException(() => {
-    //     this.priceVw = this.createChild(Value, {
-    //       initialState: {
-    //         ...shortValConfig,
-    //         amount,
-    //         fromCur,
-    //         toCur,
-    //       },
-    //     });
-    //     this.getCachedEl('.js-priceContainer')
-    //       .html(this.priceVw.render().el);
-    //   });
-    // } else {
-    //   // todo; swallow this exception and remove graveful handling code from view
-    //   // todo; swallow this exception and remove graveful handling code from view
-    //   // todo; swallow this exception and remove graveful handling code from view
-    //   // todo; swallow this exception and remove graveful handling code from view
-    //   this.priceVw = this.createChild(CryptoListingPrice, {
-    //     initialState: {
-    //       priceModifier: flatModel && flatModel.price ?
-    //         flatModel.price.modifier : null,
-    //       wrappingClass: '',
-    //       marketRelativityClass: 'hide',
-    //       valueOptions: {
-    //         ...shortValConfig,
-    //         amount: flatModel && flatModel.price ?
-    //           flatModel.price.amount : null,
-    //         fromCur,
-    //         toCur,
-    //       },
-    //     },
-    //   });
-    //   this.getCachedEl('.js-priceContainer')
-    //     .html(this.priceVw.render().el);
-    // }
+    if (!this.model.isCrypto) {
+      swallowException(() => {
+        this.priceVw = this.createChild(Value, {
+          initialState: {
+            ...shortValConfig,
+            amount,
+            fromCur,
+            toCur,
+          },
+        });
+        this.getCachedEl('.js-priceContainer')
+          .html(this.priceVw.render().el);
+      });
+    } else {
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
+      // todo; swallow this exception and remove graveful handling code from view
+      this.priceVw = this.createChild(CryptoListingPrice, {
+        initialState: {
+          priceModifier: flatModel && flatModel.price ?
+            flatModel.price.modifier : null,
+          wrappingClass: '',
+          marketRelativityClass: 'hide',
+          valueOptions: {
+            ...shortValConfig,
+            amount: flatModel && flatModel.price ?
+              flatModel.price.amount : null,
+            fromCur,
+            toCur,
+          },
+        },
+      });
+      this.getCachedEl('.js-priceContainer')
+        .html(this.priceVw.render().el);
+    }
   }
 
   render() {

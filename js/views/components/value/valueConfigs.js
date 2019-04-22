@@ -54,7 +54,7 @@ export function full(options = {}) {
   const { isFiat } = getCurMeta(currency);
 
   return {
-    truncateAfterChars: 10,
+    truncateAfterChars: 25,
     tooltipOnTruncatedZero: true,
     minDisplayDecimals: isFiat ? 2 : 0,
     // should become base units for crypto

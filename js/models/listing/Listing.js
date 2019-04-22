@@ -299,38 +299,7 @@ export default class extends BaseModel {
         options.attrs = options.attrs || this.toJSON();
 
         const isCrypto = options.attrs.metadata.contractType === 'CRYPTOCURRENCY';
-        // const pricingCurrency = options.attrs.metadata.pricingCurrency;
         const coinDivisibility = options.attrs.metadata.coinDivisibility;
-        // let curData;
-
-        // if (typeof coinDivisibility !== 'number') {
-        //   try {
-        //     curData = getCurrencyByCode(pricingCurrency);
-        //   } catch (e) {
-        //     // pass
-        //   }
-
-        //   if (!curData) {
-        //     if (!isCrypto) {
-        //       // todo todo todo defaultQuantityBaseUnit should not include quantity
-        //       // in the name
-        //       // also make it the server exponent style
-        //       console.warn(
-        //         `The listing has an unrecognized pricing currency of ${pricingCurrency}.` +
-        //         `Will use a default base units of ${defaultQuantityBaseUnit}.`
-        //       );
-        //     }
-
-        //     coinDivisibility = Math.log10(defaultQuantityBaseUnit);
-        //   } else {
-        //     coinDivisibility = Math.log10(
-        //       getCryptoCurrencyByCode(pricingCurrency) ?
-        //         curData.baseUnit : 100
-        //     );
-        //   }
-        // }
-
-        // options.attrs.metadata.coinDivisibility = coinDivisibility;
 
         // convert price fields
         if (typeof options.attrs.item.price === 'number') {

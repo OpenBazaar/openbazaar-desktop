@@ -1,8 +1,8 @@
 {
   "value": {
     "truncatedValue": {
-      "message": "%{value}&nbsp;%{tipIcon}",
-      "description": "When a value (usually a price) needs to be truncated, this translation key determines the position of the tooltip icon."
+      "message": "%{value}%{ellipse}",
+      "description": "When a value (usually a price) needs to be truncated, this translation key determines the position of the ellipses."
     },
     "cryptoPrice": {
       "priceMarketRelativitiyPairing": "%{price}&nbsp;%{symbol}"

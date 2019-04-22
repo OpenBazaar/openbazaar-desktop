@@ -739,15 +739,12 @@ export default class extends BaseModal {
       const toCurrency = app.settings.get('localCurrency');
 
       return {
-        // fromCur: fromCurrency,
-        // toCur: toCurrency,
-        toCur: 'USD',
-        // amount: flatModel.item.price,
-        amount: 13847633838449383.0000000010000004,
+        fromCur: fromCurrency,
+        toCur: toCurrency,
+        amount: flatModel.item.price,
         fullValConfig: full({
-          // fromCur: fromCurrency,
-          // toCur: toCurrency,
-          toCur: 'USD',
+          fromCur: fromCurrency,
+          toCur: toCurrency,
         }),
       };
     }, { returnValOnError: {} });

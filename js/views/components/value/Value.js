@@ -57,8 +57,6 @@ export default class extends baseVw {
       initialState: {
         // These are documented in utils/currency/index.js in
         amount: undefined,
-        fromCur: 'USD',
-        toCur: 'USD',
         locale: app && app.localSettings &&
           app.localSettings.standardizedTranslatedLang() || 'en-US',
         btcUnit: app && app.localSettings &&
@@ -164,26 +162,24 @@ export default class extends baseVw {
 
   render() {
     const state = this.getState();
+    console.log(`the amount is ${state.amount}`);
+
+    const formattedAmountOptions = this.getFormatOptions();
+
     let formattedAmount = convertAndFormatCurrency(
       state.amount,
       state.fromCur,
       state.toCur,
-      {
-        formatOptions: this.getFormatOptions(),
-      }
+      { formatOptions: formattedAmountOptions }
     );
 
-    let tipAmount;
     const maxZero =
       state.maxDisplayDecimalsOnZero > state.maxDisplayDecimals ?
         state.maxDisplayDecimalsOnZero : state.maxDisplayDecimals;
-    console.log(`\n`);
-    console.log('is');
-    window.is = isFormattedResultZero;
     const isResultZero =
       isFormattedResultZero(state.amount, maxZero);
-    console.log(`${state.amount} - ${maxZero} - ${isResultZero}`);
-    console.log(`\n`);
+    let isResultZeroFormattedOptions;
+    let tipAmount;
 
     if (
       isResultZero ||
@@ -193,15 +189,19 @@ export default class extends baseVw {
       )
     ) {
       if (isResultZero) {
+        isResultZeroFormattedOptions = {
+          formatOptions: {
+            ...this.getFormatOptions(),
+            minDisplayDecimals: 2,
+          },
+        };
+
         formattedAmount = convertAndFormatCurrency(
           state.amount,
           state.fromCur,
           state.toCur,
           {
-            formatOptions: {
-              ...this.getFormatOptions(),
-              minDisplayDecimals: 2,
-            },
+            formatOptions: isResultZeroFormattedOptions,
           }
         );
       }
@@ -220,10 +220,67 @@ export default class extends baseVw {
         }
       );
 
-      formattedAmount = app.polyglot.t('value.truncatedValue.message', {
-        value: `${formattedAmount.slice(0, state.truncateAfterChars)}`,
-        tipIcon: '<i class="ion-help-circled tipIcon"></i>',
-      });
+      // In order for the ellipses to be placed at the end of the truncated
+      // number (e.g. "1,538... ZEC") as opposed to at the end of the full
+      // string (e.g. "1,538 ZEC..."), we will attempt to isolate the number
+      // from the any currency symbol code. This is only do-able if the number
+      // in the "decimal" style is exactly the same in the "currency" style.
+      // For 98% of locales this is the case. For the ones it's not, we'll
+      // just elipsify after the full string (latter case in the example above).
+
+      const decimalFormattedAmountOptions = isResultZero ?
+        isResultZeroFormattedOptions : formattedAmountOptions;
+
+      const decimalFormattedAmount = convertAndFormatCurrency(
+        state.amount,
+        state.fromCur,
+        state.toCur,
+        {
+          formatOptions: {
+            ...decimalFormattedAmountOptions,
+            style: 'decimal',
+          },
+        }
+      );
+
+      if (formattedAmount.includes(decimalFormattedAmount)) {
+        let truncateCharPos = state.truncateAfterChars;
+        let checkCharAt = truncateCharPos - 1;
+        let goBackMost = 5;
+
+        // try to truncate on a integer
+        while (checkCharAt > 1 && goBackMost > 0) {
+          if (
+            isNaN(
+              parseInt(
+                decimalFormattedAmount[checkCharAt],
+                10
+              )
+            )
+          ) {
+            truncateCharPos = checkCharAt;
+            break;
+          }
+
+          checkCharAt -= 1;
+          goBackMost -= 1;
+        }
+
+        const decimalEllipsified = app.polyglot.t('value.truncatedValue.message', {
+          value: decimalFormattedAmount.slice(0, truncateCharPos),
+          ellipse: '…',
+        });
+
+        formattedAmount = formattedAmount.replace(
+          decimalFormattedAmount,
+          decimalEllipsified
+        );
+      } else {
+        formattedAmount = app.polyglot.t('value.truncatedValue.message', {
+          value: formattedAmount.slice(0, state.truncateAfterChars),
+          ellipse: '…',
+        });
+      }
     }
 
     loadTemplate('components/value.html', (t) => {

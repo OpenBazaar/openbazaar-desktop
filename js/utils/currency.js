@@ -14,8 +14,6 @@ import {
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
-import languages from '../data/languages';
-
 const events = {
   ...Events,
 };
@@ -651,71 +649,3 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
   return result;
 }
-
-function getRandomInt(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-console.log(`langs length: ${languages.length}`);
-console.log(`curs length: ${currencies.length}`);
-
-languages.forEach(lang => {
-  // console.log(`processing ${lang.code}`);
-
-  for (let i = 0; i < 1; i++) {
-    const hugeAmount =
-      parseFloat(String(Math.round(Math.random() * (Number.MAX_SAFE_INTEGER - 10))) + String((Math.random() * (1))).slice(1));
-    const medAmount =
-      parseFloat(String(Math.round(Math.random() * (100000))) + String((Math.random() * (1))).slice(1));
-    const tinyAmount = Math.random() * (1);
-
-    currencies.forEach(cur => {
-      [hugeAmount, medAmount, tinyAmount]
-        .forEach(amt => {
-          let err = false;
-          const minDecimals = getRandomInt(0, 20);
-          const maxDecimals = getRandomInt(minDecimals, 20);
-          let formattedDecimal;
-          let formattedCur;
-
-          try {
-            formattedDecimal =
-              new Intl.NumberFormat(lang.code, {
-                minimumFractionDigits: minDecimals,
-                maximumFractionDigits: maxDecimals,
-              }).format(amt);
-
-            formattedCur =
-              new Intl.NumberFormat(lang.code, {
-                style: 'currency',
-                currency: cur.code,
-                minimumFractionDigits: minDecimals,
-                maximumFractionDigits: maxDecimals,
-              }).format(amt);
-          } catch (e) {
-            err = true;
-            console.log('\n');
-            console.error(`error processing ${amt} - ${lang.code} - ${cur.code} - ${minDecimals} - ${maxDecimals}`);
-            console.error(e);
-            console.log('\n');
-          }
-
-          if (!err && !formattedCur.includes(formattedDecimal)) {
-            if (lang.code === 'bg' && cur.code === 'BGN') {
-              console.error(`decimal not included - ${amt} - ${lang.code} - ${cur.code} - ${minDecimals} - ${maxDecimals}`);
-              console.error(`decimal: ${formattedDecimal}`);
-              console.error(`currency: ${formattedCur}`);
-            }
-            // window.mills = window.mills || [];
-            // window.langWithIssue = window.langWithIssue || [];
-            // if (!window.langWithIssue.includes(lang.code)) window.langWithIssue.push(lang.code);
-            // if (!window.mills.includes(`${lang.code}-${cur.code}`)) window.mills.push(`${lang.code}-${cur.code}`);
-          } else if (!err) {
-            // console.log(`all good in the hood for ${amt} and ${lang.code} and ${cur.code}`);
-          }
-        });
-    });
-  }
-});
