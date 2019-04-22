@@ -1,4 +1,3 @@
-import { formatPrice } from '../../../utils/currency';
 import '../../../lib/select2';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
@@ -98,7 +97,6 @@ export default class extends BaseView {
           ...(this.options.couponErrors || {}),
         },
         getCurrency: this.options.getCurrency,
-        formatPrice,
       }));
 
       this.$('select[name=discountType]').select2({

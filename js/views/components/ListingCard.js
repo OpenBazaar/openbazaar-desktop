@@ -642,6 +642,7 @@ export default class extends baseVw {
     if (this.priceVw) this.priceVw.remove();
 
     if (!this.model.isCrypto) {
+      return;
       swallowException(() => {
         this.priceVw = this.createChild(Value, {
           initialState: {

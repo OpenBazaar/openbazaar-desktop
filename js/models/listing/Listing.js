@@ -216,6 +216,15 @@ export default class extends BaseModel {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
           'listings.');
       }
+
+      // todo: validate price is not so low based ondivisibility that a decimal is
+      // required to represent it.
+      // todo: validate price is not so low based ondivisibility that a decimal is
+      // required to represent it.
+      // todo: validate price is not so low based ondivisibility that a decimal is
+      // required to represent it.
+      // todo: validate price is not so low based ondivisibility that a decimal is
+      // required to represent it.
     }
 
     if (attrs.coupons.length > this.max.couponCount) {
@@ -291,8 +300,7 @@ export default class extends BaseModel {
       if (method !== 'delete') {
         // options.attrs.item.price = 0.000000000000000001;
         // options.attrs.metadata.pricingCurrency = "ZEC";
-        // options.attrs.metadata.coinDivisibility = 8;
-        options.attrs.metadata.coinDivisibility = 100000000;
+        options.attrs.metadata.coinDivisibility = 8;
 
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update

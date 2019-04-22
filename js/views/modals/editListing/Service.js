@@ -1,4 +1,3 @@
-import { formatPrice } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -49,7 +48,6 @@ export default class extends BaseView {
         cid: this.model.cid,
         errors: this.model.validationError || {},
         getCurrency: this.options.getCurrency,
-        formatPrice,
         ...this.model.toJSON(),
       }));
 

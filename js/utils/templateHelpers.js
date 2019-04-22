@@ -25,7 +25,11 @@ import {
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
-import { upToFixed, localizeNumber } from './number';
+import {
+  upToFixed,
+  localizeNumber,
+  toStandardNotation,
+} from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
@@ -129,7 +133,9 @@ export {
   getAvatarBgImage,
   getListingBgImage,
   localizeNumber,
+  // todo: group number into a number key
   upToFixed,
+  toStandardNotation,
   splitIntoRows,
   is,
   tagsDelimiter,

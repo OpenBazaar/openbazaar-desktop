@@ -162,9 +162,13 @@ export default class extends baseVw {
 
   render() {
     const state = this.getState();
-    console.log(`the amount is ${state.amount}`);
+    console.log(`my stateful amount is ${state.amount}`);
+    console.log(`my fromCur is ${state.fromCur}`);
+    console.log(`my toCur is ${state.toCur}`);
 
     const formattedAmountOptions = this.getFormatOptions();
+
+    console.dir(formattedAmountOptions);
 
     let formattedAmount = convertAndFormatCurrency(
       state.amount,
@@ -173,11 +177,27 @@ export default class extends baseVw {
       { formatOptions: formattedAmountOptions }
     );
 
+    console.log(`step 1: ${formattedAmount}`);
+
     const maxZero =
       state.maxDisplayDecimalsOnZero > state.maxDisplayDecimals ?
         state.maxDisplayDecimalsOnZero : state.maxDisplayDecimals;
+
+    let convertedAmount = state.amount;
+
+    try {
+      convertedAmount = convertCurrency(
+        state.amount,
+        state.fromCur,
+        state.toCur
+      );
+    } catch (e) {
+      // pass
+    }
+
+    console.log(`the converted amount is ${convertedAmount}`);
     const isResultZero =
-      isFormattedResultZero(state.amount, maxZero);
+      isFormattedResultZero(convertedAmount, maxZero);
     let isResultZeroFormattedOptions;
     let tipAmount;
 
@@ -189,6 +209,7 @@ export default class extends baseVw {
       )
     ) {
       if (isResultZero) {
+        console.log(`for amount ${state.amount}, the result is indeed zero.`);
         isResultZeroFormattedOptions = {
           formatOptions: {
             ...this.getFormatOptions(),
@@ -204,6 +225,8 @@ export default class extends baseVw {
             formatOptions: isResultZeroFormattedOptions,
           }
         );
+
+        console.log(`the fAmount is ${formattedAmount}`);
       }
 
       tipAmount = convertAndFormatCurrency(

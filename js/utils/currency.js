@@ -5,7 +5,7 @@ import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
 import { upToFixed, preciseRound } from './number';
 import { Events } from 'backbone';
-import currencies, { getCurrencyByCode, isFiatCur } from '../data/currencies';
+import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
   getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
@@ -51,6 +51,7 @@ UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
  * // note most times you'll want to provide a code not the divisibility.
  * // --- simplify by not making cur and divsibility nested???
  * //note divisiblity in exponent format
+ * // note baout return val as string.
  */
 export function decimalToInteger(value, divisibility) {
   if (typeof value !== 'number') {
@@ -139,6 +140,8 @@ export function integerToDecimal(value, divisibility, options = {}) {
  // is this needed anymore?
  // is this needed anymore?
  // is this needed anymore?
+
+ // search if not
 
 export function formatPrice(price, currency) {
   if (typeof price !== 'number') {
@@ -304,6 +307,8 @@ export function formatCurrency(amount, currency, options = {}) {
     return '';
   }
 
+  console.log(`hey silly, my maxZero is ${opts.maxDisplayDecimalsOnZero}`);
+
   if (typeof currency !== 'string') {
     throw new Error('Please provide a currency as a string');
   }
@@ -398,6 +403,9 @@ export function formatCurrency(amount, currency, options = {}) {
         opts.maxDisplayDecimalsOnZero
       ),
     }).format(amount);
+    // getMaxDisplayDigits returning wrong value here
+    console.log(`soop: ${opts.maxDisplayDecimalsOnZero}, ${getMaxDisplayDigits(amount, opts.maxDisplayDecimals, opts.maxDisplayDecimalsOnZero)}`);
+    console.log(`moop: ${formattedCurrency}`);
   }
 
   return formattedCurrency;
@@ -521,6 +529,8 @@ export function convertCurrency(amount, fromCur, toCur) {
   const fromRate = getExchangeRate(fromCurCode);
   const toRate = getExchangeRate(toCurCode);
 
+  console.log(`they call me with ${amount} and ${fromCur} and ${toCur} and I return ${(amount / fromRate) * toRate}`);
+
   return (amount / fromRate) * toRate;
 }
 
@@ -546,6 +556,8 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   try {
     convertedAmt = convertCurrency(amount, fromCur, toCur);
   } catch (e) {
+    console.error(e); // temp temp TEMP temp TEMP TEMP TEMP temp TEMP temp
+                      // temp temp TEMP temp TEMP TEMP TEMP temp TEMP temp
     if (opts.skipConvertOnError) {
       // We'll use an unconverted amount
       convertedAmt = amount;
@@ -555,6 +567,7 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
+  console.log(`${amount} ===> ${convertedAmt} ===> ${formatCurrency(convertedAmt, outputFormat, opts.formatOptions)} --- maxZero => ${opts.formatOptions.maxDisplayDecimalsOnZero}`);
   return formatCurrency(convertedAmt, outputFormat, opts.formatOptions);
 }
 

@@ -17,7 +17,7 @@ import {
   getCurrenciesSortedByCode as getCryptoCursByCode,
 } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
-import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
+import { getCurrencyValidity } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
@@ -298,17 +298,6 @@ export default class extends BaseModal {
   }
 
   onChangePrice(e) {
-    const trimmedVal = $(e.target).val().trim();
-    const numericVal = Number(trimmedVal);
-
-    if (!isNaN(numericVal) && trimmedVal) {
-      $(e.target).val(
-        formatPrice(numericVal, this.$currencySelect.val())
-      );
-    } else {
-      $(e.target).val(trimmedVal);
-    }
-
     this.variantInventory.render();
   }
 
@@ -1230,7 +1219,6 @@ export default class extends BaseModal {
           expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
           expandedTermsAndConditions: this.expandedTermsAndConditions ||
             !!this.model.get('termsAndConditions'),
-          formatPrice,
           maxCatsWarning: this.maxCatsWarning,
           maxTagsWarning: this.maxTagsWarning,
           max: {
