@@ -18,9 +18,9 @@ function getBackgroundImage(imageHashes = {}, standardSize, responsiveSize, defa
   let imageHash = '';
   let bgImageProperty = '';
 
-  if (isHiRez() && imageHashes[responsiveSize]) {
+  if (isHiRez() && imageHashes && imageHashes[responsiveSize]) {
     imageHash = imageHashes[responsiveSize];
-  } else if (imageHashes[standardSize]) {
+  } else if (imageHashes && imageHashes[standardSize]) {
     imageHash = imageHashes[standardSize];
   }
 
