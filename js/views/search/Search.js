@@ -402,8 +402,9 @@ export default class extends baseVw {
       this._setHistory = true;
       this._search = { ...this._defaultSearch, provider: app.searchProviders.at(0) };
       scrollPageIntoView();
+      const data = { name: defaultSearchProviders[0].name, logo: defaultSearchProviders[0].logo };
       // The state may not be changed here, so always fire a render.
-      this.setState({ tab: 'home' }, { renderOnChange: false });
+      this.setState({ tab: 'home', data }, { renderOnChange: false });
       this.render();
       return;
     }
