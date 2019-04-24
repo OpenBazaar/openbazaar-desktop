@@ -22,7 +22,7 @@ let whitelist = {};
  */
 function getWhitelist() {
   return new Promise((resolve, reject) => {
-    fetch('https://ticker.openbazaar.org/whitelist/')
+    fetch('https://ticker.openbazaar.org/whitelist')
       .then(res => resolve(res.json()))
       .catch(err => reject(err));
   });
