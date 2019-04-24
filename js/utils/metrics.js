@@ -6,7 +6,6 @@ import { cpus, totalmem, freemem } from 'os';
 import { getCurrentConnection } from './serverConnect';
 import { remote } from 'electron';
 
-
 let metricsRestartNeeded = false;
 
 /** Set the returned string to a higher number any time there are changes to the analytics that
@@ -37,17 +36,20 @@ export function userStats() {
   const p = app.profile;
   const pErr = 'Profile Not Available';
   const torErr = 'No Current Connection';
+  const connectedServer = getCurrentConnection() && getCurrentConnection().server.toJSON();
 
   return {
     vendor: p ? p.get('vendor') : pErr,
-    listingCount: p ? p.get('stats').get('listingCount') : 0,
-    ratingCount: p ? p.get('stats').get('ratingCount') : 0,
+    listingCount: p ? p.get('stats').get('listingCount') || 0 : 0,
+    ratingCount: p ? p.get('stats').get('ratingCount') || 0 : 0,
     moderator: p ? p.get('moderator') : pErr,
     crypto: p ? p.get('currencies') : pErr,
     displayCurrency: app.settings ? app.settings.get('localCurrency') : 'Settings Not Available',
     displayLanguage: app.localSettings.get('language'),
     bundled: remote.getGlobal('isBundledApp'),
-    Tor: getCurrentConnection() ? getCurrentConnection().server.get('useTor') : torErr,
+    Tor: connectedServer ? !!connectedServer.useTor : torErr,
+    DismissedDiscover: connectedServer ? !!connectedServer.dismissedDiscoverCallout : false,
+    DismissedStore: connectedServer ? !!connectedServer.dismissedStoreWelcome : false,
     systemLanguage: navigator.language,
     numberOfCPUs: cpus().length, // how many cores?
     CPU: cpus()[0].model, // how modern/powerful is this computer?

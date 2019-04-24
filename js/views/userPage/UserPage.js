@@ -104,8 +104,9 @@ export default class extends baseVw {
   }
 
   clickTab(e) {
-    const targ = $(e.target).closest('.js-tab');
-    this.setTabState(targ.attr('data-tab'));
+    const tab = $(e.target).closest('.js-tab').attr('data-tab');
+    recordEvent('UserPage_Tab', { tab });
+    this.setTabState(tab);
   }
 
   clickMore() {
@@ -113,11 +114,12 @@ export default class extends baseVw {
   }
 
   clickCustomize() {
+    recordEvent('Settings_Open', { origin: 'userPage' });
     launchSettingsModal({ initialTab: 'Page' });
   }
 
   clickCreateListing() {
-    recordEvent('Listing_NewFromUserPage');
+    recordEvent('Listing_New', { origin: 'userPage' });
     const listingModel = new Listing({}, { guid: app.profile.id });
 
     launchEditListingModal({
@@ -126,6 +128,7 @@ export default class extends baseVw {
   }
 
   clickCloseStoreWelcomeCallout() {
+    recordEvent('UserPage_CloseStoreWelcome');
     if (this.curConn && this.curConn.server) {
       this.curConn.server.save({ dismissedStoreWelcome: true });
       this.getCachedEl('.js-storeWelcomeCallout').remove();
@@ -133,6 +136,7 @@ export default class extends baseVw {
   }
 
   clickRating() {
+    recordEvent('UserPage_ClickReputation');
     this.setTabState('reputation');
   }
 
