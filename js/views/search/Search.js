@@ -389,7 +389,8 @@ export default class extends baseVw {
   }
 
   /**
-   * This will add the categories one by one in a loop.
+   * This will add the categories one by one in a loop. If the category views already exist, they
+   * will be reused to prevent new calls to the search endpoint.
    */
   buildCategories() {
     if (!Array.isArray(this._categorySearches)) {
@@ -402,8 +403,9 @@ export default class extends baseVw {
       this._setHistory = true;
       this._search = { ...this._defaultSearch, provider: app.searchProviders.at(0) };
       scrollPageIntoView();
+      const data = { name: defaultSearchProviders[0].name, logo: defaultSearchProviders[0].logo };
       // The state may not be changed here, so always fire a render.
-      this.setState({ tab: 'home' }, { renderOnChange: false });
+      this.setState({ tab: 'home', data }, { renderOnChange: false });
       this.render();
       return;
     }
@@ -516,6 +518,7 @@ export default class extends baseVw {
     const catsFrag = document.createDocumentFragment();
 
     this.categoryViews.forEach(catVw => {
+      catVw.delegateEvents();
       catVw.render().$el.appendTo(catsFrag);
     });
 
