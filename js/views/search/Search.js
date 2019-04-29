@@ -112,7 +112,7 @@ export default class extends baseVw {
       // If the query had a providerQ parameter, use that as the provider URL instead.
       if (queryParams.get('providerQ')) {
         const subURL = new URL(queryParams.get('providerQ'));
-        queryParams.delete('providerQ')
+        queryParams.delete('providerQ');
         // The first parameter after the ? will be part of the providerQ, transfer it over.
         for (const param of subURL.searchParams.entries()) {
           queryParams.append(param[0], param[1]);
