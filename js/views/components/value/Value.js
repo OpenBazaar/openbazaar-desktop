@@ -65,7 +65,6 @@ export default class extends baseVw {
         minDisplayDecimals: 2,
         maxDisplayDecimals: 2,
         maxDisplayDecimalsOnZero: 6,
-        formatConfig: false,
         // END - These are documented in utils/currency/index.js in
 
         // Will truncate and offer a tooltip if the formattedValue is
@@ -143,9 +142,6 @@ export default class extends baseVw {
     const state = this.getState();
 
     return {
-      amount: state.amount,
-      fromCur: state.fromCur,
-      toCur: state.toCur,
       locale: state.locale,
       btcUnit: state.btcUnit,
       useCryptoSymbol: state.useCryptoSymbol,
@@ -162,13 +158,7 @@ export default class extends baseVw {
 
   render() {
     const state = this.getState();
-    console.log(`my stateful amount is ${state.amount}`);
-    console.log(`my fromCur is ${state.fromCur}`);
-    console.log(`my toCur is ${state.toCur}`);
-
     const formattedAmountOptions = this.getFormatOptions();
-
-    console.dir(formattedAmountOptions);
 
     let formattedAmount = convertAndFormatCurrency(
       state.amount,
@@ -176,12 +166,6 @@ export default class extends baseVw {
       state.toCur,
       { formatOptions: formattedAmountOptions }
     );
-
-    console.log(`step 1: ${formattedAmount}`);
-
-    const maxZero =
-      state.maxDisplayDecimalsOnZero > state.maxDisplayDecimals ?
-        state.maxDisplayDecimalsOnZero : state.maxDisplayDecimals;
 
     let convertedAmount = state.amount;
 
@@ -195,9 +179,8 @@ export default class extends baseVw {
       // pass
     }
 
-    console.log(`the converted amount is ${convertedAmount}`);
     const isResultZero =
-      isFormattedResultZero(convertedAmount, maxZero);
+      isFormattedResultZero(convertedAmount, state.maxDisplayDecimalsOnZero);
     let isResultZeroFormattedOptions;
     let tipAmount;
 
@@ -209,12 +192,9 @@ export default class extends baseVw {
       )
     ) {
       if (isResultZero) {
-        console.log(`for amount ${state.amount}, the result is indeed zero.`);
         isResultZeroFormattedOptions = {
-          formatOptions: {
-            ...this.getFormatOptions(),
-            minDisplayDecimals: 2,
-          },
+          ...this.getFormatOptions(),
+          minDisplayDecimals: 2,
         };
 
         formattedAmount = convertAndFormatCurrency(
@@ -225,8 +205,6 @@ export default class extends baseVw {
             formatOptions: isResultZeroFormattedOptions,
           }
         );
-
-        console.log(`the fAmount is ${formattedAmount}`);
       }
 
       tipAmount = convertAndFormatCurrency(

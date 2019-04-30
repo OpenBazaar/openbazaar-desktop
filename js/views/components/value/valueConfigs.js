@@ -64,6 +64,7 @@ export function full(options = {}) {
     // should become base units for crypto, 6 for fiat
     // should become base units for crypto, 6 for fiat
     // should become base units for crypto, 6 for fiat
+    // maxDisplayDecimalsOnZero: 8,
     maxDisplayDecimalsOnZero: 8,
     ...options,
   };

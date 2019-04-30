@@ -307,8 +307,6 @@ export function formatCurrency(amount, currency, options = {}) {
     return '';
   }
 
-  console.log(`hey silly, my maxZero is ${opts.maxDisplayDecimalsOnZero}`);
-
   if (typeof currency !== 'string') {
     throw new Error('Please provide a currency as a string');
   }
@@ -403,9 +401,6 @@ export function formatCurrency(amount, currency, options = {}) {
         opts.maxDisplayDecimalsOnZero
       ),
     }).format(amount);
-    // getMaxDisplayDigits returning wrong value here
-    console.log(`soop: ${opts.maxDisplayDecimalsOnZero}, ${getMaxDisplayDigits(amount, opts.maxDisplayDecimals, opts.maxDisplayDecimalsOnZero)}`);
-    console.log(`moop: ${formattedCurrency}`);
   }
 
   return formattedCurrency;
@@ -529,8 +524,6 @@ export function convertCurrency(amount, fromCur, toCur) {
   const fromRate = getExchangeRate(fromCurCode);
   const toRate = getExchangeRate(toCurCode);
 
-  console.log(`they call me with ${amount} and ${fromCur} and ${toCur} and I return ${(amount / fromRate) * toRate}`);
-
   return (amount / fromRate) * toRate;
 }
 
@@ -567,7 +560,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  console.log(`${amount} ===> ${convertedAmt} ===> ${formatCurrency(convertedAmt, outputFormat, opts.formatOptions)} --- maxZero => ${opts.formatOptions.maxDisplayDecimalsOnZero}`);
   return formatCurrency(convertedAmt, outputFormat, opts.formatOptions);
 }
 
