@@ -1,3 +1,9 @@
+// todo: move this a level up - maybe in a crypto folder
+// todo: move this a level up - maybe in a crypto folder
+// todo: move this a level up - maybe in a crypto folder
+// todo: move this a level up - maybe in a crypto folder
+// todo: move this a level up - maybe in a crypto folder
+
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 import Value from './Value';
@@ -69,7 +75,7 @@ export default class extends baseVw {
     // no no no: views should handle or swallow exceptions. be tough in here son
     // no no no: views should handle or swallow exceptions. be tough in here son
     if (this.isValidData()) {
-      loadTemplate('components/value/cryptoListingPrice.html', (t) => {
+      loadTemplate('components/cryptoListingPrice.html', (t) => {
         this.$el.html(t({
           ...state,
         }));

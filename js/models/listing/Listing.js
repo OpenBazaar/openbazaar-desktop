@@ -300,14 +300,15 @@ export default class extends BaseModel {
       if (method !== 'delete') {
         // options.attrs.item.price = 0.000000000000000001;
         // options.attrs.metadata.pricingCurrency = "ZEC";
-        options.attrs.metadata.coinDivisibility = 8;
+        options.attrs.metadata.coinDivisibility = 100000000;
 
         options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
         const isCrypto = options.attrs.metadata.contractType === 'CRYPTOCURRENCY';
-        const coinDivisibility = options.attrs.metadata.coinDivisibility;
+        // const coinDivisibility = options.attrs.metadata.coinDivisibility;
+        const coinDivisibility = 8;
 
         // convert price fields
         if (typeof options.attrs.item.price === 'number') {
@@ -480,12 +481,28 @@ export default class extends BaseModel {
 
       let coinDivisibility;
 
+      // todo: test BS coinDivisibility
+      // todo: test BS coinDivisibility
+      // todo: test BS coinDivisibility
+      // todo: test BS coinDivisibility
+      // todo: test BS coinDivisibility
+      // todo: test BS coinDivisibility
       try {
         coinDivisibility = parsedResponse
           .metadata
           .coinDivisibility;
       } catch (e) {
         // pass
+      }
+
+      // temp until server switches to new format
+      // temp until server switches to new format
+      // temp until server switches to new format
+      // temp until server switches to new format
+      // temp until server switches to new format
+      // temp until server switches to new format
+      if (coinDivisibility) {
+        coinDivisibility = Math.log(coinDivisibility) / Math.log(10);
       }
 
       // set the hash
@@ -507,12 +524,10 @@ export default class extends BaseModel {
           if (shipOpt.services && shipOpt.services.length) {
             shipOpt.services.forEach((service, serviceIndex) => {
               const price = service.price;
-              const cur = parsedResponse.metadata &&
-                parsedResponse.metadata.pricingCurrency;
 
               if (typeof price === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = integerToDecimal(price, cur);
+                  .services[serviceIndex].price = integerToDecimal(price, coinDivisibility);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178
@@ -550,7 +565,7 @@ export default class extends BaseModel {
             const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
             parsedResponse.coupons[couponIndex].priceDiscount =
-              integerToDecimal(price, cur);
+              integerToDecimal(price, coinDivisibility);
           }
         });
       }
@@ -586,7 +601,7 @@ export default class extends BaseModel {
           const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
           if (surcharge) {
-            sku.surcharge = integerToDecimal(surcharge, cur);
+            sku.surcharge = integerToDecimal(surcharge, coinDivisibility);
           }
         });
         // END - convert price fields

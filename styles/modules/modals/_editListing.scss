@@ -262,6 +262,13 @@
         .inventoryTableWrap {
           overflow: auto;
           max-height: 500px;
+
+          .variantItemTotalPrice {
+            .formatCurTip {
+              // needed for tooltip to be large enough to break out of table cell
+              min-width: 200px;
+            }
+          }
         }
 
         table {

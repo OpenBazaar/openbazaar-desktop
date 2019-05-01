@@ -1,5 +1,5 @@
 /**
- * Will render a a combination of two currenciees indicating that one is being
+ * Will render a a combination of two currencies indicating that one is being
  * traded for the other (e.g. <btc-icon> BTC > <zec-icon> ZEC), followed by an
  * optional line of text indicating the exchange rate between the two currencies
  * (the view will update if the exchange rate changes). This differs from
@@ -17,7 +17,9 @@ import {
 } from '../../utils/currency';
 import { ensureMainnetCode } from '../../data/walletCurrencies';
 import loadTemplate from '../../utils/loadTemplate';
+import { full as fullValueConfig } from './value/valueConfigs';
 import BaseVw from '../baseVw';
+import Value from './value/Value';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -74,7 +76,7 @@ export default class extends BaseVw {
   }
 
   className() {
-    return 'cryptoTradingPairWrap';
+    return 'cryptoTradingPair';
   }
 
   setState(state = {}, options = {}) {
@@ -127,7 +129,9 @@ export default class extends BaseVw {
   }
 
   render() {
-    loadTemplate('components/cryptoTradingPairWrap.html', (t) => {
+    super.render();
+
+    loadTemplate('components/cryptoTradingPair.html', (t) => {
       const state = this.getState();
       const coinsMissingRates = [];
 
@@ -144,10 +148,49 @@ export default class extends BaseVw {
         }
       }
 
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+      // todo: test no eachange rate scenarios
+
       this.$el.html(t({
         ...state,
         noExchangeRateTip,
       }));
+
+      this.exchangeRateLineToPairing = this.createChild(Value, {
+        initialState: {
+          ...fullValueConfig({
+            toCur: state.localCurrency,
+          }),
+          amount: state.toCurAmount,
+          toCur: state.toCur,
+        },
+      });
+      this.getCachedEl('.js-exchangeRateLineToPairing')
+        .html(this.exchangeRateLineToPairing.render().el);
+
+      this.exchangeRateLineFromCurAmount = this.createChild(Value, {
+        initialState: {
+          ...fullValueConfig({
+            toCur: state.localCurrency,
+          }),
+          amount: state.fromCurConvertedAmount,
+          toCur: state.localCurrency,
+          // should be crypto base units or 8, whichever is smaller
+          // should be crypto base units or 8, whichever is smaller
+          // should be crypto base units or 8, whichever is smaller
+          // should be crypto base units or 8, whichever is smaller
+          // should be crypto base units or 8, whichever is smaller
+          // should be crypto base units or 8, whichever is smaller
+          maxDisplayDecimals: 8,
+        },
+      });
+      this.getCachedEl('.js-exchangeRateLineFromCurAmount')
+        .html(this.exchangeRateLineFromCurAmount.render().el);
     });
 
     return this;

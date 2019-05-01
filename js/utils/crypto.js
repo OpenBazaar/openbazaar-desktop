@@ -85,7 +85,7 @@ export function renderCryptoTradingPair(options = {}) {
 
   let rendered = '';
 
-  loadTemplate('components/cryptoTradingPair.html', t => {
+  loadTemplate('components/cryptoTradingPairSimple.html', t => {
     rendered = t(opts);
   });
 

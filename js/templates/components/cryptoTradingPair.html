@@ -1,13 +1,34 @@
-<span class="<%= ob.className %>">
-  <%= ob.polyT('cryptoCodeIconPairing', {
-        code: `<span class="fromCur ${ob.fromCurClass || ''}">${ob.fromCur}</span>`,
-        icon: ob.crypto.cryptoIcon({ code: ob.fromCur }),
-  }) %>
-  <span class="pairingSeparator ion-android-arrow-forward <%= ob.arrowIconClass || '' %>"></span>
-  <% if (ob.toCur) { %>
-    <%= ob.polyT('cryptoCodeIconPairing', {
-          code: `<span class="fromCur ${ob.toCurClass || ''}">${ob.toCur}</span>`,
-          icon: ob.crypto.cryptoIcon({ code: ob.toCur }),
-    }) %>    
-  <% } %>  
-</span>
+<%
+  const tradingPairOptions = Object.assign({
+    className: ob.tradingPairClass,
+    fromCur: ob.fromCur,
+    toCur: ob.toCur,
+  }, ob);
+%>
+<%= ob.crypto.tradingPair(tradingPairOptions) %>
+<%
+  let exchangeRateLine;
+
+  if (!ob.fromRateUnavailable && !ob.toRateUnavailable) {
+    exchangeRateLine = ob.polyT('cryptoConversionPairing', {
+      fromPairing: ob.currencyMod.formatCurrency(ob.fromCurAmount, ob.fromCur, {
+        minDisplayDecimals: 0,
+        useCryptoSymbol: false,
+      }),
+      toPairing: '<span class="js-exchangeRateLineToPairing"></span>',
+      fromCurAmount: '<span class="js-exchangeRateLineFromCurAmount"></span>',
+    });
+  } else {
+    let icon = `<span class="${ob.iconClass}"></span>`;
+
+    if (ob.noExchangeRateTip) {
+      icon = `<span class="toolTip" data-tip="${ob.noExchangeRateTip}">${icon}</span>`;
+    }
+
+    exchangeRateLine = ob.polyT('cryptoTradingPair.cryptoConversionPairingNoToCurExchangeRate', {
+      fromPairing: ob.currencyMod.formatCurrency(ob.fromCurAmount, ob.fromCur, { useCryptoSymbol: false }),
+      icon,
+    });
+  }
+%>
+<div class="<%= ob.exchangeRateClass %>"><%= exchangeRateLine %></div>

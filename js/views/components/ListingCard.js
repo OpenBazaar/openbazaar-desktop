@@ -636,13 +636,12 @@ export default class extends baseVw {
     let shortValConfig;
 
     swallowException(() => (
-      shortValConfig = short(fromCur, toCur)
+      shortValConfig = short({ fromCur, toCur })
     ));
 
     if (this.priceVw) this.priceVw.remove();
 
     if (!this.model.isCrypto) {
-      return;
       swallowException(() => {
         this.priceVw = this.createChild(Value, {
           initialState: {

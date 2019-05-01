@@ -3,9 +3,6 @@
     "truncatedValue": {
       "message": "%{value}%{ellipse}",
       "description": "When a value (usually a price) needs to be truncated, this translation key determines the position of the ellipses."
-    },
-    "cryptoPrice": {
-      "priceMarketRelativitiyPairing": "%{price}&nbsp;%{symbol}"
     }
   },
   "publish": {
@@ -2180,6 +2177,9 @@
   "cryptoPriceBelowMarket": "%{amount}% under market",
   "cryptoPriceAboveMarket": "%{amount}% above market",
   "cryptoPriceAtMarket": "market price",
+  "cryptoPrice": {
+    "priceMarketRelativitiyPairing": "%{price}&nbsp;%{symbol}"
+  },
   "countries": {
     "AFGHANISTAN": "Afghanistan",
     "ALAND_ISLANDS": "Aland Islands",

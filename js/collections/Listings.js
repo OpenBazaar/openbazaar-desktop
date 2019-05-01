@@ -41,7 +41,7 @@ export default class extends Collection {
     return [...new Set([].concat(...this.pluck('contractType')).sort())];
   }
 
-  parse(response) {
-    return response.filter(l => l.title === 'charlie say hey moo');
-  }
+  // parse(response) {
+  //   return response.filter(l => l.title === 'charlie say hey moo');
+  // }
 }

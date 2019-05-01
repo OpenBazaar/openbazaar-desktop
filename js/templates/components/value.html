@@ -3,26 +3,22 @@
     if (ob.tipAmount) {
       const tipWrapClass = `${ob.tipWrapBaseClass} ${ob.tipWrapClass}`;
       const tipClass = `${ob.tipBaseClass} ${ob.tipClass}`;
-      let tipContent = ob.tipAmount;
-
-      if (ob.tipAmount) {
-        tipContent = `
-          <div class="rowSm">${ob.tipAmount}</div>
-          <hr />
-          <div class="flexHRight flexVCent" style="min-height: 16px">
-            <span
-              class="clrT2 hide js-copiedIndicator"
-              style="border-bottom: 1px solid transparent">
-              Copied
-            </span>
-            <button class="js-copyTipAmount btnAsLink clrT forceColor">
-              Copy
-            </button>
-          </div>
-        `;
-      }
+      const tipContent = `
+        <div class="rowSm">${ob.tipAmount}</div>
+        <hr />
+        <div class="flexHRight flexVCent" style="min-height: 16px">
+          <span
+            class="clrT2 hide js-copiedIndicator"
+            style="border-bottom: 1px solid transparent">
+            Copied
+          </span>
+          <button class="js-copyTipAmount btnAsLink clrT forceColor">
+            Copy
+          </button>
+        </div>
+      `;
 %>
-      <span class="<%= tipWrapClass %>"><%= ob.formattedAmount %><span class="<%= tipClass %>" style="max-width: 300px"><%= tipContent %></span></span>
+      <span class="<%= tipWrapClass %>"><%= ob.formattedAmount %><span class="<%= tipClass %>"><%= tipContent %></span></span>
 <%   
     } else {
       print(ob.formattedAmount)

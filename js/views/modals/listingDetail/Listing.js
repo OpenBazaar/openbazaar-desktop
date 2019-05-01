@@ -497,6 +497,12 @@ export default class extends BaseModal {
     const _totalPrice = this.model.get('item').get('price') + surcharge;
     if (_totalPrice !== this.totalPrice) {
       this.totalPrice = _totalPrice;
+      // TODO: use Value.js here
+      // TODO: use Value.js here
+      // TODO: use Value.js here
+      // TODO: use Value.js here
+      // TODO: use Value.js here
+      // TODO: use Value.js here
       const adjPrice = renderFormattedCurrency(this.totalPrice,
         this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
       this.getCachedEl('.js-price').html(adjPrice);
@@ -735,7 +741,8 @@ export default class extends BaseModal {
       amount,
       fullValConfig,
     } = swallowException(() => {
-      const fromCurrency = flatModel.metadata.pricingCurrency;
+      const fromCurrency = this.model.isCrypto ?
+        flatModel.metadata.coinType : flatModel.metadata.pricingCurrency;
       const toCurrency = app.settings.get('localCurrency');
 
       return {
@@ -749,12 +756,13 @@ export default class extends BaseModal {
       };
     }, { returnValOnError: {} });
 
-    if (flatModel.metadata.contractType !== 'CRYPTOCURRENCY') {
+    if (!this.model.isCrypto) {
       swallowException(() => {
         this.price = this.createChild(Value, {
           initialState: {
             ...fullValConfig,
-            amount,
+            // amount,
+            amount: 0.00000000000123,
             fromCur,
             toCur,
           },

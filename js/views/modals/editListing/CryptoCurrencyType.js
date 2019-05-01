@@ -163,10 +163,6 @@ export default class extends BaseView {
     };
   }
 
-  renderCryptoTradingPair() {
-
-  }
-
   render() {
     super.render();
 

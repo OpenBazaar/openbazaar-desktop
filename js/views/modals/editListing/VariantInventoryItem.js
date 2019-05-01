@@ -1,8 +1,9 @@
 import $ from 'jquery';
 import '../../../lib/select2';
-import { formatCurrency } from '../../../utils/currency';
+import { short } from '../../components/value/valueConfigs';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
+import Value from '../../components/value/Value';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -18,8 +19,13 @@ export default class extends BaseView {
       throw new Error('Please provide a function for me to obtain the current currency.');
     }
 
+    if (typeof options.getListPosition !== 'function') {
+      throw new Error('options.getListPosition must be provided as a function.');
+    }
+
     super(options);
     this.options = options;
+    this.renderTotalPrice = this.renderTotalPrice.bind(this);
   }
 
   tagName() {
@@ -40,7 +46,7 @@ export default class extends BaseView {
   }
 
   onKeyupSurcharge(e) {
-    this.$totalPrice.text(this.calculateTotalPrice(Number(e.target.value)));
+    this.renderTotalPrice(Number(e.target.value));
   }
 
   onFocusQuantity(e) {
@@ -81,18 +87,6 @@ export default class extends BaseView {
     this.model.set(formData);
   }
 
-  calculateTotalPrice(surcharge) {
-    const listingPrice = this.options.getPrice();
-
-    if (typeof listingPrice !== 'number' || isNaN(listingPrice) ||
-      typeof surcharge !== 'number' && isNaN(surcharge)) {
-      return '';
-    }
-
-    return formatCurrency((this.options.getPrice() || 0) +
-      surcharge, this.options.getCurrency());
-  }
-
   get $formFields() {
     return this._$formFields ||
       (this._$formFields =
@@ -117,6 +111,41 @@ export default class extends BaseView {
         this.$('.js-quantity'));
   }
 
+  renderTotalPrice(surcharge) {
+    if (this.value) this.value.remove();
+
+    const listingPrice = this.options.getPrice();
+
+    if (typeof listingPrice !== 'number' || isNaN(listingPrice) ||
+      typeof surcharge !== 'number' && isNaN(surcharge)) {
+      return;
+    }
+
+    const valueInitialState = {
+      ...short({
+        toCur: this.options.getCurrency(),
+      }),
+      amount: (listingPrice || 0) + surcharge,
+      toCur: this.options.getCurrency(),
+    };
+
+    const { index, total } = this.options.getListPosition();
+
+    if (index === total - 1 || index === total - 2) {
+      // In order to not trigger a scroll bar on hover, the last two rows
+      // should have the truncated value tip come on top.
+      valueInitialState.tipClass =
+        'arrowBoxTipCenteredTop tx6 clrP clrBr clrT';
+    }
+
+    this.value = this.createChild(Value, {
+      initialState: valueInitialState,
+    });
+
+    this.getCachedEl('.js-totalPrice')
+      .html(this.value.render().el);
+  }
+
   render() {
     loadTemplate('modals/editListing/variantInventoryItem.html', t => {
       this.$el.html(t({
@@ -126,7 +155,6 @@ export default class extends BaseView {
         },
         getCurrency: this.options.getCurrency,
         getPrice: this.options.getPrice,
-        calculateTotalPrice: this.calculateTotalPrice.bind(this),
         cid: this.cid,
         infiniteQuantityChar: this.infiniteQuantityChar,
         max: this.model.max,
@@ -136,6 +164,8 @@ export default class extends BaseView {
       this._$totalPrice = null;
       this._$infiniteInventoryCheckbox = null;
       this._$quantity = null;
+
+      this.renderTotalPrice(this.model.get('surcharge'));
     });
 
     return this;

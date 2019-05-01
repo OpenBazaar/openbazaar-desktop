@@ -5,7 +5,7 @@
     <% if (ob.errors['surcharge']) print(ob.formErrorTmpl({ errors: ob.errors['surcharge'] })) %>
     <input type="text" class="clrBr clrP clrSh2 js-surcharge" name="surcharge" value="<%= ob.surcharge %>" data-var-type="number" placeholder="0.00" />
   </td>
-  <td class="clrBr js-totalPrice"><%= ob.calculateTotalPrice(ob.surcharge) %></td>
+  <td class="clrBr js-totalPrice variantItemTotalPrice"></td>
   <td class="clrBr">
     <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
     <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" maxlength="<%= ob.max.productIdLength %>" />

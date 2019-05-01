@@ -184,11 +184,15 @@ export default class extends baseVw {
       this.itemViews = [];
       const itemsFrag = document.createDocumentFragment();
 
-      this.collection.forEach(item => {
+      this.collection.forEach((item, itemIndex) => {
         const view = this.createChild(VariantInventoryItem, {
           model: item,
           getPrice: this.options.getPrice,
           getCurrency: this.options.getCurrency,
+          getListPosition: () => ({
+            index: itemIndex,
+            total: this.collection.length,
+          }),
         });
 
         this.itemViews.push(view);

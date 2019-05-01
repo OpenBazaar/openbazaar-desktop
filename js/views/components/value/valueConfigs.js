@@ -11,24 +11,39 @@ import {
 } from '../../../utils/currency';
 import { setCurs } from './Value';
 
-// todo: be consistent with the "full" format below
-// todo: be consistent with the "full" format below
-// todo: be consistent with the "full" format below
-// todo: be consistent with the "full" format below
-// todo: be consistent with the "full" format below
-export function short(fromCur, toCur, options = {}) {
-  // validate args
-  // toCur optional, put in options
+/*
+ * Given an options object containing a toCur and fromCur,
+ * this function will return the currency that would utimately
+ * be used to display a price. If exchange rate data is available
+ * for both currencies, then the toCur would be returned, otherwise
+ * the fromCur.
+ */
+function getCurrency(options = {}) {
+  if (typeof options !== 'object') {
+    throw new Error('The option must be provided as an object.');
+  }
 
-  const currency =
-    toCur &&
-    getExchangeRates(fromCur) &&
-    getExchangeRates(toCur) ?
-      toCur : fromCur;
+  const opts = setCurs(options);
 
-  const { isFiat } = getCurMeta(currency);
+  if (
+    opts.fromCur !== opts.toCur &&
+    getExchangeRates(opts.fromCur) &&
+    getExchangeRates(opts.toCur)
+  ) {
+    return opts.toCur;
+  }
+
+  return opts.fromCur;
+}
+
+export function short(options = {}) {
+  const { isFiat } = getCurMeta(getCurrency(options));
 
   return {
+    // todo: make this 15
+    // todo: make this 15
+    // todo: make this 15
+    // todo: make this 15
     truncateAfterChars: 10,
     tooltipOnTruncatedZero: true,
     minDisplayDecimals: isFiat ? 2 : 0,
@@ -40,18 +55,14 @@ export function short(fromCur, toCur, options = {}) {
 
 // doc me up - actually "almost" full
 export function full(options = {}) {
-  const opts = setCurs(options);
-  let currency = opts.fromCur;
-
-  if (
-    opts.fromCur !== opts.toCur &&
-    getExchangeRates(opts.fromCur) &&
-    getExchangeRates(opts.toCur)
-  ) {
-    currency = opts.toCur;
-  }
-
-  const { isFiat } = getCurMeta(currency);
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  // multiple is fiats out there?
+  const { isFiat } = getCurMeta(getCurrency(options));
 
   return {
     truncateAfterChars: 25,
@@ -64,7 +75,6 @@ export function full(options = {}) {
     // should become base units for crypto, 6 for fiat
     // should become base units for crypto, 6 for fiat
     // should become base units for crypto, 6 for fiat
-    // maxDisplayDecimalsOnZero: 8,
     maxDisplayDecimalsOnZero: 8,
     ...options,
   };

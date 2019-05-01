@@ -1,3 +1,11 @@
+// TODO: pricc can't be lower than the base units support. CTF son.
+// TODO: pricc can't be lower than the base units support. CTF son.
+// TODO: pricc can't be lower than the base units support. CTF son.
+// TODO: pricc can't be lower than the base units support. CTF son.
+// TODO: pricc can't be lower than the base units support. CTF son.
+
+// TODO: coinDivis should come from wallet cur config. check it yo!
+
 import $ from 'jquery';
 import '../../../utils/lib/velocity';
 import '../../../lib/select2';
@@ -297,8 +305,8 @@ export default class extends BaseModal {
     this.inProgressPhotoUploads.forEach(photoUpload => photoUpload.abort());
   }
 
-  onChangePrice(e) {
-    this.variantInventory.render();
+  onChangePrice() {
+    if (this.variantInventory) this.variantInventory.render();
   }
 
   setContractTypeClass(contractType) {

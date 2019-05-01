@@ -136,3 +136,10 @@
     font-size: 90%;
   }
 }
+
+// Value view tooltip when the value is truncated and needs a tooltip to show the full value.
+.arrowBoxTipWrap {
+  &.unconstrainedWidth {
+    max-width: 300px;
+  }
+}

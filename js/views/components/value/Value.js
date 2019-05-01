@@ -9,6 +9,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
+// todo: doc me up
 export function setCurs(options = {}) {
   if (typeof options !== 'object') {
     throw new Error('Please provide the options as an object.');
@@ -151,6 +152,32 @@ export default class extends baseVw {
     };
   }
 
+  // todo: memoize me dog
+  // todo: memoize me dog
+  // todo: memoize me dog
+  // todo: memoize me dog
+  flattenNbsp(str) {
+    if (typeof str !== 'string') {
+      throw new Error('Please provide a str as a string.');
+    }
+
+    let flattened = str.replace(/&nbsp;/g, '�');
+
+    while (flattened.endsWith('�')) {
+      flattened = flattened.slice(0, flattened.length - 1);
+    }
+
+    return flattened;
+  }
+
+  restoreNbsp(str) {
+    if (typeof str !== 'string') {
+      throw new Error('Please provide a str as a string.');
+    }
+
+    return str.replace(/�/g, '&nbsp;');
+  }
+
   remove() {
     clearTimeout(this.copiedTimeout);
     super.remove();
@@ -166,6 +193,8 @@ export default class extends baseVw {
       state.toCur,
       { formatOptions: formattedAmountOptions }
     );
+
+    const flattenedFormattedAmount = this.flattenNbsp(formattedAmount);
 
     let convertedAmount = state.amount;
 
@@ -188,7 +217,7 @@ export default class extends baseVw {
       isResultZero ||
       (
         typeof state.truncateAfterChars === 'number' &&
-        formattedAmount.length > state.truncateAfterChars
+        flattenedFormattedAmount.length > state.truncateAfterChars
       )
     ) {
       if (isResultZero) {
@@ -205,21 +234,23 @@ export default class extends baseVw {
             formatOptions: isResultZeroFormattedOptions,
           }
         );
-      }
 
-      tipAmount = convertAndFormatCurrency(
-        state.amount,
-        state.fromCur,
-        state.toCur,
-        {
-          formatOptions: {
-            ...this.getFormatOptions(),
-            minDisplayDecimals: 2,
-            maxDisplayDecimals: 20,
-            maxDisplayDecimalsOnZero: 20,
-          },
-        }
-      );
+        tipAmount = convertAndFormatCurrency(
+          state.amount,
+          state.fromCur,
+          state.toCur,
+          {
+            formatOptions: {
+              ...this.getFormatOptions(),
+              minDisplayDecimals: 2,
+              maxDisplayDecimals: 20,
+              maxDisplayDecimalsOnZero: 20,
+            },
+          }
+        );
+      } else {
+        tipAmount = formattedAmount;
+      }
 
       // In order for the ellipses to be placed at the end of the truncated
       // number (e.g. "1,538... ZEC") as opposed to at the end of the full
@@ -267,8 +298,10 @@ export default class extends baseVw {
           goBackMost -= 1;
         }
 
+        const sliceOffset = flattenedFormattedAmount.length > decimalFormattedAmount ?
+          (flattenedFormattedAmount.length - decimalFormattedAmount) : 0;
         const decimalEllipsified = app.polyglot.t('value.truncatedValue.message', {
-          value: decimalFormattedAmount.slice(0, truncateCharPos),
+          value: decimalFormattedAmount.slice(0, truncateCharPos - sliceOffset),
           ellipse: '…',
         });
 
@@ -278,7 +311,7 @@ export default class extends baseVw {
         );
       } else {
         formattedAmount = app.polyglot.t('value.truncatedValue.message', {
-          value: formattedAmount.slice(0, state.truncateAfterChars),
+          value: flattenedFormattedAmount.slice(0, state.truncateAfterChars),
           ellipse: '…',
         });
       }
@@ -287,7 +320,7 @@ export default class extends baseVw {
     loadTemplate('components/value.html', (t) => {
       this.$el.html(t({
         ...state,
-        formattedAmount,
+        formattedAmount: this.restoreNbsp(formattedAmount),
         tipAmount,
       }));
     });

@@ -55,16 +55,6 @@
         } else {
       %>
         <h2 class="flexExpand js-cryptoTitle cryptoTitle"></h2>
-        <%=
-          ob.crypto.cryptoPrice({
-            priceAmount: ob.price.amount,
-            priceCurrencyCode: ob.price.currencyCode,
-            displayCurrency: ob.displayCurrency,
-            priceModifier: ob.metadata.priceModifier,
-            wrappingTag: 'h2',
-            wrappingClass: 'flexNoShrink txRgt tx3',
-          })
-        %>
       <% } %>
     </div>
     <div class="flex gutterHLg">
