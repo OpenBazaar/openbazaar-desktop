@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import '../../../lib/select2';
-import { short } from '../../components/value/valueConfigs';
+import { full } from '../../components/value/valueConfigs';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 import Value from '../../components/value/Value';
@@ -122,11 +122,12 @@ export default class extends BaseView {
     }
 
     const valueInitialState = {
-      ...short({
+      ...full({
         toCur: this.options.getCurrency(),
       }),
       amount: (listingPrice || 0) + surcharge,
       toCur: this.options.getCurrency(),
+      truncateAfterChars: 10,
     };
 
     const { index, total } = this.options.getListPosition();
