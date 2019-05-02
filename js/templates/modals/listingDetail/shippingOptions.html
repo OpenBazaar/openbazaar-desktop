@@ -1,6 +1,6 @@
-<% if (ob.templateData.length) { %>
+<% if (ob.shippingOptions.length) { %>
   <table class="shippingTable clrBr">
-  <% ob.templateData.forEach((option, tdi) => { %>
+  <% ob.shippingOptions.forEach((option, tdi) => { %>
     <tr class="tx5 clrBr borderBottom">
       <th><%= option.name %></th>
       <% if (option.type === "LOCAL_PICKUP") { %>
@@ -13,33 +13,21 @@
     </tr>
     <% option.services.sort((a,b) => parseFloat(a.price) - parseFloat(b.price)).forEach((service, si) => { %>
       <% if (service.price === 0) var fShp = true; %>
-      <tr class="<% if (fShp) print('txB') %> <% if (si === option.services.length -1) print('lastRow') %>">
+      <tr class="<% if (fShp) print('txB') %> <% if (si === option.services.length -1) print('lastRow') %> js-serviceRow">
         <td><%= service.name %></td>
         <td><%= service.estimatedDelivery %></td>
         <td>
           <% if (fShp) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= 
-              ob.currencyMod.formattedCurrency(
-                service.price,
-                ob.pricingCurrency,
-                ob.displayCurrency
-              )
-            %>
+            <div id="<%= `${service.id}_firstItem` %>"></div>
           <% } %>
         </td>
         <td>
           <% if (service.additionalItemPrice === 0) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= 
-              ob.currencyMod.formattedCurrency(
-                service.additionalItemPrice,
-                ob.pricingCurrency,
-                ob.displayCurrency
-              )
-            %>
+            <div id="<%= `${service.id}_secondItem` %>"></div>
           <% } %>
         </td>
       </tr>
@@ -48,7 +36,7 @@
   </table>
 <% } else { %>
   <hr class="row">
-  <div class="rowLg tx4 txCtr">
+  <div class="padLg tx4 txCtr">
     <%= ob.polyT('listingDetail.noShippingFound') %>
   </div>
 <% } %>

@@ -3,8 +3,6 @@
 // doc me up joe
 // doc me up joe
 
-// todo: maybe call this Value configs and move out of here....?
-
 import {
   getCurMeta,
   getExchangeRates,
@@ -40,11 +38,7 @@ export function short(options = {}) {
   const { isFiat } = getCurMeta(getCurrency(options));
 
   return {
-    // todo: make this 15
-    // todo: make this 15
-    // todo: make this 15
-    // todo: make this 15
-    truncateAfterChars: 10,
+    truncateAfterChars: 12,
     tooltipOnTruncatedZero: true,
     minDisplayDecimals: isFiat ? 2 : 0,
     maxDisplayDecimals: isFiat ? 2 : 4,

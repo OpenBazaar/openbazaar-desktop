@@ -269,44 +269,48 @@
               min-width: 200px;
             }
           }
-        }
 
-        table {
-          border-spacing: 0;
-          border-collapse: collapse;
-          width: 100%;
+          table {
+            border-spacing: 0;
+            border-collapse: collapse;
+            width: 100%;
 
-          th {
-            text-align: left;
-          }
-
-          td, th {
-            border-width: 1px;
-            border-style: solid;
-            padding: $pad;
-            word-break: break-word;
-            min-width: 90px;
-            max-width: 125px;
-
-            input[type=text] {
-              width: 100%;
+            th {
+              text-align: left;
             }
 
-            &.unconstrainedWidth {
-              white-space: nowrap;
-              width: auto;
-              max-width: none;
+            td, th {
+              border-width: 1px;
+              border-style: solid;
+              padding: $pad;
+              word-break: break-word;
+              min-width: 90px;
+              max-width: 125px;
 
-              .errorList {
-                max-width: 225px;
-                white-space: normal;
-              }
-            }
-
-            &.quantityCol {
               input[type=text] {
-                min-width: 75px;
+                width: 100%;
               }
+
+              &.unconstrainedWidth {
+                white-space: nowrap;
+                width: auto;
+                max-width: none;
+
+                .errorList {
+                  max-width: 225px;
+                  white-space: normal;
+                }
+              }
+
+              &.quantityCol {
+                input[type=text] {
+                  min-width: 75px;
+                }
+              }
+            }
+
+            tr::last-child {
+              
             }
           }
         }

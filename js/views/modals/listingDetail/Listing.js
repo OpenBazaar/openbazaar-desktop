@@ -558,21 +558,73 @@ export default class extends BaseModal {
     this.renderShippingDestinations($(e.target).val());
   }
 
+  createServiceId(shipOptName, serviceName) {
+    return (`SERVICE_${shipOptName}_${serviceName}`)
+      .replace(/\s/g, '');
+  }
+
   renderShippingDestinations(destination) {
     if (!destination) {
       throw new Error('Please provide a destination.');
     }
+
     const shippingOptions = this.model.get('shippingOptions').toJSON();
-    const templateData = shippingOptions.filter((option) => {
+    const filteredShippingOptions = shippingOptions.filter((option) => {
       if (destination === 'ALL') return option.regions;
       return option.regions.includes(destination);
     });
+
+    filteredShippingOptions.forEach(shipOpt => {
+      shipOpt.services.forEach(service => {
+        service.id = this.createServiceId(shipOpt.name, service.name);
+      });
+    });
+
     loadTemplate('modals/listingDetail/shippingOptions.html', t => {
       this.$shippingOptions.html(t({
-        templateData,
-        displayCurrency: app.settings.get('localCurrency'),
-        pricingCurrency: this.model.get('metadata').get('pricingCurrency'),
+        shippingOptions: filteredShippingOptions,
       }));
+    });
+
+    const displayCurrency = app.settings.get('localCurrency');
+    const pricingCurrency = this.model.get('metadata').get('pricingCurrency');
+
+    filteredShippingOptions.forEach(shipOpt => {
+      shipOpt.services.forEach(service => {
+        const serviceId = this.createServiceId(shipOpt.name, service.name);
+
+        const priceFirstItem = this.createChild(Value, {
+          initialState: {
+            ...full({
+              fromCur: pricingCurrency,
+              toCur: displayCurrency,
+            }),
+            amount: service.price,
+            fromCur: pricingCurrency,
+            toCur: displayCurrency,
+            truncateAfterChars: 20,
+          },
+        });
+
+        this.$(`#${serviceId}_firstItem`)
+          .html(priceFirstItem.render().el);
+
+        const priceSecondItem = this.createChild(Value, {
+          initialState: {
+            ...full({
+              fromCur: pricingCurrency,
+              toCur: displayCurrency,
+            }),
+            amount: service.additionalItemPrice,
+            fromCur: pricingCurrency,
+            toCur: displayCurrency,
+            truncateAfterChars: 20,
+          },
+        });
+
+        this.$(`#${serviceId}_secondItem`)
+          .html(priceSecondItem.render().el);
+      });
     });
   }
 
