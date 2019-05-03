@@ -41,6 +41,7 @@ export function short(options = {}) {
     truncateAfterChars: 12,
     tooltipOnTruncatedZero: true,
     minDisplayDecimals: isFiat ? 2 : 0,
+    // on fiat, if amount less than 1, show 4
     maxDisplayDecimals: isFiat ? 2 : 4,
     maxDisplayDecimalsOnZero: 6,
     ...options,
@@ -65,6 +66,7 @@ export function full(options = {}) {
     // should become base units for crypto
     // should become base units for crypto
     // should become base units for crypto
+    // on fiat, if amount less than zero, show 8
     maxDisplayDecimals: isFiat ? 2 : 8,
     // should become base units for crypto, 6 for fiat
     // should become base units for crypto, 6 for fiat

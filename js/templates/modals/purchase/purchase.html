@@ -1,9 +1,3 @@
-<%
-  // when multiple listings are supported, the prices array will have one price object for each
-  const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
-  const pricingCurrency = ob.listingPrice.currencyCode;
-%>
-
 <div class="popInMessageHolder js-popInMessages"></div>
 
 <div class="topControls gutterHSm flex">
@@ -64,7 +58,7 @@
             <% } %>
             <div class="pad flexNoShrink">
               <b>
-                 <%= ob.currencyMod.convertAndFormatCurrency(totalPrice, pricingCurrency, ob.displayCurrency) %>
+                 <%= ob.currencyMod.convertAndFormatCurrency(ob.totalPrice, ob.pricingCurrency, ob.displayCurrency) %>
               </b>
             </div>
           </div>
@@ -72,7 +66,7 @@
           <div class="flexVCent gutterHLg row cryptoTitleWrap">
             <div class="js-cryptoTitle <% if (ob.phase !== 'pay' && ob.phase !== 'processing') print('flexExpand') %>"></div>
             <% if (ob.phase === 'pay' || ob.phase === 'processing') { %>
-              <div class="flexExpand">
+              <div class="flexExpand flexNoShrink">
                 <div class="flexVCent gutterHLg">
                   <label for="cryptoAmount" class="clrT txB required"><%= ob.polyT('purchase.cryptoAmount') %></label>
                   <div class="inputSelect">
@@ -88,16 +82,7 @@
                 </div>
               </div>
             <% } %>
-            <div class="pad flexNoShrink">
-              <%=
-                ob.crypto.cryptoPrice({
-                  priceAmount: totalPrice,
-                  priceCurrencyCode: pricingCurrency,
-                  displayCurrency: ob.displayCurrency,
-                  priceModifier: ob.listing.metadata.priceModifier,
-                })
-              %>
-            </div>
+            <div class="pad flexNoShrink js-cryptoPrice"></div>
           </div>
           <hr class="clrBr rowLg" />
           <%

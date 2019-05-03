@@ -1,9 +1,15 @@
+// TODO: don't allow purchase less than base units
+
+// TODO: should crypto components like CryptoTradingPair be grounpd into a
+// components crypto foldr?
+
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
 import '../../../lib/select2';
-import '../../../utils/lib/velocity';
 import app from '../../../app';
+import '../../../utils/lib/velocity';
+import { swallowException } from '../../../utils';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
 import {
@@ -26,6 +32,8 @@ import Moderators from '../../components/moderators/Moderators';
 import FeeChange from '../../components/FeeChange';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
 import CryptoCurSelector from '../../components/CryptoCurSelector';
+import CryptoListingPrice from '../../components/value/CryptoListingPrice';
+import { full } from '../../components/value/valueConfigs';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
 import Coupons from './Coupons';
@@ -636,6 +644,11 @@ export default class extends BaseModal {
       .at(0);
     const quantity = item.get('quantity');
     const metadata = this.listing.get('metadata');
+    // when multiple listings are supported, the prices array will have one price object for each
+    console.dir(this.prices);
+    const totalPrice = this.prices[0].price + this.prices[0].vPrice;
+    const pricingCurrency = this.listing.price.currencyCode;
+    const displayCurrency = app.settings.get('localCurrency');
 
     let uiQuantity = quantity;
 
@@ -645,10 +658,12 @@ export default class extends BaseModal {
     }
 
     loadTemplate('modals/purchase/purchase.html', t => {
+      const flatListing = this.listing.toJSON();
+
       this.$el.html(t({
         ...this.order.toJSON(),
         ...state,
-        listing: this.listing.toJSON(),
+        listing: flatListing,
         listingPrice: this.listing.price,
         itemConstraints: this.order.get('items')
           .at(0)
@@ -656,7 +671,9 @@ export default class extends BaseModal {
         vendor: this.vendor,
         variants: this.variants,
         prices: this.prices,
-        displayCurrency: app.settings.get('localCurrency'),
+        totalPrice,
+        displayCurrency,
+        pricingCurrency,
         quantity: uiQuantity,
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
@@ -724,6 +741,23 @@ export default class extends BaseModal {
           .html(this.cryptoTitle.render().el);
 
         this.$('#cryptoAmountCurrency').select2({ minimumResultsForSearch: Infinity });
+
+        if (this.cryptoPrice) this.cryptoPrice.remove();
+        swallowException(() => {
+          this.cryptoPrice = this.createChild(CryptoListingPrice, {
+            initialState: {
+              priceModifier: flatListing.metadata.priceModifier,
+              valueOptions: {
+                ...full,
+                amount: totalPrice,
+                fromCur: pricingCurrency,
+                toCur: displayCurrency,
+              },
+            },
+          });
+          this.getCachedEl('.js-cryptoPrice')
+            .html(this.cryptoPrice.render().el);
+        });
       }
     });
 
