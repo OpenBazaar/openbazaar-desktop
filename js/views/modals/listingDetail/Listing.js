@@ -7,10 +7,7 @@ import app from '../../../app';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import {
-  getCurrencyValidity,
-  renderFormattedCurrency,
-} from '../../../utils/currency';
+import { getCurrencyValidity } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 import {
@@ -55,7 +52,6 @@ export default class extends BaseModal {
 
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
-    this.totalPrice = this.model.get('item').get('price');
     this._purchaseModal = null;
     this._latestHash = this.model.get('hash');
     this._renderedHash = null;
@@ -211,6 +207,19 @@ export default class extends BaseModal {
 
     this.rendered = false;
     this._outdatedHashState = null;
+    this._selectedVariantCombo = [];
+
+    const shippingOptions = swallowException(() => (
+      this.model.get('item')
+        .get('options')
+        .toJSON()
+    ));
+
+    if (Array.isArray(shippingOptions)) {
+      for (let i = 0; i < shippingOptions.length; i++) {
+        this._selectedVariantCombo.push(0);
+      }
+    }
 
     this.purchaseErrorT = null;
     loadTemplate('modals/listingDetail/purchaseError.html',
@@ -480,33 +489,19 @@ export default class extends BaseModal {
       });
   }
 
-  onChangeVariantSelect() {
-    this.adjustPriceBySku();
-  }
+  onChangeVariantSelect(e) {
+    const $target = $(e.target);
+    const rowIndex = swallowException(() => (
+      $target
+        .closest('.js-variantSelectRow')
+        .index()
+    ));
 
-  adjustPriceBySku() {
-    const variantCombo = [];
-    // assemble a combo of the indexes of the selected variants
-    this.variantSelects.each((i, select) => {
-      variantCombo.push($(select).prop('selectedIndex'));
-    });
-    // each sku has a code that matches the selected variant index combos
-    const sku = this.model.get('item').get('skus').find(v =>
-      _.isEqual(v.get('variantCombo'), variantCombo));
-    const surcharge = sku ? sku.get('surcharge') : 0;
-    const _totalPrice = this.model.get('item').get('price') + surcharge;
-    if (_totalPrice !== this.totalPrice) {
-      this.totalPrice = _totalPrice;
-      // TODO: use Value.js here
-      // TODO: use Value.js here
-      // TODO: use Value.js here
-      // TODO: use Value.js here
-      // TODO: use Value.js here
-      // TODO: use Value.js here
-      const adjPrice = renderFormattedCurrency(this.totalPrice,
-        this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
-      this.getCachedEl('.js-price').html(adjPrice);
+    if (typeof rowIndex === 'number' && rowIndex > -1) {
+      this._selectedVariantCombo[rowIndex] = $target.prop('selectedIndex');
     }
+
+    this.renderPrice();
   }
 
   showDataChangedMessage() {
@@ -568,6 +563,10 @@ export default class extends BaseModal {
       throw new Error('Please provide a destination.');
     }
 
+    this.shippingPriceViews = this.shippingPriceViews || [];
+    this.shippingPriceViews.forEach(vw => vw.remove());
+    this.shippingPriceViews = [];
+
     const shippingOptions = this.model.get('shippingOptions').toJSON();
     const filteredShippingOptions = shippingOptions.filter((option) => {
       if (destination === 'ALL') return option.regions;
@@ -624,6 +623,9 @@ export default class extends BaseModal {
 
         this.$(`#${serviceId}_secondItem`)
           .html(priceSecondItem.render().el);
+
+        this.shippingPriceViews
+          .push(priceFirstItem, priceSecondItem);
       });
     });
   }
@@ -671,12 +673,13 @@ export default class extends BaseModal {
     }
 
     const selectedVariants = [];
-    this.variantSelects.each((i, select) => {
-      const variant = {};
-      variant.name = $(select).attr('name');
-      variant.value = $(select).val();
-      selectedVariants.push(variant);
-    });
+    this.getCachedEl('.js-variantSelect')
+      .each((i, select) => {
+        const variant = {};
+        variant.name = $(select).attr('name');
+        variant.value = $(select).val();
+        selectedVariants.push(variant);
+      });
 
     if (this._purchaseModal) this._purchaseModal.remove();
 
@@ -784,9 +787,29 @@ export default class extends BaseModal {
     super.remove();
   }
 
-  renderPrice() {
-    if (this.price) this.price.remove();
+  get totalPrice() {
     const flatModel = this.model.toJSON();
+    const surcharge = swallowException(() => {
+      const sku = flatModel.item
+        .skus
+        .find(v =>
+          _.isEqual(v.variantCombo, this._selectedVariantCombo)
+        );
+      return sku && sku.surcharge || 0;
+    }, { returnValOnError: 0 });
+
+    return flatModel.item.price + surcharge;
+  }
+
+  renderPrice() {
+    if (this.model.isCrypto) {
+      throw new Error('This should not be used for crypto listings');
+    }
+
+    const flatModel = this.model.toJSON();
+
+    if (this.price) this.price.remove();
+
     const {
       fromCur,
       toCur,
@@ -800,7 +823,7 @@ export default class extends BaseModal {
       return {
         fromCur: fromCurrency,
         toCur: toCurrency,
-        amount: flatModel.item.price,
+        amount: this.totalPrice,
         fullValConfig: full({
           fromCur: fromCurrency,
           toCur: toCurrency,
@@ -813,8 +836,7 @@ export default class extends BaseModal {
         this.price = this.createChild(Value, {
           initialState: {
             ...fullValConfig,
-            // amount,
-            amount: 0.00000000000123,
+            amount,
             fromCur,
             toCur,
           },
@@ -870,7 +892,6 @@ export default class extends BaseModal {
       if (nsfwWarning) this.$el.addClass('hide');
       super.render();
 
-      this.renderPrice();
       this.$('.js-rating').append(this.rating.render().$el);
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
@@ -922,12 +943,11 @@ export default class extends BaseModal {
 
       this.$photoSelectedInner.on('load', () => this.activateZoom());
 
-      this.variantSelects = this.$('.js-variantSelect');
-
-      this.variantSelects.select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
-      });
+      this.getCachedEl('.js-variantSelect')
+        .select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
+        });
 
       this.$('#shippingDestinations').select2();
       this.renderShippingDestinations(this.defaultCountry);
@@ -961,7 +981,7 @@ export default class extends BaseModal {
         this.getCachedEl('.js-cryptoTitle')
           .html(this.cryptoTitle.render().el);
       } else {
-        this.adjustPriceBySku();
+        this.renderPrice();
       }
 
       if (nsfwWarning) {
