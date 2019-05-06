@@ -53,9 +53,9 @@
             toCur: ob.listing.metadata.coinType,
             truncateCurAfter: 5,
           }),
-          cryptoIconsAmount:
-            `<span class="cryptoQuantity">${ob.polyT('purchase.receipt.cryptoIconsAmount',
-              { amount: formattedQuantity })}</span>`,
+          cryptoAmount:
+            `<span class="cryptoQuantity">${ob.polyT('purchase.receipt.cryptoAmount',
+              { amount: '<span class="js-cryptoQuantity"></span>' })}</span>`,
         }) %>
 
       <% } %>

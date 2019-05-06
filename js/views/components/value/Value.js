@@ -149,6 +149,7 @@ export default class extends baseVw {
       minDisplayDecimals: state.minDisplayDecimals,
       maxDisplayDecimals: state.maxDisplayDecimals,
       maxDisplayDecimalsOnZero: state.maxDisplayDecimalsOnZero,
+      style: state.style,
     };
   }
 
@@ -187,6 +188,8 @@ export default class extends baseVw {
     const state = this.getState();
     const formattedAmountOptions = this.getFormatOptions();
 
+    console.log(`hey jude: the amount is ${state.amount}`);
+
     let formattedAmount = convertAndFormatCurrency(
       state.amount,
       state.fromCur,
@@ -214,10 +217,13 @@ export default class extends baseVw {
     let tipAmount;
 
     if (
-      isResultZero ||
+      state.amount > 0 &&
       (
-        typeof state.truncateAfterChars === 'number' &&
-        flattenedFormattedAmount.length > state.truncateAfterChars
+        isResultZero ||
+        (
+          typeof state.truncateAfterChars === 'number' &&
+          flattenedFormattedAmount.length > state.truncateAfterChars
+        )
       )
     ) {
       if (isResultZero) {

@@ -645,7 +645,6 @@ export default class extends BaseModal {
     const quantity = item.get('quantity');
     const metadata = this.listing.get('metadata');
     // when multiple listings are supported, the prices array will have one price object for each
-    console.dir(this.prices);
     const totalPrice = this.prices[0].price + this.prices[0].vPrice;
     const pricingCurrency = this.listing.price.currencyCode;
     const displayCurrency = app.settings.get('localCurrency');

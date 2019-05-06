@@ -1493,8 +1493,8 @@
       "subtotal": "Subtotal (%{quantity})",
       "shippingTotal": "Total Shipping",
       "total": "Total",
-      "cryptoIconsAmount": "(%{amount})",
-      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
+      "cryptoAmount": "(%{amount})",
+      "cryptoIconsAmountCombo": "%{icons} %{cryptoAmount}"
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",

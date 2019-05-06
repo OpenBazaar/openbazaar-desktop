@@ -389,6 +389,9 @@ export function formatCurrency(amount, currency, options = {}) {
         code: cur.length > 8 ?
           `${cur.slice(0, 8)}…` : cur,
       });
+    // } else {
+    //   console.log('the sugar is sizzlin');
+    //   formattedCurrency = formattedAmount;
     }
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
