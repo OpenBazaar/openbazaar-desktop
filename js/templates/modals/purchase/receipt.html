@@ -67,7 +67,7 @@
             if (!ob.isCrypto) {
               print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
             } else {
-              print(ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency));
+              print('<span class="js-cryptoTotal"></span>');
             }
           %>
         </b>

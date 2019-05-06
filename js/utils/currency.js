@@ -389,9 +389,6 @@ export function formatCurrency(amount, currency, options = {}) {
         code: cur.length > 8 ?
           `${cur.slice(0, 8)}…` : cur,
       });
-    // } else {
-    //   console.log('the sugar is sizzlin');
-    //   formattedCurrency = formattedAmount;
     }
   } else {
     formattedCurrency = new Intl.NumberFormat(opts.locale, {
@@ -477,6 +474,20 @@ export function getExchangeRate(currency) {
   const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
 
   return exchangeRates[cur];
+}
+
+/**
+ * Returns a boolean indicating whether exchange rate data is available for the provided
+ * currenyc.
+ */
+export function exchangeRateAvailable(currency) {
+  if (!currency) {
+    throw new Error('Please provide a currency.');
+  }
+
+  const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
+
+  return exchangeRates[cur] !== undefined;
 }
 
 /**
@@ -570,6 +581,10 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
  * Returns `VALID` if the given currency is valid, otherwise it will return a code
  * indicating why it's not valid.
  */
+ // todo: is 'UNRECOGNIZED_CURRENCY' a thing anymore?
+ // todo: is 'UNRECOGNIZED_CURRENCY' a thing anymore?
+ // tooo: is 'UNRECOGNIZED_CURRENCY' a thing anymore?
+ // tooo: is 'UNRECOGNIZED_CURRENCY' a thing anymore?
 export function getCurrencyValidity(cur) {
   if (typeof cur !== 'string') {
     throw new Error('A currency must be provided as a string.');

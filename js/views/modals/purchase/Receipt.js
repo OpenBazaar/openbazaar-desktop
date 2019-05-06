@@ -1,11 +1,17 @@
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { swallowException } from '../../../utils';
+import {
+  exchangeRateAvailable,
+  convertCurrency,
+} from '../../../utils/currency';
 import Order from '../../../models/purchase/Order';
 import Listing from '../../../models/listing/Listing';
 import BaseView from '../../baseVw';
 import Value from '../../components/value/Value';
 import { full } from '../../components/value/valueConfigs';
+
+const RECEIPT_TRUNCATE_AFTER_CHARS = 15;
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -47,14 +53,19 @@ export default class extends BaseView {
   }
 
   render() {
-    console.dir(this.prices);
-
     super.render();
 
     const listingCurrency = this.listing.price.currencyCode;
     const displayCurrency = app.settings.get('localCurrency');
+    const viewingCurrency = exchangeRateAvailable(displayCurrency) ?
+      displayCurrency : listingCurrency;
     const isCrypto = this.listing.isCrypto;
     const priceObj = this.prices[0];
+
+    // convert the prices here, to prevent rounding errors in the display
+    const basePrice = convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
+    const surcharge = convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
+
     let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ?
       priceObj.quantity : 1;
 
@@ -62,6 +73,9 @@ export default class extends BaseView {
       quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
         priceObj.quantity : 0;
     }
+
+    const itemTotal = basePrice + surcharge;
+    const subTotal = itemTotal * quantity;
 
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
@@ -75,6 +89,8 @@ export default class extends BaseView {
       }));
 
       if (this.cryptoQuantity) this.cryptoQuantity.remove();
+      if (this.cryptoTotal) this.cryptoTotal.remove();
+
       if (isCrypto) {
         const fullConfig = full({
           fromCur: listingCurrency,
@@ -91,11 +107,24 @@ export default class extends BaseView {
                 fullConfig.minDisplayDecimals : 0,
               maxDisplayDecimals: quantity > 0 ?
                 fullConfig.maxDisplayDecimals : 0,
+              truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
             },
           });
 
           this.getCachedEl('.js-cryptoQuantity')
             .html(this.cryptoQuantity.render().el);
+
+          this.cryptoTotal = this.createChild(Value, {
+            initialState: {
+              ...fullConfig,
+              amount: subTotal,
+              fromCur: viewingCurrency,
+              truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+            },
+          });
+
+          this.getCachedEl('.js-cryptoTotal')
+            .html(this.cryptoTotal.render().el);
         });
       }
     });

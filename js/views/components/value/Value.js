@@ -141,16 +141,18 @@ export default class extends baseVw {
    */
   getFormatOptions() {
     const state = this.getState();
-
-    return {
+    const formatOptions = {
       locale: state.locale,
       btcUnit: state.btcUnit,
       useCryptoSymbol: state.useCryptoSymbol,
       minDisplayDecimals: state.minDisplayDecimals,
       maxDisplayDecimals: state.maxDisplayDecimals,
       maxDisplayDecimalsOnZero: state.maxDisplayDecimalsOnZero,
-      style: state.style,
     };
+
+    if (state.style !== undefined) formatOptions.style = state.style;
+
+    return formatOptions;
   }
 
   // todo: memoize me dog
@@ -187,8 +189,6 @@ export default class extends baseVw {
   render() {
     const state = this.getState();
     const formattedAmountOptions = this.getFormatOptions();
-
-    console.log(`hey jude: the amount is ${state.amount}`);
 
     let formattedAmount = convertAndFormatCurrency(
       state.amount,
