@@ -63,13 +63,11 @@
     <div class="constrainedWidth">
       <div class="flexHRight">
         <b>
-          <%
-            if (!ob.isCrypto) {
-              print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
-            } else {
-              print('<span class="js-cryptoTotal"></span>');
-            }
-          %>
+          <% print(
+            ob.isCrypto ?
+              '<span class="js-cryptoTotal"></span>' :
+              '<span class="js-listingPrice"></span>'
+          ) %>
         </b>
       </div>
     </div>

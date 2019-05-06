@@ -62,6 +62,8 @@ export default class extends BaseView {
     const isCrypto = this.listing.isCrypto;
     const priceObj = this.prices[0];
 
+    console.dir(priceObj);
+
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
     const surcharge = convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
@@ -90,35 +92,57 @@ export default class extends BaseView {
 
       if (this.cryptoQuantity) this.cryptoQuantity.remove();
       if (this.cryptoTotal) this.cryptoTotal.remove();
+      if (this.listingPrice) this.listingPrice.remove();
 
-      if (isCrypto) {
-        const fullConfig = full({
-          fromCur: listingCurrency,
+      if (!isCrypto) {
+        // js-listingPrice
+        // print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
+        swallowException(() => {
+          this.listingPrice = this.createChild(Value, {
+            initialState: {
+              ...full({
+                toCur: viewingCurrency,
+              }),
+              amount: basePrice,
+              toCur: viewingCurrency,
+            },
+          });
+
+          this.getCachedEl('.js-listingPrice')
+            .html(this.listingPrice.render().el);
+        });
+      } else {
+        const cryptoQuantityFullConfig = full({
+          toCur: listingCurrency,
         });
 
         swallowException(() => {
           this.cryptoQuantity = this.createChild(Value, {
             initialState: {
-              ...fullConfig,
+              ...cryptoQuantityFullConfig,
               amount: quantity,
-              fromCur: listingCurrency,
+              toCur: listingCurrency,
               style: 'decimal',
               minDisplayDecimals: quantity > 0 ?
-                fullConfig.minDisplayDecimals : 0,
+                cryptoQuantityFullConfig.minDisplayDecimals : 0,
               maxDisplayDecimals: quantity > 0 ?
-                fullConfig.maxDisplayDecimals : 0,
+                cryptoQuantityFullConfig.maxDisplayDecimals : 0,
               truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
             },
           });
 
           this.getCachedEl('.js-cryptoQuantity')
             .html(this.cryptoQuantity.render().el);
+        });
 
+        swallowException(() => {
           this.cryptoTotal = this.createChild(Value, {
             initialState: {
-              ...fullConfig,
+              ...full({
+                toCur: viewingCurrency,
+              }),
               amount: subTotal,
-              fromCur: viewingCurrency,
+              toCur: viewingCurrency,
               truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
             },
           });
