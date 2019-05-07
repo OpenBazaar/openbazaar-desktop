@@ -122,8 +122,10 @@ export default class extends BaseView {
         displayCurrency,
         prices: this.prices,
         isCrypto: this.listing.isCrypto,
+        shippingTotal,
       }));
 
+      if (this.quantity) this.quantity.remove();
       if (this.cryptoQuantity) this.cryptoQuantity.remove();
       if (this.cryptoTotal) this.cryptoTotal.remove();
       if (this.listingPrice) this.listingPrice.remove();
@@ -136,22 +138,40 @@ export default class extends BaseView {
       if (this.totalPrice) this.totalPrice.remove();
 
       if (!isCrypto) {
+        if (quantity) {
+          swallowException(() => {
+            this.quantity = this.createChild(Value, {
+              initialState: {
+                style: 'decimal',
+                minDisplayDecimals: 0,
+                maxDisplayDecimals: 0,
+                maxDisplayDecimalsOnZero: 0,
+                truncateAfterChars: 8,
+                amount: quantity,
+                fromCur: viewingCurrency,
+              },
+            });
+
+            this.getCachedEl('.js-quantity')
+              .html(this.quantity.render().el);
+          });
+        }
+
         swallowException(() => {
           this.listingPrice = this.createPriceVw(
             basePrice,
             viewingCurrency
           );
 
-          // this.listingPrice = this.createChild(Value, {
-          //   initialState: {
-          //     ...full({
-          //       toCur: viewingCurrency,
-          //     }),
-          //     amount: basePrice,
-          //     toCur: viewingCurrency,
-          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-          //   },
-          // });
+          this.getCachedEl('.js-listingPrice')
+            .html(this.listingPrice.render().el);
+        });
+
+        swallowException(() => {
+          this.listingPrice = this.createPriceVw(
+            basePrice,
+            viewingCurrency
+          );
 
           this.getCachedEl('.js-listingPrice')
             .html(this.listingPrice.render().el);
@@ -164,17 +184,6 @@ export default class extends BaseView {
               viewingCurrency
             );
 
-            // this.shippingPrice = this.createChild(Value, {
-            //   initialState: {
-            //     ...full({
-            //       toCur: viewingCurrency,
-            //     }),
-            //     amount: shippingPrice,
-            //     toCur: viewingCurrency,
-            //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-            //   },
-            // });
-
             this.getCachedEl('.js-shippingPrice')
               .html(this.shippingPrice.render().el);
           });
@@ -185,17 +194,6 @@ export default class extends BaseView {
                 additionalShippingPrice,
                 viewingCurrency
               );
-
-              // this.additionalShippingPrice = this.createChild(Value, {
-              //   initialState: {
-              //     ...full({
-              //       toCur: viewingCurrency,
-              //     }),
-              //     amount: additionalShippingPrice,
-              //     toCur: viewingCurrency,
-              //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-              //   },
-              // });
 
               this.getCachedEl('.js-additionalShippingPrice')
                 .html(this.additionalShippingPrice.render().el);
@@ -208,17 +206,6 @@ export default class extends BaseView {
               viewingCurrency
             );
 
-            // this.shippingTotal = this.createChild(Value, {
-            //   initialState: {
-            //     ...full({
-            //       toCur: viewingCurrency,
-            //     }),
-            //     amount: shippingTotal,
-            //     toCur: viewingCurrency,
-            //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-            //   },
-            // });
-
             this.getCachedEl('.js-shippingTotal')
               .html(this.shippingTotal.render().el);
           }
@@ -229,17 +216,6 @@ export default class extends BaseView {
             subTotal,
             viewingCurrency
           );
-
-          // this.subTotal = this.createChild(Value, {
-          //   initialState: {
-          //     ...full({
-          //       toCur: viewingCurrency,
-          //     }),
-          //     amount: subTotal,
-          //     toCur: viewingCurrency,
-          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-          //   },
-          // });
 
           this.getCachedEl('.js-subTotal')
             .html(this.subTotal.render().el);
@@ -264,20 +240,6 @@ export default class extends BaseView {
             }
           );
 
-          // this.cryptoQuantity = this.createChild(Value, {
-          //   initialState: {
-          //     ...cryptoQuantityFullConfig,
-          //     amount: quantity,
-          //     toCur: listingCurrency,
-          //     style: 'decimal',
-          //     minDisplayDecimals: quantity > 0 ?
-          //       cryptoQuantityFullConfig.minDisplayDecimals : 0,
-          //     maxDisplayDecimals: quantity > 0 ?
-          //       cryptoQuantityFullConfig.maxDisplayDecimals : 0,
-          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-          //   },
-          // });
-
           this.getCachedEl('.js-cryptoQuantity')
             .html(this.cryptoQuantity.render().el);
         });
@@ -287,17 +249,6 @@ export default class extends BaseView {
             subTotal,
             viewingCurrency
           );
-
-          // this.cryptoTotal = this.createChild(Value, {
-          //   initialState: {
-          //     ...full({
-          //       toCur: viewingCurrency,
-          //     }),
-          //     amount: subTotal,
-          //     toCur: viewingCurrency,
-          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-          //   },
-          // });
 
           this.getCachedEl('.js-cryptoTotal')
             .html(this.cryptoTotal.render().el);
@@ -332,17 +283,6 @@ export default class extends BaseView {
         subTotal + shippingTotal,
         viewingCurrency
       );
-
-      // this.totalPrice = this.createChild(Value, {
-      //   initialState: {
-      //     ...full({
-      //       toCur: viewingCurrency,
-      //     }),
-      //     amount: subTotal + shippingTotal,
-      //     toCur: viewingCurrency,
-      //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-      //   },
-      // });
 
       this.getCachedEl('.js-totalPrice')
         .html(this.totalPrice.render().el);

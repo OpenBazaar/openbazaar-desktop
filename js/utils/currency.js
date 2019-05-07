@@ -190,6 +190,8 @@ export function formatPrice(price, currency) {
 // TODO: doc me up yo
 // TODO: doc me up yo
 export function isFormattedResultZero(amount, maxDecimals) {
+  if (maxDecimals === 0) return true;
+
   return (
     preciseRound(amount, maxDecimals) <
       parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`)
@@ -223,8 +225,11 @@ function getMaxDisplayDigits(amount, desiredMax, maxOnZero = desiredMax) {
 
   let max = desiredMax;
 
+  if (max === 0) {
+    return 0;
+  }
+
   while (
-    // amount < getFloatToCheck(max) &&
     isFormattedResultZero(amount, max) &&
     max < zeroMax
   ) {

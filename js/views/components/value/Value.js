@@ -219,7 +219,7 @@ export default class extends baseVw {
     if (
       state.amount > 0 &&
       (
-        isResultZero ||
+        (!Number.isInteger(state.amount) && isResultZero) ||
         (
           typeof state.truncateAfterChars === 'number' &&
           flattenedFormattedAmount.length > state.truncateAfterChars
@@ -227,9 +227,16 @@ export default class extends baseVw {
       )
     ) {
       if (isResultZero) {
+        let isResultZeroMinDecimals =
+          state.style === 'currency' ? 2 : state.minDisplayDecimals;
+
+        isResultZeroMinDecimals =
+          isResultZeroMinDecimals > state.maxDisplayDecimals ?
+            state.maxDisplayDecimals : isResultZeroMinDecimals;
+
         isResultZeroFormattedOptions = {
           ...this.getFormatOptions(),
-          minDisplayDecimals: 2,
+          minDisplayDecimals: isResultZeroMinDecimals,
         };
 
         formattedAmount = convertAndFormatCurrency(

@@ -5,40 +5,11 @@
     ob.displayCurrency : ob.listingCurrency;
 
   ob.prices.forEach((priceObj, i) => {
-    // convert the prices here, to prevent rounding errors in the display
-    let basePrice;
-
-    if (!ob.isCrypto) {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
-    } else {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
-    }
-    
     const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency);
     const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency);
-    const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency);
-    let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ? priceObj.quantity : 1;
+    // shippingTotal
     
-    if (ob.isCrypto) {
-      quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
-        priceObj.quantity :
-        0;
-    }
-
-    let itemTotal = basePrice + surcharge;
-    ob.coupons.forEach((coupon) => {
-      if (coupon.percentDiscount) {
-        itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
-      } else if (coupon.priceDiscount) {
-        itemTotal -= ob.currencyMod.convertCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency);
-      }
-    });
-    const subTotal = itemTotal * quantity;
-    const shippingTotal = shippingPrice + additionalShippingPrice * (quantity -1);
-    const formattedQuantity = new Intl.NumberFormat(ob.displayCurrency, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8,
-    }).format(quantity);
+    const quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ? priceObj.quantity : 1;
 %>
   <div class="flexRow gutterHSm">
     <span class="flexExpand">
@@ -133,7 +104,8 @@
     <% if (!ob.isCrypto) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">
-          <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
+          <%= ob.polyT('purchase.receipt.subtotal',
+            { quantity: '<span class="js-quantity"></span>' }) %>
         </span>
         <div class="constrainedWidth">
           <div class="flexHRight">      
@@ -142,7 +114,7 @@
         </div>
       </div>
     <% } %>
-    <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && shippingTotal) { %>
+    <% if (ob.listing.shippingOptions && ob.listing.shippingOptions.length && ob.shippingTotal) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">
           <%= ob.polyT('purchase.receipt.shippingTotal') %>
