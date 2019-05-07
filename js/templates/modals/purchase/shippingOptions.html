@@ -2,21 +2,22 @@
   <div class="flexColRows boxList border borderStacked clrP clrBr">
     <% ob.validOptions.forEach((service, i) => {
          const selected = ob.selectedOption && ob.selectedOption.name === service.name && ob.selectedOption.service === service.service;
+         const clientId = service._clientID;
     %>
       <div>
         <div class="btnRadio width100">
           <input type="radio"
                  class="js-shippingOption"
-                 id="<%= `option${i}` %>"
+                 id="<%= clientId %>"
                  <% if (selected) print('checked') %>
                  data-name="<%= service.name %>"
                  data-service="<%= service.service%>"
                  name="shippingOption">
-          <label for="<%= `option${i}` %>" class="flex gutterH pad">
+          <label for="<%= clientId %>" class="flex gutterH pad">
             <div>
               <div class="tx5 rowSm txB"><%= service.name %>: <%= service.service %></div>
               <div class="tx5b clrT2 txUnb">
-                <% const price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+                <% const price = `<span class="js-shippingOptionPrice" data-client-id="${clientId}"></span>` %>
                 <% if (service.estimatedDelivery) print(ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery })) %>
               </div>
             </div>
