@@ -80,8 +80,16 @@ export default class extends BaseView {
         priceObj.quantity : 0;
     }
 
-    const itemTotal = basePrice + surcharge;
+    let itemTotal = basePrice + surcharge;
     const subTotal = itemTotal * quantity;
+
+    this.coupons.forEach(coupon => {
+      if (coupon.percentDiscount) {
+        itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
+      } else if (coupon.priceDiscount) {
+        itemTotal -= convertCurrency(coupon.priceDiscount, listingCurrency, viewingCurrency);
+      }
+    });
 
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
@@ -99,6 +107,8 @@ export default class extends BaseView {
       if (this.listingPrice) this.listingPrice.remove();
       if (this.shippingPrice) this.shippingPrice.remove();
       if (this.shippingAdditionalPrice) this.shippingAdditionalPrice.remove();
+      (this.couponPrices || []).forEach(cp => cp.remove());
+      this.couponPrices = [];
 
       if (!isCrypto) {
         swallowException(() => {
@@ -191,6 +201,30 @@ export default class extends BaseView {
             .html(this.cryptoTotal.render().el);
         });
       }
+
+      this.coupons.forEach(coupon => {
+        if (typeof coupon.priceDiscount === 'number') {
+          swallowException(() => {
+            const couponPrice = this.createChild(Value, {
+              initialState: {
+                ...full({
+                  fromCur: listingCurrency,
+                  toCur: viewingCurrency,
+                }),
+                amount: coupon.priceDiscount,
+                fromCur: listingCurrency,
+                toCur: viewingCurrency,
+                truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+              },
+            });
+
+            this.getCachedEl(`.js-couponPrice[data-coupon-hash=${coupon.hash}]`)
+              .html(couponPrice.render().el);
+
+            this.couponPrices.push(couponPrice);
+          });
+        }
+      });
     });
 
     return this;

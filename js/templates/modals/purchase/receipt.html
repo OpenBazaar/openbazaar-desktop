@@ -26,7 +26,6 @@
     }
 
     let itemTotal = basePrice + surcharge;
-    const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
         itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
@@ -81,10 +80,10 @@
         <div class="flexHRight">
           <b>
             <% if (coupon.percentDiscount) {
-                 print(`-${coupon.percentDiscount}%`);
-            } else if (coupon.priceDiscount) {
-              print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
-            } %>
+              print(`-${coupon.percentDiscount}%`);
+            } else if (coupon.priceDiscount) { %>
+              <span class="js-couponPrice" data-coupon-hash="<%= coupon.hash %>"></span>
+            <% } %>
           </b>
         </div>
       </div>
