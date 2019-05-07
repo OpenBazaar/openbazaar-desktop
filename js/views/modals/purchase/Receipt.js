@@ -55,6 +55,7 @@ export default class extends BaseView {
   render() {
     super.render();
 
+    const flatListing = this.listing.toJSON();
     const listingCurrency = this.listing.price.currencyCode;
     const displayCurrency = app.settings.get('localCurrency');
     const viewingCurrency = exchangeRateAvailable(displayCurrency) ?
@@ -67,6 +68,9 @@ export default class extends BaseView {
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
     const surcharge = convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
+    const shippingPrice = convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
+    const shippingAdditionalPrice = convertCurrency(priceObj.aPrice, listingCurrency,
+      viewingCurrency);
 
     let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ?
       priceObj.quantity : 1;
@@ -82,7 +86,7 @@ export default class extends BaseView {
     loadTemplate('modals/purchase/receipt.html', t => {
       this.$el.html(t({
         ...this.model.toJSON(),
-        listing: this.listing.toJSON(),
+        listing: flatListing,
         listingCurrency,
         coupons: this.coupons,
         displayCurrency,
@@ -93,10 +97,10 @@ export default class extends BaseView {
       if (this.cryptoQuantity) this.cryptoQuantity.remove();
       if (this.cryptoTotal) this.cryptoTotal.remove();
       if (this.listingPrice) this.listingPrice.remove();
+      if (this.shippingPrice) this.shippingPrice.remove();
+      if (this.shippingAdditionalPrice) this.shippingAdditionalPrice.remove();
 
       if (!isCrypto) {
-        // js-listingPrice
-        // print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
         swallowException(() => {
           this.listingPrice = this.createChild(Value, {
             initialState: {
@@ -111,6 +115,42 @@ export default class extends BaseView {
           this.getCachedEl('.js-listingPrice')
             .html(this.listingPrice.render().el);
         });
+
+        if (flatListing.shippingOptions && flatListing.shippingOptions.length) {
+          swallowException(() => {
+            this.shippingPrice = this.createChild(Value, {
+              initialState: {
+                ...full({
+                  toCur: viewingCurrency,
+                }),
+                amount: shippingPrice,
+                toCur: viewingCurrency,
+                truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+              },
+            });
+
+            this.getCachedEl('.js-shippingPrice')
+              .html(this.shippingPrice.render().el);
+          });
+
+          if (shippingPrice !== shippingAdditionalPrice && quantity > 1) {
+            swallowException(() => {
+              this.shippingAdditionalPrice = this.createChild(Value, {
+                initialState: {
+                  ...full({
+                    toCur: viewingCurrency,
+                  }),
+                  amount: shippingAdditionalPrice,
+                  toCur: viewingCurrency,
+                  truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+                },
+              });
+
+              this.getCachedEl('.js-shippingAdditionalPrice')
+                .html(this.shippingAdditionalPrice.render().el);
+            });
+          }
+        }
       } else {
         const cryptoQuantityFullConfig = full({
           toCur: listingCurrency,
