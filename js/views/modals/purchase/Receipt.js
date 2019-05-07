@@ -11,7 +11,7 @@ import BaseView from '../../baseVw';
 import Value from '../../components/value/Value';
 import { full } from '../../components/value/valueConfigs';
 
-const RECEIPT_TRUNCATE_AFTER_CHARS = 15;
+const RECEIPT_TRUNCATE_AFTER_CHARS = 12;
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -52,6 +52,29 @@ export default class extends BaseView {
     this.render();
   }
 
+  createPriceVw(amount, toCur, options = {}) {
+    if (typeof amount !== 'number') {
+      throw new Error('Please provide an amount as a number.');
+    }
+
+    if (typeof toCur !== 'string') {
+      throw new Error('Please provide a tour as a string.');
+    }
+
+    return this.createChild(Value, {
+      ...options,
+      initialState: {
+        ...full({
+          toCur,
+        }),
+        amount,
+        toCur,
+        truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+        ...(options && options.initialState),
+      },
+    });
+  }
+
   render() {
     super.render();
 
@@ -63,13 +86,11 @@ export default class extends BaseView {
     const isCrypto = this.listing.isCrypto;
     const priceObj = this.prices[0];
 
-    console.dir(priceObj);
-
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = convertCurrency(priceObj.price, listingCurrency, viewingCurrency);
     const surcharge = convertCurrency(priceObj.vPrice, listingCurrency, viewingCurrency);
     const shippingPrice = convertCurrency(priceObj.sPrice, listingCurrency, viewingCurrency);
-    const shippingAdditionalPrice = convertCurrency(priceObj.aPrice, listingCurrency,
+    const additionalShippingPrice = convertCurrency(priceObj.aPrice, listingCurrency,
       viewingCurrency);
 
     let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ?
@@ -80,6 +101,7 @@ export default class extends BaseView {
         priceObj.quantity : 0;
     }
 
+    const shippingTotal = shippingPrice + additionalShippingPrice * (quantity - 1);
     let itemTotal = basePrice + surcharge;
     const subTotal = itemTotal * quantity;
 
@@ -106,21 +128,30 @@ export default class extends BaseView {
       if (this.cryptoTotal) this.cryptoTotal.remove();
       if (this.listingPrice) this.listingPrice.remove();
       if (this.shippingPrice) this.shippingPrice.remove();
-      if (this.shippingAdditionalPrice) this.shippingAdditionalPrice.remove();
+      if (this.additionalShippingPrice) this.additionalShippingPrice.remove();
+      if (this.subTotal) this.subTotal.remove();
+      if (this.shippingTotal) this.shippingTotal.remove();
       (this.couponPrices || []).forEach(cp => cp.remove());
       this.couponPrices = [];
+      if (this.totalPrice) this.totalPrice.remove();
 
       if (!isCrypto) {
         swallowException(() => {
-          this.listingPrice = this.createChild(Value, {
-            initialState: {
-              ...full({
-                toCur: viewingCurrency,
-              }),
-              amount: basePrice,
-              toCur: viewingCurrency,
-            },
-          });
+          this.listingPrice = this.createPriceVw(
+            basePrice,
+            viewingCurrency
+          );
+
+          // this.listingPrice = this.createChild(Value, {
+          //   initialState: {
+          //     ...full({
+          //       toCur: viewingCurrency,
+          //     }),
+          //     amount: basePrice,
+          //     toCur: viewingCurrency,
+          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+          //   },
+          // });
 
           this.getCachedEl('.js-listingPrice')
             .html(this.listingPrice.render().el);
@@ -128,74 +159,145 @@ export default class extends BaseView {
 
         if (flatListing.shippingOptions && flatListing.shippingOptions.length) {
           swallowException(() => {
-            this.shippingPrice = this.createChild(Value, {
-              initialState: {
-                ...full({
-                  toCur: viewingCurrency,
-                }),
-                amount: shippingPrice,
-                toCur: viewingCurrency,
-                truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-              },
-            });
+            this.shippingPrice = this.createPriceVw(
+              shippingPrice,
+              viewingCurrency
+            );
+
+            // this.shippingPrice = this.createChild(Value, {
+            //   initialState: {
+            //     ...full({
+            //       toCur: viewingCurrency,
+            //     }),
+            //     amount: shippingPrice,
+            //     toCur: viewingCurrency,
+            //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+            //   },
+            // });
 
             this.getCachedEl('.js-shippingPrice')
               .html(this.shippingPrice.render().el);
           });
 
-          if (shippingPrice !== shippingAdditionalPrice && quantity > 1) {
+          if (shippingPrice !== additionalShippingPrice && quantity > 1) {
             swallowException(() => {
-              this.shippingAdditionalPrice = this.createChild(Value, {
-                initialState: {
-                  ...full({
-                    toCur: viewingCurrency,
-                  }),
-                  amount: shippingAdditionalPrice,
-                  toCur: viewingCurrency,
-                  truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-                },
-              });
+              this.additionalShippingPrice = this.createPriceVw(
+                additionalShippingPrice,
+                viewingCurrency
+              );
 
-              this.getCachedEl('.js-shippingAdditionalPrice')
-                .html(this.shippingAdditionalPrice.render().el);
+              // this.additionalShippingPrice = this.createChild(Value, {
+              //   initialState: {
+              //     ...full({
+              //       toCur: viewingCurrency,
+              //     }),
+              //     amount: additionalShippingPrice,
+              //     toCur: viewingCurrency,
+              //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+              //   },
+              // });
+
+              this.getCachedEl('.js-additionalShippingPrice')
+                .html(this.additionalShippingPrice.render().el);
             });
           }
+
+          if (shippingTotal) {
+            this.shippingTotal = this.createPriceVw(
+              shippingTotal,
+              viewingCurrency
+            );
+
+            // this.shippingTotal = this.createChild(Value, {
+            //   initialState: {
+            //     ...full({
+            //       toCur: viewingCurrency,
+            //     }),
+            //     amount: shippingTotal,
+            //     toCur: viewingCurrency,
+            //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+            //   },
+            // });
+
+            this.getCachedEl('.js-shippingTotal')
+              .html(this.shippingTotal.render().el);
+          }
         }
+
+        swallowException(() => {
+          this.subTotal = this.createPriceVw(
+            subTotal,
+            viewingCurrency
+          );
+
+          // this.subTotal = this.createChild(Value, {
+          //   initialState: {
+          //     ...full({
+          //       toCur: viewingCurrency,
+          //     }),
+          //     amount: subTotal,
+          //     toCur: viewingCurrency,
+          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+          //   },
+          // });
+
+          this.getCachedEl('.js-subTotal')
+            .html(this.subTotal.render().el);
+        });
       } else {
         const cryptoQuantityFullConfig = full({
           toCur: listingCurrency,
         });
 
         swallowException(() => {
-          this.cryptoQuantity = this.createChild(Value, {
-            initialState: {
-              ...cryptoQuantityFullConfig,
-              amount: quantity,
-              toCur: listingCurrency,
-              style: 'decimal',
-              minDisplayDecimals: quantity > 0 ?
-                cryptoQuantityFullConfig.minDisplayDecimals : 0,
-              maxDisplayDecimals: quantity > 0 ?
-                cryptoQuantityFullConfig.maxDisplayDecimals : 0,
-              truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-            },
-          });
+          this.cryptoQuantity = this.createPriceVw(
+            quantity,
+            listingCurrency,
+            {
+              initialState: {
+                style: 'decimal',
+                minDisplayDecimals: quantity > 0 ?
+                  cryptoQuantityFullConfig.minDisplayDecimals : 0,
+                maxDisplayDecimals: quantity > 0 ?
+                  cryptoQuantityFullConfig.maxDisplayDecimals : 0,
+              },
+            }
+          );
+
+          // this.cryptoQuantity = this.createChild(Value, {
+          //   initialState: {
+          //     ...cryptoQuantityFullConfig,
+          //     amount: quantity,
+          //     toCur: listingCurrency,
+          //     style: 'decimal',
+          //     minDisplayDecimals: quantity > 0 ?
+          //       cryptoQuantityFullConfig.minDisplayDecimals : 0,
+          //     maxDisplayDecimals: quantity > 0 ?
+          //       cryptoQuantityFullConfig.maxDisplayDecimals : 0,
+          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+          //   },
+          // });
 
           this.getCachedEl('.js-cryptoQuantity')
             .html(this.cryptoQuantity.render().el);
         });
 
         swallowException(() => {
-          this.cryptoTotal = this.createChild(Value, {
-            initialState: {
-              ...full({
-                toCur: viewingCurrency,
-              }),
-              amount: subTotal,
-              toCur: viewingCurrency,
-              truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
-            },
-          });
+          this.cryptoTotal = this.createPriceVw(
+            subTotal,
+            viewingCurrency
+          );
+
+          // this.cryptoTotal = this.createChild(Value, {
+          //   initialState: {
+          //     ...full({
+          //       toCur: viewingCurrency,
+          //     }),
+          //     amount: subTotal,
+          //     toCur: viewingCurrency,
+          //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+          //   },
+          // });
 
           this.getCachedEl('.js-cryptoTotal')
             .html(this.cryptoTotal.render().el);
@@ -225,6 +327,25 @@ export default class extends BaseView {
           });
         }
       });
+
+      this.totalPrice = this.createPriceVw(
+        subTotal + shippingTotal,
+        viewingCurrency
+      );
+
+      // this.totalPrice = this.createChild(Value, {
+      //   initialState: {
+      //     ...full({
+      //       toCur: viewingCurrency,
+      //     }),
+      //     amount: subTotal + shippingTotal,
+      //     toCur: viewingCurrency,
+      //     truncateAfterChars: RECEIPT_TRUNCATE_AFTER_CHARS,
+      //   },
+      // });
+
+      this.getCachedEl('.js-totalPrice')
+        .html(this.totalPrice.render().el);
     });
 
     return this;

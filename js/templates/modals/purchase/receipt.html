@@ -112,7 +112,7 @@
     </span>
     <div class="constrainedWidth">
       <div class="flexHRight">
-        <b class="js-shippingAdditionalPrice"></b>
+        <b class="js-additionalShippingPrice"></b>
       </div>
     </div>
   </div>
@@ -137,9 +137,7 @@
         </span>
         <div class="constrainedWidth">
           <div class="flexHRight">      
-            <b>
-              <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
-            </b>
+            <b class="js-subTotal"></b>
           </div>
         </div>
       </div>
@@ -151,9 +149,7 @@
         </span>
         <div class="constrainedWidth">
           <div class="flexHRight">        
-            <b>
-              <%= ob.currencyMod.formatCurrency(shippingTotal, viewingCurrency) %>
-            </b>
+            <b class="js-shippingTotal"></b>
           </div>
         </div>
       </div>
@@ -165,9 +161,7 @@
     </span>
     <div class="constrainedWidth">
       <div class="flexHRight">    
-        <b>
-          <%= ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
-        </b>
+        <b class="js-totalPrice"></b>
       </div>
     </div>
   </div>
