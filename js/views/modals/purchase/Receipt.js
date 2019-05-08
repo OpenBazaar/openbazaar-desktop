@@ -11,7 +11,7 @@ import BaseView from '../../baseVw';
 import Value from '../../components/value/Value';
 import { full } from '../../components/value/valueConfigs';
 
-const RECEIPT_TRUNCATE_AFTER_CHARS = 12;
+const RECEIPT_TRUNCATE_AFTER_CHARS = 15;
 
 export default class extends BaseView {
   constructor(options = {}) {
