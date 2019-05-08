@@ -159,17 +159,7 @@ export default class extends BaseView {
 
         swallowException(() => {
           this.listingPrice = this.createPriceVw(
-            basePrice,
-            viewingCurrency
-          );
-
-          this.getCachedEl('.js-listingPrice')
-            .html(this.listingPrice.render().el);
-        });
-
-        swallowException(() => {
-          this.listingPrice = this.createPriceVw(
-            basePrice,
+            itemTotal,
             viewingCurrency
           );
 
