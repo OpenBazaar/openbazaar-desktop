@@ -57,9 +57,7 @@
             </div>
             <% } %>
             <div class="pad flexNoShrink">
-              <b>
-                 <%= ob.currencyMod.convertAndFormatCurrency(ob.totalPrice, ob.pricingCurrency, ob.displayCurrency) %>
-              </b>
+              <b class="js-purchaseListingPrice"></b>
             </div>
           </div>
         <% } else { %>

@@ -33,6 +33,7 @@ import FeeChange from '../../components/FeeChange';
 import CryptoTradingPair from '../../components/CryptoTradingPair';
 import CryptoCurSelector from '../../components/CryptoCurSelector';
 import CryptoListingPrice from '../../components/value/CryptoListingPrice';
+import Value from '../../components/value/Value';
 import { full } from '../../components/value/valueConfigs';
 import Shipping from './Shipping';
 import Receipt from './Receipt';
@@ -670,9 +671,7 @@ export default class extends BaseModal {
         vendor: this.vendor,
         variants: this.variants,
         prices: this.prices,
-        totalPrice,
         displayCurrency,
-        pricingCurrency,
         quantity: uiQuantity,
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
@@ -757,6 +756,22 @@ export default class extends BaseModal {
           this.getCachedEl('.js-cryptoPrice')
             .html(this.cryptoPrice.render().el);
         });
+      } else {
+        if (this.listingPrice) this.listingPrice.remove();
+        this.listingPrice = this.createChild(Value, {
+          initialState: {
+            ...full({
+              fromCur: pricingCurrency,
+              toCur: displayCurrency,
+            }),
+            amount: totalPrice,
+            fromCur: pricingCurrency,
+            toCur: displayCurrency,
+          },
+        });
+
+        this.getCachedEl('.js-purchaseListingPrice')
+          .html(this.listingPrice.render().el);
       }
     });
 
