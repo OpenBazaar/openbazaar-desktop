@@ -18,7 +18,11 @@ import {
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
-import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
+import {
+  getExchangeRate,
+  integerToDecimal,
+  decimalToInteger,
+} from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
@@ -100,6 +104,12 @@ export default class extends BaseModal {
         inventory: () =>
           (typeof this.inventory === 'number' ?
             this.inventory : 99999999999999999),
+        coinType: () => (
+            this.listing
+              .get('metadata')
+              .get('coinType')
+        ),
+        cryptoAmountCurrency: () => this.cryptoAmountCurrency,
       }
     );
     // add the item to the order.
@@ -345,17 +355,17 @@ export default class extends BaseModal {
       throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
 
-    let mdQuantity = quantity;
+    const coinType = this.listing
+        .get('metadata')
+        .get('coinType');
+    let mdQuantity = Number(quantity);
     const numericQuantity = parseFloat(quantity);
 
     if (this.listing.isCrypto &&
-      cur !== this.listing.get('metadata')
-        .get('coinType') &&
+      cur !== coinType &&
       !isNaN(numericQuantity)) {
       mdQuantity = (numericQuantity / getExchangeRate(cur)) *
-        getExchangeRate(this.listing.get('metadata').get('coinType'));
-      // round to 4 decimal place
-      mdQuantity = Math.round(mdQuantity * 10000) / 10000;
+        getExchangeRate(coinType);
     }
 
     this.order.get('items')
@@ -448,7 +458,17 @@ export default class extends BaseModal {
     }
 
     // Set the payment coin.
-    const paymentCoin = this.cryptoCurSelector.getState().activeCurs[0];
+    let paymentCoin;
+
+    if (!this.listing.isCrypto) {
+      paymentCoin =
+        this.cryptoCurSelector.getState().activeCurs[0];
+    } else {
+      paymentCoin = this.listing
+        .get('metadata')
+        .get('acceptedCurrencies')[0];
+    }
+
     this.order.set({ paymentCoin });
 
     // Set the shipping address if the listing is shippable.
@@ -484,7 +504,8 @@ export default class extends BaseModal {
           errors: 'own listing',
         });
       } else {
-        const coinDivisibility = this.listing.get('metadata')
+        const coinDivisibility = this.listing
+          .get('metadata')
           .get('coinDivisibility');
 
         $.post({
@@ -495,8 +516,7 @@ export default class extends BaseModal {
               .map(item => ({
                 ...item.toJSON(),
                 quantity: this.listing.isCrypto ?
-                  // round to ensure integer
-                  Math.round(item.get('quantity') * coinDivisibility) :
+                  decimalToInteger(item.get('quantity'), coinDivisibility) :
                   item.get('quantity'),
               })),
           }),
@@ -704,8 +724,10 @@ export default class extends BaseModal {
       this.listenTo(this.directPayment, 'click', () => this.handleDirectPurchaseClick());
       this.$('.js-directPaymentWrapper').append(this.directPayment.render().el);
 
-      this.cryptoCurSelector.delegateEvents();
-      this.$('.js-cryptoCurSelectorWrapper').append(this.cryptoCurSelector.render().el);
+      if (!this.listing.isCrypto) {
+        this.cryptoCurSelector.delegateEvents();
+        this.$('.js-cryptoCurSelectorWrapper').append(this.cryptoCurSelector.render().el);
+      }
 
       if (this.shipping) {
         this.shipping.delegateEvents();

@@ -1,6 +1,12 @@
 import _ from 'underscore';
-import BaseModel from '../BaseModel';
+import {
+  getCoinDivisibility,
+  decimalToInteger,
+  getExchangeRate,
+} from '../../utils/currency';
+import { toStandardNotation } from '../../utils/number';
 import Options from '../../collections/purchase/Options';
+import BaseModel from '../BaseModel';
 import Shipping from './Shipping';
 import app from '../../app';
 
@@ -13,6 +19,25 @@ export default class extends BaseModel {
     // before sending it in.
     this.getInventory = () =>
       _.result(options, 'inventory', 99999999999999);
+
+    if (!['string', 'function'].includes(typeof options.coinType)) {
+      throw new Error('Please provide a coinType option as a string or a function ' +
+        'that returns a string.');
+    }
+
+    this.getCoinType = () =>
+      _.result(options, 'coinType');
+
+    if (
+      this.isCrypto && (
+      !['string', 'function'].includes(typeof options.cryptoAmountCurrency)
+    )) {
+      throw new Error('For a crypto cur listing a cryptoAmountCurrency option ' +
+        'must be provided as a string or a function that returns a string.');
+    } else {
+      this.getCryptoAmountCurrency = () =>
+        _.result(options, 'cryptoAmountCurrency');
+    }
   }
 
   defaults() {
@@ -72,17 +97,63 @@ export default class extends BaseModel {
       }
     } else {
       const inventory = this.getInventory();
+      const quantity = attrs.quantity;
 
       if (attrs.quantity !== undefined) {
-        if (typeof attrs.quantity !== 'number') {
+        if (typeof quantity !== 'number') {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
-        } else if (attrs.quantity <= 0) {
+        } else if (quantity <= 0) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
-        } else if (typeof inventory === 'number' &&
-          attrs.quantity > inventory) {
+        } else if (quantity > inventory) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory', {
             smart_count: inventory,
           }));
+        } else {
+          try {
+            const coinType = this.getCoinType();
+            const coinDivisibility = getCoinDivisibility(coinType);
+            const cryptoAmountCurrency = this.getCryptoAmountCurrency();
+
+            if (
+              decimalToInteger(attrs.quantity, coinDivisibility) < 1
+            ) {
+              const min = toStandardNotation(1 / (10 ** 8));
+              const convertedMin = cryptoAmountCurrency === coinType ?
+                min :
+                (
+                  toStandardNotation(
+                    (min / getExchangeRate(cryptoAmountCurrency)) *
+                      getExchangeRate(coinType)
+                  )
+                );
+
+              addError('quantity',
+                app.polyglot.t('orderModelErrors.cryptoQuantityTooLow', {
+                  cur: cryptoAmountCurrency,
+                  amount: convertedMin,
+                }));
+            }
+          } catch (e) {
+            console.error('Unable to validate whether the crypto quantity is at or above ' +
+              'the minimum.');
+            console.error(e);
+          }
+
+          // const coinDivisibility = getCoinDivisibility(paymentCoin);
+
+          // console.log(typeof item.quantity);
+          // console.log(10 ** coinDivisibility);
+
+          // if (
+          //   typeof item.quantity === 'number' &&
+          //   10 ** coinDivisibility < 1
+          // ) {
+          //   addError('quantity',
+          //     app.polyglot.t('orderModelErrors.cryptoQuantityTooLow', {
+          //       paymentCoin,
+          //       amount: 1 / coinDivisibility,
+          //     }));
+          // }          
         }
       }
 

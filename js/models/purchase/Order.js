@@ -2,6 +2,7 @@ import BaseModel from '../BaseModel';
 import app from '../../app';
 import Items from '../../collections/purchase/Items';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
+import { getCoinDivisibility } from '../../utils/currency';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
@@ -58,8 +59,9 @@ export default class extends BaseModel {
       addError('items', 'At least one item is required.');
     }
 
-    const c = attrs.paymentCoin;
-    if (!(c && typeof c === 'string' && isSupportedWalletCur(c))) {
+    const paymentCoin = attrs.paymentCoin;
+    if (!(paymentCoin && typeof paymentCoin === 'string' &&
+      isSupportedWalletCur(paymentCoin))) {
       addError('paymentCoin', app.polyglot.t('orderModelErrors.paymentCoinInvalid'));
     }
 

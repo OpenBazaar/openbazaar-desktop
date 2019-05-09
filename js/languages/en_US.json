@@ -2097,7 +2097,8 @@
     "paymentCoinInvalid": "Please choose a valid cryptocurrency to pay with.",
     "missingAddress": "Please choose a valid shipping address.",
     "needsModerator": "You must select a moderator to make a Moderated Payment.",
-    "removeModerator": "An unmoderated purchase cannot have a moderator."
+    "removeModerator": "An unmoderated purchase cannot have a moderator.",
+    "cryptoQuantityTooLow": "The lowest available amount in %{cur} is %{amount}."
   },
   "purchaseItemModelErrors": {
     "provideQuantity": "Please provide a quantity.",

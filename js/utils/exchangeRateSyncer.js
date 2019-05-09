@@ -2,7 +2,7 @@ import app from '../app';
 import { events as currencyEvents, fetchExchangeRates } from '../utils/currency';
 
 // How often to fetch the rates.
-const fetchInterval = 1000 * 60 * 5;
+const fetchInterval = 1000 * 60 * 1;
 
 // Flag to indicate if rates have been successfully fetched at least once.
 let fetchRatesTimeout;

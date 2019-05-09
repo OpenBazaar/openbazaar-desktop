@@ -11,7 +11,10 @@ import {
   ensureMainnetCode,
   supportedWalletCurs,
 } from '../data/walletCurrencies';
-import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
+import {
+  getCurrencies as getCryptoListingCurs,
+  defaultCoinDivisibility,
+} from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
 const events = {
@@ -269,6 +272,24 @@ function _getCurMeta(currency) {
 }
 
 export const getCurMeta = _.memoize(_getCurMeta);
+
+function _getCoinDivisibility(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const curMeta = getCurMeta(currency);
+
+  if (curMeta.isFiat) {
+    return 2;
+  } else if (curMeta.isWalletCur) {
+    return curMeta.curData.coinDivisibility;
+  }
+
+  return defaultCoinDivisibility;
+}
+
+export const getCoinDivisibility = _.memoize(_getCoinDivisibility);
 
 /**
  * Will format an amount in the given currency into the format appropriate for the given

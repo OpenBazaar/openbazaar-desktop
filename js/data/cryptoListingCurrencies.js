@@ -86,7 +86,14 @@ let currenciesNeedRefresh = true;
 let exchangeRateChangeBound = false;
 let currenciesSortedByNameDeferred = null;
 
+// TODO: transition from top to bot below:
+// TODO: transition from top to bot below:
+// TODO: transition from top to bot below:
+// TODO: transition from top to bot below:
+// TODO: transition from top to bot below:
+// TODO: transition from top to bot below:
 export const defaultQuantityBaseUnit = 100000000;
+export const defaultCoinDivisibility = 8;
 
 export function getCurrencies() {
   if (!exchangeRateChangeBound) {
