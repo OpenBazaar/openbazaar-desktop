@@ -50,8 +50,6 @@ export default class extends BaseOrder {
   }
 
   get orderPrice() {
-    console.log('the cont is moo');
-    window.moo = this.contract;
     return this.contract.get('buyerOrder').payment.amount;
   }
 

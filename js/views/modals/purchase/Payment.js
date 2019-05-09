@@ -8,7 +8,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import {
   formatCurrency,
   integerToDecimal,
-  getCoinDivisibility,
 } from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
@@ -48,6 +47,10 @@ export default class extends BaseVw {
       throw new Error('Please provide an origin for the metrics reporting');
     }
 
+    if (!Number.isInteger(options.coinDivisibility) || options.coinDivisibility < 0) {
+      throw new Error('Please provide a non-negative coinDivisibility as an integer.');
+    }
+
     let paymentCoinData;
 
     try {
@@ -69,6 +72,7 @@ export default class extends BaseVw {
     this.metricsOrigin = options.metricsOrigin;
     this.paymentCoin = options.paymentCoin;
     this.paymentCoinData = paymentCoinData;
+    this.coinDivisibility = options.coinDivisibility;
 
     const serverSocket = getSocket();
     if (serverSocket) {
@@ -77,7 +81,7 @@ export default class extends BaseVw {
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
-              getCoinDivisibility(this.paymentCoin));
+              this.coinDivisibility);
             if (amount >= this.balanceRemaining) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);

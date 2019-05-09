@@ -2,7 +2,6 @@ import BaseModel from '../BaseModel';
 import app from '../../app';
 import Items from '../../collections/purchase/Items';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
-import { getCoinDivisibility } from '../../utils/currency';
 
 export default class extends BaseModel {
   constructor(attrs, options = {}) {

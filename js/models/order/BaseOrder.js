@@ -62,6 +62,12 @@ export default class extends BaseModel {
 
   static getCoinDivisibility(attrs) {
     // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
     let coinDiv = this.getContract(attrs)
       .vendorListings[0]
       .metadata

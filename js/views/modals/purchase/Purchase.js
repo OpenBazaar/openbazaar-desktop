@@ -281,6 +281,10 @@ export default class extends BaseModal {
 
   get coinDivisibility() {
     // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
+    // temporary convresion of old format until the server gets the new format
     let coinDiv = this.listing
       .get('metadata')
       .get('coinDivisibility');
@@ -538,6 +542,7 @@ export default class extends BaseModal {
               isModerated: !!this.order.get('moderator'),
               metricsOrigin: 'Purchase',
               paymentCoin,
+              coinDivisibility: this.coinDivisibility,
             });
             this.listenTo(this.payment, 'walletPaymentComplete',
               (pmtCompleteData => this.completePurchase(pmtCompleteData)));

@@ -886,6 +886,7 @@ export default class extends BaseVw {
         isModerated: !!this.moderator,
         metricsOrigin: 'Transactions',
         paymentCoin: this.model.paymentCoin,
+        coinDivisibility: this.model.coinDivisibility,
       });
 
       this.getCachedEl('.js-payForOrderWrap').html(this.payForOrder.render().el);

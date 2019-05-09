@@ -1,5 +1,10 @@
 import {
   integerToDecimal,
+  // TODO: this is temp. This needs to be included by the server in the data.
+  // TODO: this is temp. This needs to be included by the server in the data.
+  // TODO: this is temp. This needs to be included by the server in the data.
+  // TODO: this is temp. This needs to be included by the server in the data.
+  // TODO: this is temp. This needs to be included by the server in the data.
   getCoinDivisibility,
 } from '../../utils/currency';
 import BaseModel from '../BaseModel';

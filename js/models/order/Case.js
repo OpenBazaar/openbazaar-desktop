@@ -1,7 +1,4 @@
-import {
-  integerToDecimal,
-  getCoinDivisibility,
-} from '../../utils/currency';
+import { integerToDecimal } from '../../utils/currency';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
@@ -80,7 +77,11 @@ export default class extends BaseOrder {
     return false;
   }
 
-  convertQuantity(contract = {}) {
+  convertQuantity(contract = {}, coinDivisibility) {
+    if (!Number.isInteger(coinDivisibility)) {
+      throw new Error('Please provide the coin divisibility as an ' +
+        'integer.');
+    }
     contract.buyerOrder.items.forEach((item, index) => {
       const listing = contract.vendorListings[index];
 
@@ -89,10 +90,7 @@ export default class extends BaseOrder {
         item.quantity64 : item.quantity;
 
       if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-        const coinDivisibility = listing.metadata
-          .coinDivisibility;
-
-        item.quantity = item.quantity / coinDivisibility;
+        item.quantity = integerToDecimal(item.quantity, coinDivisibility);
       }
     });
 
@@ -101,7 +99,7 @@ export default class extends BaseOrder {
 
   parse(response = {}) {
     const paymentCoin = BaseOrder.getPaymentCoin(response);
-    const coinDivisibility = getCoinDivisibility(paymentCoin);
+    const coinDivisibility = BaseOrder.getCoinDivisibility(response);
 
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
@@ -128,7 +126,10 @@ export default class extends BaseOrder {
         integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
           coinDivisibility);
 
-      response.buyerContract = this.convertQuantity(response.buyerContract);
+      response.buyerContract = this.convertQuantity(
+        response.buyerContract,
+        coinDivisibility
+      );
     }
 
     if (response.vendorContract) {
@@ -142,7 +143,10 @@ export default class extends BaseOrder {
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
           coinDivisibility);
 
-      response.vendorContract = this.convertQuantity(response.vendorContract);
+      response.vendorContract = this.convertQuantity(
+        response.vendorContract,
+        coinDivisibility
+      );
     }
 
     if (response.resolution) {
