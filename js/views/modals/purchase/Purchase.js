@@ -1,5 +1,3 @@
-// TODO: don't allow purchase less than base units
-
 // TODO: should crypto components like CryptoTradingPair be grounpd into a
 // components crypto foldr?
 

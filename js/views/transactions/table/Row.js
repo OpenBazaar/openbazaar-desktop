@@ -3,11 +3,15 @@
 */
 
 import app from '../../../app';
+import $ from 'jquery';
 import moment from 'moment';
 import loadTemplate from '../../../utils/loadTemplate';
 import { recordEvent } from '../../../utils/metrics';
+import { swallowException } from '../../../utils';
 import baseVw from '../../baseVw';
 import CryptoTradingPair from '../../../views/components/CryptoTradingPair';
+import Value from '../../../views/components/value/Value';
+import { full } from '../../../views/components/value/valueConfigs';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -97,7 +101,12 @@ export default class extends baseVw {
     });
   }
 
-  onRowClick() {
+  onRowClick(e) {
+    if (
+      $(e.target).hasClass('js-totalTipWrap') ||
+      $(e.target).parents('.js-totalTipWrap',
+        this.getCachedEl('.js-total')).length
+    ) return;
     this.trigger('clickRow', { view: this });
     recordEvent('Transactions_ClickOrder', {
       type: this.type,
@@ -112,23 +121,24 @@ export default class extends baseVw {
         type: this.type,
         ...this._state,
         ...this.model.toJSON(),
-        userCurrency: app.settings.get('localCurrency'),
         moment,
         vendorId: this.type === 'sales' ? app.profile.id : this.model.get('vendorId'),
       }));
     });
 
     const coinType = this.model.get('coinType');
+    const paymentCoin = this.model.get('paymentCoin');
+
+    if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
+    if (this.total) this.total.remove();
 
     if (coinType) {
-      const paymentCoin = this.model.get('paymentCoin');
       let tradingPairClass = 'cryptoTradingPairSm';
 
       if (paymentCoin.length > 5 && coinType.length > 5) {
         tradingPairClass += ' longCurCodes';
       }
 
-      if (this.cryptoTradingPair) this.cryptoTradingPair.remove();
       this.cryptoTradingPair = this.createChild(CryptoTradingPair, {
         initialState: {
           tradingPairClass,
@@ -141,6 +151,24 @@ export default class extends baseVw {
       this.getCachedEl('.js-cryptoTradingPairWrap')
         .html(this.cryptoTradingPair.render().el);
     }
+
+    swallowException(() => {
+      this.total = this.createChild(Value, {
+        initialState: {
+          full: {
+            fromCur: paymentCoin,
+            toCur: app.settings.get('localCurrency'),
+          },
+          fromCur: paymentCoin,
+          toCur: app.settings.get('localCurrency'),
+          amount: this.model.get('total'),
+          truncateAfterChars: 15,
+          tipWrapClass: 'js-totalTipWrap',
+        },
+      });
+      this.getCachedEl('.js-total')
+        .html(this.total.render().el);
+    });
 
     return this;
   }

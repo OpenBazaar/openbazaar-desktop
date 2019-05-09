@@ -11,10 +11,6 @@
     throw new Error('The type must be one of ${types}');
   }
 
-  if (!ob.userCurrency) {
-    throw new Error('Please provide the users local currency.');
-  }
-
   if (!ob.moment) {
     throw new Error('Please pass in the moment library.');
   }
@@ -75,15 +71,7 @@
 </td>  
 <% }) %>
 <td class="clrBr priceCol txRgt">
-  <span class="ulOnHover">
-    <%=
-      ob.currencyMod.convertAndFormatCurrency(
-        ob.total,
-        ob.paymentCoin,
-        ob.userCurrency
-      )
-    %>
-  </span>
+  <span class="ulOnHover js-total"></span>
 </td>
 <td class="clrBr gutterH statusCol">
   <%

@@ -1,5 +1,8 @@
 // used for sales, purchases
-import { integerToDecimal } from '../../utils/currency';
+import {
+  integerToDecimal,
+  getCoinDivisibility,
+} from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -8,13 +11,12 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    let returnVal = { ...response };
+    const returnVal = { ...response };
+    const paymentCoin = response.paymentCoin;
 
-    returnVal = {
-      ...returnVal,
-      // Convert from base units
-      total: integerToDecimal(returnVal.total, returnVal.paymentCoin),
-    };
+    returnVal.total = typeof paymentCoin === 'string' && paymentCoin ?
+      integerToDecimal(returnVal.total, getCoinDivisibility(returnVal.paymentCoin)) :
+      undefined;
 
     return returnVal;
   }
