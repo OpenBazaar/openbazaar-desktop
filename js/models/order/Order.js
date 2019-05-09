@@ -50,6 +50,8 @@ export default class extends BaseOrder {
   }
 
   get orderPrice() {
+    console.log('the cont is moo');
+    window.moo = this.contract;
     return this.contract.get('buyerOrder').payment.amount;
   }
 
@@ -83,14 +85,14 @@ export default class extends BaseOrder {
 
   getBalanceRemaining(options = {}) {
     const opts = {
-      convertFromSat: false,
+      convertFromBaseUnit: false,
       ...options,
     };
 
     const balanceRemaining = this.rawOrderPrice - this.rawTotalPaid;
 
-    return opts.convertFromSat ?
-      integerToDecimal(balanceRemaining, this.paymentCoin) :
+    return opts.convertFromBaseUnit ?
+      integerToDecimal(balanceRemaining, this.coinDivisibility) :
       balanceRemaining;
   }
 
@@ -196,10 +198,11 @@ export default class extends BaseOrder {
       response.rawContract = this.rawResponse.contract;
 
       const payment = response.contract.buyerOrder.payment;
+      const coinDivisibility = BaseOrder.getCoinDivisibility(response);
 
       // convert price fields
       payment.amount =
-        integerToDecimal(payment.amount, payment.coin);
+        integerToDecimal(payment.amount, coinDivisibility);
 
       // convert crypto listing quantities
       response.contract.buyerOrder.items.forEach((item, index) => {
@@ -211,10 +214,8 @@ export default class extends BaseOrder {
           item.quantity64 : item.quantity;
 
         if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-          const coinDivisibility = listing.metadata
-            .coinDivisibility;
-
-          item.quantity = item.quantity / coinDivisibility;
+          item.quantity =
+            integerToDecimal(item.quantity, coinDivisibility);
         }
       });
 
@@ -229,15 +230,15 @@ export default class extends BaseOrder {
         response.contract.disputeResolution.payout.buyerOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.buyerOutput.amount || 0,
-              paymentCoin);
+              coinDivisibility);
         response.contract.disputeResolution.payout.vendorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.vendorOutput.amount || 0,
-              paymentCoin);
+              coinDivisibility);
         response.contract.disputeResolution.payout.moderatorOutput.amount =
           integerToDecimal(
             response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
-              paymentCoin);
+              coinDivisibility);
       }
     }
 

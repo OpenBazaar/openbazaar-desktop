@@ -5,7 +5,11 @@
 
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { formatCurrency, integerToDecimal } from '../../../utils/currency';
+import {
+  formatCurrency,
+  integerToDecimal,
+  getCoinDivisibility,
+} from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
@@ -73,7 +77,7 @@ export default class extends BaseVw {
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
-              this.paymentCoin);
+              getCoinDivisibility(this.paymentCoin));
             if (amount >= this.balanceRemaining) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);

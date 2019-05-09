@@ -1,4 +1,7 @@
-import { integerToDecimal } from '../../utils/currency';
+import {
+  integerToDecimal,
+  getCoinDivisibility,
+} from '../../utils/currency';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
@@ -98,6 +101,7 @@ export default class extends BaseOrder {
 
   parse(response = {}) {
     const paymentCoin = BaseOrder.getPaymentCoin(response);
+    const coinDivisibility = getCoinDivisibility(paymentCoin);
 
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
@@ -122,7 +126,7 @@ export default class extends BaseOrder {
       // convert price fields
       response.buyerContract.buyerOrder.payment.amount =
         integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
-          paymentCoin);
+          coinDivisibility);
 
       response.buyerContract = this.convertQuantity(response.buyerContract);
     }
@@ -136,7 +140,7 @@ export default class extends BaseOrder {
       // convert price fields
       response.vendorContract.buyerOrder.payment.amount =
         integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
-          paymentCoin);
+          coinDivisibility);
 
       response.vendorContract = this.convertQuantity(response.vendorContract);
     }
@@ -151,13 +155,13 @@ export default class extends BaseOrder {
 
       response.resolution.payout.buyerOutput.amount =
         integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-          paymentCoin);
+          coinDivisibility);
       response.resolution.payout.vendorOutput.amount =
         integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-          paymentCoin);
+          coinDivisibility);
       response.resolution.payout.moderatorOutput.amount =
         integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-          paymentCoin);
+          coinDivisibility);
     }
 
     return response;

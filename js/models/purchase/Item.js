@@ -1,6 +1,5 @@
 import _ from 'underscore';
 import {
-  getCoinDivisibility,
   decimalToInteger,
   getExchangeRate,
 } from '../../utils/currency';
@@ -37,6 +36,17 @@ export default class extends BaseModel {
     } else {
       this.getCryptoAmountCurrency = () =>
         _.result(options, 'cryptoAmountCurrency');
+    }
+
+    if (
+      this.isCrypto && (
+      !['string', 'function'].includes(typeof options.coinDivisibility)
+    )) {
+      throw new Error('For a crypto cur listing a coinDivisibility option ' +
+        'must be provided as a string or a function that returns a string.');
+    } else {
+      this.getCoinDivisibility = () =>
+        _.result(options, 'coinDivisibility');
     }
   }
 
@@ -111,19 +121,22 @@ export default class extends BaseModel {
         } else {
           try {
             const coinType = this.getCoinType();
-            const coinDivisibility = getCoinDivisibility(coinType);
+            const coinDivisibility = this.getCoinDivisibility();
             const cryptoAmountCurrency = this.getCryptoAmountCurrency();
 
             if (
               decimalToInteger(attrs.quantity, coinDivisibility) < 1
             ) {
-              const min = toStandardNotation(1 / (10 ** 8));
+              const min = 1 / (10 ** 8);
               const convertedMin = cryptoAmountCurrency === coinType ?
-                min :
+                toStandardNotation(min) :
                 (
                   toStandardNotation(
-                    (min / getExchangeRate(cryptoAmountCurrency)) *
-                      getExchangeRate(coinType)
+                    min *
+                    (
+                      getExchangeRate(cryptoAmountCurrency) /
+                        getExchangeRate(coinType)
+                    )
                   )
                 );
 
@@ -138,22 +151,6 @@ export default class extends BaseModel {
               'the minimum.');
             console.error(e);
           }
-
-          // const coinDivisibility = getCoinDivisibility(paymentCoin);
-
-          // console.log(typeof item.quantity);
-          // console.log(10 ** coinDivisibility);
-
-          // if (
-          //   typeof item.quantity === 'number' &&
-          //   10 ** coinDivisibility < 1
-          // ) {
-          //   addError('quantity',
-          //     app.polyglot.t('orderModelErrors.cryptoQuantityTooLow', {
-          //       paymentCoin,
-          //       amount: 1 / coinDivisibility,
-          //     }));
-          // }          
         }
       }
 

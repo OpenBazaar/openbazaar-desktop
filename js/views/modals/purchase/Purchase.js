@@ -108,6 +108,7 @@ export default class extends BaseModal {
               .get('coinType')
         ),
         cryptoAmountCurrency: () => this.cryptoAmountCurrency,
+        coinDivisibility: () => this.coinDivisibility,
       }
     );
     // add the item to the order.
@@ -215,9 +216,7 @@ export default class extends BaseModal {
         this.listing.get('vendorID').peerID,
         {
           slug: this.listing.get('slug'),
-          coinDivisibility:
-            this.listing.get('metadata')
-              .get('coinDivisibility'),
+          coinDivisibility: this.coinDivisibility,
         }
       ).done(e => (this.inventory = e.inventory));
       this.listenTo(inventoryEvents, 'inventory-change',
@@ -278,6 +277,19 @@ export default class extends BaseModal {
 
   set inventory(inventory) {
     this._inventory = inventory;
+  }
+
+  get coinDivisibility() {
+    // temporary convresion of old format until the server gets the new format
+    let coinDiv = this.listing
+      .get('metadata')
+      .get('coinDivisibility');
+
+    if (coinDiv > 99) {
+      coinDiv = Math.log(coinDiv) / Math.log(10);
+    }
+
+    return coinDiv;
   }
 
   showDataChangedMessage() {
@@ -502,10 +514,6 @@ export default class extends BaseModal {
           errors: 'own listing',
         });
       } else {
-        const coinDivisibility = this.listing
-          .get('metadata')
-          .get('coinDivisibility');
-
         $.post({
           url: app.getServerUrl('ob/purchase'),
           data: JSON.stringify({
@@ -514,7 +522,7 @@ export default class extends BaseModal {
               .map(item => ({
                 ...item.toJSON(),
                 quantity: this.listing.isCrypto ?
-                  decimalToInteger(item.get('quantity'), coinDivisibility) :
+                  decimalToInteger(item.get('quantity'), this.coinDivisibility) :
                   item.get('quantity'),
               })),
           }),
@@ -524,7 +532,7 @@ export default class extends BaseModal {
           .done((data) => {
             this.setState({ phase: 'pending' });
             this.payment = this.createChild(Payment, {
-              balanceRemaining: integerToDecimal(data.amount, paymentCoin),
+              balanceRemaining: integerToDecimal(data.amount, this.coinDivisibility),
               paymentAddress: data.paymentAddress,
               orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
@@ -546,8 +554,7 @@ export default class extends BaseModal {
               jqXHR.responseJSON.code === 'ERR_INSUFFICIENT_INVENTORY' &&
               typeof jqXHR.responseJSON.remainingInventory === 'number') {
               this.inventory = jqXHR.responseJSON.remainingInventory /
-                this.listing.get('metadata')
-                  .get('coinDivisibility');
+                this.coinDivisibility;
               errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
               errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody', {
                 smart_count: this.inventory,

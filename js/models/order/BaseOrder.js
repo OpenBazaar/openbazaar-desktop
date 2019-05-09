@@ -41,6 +41,13 @@ export default class extends BaseModel {
     return contract;
   }
 
+  /**
+   * This is similar to getContract, but differs in that this returns a Contract
+   * model as opposed to flat data. Also, this must be called from a BaseOrder
+   * instance and, in order for the contract to be returned, after the data has
+   * been populated (e.g. the contract won't be available through this method
+   * via parse()).
+   */
   get contract() {
     let contract = this.get('contract');
 
@@ -51,6 +58,24 @@ export default class extends BaseModel {
     }
 
     return contract;
+  }
+
+  static getCoinDivisibility(attrs) {
+    // temporary convresion of old format until the server gets the new format
+    let coinDiv = this.getContract(attrs)
+      .vendorListings[0]
+      .metadata
+      .coinDivisibility;
+
+    if (coinDiv > 99) {
+      coinDiv = Math.log(coinDiv) / Math.log(10);
+    }
+
+    return coinDiv;
+  }
+
+  get coinDivisibility() {
+    return this.constructor.getCoinDivisibility(this.toJSON());
   }
 
   static getParticipantIds(attrs = {}) {
