@@ -160,9 +160,12 @@ export function getCryptoNames() {
 }
 
 // Todo: doc me up yo.
-export function isValidCoinDivisibility(coinDiv) {
+// Todo: doc me up yo.
+// Todo: doc me up yo.
+// Todo: doc me up yo.
+export function isValidCoinDivisibility(coinDivisibility) {
   return [
-    Number.isInteger(coinDiv) && coinDiv > 0,
+    Number.isInteger(coinDivisibility) && coinDivisibility > 0,
     'The coin divisibility must be an integer greater than 0',
   ];
 }

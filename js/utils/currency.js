@@ -76,6 +76,10 @@ export function decimalToInteger(value, divisibility) {
 /**
  * Converts the amount from an integer to a decimal based on data.divisibility.
  * // todo: doc me up + params
+ * // test that app gracefully handles missing data
+ * // test that app gracefully handles missing data
+ * // test that app gracefully handles missing data
+ * // test that app gracefully handles missing data
  */
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
@@ -90,6 +94,12 @@ export function integerToDecimal(value, divisibility, options = {}) {
       throw new Error('The value must be provided as a number');
     }
 
+    // search for 'The divisibility must be provided as a number.' and us isValidCOinDiv
+    // instead
+    // search for 'The divisibility must be provided as a number.' and us isValidCOinDiv
+    // instead
+    // search for 'The divisibility must be provided as a number.' and us isValidCOinDiv
+    // instead
     if (typeof divisibility !== 'number') {
       throw new Error('The divisibility must be provided as a number.');
     }

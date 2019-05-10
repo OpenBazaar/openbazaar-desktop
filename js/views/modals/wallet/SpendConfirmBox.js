@@ -168,7 +168,7 @@ export default class extends baseVw {
 
   render() {
     super.render();
-    
+
     loadTemplate('modals/wallet/spendConfirmBox.html', (t) => {
       const state = this.getState();
 

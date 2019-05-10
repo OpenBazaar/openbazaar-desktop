@@ -166,6 +166,7 @@ export default class extends BaseVw {
         amount: this.balanceRemaining,
         currency,
         wallet: currency,
+        coinDivisibility: this.coinDivisibility,
       })
         .done(() => {
           endPrefixedAjaxEvent('SpendFromWallet', this.metricsOrigin, { currency });
@@ -185,6 +186,7 @@ export default class extends BaseVw {
       // is confusing and at least to make debugging easier, we'll display an error modal.
       this.showSpendError(e.message || '');
       this.getCachedEl('.js-payFromWallet').removeClass('processing');
+      console.error(e);
     }
   }
 

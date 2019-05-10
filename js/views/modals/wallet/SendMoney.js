@@ -2,7 +2,11 @@ import app from '../../../app';
 import '../../../lib/select2';
 import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
-import { convertCurrency, getExchangeRate } from '../../../utils/currency';
+import {
+  convertCurrency,
+  getExchangeRate,
+  getCoinDivisibility,
+} from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import Spend, { spend } from '../../../models/wallet/Spend';
@@ -43,6 +47,16 @@ export default class extends baseVw {
 
     spend({
       ...this.model.toJSON(),
+      // Temporaily coming from local client coin config, but... this will need to come from
+      // the server since it's based on whatever the coin div is of the wallet balance which
+      // is something driven by the server.
+      // Temporaily coming from local client coin config, but... this will need to come from
+      // the server since it's based on whatever the coin div is of the wallet balance which
+      // is something driven by the server.
+      // Temporaily coming from local client coin config, but... this will need to come from
+      // the server since it's based on whatever the coin div is of the wallet balance which
+      // is something driven by the server.
+      coinDivisibility: getCoinDivisibility(this.coinType),
       feeLevel: app.localSettings.get('defaultTransactionFee'),
     }).fail(jqXhr => {
       let reason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';

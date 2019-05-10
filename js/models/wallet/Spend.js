@@ -1,4 +1,5 @@
 import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
+import { isValidCoinDivisibility } from '../../utils/crypto';
 import {
   getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
@@ -127,6 +128,12 @@ class Spend extends BaseModel {
         ) {
           addError('orderId', 'Please provide an orderId.');
         }
+
+        const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(attrs.coinDivisibility);
+
+        if (!isValidCoinDiv) {
+          addError('coinDivisibility', coinDivErr);
+        }
       }
     }
 
@@ -146,8 +153,21 @@ class Spend extends BaseModel {
         amount = this.amountInServerCur;
       }
 
-      options.attrs.amount = decimalToInteger(amount, walletCur.code);
+      options.attrs.amount = decimalToInteger(amount, options.attrs.coinDivisibility);
       delete options.attrs.currency;
+      delete options.attrs.coinDivisibility;
+
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      // temporary until server will be updated to expect string
+      options.attrs.amount = Number(options.attrs.amount);
     }
 
     return super.sync(method, model, options);
