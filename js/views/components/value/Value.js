@@ -9,8 +9,7 @@ import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import baseVw from '../../baseVw';
 
-// todo: doc me up
-export function setCurs(options = {}) {
+export function validateValueOpts(options = {}) {
   if (typeof options !== 'object') {
     throw new Error('Please provide the options as an object.');
   }
@@ -39,6 +38,11 @@ export function setCurs(options = {}) {
   ) {
     throw new Error('Either a fromCur or toCur must be provided as a non-empty string.');
   }
+}
+
+// todo: doc me up
+export function standardizeCurs(options = {}) {
+  validateValueOpts(options);
 
   const opts = { ...options };
 
@@ -51,6 +55,14 @@ export function setCurs(options = {}) {
   return opts;
 }
 
+// note how if you don't want conversion just pass in only one-of
+// fromCur or toCur
+// note how if you don't want conversion just pass in only one-of
+// fromCur or toCur
+// note how if you don't want conversion just pass in only one-of
+// fromCur or toCur
+// note how if you don't want conversion just pass in only one-of
+// fromCur or toCur
 export default class extends baseVw {
   constructor(options = {}) {
     let opts = {
@@ -86,14 +98,8 @@ export default class extends baseVw {
 
     opts = {
       ...opts,
-      initialState: setCurs(opts.initialState),
+      initialState: standardizeCurs(opts.initialState),
     };
-
-    // What happens if one cur is good and other wrong type?
-    // What happens if one cur is good and other wrong type?
-    // What happens if one cur is good and other wrong type?
-    // What happens if one cur is good and other wrong type?
-    // What happens if one cur is good and other wrong type?
 
     super(opts);
   }

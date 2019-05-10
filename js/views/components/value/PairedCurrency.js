@@ -1,6 +1,8 @@
 import app from '../../../app';
+import { ensureMainnetCode } from '../../../data/walletCurrencies';
 import baseVw from '../../baseVw';
-import Value from './Value';
+import { getCurrency } from './valueConfigs';
+import Value, { validateValueOpts } from './Value';
 
 // doc me up
 // doc me up
@@ -13,23 +15,14 @@ export default class extends baseVw {
     const opts = {
       ...options,
       initialState: {
-        // These will be passed onto the nested Value components.
+        // These need to be provided as objects.
+        // fromCur is the cur that will be in the parenthesis. To cur is likely
+        // the app's display currency from settings.
         fromCurValueOptions: {},
         toCurValueOptions: {},
         ...options.initialState,
       },
     };
-
-    // console.log('charlie zen ==>');
-    // console.dir(options);
-    // console.log('<== charlie zen');
-    // console.log('\n');
-
-
-    // console.log('flee fluy ==>');
-    // console.dir(opts);
-    // console.log('<== flee fluy');
-    // console.log('\n');
 
     super(opts);
   }
@@ -39,31 +32,33 @@ export default class extends baseVw {
   }
 
   setState(state = {}, options = {}) {
-    // if (typeof state.valueOptions !== 'object') {
-    //   throw new Error('state.valueOptions must be provided as an object.');
-    // }
+    if (!(
+      state.fromCurValueOptions &&
+      typeof state.fromCurValueOptions.initialState === 'object'
+    )) {
+      throw new Error('Please provide an initialState for the fromCurValueOptions.');
+    }
 
-    // if (typeof state.valueOptions.amount !== 'number') {
-    //   throw new Error('state.valueOptions.priceAmount must be provided as ' +
-    //     'a number.');
-    // }
+    if (!(
+      state.toCurValueOptions &&
+      typeof state.toCurValueOptions.initialState === 'object'
+    )) {
+      throw new Error('Please provide an initialState for the toCurValueOptions.');
+    }
 
-    // if (typeof state.valueOptions.fromCur !== 'string' ||
-    //   !state.valueOptions.fromCur) {
-    //   throw new Error('state.valueOptions.fromCur must be provided as ' +
-    //     'a non-empty string.');
-    // }
+    try {
+      validateValueOpts(state.fromCurValueOptions.initialState);
+    } catch (e) {
+      console.error('There was an error validating the fromCurValueOptions.');
+      throw e;
+    }
 
-    // if (typeof state.valueOptions.toCur !== 'string' ||
-    //   !state.valueOptions.toCur) {
-    //   throw new Error('state.valueOptions.toCur must be provided as ' +
-    //     'a non-empty string.');
-    // }
-
-    // if (typeof state.priceModifier !== 'number') {
-    //   throw new Error('state.priceModifier must be provided as ' +
-    //     'a number');
-    // }
+    try {
+      validateValueOpts(state.toCurValueOptions.initialState);
+    } catch (e) {
+      console.error('There was an error validating the toCurValueOptions.');
+      throw e;
+    }
 
     return super.setState(state, options);
   }
@@ -71,26 +66,33 @@ export default class extends baseVw {
   render() {
     super.render();
     const state = this.getState();
-
-    this.$el.html(
-      `<span class="suckIt">${
-        app.polyglot.t('currencyPairing', {
-          baseCurValue: '<span class="js-pairedCurFrom"></span>',
-          convertedCurValue: '<span class="js-pairedCurTo"></span>',
-        })
-      }</span>`
-    );
+    const fromCur = getCurrency(state.fromCurValueOptions.initialState);
+    const toCur = getCurrency(state.toCurValueOptions.initialState);
 
     if (this.fromCurValue) this.fromCurValue.remove();
     if (this.toCurValue) this.toCurValue.remove();
 
-    this.fromCurValue = this.createChild(Value, state.fromCurValueOptions);
-    this.getCachedEl('.js-pairedCurFrom')
-      .html(this.fromCurValue.render().el);
+    if (ensureMainnetCode(fromCur) === ensureMainnetCode(toCur)) {
+      this.toCurValue = this.createChild(Value, state.toCurValueOptions);
+      this.$el.html(this.toCurValue.render().el);
+    } else {
+      this.$el.html(
+        `<span>${
+          app.polyglot.t('currencyPairing', {
+            baseCurValue: '<span class="js-pairedCurFrom"></span>',
+            convertedCurValue: '<span class="js-pairedCurTo"></span>',
+          })
+        }</span>`
+      );
 
-    this.toCurValue = this.createChild(Value, state.toCurValueOptions);
-    this.getCachedEl('.js-pairedCurTo')
-      .html(this.toCurValue.render().el);
+      this.fromCurValue = this.createChild(Value, state.fromCurValueOptions);
+      this.getCachedEl('.js-pairedCurFrom')
+        .html(this.fromCurValue.render().el);
+
+      this.toCurValue = this.createChild(Value, state.toCurValueOptions);
+      this.getCachedEl('.js-pairedCurTo')
+        .html(this.toCurValue.render().el);
+    }
 
     return this;
   }

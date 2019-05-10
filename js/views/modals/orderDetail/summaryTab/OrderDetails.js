@@ -1,15 +1,26 @@
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+// todo: search codebase for formatCurrency and convertAndFormatCurrency
+
 import _ from 'underscore';
 import $ from 'jquery';
 import app from '../../../../app';
 import moment from 'moment';
 import { getCountryByDataName } from '../../../../data/countries';
+import { swallowException } from '../../../../utils';
 import { convertAndFormatCurrency } from '../../../../utils/currency';
 import { clipboard } from 'electron';
 import '../../../../utils/lib/velocity';
 import loadTemplate from '../../../../utils/loadTemplate';
+import BaseVw from '../../../baseVw';
+import PairedCurrency from '../../../components/value/PairedCurrency';
+import { full, short } from '../../../components/value/valueConfigs';
 import ModFragment from '../ModFragment';
 import { checkValidParticipantObject } from '../OrderDetail.js';
-import BaseVw from '../../../baseVw';
 
 export default class extends BaseVw {
   constructor(options = {}) {
@@ -136,13 +147,14 @@ export default class extends BaseVw {
   }
 
   render() {
+    const displayCurrency = app.settings.get('localCurrency');
+
     loadTemplate('modals/orderDetail/summaryTab/orderDetails.html', (t) => {
       this.$el.html(t({
         listing: this.listing.toJSON(),
         order: this.order,
         getCountryByDataName,
         convertAndFormatCurrency,
-        userCurrency: app.settings.get('localCurrency'),
         moment,
         isModerated: this.isModerated(),
         sku: this.sku,
@@ -151,6 +163,44 @@ export default class extends BaseVw {
       }));
 
       this._$copiedToClipboard = null;
+
+      if (this.orderTotal) this.orderTotal.remove();
+
+      swallowException(() => {
+        const amount = this.order.payment.amount;
+        const fromCur = this.order.payment.coin;
+
+        this.orderTotal = this.createChild(PairedCurrency, {
+          initialState: {
+            fromCurValueOptions: {
+              initialState: {
+                ...full({
+                  toCur: fromCur,
+                }),
+                toCur: fromCur,
+                amount,
+                truncateAfterChars: 20,
+              },
+            },
+            toCurValueOptions: {
+              initialState: {
+                ...short({
+                  fromCur,
+                  toCur: displayCurrency,
+                }),
+                fromCur,
+                toCur: displayCurrency,
+                amount,
+              },
+            },
+          },
+        });
+
+        this.getCachedEl('.js-orderTotal')
+          .html(
+            this.orderTotal.render().el
+          );
+      });
 
       if (this.isModerated()) {
         const moderatorState = {

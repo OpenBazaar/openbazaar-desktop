@@ -157,15 +157,7 @@
               </div>
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
-                <div>
-                  <%=
-                    ob.currencyMod.pairedCurrency(
-                      ob.order.payment.amount,
-                      ob.order.payment.coin,
-                      ob.userCurrency
-                    )
-                  %>
-                </div>
+                <div class="js-orderTotal"></div>
               </div>
             </div>
           </div>

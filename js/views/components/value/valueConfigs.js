@@ -7,7 +7,10 @@ import {
   getCurMeta,
   getExchangeRates,
 } from '../../../utils/currency';
-import { setCurs } from './Value';
+import {
+  standardizeCurs,
+  validateValueOpts,
+} from './Value';
 
 /*
  * Given an options object containing a toCur and fromCur,
@@ -16,12 +19,12 @@ import { setCurs } from './Value';
  * for both currencies, then the toCur would be returned, otherwise
  * the fromCur.
  */
-function getCurrency(options = {}) {
+export function getCurrency(options = {}) {
   if (typeof options !== 'object') {
     throw new Error('The option must be provided as an object.');
   }
 
-  const opts = setCurs(options);
+  const opts = standardizeCurs(options);
 
   if (
     opts.fromCur !== opts.toCur &&
@@ -35,6 +38,7 @@ function getCurrency(options = {}) {
 }
 
 export function short(options = {}) {
+  validateValueOpts(options);
   const { isFiat } = getCurMeta(getCurrency(options));
 
   return {
@@ -50,6 +54,7 @@ export function short(options = {}) {
 
 // doc me up - actually "almost" full
 export function full(options = {}) {
+  validateValueOpts(options);
   // multiple is fiats out there?
   // multiple is fiats out there?
   // multiple is fiats out there?
