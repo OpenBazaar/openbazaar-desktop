@@ -67,6 +67,14 @@ export default class extends baseVw {
         ...state,
       }));
 
+      // todo: options shouldn''t go into intilal state. they might want higher up
+      // ones
+      // todo: options shouldn''t go into intilal state. they might want higher up
+      // ones
+      // todo: options shouldn''t go into intilal state. they might want higher up
+      // ones
+      // todo: options shouldn''t go into intilal state. they might want higher up
+      // ones
       if (this.cryptoPrice) this.cryptoPrice.remove();
       this.cryptoPrice = this.createChild(Value, {
         initialState: { ...state.valueOptions },

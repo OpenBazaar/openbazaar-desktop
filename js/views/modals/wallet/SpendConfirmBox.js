@@ -1,6 +1,8 @@
 import $ from 'jquery';
 import app from '../../../app';
+import { swallowException } from '../../../utils';
 import loadTemplate from '../../../utils/loadTemplate';
+import { isValidCoinDivisibility } from '../../../utils/crypto';
 import { estimateFee } from '../../../utils/fees';
 import {
   startPrefixedAjaxEvent,
@@ -8,24 +10,27 @@ import {
   recordPrefixedEvent,
 } from '../../../utils/metrics';
 import baseVw from '../../baseVw';
+import PairedCurrency from '../../components/value/PairedCurrency';
+import { short, full } from '../../components/value/valueConfigs';
 
 export default class extends baseVw {
   constructor(options = {}) {
-    super(options);
+    super({
+      ...options,
+      initialState: {
+        show: false,
+        fetchingFee: false,
+        fetchFailed: false,
+        fetchError: '',
+        fee: false,
+        coinType: '',
+        btnSendText: app.polyglot.t('wallet.spendConfirmBox.btnConfirmSend'),
+        coinDiv: undefined,
+        ...options.initialState || {},
+      },
+    });
 
-    this._state = {
-      show: false,
-      fetchingFee: false,
-      fetchFailed: false,
-      fetchError: '',
-      fee: false,
-      coinType: '',
-      displayCurrency: app.settings.get('localCurrency') || 'USD',
-      btnSendText: app.polyglot.t('wallet.spendConfirmBox.btnConfirmSend'),
-      ...options.initialState || {},
-    };
-
-    this.lastFetchFeeEstimateArgs = {};
+    this.lastFetchFeeEstimateArgs = [];
     this.metricsOrigin = options.metricsOrigin;
     this.boundDocumentClick = this.onDocumentClick.bind(this);
     $(document).on('click', this.boundDocumentClick);
@@ -65,18 +70,32 @@ export default class extends baseVw {
   }
 
   onClickRetry(e) {
-    const amount = this.lastFetchFeeEstimateArgs.amount;
-    if (typeof amount === 'number') {
-      this.fetchFeeEstimate(...this.lastFetchFeeEstimateArgs);
-    }
+    this.fetchFeeEstimate(...this.lastFetchFeeEstimateArgs);
     e.stopPropagation();
     recordPrefixedEvent('ConfirmBoxRetry', this.metricsOrigin);
+  }
+
+  setState(state, options) {
+    const fullState = {
+      ...this.getState(),
+      ...state,
+    };
+
+    const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(fullState.coinDiv);
+
+    if (!isValidCoinDiv) {
+      throw new Error(coinDivErr);
+    }
+
+    return super.setState(state, options);
   }
 
   fetchFeeEstimate(
     amount,
     coinType = this.getState().coinType,
-    feeLevel = app.localSettings.get('defaultTransactionFee')) {
+    coinDiv = this.getState().coinDiv,
+    feeLevel = app.localSettings.get('defaultTransactionFee')
+  ) {
     if (typeof amount !== 'number') {
       throw new Error('Please provide an amount as a number.');
     }
@@ -85,11 +104,12 @@ export default class extends baseVw {
       throw new Error('Please provide the coinType as a string.');
     }
 
-    this.lastFetchFeeEstimateArgs = {
+    this.lastFetchFeeEstimateArgs = [
       amount,
       coinType,
+      coinDiv,
       feeLevel,
-    };
+    ];
 
     this.setState({
       fetchingFee: true,
@@ -100,7 +120,7 @@ export default class extends baseVw {
 
     startPrefixedAjaxEvent('ConfirmBoxEstimateFee', this.metricsOrigin);
 
-    estimateFee(coinType, feeLevel, amount)
+    estimateFee(coinType, coinDiv, feeLevel, amount)
       .done(fee => {
         let state = {
           fee,
@@ -147,10 +167,52 @@ export default class extends baseVw {
   }
 
   render() {
+    super.render();
+    
     loadTemplate('modals/wallet/spendConfirmBox.html', (t) => {
+      const state = this.getState();
+
       this.$el.html(t({
-        ...this._state,
+        ...state,
       }));
+
+      if (this.feeText) this.feeText.remove();
+
+      if (typeof state.fee === 'number') {
+        swallowException(() => {
+          const toCur = app.settings.get('localCurrency');
+          const amount = state.fee;
+
+          this.feeText = this.createChild(PairedCurrency, {
+            initialState: {
+              fromCurValueOptions: {
+                initialState: {
+                  ...full({
+                    toCur: state.coinType,
+                  }),
+                  toCur: state.coinType,
+                  amount,
+                  truncateAfterChars: 20,
+                },
+              },
+              toCurValueOptions: {
+                initialState: {
+                  ...short({
+                    fromCur: state.coinType,
+                    toCur,
+                  }),
+                  fromCur: state.coinType,
+                  toCur,
+                  amount,
+                },
+              },
+            },
+          });
+
+          this.getCachedEl('.js-feeText')
+            .html(this.feeText.render().el);
+        });
+      }
     });
 
     return this;

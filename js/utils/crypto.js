@@ -158,3 +158,11 @@ export function getCryptoNames() {
   cryptoNamesDeferred = cryptoNamesDeferred || $.Deferred();
   return cryptoNamesDeferred.promise();
 }
+
+// Todo: doc me up yo.
+export function isValidCoinDivisibility(coinDiv) {
+  return [
+    Number.isInteger(coinDiv) && coinDiv > 0,
+    'The coin divisibility must be an integer greater than 0',
+  ];
+}

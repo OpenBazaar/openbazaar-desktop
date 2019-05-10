@@ -670,6 +670,10 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
  * along with it's fiat equivalent (e.g. $2.33 (0.0002534 BTC)). If it cannot show the
  * "to" currency (e.g. exchange rate data not available), it will just show the "from".
  * If the "from" currency is invalid, it will render an empty string.
+ *
+ * TODO: note about view
+ * TODO: note about view
+ * TODO: note about view
  */
 export function renderPairedCurrency(price, fromCur, toCur) {
   const fromCurValidity = getCurrencyValidity(fromCur);
@@ -681,6 +685,11 @@ export function renderPairedCurrency(price, fromCur, toCur) {
     return '';
   }
 
+  // getCurrencyValidity - is this needed anymore?
+  // getCurrencyValidity - is this needed anymore?
+  // getCurrencyValidity - is this needed anymore?
+  // getCurrencyValidity - is this needed anymore?
+  // getCurrencyValidity - is this needed anymore?
   const toCurValidity = getCurrencyValidity(toCur);
   const formattedBase = formatCurrency(price, fromCur);
   const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||

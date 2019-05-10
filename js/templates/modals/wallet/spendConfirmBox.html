@@ -25,16 +25,10 @@
         </p>
         <a class="js-sendConfirmRetry"><%= ob.polyT('wallet.spendConfirmBox.btnRetry') %></a>
       <% } %>
-    <% } else if (typeof ob.fee === 'number') {
-      let feeText = ob.currencyMod.pairedCurrency(
-        ob.fee,
-        ob.coinType,
-        ob.displayCurrency
-      );
-    %>
+    <% } else if (typeof ob.fee === 'number') { %>
       <p class="clrT2">
         <%= ob.polyT('wallet.spendConfirmBox.body', {
-          currencyPairing: feeText,
+          currencyPairing: '<span class="js-feeText"></span>',
         }) %>
       </p>
     <% } %>

@@ -254,6 +254,7 @@ export default class extends BaseVw {
         initialState: {
           btnSendText: app.polyglot.t('purchase.pendingSection.btnConfirmedPay'),
           coinType: this.paymentCoin,
+          coinDiv: this.coinDivisibility,
         },
       });
       this.listenTo(this.spendConfirmBox, 'clickSend', this.walletConfirm);

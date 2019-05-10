@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import { integerToDecimal, decimalToInteger } from './currency';
+import { isValidCoinDivisibility } from './crypto';
 import { getSocket, events as serverConnectEvents } from './serverConnect';
 import app from '../app';
 
@@ -52,7 +53,7 @@ function watchTransactions() {
  *   in Bitcoin. If the call fails, the deferred will fail and pass on the args the
  *   xhr fail handler receives.
  */
-export function estimateFee(coinType, feeLevel, amount) {
+export function estimateFee(coinType, coinDiv, feeLevel, amount) {
   if (feeLevels.indexOf(feeLevel) === -1) {
     throw new Error(`feelevel must be one of ${feeLevels.join(', ')}`);
   }
@@ -65,7 +66,13 @@ export function estimateFee(coinType, feeLevel, amount) {
     throw new Error('Please provide the coinType as a string.');
   }
 
-  const amountInBaseUnits = decimalToInteger(amount, coinType);
+  const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(coinDiv);
+
+  if (!isValidCoinDiv) {
+    throw new Error(coinDivErr);
+  }
+
+  const amountInBaseUnits = decimalToInteger(amount, coinDiv);
 
   if (amountInBaseUnits === undefined) {
     throw new Error('Unable to convert the given amount to base units of the given ' +
@@ -101,7 +108,7 @@ export function estimateFee(coinType, feeLevel, amount) {
     $.get(app.getServerUrl(`wallet/estimatefee/${coinType}?${queryArgs}`))
       .done((...args) => {
         deferred.resolve(
-          integerToDecimal(args[0].estimatedFee, coinType), ...args.slice(1)
+          integerToDecimal(args[0].estimatedFee, coinDiv), ...args.slice(1)
         );
       }).fail((xhr, ...args) => {
         deferred.reject(xhr, ...args);
