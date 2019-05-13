@@ -4,7 +4,11 @@ import app from '../../app';
 import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import {
+  decimalToInteger,
+  integerToDecimal,
+  getCoinDivisibility,
+} from '../../utils/currency';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
@@ -292,31 +296,36 @@ export default class extends BaseModel {
         // it's a create or update
         options.attrs = options.attrs || this.toJSON();
 
+        let coinDiv = options.attrs.metadata.coinDivisibility;
+
+        // TODO: temp conversion until the server adjusts the format
+        // TODO: temp converesion to new format until the server follows suit.
+        coinDiv = coinDiv > 99 ?
+          Math.log(coinDiv) / Math.log(10) : coinDiv;
+
         // convert price fields
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
-          options.attrs.item.price = decimalToInteger(price,
-            options.attrs.metadata.pricingCurrency);
+          options.attrs.item.price = decimalToInteger(price, coinDiv);
         }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
             if (typeof service.price === 'number') {
-              service.price = decimalToInteger(service.price,
-                options.attrs.metadata.pricingCurrency);
+              service.price = decimalToInteger(service.price, coinDiv);
             }
 
             if (typeof service.additionalItemPrice === 'number') {
-              service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
-                options.attrs.metadata.pricingCurrency);
+              service.additionalItemPrice =
+                decimalToInteger(service.additionalItemPrice, coinDiv);
             }
           });
         });
 
         options.attrs.coupons.forEach(coupon => {
           if (typeof coupon.priceDiscount === 'number') {
-            coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency);
+            coupon.priceDiscount =
+              decimalToInteger(coupon.priceDiscount, coinDiv);
           }
         });
 
@@ -358,8 +367,7 @@ export default class extends BaseModel {
         } else {
           options.attrs.item.skus.forEach(sku => {
             if (typeof sku.surcharge === 'number') {
-              sku.surcharge = decimalToInteger(sku.surcharge,
-                options.attrs.metadata.pricingCurrency);
+              sku.surcharge = decimalToInteger(sku.surcharge, coinDiv);
             }
           });
         }
@@ -462,6 +470,17 @@ export default class extends BaseModel {
     if (parsedResponse) {
       const isCrypto = parsedResponse.metadata &&
         parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';
+      let coinDiv;
+
+      try {
+        coinDiv = getCoinDivisibility(parsedResponse.metadata.pricingCurrency);
+
+        // TODO: temp converesion to new format until the server follows suit.
+        coinDiv = coinDiv > 99 ?
+          Math.log(coinDiv) / Math.log(10) : coinDiv;
+      } catch (e) {
+        // pass
+      }
 
       // set the hash
       parsedResponse.hash = response.hash;
@@ -469,11 +488,9 @@ export default class extends BaseModel {
       // convert price fields
       if (parsedResponse.item) {
         const price = parsedResponse.item.price;
-        const cur = parsedResponse.metadata &&
-          parsedResponse.metadata.pricingCurrency;
 
         if (price) {
-          parsedResponse.item.price = integerToDecimal(price, cur);
+          parsedResponse.item.price = integerToDecimal(price, coinDiv);
         }
       }
 
@@ -482,12 +499,10 @@ export default class extends BaseModel {
           if (shipOpt.services && shipOpt.services.length) {
             shipOpt.services.forEach((service, serviceIndex) => {
               const price = service.price;
-              const cur = parsedResponse.metadata &&
-                parsedResponse.metadata.pricingCurrency;
 
               if (typeof price === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = integerToDecimal(price, cur);
+                  .services[serviceIndex].price = integerToDecimal(price, coinDiv);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178
@@ -498,7 +513,7 @@ export default class extends BaseModel {
               const price2 = service.additionalItemPrice;
               if (typeof price2 === 'number') {
                 parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, cur);
+                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, coinDiv);
               } else {
                 // This is necessary because of this bug:
                 // https://github.com/OpenBazaar/openbazaar-go/issues/178
@@ -524,7 +539,7 @@ export default class extends BaseModel {
             const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
             parsedResponse.coupons[couponIndex].priceDiscount =
-              integerToDecimal(price, cur);
+              integerToDecimal(price, coinDiv);
           }
         });
       }
@@ -560,7 +575,7 @@ export default class extends BaseModel {
           const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
           if (surcharge) {
-            sku.surcharge = integerToDecimal(surcharge, cur);
+            sku.surcharge = integerToDecimal(surcharge, coinDiv);
           }
         });
         // END - convert price fields

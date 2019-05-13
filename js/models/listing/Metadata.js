@@ -2,6 +2,7 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
+import { isValidCoinDivisibility } from '../../utils/currency';
 import { getCurrencyByCode } from '../../data/currencies';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
@@ -120,6 +121,13 @@ export default class extends BaseModel {
         addError('acceptedCurrencies', app.polyglot.t('unsupportedAcceptedCurs',
           { curs: unsupportedCurrencies.join(', ') }));
       }
+    }
+
+    const [isValidDivis, divisErr] = isValidCoinDivisibility(attrs.coinDivisibility);
+
+    if (!isValidDivis) {
+      // This would never be user facing unless there was a dev error.
+      addError('coinDivisibility', divisErr);
     }
 
     if (attrs.contractType === 'CRYPTOCURRENCY') {
