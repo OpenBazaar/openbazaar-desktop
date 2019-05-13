@@ -110,6 +110,9 @@ export function integerToDecimal(value, divisibility, options = {}) {
       throw new Error(divisErr);
     }
 
+    console.log(`the val is ${value}`);
+    console.log('boo');
+    window.boo = bigNumber;
     const result = bigNumber(value)
       .dividedBy(
         bigNumber(10)

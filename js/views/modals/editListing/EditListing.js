@@ -778,6 +778,7 @@ export default class extends BaseModal {
     this.setModelData();
 
     const serverData = this.model.toJSON();
+
     serverData.item.skus = serverData.item.skus.map(sku => (
       // The variant inventory view adds some stuff to the skus collection that
       // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
@@ -993,6 +994,12 @@ export default class extends BaseModal {
         return this;
       }
 
+      // todo is this still valid
+      // todo is this still valid
+      // todo is this still valid
+      // todo is this still valid
+      // todo is this still valid
+      // todo is this still valid
       if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,

@@ -2,9 +2,7 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
-import { isValidCoinDivisibility } from '../../utils/currency';
 import { getCurrencyByCode } from '../../data/currencies';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
@@ -14,7 +12,6 @@ export default class extends BaseModel {
       format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
-      coinDivisibility: defaultQuantityBaseUnit,
       acceptedCurrencies: [
         ...(app && app.profile && app.profile.get('currencies') || []),
       ],
@@ -121,13 +118,6 @@ export default class extends BaseModel {
         addError('acceptedCurrencies', app.polyglot.t('unsupportedAcceptedCurs',
           { curs: unsupportedCurrencies.join(', ') }));
       }
-    }
-
-    const [isValidDivis, divisErr] = isValidCoinDivisibility(attrs.coinDivisibility);
-
-    if (!isValidDivis) {
-      // This would never be user facing unless there was a dev error.
-      addError('coinDivisibility', divisErr);
     }
 
     if (attrs.contractType === 'CRYPTOCURRENCY') {

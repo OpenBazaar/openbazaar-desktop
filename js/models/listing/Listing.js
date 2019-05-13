@@ -7,6 +7,7 @@ import { events as listingEvents, shipsFreeToMe } from './';
 import {
   decimalToInteger,
   integerToDecimal,
+  getCurMeta,
   getCoinDivisibility,
 } from '../../utils/currency';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
@@ -298,6 +299,10 @@ export default class extends BaseModel {
 
         let coinDiv = options.attrs.metadata.coinDivisibility;
 
+        if (method === 'create') {
+          coinDiv = getCoinDivisibility(options.attrs.metadata.pricingCurrency);
+        }
+
         // TODO: temp conversion until the server adjusts the format
         // TODO: temp converesion to new format until the server follows suit.
         coinDiv = coinDiv > 99 ?
@@ -473,9 +478,13 @@ export default class extends BaseModel {
       let coinDiv;
 
       try {
-        coinDiv = getCoinDivisibility(parsedResponse.metadata.pricingCurrency);
+        coinDiv = parsedResponse.metadata.coinDivisibility;
 
         // TODO: temp converesion to new format until the server follows suit.
+        // TODO: also temp fiat check since server is sending 100000000 for all curs
+        //   including fiat.
+        const { isFiat } = getCurMeta(parsedResponse.metadata.pricingCurrency);
+        coinDiv = isFiat ? 100 : coinDiv;
         coinDiv = coinDiv > 99 ?
           Math.log(coinDiv) / Math.log(10) : coinDiv;
       } catch (e) {
@@ -536,7 +545,6 @@ export default class extends BaseModel {
         parsedResponse.coupons.forEach((coupon, couponIndex) => {
           if (typeof coupon.priceDiscount === 'number') {
             const price = parsedResponse.coupons[couponIndex].priceDiscount;
-            const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
             parsedResponse.coupons[couponIndex].priceDiscount =
               integerToDecimal(price, coinDiv);
@@ -572,7 +580,6 @@ export default class extends BaseModel {
           }
           // convert the surcharge
           const surcharge = sku.surcharge;
-          const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
           if (surcharge) {
             sku.surcharge = integerToDecimal(surcharge, coinDiv);
