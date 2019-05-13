@@ -8,7 +8,6 @@ import {
   decimalToInteger,
   integerToDecimal,
   getCurMeta,
-  getCoinDivisibility,
 } from '../../utils/currency';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
@@ -298,10 +297,6 @@ export default class extends BaseModel {
         options.attrs = options.attrs || this.toJSON();
 
         let coinDiv = options.attrs.metadata.coinDivisibility;
-
-        if (method === 'create') {
-          coinDiv = getCoinDivisibility(options.attrs.metadata.pricingCurrency);
-        }
 
         // TODO: temp conversion until the server adjusts the format
         // TODO: temp converesion to new format until the server follows suit.

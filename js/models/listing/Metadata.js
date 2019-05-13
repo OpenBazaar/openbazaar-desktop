@@ -2,6 +2,7 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
+import { isValidCoinDivisibility } from '../../utils/currency';
 import { getCurrencyByCode } from '../../data/currencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
@@ -97,6 +98,13 @@ export default class extends BaseModel {
 
     if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
       addError('pricingCurrency', 'The currency is not one of the available ones.');
+    } else if (attrs.contractType !== 'CRYPTOCURRENCY') {
+      const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(attrs.coinDivisibility);
+
+      if (!isValidCoinDiv) {
+        // This should never be user facing - it would be a dev error.
+        addError('coinDivisibility', coinDivErr);
+      }
     }
 
     if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies.length) {
@@ -136,6 +144,16 @@ export default class extends BaseModel {
       if (Array.isArray(attrs.acceptedCurrencies) && attrs.acceptedCurrencies.length > 1) {
         addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted ' +
           'currency is allowed.');
+      }
+
+      if (!attrs.coinType || typeof attrs.coinType !== 'string') {
+        addError('coinType', 'Please provide a coinType.');
+      } else {
+        const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(attrs.coinType);
+
+        if (!isValidCoinDiv) {
+          addError('coinDivisibility', coinDivErr);
+        }
       }
     }
 

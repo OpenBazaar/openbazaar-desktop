@@ -17,7 +17,11 @@ import {
   getCurrenciesSortedByCode as getCryptoCursByCode,
 } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
-import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
+import {
+  formatPrice,
+  getCurrencyValidity,
+  getCoinDivisibility,
+} from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
@@ -964,6 +968,14 @@ export default class extends BaseModal {
           formData.item.tags.split(tagsDelimiter) : [],
         categories: formData.item.categories.length ?
           formData.item.categories.split(tagsDelimiter) : [],
+      },
+      metadata: {
+        ...formData.metadata,
+        coinDivisibility: formData.metadata.coinDivisibility === 'number' ?
+          formData.metadata.coinDivisibility :
+          getCoinDivisibility(
+            isCrypto ? formData.metadata.coinType : formData.metadata.pricingCurrency
+          ),
       },
     });
 
