@@ -86,6 +86,13 @@ let currenciesNeedRefresh = true;
 let exchangeRateChangeBound = false;
 let currenciesSortedByNameDeferred = null;
 
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
+// TODO: transition from this to the default in the crypto util mod
 export const defaultQuantityBaseUnit = 100000000;
 
 export function getCurrencies() {

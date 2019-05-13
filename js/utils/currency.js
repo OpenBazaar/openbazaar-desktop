@@ -2,6 +2,7 @@ import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
+import bigNumber from 'bignumber.js';
 import { upToFixed } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode, isFiatCur } from '../data/currencies';
@@ -44,54 +45,53 @@ export function UnrecognizedCurrencyError(message) {
 UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
 UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
 
-/**
- * Converts the amount from a decimal to an integer. If the currency code is a crypto currency,
- * it will convert to its base units.
- */
-export function decimalToInteger(amount, currency, options = {}) {
-  const opts = {
-    returnUndefinedOnError: true,
-    ...options,
-  };
-
-  let returnVal;
-
-  try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
-    }
-
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
-    }
-
-    const curData = getCurrencyByCode(currency);
-
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
-    } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Math.round(amount * curData.baseUnit);
-      } else {
-        returnVal = Math.round(amount * 100);
-      }
-    }
-  } catch (e) {
-    if (!opts.returnUndefinedOnError) {
-      throw e;
-    }
-  }
-
-  return returnVal;
+export function isValidCoinDivisibility(coinDivisibility) {
+  return [
+    Number.isInteger(coinDivisibility) && coinDivisibility > 0,
+    'The coin divisibility must be an integer greater than 0',
+  ];
 }
 
 /**
- * Converts the amount from an integer to a decimal, rounding to 2 decimal places. If the
- * currency code is for a crypto currency, it will convert from its base units.
+ * Converts the amount from a decimal to an integer based on the provided
+ * coin divisibility.
+ * @param {Number} value - A number that should be converted to an integer.
+ * @param {Number} divisibility - An integer representing the coin divisibility (e.g. for
+ *   bitcoin, it is 8)
+ * @returns {string} - A string representation of the integer number.
  */
-export function integerToDecimal(amount, currency, options = {}) {
+export function decimalToInteger(value, divisibility) {
+  if (typeof value !== 'number') {
+    throw new Error('The value must be provided as a number');
+  }
+
+  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+  if (!isValidDivis) {
+    throw new Error(divisErr);
+  }
+
+  return bigNumber(value)
+    .multipliedBy(
+      bigNumber(10)
+        .pow(divisibility)
+    )
+    .toString();
+}
+
+/**
+ * Converts the amount from an integer to a decimal based on the provided
+ * divisibility.
+ * @param {Number} value - A number that should be converted to an integer.
+ * @param {Number} divisibility - An integer representing the coin divisibility
+ *   (e.g. for bitcoin, it is 8)
+ * @param {Object} options
+ * @param {boolean} [options.returnUndefinedOnError = true] - if true and there's
+ *   an error, rather than an exception being thrown, undefined will be return. This
+ *   will allow templates to just display nothing instead of bombing on render.
+ * @returns {string} - A string representation of the integer number.
+ */
+export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnUndefinedOnError: true,
     ...options,
@@ -100,25 +100,34 @@ export function integerToDecimal(amount, currency, options = {}) {
   let returnVal;
 
   try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
+    if (!['number', 'string'].includes(typeof value)) {
+      throw new Error('The value must be provided as a number');
     }
 
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
+    const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+    if (!isValidDivis) {
+      throw new Error(divisErr);
     }
 
-    const curData = getCurrencyByCode(currency);
+    const result = bigNumber(value)
+      .dividedBy(
+        bigNumber(10)
+          .pow(divisibility)
+      );
 
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
+    if (result.isGreaterThan(Number.MAX_SAFE_INTEGER)) {
+      throw new Error('value higher than we can handle');
     } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Number(amount / curData.baseUnit);
-      } else {
-        returnVal = Number(amount / 100);
+      returnVal = result.toNumber();
+
+      if (isNaN(returnVal)) {
+        if (opts.returnUndefinedOnError) {
+          returnVal = undefined;
+        } else {
+          throw new Error('Unable to convert the value to a ' +
+            'valid number.');
+        }
       }
     }
   } catch (e) {
@@ -514,6 +523,11 @@ export function getCurrencyValidity(cur) {
   return returnVal;
 }
 
+// TODO: will this be needed anymore?
+// TODO: will this be needed anymore?
+// TODO: will this be needed anymore?
+// TODO: will this be needed anymore?
+// TODO: will this be needed anymore?
 /**
  * Will render a formattedCurrency template. The main function of the template is that it will
  * render a localized price when possible. When it is not possible (e.g. an unrecognized currency),
@@ -576,3 +590,58 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
   return result;
 }
+
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+/**
+ * Will return information about a currency including it's currency
+ * data, if available.
+ */
+function _getCurMeta(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const cur = currency.toUpperCase();
+  const curData = getCurrencyByCode(cur, {
+    includeWalletCurs: false,
+  });
+
+  const walletCur = getWalletCurByCode(cur);
+
+  // If we don't recognize the currency, we'll assume it's a crypto
+  // listing cur.
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
+    (!walletCur && !curData);
+
+  return {
+    isFiat: !!curData,
+    isWalletCur: !!walletCur,
+    isCryptoListingCur,
+    curData: curData || walletCur,
+  };
+}
+
+export const getCurMeta = _.memoize(_getCurMeta);
+
+export const defaultCryptoCoinDivisibility = 8;
+
+function _getCoinDivisibility(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const curMeta = getCurMeta(currency);
+
+  if (curMeta.isFiat) {
+    return 2;
+  } else if (curMeta.isWalletCur) {
+    return curMeta.curData.coinDivisibility;
+  }
+
+  return defaultCryptoCoinDivisibility;
+}
+
+export const getCoinDivisibility = _.memoize(_getCoinDivisibility);

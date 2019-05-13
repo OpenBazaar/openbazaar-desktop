@@ -1,6 +1,6 @@
 import app from '../../app';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { integerToDecimal } from '../../utils/currency';
+import { integerToDecimal, getCoinDivisibility } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -60,10 +60,22 @@ export default class extends BaseModel {
       }
     } else {
       const priceObj = parsedResponse.price;
-      parsedResponse.price = {
-        ...priceObj,
-        amount: integerToDecimal(priceObj.amount, priceObj.currencyCode),
-      };
+
+      if (priceObj) {
+        // TODO: This is temp until the server provides this.
+        // TODO: This is temp until the server provides this.
+        // TODO: This is temp until the server provides this.
+        // TODO: This is temp until the server provides this.
+        // TODO: This is temp until the server provides this.
+        const coinDiv =
+          priceObj.currencyCode && typeof priceObj.currencyCode === 'string' ?
+            getCoinDivisibility(priceObj.currencyCode) : undefined;
+
+        parsedResponse.price = {
+          ...priceObj,
+          amount: integerToDecimal(priceObj.amount, coinDiv),
+        };
+      }
     }
 
     return parsedResponse;
