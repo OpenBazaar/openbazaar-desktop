@@ -13,8 +13,6 @@ export default class extends BaseView {
       throw new Error('Please provide the maximum coupon count.');
     }
 
-    console.dir(options);
-    
     if (typeof options.getCoinDiv !== 'function') {
       throw new Error('Please provide a function that returns the coin divisibility of ' +
         'the listing.');
