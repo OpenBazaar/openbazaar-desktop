@@ -13,6 +13,13 @@ export default class extends BaseView {
       throw new Error('Please provide the maximum coupon count.');
     }
 
+    console.dir(options);
+    
+    if (typeof options.getCoinDiv !== 'function') {
+      throw new Error('Please provide a function that returns the coin divisibility of ' +
+        'the listing.');
+    }
+
     // Certain coupon validations are not possible to do purely in the Coupon
     // model (e.g. validating the coupon price is not greater than the listing price).
     // In that case, any coupon related errors can be optionally passed in, in the
@@ -87,7 +94,7 @@ export default class extends BaseView {
 
     const view = this.createChild(Coupon, {
       model,
-      getCurrency: () => ('USD'),
+      getCoinDiv: this.options.getCoinDiv,
       couponErrors,
       ...options,
     });

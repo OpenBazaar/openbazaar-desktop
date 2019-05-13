@@ -307,7 +307,7 @@ export default class extends BaseModal {
 
     if (!isNaN(numericVal) && trimmedVal) {
       $(e.target).val(
-        formatPrice(numericVal, this.$currencySelect.val())
+        formatPrice(numericVal, this.coinDivisibility)
       );
     } else {
       $(e.target).val(trimmedVal);
@@ -971,11 +971,7 @@ export default class extends BaseModal {
       },
       metadata: {
         ...formData.metadata,
-        coinDivisibility: formData.metadata.coinDivisibility === 'number' ?
-          formData.metadata.coinDivisibility :
-          getCoinDivisibility(
-            isCrypto ? formData.metadata.coinType : formData.metadata.pricingCurrency
-          ),
+        coinDivisibility: this.coinDivisibility,
       },
     });
 
@@ -1194,6 +1190,23 @@ export default class extends BaseModal {
     return (this.$currencySelect.length ?
         this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
           app.settings.get('localCurrency'));
+  }
+
+  get coinDivisibility() {
+    let coinDiv;
+
+    if (this.getCachedEl('#editContractType').length) {
+      coinDiv = getCoinDivisibility(
+        this.getCachedEl('#editContractType').val === 'CRYPTOCURRENCY' ?
+          this.getCachedEl('#editListingCoinType').val() :
+          this.currency
+      );
+    } else {
+      coinDiv = this.model.get('metadata')
+        .get('coinDivisibility');
+    }
+
+    return coinDiv;
   }
 
   createShippingOptionView(opts) {
@@ -1471,6 +1484,7 @@ export default class extends BaseModal {
           collection: this.coupons,
           maxCouponCount: this.model.max.couponCount,
           couponErrors,
+          getCoinDiv: () => this.coinDivisibility,
         });
 
         this.$couponsSection.find('.js-couponsContainer').append(
@@ -1503,6 +1517,10 @@ export default class extends BaseModal {
           getCoinTypes: this.getCoinTypesDeferred.promise(),
           getReceiveCur: () => this._receiveCryptoCur,
         });
+
+        console.log('sizzle');
+        window.sizzle = this.cryptoCurrencyType;
+
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);
 

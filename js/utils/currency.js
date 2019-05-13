@@ -197,7 +197,7 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
  * It is more useful for <input>'s because we are not localizing the numbers in them.
  *
  */
-export function formatPrice(price, currency) {
+export function formatPrice(price, divisibility) {
   if (typeof price !== 'number') {
     throw new Error('Please provide a price as a number');
   }
@@ -206,25 +206,13 @@ export function formatPrice(price, currency) {
     throw new Error('Please provide a price that is not NaN');
   }
 
-  if (typeof currency !== 'string') {
-    throw new Error('Please provide a currency as a string');
+  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+  if (!isValidDivis) {
+    throw new Error(divisErr);
   }
 
-  let convertedPrice;
-  // todo: this needs to take into account crypto listing currency codes,
-  // which using the method below, would result in most of them being
-  // considered as fiat.
-  const cryptoCur = getWalletCurByCode(currency);
-
-  if (cryptoCur) {
-    // Format crypto price so it has up to the max decimal places (as specified in the crypto
-    // config), but without any trailing zeros
-    convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
-  } else {
-    convertedPrice = price.toFixed(2);
-  }
-
-  return convertedPrice;
+  return upToFixed(price, divisibility);
 }
 
 /**

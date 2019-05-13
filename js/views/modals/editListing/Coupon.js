@@ -9,8 +9,8 @@ export default class extends BaseView {
       throw new Error('Please provide a model.');
     }
 
-    if (typeof options.getCurrency !== 'function') {
-      throw new Error('Please provide a function for me to obtain the current currency.');
+    if (typeof options.getCoinDiv !== 'function') {
+      throw new Error('Please provide a function for me to obtain the coin divisibility.');
     }
 
     // any parent level errors can be passed in options.couponErrors, e.g.
@@ -97,7 +97,7 @@ export default class extends BaseView {
           ...(this.model.validationError || {}),
           ...(this.options.couponErrors || {}),
         },
-        getCurrency: this.options.getCurrency,
+        getCoinDiv: this.options.getCoinDiv,
         formatPrice,
       }));
 
