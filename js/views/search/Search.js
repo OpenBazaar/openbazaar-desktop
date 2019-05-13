@@ -82,11 +82,12 @@ export default class extends baseVw {
 
     this._categorySearch = {
       ...this._search,
+      provider: app.searchProviders.at(0),
       ps: 8,
     };
 
     this._cryptoSearch = {
-      ...this._search,
+      ...this._categorySearch,
       ps: 5,
       filters: {
         type: 'cryptocurrency',
