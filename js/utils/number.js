@@ -93,3 +93,13 @@ export function decimalPlaces(num) {
     - (match[2] ? +match[2] : 0)
  );
 }
+
+// todo: doc and put in our style
+// todo: doc and put in our style
+// todo: doc and put in our style
+// todo: doc and put in our style
+// https://stackoverflow.com/a/7343013/632806
+export function preciseRound(value, precision) {
+  const multiplier = Math.pow(10, precision || 0);
+  return Math.round(value * multiplier) / multiplier;
+}

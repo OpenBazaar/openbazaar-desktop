@@ -3,7 +3,7 @@ import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
-import { upToFixed } from './number';
+import { upToFixed, preciseRound } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode, isFiatCur } from '../data/currencies';
 import {
@@ -51,6 +51,61 @@ export function isValidCoinDivisibility(coinDivisibility) {
     'The coin divisibility must be an integer greater than 0',
   ];
 }
+
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+// TODO: is there some other isFiat implementation that is no longer needed now
+/**
+ * Will return information about a currency including it's currency
+ * data, if available.
+ */
+function _getCurMeta(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const cur = currency.toUpperCase();
+  const curData = getCurrencyByCode(cur, {
+    includeWalletCurs: false,
+  });
+
+  const walletCur = getWalletCurByCode(cur);
+
+  // If we don't recognize the currency, we'll assume it's a crypto
+  // listing cur.
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
+    (!walletCur && !curData);
+
+  return {
+    isFiat: !!curData,
+    isWalletCur: !!walletCur,
+    isCryptoListingCur,
+    curData: curData || walletCur,
+  };
+}
+
+export const getCurMeta = _.memoize(_getCurMeta);
+
+export const defaultCryptoCoinDivisibility = 8;
+
+function _getCoinDivisibility(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const curMeta = getCurMeta(currency);
+
+  if (curMeta.isFiat) {
+    return 2;
+  } else if (curMeta.isWalletCur) {
+    return curMeta.curData.coinDivisibility;
+  }
+
+  return defaultCryptoCoinDivisibility;
+}
+
+export const getCoinDivisibility = _.memoize(_getCoinDivisibility);
 
 /**
  * Converts the amount from a decimal to an integer based on the provided
@@ -223,6 +278,50 @@ export function formatPrice(price, divisibility) {
   return upToFixed(price, divisibility);
 }
 
+export function isFormattedResultZero(amount, maxDecimals) {
+  if (maxDecimals === 0) return true;
+
+  return (
+    preciseRound(amount, maxDecimals) <
+      parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`)
+  );
+}
+
+// This is the max supported by Intl.NumberFormat.
+const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 20;
+
+// todo: todo: todo: unit test me like a bandit
+// todo: doc me up
+// note about first sig dig on zero
+function getMaxDisplayDigits(amount, desiredMax) {
+  if (typeof amount !== 'number') {
+    throw new Error('Please provide the amount as a number.');
+  }
+
+  if (typeof desiredMax !== 'number') {
+    throw new Error('Please provide the desiredMax as a number.');
+  }
+
+  if (amount === 0) {
+    return desiredMax;
+  }
+
+  let max = desiredMax;
+
+  if (max === 0) {
+    return 0;
+  }
+
+  while (
+    isFormattedResultZero(amount, max) &&
+    max < MAX_NUMBER_FORMAT_DISPLAY_DECIMALS
+  ) {
+    max++;
+  }
+
+  return max;
+}
+
 /**
  * Will format an amount in the given currency into the format appropriate for the given locale.
  * In many cases, instead of using this method directly, you may want to use
@@ -242,6 +341,11 @@ export function formatCurrency(amount, currency, options) {
     // If you just want to format a number representing a crypto currency amount
     // but don't want any code or symbol used, set to false.
     includeCryptoCurIdentifier: true,
+    // If the formatted amount would be zero given the provided amount and
+    // maxDisplayDecimals, if true, the
+    // If true and the amount is greater than zero, maxDisplayDecimals will be
+    // raised as necessary to avoid a formatted result being 0.
+    extendMaxDecimalsOnZero: true,
     ...options,
   };
 
@@ -258,29 +362,40 @@ export function formatCurrency(amount, currency, options) {
   }
 
   const cur = currency.toUpperCase();
-  const curData = getCurrencyByCode(cur);
+  const {
+    isFiat,
+    isWalletCur,
+    isCryptoListingCur,
+    curData,
+  } = getCurMeta(cur);
 
   let formattedCurrency;
-  const cryptoCur = getWalletCurByCode(cur);
 
-  // If we don't recognize the currency, we'll assume it's a crypto
-  // listing cur.
-  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-    (!cryptoCur && !curData);
-
-  if (cryptoCur || isCryptoListingCur) {
-    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
-      opts.minDisplayDecimals : 0;
-    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-      opts.maxDisplayDecimals : 8;
-  } else {
+  if (isFiat) {
     opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
       opts.minDisplayDecimals : 2;
-    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-      opts.maxDisplayDecimals : 2;
+  } else {
+    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
+      opts.minDisplayDecimals : 0;
   }
 
-  if (cryptoCur) {
+  opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
+    opts.maxDisplayDecimals : getCoinDivisibility(cur);
+
+  if (
+    amount > 0 &&
+    opts.extendMaxDecimalsOnZero
+  ) {
+    opts.maxDisplayDecimals = getMaxDisplayDigits(amount, opts.maxDisplayDecimals);
+  }
+
+  if (opts.maxDisplayDecimals > MAX_NUMBER_FORMAT_DISPLAY_DECIMALS) {
+    opts.maxDisplayDecimals = MAX_NUMBER_FORMAT_DISPLAY_DECIMALS;
+    console.warn(`Using ${MAX_NUMBER_FORMAT_DISPLAY_DECIMALS} for maxDisplayDecimals since it ' +
+      'is the maximum supported by Intl.NumberFormat`);
+  }
+
+  if (isWalletCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
     let bitcoinConvertUnit;
     let amt = amount;
@@ -586,58 +701,3 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
   return result;
 }
-
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
-/**
- * Will return information about a currency including it's currency
- * data, if available.
- */
-function _getCurMeta(currency) {
-  if (typeof currency !== 'string' || !currency) {
-    throw new Error('Please provide a currrency as a non-empty string.');
-  }
-
-  const cur = currency.toUpperCase();
-  const curData = getCurrencyByCode(cur, {
-    includeWalletCurs: false,
-  });
-
-  const walletCur = getWalletCurByCode(cur);
-
-  // If we don't recognize the currency, we'll assume it's a crypto
-  // listing cur.
-  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-    (!walletCur && !curData);
-
-  return {
-    isFiat: !!curData,
-    isWalletCur: !!walletCur,
-    isCryptoListingCur,
-    curData: curData || walletCur,
-  };
-}
-
-export const getCurMeta = _.memoize(_getCurMeta);
-
-export const defaultCryptoCoinDivisibility = 8;
-
-function _getCoinDivisibility(currency) {
-  if (typeof currency !== 'string' || !currency) {
-    throw new Error('Please provide a currrency as a non-empty string.');
-  }
-
-  const curMeta = getCurMeta(currency);
-
-  if (curMeta.isFiat) {
-    return 2;
-  } else if (curMeta.isWalletCur) {
-    return curMeta.curData.coinDivisibility;
-  }
-
-  return defaultCryptoCoinDivisibility;
-}
-
-export const getCoinDivisibility = _.memoize(_getCoinDivisibility);
