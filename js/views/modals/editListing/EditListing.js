@@ -300,7 +300,7 @@ export default class extends BaseModal {
     this.inProgressPhotoUploads.forEach(photoUpload => photoUpload.abort());
   }
 
-  onChangePrice(e) {
+  onChangePrice() {
     this.variantInventory.render();
   }
 

@@ -44,13 +44,13 @@ export function toStandardNotation(number, options) {
  * (18.986).toFixed(4) // 18.9860
  * upToFixed(18.986, 4) // 18.986
  */
-export function upToFixed(number, decimalPlaces) {
+export function upToFixed(number, decPlaces) {
   if (typeof number !== 'number') {
     throw new Error('Please provide a number.');
   }
 
   return toStandardNotation(
-    parseFloat((number).toFixed(decimalPlaces))
+    parseFloat((number).toFixed(decPlaces))
   ).toString();
 }
 
