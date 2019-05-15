@@ -12,7 +12,7 @@ export function toStandardNotation(number, options) {
 
   const opts = {
     minDisplayDecimals: 0,
-    maxDisplayDecimals: 8,
+    maxDisplayDecimals: 20,
     ...options,
   };
 

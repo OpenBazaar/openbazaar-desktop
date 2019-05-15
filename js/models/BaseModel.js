@@ -160,7 +160,7 @@ export default class extends Model {
     return superSet;
   }
 
-  mergeInNestedModelErrors(errObj = {}) {
+  _mergeInNestedModelErrors(errObj = {}) {
     const nested = _.result(this, 'nested', []);
     const prefixedErrs = {};
 
@@ -168,12 +168,13 @@ export default class extends Model {
       .forEach((key) => {
         if (this.get(key) instanceof Model) {
           const nestedMd = this.get(key);
-          const nestedErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
+          const nestedErrs = !nestedMd.isValid() ? nestedMd.validationError : {};
 
           Object.keys(nestedErrs).forEach((nestedErrKey) => {
             const prefixedKey = `${key}.${nestedErrKey}`;
             prefixedErrs[prefixedKey] = errObj[prefixedKey] || [];
-            prefixedErrs[prefixedKey].push(nestedErrs[nestedErrKey]);
+            prefixedErrs[prefixedKey] =
+              prefixedErrs[prefixedKey].concat(nestedErrs[nestedErrKey]);
           });
         }
       });
@@ -184,7 +185,7 @@ export default class extends Model {
     };
   }
 
-  mergeInNestedCollectionErrors(errObj = {}) {
+  _mergeInNestedCollectionErrors(errObj = {}) {
     const nested = _.result(this, 'nested', []);
     let mergedErrs = errObj;
 
@@ -193,15 +194,16 @@ export default class extends Model {
         if (this.get(key) instanceof Collection) {
           const nestedCl = this.get(key);
 
-          nestedCl.forEach((nestedMd) => {
+          nestedCl.forEach(nestedMd => {
             const prefixedErrs = {};
-            const nestedMdErrs = nestedMd.isValid() ? {} : nestedMd.validationError;
+            const nestedMdErrs = !nestedMd.isValid() ? nestedMd.validationError : {};
 
-            Object.keys(nestedMdErrs).forEach((nestedMdErrKey) => {
+            Object.keys(nestedMdErrs).forEach(nestedMdErrKey => {
               // since indexes can change, we'll index using the model's client id (cid)
               const prefixedKey = `${key}[${nestedMd.cid}].${nestedMdErrKey}`;
               prefixedErrs[prefixedKey] = errObj[prefixedKey] || [];
-              prefixedErrs[prefixedKey].push(nestedMdErrs[nestedMdErrKey]);
+              prefixedErrs[prefixedKey] =
+                prefixedErrs[prefixedKey].concat(nestedMdErrs[nestedMdErrKey]);
             });
 
             mergedErrs = {
@@ -216,11 +218,75 @@ export default class extends Model {
   }
 
   mergeInNestedErrors(errObj = {}) {
-    return {
+    // The _mergeInNested... functions need to be called before
+    // _setNestedValidationErrors since the former clear the validation
+    // errors and the latter adds on to the nested ones. If you called them
+    // in reverse _mergeInNested... would overwrite the _setNestedValidationErrors.
+    const merged = {
       ...errObj,
-      ...this.mergeInNestedModelErrors(errObj),
-      ...this.mergeInNestedCollectionErrors(errObj),
+      ...this._mergeInNestedModelErrors(errObj),
+      ...this._mergeInNestedCollectionErrors(errObj),
     };
+
+    this._setNestedValidationErrors(merged);
+
+    return merged;
+  }
+
+  /*
+   * This will ensure that the validationError property is updated on all
+   * nested instances with any errors based on the provided errObj. This
+   * only be called on the top-level parent of a model with nested elements.
+   * It will go as many levels deep as described by the structure of the
+   * keys in the provided errObj.
+   */
+  _setNestedValidationErrors(errObj = {}) {
+    // Update the validationError for any nested items
+    // const nestedValidationErrsCleared = [];
+
+    Object.keys(errObj)
+      .forEach(errKey => {
+        try {
+          const split = errKey.split('.');
+
+          let baseInstance = this;
+          // const deepErrs = split.slice(1);
+
+          split
+            .forEach((deepErrKey, deepIndex) => {
+              if (deepErrKey.includes('[')) {
+                const clientID = deepErrKey.match(/\[(.*?)\]/)[1];
+
+                if (!clientID) {
+                  throw new Error('Unable to obtain the client id.');
+                } else {
+                  baseInstance = baseInstance
+                    .get(deepErrKey.slice(0, deepErrKey.indexOf('[')))
+                    .get(clientID);
+                }
+              } else if (deepIndex + 1 === split.length) {
+                if (!baseInstance) {
+                  throw new Error('Unable to obtain the nested instance.');
+                }
+
+                // if (!nestedValidationErrsCleared.includes(errKey)) {
+                //   baseInstance.validationError = {};
+                //   nestedValidationErrsCleared.push(errKey);
+                // }
+
+                baseInstance.validationError =
+                  baseInstance.validationError || {};
+                baseInstance.validationError[deepErrKey] = errObj[errKey];
+              } else {
+                baseInstance = baseInstance.nested[deepErrKey] || baseInstance;
+              }
+            });
+        } catch (e) {
+          throw e;
+        }
+      });
+
+    return errObj;
   }
 
   toJSON() {
@@ -234,6 +300,8 @@ export default class extends Model {
         }
       });
     }
+
+    attrs.cid = this.cid;
 
     return attrs;
   }

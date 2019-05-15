@@ -113,8 +113,6 @@ export default class extends BaseModel {
       addError('price', app.polyglot.t('itemModelErrors.provideAmount'));
     } else if (is.not.number(attrs.price)) {
       addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
-    } else if (attrs.price <= 0) {
-      addError('price', app.polyglot.t('itemModelErrors.provideAmountGreaterThanZero'));
     }
 
     if (!attrs.images.length) {

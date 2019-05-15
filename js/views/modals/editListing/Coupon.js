@@ -17,6 +17,7 @@ export default class extends BaseView {
     // options.couponErrors = {
     //   <field-name>: ['err1', 'err2', 'err3']
     // }
+    delete options.couponErrors;
 
     super(options);
     this.options = options;
@@ -29,7 +30,8 @@ export default class extends BaseView {
   events() {
     return {
       'click .js-btnRemoveCoupon': 'onClickRemove',
-      'change [name=discountType]': 'onChangeDiscountType',
+      // 'change [name=discountType]': 'onChangeDiscountType',
+      // 'change [name=discountAmount]': 'onChangeDiscountAmount',
     };
   }
 
@@ -37,16 +39,28 @@ export default class extends BaseView {
     this.trigger('remove-click', { view: this });
   }
 
-  onChangeDiscountType(e) {
-    // Price fields are formatted on 'change' by the parent view, so we'll
-    // make sure to give the appropriate class if the user is providing
-    // a fixed amount for the discount amount.
-    if (e.target.value === 'FIXED') {
-      this.$inputDiscountAmount.addClass('js-price');
-    } else {
-      this.$inputDiscountAmount.removeClass('js-price');
-    }
-  }
+  // onChangeDiscountType(e) {
+  //   this.formatDiscountAmount(e.target.value, undefined);
+  // }
+
+  // onChangeDiscountAmount(e) {
+  //   this.formatDiscountAmount(undefined, Number(e.target.value));
+  // }
+
+  // formatDiscountAmount(
+  //   discountType = this.getCachedEl('select[name=discountType]').val(),
+  //   val = Number(this.$inputDiscountAmount.val())
+  // ) {
+  //   if (discountType === 'FIXED') {
+  //     this.$inputDiscountAmount.val(
+  //       formatPrice(Number(val), this.options.getCoinDiv())
+  //     );
+  //   } else {
+  //     this.$inputDiscountAmount.val(
+  //       formatPrice(val, 2)
+  //     );
+  //   }
+  // }
 
   getFormData(fields = this.$formFields) {
     const formData = super.getFormData(fields);
@@ -98,13 +112,14 @@ export default class extends BaseView {
           ...(this.options.couponErrors || {}),
         },
         getCoinDiv: this.options.getCoinDiv,
-        formatPrice,
+        // formatPrice,
       }));
 
-      this.$('select[name=discountType]').select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
-      });
+      this.getCachedEl('select[name=discountType]')
+        .select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
+        });
 
       this._$formFields = null;
       this._$inputDiscountAmount = null;

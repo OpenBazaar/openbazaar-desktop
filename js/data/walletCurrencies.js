@@ -11,7 +11,13 @@ const currencies = [
     code: 'BTC',
     testnetCode: 'TBTC',
     symbol: '₿',
+    // todo: transition away from base units
+    // todo: transition away from base units
+    // todo: transition away from base units
+    // todo: transition away from base units
+    // todo: transition away from base units
     baseUnit: 100000000,
+    coinDivisibility: 8,
     averageModeratedTransactionSize: 184,
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,
@@ -52,6 +58,7 @@ const currencies = [
     code: 'BCH',
     testnetCode: 'TBCH',
     baseUnit: 100000000,
+    coinDivisibility: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => {
@@ -82,6 +89,7 @@ const currencies = [
     code: 'LTC',
     testnetCode: 'TLTC',
     baseUnit: 100000000,
+    coinDivisibility: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `litecoin:${address}`,
@@ -104,6 +112,7 @@ const currencies = [
     code: 'ZEC',
     testnetCode: 'TZEC',
     baseUnit: 100000000,
+    coinDivisibility: 8,
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,

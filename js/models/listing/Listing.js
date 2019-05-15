@@ -8,7 +8,9 @@ import {
   decimalToInteger,
   integerToDecimal,
   getCurMeta,
+  isValidCoinDivisibility,
 } from '../../utils/currency';
+import { toStandardNotation } from '../../utils/number';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
@@ -137,6 +139,28 @@ export default class extends BaseModel {
   }
 
   /**
+   * Returns the minimum possible price based on the coinDivisibility which is
+   * set on the model.
+   */
+  get minCoinDivPrice() {
+    let coinDiv;
+
+    try {
+      const metadata = this.get('metadata');
+      coinDiv = metadata.get('coinDivisibility');
+      const [isValidCoinDiv] =
+        isValidCoinDivisibility(coinDiv);
+      if (!isValidCoinDiv) {
+        throw new Error('Invalid coin divisibility');
+      }
+    } catch (e) {
+      throw new Error('Unable to obtain a valid coin divisibility');
+    }
+
+    return 1 / (Math.pow(10, coinDiv));
+  }
+
+  /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
    * if this listing is being used as a template for a new listing. This differs from
@@ -166,6 +190,26 @@ export default class extends BaseModel {
       ...this.get('item').toJSON(),
       ...attrs.item,
     };
+
+    let minCoinDivPrice;
+
+    try {
+      minCoinDivPrice = this.minCoinDivPrice;
+    } catch (e) {
+      // pass
+    }
+
+    console.log('boris mally sally jon');
+    window.boris = attrs;
+    window.mally = attrs.metadata instanceof Metadata;
+    window.sally = minCoinDivPrice;
+    const validMinPrice = attrs.metadata instanceof Metadata &&
+      typeof minCoinDivPrice === 'number';
+    window.jon = validMinPrice;
+
+    if (!(attrs.metadata instanceof Metadata)) {
+      addError('metadata', 'metadata must be provided as a nested Metadata model instance.');
+    }
 
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
@@ -219,11 +263,58 @@ export default class extends BaseModel {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
           'listings.');
       }
+
+      if (validMinPrice && item.price < minCoinDivPrice) {
+        addError('item.price', app.polyglot.t('listingModelErrors.priceTooLow', {
+          cur: metadata.pricingCurrency,
+          min: toStandardNotation(minCoinDivPrice),
+        }));
+      }
     }
 
-    if (attrs.coupons.length > this.max.couponCount) {
-      addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
-        { maxCouponCount: this.max.couponCount }));
+    if (attrs.coupons.length) {
+      const coupons = attrs.coupons.toJSON();
+
+      if (coupons.length > this.max.couponCount) {
+        addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
+          { maxCouponCount: this.max.couponCount }));
+      }
+
+      coupons.forEach(coupon => {
+        if (validMinPrice && coupon.priceDiscount < minCoinDivPrice) {
+          addError(`coupons[${coupon.cid}].priceDiscount`,
+            app.polyglot.t('listingModelErrors.priceTooLow', {
+              cur: metadata.pricingCurrency,
+              min: toStandardNotation(minCoinDivPrice),
+            }));
+        }
+      });
+
+      // Coupon price discount cannot exceed the item price.
+      coupons.forEach(coupon => {
+        const priceDiscount = coupon.priceDiscount;
+
+        if (typeof priceDiscount !== 'undefined' && priceDiscount >= attrs.item.get('price')) {
+          addError(`coupons[${coupon.cid}].priceDiscount`,
+            app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
+        }
+      });
+    }
+
+    if (validMinPrice && Array.isArray(item.skus)) {
+      item.skus.forEach(sku => {
+        if (
+          typeof sku.surcharge === 'number' &&
+          sku.surcharge > 0 &&
+          sku.surcharge < this.minCoinDivPrice
+        ) {
+          addError(`item.skus[${sku.cid}].surcharge`,
+            app.polyglot.t('listingModelErrors.skuPriceTooLow', {
+              cur: metadata.pricingCurrency,
+              min: toStandardNotation(minCoinDivPrice),
+            }));
+        }
+      });
     }
 
     errObj = this.mergeInNestedErrors(errObj);
@@ -239,16 +330,6 @@ export default class extends BaseModel {
     } else {
       delete errObj['item.cryptoQuantity'];
     }
-
-    // Coupon price discount cannot exceed the item price.
-    attrs.coupons.forEach(coupon => {
-      const priceDiscount = coupon.get('priceDiscount');
-
-      if (typeof priceDiscount !== 'undefined' && priceDiscount >= attrs.item.get('price')) {
-        addError(`coupons[${coupon.cid}].priceDiscount`,
-          app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
-      }
-    });
 
     if (Object.keys(errObj).length) return errObj;
 

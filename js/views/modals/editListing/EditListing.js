@@ -306,9 +306,9 @@ export default class extends BaseModal {
     const numericVal = Number(trimmedVal);
 
     if (!isNaN(numericVal) && trimmedVal) {
-      $(e.target).val(
-        formatPrice(numericVal, this.coinDivisibility)
-      );
+      // $(e.target).val(
+      //   formatPrice(numericVal, this.coinDivisibility)
+      // );
     } else {
       $(e.target).val(trimmedVal);
     }
@@ -858,6 +858,8 @@ export default class extends BaseModal {
     // render so errrors are shown / cleared
     this.render(!!save);
 
+    console.dir(this.model.validationError);
+
     if (!save) {
       const $firstErr = this.$('.errorList:visible').eq(0);
       if ($firstErr.length) {
@@ -1187,9 +1189,10 @@ export default class extends BaseModal {
 
   // return the currency associated with this listing
   get currency() {
-    return (this.$currencySelect.length ?
+    const moo = (this.$currencySelect.length ?
         this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
           app.settings.get('localCurrency'));
+    return moo;
   }
 
   get coinDivisibility() {
@@ -1197,7 +1200,7 @@ export default class extends BaseModal {
 
     if (this.getCachedEl('#editContractType').length) {
       coinDiv = getCoinDivisibility(
-        this.getCachedEl('#editContractType').val === 'CRYPTOCURRENCY' ?
+        this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?
           this.getCachedEl('#editListingCoinType').val() :
           this.currency
       );
@@ -1517,9 +1520,6 @@ export default class extends BaseModal {
           getCoinTypes: this.getCoinTypesDeferred.promise(),
           getReceiveCur: () => this._receiveCryptoCur,
         });
-
-        console.log('sizzle');
-        window.sizzle = this.cryptoCurrencyType;
 
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);

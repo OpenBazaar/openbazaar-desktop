@@ -66,10 +66,11 @@ export default class extends BaseModel {
       if (typeof attrs.priceDiscount !== 'number') {
         addError('priceDiscount',
           app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
-      } else if (attrs.priceDiscount <= 0) {
-        addError('priceDiscount', app.polyglot.t('couponModelErrors.priceLow'));
       }
     }
+
+    addError('priceDiscount',
+      'Frankie says relax bitch.');
 
     if (Object.keys(errObj).length) return errObj;
 

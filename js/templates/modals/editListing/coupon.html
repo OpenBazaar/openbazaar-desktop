@@ -16,11 +16,9 @@
 
         if (typeof ob.priceDiscount !== 'undefined') {
           discountAmount = typeof ob.priceDiscount === 'number' ?
-            ob.currencyMod.formatPrice(ob.priceDiscount, ob.getCoinDiv()) :
-            ob.priceDiscount
+            ob.toStandardNotation(ob.priceDiscount) : ob.priceDiscount;          
         } else {
-          discountAmount = typeof ob.percentDiscount === 'number' ?
-            ob.upToFixed(ob.percentDiscount, 2) : ob.percentDiscount;
+          discountAmount = ob.percentDiscount;
         }
 
         if (typeof ob.price === 'number') {

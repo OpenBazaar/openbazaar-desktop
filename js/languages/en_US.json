@@ -2000,7 +2000,9 @@
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
+    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
+    "priceTooLow": "The minimum value for a price in %{cur} is %{min}.",
+    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -2009,7 +2011,6 @@
     "badConditionType": "The condition is not one of the available types.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
-    "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
@@ -2035,7 +2036,6 @@
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above or equal to 100%",
-    "priceLow": "The price must be geater than zero.",
     "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },

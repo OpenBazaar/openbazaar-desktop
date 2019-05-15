@@ -198,6 +198,7 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
  *
  */
 export function formatPrice(price, divisibility) {
+  return price;
   if (typeof price !== 'number') {
     throw new Error('Please provide a price as a number');
   }
