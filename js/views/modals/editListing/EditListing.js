@@ -18,7 +18,6 @@ import {
 } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import {
-  formatPrice,
   getCurrencyValidity,
   getCoinDivisibility,
 } from '../../../utils/currency';
@@ -302,17 +301,6 @@ export default class extends BaseModal {
   }
 
   onChangePrice(e) {
-    const trimmedVal = $(e.target).val().trim();
-    const numericVal = Number(trimmedVal);
-
-    if (!isNaN(numericVal) && trimmedVal) {
-      // $(e.target).val(
-      //   formatPrice(numericVal, this.coinDivisibility)
-      // );
-    } else {
-      $(e.target).val(trimmedVal);
-    }
-
     this.variantInventory.render();
   }
 
@@ -858,8 +846,6 @@ export default class extends BaseModal {
     // render so errrors are shown / cleared
     this.render(!!save);
 
-    console.dir(this.model.validationError);
-
     if (!save) {
       const $firstErr = this.$('.errorList:visible').eq(0);
       if ($firstErr.length) {
@@ -1265,7 +1251,6 @@ export default class extends BaseModal {
           expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
           expandedTermsAndConditions: this.expandedTermsAndConditions ||
             !!this.model.get('termsAndConditions'),
-          formatPrice,
           maxCatsWarning: this.maxCatsWarning,
           maxTagsWarning: this.maxTagsWarning,
           max: {
@@ -1473,21 +1458,9 @@ export default class extends BaseModal {
         // render coupons
         if (this.couponsView) this.couponsView.remove();
 
-        const couponErrors = {};
-
-        Object.keys(this.model.validationError || {})
-          .forEach(errKey => {
-            if (errKey.startsWith('coupons[')) {
-              couponErrors[errKey] =
-                this.model.validationError[errKey];
-            }
-          });
-
         this.couponsView = this.createChild(Coupons, {
           collection: this.coupons,
           maxCouponCount: this.model.max.couponCount,
-          couponErrors,
-          getCoinDiv: () => this.coinDivisibility,
         });
 
         this.$couponsSection.find('.js-couponsContainer').append(

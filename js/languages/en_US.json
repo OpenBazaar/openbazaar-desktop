@@ -2002,7 +2002,8 @@
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
     "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
     "priceTooLow": "The minimum value for a price in %{cur} is %{min}.",
-    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}."
+    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}.",
+    "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up so no more than %{coinDiv} decimal places are represented."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",

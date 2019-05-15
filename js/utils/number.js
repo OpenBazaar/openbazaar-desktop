@@ -6,21 +6,31 @@ import app from '../app';
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
 export function toStandardNotation(number, options) {
-  if (typeof number !== 'number') {
-    throw new Error('Please provide a number.');
-  }
-
   const opts = {
     minDisplayDecimals: 0,
     maxDisplayDecimals: 20,
+    returnUnchangedOnError: true,
     ...options,
   };
 
-  return new Intl.NumberFormat('en-US', {
-    minimumFractionDigits: opts.minDisplayDecimals,
-    maximumFractionDigits: opts.maxDisplayDecimals,
-    useGrouping: false,
-  }).format(number);
+  if (!opts.returnUnchangedOnError && typeof number !== 'number') {
+    throw new Error('Please provide a number.');
+  }
+
+  let converted;
+
+  try {
+    converted = new Intl.NumberFormat('en-US', {
+      minimumFractionDigits: opts.minDisplayDecimals,
+      maximumFractionDigits: opts.maxDisplayDecimals,
+      useGrouping: false,
+    }).format(number);
+  } catch (e) {
+    if (opts.returnUnchangedOnError) return number;
+    throw e;
+  }
+
+  return converted;
 }
 
 /*
@@ -71,3 +81,15 @@ export function localizeNumber(number,
   return new Intl.NumberFormat(lang).format(number);
 }
 
+// https://stackoverflow.com/a/10454560
+export function decimalPlaces(num) {
+  const match = (String(num)).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  if (!match) { return 0; }
+  return Math.max(
+    0,
+    // Number of digits right of decimal point.
+    (match[1] ? match[1].length : 0)
+    // Adjust for scientific notation.
+    - (match[2] ? +match[2] : 0)
+ );
+}

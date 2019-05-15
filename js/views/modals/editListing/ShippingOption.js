@@ -18,10 +18,6 @@ export default class extends BaseView {
       throw new Error('Please provide a model.');
     }
 
-    if (typeof options.getCurrency !== 'function') {
-      throw new Error('Please provide a function for me to obtain the current currency.');
-    }
-
     const opts = {
       listPosition: 1,
       ...options,
@@ -150,12 +146,7 @@ export default class extends BaseView {
     this.model.set(this.getFormData());
   }
 
-  createServiceView(opts) {
-    const options = {
-      getCurrency: this.options.getCurrency,
-      ...opts || {},
-    };
-
+  createServiceView(options) {
     const view = this.createChild(Service, options);
 
     this.listenTo(view, 'click-remove', e => {

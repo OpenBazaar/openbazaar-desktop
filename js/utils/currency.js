@@ -184,6 +184,13 @@ function getSmartMaxDisplayDigits(amount, desiredMax) {
   return max > desiredMax ? max : desiredMax;
 }
 
+// TODO: is this needed anymore?
+// TODO: is this needed anymore?
+// TODO: is this needed anymore?
+// TODO: is this needed anymore?
+// TODO: is this needed anymore?
+// TODO: is this needed anymore?
+
 /**
  * Will take a number and return a string version of the number with the appropriate number of
  * decimal places based on whether the number represents a crypto or fiat price.

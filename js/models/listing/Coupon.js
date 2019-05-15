@@ -69,9 +69,6 @@ export default class extends BaseModel {
       }
     }
 
-    addError('priceDiscount',
-      'Frankie says relax bitch.');
-
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;

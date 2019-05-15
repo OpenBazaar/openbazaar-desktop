@@ -10,7 +10,10 @@ import {
   getCurMeta,
   isValidCoinDivisibility,
 } from '../../utils/currency';
-import { toStandardNotation } from '../../utils/number';
+import {
+  toStandardNotation,
+  decimalPlaces,
+} from '../../utils/number';
 import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
@@ -139,28 +142,6 @@ export default class extends BaseModel {
   }
 
   /**
-   * Returns the minimum possible price based on the coinDivisibility which is
-   * set on the model.
-   */
-  get minCoinDivPrice() {
-    let coinDiv;
-
-    try {
-      const metadata = this.get('metadata');
-      coinDiv = metadata.get('coinDivisibility');
-      const [isValidCoinDiv] =
-        isValidCoinDivisibility(coinDiv);
-      if (!isValidCoinDiv) {
-        throw new Error('Invalid coin divisibility');
-      }
-    } catch (e) {
-      throw new Error('Unable to obtain a valid coin divisibility');
-    }
-
-    return 1 / (Math.pow(10, coinDiv));
-  }
-
-  /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
    * if this listing is being used as a template for a new listing. This differs from
@@ -191,21 +172,22 @@ export default class extends BaseModel {
       ...attrs.item,
     };
 
-    let minCoinDivPrice;
+    let coinDiv;
+    let isValidCoinDiv;
 
     try {
-      minCoinDivPrice = this.minCoinDivPrice;
+      [isValidCoinDiv] =
+        isValidCoinDivisibility(metadata.coinDivisibility);
+      coinDiv = metadata.coinDivisibility;
     } catch (e) {
       // pass
     }
 
-    console.log('boris mally sally jon');
-    window.boris = attrs;
-    window.mally = attrs.metadata instanceof Metadata;
-    window.sally = minCoinDivPrice;
-    const validMinPrice = attrs.metadata instanceof Metadata &&
-      typeof minCoinDivPrice === 'number';
-    window.jon = validMinPrice;
+    let minCoinDivPrice;
+
+    if (isValidCoinDiv) {
+      minCoinDivPrice = 1 / (Math.pow(10, coinDiv));
+    }
 
     if (!(attrs.metadata instanceof Metadata)) {
       addError('metadata', 'metadata must be provided as a nested Metadata model instance.');
@@ -264,11 +246,18 @@ export default class extends BaseModel {
           'listings.');
       }
 
-      if (validMinPrice && item.price < minCoinDivPrice) {
-        addError('item.price', app.polyglot.t('listingModelErrors.priceTooLow', {
-          cur: metadata.pricingCurrency,
-          min: toStandardNotation(minCoinDivPrice),
-        }));
+      if (isValidCoinDiv) {
+        if (item.price < minCoinDivPrice) {
+          addError('item.price', app.polyglot.t('listingModelErrors.priceTooLow', {
+            cur: metadata.pricingCurrency,
+            min: toStandardNotation(minCoinDivPrice),
+          }));
+        } else if (decimalPlaces(item.price) > coinDiv) {
+          addError('item.price', app.polyglot.t('listingModelErrors.fractionTooLow', {
+            cur: metadata.pricingCurrency,
+            coinDiv,
+          }));
+        }
       }
     }
 
@@ -281,12 +270,20 @@ export default class extends BaseModel {
       }
 
       coupons.forEach(coupon => {
-        if (validMinPrice && coupon.priceDiscount < minCoinDivPrice) {
-          addError(`coupons[${coupon.cid}].priceDiscount`,
-            app.polyglot.t('listingModelErrors.priceTooLow', {
-              cur: metadata.pricingCurrency,
-              min: toStandardNotation(minCoinDivPrice),
-            }));
+        if (isValidCoinDiv) {
+          if (coupon.priceDiscount < minCoinDivPrice) {
+            addError(`coupons[${coupon.cid}].priceDiscount`,
+              app.polyglot.t('listingModelErrors.priceTooLow', {
+                cur: metadata.pricingCurrency,
+                min: toStandardNotation(minCoinDivPrice),
+              }));
+          } else if (decimalPlaces(coupon.priceDiscount) > coinDiv) {
+            addError(`coupons[${coupon.cid}].priceDiscount`,
+              app.polyglot.t('listingModelErrors.fractionTooLow', {
+                cur: metadata.pricingCurrency,
+                coinDiv,
+              }));
+          }
         }
       });
 
@@ -301,18 +298,25 @@ export default class extends BaseModel {
       });
     }
 
-    if (validMinPrice && Array.isArray(item.skus)) {
+    if (isValidCoinDiv && Array.isArray(item.skus)) {
       item.skus.forEach(sku => {
-        if (
-          typeof sku.surcharge === 'number' &&
-          sku.surcharge > 0 &&
-          sku.surcharge < this.minCoinDivPrice
-        ) {
-          addError(`item.skus[${sku.cid}].surcharge`,
-            app.polyglot.t('listingModelErrors.skuPriceTooLow', {
-              cur: metadata.pricingCurrency,
-              min: toStandardNotation(minCoinDivPrice),
-            }));
+        if (typeof sku.surcharge === 'number') {
+          if (
+            sku.surcharge > 0 &&
+            sku.surcharge < minCoinDivPrice
+          ) {
+            addError(`item.skus[${sku.cid}].surcharge`,
+              app.polyglot.t('listingModelErrors.skuPriceTooLow', {
+                cur: metadata.pricingCurrency,
+                min: toStandardNotation(minCoinDivPrice),
+              }));
+          } else if (decimalPlaces(sku.surcharge) > coinDiv) {
+            addError(`item.skus[${sku.cid}].surcharge`,
+              app.polyglot.t('listingModelErrors.fractionTooLow', {
+                cur: metadata.pricingCurrency,
+                coinDiv,
+              }));
+          }
         }
       });
     }

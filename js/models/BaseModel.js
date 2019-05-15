@@ -241,16 +241,12 @@ export default class extends Model {
    * keys in the provided errObj.
    */
   _setNestedValidationErrors(errObj = {}) {
-    // Update the validationError for any nested items
-    // const nestedValidationErrsCleared = [];
-
     Object.keys(errObj)
       .forEach(errKey => {
         try {
           const split = errKey.split('.');
 
           let baseInstance = this;
-          // const deepErrs = split.slice(1);
 
           split
             .forEach((deepErrKey, deepIndex) => {
@@ -269,16 +265,12 @@ export default class extends Model {
                   throw new Error('Unable to obtain the nested instance.');
                 }
 
-                // if (!nestedValidationErrsCleared.includes(errKey)) {
-                //   baseInstance.validationError = {};
-                //   nestedValidationErrsCleared.push(errKey);
-                // }
-
                 baseInstance.validationError =
                   baseInstance.validationError || {};
                 baseInstance.validationError[deepErrKey] = errObj[errKey];
               } else {
-                baseInstance = baseInstance.nested[deepErrKey] || baseInstance;
+                baseInstance = baseInstance.nested[deepErrKey] ?
+                  baseInstance.get(deepErrKey) : baseInstance;
               }
             });
         } catch (e) {

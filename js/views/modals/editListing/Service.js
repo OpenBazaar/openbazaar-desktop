@@ -1,4 +1,3 @@
-import { formatPrice } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -6,10 +5,6 @@ export default class extends BaseView {
   constructor(options = {}) {
     if (!options.model) {
       throw new Error('Please provide a model.');
-    }
-
-    if (typeof options.getCurrency !== 'function') {
-      throw new Error('Please provide a function for me to obtain the current currency.');
     }
 
     super(options);
@@ -48,8 +43,6 @@ export default class extends BaseView {
         // include the cid, so they're unique.
         cid: this.model.cid,
         errors: this.model.validationError || {},
-        getCurrency: this.options.getCurrency,
-        formatPrice,
         ...this.model.toJSON(),
       }));
 
