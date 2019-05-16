@@ -18,7 +18,6 @@ const currencies = [
     // todo: transition away from base units
     baseUnit: 100000000,
     coinDivisibility: 8,
-    coinDivisibility: 18,
     averageModeratedTransactionSize: 184,
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,

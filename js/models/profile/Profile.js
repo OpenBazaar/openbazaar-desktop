@@ -2,7 +2,11 @@ import $ from 'jquery';
 import app from '../../app';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import {
+  decimalToInteger,
+  integerToDecimal,
+  getCoinDivisibility,
+} from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
@@ -144,7 +148,20 @@ export default class Profile extends BaseModel {
       const amount = response.moderatorInfo.fee.fixedFee.amount;
       const cur = response.moderatorInfo.fee.fixedFee.currencyCode;
 
-      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, cur);
+      // TODO: temporarily pulling the coin div from config. Server though
+      // should be providing it.
+      // TODO: temporarily pulling the coin div from config. Server though
+      // should be providing it.
+      // TODO: temporarily pulling the coin div from config. Server though
+      // should be providing it.
+      // TODO: temporarily pulling the coin div from config. Server though
+      // should be providing it.
+      // TODO: temporarily pulling the coin div from config. Server though
+      // should be providing it.
+      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(
+        amount,
+        getCoinDivisibility(cur)
+      );
     }
 
     if (response.handle && response.handle.startsWith('@')) {
