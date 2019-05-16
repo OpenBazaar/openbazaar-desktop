@@ -11,8 +11,11 @@ export default class extends BaseModel {
 
     returnVal = {
       ...returnVal,
-      // Convert from base units
-      total: integerToDecimal(returnVal.total, returnVal.paymentCoin),
+      // TODO: temp hard code of coinDiv until the server provides it
+      // TODO: temp hard code of coinDiv until the server provides it
+      // TODO: temp hard code of coinDiv until the server provides it
+      // TODO: temp hard code of coinDiv until the server provides it
+      total: integerToDecimal(returnVal.total, 8),
     };
 
     return returnVal;
