@@ -1183,8 +1183,6 @@ export default class extends BaseModal {
   get coinDivisibility() {
     let coinDiv;
 
-    console.log(this.model.get('metadata').get('coinDivisibility'));
-
     if (this.getCachedEl('#editContractType').length) {
       coinDiv = getCoinDivisibility(
         this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?

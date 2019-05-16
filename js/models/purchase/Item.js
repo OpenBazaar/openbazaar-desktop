@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import { decimalPlaces, toStandardNotation } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
 import Shipping from './Shipping';
@@ -7,8 +8,23 @@ import app from '../../app';
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
+
+    if (typeof options.getCoinDiv !== 'function') {
+      throw new Error('Please provide a function that returns the coin divisibility ' +
+        ' of the listing');
+    }
+
     this.shippable = options.shippable || false;
     this.isCrypto = options.isCrypto || false;
+
+    if (this.isCrypto && typeof options.getCoinType !== 'function') {
+      throw new Error('For crypto listings, please provide a function that returns ' +
+        'the coinType.');
+    }
+
+    this.getCoinType = options.getCoinType;
+    this.getCoinDiv = options.getCoinDiv;
+
     // If the inventory is for a crypto listing, be sure to convert it from base units
     // before sending it in.
     this.getInventory = () =>
@@ -71,13 +87,35 @@ export default class extends BaseModel {
           'crypto listings');
       }
     } else {
-      const inventory = this.getInventory();
-
       if (attrs.quantity !== undefined) {
+        const inventory = this.getInventory();
+
+        let coinDiv = this.getCoinDiv();
+        // temp conversion until server updates to the new format
+        // temp conversion until server updates to the new format
+        // temp conversion until server updates to the new format
+        // temp conversion until server updates to the new format
+        coinDiv = coinDiv > 99 ?
+          Math.log(coinDiv) / Math.log(10) : coinDiv;
+
+        const minCoinDivPrice = 1 / Math.pow(10, coinDiv);
+
         if (typeof attrs.quantity !== 'number') {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
         } else if (attrs.quantity <= 0) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
+        } else if (attrs.quantity < minCoinDivPrice) {
+          addError('quantity',
+            app.polyglot.t('purchaseItemModelErrors.cryptoQuantityTooLow', {
+              cur: this.getCoinType(),
+              min: toStandardNotation(minCoinDivPrice),
+            })
+          );
+        } else if (decimalPlaces(attrs.quantity) > coinDiv) {
+          // We're rounding in the view to avoid this error, so it should never be
+          // user facing.
+          addError('quantity',
+            `The quantity has too many decimal places. The maximum is ${coinDiv}.`);
         } else if (typeof inventory === 'number' &&
           attrs.quantity > inventory) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory', {

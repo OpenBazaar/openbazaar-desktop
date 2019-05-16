@@ -519,8 +519,6 @@ export default class extends BaseModel {
           // crypto listing.
           delete options.attrs.metadata.priceModifier;
         }
-
-        console.dir(options.attrs);
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/listing/${this.get('slug')}`);

@@ -74,7 +74,6 @@ export default class extends BaseModel {
   }
 
   validate(attrs) {
-    console.dir(attrs);
     const errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];

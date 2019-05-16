@@ -2110,7 +2110,8 @@
     "missingShippingOption": "Please choose a valid shipping option.",
     "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
     "providePaymentAddress": "Please provide a payment address.",
-    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters.",
+    "cryptoQuantityTooLow": "For %{cur}, the minimum quantity value is %{min}. If converting to %{cur} from a different currency, ensure the amount is low enough that the resulting %{cur} value is below the minimum."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",

@@ -11,8 +11,8 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
-import { toStandardNotation } from '../../../utils/number';
-import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
+import { toStandardNotation, preciseRound } from '../../../utils/number';
+import { getExchangeRate, integerToDecimal, convertCurrency } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
@@ -91,6 +91,12 @@ export default class extends BaseModal {
         inventory: () =>
           (typeof this.inventory === 'number' ?
             this.inventory : 99999999999999999),
+        getCoinDiv: () => (this.coinDivisibility),
+        getCoinType: () => (
+          this.listing
+            .get('metadata')
+            .get('coinType')
+        ),
       }
     );
     // add the item to the order.
@@ -198,9 +204,7 @@ export default class extends BaseModal {
         this.listing.get('vendorID').peerID,
         {
           slug: this.listing.get('slug'),
-          coinDivisibility:
-            this.listing.get('metadata')
-              .get('coinDivisibility'),
+          coinDivisibility: coinDivisibility,
         }
       ).done(e => (this.inventory = e.inventory));
       this.listenTo(inventoryEvents, 'inventory-change',
@@ -250,6 +254,7 @@ export default class extends BaseModal {
       'blur #memo': 'blurMemo',
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       'change #cryptoAmountCurrency': 'changeCryptoAmountCurrency',
+      'change #cryptoAmount': 'onChangeCryptoAmount',
       'keyup [name="quantity"]': 'keyupQuantity',
       ...super.events(),
     };
@@ -325,6 +330,26 @@ export default class extends BaseModal {
     this.render(); // always render even if the state didn't change
   }
 
+  onChangeCryptoAmount(e) {
+    // If the amount is grater than zero we'll round to base units. If the rounded
+    // result is zero, it means the price is lower than the base units allow. In that
+    // case we'll do nothing and let the model error show in the UI and the user could
+    // increase it.
+    const coinType = this.listing
+      .get('metadata')
+      .get('coinType');
+
+    if (this.cryptoAmountCurrency !== coinType) return;
+
+    const roundedAmount = preciseRound(Number(e.target.value), this.coinDivisibility);
+
+    if (roundedAmount === 0) return;
+
+    $(e.target).val(
+      toStandardNotation(roundedAmount)
+    );
+  }
+
   changeCryptoAddress(e) {
     this.order.get('items')
       .at(0)
@@ -343,10 +368,17 @@ export default class extends BaseModal {
       cur !== this.listing.get('metadata')
         .get('coinType') &&
       !isNaN(numericQuantity)) {
-      mdQuantity = (numericQuantity / getExchangeRate(cur)) *
-        getExchangeRate(this.listing.get('metadata').get('coinType'));
-      // round to 4 decimal place
-      mdQuantity = Math.round(mdQuantity * 10000) / 10000;
+      mdQuantity = convertCurrency(
+        numericQuantity,
+        cur,
+        this.listing
+          .get('metadata')
+          .get('coinType')
+      );
+      const rounded = preciseRound(mdQuantity, this.coinDivisibility);
+      // If the quantity is so low that rounding to base units results in zero, we'll
+      // us the unrounded one and let the model error bubble up to the UI.
+      if (rounded > 0) mdQuantity = rounded;
     }
 
     this.order.get('items')
@@ -475,8 +507,7 @@ export default class extends BaseModal {
           errors: 'own listing',
         });
       } else {
-        const coinDivisibility = this.listing.get('metadata')
-          .get('coinDivisibility');
+        const coinDivisibility = this.coinDivisibility;
 
         $.post({
           url: app.getServerUrl('ob/purchase'),
@@ -486,8 +517,7 @@ export default class extends BaseModal {
               .map(item => ({
                 ...item.toJSON(),
                 quantity: this.listing.isCrypto ?
-                  // round to ensure integer
-                  Math.round(item.get('quantity') * coinDivisibility) :
+                  integerToDecimal(item.get('quantity'), coinDivisibility) :
                   item.get('quantity'),
               })),
           }),
@@ -497,7 +527,7 @@ export default class extends BaseModal {
           .done((data) => {
             this.setState({ phase: 'pending' });
             this.payment = this.createChild(Payment, {
-              balanceRemaining: integerToDecimal(data.amount, paymentCoin),
+              balanceRemaining: integerToDecimal(data.amount, coinDivisibility),
               paymentAddress: data.paymentAddress,
               orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
@@ -519,8 +549,7 @@ export default class extends BaseModal {
               jqXHR.responseJSON.code === 'ERR_INSUFFICIENT_INVENTORY' &&
               typeof jqXHR.responseJSON.remainingInventory === 'number') {
               this.inventory = jqXHR.responseJSON.remainingInventory /
-                this.listing.get('metadata')
-                  .get('coinDivisibility');
+                coinDivisibility;
               errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
               errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody', {
                 smart_count: this.inventory,
@@ -617,6 +646,22 @@ export default class extends BaseModal {
     return this._cryptoAmountCurrency ||
       this.listing.get('metadata')
         .get('coinType');
+  }
+
+  get coinDivisibility() {
+    let coinDiv = this.listing
+      .get('metadata')
+      .get('coinDivisibility');
+
+    // TODO: temp conversion until server migrates to new format
+    // TODO: temp conversion until server migrates to new format
+    // TODO: temp conversion until server migrates to new format
+    // TODO: temp conversion until server migrates to new format
+
+    coinDiv = coinDiv > 99 ?
+      Math.log(coinDiv) / Math.log(10) : coinDiv;
+
+    return coinDiv;
   }
 
   get isModerated() {
