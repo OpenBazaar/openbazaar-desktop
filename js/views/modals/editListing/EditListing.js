@@ -963,6 +963,9 @@ export default class extends BaseModal {
       },
     });
 
+    console.log('sizzle');
+    window.sizzle = this.model;
+
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
     if (metadata.get('contractType') !== 'PHYSICAL_GOOD') {
       this.model.get('shippingOptions').reset();

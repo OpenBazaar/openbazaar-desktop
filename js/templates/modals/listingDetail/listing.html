@@ -51,11 +51,10 @@
       %>
         <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
         <h2 class="txUnb flexNoShrink js-price">
-          <% console.log(`taking ${ob.price.amount} from ${ob.price.currencyCode} to ${ob.displayCurrency}`) %>
           <%=
             ob.currencyMod.convertAndFormatCurrency(
-              ob.price.amount,
-              ob.price.currencyCode,
+              0.000000000000000001,
+              'DOGE',
               ob.displayCurrency
             )
           %>

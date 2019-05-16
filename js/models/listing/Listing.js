@@ -414,6 +414,10 @@ export default class extends BaseModel {
           }
         });
 
+        // todo: what is this?
+        // todo: what is this?
+        // todo: what is this?
+        // todo: what is this?
         const baseUnit = options.attrs.metadata.coinDivisibility =
           options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
 
@@ -421,6 +425,14 @@ export default class extends BaseModel {
           // round to ensure integer
           options.attrs.item.cryptoQuantity =
             Math.round(options.attrs.item.cryptoQuantity * baseUnit);
+
+          // TODO: temp until server supports new format and removes restriction
+          // forcing 100 mil
+          // TODO: temp until server supports new format and removes restriction
+          // forcing 100 mil
+          // TODO: temp until server supports new format and removes restriction
+          // forcing 100 mil
+          options.attrs.metadata.coinDivisibility = 100000000;
 
           // Don't send over the price on crypto listings.
           delete options.attrs.price;

@@ -207,37 +207,37 @@ export function integerToDecimal(value, divisibility, options = {}) {
  *
  */
 // TODO: unit test this
-function getSmartMaxDisplayDigits(amount, desiredMax) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide the amount as a number.');
-  }
+// function getSmartMaxDisplayDigits(amount, desiredMax) {
+//   if (typeof amount !== 'number') {
+//     throw new Error('Please provide the amount as a number.');
+//   }
 
-  if (typeof desiredMax !== 'number') {
-    throw new Error('Please provide the desiredMax as a number.');
-  }
+//   if (typeof desiredMax !== 'number') {
+//     throw new Error('Please provide the desiredMax as a number.');
+//   }
 
-  let max = desiredMax;
+//   let max = desiredMax;
 
-  if (amount < 0.0000000005) {
-    max = 10;
-  } else if (amount < 0.000000005) {
-    max = 9;
-  } else if (amount < 0.00000005) {
-    max = 8;
-  } else if (amount < 0.0000005) {
-    max = 7;
-  } else if (amount < 0.000005) {
-    max = 6;
-  } else if (amount < 0.00005) {
-    max = 5;
-  } else if (amount < 0.0005) {
-    max = 4;
-  } else if (amount < 0.005) {
-    max = 3;
-  }
+//   if (amount < 0.0000000005) {
+//     max = 10;
+//   } else if (amount < 0.000000005) {
+//     max = 9;
+//   } else if (amount < 0.00000005) {
+//     max = 8;
+//   } else if (amount < 0.0000005) {
+//     max = 7;
+//   } else if (amount < 0.000005) {
+//     max = 6;
+//   } else if (amount < 0.00005) {
+//     max = 5;
+//   } else if (amount < 0.0005) {
+//     max = 4;
+//   } else if (amount < 0.005) {
+//     max = 3;
+//   }
 
-  return max > desiredMax ? max : desiredMax;
-}
+//   return max > desiredMax ? max : desiredMax;
+// }
 
 // TODO: is this needed anymore?
 // TODO: is this needed anymore?
@@ -421,7 +421,7 @@ export function formatCurrency(amount, currency, options) {
 
     const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
+      maximumFractionDigits: opts.maxDisplayDecimals,
     }).format(amt);
 
     if (opts.includeCryptoCurIdentifier) {
@@ -435,7 +435,7 @@ export function formatCurrency(amount, currency, options) {
   } else if (isCryptoListingCur) {
     const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
+      maximumFractionDigits: opts.maxDisplayDecimals,
     }).format(amount);
 
     if (opts.includeCryptoCurIdentifier) {
@@ -450,7 +450,7 @@ export function formatCurrency(amount, currency, options) {
       style: 'currency',
       currency,
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
+      maximumFractionDigits: opts.maxDisplayDecimals,
     }).format(amount);
   }
 
@@ -590,6 +590,11 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
     btcUnit: app && app.localSettings && app.localSettings.get('bitcoinUnit') || 'BTC',
     skipConvertOnError: true,
+    // If the amount is greater than zero and the converted result is so small
+    // that even the using the MAX_NUMBER_FORMAT_DISPLAY_DECIMALS would result in
+    // it displaying as zero... if this option is true, we'll use the unconverted
+    // amount.
+    skipConvertIfResultWillBeZero: true,
     ...options,
   };
 
@@ -608,8 +613,15 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
+  if (amount > 0 &&
+    opts.skipConvertIfResultWillBeZero &&
+    isFormattedResultZero(convertedAmt, MAX_NUMBER_FORMAT_DISPLAY_DECIMALS)) {
+    convertedAmt = amount;
+    outputFormat = fromCur;
+  }
+
   return formatCurrency(convertedAmt, outputFormat,
-    _.omit(opts, 'skipConvertOnError'));
+    _.omit(opts, ['skipConvertOnError', 'skipConvertIfResultWillBeZero']));
 }
 
 /**
