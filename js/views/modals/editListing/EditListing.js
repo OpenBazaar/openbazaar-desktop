@@ -963,9 +963,6 @@ export default class extends BaseModal {
       },
     });
 
-    console.log('sizzle');
-    window.sizzle = this.model;
-
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
     if (metadata.get('contractType') !== 'PHYSICAL_GOOD') {
       this.model.get('shippingOptions').reset();
@@ -1178,19 +1175,21 @@ export default class extends BaseModal {
 
   // return the currency associated with this listing
   get currency() {
-    const moo = (this.$currencySelect.length ?
+    return (this.$currencySelect.length ?
         this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
           app.settings.get('localCurrency'));
-    return moo;
   }
 
   get coinDivisibility() {
     let coinDiv;
 
+    console.log(this.model.get('metadata').get('coinDivisibility'));
+
     if (this.getCachedEl('#editContractType').length) {
       coinDiv = getCoinDivisibility(
         this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?
-          this.getCachedEl('#editListingCoinType').val() :
+          this.getCachedEl('#editListingCoinType').val() ||
+            this.model.get('metadata').get('coinType') :
           this.currency
       );
     } else {

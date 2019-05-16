@@ -14,7 +14,6 @@ import {
   toStandardNotation,
   decimalPlaces,
 } from '../../utils/number';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -240,6 +239,20 @@ export default class extends BaseModel {
         addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
           'listings.');
       }
+
+      if (isValidCoinDiv) {
+        if (item.cryptoQuantity < minCoinDivPrice) {
+          addError('item.cryptoQuantity', app.polyglot.t('listingModelErrors.priceTooLow', {
+            cur: metadata.coinType,
+            min: toStandardNotation(minCoinDivPrice),
+          }));
+        } else if (decimalPlaces(item.cryptoQuantity) > coinDiv) {
+          addError('item.cryptoQuantity', app.polyglot.t('listingModelErrors.fractionTooLow', {
+            cur: metadata.coinType,
+            coinDiv,
+          }));
+        }
+      }
     } else {
       if (item && typeof item.cryptoQuantity !== 'undefined') {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
@@ -414,17 +427,11 @@ export default class extends BaseModel {
           }
         });
 
-        // todo: what is this?
-        // todo: what is this?
-        // todo: what is this?
-        // todo: what is this?
-        const baseUnit = options.attrs.metadata.coinDivisibility =
-          options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
-
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          // round to ensure integer
-          options.attrs.item.cryptoQuantity =
-            Math.round(options.attrs.item.cryptoQuantity * baseUnit);
+          options.attrs.item.cryptoQuantity = decimalToInteger(
+            options.attrs.item.cryptoQuantity,
+            options.attrs.metadata.coinDivisibility
+          );
 
           // TODO: temp until server supports new format and removes restriction
           // forcing 100 mil
@@ -512,6 +519,8 @@ export default class extends BaseModel {
           // crypto listing.
           delete options.attrs.metadata.priceModifier;
         }
+
+        console.dir(options.attrs);
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/listing/${this.get('slug')}`);

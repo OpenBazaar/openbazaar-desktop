@@ -53,8 +53,8 @@
         <h2 class="txUnb flexNoShrink js-price">
           <%=
             ob.currencyMod.convertAndFormatCurrency(
-              0.000000000000000001,
-              'DOGE',
+              ob.price.amount,
+              ob.price.currencyCode,
               ob.displayCurrency
             )
           %>
