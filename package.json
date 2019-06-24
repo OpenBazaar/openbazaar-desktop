@@ -100,7 +100,7 @@
     "jquery-zoom": "1.7.18",
     "moment": "2.19.3",
     "multihashes": "0.2.2",
-    "node-polyglot": "2.0.0",
+    "node-polyglot": "2.3.1",
     "object-sizeof": "1.4.0",
     "qr-encode": "0.3.0",
     "sanitize-html": "1.20.0",
