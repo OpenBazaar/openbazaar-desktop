@@ -108,7 +108,7 @@ describe('the currency utility module', () => {
         'the resulting value', () => {
         expect(cur.convertAndFormatCurrency(500, 'USD', 'PLN', { locale: 'en-US' }))
           .to
-          .equal('PLN2,097.31');
+          .equal('PLN 2,097.31');
       });
 
       it('which will convert between a fiat currency and BTC and properly localize ' +
