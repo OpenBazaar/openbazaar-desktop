@@ -155,8 +155,9 @@ case "$TRAVIS_OS_NAME" in
     brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
     brew install freetype graphicsmagick
     brew link xz
+    brew remove osslsigncode
     brew install mono osslsigncode
-    brew link freetype graphicsmagick mono osslsigncode
+    brew link freetype graphicsmagick mono 
 
     # Retrieve Latest Server Binaries
     cd OPENBAZAAR_TEMP/
