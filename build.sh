@@ -144,8 +144,9 @@ case "$TRAVIS_OS_NAME" in
   "osx")
 
     brew update
+    brew remove jq
+    brew link oniguruma
     brew install jq
-    brew link jq
     curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
     chmod +x /tmp/7za
     curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
