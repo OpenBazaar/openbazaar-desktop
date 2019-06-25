@@ -156,6 +156,7 @@ case "$TRAVIS_OS_NAME" in
     brew install freetype graphicsmagick
     brew link xz
     brew install mono osslsigncode
+    brew link freetype graphicsmagick mono osslsigncode
 
     # Retrieve Latest Server Binaries
     cd OPENBAZAAR_TEMP/
