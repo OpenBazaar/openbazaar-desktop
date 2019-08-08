@@ -661,6 +661,7 @@ export default class extends BaseModal {
         cryptoAmountCurrency: this.cryptoAmountCurrency,
         isCrypto: this.listing.isCrypto,
         phaseClass: `phase${capitalize(state.phase)}`,
+        hasCoupons: this.listing.get('coupons').length,
       }));
 
       super.render();
