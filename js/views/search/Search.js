@@ -504,7 +504,7 @@ export default class extends baseVw {
   }
 
   onClickSuggestion(opts) {
-    this.setSearch({ q: opts.suggestion, p: 0 });
+    this.setSearch({ q: opts.suggestion, p: 0, filters: { type: 'all' } });
     recordEvent('Discover_ClickSuggestion');
     recordEvent('Discover_Search', { type: 'suggestion' });
   }
