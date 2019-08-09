@@ -175,7 +175,7 @@
             </div>
           <% } else if (ob.metadata.contractType === 'PHYSICAL_GOOD') { %>
             <div>
-              <%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.item.condition}</b>` }) %>
+              <%= ob.polyT('listingDetail.condition', { condition: `<b>${ob.polyT(`conditionTypes.${ob.item.condition.toUpperCase()}`, { _: ob.item.condition })}</b>` }) %>
             </div>
           <% } %>
         </div>

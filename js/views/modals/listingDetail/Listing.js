@@ -742,12 +742,6 @@ export default class extends BaseModal {
     loadTemplate('modals/listingDetail/listing.html', t => {
       const flatModel = this.model.toJSON();
 
-      // translate recognised conditions, leave unknown conditions as-is.
-      if (this.model.get('item').conditionTypes.includes(flatModel.item.condition)) {
-        flatModel.item.condition =
-          app.polyglot.t(`conditionTypes.${flatModel.item.condition.toUpperCase()}`);
-      }
-
       this.$el.html(t({
         ...flatModel,
         shipsFreeToMe: this.shipsFreeToMe,
