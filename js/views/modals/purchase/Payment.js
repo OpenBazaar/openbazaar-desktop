@@ -214,7 +214,7 @@ export default class extends BaseVw {
   get qrDataUri() {
     const address = this.paymentCoinData.qrCodeText(this.paymentAddress);
     const URL = `${address}?amount=${this.balanceRemaining}`;
-    return qr(URL, { type: 8, size: 5, level: 'Q' });
+    return qr(URL, { type: 8, size: 5, level: 'M' });
   }
 
   remove() {
