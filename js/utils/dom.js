@@ -112,6 +112,9 @@ export function handleLinks(el) {
     // Anchor without href is likely being handled programmatically.
     if (!href) return;
 
+    // Ignore javascript:void(0) links such as in selectize's close buttons.
+    if (href.startsWith('javascript')) return;
+
     const link = document.createElement('a');
     link.setAttribute('href', href);
 
