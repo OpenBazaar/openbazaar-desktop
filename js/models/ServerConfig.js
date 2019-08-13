@@ -51,7 +51,7 @@ export default class extends BaseModel {
     if (!is.existy(attrs.serverIp) || is.empty(attrs.serverIp)) {
       addError('serverIp', app.polyglot.t('serverConfigModelErrors.provideValue'));
     } else {
-      if (!is.ip(attrs.serverIp)) {
+      if (!is.ip(attrs.serverIp) && attrs.serverIp !== 'localhost') {
         addError('serverIp', app.polyglot.t('serverConfigModelErrors.invalidIp'));
       }
     }
@@ -78,7 +78,7 @@ export default class extends BaseModel {
         if (split.length !== 2) {
           valid = false;
         } else {
-          if (!is.ip(split[0])) {
+          if (!is.ip(split[0]) && split[0] !== 'localhost') {
             valid = false;
           } else if (!is.within(parseInt(split[1], 10), -1, 65536)) {
             valid = false;
