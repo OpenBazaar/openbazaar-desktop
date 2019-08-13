@@ -6,7 +6,6 @@ import _ from 'underscore';
 import app from '../app';
 import multihashes from 'multihashes';
 import twemoji from 'twemoji';
-import { isPromise } from '../utils/object';
 
 export function getGuid(handle, resolver) {
   const deferred = $.Deferred();
