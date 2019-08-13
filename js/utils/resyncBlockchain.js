@@ -45,8 +45,6 @@ function __isResyncAvailable(coinType) {
 let _isResyncAvailable = {};
 
 function setResyncAvailable(coinType, bool = __isResyncAvailable(coinType)) {
-  if (resyncInactiveTime <= 0) return;
-
   checkCoinType(coinType);
 
   if (typeof bool !== 'boolean') {
