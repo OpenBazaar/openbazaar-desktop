@@ -16,7 +16,7 @@ let server;
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
 // long its unavailable.
-const resyncInactiveTime = 1000 * 60 * 60 * 1; // 1 hour
+const resyncInactiveTime = 1000 * 60;
 
 function checkCoinType(coinType) {
   if (typeof coinType !== 'string' && !coinType) {
@@ -76,8 +76,8 @@ function setlastResyncExpiresTimeouts(coinType) {
     if (fromNow > 0) {
       lastResyncExpiresTimeouts[coinType] = setTimeout(() => {
         setResyncAvailable(coinType);
-      }, fromNow + (1000 * 60));
-      // Giving a 1m buffer in case the timeout is a little fast
+      }, fromNow + (1000 * 10));
+      // Giving a 10s buffer in case the timeout is a little fast
     }
   }
 }
@@ -170,14 +170,21 @@ export default function resyncBlockchain(coinType) {
           lastBlockchainResync = typeof lastBlockchainResync === 'object' ?
             lastBlockchainResync : {};
           lastBlockchainResync[coinType] = (new Date()).getTime();
-          _server.save({ lastBlockchainResync })
-            .done(() => {
+          const serverSave = _server.save({ lastBlockchainResync });
+
+          if (serverSave) {
+            serverSave.done(() => {
               if (server === _server) {
                 setResyncAvailable(coinType);
                 Object.keys(lastResyncExpiresTimeouts)
                   .forEach(cur => setlastResyncExpiresTimeouts(cur));
               }
             });
+          } else {
+            console.error('There was an error updating the local server config with the ' +
+              'last resync time.');
+            console.dir(_server.validationError);
+          }
         }
       });
 

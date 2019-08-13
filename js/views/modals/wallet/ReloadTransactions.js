@@ -70,7 +70,7 @@ export default class extends BaseVw {
   onClickResync() {
     const coinType = this.getState().coinType;
     recordEvent('Wallet_Resync');
-    resyncBlockchain(this.getState().coinType)
+    resyncBlockchain(coinType)
       .done(() => {
         openSimpleMessage(
           app.polyglot.t('wallet.reloadTransactionsWidget.resyncCompleteTitle', {

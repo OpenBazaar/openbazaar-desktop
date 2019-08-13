@@ -981,8 +981,8 @@
     "reloadTransactionsWidget": {
       "resyncBtn": "Resync",
       "resyncCompleteTitle": "%{cur} Resync Started",
-      "resyncComplete": "Your transactions will begin resyncing. This may take five to ten minutes or longer.",
-      "syncUnavailable": "You can only reload transactions once per hour."
+      "resyncComplete": "Your transactions will begin resyncing. This may take a minute or two to complete.",
+      "syncUnavailable": "You can only reload transactions once every minute."
     },
     "cryptoTeaser": {
       "coinCount": "%{count}+ coins",
