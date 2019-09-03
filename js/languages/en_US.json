@@ -134,6 +134,9 @@
       "retryConfig": {
         "title": "Unable to obtain your server config."
       },
+      "unableToGetWalletCurDef": {
+        "title": "Unable to obatin the wallet currency definition."
+      },
       "retryOnboardingFetch": {
         "title": "Unable to get your profile and settings data."
       },

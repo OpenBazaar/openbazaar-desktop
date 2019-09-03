@@ -227,6 +227,8 @@ export function init(walletCurs, walletCurDef) {
 
   _currencies = curs;
   _initialized = true;
+  console.log('the curs are so silly');
+  window.silly = _currencies;
 }
 
 function getTranslatedCurrencies(
@@ -304,43 +306,29 @@ export function ensureMainnetCode(cur) {
   return curObj ? curObj.code : cur;
 }
 
+export function getWalletCurs() {
+  return _currencies;
+}
+
 /**
  * Returns a list of the crypto currencies supported by the wallet.
  *
  * @param {object} [options={}] - Function options
- * @param {boolean} [options.clientSupported=true] - If true, it will only include
- *   currencies that are supported by both the client and the server. For the client to
- *   support the currency, it must have an entry in the walletCurrencies data file. Without
- *   that information, the client can't really support the currency since fundamental information
- *   (e.g baseUnits) aren't available. In most context, we will not want to show a currency if it
- *   is not client supported.
- * @param {Array} [options.serverCurs=app.serverConfig.wallets] - The list of currencies that
- *   are supported by the server's wallet. By default, this is obtained from the server config
- *   API. In almost all cases, the default should be used. It's mainly exposed as an option
- *   for unit testing.
+ * @param {boolean} [options.testnet=apps.serverConfig.testnet] - Indicates if the app
+ *   is running on testnet. If so, testnet codes will be returned.
  * @return {Array} An Array containing the currency codes that are supported by the wallet.
  */
 export function supportedWalletCurs(options = {}) {
-  enforceInitialized();
-
   const opts = {
-    clientSupported: true,
-    serverCurs: app && app.serverConfig && app.serverConfig.wallets || [],
+    testnet: app && app.serverConfig && app.serverConfig.testnet || false,
     ...options,
   };
 
-  if (!Array.isArray(opts.serverCurs)) {
-    throw new Error('options.serverCurs must be provided as an Array.');
-  }
+  enforceInitialized();
 
-  return opts.serverCurs
-    .filter(cur =>
-      (
-        opts.clientSupported ?
-          !!getIndexedCurrencies()[cur] :
-          true
-      )
-    );
+  return getWalletCurs()
+    .filter(cur => (opts.testnet ? cur.testnetCode : true))
+    .map(cur => (opts.testnet ? cur.testnetCode : cur.code));
 }
 
 /**

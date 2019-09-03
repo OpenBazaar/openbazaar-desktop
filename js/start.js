@@ -7,6 +7,7 @@ import moment from 'moment';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
+import { init as initWalletCurs } from './data/walletCurrencies';
 import ServerConfigs from './collections/ServerConfigs';
 import ServerConfig from './models/ServerConfig';
 import serverConnect, {
@@ -133,53 +134,96 @@ addFeedback();
 
 app.verifiedMods = new VerifiedMods();
 
-const fetchConfigDeferred = $.Deferred();
+const fetchStartupData1Deferred = $.Deferred();
+let configFetch;
+let walletCurDefFetch;
 
-function fetchConfig() {
-  $.get(app.getServerUrl('ob/config')).done((...args) => {
-    fetchConfigDeferred.resolve(...args);
-  }).fail(xhr => {
-    const curConn = getCurrentConnection();
+function fetchStartupData1() {
+  configFetch = !configFetch || configFetch.state() === 'rejected' ?
+    $.get(app.getServerUrl('ob/config')) : configFetch;
+  walletCurDefFetch = !walletCurDefFetch || walletCurDefFetch.state() === 'rejected' ?
+    $.get(app.getServerUrl('wallet/currencies')) : walletCurDefFetch;
 
-    if (!curConn || curConn.status === 'disconnected') {
-      // the connection management modal should be up with relevant info
-      console.error('The server config fetch failed. Looks like the connection to the ' +
-        'server was lost.');
-      return;
-    }
+  const fetches = [
+    configFetch,
+    walletCurDefFetch,
+  ];
 
-    const retryConfigDialog = new Dialog({
-      title: app.polyglot.t('startUp.dialogs.retryConfig.title'),
-      message: xhr && xhr.responseJSON && xhr.responseJSON.reason ||
-        xhr.responseText || '',
-      buttons: [
-        {
-          text: app.polyglot.t('startUp.dialogs.btnRetry'),
-          fragment: 'retry',
-        },
-        {
-          text: app.polyglot.t('startUp.dialogs.btnManageConnections'),
-          fragment: 'manageConnections',
-        },
-      ],
-      dismissOnOverlayClick: false,
-      dismissOnEscPress: false,
-      showCloseButton: false,
-    }).on('click-retry', () => {
-      retryConfigDialog.close();
+  $.whenAll(fetches.slice())
+    .done((...args) => {
+      fetchStartupData1Deferred.resolve({
+        serverConfig: args[0][0],
+        walletCurDf: args[1][0],
+      });
+    })
+    .fail(() => {
+      const curConn = getCurrentConnection();
 
-      // sleight of hand to ensure the loading modal has a chance to at
-      // least briefly show before another potential failure
-      setTimeout(() => {
-        fetchConfig();
-      }, 300);
-    }).on('click-manageConnections', () =>
-      app.connectionManagmentModal.open())
-    .render()
-    .open();
-  });
+      if (!curConn || curConn.status !== 'connected') {
+        // the connection management modal should be up with relevant info
+        console.error('The tier 1 startup data fetches failed. Looks like the connection to the ' +
+          'server was lost.');
+        return;
+      }
 
-  return fetchConfigDeferred.promise();
+      const failed = fetches.filter(xhr => xhr.state() === 'rejected');
+
+      if (failed.length) {
+        const firstFailedXhr = failed[0];
+        let title = '';
+        const message = firstFailedXhr.responseJSON && firstFailedXhr.responseJSON.reason ||
+          firstFailedXhr.status || '';
+        const btnText = app.polyglot.t('startUp.dialogs.btnManageConnections');
+        const btnFrag = 'manageConnections';
+
+        if (configFetch.state() === 'rejected') {
+          console.log('test me bro');
+          console.log('test me bro');
+          console.log('test me bro');
+          title = app.polyglot.t('startUp.dialogs.retryConfig.title');
+        } else {
+          console.log('test me silly');
+          console.log('test me silly');
+          console.log('test me silly');
+          title = app.polyglot.t('startUp.dialogs.unableToGetWalletCurDef.title');
+        }
+
+        const retryFetchStartupData1Dialog = new Dialog({
+          title,
+          message,
+          buttons: [
+            {
+              text: app.polyglot.t('startUp.dialogs.btnRetry'),
+              fragment: 'retry',
+            },
+            {
+              text: btnText,
+              fragment: btnFrag,
+            },
+          ],
+          dismissOnOverlayClick: false,
+          dismissOnEscPress: false,
+          showCloseButton: false,
+        }).on('click-retry', () => {
+          retryFetchStartupData1Dialog.close();
+
+          // slight of hand to ensure the loading modal has a chance to at
+          // least briefly show before another potential failure
+          setTimeout(() => fetchStartupData1(), 300);
+        }).on('click-manageConnections', () =>
+          app.connectionManagmentModal.open())
+        .on('click-continue', () => {
+          retryFetchStartupData1Dialog.close();
+          fetchStartupData1Deferred.resolve();
+        })
+        .render()
+        .open();
+      } else {
+        fetchStartupData1Deferred.resolve();
+      }
+    });
+
+  return fetchStartupData1Deferred.promise();
 }
 
 const onboardingNeededDeferred = $.Deferred();
@@ -312,13 +356,13 @@ function fetchVerifiedMods() {
     });
 }
 
-const fetchStartupDataDeferred = $.Deferred();
+const fetchStartupData2Deferred = $.Deferred();
 let ownFollowingFetch;
 let exchangeRatesFetch;
 let walletBalancesFetch;
 let searchProvidersFetch;
 
-function fetchStartupData() {
+function fetchStartupData2() {
   ownFollowingFetch = !ownFollowingFetch || ownFollowingFetch.state() === 'rejected' ?
     app.ownFollowing.fetch() : ownFollowingFetch;
   exchangeRatesFetch = !exchangeRatesFetch || exchangeRatesFetch.state() === 'rejected' ?
@@ -337,14 +381,14 @@ function fetchStartupData() {
 
   $.whenAll(fetches.slice())
     .done(() => {
-      fetchStartupDataDeferred.resolve();
+      fetchStartupData2Deferred.resolve();
     })
     .fail(() => {
       const curConn = getCurrentConnection();
 
       if (!curConn || curConn.status !== 'connected') {
         // the connection management modal should be up with relevant info
-        console.error('The startup data fetches failed. Looks like the connection to the ' +
+        console.error('The tier 2 startup data fetches failed. Looks like the connection to the ' +
           'server was lost.');
         return;
       }
@@ -374,7 +418,7 @@ function fetchStartupData() {
           btnFrag = 'continue';
         }
 
-        const retryFetchStartupDataDialog = new Dialog({
+        const retryFetchStartupData2Dialog = new Dialog({
           title,
           message,
           buttons: [
@@ -391,25 +435,25 @@ function fetchStartupData() {
           dismissOnEscPress: false,
           showCloseButton: false,
         }).on('click-retry', () => {
-          retryFetchStartupDataDialog.close();
+          retryFetchStartupData2Dialog.close();
 
           // slight of hand to ensure the loading modal has a chance to at
           // least briefly show before another potential failure
-          setTimeout(() => fetchStartupData(), 300);
+          setTimeout(() => fetchStartupData2(), 300);
         }).on('click-manageConnections', () =>
           app.connectionManagmentModal.open())
         .on('click-continue', () => {
-          retryFetchStartupDataDialog.close();
-          fetchStartupDataDeferred.resolve();
+          retryFetchStartupData2Dialog.close();
+          fetchStartupData2Deferred.resolve();
         })
         .render()
         .open();
       } else {
-        fetchStartupDataDeferred.resolve();
+        fetchStartupData2Deferred.resolve();
       }
     });
 
-  return fetchStartupDataDeferred.promise();
+  return fetchStartupData2Deferred.promise();
 }
 
 const onboardIfNeededDeferred = $.Deferred();
@@ -496,11 +540,12 @@ function start() {
   // to connecting with a server. The latter is stored in local storage.
   // TODO - instead of these elaborate comments explaining the distinction, perhaps rename
   // serverConfigs to serverConnectionConfigs?
-  fetchConfig().done((data) => {
-    app.serverConfig = data || {};
-    app.profile = new Profile({ peerID: data.peerID });
+  fetchStartupData1().done((data) => {
+    app.serverConfig = data.serverConfig || {};
+    app.profile = new Profile({ peerID: data.serverConfig.peerID });
     app.router.onProfileSet();
     app.settings = new Settings();
+    initWalletCurs(app.serverConfig.wallets, data.walletCurDef);
 
     const curConn = getCurrentConnection();
 
@@ -517,7 +562,7 @@ function start() {
     app.searchProviders = new SearchProvidersCol();
 
     onboardIfNeeded().done(() => {
-      fetchStartupData().done(() => {
+      fetchStartupData1().done(() => {
         ensureValidSettingsCurrency().done(() => {
           app.pageNav.navigable = true;
           app.pageNav.setAppProfile();
