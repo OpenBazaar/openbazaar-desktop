@@ -207,8 +207,8 @@ export function init(walletCurs, walletCurDef) {
 
       if (
         (
-          walletCurs.inludes(curDef.code) ||
-          walletCurs.inludes(curDef.testnetCode)
+          walletCurs.includes(curDef.code) ||
+          walletCurs.includes(curDef.testnetCode)
         ) &&
         clientCur
       ) {

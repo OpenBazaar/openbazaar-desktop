@@ -153,7 +153,7 @@ function fetchStartupData1() {
     .done((...args) => {
       fetchStartupData1Deferred.resolve({
         serverConfig: args[0][0],
-        walletCurDf: args[1][0],
+        walletCurDef: args[1][0],
       });
     })
     .fail(() => {
@@ -562,7 +562,7 @@ function start() {
     app.searchProviders = new SearchProvidersCol();
 
     onboardIfNeeded().done(() => {
-      fetchStartupData1().done(() => {
+      fetchStartupData2().done(() => {
         ensureValidSettingsCurrency().done(() => {
           app.pageNav.navigable = true;
           app.pageNav.setAppProfile();
