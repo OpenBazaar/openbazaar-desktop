@@ -304,7 +304,10 @@ export function ensureMainnetCode(cur) {
   return curObj ? curObj.code : cur;
 }
 
-export function getWalletCurs() {
+// todo is this needed if not exported as opposed to just using the private var?
+// todo is this needed if not exported as opposed to just using the private var?
+// todo is this needed if not exported as opposed to just using the private var?
+function getWalletCurs() {
   return _currencies;
 }
 

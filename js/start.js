@@ -543,8 +543,6 @@ function start() {
   fetchStartupData1().done((data) => {
     app.serverConfig = data.serverConfig || {};
     app.profile = new Profile({ peerID: data.serverConfig.peerID });
-    console.log('the profile is moo');
-    window.moo = app.profile;
     app.router.onProfileSet();
     app.settings = new Settings();
     initWalletCurs(app.serverConfig.wallets, data.walletCurDef);
