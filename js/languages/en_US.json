@@ -2033,7 +2033,7 @@
     "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
     "provideCoinType": "Please select a coin to trade.",
     "unsupportedAcceptedCur": "%{cur} is not supported by your wallet. Please select a different currency.",
-    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: ${curs}"
+    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: %{curs}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",

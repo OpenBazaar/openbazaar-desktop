@@ -30,6 +30,8 @@ export function toStandardNotation(number, options) {
     throw e;
   }
 
+  if (isNaN(converted)) return '';
+
   return converted;
 }
 

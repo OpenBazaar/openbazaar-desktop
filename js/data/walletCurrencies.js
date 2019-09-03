@@ -227,8 +227,6 @@ export function init(walletCurs, walletCurDef) {
 
   _currencies = curs;
   _initialized = true;
-  console.log('the curs are so silly');
-  window.silly = _currencies;
 }
 
 function getTranslatedCurrencies(

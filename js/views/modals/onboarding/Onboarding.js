@@ -5,6 +5,7 @@ import app from '../../../app';
 import { getCurrentConnection } from '../../../utils/serverConnect';
 import { getTranslatedCountries } from '../../../data/countries';
 import { getCurrencies } from '../../../data/currencies';
+import { supportedWalletCurs } from '../../../data/walletCurrencies';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseModal from '../BaseModal';
@@ -152,7 +153,10 @@ export default class extends BaseModal {
     app.settings.set(this.getFormData($settingsFields));
     const $profileFields = this.getCachedEl('select[data-model=profile], ' +
       'input[data-model=profile], textarea[data-model=profile]');
-    app.profile.set(this.getFormData($profileFields));
+    app.profile.set({
+      ...this.getFormData($profileFields),
+      currencies: supportedWalletCurs(),
+    });
   }
 
   saveAvatar() {

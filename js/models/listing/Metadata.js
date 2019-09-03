@@ -123,7 +123,7 @@ export default class extends BaseModel {
         .filter(cur => !isSupportedWalletCur(cur));
 
       if (unsupportedCurrencies.length) {
-        addError('acceptedCurrencies', app.polyglot.t('unsupportedAcceptedCurs',
+        addError('acceptedCurrencies', app.polyglot.t('metadataModelErrors.unsupportedAcceptedCurs',
           { curs: unsupportedCurrencies.join(', ') }));
       }
     }

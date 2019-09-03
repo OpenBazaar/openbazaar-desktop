@@ -1499,6 +1499,8 @@ export default class extends BaseModal {
 
         const activeCurs = this.model.get('metadata')
           .get('acceptedCurrencies');
+        console.log(activeCurs);
+        console.log(supportedWalletCurs());
         let curSelectorInitialState = {
           currencies: [
             ...activeCurs,
