@@ -100,18 +100,34 @@ export default class extends BaseModel {
           { address: returnVal.memo.slice(12) });
       }
 
+      const coinType = this.options ? this.options.coinType : options.coinType;
+      let value;
+
+      try {
+        value = integerToDecimal(
+          returnVal.value,
+          getWalletCurByCode(coinType).coinDivisibility,
+          { returnUndefinedOnError: false }
+        );
+      } catch (e) {
+        // pass
+        console.error(`Unable to convert the ${coinType} transaction value from base ` +
+          `units: ${e.message}`);
+      }
+
+      if (typeof value === 'number') {
+        returnVal = {
+          ...returnVal,
+          value,
+        };
+      }
+
       // The UI has more stringent logic to determine when fee bumping is possible. This model will
       // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
       // server is just used to determine whether the fee was already bumped or not.
-      returnVal.feeBumped = returnVal.value > 0 && !returnVal.canBumpFee;
+      returnVal.feeBumped = typeof value === 'number' ?
+        (returnVal.value > 0 && !returnVal.canBumpFee) : false;
       delete returnVal.canBumpFee;
-
-      returnVal = {
-        ...returnVal,
-        // Convert from base units
-        value: integerToDecimal(returnVal.value,
-          this.options ? this.options.coinType : options.coinType),
-      };
     }
 
     return returnVal;

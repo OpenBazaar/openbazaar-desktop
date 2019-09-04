@@ -14,6 +14,9 @@ import {
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
+console.log('i be silly big');
+window.big = bigNumber;
+
 const events = {
   ...Events,
 };
@@ -110,8 +113,8 @@ export const getCoinDivisibility = _.memoize(_getCoinDivisibility);
 /**
  * Converts the amount from a decimal to an integer based on the provided
  * coin divisibility.
- * @param {Number} value - A number that should be converted to an integer.
- * @param {Number} divisibility - An integer representing the coin divisibility (e.g. for
+ * @param {number} value - A number that should be converted to an integer.
+ * @param {number} divisibility - An integer representing the coin divisibility (e.g. for
  *   bitcoin, it is 8)
  * @returns {string} - A string representation of the integer number.
  */
@@ -137,10 +140,11 @@ export function decimalToInteger(value, divisibility) {
 /**
  * Converts the amount from an integer to a decimal based on the provided
  * divisibility.
- * @param {Number} value - A number that should be converted to an integer.
- * @param {Number} divisibility - An integer representing the coin divisibility
+ * @param {number|string} value - A number or string based representation of a number that
+ *   should be converted to an integer.
+ * @param {number} divisibility - An integer representing the coin divisibility
  *   (e.g. for bitcoin, it is 8)
- * @param {Object} options
+ * @param {object} options
  * @param {boolean} [options.returnUndefinedOnError = true] - if true and there's
  *   an error, rather than an exception being thrown, undefined will be return. This
  *   will allow templates to just display nothing instead of bombing on render.
@@ -156,7 +160,7 @@ export function integerToDecimal(value, divisibility, options = {}) {
 
   try {
     if (!['number', 'string'].includes(typeof value)) {
-      throw new Error('The value must be provided as a number');
+      throw new Error('The value must be provided as a number or a string.');
     }
 
     const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
