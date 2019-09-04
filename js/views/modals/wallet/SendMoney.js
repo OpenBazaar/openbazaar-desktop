@@ -41,27 +41,31 @@ export default class extends baseVw {
 
     startAjaxEvent('Wallet_SendConfirm');
 
-    spend({
-      ...this.model.toJSON(),
-      feeLevel: app.localSettings.get('defaultTransactionFee'),
-    }).fail(jqXhr => {
-      let reason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
+    try {
+      spend({
+        ...this.model.toJSON(),
+        feeLevel: app.localSettings.get('defaultTransactionFee'),
+      }).fail(jqXhr => {
+        let reason = jqXhr.responseJSON && jqXhr.responseJSON.reason || '';
 
-      if (reason === 'ERROR_INVALID_ADDRESS') {
-        reason = app.polyglot.t('wallet.sendMoney.errorInvalidAddress');
-      }
+        if (reason === 'ERROR_INVALID_ADDRESS') {
+          reason = app.polyglot.t('wallet.sendMoney.errorInvalidAddress');
+        }
 
-      openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'), reason);
-      endAjaxEvent('Wallet_SendConfirm', {
-        errors: reason,
-      });
-    }).always(() => {
-      this.saveInProgress = false;
-    })
-      .done(() => {
-        endAjaxEvent('Wallet_SendConfirm');
-        this.clearForm();
-      });
+        openSimpleMessage(app.polyglot.t('wallet.sendMoney.sendPaymentFailDialogTitle'), reason);
+        endAjaxEvent('Wallet_SendConfirm', {
+          errors: reason,
+        });
+      }).always(() => {
+        this.saveInProgress = false;
+      })
+        .done(() => {
+          endAjaxEvent('Wallet_SendConfirm');
+          this.clearForm();
+        });
+    } catch (e) {
+      throw new Error(`say you say me: ${e}`);
+    }
   }
 
   onClickSend(e) {

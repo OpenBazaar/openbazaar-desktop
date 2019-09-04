@@ -715,3 +715,54 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
   return result;
 }
+
+// {
+//     \"amount\": \"535021\",
+//     \"currency\": {
+//       \"code\": \"TLTC\",
+//       \"divisibility\": 8
+//     }
+//   }
+
+/**
+ * Will create an object representation of an amount based on how the server is
+ * representing it, notably including the currency code and divisibility.
+ * @param {number|string} amount - If providing the amount in base units, it should
+ *   be provided as a string (as returned by decimalToInteger), otherwise if providing
+ *   a number, it will be assumed that it needs to be converted to base units.
+ * @param {string} curCode - The currency the amount is in.
+ * @param {object} [options={}] - Function options
+ * @param {boolean} [options.divisibility] - The divisibility of the amount. If not
+ *   provided, it will be obtained from getCoinDivisibility().
+ * @returns {string} - An object representation of the number with meta.
+ */
+export function createAmount(amount, curCode, options = {}) {
+  if (
+    !(
+      typeof amount === 'number' ||
+      (
+        typeof amount === 'string' && amount
+      )
+    )
+  ) {
+    throw new Error('The amount must be provided as a number or a non-empty string.');
+  }
+
+  if (typeof curCode !== 'string' || !curCode) {
+    throw new Error('The curCode must be provided as a non-empty string.');
+  }
+
+  const divisibility = options.divisibility === undefined ?
+    getCoinDivisibility(curCode) : options.divisibility;
+
+  const convertedAmount = typeof amount === 'number' ?
+    decimalToInteger(amount, divisibility) : amount;
+
+  return {
+    amount: convertedAmount,
+    currency: {
+      code: curCode,
+      divisibility,
+    },
+  };
+}

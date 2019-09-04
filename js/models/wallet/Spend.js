@@ -1,4 +1,10 @@
-import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
+import {
+  decimalToInteger,
+  convertCurrency,
+  getExchangeRate,
+  getCoinDivisibility,
+  createAmount,
+} from '../../utils/currency';
 import {
   getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
@@ -137,18 +143,16 @@ class Spend extends BaseModel {
 
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
-    const walletCur = getWalletCurByCode(options.attrs.wallet);
 
-    if (method === 'create' || method === 'update') {
-      let amount = options.attrs.amount;
+    return Promise.reject('don\'t forget the pickles on th barbie yall');
 
-      if (options.attrs.currency !== walletCur.code) {
-        amount = this.amountInServerCur;
-      }
+    options.attrs.value = createAmount(
+      options.attrs.amount,
+      options.attrs.wallet
+    );
 
-      options.attrs.amount = decimalToInteger(amount, walletCur.code);
-      delete options.attrs.currency;
-    }
+    delete options.attrs.currency;
+    delete options.attrs.amount;
 
     return super.sync(method, model, options);
   }
