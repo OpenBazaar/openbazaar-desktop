@@ -633,9 +633,10 @@ function start() {
 
           if (serverSocket) {
             serverSocket.on('message', (e = {}) => {
-              if (e.jsonData.walletUpdate) {
-                app.walletBalances.set(e.jsonData.walletUpdate, { parse: true });
-              }
+              console.log('todo: ignoring for now pending server bug 1696');
+              // if (e.jsonData.walletUpdate) {
+              //   app.walletBalances.set(e.jsonData.walletUpdate, { parse: true });
+              // }
             });
           }
 

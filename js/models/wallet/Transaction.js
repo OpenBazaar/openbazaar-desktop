@@ -110,17 +110,14 @@ export default class extends BaseModel {
           { returnUndefinedOnError: false }
         );
       } catch (e) {
-        // pass
         console.error(`Unable to convert the ${coinType} transaction value from base ` +
           `units: ${e.message}`);
       }
 
-      if (typeof value === 'number') {
-        returnVal = {
-          ...returnVal,
-          value,
-        };
-      }
+      returnVal = {
+        ...returnVal,
+        value,
+      };
 
       // The UI has more stringent logic to determine when fee bumping is possible. This model will
       // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
