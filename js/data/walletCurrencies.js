@@ -312,7 +312,7 @@ function getWalletCurs() {
 }
 
 /**
- * Returns a list of the crypto currencies supported by the wallet.
+ * Returns a list of the wallet currency codes supported by the wallet.
  *
  * @param {object} [options={}] - Function options
  * @param {boolean} [options.testnet=apps.serverConfig.testnet] - Indicates if the app
