@@ -181,28 +181,6 @@ export default class Profile extends BaseModel {
       delete response.headerHashes;
     }
 
-    // temp code to account for:
-    // https://github.com/OpenBazaar/openbazaar-go/issues/1694
-    if (app.serverConfig.testnet && Array.isArray(response.currencies)) {
-      response.currencies = response.currencies
-        .filter(cur => {
-          const walletCurDef = getWalletCurByCode(cur);
-          return (
-            walletCurDef && (
-              app.serverConfig.testnet ?
-                walletCurDef.testnetCode : true
-            )
-          );
-        })
-        .map(cur => {
-          const walletCurDef = getWalletCurByCode(cur);
-          return (
-            app.serverConfig.testnet ?
-              walletCurDef.testnetCode : walletCurDef.code
-          );
-        });
-    }
-
     return response;
   }
 
