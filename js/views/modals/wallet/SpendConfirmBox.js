@@ -127,8 +127,8 @@ export default class extends baseVw {
         }
 
         this.setState(state);
-      }).fail(xhr => {
-        const fetchError = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
+      }).fail(err => {
+        const fetchError = err || '';
         this.setState({
           fetchingFee: false,
           fetchFailed: true,

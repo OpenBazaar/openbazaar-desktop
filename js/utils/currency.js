@@ -14,9 +14,6 @@ import {
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
 import loadTemplate from '../utils/loadTemplate';
 
-console.log('i be silly big');
-window.big = bigNumber;
-
 const events = {
   ...Events,
 };
@@ -134,6 +131,7 @@ export function decimalToInteger(value, divisibility) {
       bigNumber(10)
         .pow(divisibility)
     )
+    .decimalPlaces(0)
     .toString();
 }
 
