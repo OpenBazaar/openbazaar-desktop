@@ -60,6 +60,7 @@ export default class extends BaseModal {
     data.slug = this.slug;
     const formData = this.getFormData();
     data.reason = formData.reason === 'Other' ? formData.other : formData.reason;
+    data.report_type = 'listing';
     this.setState({
       reporting: true,
     });
