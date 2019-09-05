@@ -97,6 +97,8 @@ function _getCoinDivisibility(currency) {
   const curMeta = getCurMeta(currency);
 
   if (curMeta.isFiat) {
+    console.log('try to get this from the wallet cur def');
+    console.log('try to get this from the wallet cur def');
     return 2;
   } else if (curMeta.isWalletCur) {
     return curMeta.curData.coinDivisibility;

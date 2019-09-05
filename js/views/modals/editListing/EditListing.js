@@ -1180,16 +1180,23 @@ export default class extends BaseModal {
           app.settings.get('localCurrency'));
   }
 
+  // Keep in mind this could return undefined if certain depndant form fields are not set yet
+  // (e.g. rendering not complete, dependant async data not loaded) and the divisibility was
+  // never set in the model.
   get coinDivisibility() {
     let coinDiv;
 
     if (this.getCachedEl('#editContractType').length) {
-      coinDiv = getCoinDivisibility(
-        this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?
-          this.getCachedEl('#editListingCoinType').val() ||
-            this.model.get('metadata').get('coinType') :
-          this.currency
-      );
+      try {
+        coinDiv = getCoinDivisibility(
+          this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?
+            this.getCachedEl('#editListingCoinType').val() ||
+              this.model.get('metadata').get('coinType') :
+            this.currency
+        );
+      } catch (e) {
+        // pass
+      }
     } else {
       coinDiv = this.model.get('metadata')
         .get('coinDivisibility');
