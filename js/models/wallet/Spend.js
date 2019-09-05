@@ -143,16 +143,20 @@ class Spend extends BaseModel {
 
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
+    options.attrs.value = false;
 
-    return Promise.reject('don\'t forget the pickles on th barbie yall');
-
-    options.attrs.value = createAmount(
-      options.attrs.amount,
-      options.attrs.wallet
-    );
+    try {
+      options.attrs.value = createAmount(
+        this.amountInServerCur,
+        options.attrs.wallet
+      );
+    } catch (e) {
+      console.error(`Unable to create the amount object for spending: ${e.message}`);
+    }
 
     delete options.attrs.currency;
     delete options.attrs.amount;
+    delete options.attrs.cid;
 
     return super.sync(method, model, options);
   }
