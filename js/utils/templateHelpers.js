@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import app from '../app';
-import { isFiatCur } from '../data/currencies';
 import {
   formatCurrency,
   convertAndFormatCurrency,
@@ -10,6 +9,7 @@ import {
   getExchangeRate,
   renderFormattedCurrency,
   renderPairedCurrency,
+  isFiatCur,
 } from './currency';
 import {
   getCurrencyByCode as getWalletCurByCode,
@@ -111,7 +111,7 @@ const currencyExport = {
   getExchangeRate,
   formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),
-  isFiatCur,
+  isFiatCur: gracefulException(isFiatCur, false),
 };
 
 const crypto = {

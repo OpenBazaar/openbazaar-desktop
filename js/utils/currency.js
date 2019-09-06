@@ -3,9 +3,9 @@ import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
-import { upToFixed, preciseRound } from './number';
+import { preciseRound } from './number';
 import { Events } from 'backbone';
-import { getCurrencyByCode, isFiatCur } from '../data/currencies';
+import { getCurrencyByCode } from '../data/currencies';
 import {
   getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
@@ -27,23 +27,17 @@ export function getEvents() {
 
 export const btcSymbol = '₿';
 
-export function NoExchangeRateDataError(message) {
-  this.message = message || 'Missing exchange rate data';
-  this.name = 'NoExchangeRateDataError';
-  this.stack = (new Error()).stack;
+export class NoExchangeRateDataError extends Error {
+  constructor(message) {
+    return super(message || 'Missing exchange rate data');
+  }
 }
 
-NoExchangeRateDataError.prototype = Object.create(Error.prototype);
-NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
-
-export function UnrecognizedCurrencyError(message) {
-  this.message = message || 'The currency is not recognized.';
-  this.name = 'UnrecognizedCurrencyError';
-  this.stack = (new Error()).stack;
+export class UnrecognizedCurrencyError extends Error {
+  constructor(message) {
+    return super(message || 'The currency is not recognized.');
+  }
 }
-
-UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
-UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
 
 export function isValidCoinDivisibility(coinDivisibility) {
   return [
@@ -52,15 +46,10 @@ export function isValidCoinDivisibility(coinDivisibility) {
   ];
 }
 
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
-// TODO: is there some other isFiat implementation that is no longer needed now
 /**
- * Will return information about a currency including it's currency
- * data, if available.
+ * Will return information about a currency including its currency data, if available.
  */
-function _getCurMeta(currency) {
+export function getCurMeta(currency) {
   if (typeof currency !== 'string' || !currency) {
     throw new Error('Please provide a currrency as a non-empty string.');
   }
@@ -72,42 +61,82 @@ function _getCurMeta(currency) {
 
   const walletCur = getWalletCurByCode(cur);
 
-  // If we don't recognize the currency, we'll assume it's a crypto
-  // listing cur.
-  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-    (!walletCur && !curData);
+  const isFiat = !!curData;
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur);
+  const isWalletCur = !!walletCur;
+
+  if (!(
+    isFiat || isCryptoListingCur || isWalletCur
+  )) {
+    throw new UnrecognizedCurrencyError();
+  }
 
   return {
-    isFiat: !!curData,
-    isWalletCur: !!walletCur,
+    isFiat,
+    isWalletCur,
     isCryptoListingCur,
-    curData: curData || walletCur,
+    // Crypto listing curs don't have any data at this time. They are just a string
+    // based code.
+    curData: curData || walletCur || null,
   };
 }
 
-export const getCurMeta = _.memoize(_getCurMeta);
+export function isFiatCur(cur) {
+  return getCurMeta(cur).isFiat;
+}
 
 export const defaultCryptoCoinDivisibility = 8;
+export const defaultFiatCoinDivisibility = 2;
 
-function _getCoinDivisibility(currency) {
+/*
+ * Keep in mind that while this function strives to get accurate coin divisibility values,
+ * it is always safest to:
+ *
+ * - When converting an integer obtained from the server to a decimal, if provided, use the
+ *   divisibility the server explicitly provides with that amount.
+ * - When converting a decimal back to an integer, if the API accepts the divisibility, it's
+ *   safest to send it over, so it's clear what value was used.
+ */
+function _getCoinDivisibility(currency, options = {}) {
   if (typeof currency !== 'string' || !currency) {
     throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  let walletCurDef = options.walletCurDef;
+
+  try {
+    walletCurDef = app.walletCurDef;
+  } catch (e) {
+    // pass
+  }
+
+  if (!walletCurDef) {
+    throw new Error('The wallet currency definition must be provide as an object either ' +
+      'passed in as an option or available on the app module.');
+  }
+
+  if (walletCurDef[currency]) {
+    return walletCurDef[currency].divisibility;
   }
 
   const curMeta = getCurMeta(currency);
 
   if (curMeta.isFiat) {
-    console.log('try to get this from the wallet cur def');
-    console.log('try to get this from the wallet cur def');
     return 2;
   } else if (curMeta.isWalletCur) {
     return curMeta.curData.coinDivisibility;
+  } else if (curMeta.isCryptoListingCur) {
+    return defaultCryptoCoinDivisibility;
   }
 
-  return defaultCryptoCoinDivisibility;
+  throw new UnrecognizedCurrencyError();
 }
 
-export const getCoinDivisibility = _.memoize(_getCoinDivisibility);
+export function getCoinDivisibility(...args) {
+  const result = _getCoinDivisibility(...args);
+  console.log(`the coin div for ${args[0]} is ${result}`);
+  return result;
+}
 
 /**
  * Converts the amount from a decimal to an integer based on the provided
@@ -198,90 +227,6 @@ export function integerToDecimal(value, divisibility, options = {}) {
   return returnVal;
 }
 
-/**
- * Will increase the desired number of decimal places to display if the
- * desired amount would render a poorly represented price. For example,
- * having a USD amount of 0.001, would result in a price of $0.00 with
- * the desired max being 2 decimal places for fiat currency. This function
- * would have returned 3, which would leave the price represented as $0.001.
- *
- * It also helps with crypto currencies so in most places we could display
- * them with 4 decimal places and it will increase that number if the
- * resulting price would be zero.
- *
- */
-// TODO: unit test this
-// function getSmartMaxDisplayDigits(amount, desiredMax) {
-//   if (typeof amount !== 'number') {
-//     throw new Error('Please provide the amount as a number.');
-//   }
-
-//   if (typeof desiredMax !== 'number') {
-//     throw new Error('Please provide the desiredMax as a number.');
-//   }
-
-//   let max = desiredMax;
-
-//   if (amount < 0.0000000005) {
-//     max = 10;
-//   } else if (amount < 0.000000005) {
-//     max = 9;
-//   } else if (amount < 0.00000005) {
-//     max = 8;
-//   } else if (amount < 0.0000005) {
-//     max = 7;
-//   } else if (amount < 0.000005) {
-//     max = 6;
-//   } else if (amount < 0.00005) {
-//     max = 5;
-//   } else if (amount < 0.0005) {
-//     max = 4;
-//   } else if (amount < 0.005) {
-//     max = 3;
-//   }
-
-//   return max > desiredMax ? max : desiredMax;
-// }
-
-// TODO: is this needed anymore?
-// TODO: is this needed anymore?
-// TODO: is this needed anymore?
-// TODO: is this needed anymore?
-// TODO: is this needed anymore?
-// TODO: is this needed anymore?
-
-/**
- * Will take a number and return a string version of the number with the appropriate number of
- * decimal places based on whether the number represents a crypto or fiat price.
- *
- * This differs from formatCurrency in that this does not localize the number at all. It simply
- * returns the value with the appropriate number of decimal place, e.g:
- *
- * formatPrice(123.456, 'USD') // "123.46"
- * formatPrice(123.456, 'BTC')  // "123.45600000"
- *
- * It is more useful for <input>'s because we are not localizing the numbers in them.
- *
- */
-export function formatPrice(price, divisibility) {
-  return price;
-  if (typeof price !== 'number') {
-    throw new Error('Please provide a price as a number');
-  }
-
-  if (isNaN(price)) {
-    throw new Error('Please provide a price that is not NaN');
-  }
-
-  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
-
-  if (!isValidDivis) {
-    throw new Error(divisErr);
-  }
-
-  return upToFixed(price, divisibility);
-}
-
 export function isFormattedResultZero(amount, maxDecimals) {
   if (maxDecimals === 0) return true;
 
@@ -327,7 +272,8 @@ function getMaxDisplayDigits(amount, desiredMax) {
 }
 
 /**
- * Will format an amount in the given currency into the format appropriate for the given locale.
+ * Will format an amount in the given currency into the format appropriate for the given
+ * locale.
  * In many cases, instead of using this method directly, you may want to use
  * renderFormattedCurrency() from this module or its corresponding template helper,
  * formattedCurrency, since those will more robustly handle (via tooltips and icons)
@@ -354,6 +300,7 @@ export function formatCurrency(amount, currency, options) {
   };
 
   if (typeof amount !== 'number' || isNaN(amount)) {
+    console.error('Unable to format the currency because the amount is not in a valid format.');
     return '';
   }
 
@@ -366,12 +313,33 @@ export function formatCurrency(amount, currency, options) {
   }
 
   const cur = currency.toUpperCase();
-  const {
-    isFiat,
-    isWalletCur,
-    isCryptoListingCur,
-    curData,
-  } = getCurMeta(cur);
+  let isFiat = false;
+  let isWalletCur = false;
+  let isCryptoListingCur = false;
+  let curData = null;
+
+  try {
+    const curMeta = getCurMeta(cur);
+    console.log(currency);
+    console.log(amount);
+    console.dir(curMeta);
+    console.log('\n');
+
+    isFiat = curMeta.isFiat;
+    isWalletCur = curMeta.isWalletCur;
+    isCryptoListingCur = curMeta.isCryptoListingCur;
+    curData = curMeta.curData;
+  } catch (e) {
+    if (e instanceof UnrecognizedCurrencyError) {
+      // We'll just assume it's a crypto listing currency. This function would only affect
+      // formatting - not any vital calculations.
+      isCryptoListingCur = true;
+    } else {
+      console.error('Unable to format the currency because the currency meta could not ' +
+        `be obtained: ${e.message}`);
+      return '';
+    }
+  }
 
   let formattedCurrency;
 
@@ -383,8 +351,15 @@ export function formatCurrency(amount, currency, options) {
       opts.minDisplayDecimals : 0;
   }
 
-  opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-    opts.maxDisplayDecimals : getCoinDivisibility(cur);
+  if (typeof opts.maxDisplayDecimals !== 'number') {
+    try {
+      opts.maxDisplayDecimals = getCoinDivisibility(cur);
+    } catch (e) {
+      console.error(e);
+      // It just means it might display with more zeros than it should - just a cosmetic thing.
+      opts.maxDisplayDecimals = defaultCryptoCoinDivisibility;
+    }
+  }
 
   if (
     amount > 0 &&
@@ -650,11 +625,6 @@ export function getCurrencyValidity(cur) {
   return returnVal;
 }
 
-// TODO: will this be needed anymore?
-// TODO: will this be needed anymore?
-// TODO: will this be needed anymore?
-// TODO: will this be needed anymore?
-// TODO: will this be needed anymore?
 /**
  * Will render a formattedCurrency template. The main function of the template is that it will
  * render a localized price when possible. When it is not possible (e.g. an unrecognized currency),
@@ -746,8 +716,22 @@ export function createAmount(amount, curCode, options = {}) {
     throw new Error('The curCode must be provided as a non-empty string.');
   }
 
-  const divisibility = options.divisibility === undefined ?
-    getCoinDivisibility(curCode) : options.divisibility;
+  let divisibility;
+
+  try {
+    divisibility = options.divisibility === undefined ?
+      getCoinDivisibility(curCode) : options.divisibility;
+  } catch (e) {
+    // If unable to obtain a divisibility, we'll just default to the crypto listing curs
+    // default.
+    divisibility = defaultCryptoCoinDivisibility;
+  }
+
+  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+  if (!isValidDivis) {
+    throw new Error(divisErr);
+  }
 
   const convertedAmount = typeof amount === 'number' ?
     decimalToInteger(amount, divisibility) : amount;

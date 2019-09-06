@@ -211,15 +211,10 @@ function fetchStartupData1() {
           // least briefly show before another potential failure
           setTimeout(() => fetchStartupData1(), 300);
         }).on('click-manageConnections', () =>
-          app.connectionManagmentModal.open())
-        .on('click-continue', () => {
-          retryFetchStartupData1Dialog.close();
-          fetchStartupData1Deferred.resolve();
-        })
+          app.connectionManagmentModal.open()
+        )
         .render()
         .open();
-      } else {
-        fetchStartupData1Deferred.resolve();
       }
     });
 
@@ -546,6 +541,7 @@ function start() {
     app.router.onProfileSet();
     app.settings = new Settings();
     initWalletCurs(app.serverConfig.wallets, data.walletCurDef);
+    app.walletCurDef = data.walletCurDef;
 
     const curConn = getCurrentConnection();
 

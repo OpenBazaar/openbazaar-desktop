@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import app from '../../app';
-import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import {

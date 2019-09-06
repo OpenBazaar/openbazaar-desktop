@@ -64,7 +64,8 @@
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
                 <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
                    var ccode = ob.fee && ob.fee.fixedFee && ob.fee.fixedFee.currencyCode ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
-                   amt = typeof amt === 'number' ? ob.currencyMod.formatPrice(amt, ccode) : amt;
+                   console.log('todo: probably put in a check on the model to ensure the value isnt ' +
+                   'below the min the divisibility can support');
                 %>
                 <!-- use text and set max length so excess decimals can't be entered.-->
                 <input type="text"
