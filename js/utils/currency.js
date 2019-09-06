@@ -718,14 +718,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
   return result;
 }
 
-// {
-//     \"amount\": \"535021\",
-//     \"currency\": {
-//       \"code\": \"TLTC\",
-//       \"divisibility\": 8
-//     }
-//   }
-
 /**
  * Will create an object representation of an amount based on how the server is
  * representing it, notably including the currency code and divisibility.
