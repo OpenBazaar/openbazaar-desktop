@@ -121,8 +121,8 @@ export function estimateFee(coinType, feeLevel, amount, options = {}) {
 
           try {
             convertedAmount = integerToDecimal(
-              args[0].estimatedFee.amount,
-              args[0].estimatedFee.currency.divisibility,
+              args[0].amount,
+              args[0].currency.divisibility,
               { returnUndefinedOnError: false }
             );
           } catch (e) {

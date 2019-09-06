@@ -1,8 +1,6 @@
 import {
-  decimalToInteger,
   convertCurrency,
   getExchangeRate,
-  getCoinDivisibility,
   createAmount,
 } from '../../utils/currency';
 import {
@@ -41,7 +39,7 @@ class Spend extends BaseModel {
     ];
   }
 
-  get amountInServerCur() {
+  get amountInWalletCur() {
     let cryptoAmount = 0;
     const amount = this.get('amount');
 
@@ -111,7 +109,7 @@ class Spend extends BaseModel {
         } else if (exchangeRatesAvailable &&
           app.walletBalances) {
           const balanceMd = app.walletBalances.get(attrs.wallet);
-          if (balanceMd && this.amountInServerCur >= balanceMd.get('confirmed')) {
+          if (balanceMd && this.amountInWalletCur >= balanceMd.get('confirmed')) {
             addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
           }
         }
@@ -143,22 +141,40 @@ class Spend extends BaseModel {
 
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
-    options.attrs.value = false;
+
+    // This will be overridden by createAmount below, unless that throws an exception
+    // (which should be rare). In that case we'll let the bool go through and have the
+    // server reject it, since otherwise it's not easy for sync to kick back an error
+    // that makes it back to the Model.save() call which initiated the sync call
+    options.attrs.amount = false;
+
+    delete options.attrs.currency;
 
     try {
-      options.attrs.value = createAmount(
-        this.amountInServerCur,
-        options.attrs.wallet
-      );
+      options.attrs = {
+        ...options.attrs,
+        ...(
+          createAmount(
+            this.amountInWalletCur,
+            options.attrs.wallet
+          )
+        ),
+      };
     } catch (e) {
       console.error(`Unable to create the amount object for spending: ${e.message}`);
     }
 
-    delete options.attrs.currency;
-    delete options.attrs.amount;
+    delete options.attrs.wallet;
     delete options.attrs.cid;
 
-    return super.sync(method, model, options);
+    return super.sync(method, model, {
+      ...options,
+      success: () => {
+        // no-op - we just don't want backbone's standard success handler
+        // to execute since it overwrites the model with attributes returned
+        // by the server which have a different format than ours.
+      },
+    });
   }
 
   parse(response) {
@@ -212,8 +228,14 @@ export function _spend(fields, options = {}) {
           balanceMd.set(
             balanceMd.parse({
               code: coinType,
-              confirmed: data.confirmedBalance,
-              unconfirmed: data.unconfirmedBalance,
+              confirmed: {
+                amount: data.confirmedBalance,
+                currency: data.currency,
+              },
+              unconfirmed: {
+                amount: data.unconfirmedBalance,
+                currency: data.currency,
+              },
             })
           );
         }

@@ -719,8 +719,7 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 }
 
 /**
- * Will create an object representation of an amount based on how the server is
- * representing it, notably including the currency code and divisibility.
+ * Will return a string based amount along with a currency definition.
  * @param {number|string} amount - If providing the amount in base units, it should
  *   be provided as a string (as returned by decimalToInteger), otherwise if providing
  *   a number, it will be assumed that it needs to be converted to base units.
@@ -728,7 +727,8 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @param {object} [options={}] - Function options
  * @param {boolean} [options.divisibility] - The divisibility of the amount. If not
  *   provided, it will be obtained from getCoinDivisibility().
- * @returns {string} - An object representation of the number with meta.
+ * @returns {string} - An object containing a string based amount along with a
+ *   currency definition.
  */
 export function createAmount(amount, curCode, options = {}) {
   if (
