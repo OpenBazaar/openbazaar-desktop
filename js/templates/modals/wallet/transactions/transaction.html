@@ -70,7 +70,7 @@
     <div class="flexHRight">
       <div class="btnStrip">
         <a class="btn clrP clrBr clrSh2" href="<%= ob.walletCur.getBlockChainTxUrl(ob.txid, ob.isTestnet) %>"><%= ob.polyT('wallet.transactions.transaction.viewDetailsBtn') %></a>
-        <% if (ob.allowFeeBump || true) { %>
+        <% if (ob.allowFeeBump) { %>
           <%= ob.processingButton({
             className: `btn clrP clrBr clrSh2 js-retryPmt ${ob.retryConfirmOn ? 'disabled' : ''} ${ob.retryInProgress ? 'processing' : ''}`,
             btnText: ob.polyT('wallet.transactions.transaction.retryTransactionBtn')
