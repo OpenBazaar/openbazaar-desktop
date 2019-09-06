@@ -186,9 +186,39 @@ export function getFees(coinType) {
     };
 
     $.get(app.getServerUrl(`wallet/fees/${coinType}`))
-      .done((...args) => deferred.resolve(...args))
-      .fail((...args) => {
-        deferred.reject(...args);
+      .done(data => {
+        let economic;
+        let normal;
+        let priority;
+
+        try {
+          economic = integerToDecimal(
+            data.economic.amount,
+            data.economic.currency.divisibility
+          );
+          normal = integerToDecimal(
+            data.normal.amount,
+            data.normal.currency.divisibility
+          );
+          priority = integerToDecimal(
+            data.priority.amount,
+            data.priority.currency.divisibility
+          );
+        } catch (e) {
+          deferred.reject(`There was an error processing the reponse: ${e.message}`);
+          return;
+        }
+
+        deferred.resolve({
+          economic,
+          normal,
+          priority,
+        });
+      })
+      .fail(xhr => {
+        const reason =
+          xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
+        deferred.reject(reason);
         delete getFeesCache[coinType];
       });
   }
