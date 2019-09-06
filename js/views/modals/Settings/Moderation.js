@@ -126,7 +126,7 @@ export default class extends baseVw {
     if (save) {
       this.getCachedEl('.js-save').addClass('processing');
     } else {
-      const $firstErr = this.$('.errorList:first');
+      const $firstErr = this.$('.errorList:visible:first');
 
       if ($firstErr.length) {
         $firstErr[0].scrollIntoViewIfNeeded();
