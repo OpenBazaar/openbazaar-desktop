@@ -7,13 +7,12 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    let confirmed;
-    let unconfirmed;
+    const converted = { ...response };
 
     try {
-      confirmed = integerToDecimal(
-        response.confirmed.amount,
-        response.confirmed.currency.divisibility,
+      converted.confirmed = integerToDecimal(
+        response.confirmed,
+        response.currency.divisibility,
         { returnUndefinedOnError: false }
       );
     } catch (e) {
@@ -22,9 +21,9 @@ export default class extends BaseModel {
     }
 
     try {
-      unconfirmed = integerToDecimal(
-        response.unconfirmed.amount,
-        response.unconfirmed.currency.divisibility,
+      converted.unconfirmed = integerToDecimal(
+        response.unconfirmed,
+        response.currency.divisibility,
         { returnUndefinedOnError: false }
       );
     } catch (e) {
@@ -32,16 +31,10 @@ export default class extends BaseModel {
         `units: ${e.message}`);
     }
 
-    console.log('todo - test the scenario in the comment below.');
+    delete converted.currency;
 
-    return {
-      ...response,
-      // Convert from base units - these will be set to undefined if the client doesn't
-      // support the currency as a wallet currency (i.e. no entry in the cryptoCurrencies
-      // data file). The wallet will list the currency, but it will be marked as
-      // unsupported.
-      confirmed,
-      unconfirmed,
-    };
+    console.log('todo - test if either confirmed or unconfirmed end up as undefined due to error. What happens in the UI?');
+
+    return converted;
   }
 }

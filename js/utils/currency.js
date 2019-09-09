@@ -314,11 +314,6 @@ export function formatCurrency(amount, currency, options) {
 
   try {
     const curMeta = getCurMeta(cur);
-    console.log(currency);
-    console.log(amount);
-    console.dir(curMeta);
-    console.log('\n');
-
     isFiat = curMeta.isFiat;
     isWalletCur = curMeta.isWalletCur;
     isCryptoListingCur = curMeta.isCryptoListingCur;
