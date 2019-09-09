@@ -3,10 +3,16 @@ import BaseModel from '../BaseModel';
 import app from '../../app';
 import FixedFee from './FixedFee';
 
+export const feeTypes = {
+  PERCENTAGE: 'PERCENTAGE',
+  FIXED: 'FIXED',
+  FIXED_PLUS_PERCENTAGE: 'FIXED_PLUS_PERCENTAGE',
+};
+
 export default class extends BaseModel {
   defaults() {
     return {
-      feeType: 'PERCENTAGE',
+      feeType: feeTypes.PERCENTAGE,
       percentage: 0,
       fixedFee: new FixedFee(),
     };
@@ -25,19 +31,20 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    const feeTypes = ['PERCENTAGE', 'FIXED', 'FIXED_PLUS_PERCENTAGE'];
-
-    if (attrs.feeType === 'PERCENTAGE') {
+    if (attrs.feeType === feeTypes.PERCENTAGE) {
       // remove fixed fee errors if the fixed fee isn't needed
       errObj = _.omit(errObj, (val, key) => key.startsWith('fixedFee'));
     }
 
     // feeType must exist and be one of the valid values
-    if (!attrs.feeType || feeTypes.indexOf(attrs.feeType) === -1) {
+    if (!attrs.feeType || !feeTypes[attrs.feeType]) {
       addError('feeType', app.polyglot.t('feeModelErrors.noFeeType'));
     }
 
-    if (attrs.feeType === 'PERCENTAGE' || attrs.feeType === 'FIXED_PLUS_PERCENTAGE') {
+    if (
+      attrs.feeType === feeTypes.PERCENTAGE ||
+      attrs.feeType === feeTypes.FIXED_PLUS_PERCENTAGE
+    ) {
       // is the percentage a number?
       if (typeof attrs.percentage !== 'number') {
         addError('feeType',

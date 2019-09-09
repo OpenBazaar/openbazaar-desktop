@@ -3,13 +3,14 @@ import app from '../../app';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import {
-  decimalToInteger,
+  createAmount,
   integerToDecimal,
   getCoinDivisibility,
 } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
+import { feeTypes } from './Fee';
 import Colors from './Colors';
 import Contact from './Contact';
 import Stats from './Stats';
@@ -143,25 +144,23 @@ export default class Profile extends BaseModel {
   parse(resp) {
     const response = { ...resp };
 
-    if (response.moderatorInfo && response.moderatorInfo.fee &&
-      response.moderatorInfo.fee.fixedFee) {
-      const amount = response.moderatorInfo.fee.fixedFee.amount;
-      const cur = response.moderatorInfo.fee.fixedFee.currencyCode;
+    try {
+      response.moderatorInfo.fee.fixedFee = {
+        amount: integerToDecimal(
+          response.moderatorInfo.fee.fixedFee.amount,
+          response.moderatorInfo.fee.fixedFee.currency.divisibility
+        ),
+        currencyCode: response.moderatorInfo.fee.fixedFee.currency.code,
+      };
+    } catch (e) {
+      if (
+        response.moderatorInfo &&
+        response.moderatorInfo.fee
+      ) {
+        delete response.moderatorInfo.fee;
+      }
 
-      // TODO: temporarily pulling the coin div from config. Server though
-      // should be providing it.
-      // TODO: temporarily pulling the coin div from config. Server though
-      // should be providing it.
-      // TODO: temporarily pulling the coin div from config. Server though
-      // should be providing it.
-      // TODO: temporarily pulling the coin div from config. Server though
-      // should be providing it.
-      // TODO: temporarily pulling the coin div from config. Server though
-      // should be providing it.
-      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(
-        amount,
-        getCoinDivisibility(cur)
-      );
+      console.error(`Unable to convert the moderator fee from base units: ${e.message}`);
     }
 
     if (response.handle && response.handle.startsWith('@')) {
@@ -212,13 +211,18 @@ export default class Profile extends BaseModel {
       });
 
       if (method !== 'delete') {
-        // convert the amount field
-        if (options.attrs.moderatorInfo && options.attrs.moderatorInfo.fee &&
-          options.attrs.moderatorInfo.fee.fixedFee &&
-          options.attrs.moderatorInfo.fee.fixedFee.amount) {
-          const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
-          const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
-          options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, cur);
+        if (
+          options.attrs.moderatorInfo &&
+          options.attrs.moderatorInfo.fee
+        ) {
+          if (options.attrs.moderatorInfo.fee === feeTypes.PERCENTAGE) {
+            delete options.attrs.moderatorInfo.fee.fixedFee;
+          } else {
+            const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
+            const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
+            options.attrs.moderatorInfo.fee.fixedFee =
+              createAmount(amount, cur);
+          }
         }
       }
     }

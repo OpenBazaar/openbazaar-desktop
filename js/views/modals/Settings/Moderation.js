@@ -5,6 +5,7 @@ import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
+import { feeTypes } from '../../../models/profile/Fee';
 import baseVw from '../../baseVw';
 import { getTranslatedLangs } from '../../../data/languages';
 import { getCurrencies } from '../../../data/currencies';
@@ -73,9 +74,9 @@ export default class extends baseVw {
     }
 
     // clear unused values by setting them to the default, if it exists
-    if (formData.moderatorInfo.fee.feeType === 'PERCENTAGE') {
+    if (formData.moderatorInfo.fee.feeType === feeTypes.PERCENTAGE) {
       formData.moderatorInfo.fee.fixedFee.amount = this.defaultAmount;
-    } else if (formData.moderatorInfo.fee.feeType === 'FIXED') {
+    } else if (formData.moderatorInfo.fee.feeType === feeTypes.FIXED) {
       formData.moderatorInfo.fee.percentage = this.defaultPercentage;
     }
 
@@ -156,6 +157,7 @@ export default class extends baseVw {
           description: this.moderator.max.descriptionLength,
           terms: this.moderator.max.termsLength,
         },
+        feeTypes,
         ...moderator.toJSON(),
       }));
 

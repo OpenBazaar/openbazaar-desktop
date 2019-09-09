@@ -1,7 +1,8 @@
+import is from 'is_js';
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import { getCurrencyByCode } from '../../data/currencies';
-import is from 'is_js';
+import { getCoinDivisibility } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
@@ -20,6 +21,17 @@ export default class extends BaseModel {
 
     if (is.not.existy(attrs.currencyCode) || typeof attrs.currencyCode !== 'string') {
       addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
+    } else {
+      try {
+        getCoinDivisibility(attrs.currencyCode);
+      } catch (e) {
+        // this would really be a developer error to allow an unsupported currency
+        // code in the list
+        console.error(`the sam is patt => ${attrs.currencyCode}`);
+        console.error(e);
+        addError('feeType', 'Unable to determine the coin divisibility for ' +
+          `${attrs.currencyCode}.`);
+      }
     }
 
     if (typeof attrs.currencyCode !== 'string' ||

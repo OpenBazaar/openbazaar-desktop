@@ -97,7 +97,7 @@ export const defaultFiatCoinDivisibility = 2;
  * - When converting a decimal back to an integer, if the API accepts the divisibility, it's
  *   safest to send it over, so it's clear what value was used.
  */
-function _getCoinDivisibility(currency, options = {}) {
+export function getCoinDivisibility(currency, options = {}) {
   if (typeof currency !== 'string' || !currency) {
     throw new Error('Please provide a currrency as a non-empty string.');
   }
@@ -130,12 +130,6 @@ function _getCoinDivisibility(currency, options = {}) {
   }
 
   throw new UnrecognizedCurrencyError();
-}
-
-export function getCoinDivisibility(...args) {
-  const result = _getCoinDivisibility(...args);
-  console.log(`the coin div for ${args[0]} is ${result}`);
-  return result;
 }
 
 /**
@@ -700,6 +694,7 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @returns {string} - An object containing a string based amount along with a
  *   currency definition.
  */
+console.log('todo: maybe a better name for this?');
 export function createAmount(amount, curCode, options = {}) {
   if (
     !(
