@@ -17,37 +17,27 @@ describe('the currency utility module', () => {
     };
   });
 
-  it('correctly converts a fiat amount from an integer to decimal', () => {
-    expect(cur.integerToDecimal(123, 'USD')).to.equal(1.23);
+  it('correctly converts an amount from an integer to decimal', () => {
+    expect(cur.integerToDecimal(123, 2)).to.equal(1.23);
+    expect(cur.integerToDecimal(123, 8)).to.equal(0.00000123);
+    expect(cur.integerToDecimal(123, 18)).to.equal(0.000000000000000123);
   });
 
-  it('correctly converts a BTC price from an integer to a decimal', () => {
-    expect(cur.integerToDecimal(271453590, 'BTC')).to.equal(2.71453590);
+  it('correctly converts an amount from a decimal to an integer', () => {
+    expect(cur.decimalToInteger(1.23, 2)).to.equal('123');
+    expect(cur.decimalToInteger(1.23, 8)).to.equal('123000000');
+    expect(cur.decimalToInteger(1.23, 18)).to.equal('1230000000000000000');
   });
 
-  it('correctly converts a fiat amount from a decimal to an integer', () => {
-    expect(cur.decimalToInteger(1.23, 'USD')).to.equal(123);
-  });
-
-  it('correctly converts a fiat amount from a decimal to an integer' +
-    ' rounding to the hundreds place.', () => {
-    expect(cur.decimalToInteger(1.23678, 'USD')).to.equal(124);
-  });
-
-  it('correctly converts a BTC price from a decimal to an integer', () => {
-    expect(cur.decimalToInteger(2.71, 'BTC')).to.equal(271000000);
-  });
-
-  it('correctly formats a non-crypto price to 2 decimal place', () => {
-    expect(cur.formatPrice(2.713546, 'USD')).to.equal('2.71');
-    expect(cur.formatPrice(2.7189, 'USD')).to.equal('2.72');
-    expect(cur.formatPrice(2, 'USD')).to.equal('2.00');
-  });
-
-  it('correctly formats a BTC price up to 8 decimal places without any insignificant zeros', () => {
-    expect(cur.formatPrice(2.713546, 'BTC')).to.equal('2.713546');
-    expect(cur.formatPrice(2.718925729, 'BTC')).to.equal('2.71892573');
-    expect(cur.formatPrice(2, 'BTC')).to.equal('2');
+  it('correctly converts an amount from a decimal to an integer' +
+    ' rounding to the correct place.', () => {
+    expect(cur.decimalToInteger(1.2367832894, 2)).to.equal('124');
+    expect(cur.decimalToInteger(1.2367832894, 8))
+      .to
+      .equal('123678329');
+    expect(cur.decimalToInteger('1.2367832894239473246342349734', 18))
+      .to
+      .equal('1236783289423947325');
   });
 
   describe('has functions that involve converting between currencies', () => {

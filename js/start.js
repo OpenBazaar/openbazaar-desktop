@@ -36,7 +36,8 @@ import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
 import WalletBalances from './collections/wallet/Balances';
 import Followers from './collections/Followers';
-import { fetchExchangeRates } from './utils/currency';
+// import { fetchExchangeRates } from './utils/currency';
+import * as c from './utils/currency';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
@@ -47,6 +48,11 @@ import SearchProvidersCol from './collections/search/SearchProviders';
 import defaultSearchProviders from './data/defaultSearchProviders';
 import VerifiedMods from './collections/VerifiedMods';
 import VerifiedModsError from './views/modals/VerifiedModsFetchError';
+
+const fetchExchangeRates = c.fetchExchangeRates;
+
+console.log('all about the c c c c c c');
+window.c = c;
 
 fixLinuxZoomIssue();
 handleServerShutdownRequests();

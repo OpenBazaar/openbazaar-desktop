@@ -104,10 +104,12 @@ export function getCoinDivisibility(currency, options = {}) {
 
   let walletCurDef = options.walletCurDef;
 
-  try {
-    walletCurDef = app.walletCurDef;
-  } catch (e) {
-    // pass
+  if (!walletCurDef) {
+    try {
+      walletCurDef = app.walletCurDef;
+    } catch (e) {
+      // pass
+    }
   }
 
   if (!walletCurDef) {
@@ -135,14 +137,15 @@ export function getCoinDivisibility(currency, options = {}) {
 /**
  * Converts the amount from a decimal to an integer based on the provided
  * coin divisibility.
- * @param {number} value - A number that should be converted to an integer.
+ * @param {number|string} value - A number or a string representation of a number that
+ *   should be converted to an integer.
  * @param {number} divisibility - An integer representing the coin divisibility (e.g. for
  *   bitcoin, it is 8)
  * @returns {string} - A string representation of the integer number.
  */
 export function decimalToInteger(value, divisibility) {
-  if (typeof value !== 'number') {
-    throw new Error('The value must be provided as a number');
+  if (!['number', 'string'].includes(typeof value)) {
+    throw new Error('The value must be provided as a number or a string.');
   }
 
   const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
@@ -293,10 +296,10 @@ export function formatCurrency(amount, currency, options) {
     ...options,
   };
 
-  if (typeof amount !== 'number' || isNaN(amount)) {
-    console.error('Unable to format the currency because the amount is not in a valid format.');
-    return '';
-  }
+  // if (typeof amount !== 'number' || isNaN(amount)) {
+  //   console.error('Unable to format the currency because the amount is not in a valid format.');
+  //   return '';
+  // }
 
   if (typeof opts.locale !== 'string') {
     throw new Error('Please provide a locale as a string');
