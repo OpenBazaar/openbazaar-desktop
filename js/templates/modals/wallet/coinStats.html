@@ -1,5 +1,4 @@
 <%
-
   const isValidCryptoCur = typeof ob.cryptoCur === 'string' && ob.cryptoCur;
   const isValidDisplayCur = typeof ob.displayCur === 'string' && ob.displayCur;
   const cryptoCurHasExchangeRate = isValidCryptoCur &&
@@ -10,7 +9,7 @@
     cryptoCurHasExchangeRate && displayCurHasExchangeRate && 
     ob.displayCur !== ob.cryptoCur;
   const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';  
-  let confirmedText = typeof ob.confirmed === 'number' && isValidCryptoCur ?
+  let confirmedText = isValidCryptoCur ?
       ob.currencyMod.formatCurrency(ob.confirmed, ob.cryptoCur, { includeCryptoCurIdentifier: false }) : '';
   let confirmedTextSizeClass = 'tx2';
   confirmedTextSizeClass = confirmedText.length > 14 ? 'tx3' : confirmedTextSizeClass;

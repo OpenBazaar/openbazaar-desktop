@@ -1,3 +1,4 @@
+import bigNumber from 'bignumber.js';
 import app from '../app';
 
 /*
@@ -5,6 +6,7 @@ import app from '../app';
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
+console.log('explain how max is 20 and put in a check');
 export function toStandardNotation(number, options) {
   const opts = {
     minDisplayDecimals: 0,
@@ -99,9 +101,63 @@ export function decimalPlaces(num) {
 // todo: doc and put in our style
 // todo: doc and put in our style
 // todo: doc and put in our style
-// todo: doc and put in our style
+console.log('todo: doc and put in our style');
 // https://stackoverflow.com/a/7343013/632806
 export function preciseRound(value, precision) {
+  if (typeof value === 'string') {
+    const bigNum = bigNumber(value);
+
+    if (bigNum.isNaN()) {
+      throw new Error('The provided string does not evaluate to a valid number.');
+    }
+
+    return bigNum
+      .decimalPlaces(precision)
+      .toString();
+  }
+
   const multiplier = Math.pow(10, precision || 0);
   return Math.round(value * multiplier) / multiplier;
+}
+
+console.log('unit test me silly style');
+/*
+ * Returns true if the provided string is a valid number as determined by
+ * bigNumber.js.
+ */
+export function isValidStringBasedNumber(strNumber) {
+  if (
+    typeof strNumber !== 'string' &&
+    typeof strNumber !== 'number'
+  ) {
+    return false;
+  }
+
+  try {
+    const bigNum = bigNumber(strNumber);
+    return !bigNum.isNaN();
+  } catch (e) {
+    return false;
+  }
+}
+
+console.log('docs me uppers and write unit testy.');
+export function validateNumberType(strNumber, options = {}) {
+  const opts = {
+    fieldName: 'value',
+    allowStringBasedNumber: true,
+    ...options,
+  };
+
+  let isValid = true;
+
+  if (typeof strNumber !== 'number') {
+    isValid = opts.allowStringBasedNumber ?
+      isValidStringBasedNumber(strNumber) : false;
+  }
+
+  if (!isValid) {
+    throw new Error(`The ${opts.fieldName} must be provided as a number or a string based ` +
+      'representation of a number.');
+  }
 }

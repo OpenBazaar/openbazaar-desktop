@@ -2,7 +2,10 @@ import {
   convertCurrency,
   getExchangeRate,
   createAmount,
+  getCoinDivisibility,
+  decimalToInteger,
 } from '../../utils/currency';
+import { isValidStringBasedNumber } from '../../utils/number';
 import {
   getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
@@ -40,14 +43,8 @@ class Spend extends BaseModel {
   }
 
   get amountInWalletCur() {
-    let cryptoAmount = 0;
     const amount = this.get('amount');
-
-    if (typeof amount === 'number') {
-      cryptoAmount = convertCurrency(amount, this.get('currency'), this.get('wallet'));
-    }
-
-    return cryptoAmount;
+    return convertCurrency(amount, this.get('currency'), this.get('wallet'));
   }
 
   validate(attrs) {
@@ -102,12 +99,15 @@ class Spend extends BaseModel {
           }
         }
 
-        if (typeof attrs.amount !== 'number') {
+        console.dir(attrs);
+        if (!isValidStringBasedNumber(attrs.amount)) {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-        } else if (exchangeRatesAvailable &&
-          app.walletBalances) {
+        } else if (
+          exchangeRatesAvailable &&
+          app.walletBalances
+        ) {
           const balanceMd = app.walletBalances.get(attrs.wallet);
           if (balanceMd && this.amountInWalletCur >= balanceMd.get('confirmed')) {
             addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
@@ -155,7 +155,7 @@ class Spend extends BaseModel {
         ...options.attrs,
         ...(
           createAmount(
-            this.amountInWalletCur,
+            decimalToInteger(this.amountInWalletCur, getCoinDivisibility(options.attrs.wallet)),
             options.attrs.wallet
           )
         ),
@@ -228,14 +228,9 @@ export function _spend(fields, options = {}) {
           balanceMd.set(
             balanceMd.parse({
               code: coinType,
-              confirmed: {
-                amount: data.confirmedBalance,
-                currency: data.currency,
-              },
-              unconfirmed: {
-                amount: data.unconfirmedBalance,
-                currency: data.currency,
-              },
+              confirmed: data.confirmedBalance,
+              unconfirmed: data.unconfirmedBalance,
+              currency: data.currency,
             })
           );
         }

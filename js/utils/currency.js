@@ -163,6 +163,9 @@ export function decimalToInteger(value, divisibility) {
     .toString();
 }
 
+console.log('big');
+window.big = bigNumber;
+
 /**
  * Converts the amount from an integer to a decimal based on the provided
  * divisibility.
@@ -176,6 +179,7 @@ export function decimalToInteger(value, divisibility) {
  *   will allow templates to just display nothing instead of bombing on render.
  * @returns {string} - A string representation of the integer number.
  */
+console.log('to do - update docs to reflect changes');
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnUndefinedOnError: true,
@@ -201,23 +205,16 @@ export function integerToDecimal(value, divisibility, options = {}) {
           .pow(divisibility)
       );
 
-    if (result.isGreaterThan(Number.MAX_SAFE_INTEGER)) {
-      throw new Error('value higher than we can handle');
-    } else {
-      returnVal = result.toNumber();
-
-      if (isNaN(returnVal)) {
-        if (opts.returnUndefinedOnError) {
-          returnVal = undefined;
-        } else {
-          throw new Error('Unable to convert the value to a ' +
-            'valid number.');
-        }
-      }
+    if (result.isNaN()) {
+      throw new Error('result is not a number');
     }
+
+    returnVal = result.toString();
   } catch (e) {
     if (!opts.returnUndefinedOnError) {
       throw e;
+    } else {
+      console.error(`Unable to convert ${value} from an integer to a decimal: ${e.message}`);
     }
   }
 
@@ -240,8 +237,9 @@ const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 20;
 // todo: doc me up
 // note about first sig dig on zero
 function getMaxDisplayDigits(amount, desiredMax) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide the amount as a number.');
+  if (typeof amount !== 'number' && typeof amount !== 'string') {
+    throw new Error('The amount must be provided as a number or a string representation ' +
+      'of a number.');
   }
 
   if (typeof desiredMax !== 'number') {
@@ -296,10 +294,7 @@ export function formatCurrency(amount, currency, options) {
     ...options,
   };
 
-  // if (typeof amount !== 'number' || isNaN(amount)) {
-  //   console.error('Unable to format the currency because the amount is not in a valid format.');
-  //   return '';
-  // }
+  console.log('todo check for valid numeric type of amount.');
 
   if (typeof opts.locale !== 'string') {
     throw new Error('Please provide a locale as a string');
@@ -510,12 +505,23 @@ export function getExchangeRates() {
  * Converts an amount from one currency to another based on exchange rate data.
  */
 export function convertCurrency(amount, fromCur, toCur) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number');
+  if (
+    typeof amount !== 'number' &&
+    typeof amount !== 'string'
+  ) {
+    throw new Error('The amount must be provided as a number or string.');
   }
 
-  if (isNaN(amount)) {
-    throw new Error('Please provide an amount that is not NaN');
+  let bigNumAmount;
+
+  if (typeof amount === 'string') {
+    bigNumAmount = bigNumber(amount);
+
+    if (bigNumAmount.isNaN()) {
+      throw new Error('The string based number evaluates to NaN.');
+    }
+  } else if (isNaN(amount)) {
+    throw new Error('If providing an amount as a number, it cannot be NaN.');
   }
 
   if (typeof fromCur !== 'string') {
@@ -545,6 +551,15 @@ export function convertCurrency(amount, fromCur, toCur) {
 
   const fromRate = getExchangeRate(fromCurCode);
   const toRate = getExchangeRate(toCurCode);
+
+  if (bigNumAmount) {
+    return (
+      bigNumAmount
+        .dividedBy(fromRate)
+        .multipliedBy(toRate)
+        .toString()
+    );
+  }
 
   return (amount / fromRate) * toRate;
 }
@@ -655,13 +670,12 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
 export function renderPairedCurrency(price, fromCur, toCur) {
   const fromCurValidity = getCurrencyValidity(fromCur);
 
-  if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    // Sometimes when prices are in an unsupported currency, they will be
-    // saved as empty strings or undefined. We'll ignore those an just render an
-    // empty string.
-    return '';
-  }
-
+  // if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+  //   // Sometimes when prices are in an unsupported currency, they will be
+  //   // saved as empty strings or undefined. We'll ignore those and just render an
+  //   // empty string.
+  //   return '';
+  // }
   const toCurValidity = getCurrencyValidity(toCur);
   const formattedBase = formatCurrency(price, fromCur);
   const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||

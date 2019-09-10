@@ -5,6 +5,7 @@ import {
   isValidCoinDivisibility,
   getCoinDivisibility,
 } from './currency';
+import { validateNumberType } from './number';
 import { getSocket, events as serverConnectEvents } from './serverConnect';
 import app from '../app';
 
@@ -57,17 +58,15 @@ function watchTransactions() {
  * @param {boolean} [options.divisibility] - You can provide the divisibility, otherwise
  *   it will be obtained from the wallet currency definition.
  * @return {object} An jQuery promise which on success will resolve with the fee
- *   in Bitcoin. If the call fails, the deferred will fail and pass on the error reason
- *   as the first arg and the xhr as the second.
+ *   (not in base units). If the call fails, the deferred will fail and pass on the
+ *   error reason as the first arg and the xhr as the second.
  */
 export function estimateFee(coinType, feeLevel, amount, options = {}) {
   if (feeLevels.indexOf(feeLevel) === -1) {
     throw new Error(`feelevel must be one of ${feeLevels.join(', ')}`);
   }
 
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number.');
-  }
+  validateNumberType(amount);
 
   if (typeof coinType !== 'string' || !coinType) {
     throw new Error('Please provide the coinType as a string.');
