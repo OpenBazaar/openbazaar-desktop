@@ -76,7 +76,7 @@
                 <div class="flexVCent gutterHLg">
                   <label for="cryptoAmount" class="clrT txB required"><%= ob.polyT('purchase.cryptoAmount') %></label>
                   <div class="inputSelect">
-                    <input type="text" class="clrBr clrP clrSh2" name="quantity" id="cryptoAmount" value="<%= ob.quantity %>" data-var-type="number" placeholder="0.0000" size="8">
+                    <input type="text" class="clrBr clrP clrSh2" name="quantity" id="cryptoAmount" value="<%= ob.quantity %>" placeholder="0.0000" size="8">
                     <% if (ob.displayCurrency !== ob.listing.metadata.coinType) { %>
                       <select id="cryptoAmountCurrency" class="clrBr clrP nestInputRight">
                         <% [ob.listing.metadata.coinType, ob.displayCurrency].forEach((cur) => {%>
