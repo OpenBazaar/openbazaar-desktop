@@ -140,6 +140,13 @@ export function getCoinDivisibility(currency, options = {}) {
 /*
  * Based on the provided coin divisibility, will return the minimum value
  * that coin divisibility supports (e.g. for 8, 1e-8 will be returned).
+ * @param {number} coinDivisibility
+ * @param {object} options
+ * @param {boolean} [options.returnInStandardNotation = false] - if true wil return
+ *   the result in standard notation ('0.00000001' instead of 1e-8). Note the result
+ *   will be returned as a string when this option is true.
+ * @returns {number|string} - The minimum supported value for the given
+ *   coin divisibility.
  */
 export function minValueByCoinDiv(coinDivisibility, options = {}) {
   const opts = {
@@ -201,7 +208,6 @@ export function decimalToInteger(value, divisibility) {
  *   will allow templates to just display nothing instead of bombing on render.
  * @returns {string} - A string representation of the integer number.
  */
-console.log('to do - update docs to reflect changes');
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnUndefinedOnError: true,
@@ -243,6 +249,10 @@ export function integerToDecimal(value, divisibility, options = {}) {
   return returnVal;
 }
 
+/**
+ * Returns true if the given amount with the given maxDecimals results
+ * in a value of zero.
+ */
 export function isFormattedResultZero(amount, maxDecimals) {
   if (maxDecimals === 0) return true;
 
