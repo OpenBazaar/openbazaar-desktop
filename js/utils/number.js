@@ -86,8 +86,11 @@ export function localizeNumber(number,
 }
 
 // https://stackoverflow.com/a/10454560
+console.log('doc me up - note this only works on string based numbers');
 export function decimalPlaces(num) {
-  const match = (String(num)).match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
+  // trim trailing zeros
+  const trimmed = String(num).replace(/0+$/, '');
+  const match = trimmed.match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
   if (!match) { return 0; }
   return Math.max(
     0,

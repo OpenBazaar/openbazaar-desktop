@@ -134,6 +134,24 @@ export function getCoinDivisibility(currency, options = {}) {
   throw new UnrecognizedCurrencyError();
 }
 
+/*
+ * Based on the provided coin divisibility, will return the minimum value
+ * that coin divisibility supports (e.g. for 8, 1e-8 will be returned).
+ */
+function minValueByCoinDiv(coinDivisibility) {
+  const [isValidCoinDiv] = isValidCoinDivisibility(coinDivisibility);
+
+  if (!isValidCoinDiv) {
+    throw new Error('The provided coinDivisibility is not valid.');
+  }
+
+  return 1 / (Math.pow(10, coinDivisibility));
+}
+
+const memoizedMinValueByCoinDiv = _.memoize(minValueByCoinDiv);
+
+export { memoizedMinValueByCoinDiv as minValueByCoinDiv };
+
 /**
  * Converts the amount from a decimal to an integer based on the provided
  * coin divisibility.

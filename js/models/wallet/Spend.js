@@ -1,11 +1,18 @@
+import bigNumber from 'bignumber.js';
 import {
   convertCurrency,
   getExchangeRate,
   createAmount,
   getCoinDivisibility,
   decimalToInteger,
+  isValidCoinDivisibility,
+  minValueByCoinDiv,
 } from '../../utils/currency';
-import { isValidStringBasedNumber } from '../../utils/number';
+import {
+  isValidStringBasedNumber,
+  toStandardNotation,
+  decimalPlaces,
+} from '../../utils/number';
 import {
   getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
@@ -42,9 +49,22 @@ class Spend extends BaseModel {
     ];
   }
 
-  get amountInWalletCur() {
+  getAmountInWalletCur() {
+    this._amountInWalletCurCache =
+      this._amountInWalletCurCache || {};
     const amount = this.get('amount');
-    return convertCurrency(amount, this.get('currency'), this.get('wallet'));
+    const cur = this.get('currency');
+    const wallet = this.get('wallet');
+    const cacheKey = `${amount}-${cur}-${wallet}`;
+    const cachedVal = this._amountInWalletCurCache[cacheKey];
+    let converted;
+
+    if (cachedVal !== 'undefined') {
+      converted = convertCurrency(amount, cur, wallet);
+      this._amountInWalletCurCache[cacheKey] = converted;
+    }
+
+    return converted;
   }
 
   validate(attrs) {
@@ -99,18 +119,69 @@ class Spend extends BaseModel {
           }
         }
 
-        console.dir(attrs);
         if (!isValidStringBasedNumber(attrs.amount)) {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-        } else if (
-          exchangeRatesAvailable &&
-          app.walletBalances
-        ) {
-          const balanceMd = app.walletBalances.get(attrs.wallet);
-          if (balanceMd && this.amountInWalletCur >= balanceMd.get('confirmed')) {
-            addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+        } else {
+          const amountInWalletCur = this.getAmountInWalletCur();
+          let coinDiv;
+          let isValidCoinDiv;
+
+          try {
+            coinDiv = getCoinDivisibility(attrs.wallet);
+            [isValidCoinDiv] =
+              isValidCoinDivisibility(coinDiv);
+          } catch (e) {
+            // pass
+          }
+
+          let foundErr = false;
+
+          if (isValidCoinDiv) {
+            if (ensureMainnetCode(attrs.wallet) !== ensureMainnetCode(attrs.currency)) {
+              if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
+                addError('amount', app.polyglot.t('spendModelErrors.convertedAmountTooLow', {
+                  min: toStandardNotation(minValueByCoinDiv(coinDiv)),
+                  walletCur: attrs.wallet,
+                  convertedAmount: toStandardNotation(amountInWalletCur),
+                }));
+                foundErr = true;
+              }
+            } else {
+              if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
+                addError('amount', app.polyglot.t('spendModelErrors.amountTooLow', {
+                  cur: attrs.wallet,
+                  min: toStandardNotation(minValueByCoinDiv(coinDiv)),
+                }));
+                foundErr = true;
+              } else if (decimalPlaces(amountInWalletCur) > coinDiv) {
+                addError(
+                  'item.cryptoQuantity',
+                  app.polyglot.t('genericModelErrors.fractionTooLow', {
+                    cur: attrs.wallet,
+                    coinDiv,
+                  })
+                );
+                foundErr = true;
+              }
+            }
+          }
+
+          if (
+            !foundErr &&
+            exchangeRatesAvailable &&
+            app.walletBalances
+          ) {
+            const balanceMd = app.walletBalances.get(attrs.wallet);
+
+            if (
+              balanceMd &&
+              bigNumber(this.getAmountInWalletCur())
+                .gte(balanceMd.get('confirmed'))
+            ) {
+              addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+            }
           }
         }
 
@@ -155,7 +226,7 @@ class Spend extends BaseModel {
         ...options.attrs,
         ...(
           createAmount(
-            decimalToInteger(this.amountInWalletCur, getCoinDivisibility(options.attrs.wallet)),
+            decimalToInteger(this.getAmountInWalletCur(), getCoinDivisibility(options.attrs.wallet)),
             options.attrs.wallet
           )
         ),

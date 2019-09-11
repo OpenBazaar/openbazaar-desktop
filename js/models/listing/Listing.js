@@ -182,6 +182,7 @@ export default class extends BaseModel {
       // pass
     }
 
+    console.log('use common func to do this from cur mod');
     let minCoinDivPrice;
 
     if (isValidCoinDiv) {
