@@ -9,6 +9,7 @@ import {
   integerToDecimal,
   getCurMeta,
   isValidCoinDivisibility,
+  minValueByCoinDiv,
 } from '../../utils/currency';
 import {
   toStandardNotation,
@@ -182,11 +183,10 @@ export default class extends BaseModel {
       // pass
     }
 
-    console.log('use common func to do this from cur mod');
     let minCoinDivPrice;
 
     if (isValidCoinDiv) {
-      minCoinDivPrice = 1 / (Math.pow(10, coinDiv));
+      minCoinDivPrice = minValueByCoinDiv(coinDiv);
     }
 
     if (!(attrs.metadata instanceof Metadata)) {

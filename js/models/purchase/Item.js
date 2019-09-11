@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import { decimalPlaces, toStandardNotation } from '../../utils/number';
+import { minValueByCoinDiv } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
 import Shipping from './Shipping';
@@ -98,7 +99,7 @@ export default class extends BaseModel {
         coinDiv = coinDiv > 99 ?
           Math.log(coinDiv) / Math.log(10) : coinDiv;
 
-        const minCoinDivPrice = 1 / Math.pow(10, coinDiv);
+        const minCoinDivPrice = minValueByCoinDiv(coinDiv);
 
         if (typeof attrs.quantity !== 'number') {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
