@@ -1,8 +1,18 @@
+import bigNumber from 'bignumber.js';
 import is from 'is_js';
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import { getCurrencyByCode } from '../../data/currencies';
-import { getCoinDivisibility } from '../../utils/currency';
+import { ensureMainnetCode } from '../../data/walletCurrencies';
+import {
+  getCoinDivisibility,
+  isValidCoinDivisibility,
+  minValueByCoinDiv,
+} from '../../utils/currency';
+import {
+  isValidStringBasedNumber,
+  decimalPlaces,
+} from '../../utils/number';
 
 export default class extends BaseModel {
   defaults() {
@@ -27,21 +37,57 @@ export default class extends BaseModel {
       } catch (e) {
         // this would really be a developer error to allow an unsupported currency
         // code in the list
-        console.error(`the sam is patt => ${attrs.currencyCode}`);
-        console.error(e);
         addError('feeType', 'Unable to determine the coin divisibility for ' +
           `${attrs.currencyCode}.`);
       }
     }
 
-    if (typeof attrs.currencyCode !== 'string' ||
+    let isValidCoinDiv = false;
+    let coinDiv;
+
+    if (
+      typeof attrs.currencyCode !== 'string' ||
       !attrs.currencyCode ||
-      !getCurrencyByCode(attrs.currencyCode)) {
-      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
+      !getCurrencyByCode(attrs.currencyCode)
+    ) {
+      addError('currencyCode', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
+    } else {
+      try {
+        coinDiv = getCoinDivisibility(attrs.currencyCode);
+        [isValidCoinDiv] =
+          isValidCoinDivisibility(coinDiv);
+      } catch (e) {
+        // pass
+      }
+
+      if (!isValidCoinDiv) {
+        addError('currencyCode',
+          app.polyglot.t('fixedFeeModelErrors.invalidCoinDiv', {
+            cur: ensureMainnetCode(attrs.currencyCode),
+          })
+        );
+      }
     }
 
-    if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
-      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noAmount'));
+    if (!isValidStringBasedNumber(attrs.amount)) {
+      addError('amount', app.polyglot.t('fixedFeeModelErrors.noAmount'));
+    } else if (isValidCoinDiv) {
+      if (bigNumber(attrs.amount) < minValueByCoinDiv(coinDiv)) {
+        addError('amount',
+          app.polyglot.t('genericModelErrors.priceTooLow', {
+            cur: attrs.currencyCode,
+            min: minValueByCoinDiv(coinDiv, { returnInStandardNotation: true }),
+          })
+        );
+      } else if (decimalPlaces(attrs.amount) > coinDiv) {
+        addError(
+          'amount',
+          app.polyglot.t('genericModelErrors.fractionTooLow', {
+            cur: attrs.currencyCode,
+            coinDiv,
+          })
+        );
+      }
     }
 
     if (Object.keys(errObj).length) return errObj;

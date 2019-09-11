@@ -45,8 +45,14 @@
             <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['moderatorInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.feeType'] })) %>
-            <% if (ob.errors['moderatorInfo.fee.fixedFee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.fixedFee.feeType'] })) %>
+            <%
+              const feeErrors = Object.keys(ob.errors)
+                .filter(errKey => errKey.startsWith('moderatorInfo.fee.'))
+                .map(errKey => ob.errors[errKey])
+              if (feeErrors.length) {
+                print(ob.formErrorTmpl({ errors: feeErrors }));
+              }
+            %>
             <div class="flexRow gutterH rowTn">
               <div class="col4">
                 <select id="moderationFeeType" name="moderatorInfo.fee.feeType" class="clrBr clrP clrSh2">
@@ -62,17 +68,20 @@
                 </select>
               </div>
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
-                <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
-                   var ccode = ob.fee && ob.fee.fixedFee && ob.fee.fixedFee.currencyCode ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
-                   console.log('todo: probably put in a check on the model to ensure the value isnt ' +
-                   'below the min the divisibility can support');
+                <%
+                  const amt = ob.fee && ob.fee.fixedFee ?
+                    ob.toStandardNotation(ob.fee.fixedFee.amount) : 0;
+                  const ccode =
+                    ob.fee &&
+                    ob.fee.fixedFee &&
+                    ob.fee.fixedFee.currencyCode ?
+                      ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
                 %>
                 <!-- use text and set max length so excess decimals can't be entered.-->
                 <input type="text"
                        class="noSpin clrBr clrSh2"
                        name="moderatorInfo.fee.fixedFee.amount"
-                       value="<%= amt %>"
-                       data-var-type="number">
+                       value="<%= amt %>">
               </div>
               <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
                 <select  id="moderationCurrency" name="moderatorInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">

@@ -3,7 +3,10 @@ import app from '../app';
 import $ from 'jquery';
 import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
-import { preciseRound } from './number';
+import {
+  preciseRound,
+  toStandardNotation,
+} from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
 import {
@@ -138,19 +141,23 @@ export function getCoinDivisibility(currency, options = {}) {
  * Based on the provided coin divisibility, will return the minimum value
  * that coin divisibility supports (e.g. for 8, 1e-8 will be returned).
  */
-function minValueByCoinDiv(coinDivisibility) {
+export function minValueByCoinDiv(coinDivisibility, options = {}) {
+  const opts = {
+    returnInStandardNotation: false,
+    ...options,
+  };
+
   const [isValidCoinDiv] = isValidCoinDivisibility(coinDivisibility);
 
   if (!isValidCoinDiv) {
     throw new Error('The provided coinDivisibility is not valid.');
   }
 
-  return 1 / (Math.pow(10, coinDivisibility));
+  const minVal = 1 / (Math.pow(10, coinDivisibility));
+
+  return opts.returnInStandardNotation ?
+    toStandardNotation(minVal) : minVal;
 }
-
-const memoizedMinValueByCoinDiv = _.memoize(minValueByCoinDiv);
-
-export { memoizedMinValueByCoinDiv as minValueByCoinDiv };
 
 /**
  * Converts the amount from a decimal to an integer based on the provided
@@ -180,9 +187,6 @@ export function decimalToInteger(value, divisibility) {
     .decimalPlaces(0)
     .toString();
 }
-
-console.log('big');
-window.big = bigNumber;
 
 /**
  * Converts the amount from an integer to a decimal based on the provided

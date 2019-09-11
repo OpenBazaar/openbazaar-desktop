@@ -2076,7 +2076,8 @@
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "invalidCoinDiv": "%{cur} does not have a valid coin divisibility. Please select a different currency."
   },
   "skuModelErrors": {
     "provideQuantity": "Please provide a quantity.",

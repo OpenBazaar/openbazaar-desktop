@@ -5,7 +5,6 @@ import { getSocket } from '../../utils/serverConnect';
 import {
   createAmount,
   integerToDecimal,
-  getCoinDivisibility,
 } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
@@ -144,23 +143,25 @@ export default class Profile extends BaseModel {
   parse(resp) {
     const response = { ...resp };
 
-    try {
-      response.moderatorInfo.fee.fixedFee = {
-        amount: integerToDecimal(
-          response.moderatorInfo.fee.fixedFee.amount,
-          response.moderatorInfo.fee.fixedFee.currency.divisibility
-        ),
-        currencyCode: response.moderatorInfo.fee.fixedFee.currency.code,
-      };
-    } catch (e) {
-      if (
-        response.moderatorInfo &&
-        response.moderatorInfo.fee
-      ) {
-        delete response.moderatorInfo.fee;
-      }
+    if (response.moderatorInfo) {
+      try {
+        response.moderatorInfo.fee.fixedFee = {
+          amount: integerToDecimal(
+            response.moderatorInfo.fee.fixedFee.amount,
+            response.moderatorInfo.fee.fixedFee.currency.divisibility
+          ),
+          currencyCode: response.moderatorInfo.fee.fixedFee.currency.code,
+        };
+      } catch (e) {
+        if (
+          response.moderatorInfo &&
+          response.moderatorInfo.fee
+        ) {
+          delete response.moderatorInfo.fee;
+        }
 
-      console.error(`Unable to convert the moderator fee from base units: ${e.message}`);
+        console.error(`Unable to convert the moderator fee from base units: ${e.message}`);
+      }
     }
 
     if (response.handle && response.handle.startsWith('@')) {
