@@ -10,31 +10,7 @@ import {
   getCurrencyByCode,
   init,
 } from '../../js/data/walletCurrencies';
-
-const walletCurs = ['BCH', 'BTC'];
-const walletCurDef = {
-  AED: {
-    code: 'AED',
-    currencyType: 'fiat',
-    divisibility: 2,
-    name: 'UAE Dirham',
-    testnetCode: '',
-  },
-  BCH: {
-    code: 'BCH',
-    currencyType: 'crypto',
-    divisibility: 8,
-    name: 'Bitcoin Cash',
-    testnetCode: 'TBCH',
-  },
-  BTC: {
-    code: 'BTC',
-    currencyType: 'crypto',
-    divisibility: 8,
-    name: 'Bitcoin',
-    testnetCode: 'TBTC',
-  },
-};
+import { walletCurs, walletCurDef } from '../walletCurData';
 
 let isAppTestnet = false;
 

@@ -6,6 +6,7 @@ import bigNumber from 'bignumber.js';
 import {
   preciseRound,
   toStandardNotation,
+  validateNumberType,
 } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
@@ -265,14 +266,27 @@ export function isFormattedResultZero(amount, maxDecimals) {
 // This is the max supported by Intl.NumberFormat.
 const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 20;
 
-// todo: todo: todo: unit test me like a bandit
-// todo: doc me up
-// note about first sig dig on zero
+/**
+ * The idea of this function is that many times for display purposes, you want to
+ * limit the number of decimals displayed on price (e.g. $1.34 instead of $1.3421,
+ * 0.0023 BTC instead of 0.00238734 BTC), but simply forcing it may result in a zero
+ * value on what is otherwise not a zero value (e.g. 0.001 with a maximum decimal
+ * places of 2 would result in 0).
+ * This function accepts the amount and the desired maximum decimal places and if
+ * the result would be zero, it will increase the desired max until at least one
+ * significant digit is shown. For example, a call of 0.0001 with a desired max of 2,
+ * would return 4.
+ * Note that max value returned with be MAX_NUMBER_FORMAT_DISPLAY_DECIMALS.
+ * Note that this mimics the behavior of Intl.NumberFormat which will round up. So,
+ * 0.005 with a desired max of 2 will return two because when formatted it will
+ * result in 0.01.
+ * @param {number|string} amount
+ * @param {number} desiredMax - An integer intdicating the desired number of decimal
+ *   places.
+ * @returns {number} - An integer with the computed maximum decimal places.
+ */
 function getMaxDisplayDigits(amount, desiredMax) {
-  if (typeof amount !== 'number' && typeof amount !== 'string') {
-    throw new Error('The amount must be provided as a number or a string representation ' +
-      'of a number.');
-  }
+  validateNumberType(amount);
 
   if (typeof desiredMax !== 'number') {
     throw new Error('Please provide the desiredMax as a number.');
@@ -295,7 +309,7 @@ function getMaxDisplayDigits(amount, desiredMax) {
     max++;
   }
 
-  return max;
+  return max < desiredMax ? desiredMax : max;
 }
 
 /**
