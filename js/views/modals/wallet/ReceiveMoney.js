@@ -61,7 +61,7 @@ export default class extends baseVw {
 
       if (address && walletCur) {
         qrDataUri = qr(walletCur.qrCodeText(address),
-          { type: 6, size: 5, level: 'Q' });
+          { type: 7, size: 5, level: 'M' });
       }
 
       this.$el.html(t({

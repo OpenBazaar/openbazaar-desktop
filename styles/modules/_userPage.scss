@@ -83,8 +83,31 @@
       }
     }
 
-    .userPageHome .aboutBox img {
-      max-width: 100%;
+    .userPageHome {
+
+      .aboutBox img {
+        max-width: 100%;
+      }
+
+      .userCard {
+
+        .contentBox {
+
+          .content {
+            height: auto;
+
+            .contentTop {
+              height: auto;
+              margin-bottom: 10px;
+
+              .userDescription {
+                max-height: none;
+                -webkit-line-clamp: unset;
+              }
+            }
+          }
+        }
+      }
     }
 
     .userPageFollow {

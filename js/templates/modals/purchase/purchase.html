@@ -196,6 +196,7 @@
             </div>
           </div>
           <div class="col6">
+            <% if (ob.hasCoupons) { %>
             <div class="rowTn">
               <label for="couponCode" class="tx5">
                 <%= ob.polyT('purchase.couponCode') %>
@@ -215,6 +216,7 @@
             <div class="js-couponsWrapper">
               <% // coupons are inserted here after they are added by the user. %>
             </div>
+            <% } %>
           </div>
         </div>
         <hr class="clrBr row">

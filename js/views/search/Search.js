@@ -82,11 +82,12 @@ export default class extends baseVw {
 
     this._categorySearch = {
       ...this._search,
+      provider: app.searchProviders.at(0),
       ps: 8,
     };
 
     this._cryptoSearch = {
-      ...this._search,
+      ...this._categorySearch,
       ps: 5,
       filters: {
         type: 'cryptocurrency',
@@ -503,7 +504,7 @@ export default class extends baseVw {
   }
 
   onClickSuggestion(opts) {
-    this.setSearch({ q: opts.suggestion, p: 0 });
+    this.setSearch({ q: opts.suggestion, p: 0, filters: { type: 'all' } });
     recordEvent('Discover_ClickSuggestion');
     recordEvent('Discover_Search', { type: 'suggestion' });
   }
