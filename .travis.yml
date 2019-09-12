@@ -8,7 +8,7 @@ cache:
   - node_modules
   - "/usr/local/Cellar"
 node_js:
-- '8'
+- '11'
 addons:
   apt:
     packages:
