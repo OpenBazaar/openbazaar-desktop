@@ -280,6 +280,25 @@ describe('the currency utility module', () => {
           .to
           .equal(500);
       });
+
+      it('which when called with a string based amount, returns a string ' +
+        'based amount', () => {
+        expect(cur.convertCurrency('500', 'USD', 'PLN'))
+          .to
+          .equal('2097.308819610977884344624');
+
+        expect(cur.convertCurrency('500', 'BTC', 'USD'))
+          .to
+          .equal('375300');
+
+        expect(cur.convertCurrency('500', 'USD', 'USD'))
+          .to
+          .equal('500');
+
+        expect(cur.convertCurrency('500', 'BTC', 'BTC'))
+          .to
+          .equal('500');
+      });
     });
 
     describe('like convertAndFormatCurrency', () => {
@@ -303,10 +322,106 @@ describe('the currency utility module', () => {
           .to
           .equal('$375,300.00');
       });
+
+      it('which will properly handle string based amounts', () => {
+        expect(cur.convertAndFormatCurrency('500', 'USD', 'PLN', { locale: 'en-US' }))
+          .to
+          .equal('PLN 2,097.31');
+
+        expect(cur.convertAndFormatCurrency('500', 'USD', 'BTC', { locale: 'en-US' }))
+          .to
+          .equal('₿0.66613376');
+
+        expect(cur.convertAndFormatCurrency('500', 'BTC', 'USD', { locale: 'en-US' }))
+          .to
+          .equal('$375,300.00');
+      });
     });
 
     after(function () {
       ajax.restore();
+    });
+  });
+
+  describe('has a function that formats a currency for display purposes', () => {
+    const baseOpts = {
+      locale: 'en-US',
+      btcUnit: 'BTC',
+      useCryptoSymbol: true,
+      includeCryptoCurIdentifier: true,
+      extendMaxDecimalsOnZero: true,
+    };
+
+    const cryptoOpts = {
+      ...baseOpts,
+      minDisplayDecimals: 0,
+      maxDisplayDecimals: 8,
+    };
+
+    const fiatOpts = {
+      ...baseOpts,
+      minDisplayDecimals: 2,
+      maxDisplayDecimals: 2,
+    };
+
+    it('properly formats a currency when passing in an amount as a number', () => {
+      expect(cur.formatCurrency(123.4567891234, 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678912');
+
+      expect(cur.formatCurrency(123.4567891294, 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678913');
+
+      expect(cur.formatCurrency(123.4567891234, 'USD', fiatOpts))
+        .to
+        .equal('$123.46');
+
+      expect(cur.formatCurrency(123.4527891294, 'USD', fiatOpts))
+        .to
+        .equal('$123.45');
+    });
+
+    it('properly formats a currency when passing in an amount as a number', () => {
+      expect(cur.formatCurrency('123.4567891234', 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678912');
+
+      expect(cur.formatCurrency('123.4567891294', 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678913');
+
+      expect(cur.formatCurrency('123.4567891234', 'USD', fiatOpts))
+        .to
+        .equal('$123.46');
+
+      expect(cur.formatCurrency('123.4527891294', 'USD', fiatOpts))
+        .to
+        .equal('$123.45');
+    });
+
+    it('handles numbers that are beyond the support of Intl.NumberFormat', () => {
+      const strNumTooBig = '9007199254740992';
+
+      expect(cur.formatCurrency(strNumTooBig, 'BTC', cryptoOpts))
+        .to
+        .equal('₿9,007,199,254,740,992');
+
+      expect(cur.formatCurrency(`0.${strNumTooBig}`, 'BTC', cryptoOpts))
+        .to
+        .equal('₿0.90071993');
+
+      // expect(cur.formatCurrency(1234567891.4567891294, 'BCH', cryptoOpts))
+      //   .to
+      //   .equal('1,234,567,891.45678913 BCH');
+
+      // expect(cur.formatCurrency(123456789.876543214, 'BCH', cryptoOpts))
+      //   .to
+      //   .equal('123,456,789.87654321 BCH');
+
+      // expect(cur.formatCurrency(123456789.876543215, 'BCH', cryptoOpts))
+      //   .to
+      //   .equal('123,456,789.87654322 BCH');
     });
   });
 });

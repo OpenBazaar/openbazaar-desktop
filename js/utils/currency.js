@@ -22,6 +22,9 @@ const events = {
   ...Events,
 };
 
+console.log('big');
+window.big = bigNumber;
+
 export { events };
 
 // friendlier for circular dependancies
@@ -313,6 +316,54 @@ function getMaxDisplayDigits(amount, desiredMax) {
 }
 
 /**
+ * Returns a boolean indicating whether the number can properly be formatted
+ * by Intl.NumberFormat. Certain numbers that are too big or have too many decimal
+ * places or too many significant digits will be rounded or otherwise adjusted by
+ * Intl.NumberFormat. In many cases, such a change of the number is not desired and
+ * this function will allow you to identify if that will happen and have the potential
+ * to use other functionality, e.g. BigNumber.toFixed() (keep in mind though, that
+ * option will properly show an untruncated / unreounded number, but it will not localize
+ * the number at all).
+ */
+function nativeNumberFormatSupported(val, maxDecimals = 20) {
+  validateNumberType(val);
+
+  if (!(Number.isInteger(maxDecimals) && maxDecimals >= 0)) {
+    throw new Error('maxDecimals must be provided as an integer >= 0.');
+  }
+
+  const bigNum = bigNumber(val).dp(maxDecimals);
+  const split = bigNum.toString().split('.');
+  const int = bigNumber(split[0]);
+  const fraction = bigNumber(split[2]);
+
+  if (int.toString() === '0' && fraction.toString().length > 20) {
+    return false;
+  }
+
+  if (
+    !int.isNaN() &&
+    int.gt(Number.MAX_SAFE_INTEGER)
+  ) {
+    return false;
+  }
+
+  if (
+    !fraction.isNaN() &&
+    fraction.gt(Number.MAX_SAFE_INTEGER)
+  ) {
+    return false;
+  }
+
+  const intLength = !int.isNaN() && int.toString().length || 0;
+  const fractionLength = !fraction.isNaN() && fraction.toString().length || 0;
+
+  if (intLength + fractionLength > 16) return false;
+
+  return true;
+}
+
+/**
  * Will format an amount in the given currency into the format appropriate for the given
  * locale.
  * In many cases, instead of using this method directly, you may want to use
@@ -340,7 +391,46 @@ export function formatCurrency(amount, currency, options) {
     ...options,
   };
 
-  console.log('todo check for valid numeric type of amount.');
+  // This is intended to be used for amounts that you want formatted in the
+  // 'decimal' style. This won't work for the other formats (e.g. currency, percent)
+  // because this function will fall back if necessary to BigNumber.toFormat() and that
+  // does not support those styles.
+  const formatAmount = (value, locale, formatAmountOpts = {}) => {
+    const maxDecimals = formatAmountOpts.maximumFractionDigits;
+    const minDecimals = formatAmountOpts.minimumFractionDigits;
+
+    if (nativeNumberFormatSupported(value, maxDecimals)) {
+      return new Intl.NumberFormat(
+        opts.locale,
+        {
+          ...formatAmountOpts,
+          style: 'decimal',
+        }
+      ).format(amount);
+    }
+
+    let rounded = bigNumber(value)
+      .dp(maxDecimals)
+      .toString();
+
+    if (Number.isInteger(minDecimals)) {
+      const split = rounded.split('.');
+      const int = split[0];
+      const fraction = split[1];
+
+      if (fraction && fraction.length < minDecimals) {
+        const trailingZeros = '';
+        trailingZeros.padEnd(minDecimals - fraction.length, '0');
+        rounded = `${int}.${fraction}${trailingZeros}`;
+      }
+    }
+
+    const formattedValue = bigNumber(rounded).toFormat();
+
+    return formattedValue;
+  };
+
+  validateNumberType(amount);
 
   if (typeof opts.locale !== 'string') {
     throw new Error('Please provide a locale as a string');
@@ -431,39 +521,47 @@ export function formatCurrency(amount, currency, options) {
       amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
     }
 
-    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+    formattedCurrency = formatAmount(amt, opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
       maximumFractionDigits: opts.maxDisplayDecimals,
-    }).format(amt);
+    });
 
     if (opts.includeCryptoCurIdentifier) {
       const translationSubKey = curSymbol === curData.symbol ?
         'curSymbolAmount' : 'curCodeAmount';
       formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
-        amount: formattedAmount,
+        amount: formattedCurrency,
         [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
       });
     }
   } else if (isCryptoListingCur) {
-    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+    formattedCurrency = formatAmount(amount, opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
       maximumFractionDigits: opts.maxDisplayDecimals,
-    }).format(amount);
+    });
 
     if (opts.includeCryptoCurIdentifier) {
       formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
-        amount: formattedAmount,
+        amount: formattedCurrency,
         code: cur.length > 8 ?
           `${cur.slice(0, 8)}…` : cur,
       });
     }
   } else {
-    formattedCurrency = new Intl.NumberFormat(opts.locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: opts.maxDisplayDecimals,
-    }).format(amount);
+    // Note if the amount provided is too large to has too many decimal places,
+    // Intl.NumberFormat may change (round, truncate) the number. It's unlikely
+    // though because this is being used for fiat which we round to two decimal
+    // places. So the main culprit would be an amount > Number.MAX_SAFE_INTEGER,
+    // which is unlikely you'll stumble upon such a fiat amount.
+    formattedCurrency = new Intl.NumberFormat(
+      opts.locale,
+      {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: opts.minDisplayDecimals,
+        maximumFractionDigits: opts.maxDisplayDecimals,
+      }
+    ).format(amount);
   }
 
   return formattedCurrency;
@@ -550,6 +648,7 @@ export function getExchangeRates() {
 /**
  * Converts an amount from one currency to another based on exchange rate data.
  */
+console.log('doc how string will gt string and num will get num');
 export function convertCurrency(amount, fromCur, toCur) {
   if (
     typeof amount !== 'number' &&
@@ -715,6 +814,8 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
  */
 export function renderPairedCurrency(price, fromCur, toCur) {
   const fromCurValidity = getCurrencyValidity(fromCur);
+
+  console.log('maybe just catch any error and render an empty string');
 
   // if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
   //   // Sometimes when prices are in an unsupported currency, they will be
