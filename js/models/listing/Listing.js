@@ -284,7 +284,7 @@ export default class extends BaseModel {
       }
 
       coupons.forEach(coupon => {
-        if (isValidCoinDiv) {
+        if (isValidCoinDiv && coupon.priceDiscount) {
           if (coupon.priceDiscount < minCoinDivPrice) {
             addError(`coupons[${coupon.cid}].priceDiscount`,
               app.polyglot.t('listingModelErrors.priceTooLow', {

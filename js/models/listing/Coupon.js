@@ -1,4 +1,5 @@
 import app from '../../app';
+import { isValidStringBasedNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -46,8 +47,13 @@ export default class extends BaseModel {
       }
     }
 
-    if (typeof attrs.percentDiscount === 'undefined' &&
-      typeof attrs.priceDiscount === 'undefined') {
+    if (
+      typeof attrs.percentDiscount === 'undefined' &&
+      (
+        typeof attrs.priceDiscount === 'undefined' ||
+        !attrs.priceDiscount
+      )
+    ) {
       addError('percentDiscount', app.polyglot.t('couponModelErrors.provideDiscountAmount'));
     } else if (attrs.percentDiscount && attrs.priceDiscount) {
       // This is an internal error. Assuming a reasonable UI, the user should never be able to
@@ -62,11 +68,12 @@ export default class extends BaseModel {
       } else if (attrs.percentDiscount >= 100) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
       }
-    } else if (typeof attrs.priceDiscount !== 'undefined') {
-      if (typeof attrs.priceDiscount !== 'number') {
-        addError('priceDiscount',
-          app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
-      }
+    } else if (
+      typeof attrs.priceDiscount !== 'undefined' &&
+      !isValidStringBasedNumber(attrs.priceDiscount)
+    ) {
+      addError('priceDiscount',
+        app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;

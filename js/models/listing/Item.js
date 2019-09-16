@@ -1,7 +1,8 @@
 import { guid } from '../../utils';
 import is from 'is_js';
-import app from '../../app';
 import { Collection } from 'backbone';
+import app from '../../app';
+import { isValidStringBasedNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
@@ -111,7 +112,7 @@ export default class extends BaseModel {
 
     if (attrs.price === '') {
       addError('price', app.polyglot.t('itemModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.price)) {
+    } else if (!isValidStringBasedNumber(attrs.price)) {
       addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
     }
 

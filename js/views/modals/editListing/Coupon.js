@@ -32,7 +32,15 @@ export default class extends BaseView {
     if (formData.discountType === 'FIXED') {
       formData.priceDiscount = formData.discountAmount;
     } else {
-      formData.percentDiscount = formData.discountAmount;
+      const priceDiscount = Number(formData.discountAmount);
+
+      console.log(`the price discount is ${formData.discountAmount}`);
+
+      formData.percentDiscount =
+        !isNaN(priceDiscount) && formData.discountAmount ?
+          priceDiscount : formData.discountAmount;
+
+      console.log(`the percent discount is ${formData.percentDiscount}`);
     }
 
     delete formData.discountType;

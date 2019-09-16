@@ -14,14 +14,15 @@
       <%
         let discountAmount;
 
-        if (typeof ob.priceDiscount !== 'undefined') {
-          discountAmount = typeof ob.priceDiscount === 'number' ?
-            ob.toStandardNotation(ob.priceDiscount) : ob.priceDiscount;          
-        } else {
+        if (ob.priceDiscount) {
+          console.log(`snoop: ${ob.priceDiscount}`);
+          discountAmount = ob.toStandardNotation(ob.priceDiscount);
+          console.log(`doggers: ${discountAmount}`);
+        } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount = ob.percentDiscount;
         }
       %>
-      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= ob.toStandardNotation(discountAmount) %>">
+      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>">
       <select name="discountType" class="clrBr clrP nestInputRight">
         <option value="PERCENTAGE" <% if (typeof ob.percentDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
         <option value="FIXED" <% if (typeof ob.priceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>

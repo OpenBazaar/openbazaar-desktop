@@ -71,8 +71,8 @@ describe('the Coupon model', () => {
     const coupon = new Coupon();
 
     coupon.set({
-      priceDiscount: 123,
-      percentDiscount: 456,
+      priceDiscount: '123',
+      percentDiscount: 25,
     }, { validate: true });
     const valErr = coupon.validationError;
 
