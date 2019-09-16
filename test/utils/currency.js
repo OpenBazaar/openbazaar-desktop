@@ -9,6 +9,9 @@ import { walletCurs, walletCurDef } from '../walletCurData';
 import { init as initWalletCurs } from '../../js/data/walletCurrencies';
 import * as cur from '../../js/utils/currency';
 
+// A string larger than JS can handle without precision loss
+const strNumTooBig = '9007199254740992';
+
 describe('the currency utility module', () => {
   before(function () {
     app.polyglot = new Polyglot();
@@ -79,154 +82,6 @@ describe('the currency utility module', () => {
         .equal('0.000000000000000001');
     });
   });
-
-  // describe('has a isFormattedResultZero function', () => {
-  //   it('that correctly lets you know if an amount provided as a number would result in zero ' +
-  //     'if formatted with the given maxDecimals',
-  //     () => {
-  //       expect(cur.isFormattedResultZero(19, 2))
-  //         .to
-  //         .equal(false);
-
-  //       expect(cur.isFormattedResultZero(1.000001, 2))
-  //         .to
-  //         .equal(false);
-
-  //       expect(cur.isFormattedResultZero(0.001, 2))
-  //         .to
-  //         .equal(true);
-
-  //       expect(cur.isFormattedResultZero(0.005, 2))
-  //         .to
-  //         .equal(false);
-
-  //       expect(cur.isFormattedResultZero(0.000000000000000001, 18))
-  //         .to
-  //         .equal(false);
-
-  //       expect(cur.isFormattedResultZero(0.0000000000000000001, 18))
-  //         .to
-  //         .equal(true);
-
-  //       expect(cur.isFormattedResultZero(1.0000000000000000001, 18))
-  //         .to
-  //         .equal(false);
-
-  //       expect(cur.isFormattedResultZero(0.0000000000000000005, 18))
-  //         .to
-  //         .equal(false);
-  //     });
-
-  //   it('that correctly lets you know if an amount provided as a string would result in zero ' +
-  //       'if formatted with the given maxDecimals',
-  //       () => {
-  //         expect(cur.isFormattedResultZero('19', 2))
-  //           .to
-  //           .equal(false);
-
-  //         expect(cur.isFormattedResultZero('1.000001', 2))
-  //           .to
-  //           .equal(false);
-
-  //         expect(cur.isFormattedResultZero('0.001', 2))
-  //           .to
-  //           .equal(true);
-
-  //         expect(cur.isFormattedResultZero('0.005', 2))
-  //           .to
-  //           .equal(false);
-
-  //         expect(cur.isFormattedResultZero('0.000000000000000001', 18))
-  //           .to
-  //           .equal(false);
-
-  //         expect(cur.isFormattedResultZero('0.0000000000000000001', 18))
-  //           .to
-  //           .equal(true);
-
-  //         expect(cur.isFormattedResultZero('1.0000000000000000001', 18))
-  //           .to
-  //           .equal(false);
-
-  //         expect(cur.isFormattedResultZero('0.0000000000000000005', 18))
-  //           .to
-  //           .equal(false);
-  //       });
-  // });
-
-  // describe('has a getMaxDisplayDigits', () => {
-  //   it('that returns the provided desiredMax if the resulting formatted ' +
-  //     'number would not be zero', () => {
-  //     expect(cur.getMaxDisplayDigits(0.0001, 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits(0.00016754, 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits(0.00010000, 4))
-  //       .to
-  //       .equal(4);
-
-  //     // supports both a string and numeric amount
-  //     expect(cur.getMaxDisplayDigits('0.0001', 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits('0.00016754', 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits('0.00010000', 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits('0.00010000', 4))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits('0.0001', 8))
-  //       .to
-  //       .equal(8);
-  //   });
-
-  //   it('returns the number of decimal places required to show the first ' +
-  //     'significant digit', () => {
-  //     expect(cur.getMaxDisplayDigits(0.00001, 4))
-  //       .to
-  //       .equal(5);
-
-  //     expect(cur.getMaxDisplayDigits(0.00016754, 2))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits(0.0005, 3))
-  //       .to
-  //       .equal(3);
-
-  //     expect(cur.getMaxDisplayDigits(0.0004, 3))
-  //       .to
-  //       .equal(4);
-
-  //     // supports both a string and numeric amount
-  //     expect(cur.getMaxDisplayDigits('0.00001', 4))
-  //       .to
-  //       .equal(5);
-
-  //     expect(cur.getMaxDisplayDigits('0.00016754', 2))
-  //       .to
-  //       .equal(4);
-
-  //     expect(cur.getMaxDisplayDigits('0.0005', 3))
-  //       .to
-  //       .equal(3);
-
-  //     expect(cur.getMaxDisplayDigits('0.0004', 3))
-  //       .to
-  //       .equal(4);
-  //   });
-  // });
 
   describe('has functions that involve converting between currencies', () => {
     let ajax;
@@ -373,6 +228,10 @@ describe('the currency utility module', () => {
         .to
         .equal('₿123.45678913');
 
+      expect(cur.formatCurrency(5.12345, 'BTC', cryptoOpts))
+        .to
+        .equal('₿5.12345');
+
       expect(cur.formatCurrency(123.4567891234, 'USD', fiatOpts))
         .to
         .equal('$123.46');
@@ -382,7 +241,7 @@ describe('the currency utility module', () => {
         .equal('$123.45');
     });
 
-    it('properly formats a currency when passing in an amount as a number', () => {
+    it('properly formats a currency when passing in an amount as a string', () => {
       expect(cur.formatCurrency('123.4567891234', 'BTC', cryptoOpts))
         .to
         .equal('₿123.45678912');
@@ -401,27 +260,146 @@ describe('the currency utility module', () => {
     });
 
     it('handles numbers that are beyond the support of Intl.NumberFormat', () => {
-      const strNumTooBig = '9007199254740992';
-
-      expect(cur.formatCurrency(strNumTooBig, 'BTC', cryptoOpts))
+      expect(cur.formatCurrency(strNumTooBig, 'BTC', {
+        ...cryptoOpts,
+        locale: 'pl-PL',
+      }))
         .to
         .equal('₿9,007,199,254,740,992');
 
-      expect(cur.formatCurrency(`0.${strNumTooBig}`, 'BTC', cryptoOpts))
+      expect(cur.formatCurrency(`0.${strNumTooBig}`, 'BTC', {
+        ...cryptoOpts,
+        locale: 'pl-PL',
+      }))
         .to
         .equal('₿0.90071993');
 
-      // expect(cur.formatCurrency(1234567891.4567891294, 'BCH', cryptoOpts))
-      //   .to
-      //   .equal('1,234,567,891.45678913 BCH');
+      expect(cur.formatCurrency(`0.${strNumTooBig}94184`, 'BTC', {
+        ...cryptoOpts,
+        maxDisplayDecimals: 20,
+      }))
+        .to
+        .equal('₿0.90071992547409929418');
 
-      // expect(cur.formatCurrency(123456789.876543214, 'BCH', cryptoOpts))
-      //   .to
-      //   .equal('123,456,789.87654321 BCH');
-
-      // expect(cur.formatCurrency(123456789.876543215, 'BCH', cryptoOpts))
-      //   .to
-      //   .equal('123,456,789.87654322 BCH');
+      expect(cur.formatCurrency(`0.${strNumTooBig}94185`, 'BTC', {
+        ...cryptoOpts,
+        maxDisplayDecimals: 20,
+      }))
+        .to
+        .equal('₿0.90071992547409929419');
     });
+
+    it('handles alternate BTC units', () => {
+      expect(cur.formatCurrency(`0.${strNumTooBig}94185`, 'BTC', {
+        ...cryptoOpts,
+        maxDisplayDecimals: 20,
+        btcUnit: 'UBTC',
+      }))
+        .to
+        .equal('900,719.925474099294185 μBTC');
+
+      expect(cur.formatCurrency(5.12345, 'BTC', {
+        ...cryptoOpts,
+        btcUnit: 'UBTC',
+      }))
+        .to
+        .equal('5,123,450 μBTC');
+
+      expect(cur.formatCurrency(`0.${strNumTooBig}94185`, 'BTC', {
+        ...cryptoOpts,
+        maxDisplayDecimals: 20,
+        btcUnit: 'MBTC',
+      }))
+        .to
+        .equal('900.719925474099294185 mBTC');
+
+      expect(cur.formatCurrency(5.12345, 'BTC', {
+        ...cryptoOpts,
+        btcUnit: 'MBTC',
+      }))
+        .to
+        .equal('5,123.45 mBTC');
+
+      expect(cur.formatCurrency(`0.${strNumTooBig}94185`, 'BTC', {
+        ...cryptoOpts,
+        maxDisplayDecimals: 20,
+        btcUnit: 'SATOSHI',
+      }))
+        .to
+        .equal('90,071,992.5474099294185 sat');
+
+      expect(cur.formatCurrency(5.12345, 'BTC', {
+        ...cryptoOpts,
+        btcUnit: 'SATOSHI',
+      }))
+        .to
+        .equal('512,345,000 sat');
+    });
+  });
+
+  it('has a function to create an amount object that includes a currency ' +
+    'definition', () => {
+    expect(cur.createAmount(23.12, 'USD'))
+      .to
+      .deep
+      .equal({
+        amount: '2312',
+        currency: {
+          code: 'USD',
+          divisibility: 2,
+        },
+      });
+
+    expect(cur.createAmount('23.12', 'USD'))
+      .to
+      .deep
+      .equal({
+        amount: '2312',
+        currency: {
+          code: 'USD',
+          divisibility: 2,
+        },
+      });
+
+    // should throw exception
+    let intAmountExceptionThrown = false;
+
+    try {
+      cur.createAmount(23.12, 'USD', {
+        convertToBaseUnits: false,
+      });
+    } catch (e) {
+      intAmountExceptionThrown = true;
+    }
+
+    expect(intAmountExceptionThrown)
+      .to
+      .equal(true);
+
+    expect(cur.createAmount(12345, 'BTC', {
+      convertToBaseUnits: false,
+    }))
+      .to
+      .deep
+      .equal({
+        amount: '12345',
+        currency: {
+          code: 'BTC',
+          divisibility: 8,
+        },
+      });
+
+    expect(cur.createAmount(strNumTooBig, 'BTC', {
+      divisibility: 4,
+    }))
+      .to
+      .deep
+      .equal({
+        amount: '90071992547409920000',
+        currency: {
+          code: 'BTC',
+          divisibility: 4,
+        },
+      });
   });
 });

@@ -1,7 +1,6 @@
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
-import bitcoinConvert from 'bitcoin-convert';
 import bigNumber from 'bignumber.js';
 import {
   preciseRound,
@@ -335,7 +334,7 @@ function nativeNumberFormatSupported(val, maxDecimals = 20) {
   const bigNum = bigNumber(val).dp(maxDecimals);
   const split = bigNum.toString().split('.');
   const int = bigNumber(split[0]);
-  const fraction = bigNumber(split[2]);
+  const fraction = bigNumber(split[1]);
 
   if (int.toString() === '0' && fraction.toString().length > 20) {
     return false;
@@ -406,7 +405,7 @@ export function formatCurrency(amount, currency, options) {
           ...formatAmountOpts,
           style: 'decimal',
         }
-      ).format(amount);
+      ).format(value);
     }
 
     let rounded = bigNumber(value)
@@ -499,26 +498,27 @@ export function formatCurrency(amount, currency, options) {
 
   if (isWalletCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
-    let bitcoinConvertUnit;
-    let amt = amount;
+    let amt = bigNumber(amount);
 
     if (cur === 'BTC' || cur === 'TBTC') {
       switch (opts.btcUnit) {
         case 'MBTC':
-          bitcoinConvertUnit = curSymbol = 'mBTC';
+          curSymbol = 'mBTC';
+          amt = amt.multipliedBy(1000);
           break;
         case 'UBTC':
-          bitcoinConvertUnit = curSymbol = 'μBTC';
+          curSymbol = 'μBTC';
+          amt = amt.multipliedBy(1000000);
           break;
         case 'SATOSHI':
           curSymbol = 'sat';
-          bitcoinConvertUnit = 'Satoshi';
+          amt = amt.multipliedBy(100000000);
           break;
         default:
-          bitcoinConvertUnit = 'BTC';
+          // pass
       }
 
-      amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
+      amt = amt.toString();
     }
 
     formattedCurrency = formatAmount(amt, opts.locale, {
@@ -759,6 +759,7 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
  * Returns `VALID` if the given currency is valid, otherwise it will return a code
  * indicating why it's not valid.
  */
+console.log('is this stil being used?');
 export function getCurrencyValidity(cur) {
   if (typeof cur !== 'string') {
     throw new Error('A currency must be provided as a string.');
@@ -813,29 +814,37 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
  * If the "from" currency is invalid, it will render an empty string.
  */
 export function renderPairedCurrency(price, fromCur, toCur) {
-  const fromCurValidity = getCurrencyValidity(fromCur);
+  let result;
 
-  console.log('maybe just catch any error and render an empty string');
+  try {
+    const fromCurValidity = getCurrencyValidity(fromCur);
 
-  // if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-  //   // Sometimes when prices are in an unsupported currency, they will be
-  //   // saved as empty strings or undefined. We'll ignore those and just render an
-  //   // empty string.
-  //   return '';
-  // }
-  const toCurValidity = getCurrencyValidity(toCur);
-  const formattedBase = formatCurrency(price, fromCur);
-  const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
-    fromCurValidity !== 'VALID' ?
-      '' : convertAndFormatCurrency(price, fromCur, toCur);
+    console.log('maybe just catch any error and render an empty string');
 
-  let result = formattedBase;
+    // if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
+    //   // Sometimes when prices are in an unsupported currency, they will be
+    //   // saved as empty strings or undefined. We'll ignore those and just render an
+    //   // empty string.
+    //   return '';
+    // }
+    const toCurValidity = getCurrencyValidity(toCur);
+    const formattedBase = formatCurrency(price, fromCur);
+    const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
+      fromCurValidity !== 'VALID' ?
+        '' : convertAndFormatCurrency(price, fromCur, toCur);
 
-  if (formattedConverted !== '') {
-    result = app.polyglot.t('currencyPairing', {
-      baseCurValue: formattedBase,
-      convertedCurValue: formattedConverted,
-    });
+    result = formattedBase;
+
+    if (formattedConverted !== '') {
+      result = app.polyglot.t('currencyPairing', {
+        baseCurValue: formattedBase,
+        convertedCurValue: formattedConverted,
+      });
+    }
+  } catch (e) {
+    result = '';
+    console.log('Unable to render the paired currency. Returning an empty string. ' +
+      `Error: ${e.message}`);
   }
 
   return result;
@@ -843,38 +852,42 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
 /**
  * Will return a string based amount along with a currency definition.
- * @param {number|string} amount - If providing the amount in base units, it should
- *   be provided as a string (as returned by decimalToInteger), otherwise if providing
- *   a number, it will be assumed that it needs to be converted to base units.
+ * @param {number|string} amount
  * @param {string} curCode - The currency the amount is in.
  * @param {object} [options={}] - Function options
- * @param {boolean} [options.divisibility] - The divisibility of the amount. If not
+ * @param {number} [options.divisibility] - The divisibility of the amount. If not
  *   provided, it will be obtained from getCoinDivisibility().
+ * @param {boolean} [options.convertToBaseUnits=true] - Indicates whether you
+ *   are providing a decimal amount that should be converted to base units.
  * @returns {string} - An object containing a string based amount along with a
  *   currency definition.
  */
 console.log('todo: maybe a better name for this?');
 export function createAmount(amount, curCode, options = {}) {
-  if (
-    !(
-      typeof amount === 'number' ||
-      (
-        typeof amount === 'string' && amount
-      )
-    )
-  ) {
-    throw new Error('The amount must be provided as a number or a non-empty string.');
-  }
+  validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
     throw new Error('The curCode must be provided as a non-empty string.');
   }
 
-  let divisibility;
+  const opts = {
+    convertToBaseUnits: true,
+    ...options,
+  };
+
+  if (
+    !opts.convertToBaseUnits &&
+    !Number.isInteger(amount)
+  ) {
+    throw new Error('If this function won\'t be converting to base units, then ' +
+      'you must provide an interger amount');
+  }
+
+  let divisibility = opts.divisibility;
 
   try {
-    divisibility = options.divisibility === undefined ?
-      getCoinDivisibility(curCode) : options.divisibility;
+    divisibility = divisibility === undefined ?
+      getCoinDivisibility(curCode) : divisibility;
   } catch (e) {
     // If unable to obtain a divisibility, we'll just default to the crypto listing curs
     // default.
@@ -887,8 +900,9 @@ export function createAmount(amount, curCode, options = {}) {
     throw new Error(divisErr);
   }
 
-  const convertedAmount = typeof amount === 'number' ?
-    decimalToInteger(amount, divisibility) : amount;
+  const convertedAmount =
+    opts.convertToBaseUnits ?
+      decimalToInteger(amount, divisibility) : String(amount);
 
   return {
     amount: convertedAmount,

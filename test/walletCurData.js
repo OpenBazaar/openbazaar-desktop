@@ -1,8 +1,7 @@
-// Multiple test depend on this data. If you need to modify it please be absolutely
-// sure you're not affecting tests that use it. To be safe, maybe it's best if you
-// import it and then adjust it locally.
+// Multiple test depend on this data. If you modify this file, please ensure
+// you're not breaking other tests.
 
-export const walletCurs = ['BCH', 'BTC', 'LTC', 'ZEC'];
+export const walletCurs = ['BCH', 'BTC', 'ETH', 'LTC', 'ZEC'];
 
 export const walletCurDef = {
   AED: {
@@ -25,6 +24,13 @@ export const walletCurDef = {
     divisibility: 8,
     name: 'Bitcoin',
     testnetCode: 'TBTC',
+  },
+  ETH: {
+    code: 'ETH',
+    currencyType: 'crypto',
+    divisibility: 18,
+    name: 'Ethereum',
+    testnetCode: 'TETH',
   },
   LTC: {
     code: 'LTC',
