@@ -34,13 +34,12 @@ export default class extends BaseView {
     } else {
       const priceDiscount = Number(formData.discountAmount);
 
-      console.log(`the price discount is ${formData.discountAmount}`);
-
       formData.percentDiscount =
         !isNaN(priceDiscount) && formData.discountAmount ?
           priceDiscount : formData.discountAmount;
 
-      console.log(`the percent discount is ${formData.percentDiscount}`);
+      formData.percentDiscount = formData.percentDiscount === '' ?
+        undefined : formData.percentDiscount;
     }
 
     delete formData.discountType;

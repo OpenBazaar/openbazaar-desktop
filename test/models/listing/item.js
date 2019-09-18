@@ -21,6 +21,14 @@ describe('the Item model', () => {
     expect(valErr && valErr.title && !!valErr.title.length || false).to.equal(true);
   });
 
+  it('fails validation if a title is not provided', () => {
+    const item = new Item();
+    item.set({}, { validate: true });
+    const valErr = item.validationError;
+
+    expect(valErr && valErr.title && !!valErr.title.length || false).to.equal(true);
+  });
+
   it('fails validation if the condition is not one of the available types', () => {
     const item = new Item();
     item.set({

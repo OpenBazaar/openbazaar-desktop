@@ -15,9 +15,7 @@
         let discountAmount;
 
         if (ob.priceDiscount) {
-          console.log(`snoop: ${ob.priceDiscount}`);
           discountAmount = ob.toStandardNotation(ob.priceDiscount);
-          console.log(`doggers: ${discountAmount}`);
         } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount = ob.percentDiscount;
         }

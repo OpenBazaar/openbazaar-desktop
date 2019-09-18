@@ -4,8 +4,8 @@ import $ from 'jquery';
 import bigNumber from 'bignumber.js';
 import {
   preciseRound,
-  toStandardNotation,
   validateNumberType,
+  decimalPlaces,
 } from './number';
 import { Events } from 'backbone';
 import { getCurrencyByCode } from '../data/currencies';
@@ -148,7 +148,7 @@ export function getCoinDivisibility(currency, options = {}) {
  * @param {boolean} [options.returnInStandardNotation = false] - if true wil return
  *   the result in standard notation ('0.00000001' instead of 1e-8). Note the result
  *   will be returned as a string when this option is true.
- * @returns {number|string} - The minimum supported value for the given
+ * @returns {number} - The minimum supported value for the given
  *   coin divisibility.
  */
 export function minValueByCoinDiv(coinDivisibility, options = {}) {
@@ -163,10 +163,12 @@ export function minValueByCoinDiv(coinDivisibility, options = {}) {
     throw new Error('The provided coinDivisibility is not valid.');
   }
 
-  const minVal = 1 / (Math.pow(10, coinDivisibility));
+  const minVal = bigNumber(1).div(bigNumber(10).pow(coinDivisibility));
 
-  return opts.returnInStandardNotation ?
-    toStandardNotation(minVal) : minVal;
+  return Number(
+    opts.returnInStandardNotation ?
+      minVal.toFormat() : minVal.toString()
+  );
 }
 
 /**
@@ -910,5 +912,27 @@ export function createAmount(amount, curCode, options = {}) {
       code: curCode,
       divisibility,
     },
+  };
+}
+
+export function validateDivisibilityRanges(value, divis) {
+  const [isValidCoinDiv, invalidCoinDivErr] = isValidCoinDivisibility(divis);
+
+  if (!isValidCoinDiv) {
+    throw new Error(invalidCoinDivErr);
+  }
+
+  const bigNum = bigNumber(value);
+
+  if (bigNum.isNaN()) {
+    throw new Error('Please provide a valid number.');
+  }
+
+  const minValue = minValueByCoinDiv(divis, { returnInStandardNotation: true });
+
+  return {
+    valueTooLow: bigNum.lt(minValue),
+    fractionTooManyDigits: decimalPlaces(value) > divis,
+    minValue,
   };
 }

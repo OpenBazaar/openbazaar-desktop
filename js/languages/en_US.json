@@ -2006,9 +2006,7 @@
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
     "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
-    "priceTooLow": "The minimum value for a price in %{cur} is %{min}.",
-    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}.",
-    "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up so no more than %{coinDiv} decimal places are represented."
+    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -2042,7 +2040,7 @@
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above or equal to 100%",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"1.25\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {

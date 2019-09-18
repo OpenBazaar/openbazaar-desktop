@@ -68,10 +68,7 @@ export default class extends BaseModel {
       } else if (attrs.percentDiscount >= 100) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
       }
-    } else if (
-      typeof attrs.priceDiscount !== 'undefined' &&
-      !isValidStringBasedNumber(attrs.priceDiscount)
-    ) {
+    } else if (!isValidStringBasedNumber(attrs.priceDiscount)) {
       addError('priceDiscount',
         app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
     }

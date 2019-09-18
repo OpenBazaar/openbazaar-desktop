@@ -7,6 +7,7 @@ import app from '../app';
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
 console.log('explain how max is 20 and put in a check');
+console.log('unit test me.');
 export function toStandardNotation(number, options) {
   const opts = {
     minDisplayDecimals: 0,
@@ -15,7 +16,11 @@ export function toStandardNotation(number, options) {
     ...options,
   };
 
-  if (!opts.returnUnchangedOnError && typeof number !== 'number') {
+  if (typeof number !== 'number') {
+    if (opts.returnUnchangedOnError) {
+      return number;
+    }
+
     throw new Error('Please provide a number.');
   }
 
@@ -87,6 +92,8 @@ export function localizeNumber(number,
 
 // https://stackoverflow.com/a/10454560
 console.log('doc me up - note this only works on string based numbers');
+console.log('is this being called anywhere with the expectation it work on number numbrs?');
+console.log('can this without too much pain work on numbers?');
 export function decimalPlaces(num) {
   // trim trailing zeros
   const trimmed = String(num).replace(/0+$/, '');
@@ -124,14 +131,23 @@ export function preciseRound(value, precision) {
 }
 
 console.log('unit test me silly style');
+console.log('doc me up more');
 /*
  * Returns true if the provided string is a valid number as determined by
  * bigNumber.js.
  */
-export function isValidStringBasedNumber(strNumber) {
+export function isValidStringBasedNumber(strNumber, options = {}) {
+  const opts = {
+    allowNumber: false,
+    ...options,
+  };
+
   if (
     typeof strNumber !== 'string' &&
-    typeof strNumber !== 'number'
+    (
+      !opts.allowNumber &&
+      typeof strNumber === 'number'
+    )
   ) {
     return false;
   }

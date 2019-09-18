@@ -1,6 +1,8 @@
 import _ from 'underscore';
-import { removeProp } from '../utils/object';
 import { Model, Collection } from 'backbone';
+import app from '../app';
+import { removeProp } from '../utils/object';
+import { validateDivisibilityRanges } from '../utils/currency';
 
 /*
 
@@ -327,5 +329,76 @@ export default class extends Model {
     }
 
     return super.sync(method, model, options);
+  }
+
+  // todo: would be nice to add addError to the base model rather than each validate
+  // implementation having to repeat it. Would also be nice if it kept track of it's own
+  // error object. Would probably need some type of clearError functionality. It would
+  // also save us from having to pass in addError
+  validateDivisibilityRanges(
+    value,
+    divis,
+    cur,
+    addError,
+    errObj,
+    errKey,
+    options = {}
+  ) {
+    console.log('doc me up with a fury');
+
+    if (typeof cur !== 'string' || !cur) {
+      throw new Error('The cur must be provided as a non-empty string.');
+    }
+
+    if (typeof errKey !== 'string' || !errKey) {
+      throw new Error('The errKey must be provided as a non-empty string.');
+    }
+
+    if (typeof addError !== 'function') {
+      throw new Error('addError must be provided as a function.');
+    }
+
+    if (typeof errObj !== 'object') {
+      throw new Error('errObj must be provided as an object.');
+    }
+
+    const opts = {
+      addErrorValueTooLow: true,
+      addErrorFractionTooManyDigits: true,
+      ...options,
+    };
+
+    let rangeValidation;
+
+    try {
+      rangeValidation = validateDivisibilityRanges(value, divis);
+    } catch (e) {
+      // You likely passed in an invalid value (not a number or string based number) or
+      // an invalid coin divisibility. We'll do nothing since the assumption is that you
+      // will have additional model level validations surrounding those items and pushing
+      // the error up to the UI if needed.
+      return;
+    }
+
+    if (opts.addErrorValueTooLow && rangeValidation.valueTooLow) {
+      addError(errKey, app.polyglot.t('genericModelErrors.priceTooLow', {
+        cur,
+        min: rangeValidation.minValue,
+      }));
+    } else if (opts.addErrorFractionTooManyDigits && rangeValidation.fractionTooManyDigits) {
+      addError('item.cryptoQuantity', app.polyglot.t('genericModelErrors.fractionTooLow', {
+        cur,
+        coinDiv: divis,
+      }));
+    }
+
+    if (
+      typeof opts.onInvalid === 'function' &&
+      (
+        opts.validateValueTooLow || opts.validateFractionTooManyDigits
+      )
+    ) {
+      opts.onInvalid(rangeValidation);
+    }
   }
 }
