@@ -915,24 +915,63 @@ export function createAmount(amount, curCode, options = {}) {
   };
 }
 
-export function validateDivisibilityRanges(value, divis) {
-  const [isValidCoinDiv, invalidCoinDivErr] = isValidCoinDivisibility(divis);
-
-  if (!isValidCoinDiv) {
-    throw new Error(invalidCoinDivErr);
-  }
-
-  const bigNum = bigNumber(value);
-
-  if (bigNum.isNaN()) {
-    throw new Error('Please provide a valid number.');
-  }
-
-  const minValue = minValueByCoinDiv(divis, { returnInStandardNotation: true });
-
-  return {
-    valueTooLow: bigNum.lt(minValue),
-    fractionTooManyDigits: decimalPlaces(value) > divis,
-    minValue,
+console.log('doc me up');
+// some validations skipped if dependants fail or args not provided.
+export function validateCurrencyAmount(amount, options = {}) {
+  const opts = {
+    requireStringBasedAmount: true,
+    validateRequired: true,
+    validateType: true,
+    validateGreaterThanZero: true,
+    validateNonNegative: false,
+    validateTooManyFractionDigits: true,
+    ...options,
   };
+
+  const returnVal = {};
+
+  if (
+    opts.validateRequired &&
+    typeof amount === 'undefined' ||
+    amount === '' ||
+    amount === null
+  ) {
+    return { require: false };
+  }
+
+  returnVal.required = true;
+
+  const bigNum = bigNumber(amount);
+
+  if (
+    (
+      opts.requireStringBasedAmount &&
+      typeof amount !== 'string'
+    ) ||
+    (bigNum.isNaN())
+  ) {
+    returnVal.validType = false;
+    return returnVal;
+  }
+
+  returnVal.validType = true;
+
+  if (opts.validateGreaterThanZero) {
+    returnVal.greaterThanZero = bigNum.gt(0);
+  }
+
+  if (opts.validateNonNegative) {
+    returnVal.nonNegative = bigNum.gte(0);
+  }
+
+  if (opts.validateTooManyFractionDigits) {
+    const [isValidCoinDiv] = isValidCoinDivisibility(opts.coinDiv);
+
+    if (isValidCoinDiv) {
+      returnVal.tooManyFractionDigits = decimalPlaces(amount) > opts.coinDiv;
+      returnVal.minValue = minValueByCoinDiv(opts.coinDiv, { returnInStandardNotation: true });
+    }
+  }
+
+  return returnVal;
 }

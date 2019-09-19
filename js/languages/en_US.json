@@ -1954,8 +1954,11 @@
   "debugLog": {
     "copyToClipboard": "Copy to clipboard"
   },
-  "genericModelErrors": {
-    "priceTooLow": "The minimum value for the currency %{cur} is %{min}.",
+  "currencyAmountErrors": {
+    "missingValue": "Please provide a value.",
+    "invalidType": "Please provide the value as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "greaterThanZero": "Please provide a value greater than zero.",
+    "nonNegative": "Please provide a non-negative value.",
     "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up so no more than %{coinDiv} decimal places are represented."
   },
   "profileModelErrors": {

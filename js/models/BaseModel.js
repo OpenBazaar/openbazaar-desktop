@@ -2,7 +2,7 @@ import _ from 'underscore';
 import { Model, Collection } from 'backbone';
 import app from '../app';
 import { removeProp } from '../utils/object';
-import { validateDivisibilityRanges } from '../utils/currency';
+import { validateCurrencyAmount } from '../utils/currency';
 
 /*
 
@@ -334,21 +334,15 @@ export default class extends Model {
   // todo: would be nice to add addError to the base model rather than each validate
   // implementation having to repeat it. Would also be nice if it kept track of it's own
   // error object. Would probably need some type of clearError functionality. It would
-  // also save us from having to pass in addError
-  validateDivisibilityRanges(
+  // also save us from having to pass in addError and the errObj here.
+  validateCurrencyAmount(
     value,
-    divis,
-    cur,
     addError,
     errObj,
     errKey,
     options = {}
   ) {
     console.log('doc me up with a fury');
-
-    if (typeof cur !== 'string' || !cur) {
-      throw new Error('The cur must be provided as a non-empty string.');
-    }
 
     if (typeof errKey !== 'string' || !errKey) {
       throw new Error('The errKey must be provided as a non-empty string.');
@@ -362,43 +356,37 @@ export default class extends Model {
       throw new Error('errObj must be provided as an object.');
     }
 
-    const opts = {
-      addErrorValueTooLow: true,
-      addErrorFractionTooManyDigits: true,
-      ...options,
-    };
+    // if (
+    //   options.validateTooManyFractionDigits &&
+    //   (typeof options.cur !== 'string' || !options.cur)
+    // ) {
+    //   throw new Error('If validating for too many fraction digits, a cur must be provided as a ' +
+    //     'non-empty string.');
+    // }
 
-    let rangeValidation;
+    const validation = validateCurrencyAmount(value, options);
 
-    try {
-      rangeValidation = validateDivisibilityRanges(value, divis);
-    } catch (e) {
-      // You likely passed in an invalid value (not a number or string based number) or
-      // an invalid coin divisibility. We'll do nothing since the assumption is that you
-      // will have additional model level validations surrounding those items and pushing
-      // the error up to the UI if needed.
-      return;
+    if (options.validateRequired && !validation.required) {
+      addError(errKey, app.polyglot.t('currencyAmountErrors.missingValue'));
+      return validation;
     }
 
-    if (opts.addErrorValueTooLow && rangeValidation.valueTooLow) {
-      addError(errKey, app.polyglot.t('genericModelErrors.priceTooLow', {
-        cur,
-        min: rangeValidation.minValue,
+    if (options.validateType && !validation.validType) {
+      addError(errKey, app.polyglot.t('currencyAmountErrors.invalidType'));
+      return validation;
+    }
+
+    if (options.validateGreaterThanZero && !validation.greaterThanZero) {
+      addError(errKey, app.polyglot.t('currencyAmountErrors.greaterThanZero'));
+    } else if (options.validateNonNegative && !validation.nonNegative) {
+      addError(errKey, app.polyglot.t('currencyAmountErrors.nonNegative'));
+    } else if (options.validateTooManyFractionDigits && !validation.tooManyFractionDigits) {
+      addError(errKey, app.polyglot.t('currencyAmountErrors.fractionTooLow', {
+        cur: options.cur,
+        coinDiv: options.coinDiv,
       }));
-    } else if (opts.addErrorFractionTooManyDigits && rangeValidation.fractionTooManyDigits) {
-      addError('item.cryptoQuantity', app.polyglot.t('genericModelErrors.fractionTooLow', {
-        cur,
-        coinDiv: divis,
-      }));
     }
 
-    if (
-      typeof opts.onInvalid === 'function' &&
-      (
-        opts.validateValueTooLow || opts.validateFractionTooManyDigits
-      )
-    ) {
-      opts.onInvalid(rangeValidation);
-    }
+    return validation;
   }
 }

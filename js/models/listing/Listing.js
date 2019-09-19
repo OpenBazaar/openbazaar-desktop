@@ -9,13 +9,8 @@ import {
   decimalToInteger,
   integerToDecimal,
   getCurMeta,
-  isValidCoinDivisibility,
-  minValueByCoinDiv,
 } from '../../utils/currency';
-import {
-  toStandardNotation,
-  isValidStringBasedNumber,
-} from '../../utils/number';
+import { isValidStringBasedNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -227,28 +222,34 @@ export default class extends BaseModel {
           'listings.');
       }
 
-      this.validateDivisibilityRanges(
-        item.cryptoQuantity,
-        coinDiv,
-        metadata.coinType,
-        addError,
-        errObj,
-        'item.cryptoQuantity'
-      );
+      // this.validateDivisibilityRanges(
+      //   item.cryptoQuantity,
+      //   coinDiv,
+      //   metadata.coinType,
+      //   addError,
+      //   errObj,
+      //   'item.cryptoQuantity'
+      // );
     } else {
       if (item && typeof item.cryptoQuantity !== 'undefined') {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
           'listings.');
       }
 
-      this.validateDivisibilityRanges(
-        item.price,
-        coinDiv,
-        metadata.pricingCurrency,
-        addError,
-        errObj,
-        'item.price'
-      );
+      // this.validateCurrencyAmount(
+      //   item.price,
+      //   addError,
+      //   errObj,
+      //   'item.price',
+      //   {
+      //     coinDiv,
+      //     cur: metadata.pricingCurrency,
+      //     // these 3 are validated in the Item model
+      //     validateRequired: false,
+      //     validateType: false,
+      //     validateGreaterThanZero: false,
+      //   }
+      // );
     }
 
     if (attrs.coupons.length) {
@@ -260,14 +261,14 @@ export default class extends BaseModel {
       }
 
       coupons.forEach(coupon => {
-        this.validateDivisibilityRanges(
-          coupon.priceDiscount,
-          coinDiv,
-          metadata.pricingCurrency,
-          addError,
-          errObj,
-          `coupons[${coupon.cid}].priceDiscount`
-        );
+        // this.validateDivisibilityRanges(
+        //   coupon.priceDiscount,
+        //   coinDiv,
+        //   metadata.pricingCurrency,
+        //   addError,
+        //   errObj,
+        //   `coupons[${coupon.cid}].priceDiscount`
+        // );
 
         const priceDiscount = bigNumber(coupon.priceDiscount);
 
@@ -288,26 +289,26 @@ export default class extends BaseModel {
 
     if (Array.isArray(item.skus)) {
       item.skus.forEach(sku => {
-        this.validateDivisibilityRanges(
-          sku.surcharge,
-          coinDiv,
-          metadata.pricingCurrency,
-          addError,
-          errObj,
-          `item.skus[${sku.cid}].surcharge`,
-          {
-            addErrorValueTooLow: false,
-            onInvalid(e) {
-              if (e.valueTooLow) {
-                addError(`item.skus[${sku.cid}].surcharge`,
-                  app.polyglot.t('listingModelErrors.skuPriceTooLow', {
-                    cur: metadata.pricingCurrency,
-                    min: e.minValue,
-                  }));
-              }
-            },
-          }
-        );
+        // this.validateDivisibilityRanges(
+        //   sku.surcharge,
+        //   coinDiv,
+        //   metadata.pricingCurrency,
+        //   addError,
+        //   errObj,
+        //   `item.skus[${sku.cid}].surcharge`,
+        //   {
+        //     addErrorValueTooLow: false,
+        //     onInvalid(e) {
+        //       if (e.valueTooLow) {
+        //         addError(`item.skus[${sku.cid}].surcharge`,
+        //           app.polyglot.t('listingModelErrors.skuPriceTooLow', {
+        //             cur: metadata.pricingCurrency,
+        //             min: e.minValue,
+        //           }));
+        //       }
+        //     },
+        //   }
+        // );
       });
     }
 
