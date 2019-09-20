@@ -29,7 +29,6 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    let isValidCoinDiv = false;
     let coinDiv;
 
     if (
@@ -41,31 +40,28 @@ export default class extends BaseModel {
     } else {
       try {
         coinDiv = getCoinDivisibility(attrs.currencyCode);
-        [isValidCoinDiv] =
-          isValidCoinDivisibility(coinDiv);
       } catch (e) {
         // pass
       }
 
-      if (!isValidCoinDiv) {
-        addError('currencyCode',
-          app.polyglot.t('fixedFeeModelErrors.invalidCoinDiv', {
-            cur: ensureMainnetCode(attrs.currencyCode),
-          })
-        );
-      }
+      this.validateCurrencyAmount(
+        {
+          currency: attrs.currencyCode,
+          divisibility: coinDiv,
+          amount: attrs.amount,
+        },
+        addError,
+        errObj,
+        'amount',
+        {
+          translations: {
+            range: 'fixedFeeModelErrors.amountGreaterThanZero',
+            type: 'fixedFeeModelErrors.fixedFeeAsNumber',
+            required: 'fixedFeeModelErrors.fixedFeeAsNumber',
+          },
+        }
+      );
     }
-
-    this.validateCurrencyAmount(
-      attrs.amount,
-      addError,
-      errObj,
-      'amount',
-      {
-        cur: attrs.currencyCode,
-        coinDiv,
-      }
-    );
 
     if (Object.keys(errObj).length) return errObj;
 

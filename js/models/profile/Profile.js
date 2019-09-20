@@ -3,7 +3,7 @@ import app from '../../app';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import {
-  createAmount,
+  createCurrencyAmount,
   integerToDecimal,
 } from '../../utils/currency';
 import BaseModel from '../BaseModel';
@@ -222,7 +222,7 @@ export default class Profile extends BaseModel {
             const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
             const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
             options.attrs.moderatorInfo.fee.fixedFee =
-              createAmount(amount, cur);
+              createCurrencyAmount(amount, cur);
           }
         }
       }

@@ -2,7 +2,10 @@ import _ from 'underscore';
 import { Model, Collection } from 'backbone';
 import app from '../app';
 import { removeProp } from '../utils/object';
-import { validateCurrencyAmount } from '../utils/currency';
+import {
+  validateCurrencyAmount,
+  CUR_VAL_RANGE_TYPES,
+} from '../utils/currency';
 
 /*
 
@@ -336,7 +339,7 @@ export default class extends Model {
   // error object. Would probably need some type of clearError functionality. It would
   // also save us from having to pass in addError and the errObj here.
   validateCurrencyAmount(
-    value,
+    curDef,
     addError,
     errObj,
     errKey,
@@ -356,34 +359,74 @@ export default class extends Model {
       throw new Error('errObj must be provided as an object.');
     }
 
-    // if (
-    //   options.validateTooManyFractionDigits &&
-    //   (typeof options.cur !== 'string' || !options.cur)
-    // ) {
-    //   throw new Error('If validating for too many fraction digits, a cur must be provided as a ' +
-    //     'non-empty string.');
-    // }
+    const opts = {
+      ...options,
+      translations: {
+        coinDiv: 'currencyAmountErrors.invalidCoinDiv',
+        required: 'currencyAmountErrors.missingValue',
+        type: 'currencyAmountErrors.invalidType',
+        fractionDigitCount: 'currencyAmountErrors.fractionTooLow',
+        ...options.translations,
+      },
+    };
 
-    const validation = validateCurrencyAmount(value, options);
+    // This should match the default range in validateCurrencyAmount()
+    const defaultRange = CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO;
 
-    if (options.validateRequired && !validation.required) {
-      addError(errKey, app.polyglot.t('currencyAmountErrors.missingValue'));
+    if (!opts.translations.range) {
+      const range =
+        options.validationOptions &&
+        options.validationOptions.range ||
+        defaultRange;
+
+      if (range === CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO) {
+        opts.translations.range = 'currencyAmountErrors.greaterThanZero';
+      } else if (range === CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO) {
+        opts.translations.range = 'currencyAmountErrors.greaterThanEqualZero';
+      }
+    }
+
+    const validation = validateCurrencyAmount(curDef, opts.validationOptions);
+
+    if (
+      validation.validCoinDiv === false &&
+      typeof opts.translations.coinDiv === 'string'
+    ) {
+      // almost certainly developer error
+      addError(errKey, app.polyglot.t(opts.translations.coinDiv));
       return validation;
     }
 
-    if (options.validateType && !validation.validType) {
-      addError(errKey, app.polyglot.t('currencyAmountErrors.invalidType'));
+    if (
+      validation.validRequired === false &&
+      typeof opts.translations.required === 'string'
+    ) {
+      addError(errKey, app.polyglot.t(opts.translations.required));
       return validation;
     }
 
-    if (options.validateGreaterThanZero && !validation.greaterThanZero) {
-      addError(errKey, app.polyglot.t('currencyAmountErrors.greaterThanZero'));
-    } else if (options.validateNonNegative && !validation.nonNegative) {
-      addError(errKey, app.polyglot.t('currencyAmountErrors.nonNegative'));
-    } else if (options.validateTooManyFractionDigits && !validation.tooManyFractionDigits) {
-      addError(errKey, app.polyglot.t('currencyAmountErrors.fractionTooLow', {
-        cur: options.cur,
-        coinDiv: options.coinDiv,
+    if (
+      validation.validType === false &&
+      typeof opts.translations.type === 'string'
+    ) {
+      addError(errKey, app.polyglot.t(opts.translations.type));
+      return validation;
+    }
+
+    if (
+      validation.validRange === false &&
+      typeof opts.translations.range === 'string'
+    ) {
+      addError(errKey, app.polyglot.t(opts.translations.range));
+    }
+
+    if (
+      validation.validFractionDigitCount === false &&
+      typeof opts.translations.fractionDigitCount === 'string'
+    ) {
+      addError(errKey, app.polyglot.t(opts.translations.fractionDigitCount, {
+        cur: curDef.currency,
+        coinDiv: curDef.divisibility,
       }));
     }
 

@@ -865,7 +865,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  *   currency definition.
  */
 export function createCurrencyAmount(amount, curCode, options = {}) {
-  console.log(`in ${amount}`);
   validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
@@ -906,8 +905,6 @@ export function createCurrencyAmount(amount, curCode, options = {}) {
     opts.convertToBaseUnits ?
       decimalToInteger(amount, divisibility) : String(amount);
 
-  console.log(`out ${convertedAmount}`);
-
   return {
     amount: convertedAmount,
     currency: {
@@ -917,38 +914,60 @@ export function createCurrencyAmount(amount, curCode, options = {}) {
   };
 }
 
+export const CUR_VAL_RANGE_TYPES = {
+  GREATER_THAN_ZERO: 1,
+  GREATER_THAN_OR_EQUAL_ZERO: 2,
+};
+
+let rangeTypeValues;
+
+function isValidRangeType(type) {
+  if (!rangeTypeValues) {
+    rangeTypeValues =
+      Object
+        .keys(CUR_VAL_RANGE_TYPES)
+        .map(key => CUR_VAL_RANGE_TYPES[key]);
+  }
+
+  return rangeTypeValues.includes(type);
+}
+
 console.log('doc me up');
 // some validations skipped if dependants fail or args not provided.
-export function validateCurrencyAmount(amount, options = {}) {
+export function validateCurrencyAmount(curDef, options = {}) {
   const opts = {
     requireStringBasedAmount: true,
-    validateRequired: true,
-    validateType: true,
-    validateGreaterThanZero: true,
-    validateNonNegative: false,
-    validateTooManyFractionDigits: true,
+    rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO,
     ...options,
   };
 
-  const returnVal = {};
-
-  if (
-    opts.validateRequired &&
-    typeof amount === 'undefined' ||
-    amount === '' ||
-    amount === null
-  ) {
-    return { require: false };
+  if (!isValidRangeType(opts.rangeType)) {
+    throw new Error('You have provided an invalid range type.');
   }
 
-  returnVal.required = true;
+  const [isValidCoinDiv] = isValidCoinDivisibility(curDef.divisibility);
 
-  const bigNum = bigNumber(amount);
+  const returnVal = {
+    validCoinDiv: isValidCoinDiv,
+  };
+
+  if (
+    typeof curDef.amount === 'undefined' ||
+    curDef.amount === '' ||
+    curDef.amount === null
+  ) {
+    returnVal.validRequired = false;
+    return returnVal;
+  }
+
+  returnVal.validRequired = true;
+
+  const bigNum = bigNumber(curDef.amount);
 
   if (
     (
       opts.requireStringBasedAmount &&
-      typeof amount !== 'string'
+      typeof curDef.amount !== 'string'
     ) ||
     (bigNum.isNaN())
   ) {
@@ -958,21 +977,21 @@ export function validateCurrencyAmount(amount, options = {}) {
 
   returnVal.validType = true;
 
-  if (opts.validateGreaterThanZero) {
-    returnVal.greaterThanZero = bigNum.gt(0);
+  switch (opts.rangeType) {
+    case CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO:
+      returnVal.validRange = bigNum.gt(0);
+      break;
+    case CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO:
+      returnVal.validRange = bigNum.gte(0);
+      break;
+    default:
+      // pass
   }
 
-  if (opts.validateNonNegative) {
-    returnVal.nonNegative = bigNum.gte(0);
-  }
-
-  if (opts.validateTooManyFractionDigits) {
-    const [isValidCoinDiv] = isValidCoinDivisibility(opts.coinDiv);
-
-    if (isValidCoinDiv) {
-      returnVal.tooManyFractionDigits = decimalPlaces(amount) > opts.coinDiv;
-      returnVal.minValue = minValueByCoinDiv(opts.coinDiv, { returnInStandardNotation: true });
-    }
+  if (isValidCoinDiv) {
+    returnVal.validFractionDigitCount =
+      decimalPlaces(curDef.amount) <= curDef.divisibility;
+    returnVal.minValue = minValueByCoinDiv(curDef.divisibility, { returnInStandardNotation: true });
   }
 
   return returnVal;

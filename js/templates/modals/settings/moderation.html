@@ -71,7 +71,6 @@
                 <%
                   const amt = ob.fee && ob.fee.fixedFee ?
                     ob.toStandardNotation(ob.fee.fixedFee.amount) : 0;
-                  console.log(`the amount is ${amt}`);
                   const ccode =
                     ob.fee &&
                     ob.fee.fixedFee &&
