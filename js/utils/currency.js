@@ -864,8 +864,8 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @returns {string} - An object containing a string based amount along with a
  *   currency definition.
  */
-console.log('todo: maybe a better name for this?');
-export function createAmount(amount, curCode, options = {}) {
+export function createCurrencyAmount(amount, curCode, options = {}) {
+  console.log(`in ${amount}`);
   validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
@@ -905,6 +905,8 @@ export function createAmount(amount, curCode, options = {}) {
   const convertedAmount =
     opts.convertToBaseUnits ?
       decimalToInteger(amount, divisibility) : String(amount);
+
+  console.log(`out ${convertedAmount}`);
 
   return {
     amount: convertedAmount,

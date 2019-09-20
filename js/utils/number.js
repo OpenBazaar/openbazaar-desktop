@@ -6,40 +6,33 @@ import app from '../app';
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
-console.log('explain how max is 20 and put in a check');
+console.log('bignum config bump up from 20 max decimalz');
 console.log('unit test me.');
 export function toStandardNotation(number, options) {
+  console.log(`the num is ${number}`);
   const opts = {
-    minDisplayDecimals: 0,
-    maxDisplayDecimals: 20,
     returnUnchangedOnError: true,
     ...options,
   };
 
-  if (typeof number !== 'number') {
-    if (opts.returnUnchangedOnError) {
-      return number;
+  try {
+    const bigNum = bigNumber(number);
+
+    if (bigNum.isNaN()) {
+      throw new Error(`${number} is not a valid number.`);
     }
 
-    throw new Error('Please provide a number.');
-  }
-
-  let converted;
-
-  try {
-    converted = new Intl.NumberFormat('en-US', {
-      minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: opts.maxDisplayDecimals,
-      useGrouping: false,
-    }).format(number);
+    return (
+      bigNum.toFormat({
+        ...bigNumber.config().FORMAT,
+        groupSeparator: '',
+        fractionGroupSeparator: '',
+      })
+    );
   } catch (e) {
     if (opts.returnUnchangedOnError) return number;
     throw e;
   }
-
-  if (isNaN(converted)) return '';
-
-  return converted;
 }
 
 /*
