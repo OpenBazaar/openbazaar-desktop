@@ -9,7 +9,6 @@ import app from '../app';
 console.log('bignum config bump up from 20 max decimalz');
 console.log('unit test me.');
 export function toStandardNotation(number, options) {
-  console.log(`the num is ${number}`);
   const opts = {
     returnUnchangedOnError: true,
     ...options,

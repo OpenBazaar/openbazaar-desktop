@@ -1,6 +1,7 @@
 import app from '../../app';
-import BaseModel from '../BaseModel';
 import is from 'is_js';
+import { CUR_VAL_RANGE_TYPES } from '../../utils/currency';
+import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
   defaults() {
@@ -35,21 +36,38 @@ export default class extends BaseModel {
       addError('estimatedDelivery', app.polyglot.t('serviceModelErrors.provideEstDeliveryTime'));
     }
 
-    if (attrs.price === '') {
-      addError('price', app.polyglot.t('serviceModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.price)) {
-      addError('price', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
-    } else if (attrs.price < 0) {
-      addError('price', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
-    }
+    console.log('TBD where the hard coders below will come from');
+    this.validateCurrencyAmount(
+      {
+        currency: 'USD',
+        divisibility: 2,
+        amount: attrs.price,
+      },
+      addError,
+      errObj,
+      'price',
+      {
+        validationOptions: {
+          rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+        },
+      }
+    );
 
-    if (attrs.additionalItemPrice === '') {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.additionalItemPrice)) {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
-    } else if (attrs.additionalItemPrice < 0) {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
-    }
+    this.validateCurrencyAmount(
+      {
+        currency: 'USD',
+        divisibility: 2,
+        amount: attrs.additionalItemPrice,
+      },
+      addError,
+      errObj,
+      'additionalItemPrice',
+      {
+        validationOptions: {
+          rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+        },
+      }
+    );
 
     if (Object.keys(errObj).length) return errObj;
 

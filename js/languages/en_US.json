@@ -134,7 +134,7 @@
       "retryConfig": {
         "title": "Unable to obtain your server config."
       },
-      "unableToGetWalletCurDef": {
+      "`": {
         "title": "Unable to obtain the wallet currency definition."
       },
       "retryOnboardingFetch": {
@@ -2056,10 +2056,7 @@
   "serviceModelErrors": {
     "provideName": "Please provide a service name.",
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
-    "provideService": "Please provide at least on shipping service.",
-    "provideAmount": "Please provide a price.",
-    "provideNumericAmount": "Please provide the price as a number.",
-    "provideNonNegativePrice": "The price must be greater than or equal to 0."
+    "provideService": "Please provide at least on shipping service."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",
@@ -2085,8 +2082,6 @@
     "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "providePositiveQuantity": "The quantity cannot be less than 0.",
-    "provideSurcharge": "Please provide a surcharge.",
-    "provideNumericSurcharge": "Please provide the surcharge as a number."
   },
   "variantOptionModelErrors": {
     "provideName": "Please provide a title.",

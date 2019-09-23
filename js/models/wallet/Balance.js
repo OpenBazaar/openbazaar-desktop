@@ -9,20 +9,6 @@ export default class extends BaseModel {
   parse(response = {}) {
     const converted = { ...response };
 
-          // balanceMd.set(
-          //   balanceMd.parse({
-          //     code: coinType,
-          //     confirmed: {
-          //       amount: data.confirmedBalance,
-          //       currency: data.currency,
-          //     },
-          //     unconfirmed: {
-          //       amount: data.unconfirmedBalance,
-          //       currency: data.currency,
-          //     },
-          //   })
-          // );
-
     try {
       converted.confirmed = integerToDecimal(
         response.confirmed,

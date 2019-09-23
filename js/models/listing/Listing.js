@@ -382,25 +382,27 @@ export default class extends BaseModel {
         // convert price fields
         if (options.attrs.item.price) {
           const price = options.attrs.item.price;
-          options.attrs.item.price = decimalToInteger(price, coinDiv);
+          // options.attrs.item.price = decimalToInteger(price, coinDiv);
+          options.attrs.item.price = 12345;
         }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
-            if (typeof service.price === 'number') {
-              service.price = decimalToInteger(service.price, coinDiv);
-            }
+            console.log('only on valid numeric string');
+            // service.price = decimalToInteger(service.price, coinDiv);
+            service.price = 23;
 
-            if (typeof service.additionalItemPrice === 'number') {
-              service.additionalItemPrice =
-                decimalToInteger(service.additionalItemPrice, coinDiv);
-            }
+            // service.additionalItemPrice =
+            //   decimalToInteger(service.additionalItemPrice, coinDiv);
+            service.additionalItemPrice = 12;
           });
         });
 
         options.attrs.coupons.forEach(coupon => {
-          coupon.priceDiscount =
-            decimalToInteger(coupon.priceDiscount, coinDiv);
+          console.log('only on valid numeric string');
+          // coupon.priceDiscount =
+          //   decimalToInteger(coupon.priceDiscount, coinDiv);
+          coupon.priceDiscount = 145;
         });
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
@@ -446,9 +448,9 @@ export default class extends BaseModel {
           }
         } else {
           options.attrs.item.skus.forEach(sku => {
-            if (typeof sku.surcharge === 'number') {
-              sku.surcharge = decimalToInteger(sku.surcharge, coinDiv);
-            }
+            console.log('only on valid numeric string');
+            // sku.surcharge = decimalToInteger(sku.surcharge, coinDiv);
+            sku.surcharge = 846;
           });
         }
 

@@ -12,7 +12,7 @@ import {
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation, preciseRound } from '../../../utils/number';
-import { getExchangeRate, integerToDecimal, convertCurrency } from '../../../utils/currency';
+import { integerToDecimal, convertCurrency } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';

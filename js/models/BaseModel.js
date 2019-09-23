@@ -418,16 +418,16 @@ export default class extends Model {
       typeof opts.translations.range === 'string'
     ) {
       addError(errKey, app.polyglot.t(opts.translations.range));
-    }
-
-    if (
-      validation.validFractionDigitCount === false &&
-      typeof opts.translations.fractionDigitCount === 'string'
-    ) {
-      addError(errKey, app.polyglot.t(opts.translations.fractionDigitCount, {
-        cur: curDef.currency,
-        coinDiv: curDef.divisibility,
-      }));
+    } else {
+      if (
+        validation.validFractionDigitCount === false &&
+        typeof opts.translations.fractionDigitCount === 'string'
+      ) {
+        addError(errKey, app.polyglot.t(opts.translations.fractionDigitCount, {
+          cur: curDef.currency,
+          coinDiv: curDef.divisibility,
+        }));
+      }
     }
 
     return validation;

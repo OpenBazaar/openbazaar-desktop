@@ -1,15 +1,16 @@
 import $ from 'jquery';
-import loadTemplate from '../../../utils/loadTemplate';
-import BaseModal from '../BaseModal';
 import multihashes from 'multihashes';
+import loadTemplate from '../../../utils/loadTemplate';
+import { isValidStringBasedNumber } from '../../../utils/number';
+import BaseModal from '../BaseModal';
 
 export default class extends BaseModal {
   constructor(options = {}) {
     super(options);
     this.options = options;
 
-    if (typeof options.listingPrice !== 'number') {
-      throw new Error('Please provide a numerical price for the listing.');
+    if (!isValidStringBasedNumber(options.listingPrice)) {
+      throw new Error('Please provide a string based number as the price of the listing.');
     }
 
     this.couponCodes = [];
