@@ -2,7 +2,7 @@ import bigNumber from 'bignumber.js';
 import {
   convertCurrency,
   getExchangeRate,
-  createCurrencyDefinition,
+  decimalToCurDef,
   getCoinDivisibility,
   isValidCoinDivisibility,
   minValueByCoinDiv,
@@ -212,7 +212,7 @@ class Spend extends BaseModel {
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
 
-    // This will be overridden by createCurrencyDefinition below, unless that throws an exception
+    // This will be overridden by decimalToCurDef below, unless that throws an exception
     // (which should be rare). In that case we'll let the bool go through and have the
     // server reject it, since otherwise it's not easy for sync to kick back an error
     // that makes it back to the Model.save() call which initiated the sync call
@@ -224,7 +224,7 @@ class Spend extends BaseModel {
       options.attrs = {
         ...options.attrs,
         ...(
-          createCurrencyDefinition(
+          decimalToCurDef(
             this.getAmountInWalletCur(),
             options.attrs.wallet
           )

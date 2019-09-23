@@ -859,33 +859,19 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @param {object} [options={}] - Function options
  * @param {number} [options.divisibility] - The divisibility of the amount. If not
  *   provided, it will be obtained from getCoinDivisibility().
- * @param {boolean} [options.convertToBaseUnits=true] - Indicates whether you
- *   are providing a decimal amount that should be converted to base units.
  * @returns {string} - An object containing a string based amount along with a
  *   currency definition.
  */
-console.log('rename to decimalToCurDef?');
-export function createCurrencyDefinition(amount, curCode, options = {}) {
+// export function createCurrencyDefinition(amount, curCode, options = {}) {
+console.log('unit testify me');
+export function decimalToCurDef(amount, curCode, options = {}) {
   validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
     throw new Error('The curCode must be provided as a non-empty string.');
   }
 
-  const opts = {
-    convertToBaseUnits: true,
-    ...options,
-  };
-
-  if (
-    !opts.convertToBaseUnits &&
-    !Number.isInteger(amount)
-  ) {
-    throw new Error('If this function won\'t be converting to base units, then ' +
-      'you must provide an integer amount');
-  }
-
-  let divisibility = opts.divisibility;
+  let divisibility = options.divisibility;
 
   try {
     divisibility = divisibility === undefined ?
@@ -902,9 +888,7 @@ export function createCurrencyDefinition(amount, curCode, options = {}) {
     throw new Error(divisErr);
   }
 
-  const convertedAmount =
-    opts.convertToBaseUnits ?
-      decimalToInteger(amount, divisibility) : String(amount);
+  const convertedAmount = decimalToInteger(amount, divisibility);
 
   return {
     amount: convertedAmount,
