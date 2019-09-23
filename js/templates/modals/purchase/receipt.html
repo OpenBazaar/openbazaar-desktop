@@ -20,6 +20,8 @@
     let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ? priceObj.quantity : 1;
     
     if (ob.isCrypto) {
+      console.log('update and test me here');
+      console.log('quantity will need to be a string at least for crypto')
       quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
         priceObj.quantity :
         0;
@@ -65,7 +67,7 @@
         <b>
           <%
             if (!ob.isCrypto) {
-              print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
+              <!-- print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency)); -->
             } else {
               print(ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency));
             }
@@ -85,7 +87,7 @@
             <% if (coupon.percentDiscount) {
                  print(`-${coupon.percentDiscount}%`);
             } else if (coupon.priceDiscount) {
-              print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
+<!--               print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`); -->
             } %>
           </b>
         </div>

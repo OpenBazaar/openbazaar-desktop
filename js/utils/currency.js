@@ -650,7 +650,7 @@ export function getExchangeRates() {
 /**
  * Converts an amount from one currency to another based on exchange rate data.
  */
-console.log('doc how string will gt string and num will get num');
+console.log('doc different return types base on provided val');
 export function convertCurrency(amount, fromCur, toCur) {
   if (
     typeof amount !== 'number' &&

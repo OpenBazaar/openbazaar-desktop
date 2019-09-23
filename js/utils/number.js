@@ -131,6 +131,7 @@ console.log('doc me up more');
 export function isValidStringBasedNumber(strNumber, options = {}) {
   const opts = {
     allowNumber: false,
+    allowBigNumber: false,
     ...options,
   };
 
@@ -157,6 +158,7 @@ export function validateNumberType(strNumber, options = {}) {
   const opts = {
     fieldName: 'value',
     allowStringBasedNumber: true,
+    allowBigNumber: false,
     ...options,
   };
 

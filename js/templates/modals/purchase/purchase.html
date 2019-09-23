@@ -1,6 +1,10 @@
 <%
   // when multiple listings are supported, the prices array will have one price object for each
-  const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+  const totalPrice =
+    ob.prices[0]
+      .price
+      .plus(ob.prices[0].vPrice);
+
   const pricingCurrency = ob.listingPrice.currencyCode;
 %>
 

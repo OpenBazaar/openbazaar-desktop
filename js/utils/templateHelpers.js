@@ -1,10 +1,8 @@
 import $ from 'jquery';
 import app from '../app';
 import {
-  formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
-  formatPrice,
   getCurrencyValidity,
   getExchangeRate,
   renderFormattedCurrency,
@@ -103,9 +101,8 @@ export function formatRating(average, count, skipCount) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 const currencyExport = {
-  formatPrice,
-  formatCurrency,
-  convertAndFormatCurrency,
+  formatCurrency: gracefulException(convertAndFormatCurrency),
+  convertAndFormatCurrency: gracefulException(convertAndFormatCurrency),
   convertCurrency,
   getCurrencyValidity,
   getExchangeRate,

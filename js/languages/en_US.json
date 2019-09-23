@@ -2081,7 +2081,7 @@
   "skuModelErrors": {
     "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
-    "providePositiveQuantity": "The quantity cannot be less than 0.",
+    "providePositiveQuantity": "The quantity cannot be less than 0."
   },
   "variantOptionModelErrors": {
     "provideName": "Please provide a title.",

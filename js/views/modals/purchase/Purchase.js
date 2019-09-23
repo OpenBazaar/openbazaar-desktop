@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
+import bigNumber from 'bignumber.js';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
 import app from '../../../app';
@@ -200,11 +201,14 @@ export default class extends BaseModal {
     this.inventory = this.options.inventory;
     if (this.listing.isCrypto &&
       typeof this.inventory !== 'number') {
+      console.log('test this...');
       this.inventoryFetch = getInventory(
         this.listing.get('vendorID').peerID,
         {
           slug: this.listing.get('slug'),
-          coinDivisibility: coinDivisibility,
+          coinDivisibility:
+            this.listing.get('metadata')
+              .get('coinDivisibility'),
         }
       ).done(e => (this.inventory = e.inventory));
       this.listenTo(inventoryEvents, 'inventory-change',
@@ -463,7 +467,13 @@ export default class extends BaseModal {
 
     // Don't allow a zero or negative price purchase.
     const priceObj = this.prices[0];
-    if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
+    console.log('test this case');
+    if (
+      priceObj
+        .price
+        .plus(priceObj.vPrice)
+        .plus(priceObj.sPrice).lte(0)
+    ) {
       this.insertErrors(this.getCachedEl('.js-errors'),
         [app.polyglot.t('purchase.errors.zeroPrice')]);
       this.setState({ phase: 'pay' });
@@ -624,10 +634,10 @@ export default class extends BaseModal {
         _.isEqual(v.get('variantCombo'), variantCombo));
 
       return {
-        price: this.listing.price.amount,
-        sPrice: sOptService ? sOptService.get('price') : 0,
-        aPrice: sOptService ? sOptService.get('additionalItemPrice') : 0,
-        vPrice: sku ? sku.get('surcharge') : 0,
+        price: bigNumber(this.listing.price.amount),
+        sPrice: bigNumber(sOptService ? sOptService.get('price') : 0),
+        aPrice: bigNumber(sOptService ? sOptService.get('additionalItemPrice') : 0),
+        vPrice: bigNumber(sku ? sku.get('surcharge') : 0),
         quantity: item.get('quantity'),
       };
     });

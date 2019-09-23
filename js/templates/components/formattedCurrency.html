@@ -24,4 +24,4 @@
     false;
 %>
 
-<%= formattedPrice %><% if (formattedPrice === false) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>
+<%= formattedPrice === false ? '' : formattedPrice %><% if (formattedPrice === false) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>
