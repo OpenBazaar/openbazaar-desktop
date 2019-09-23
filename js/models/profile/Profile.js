@@ -3,8 +3,8 @@ import app from '../../app';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
 import {
-  createCurrencyAmount,
-  integerToDecimal,
+  createCurrencyDefinition,
+  curDefToDecimal,
 } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
@@ -143,23 +143,19 @@ export default class Profile extends BaseModel {
   parse(resp) {
     const response = { ...resp };
 
-    if (response.moderatorInfo) {
+    if (
+      response.moderatorInfo &&
+      response.moderatorInfo.fee &&
+      response.moderatorInfo.fee.fixedFee
+    ) {
       try {
         response.moderatorInfo.fee.fixedFee = {
-          amount: integerToDecimal(
-            response.moderatorInfo.fee.fixedFee.amount,
-            response.moderatorInfo.fee.fixedFee.currency.divisibility
-          ),
-          currencyCode: response.moderatorInfo.fee.fixedFee.currency.code,
+          amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee),
+          currencyCode: response.moderatorInfo.fee.fixedFee.currency &&
+            response.moderatorInfo.fee.fixedFee.currency.code || 'USD',
         };
       } catch (e) {
-        if (
-          response.moderatorInfo &&
-          response.moderatorInfo.fee
-        ) {
-          delete response.moderatorInfo.fee;
-        }
-
+        delete response.moderatorInfo.fixedFee;
         console.error(`Unable to convert the moderator fee from base units: ${e.message}`);
       }
     }
@@ -222,7 +218,7 @@ export default class Profile extends BaseModel {
             const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
             const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
             options.attrs.moderatorInfo.fee.fixedFee =
-              createCurrencyAmount(amount, cur);
+              createCurrencyDefinition(amount, cur);
           }
         }
       }

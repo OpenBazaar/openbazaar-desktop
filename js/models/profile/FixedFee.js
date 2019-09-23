@@ -1,18 +1,7 @@
-// import bigNumber from 'bignumber.js';
-// import is from 'is_js';
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import { getCurrencyByCode } from '../../data/currencies';
-import { ensureMainnetCode } from '../../data/walletCurrencies';
-import {
-  getCoinDivisibility,
-  isValidCoinDivisibility,
-  // minValueByCoinDiv,
-} from '../../utils/currency';
-// import {
-//   isValidStringBasedNumber,
-//   decimalPlaces,
-// } from '../../utils/number';
+import { getCoinDivisibility } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {

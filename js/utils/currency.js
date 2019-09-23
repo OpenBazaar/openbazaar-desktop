@@ -864,7 +864,8 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @returns {string} - An object containing a string based amount along with a
  *   currency definition.
  */
-export function createCurrencyAmount(amount, curCode, options = {}) {
+console.log('rename to decimalToCurDef?');
+export function createCurrencyDefinition(amount, curCode, options = {}) {
   validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
@@ -881,7 +882,7 @@ export function createCurrencyAmount(amount, curCode, options = {}) {
     !Number.isInteger(amount)
   ) {
     throw new Error('If this function won\'t be converting to base units, then ' +
-      'you must provide an interger amount');
+      'you must provide an integer amount');
   }
 
   let divisibility = opts.divisibility;
@@ -912,6 +913,27 @@ export function createCurrencyAmount(amount, curCode, options = {}) {
       divisibility,
     },
   };
+}
+
+console.log('doc me up');
+export function curDefToDecimal(curDef) {
+  validateNumberType(curDef.amount, {
+    fieldName: 'curDef.amount',
+  });
+
+  const currency = curDef.currency;
+
+  if (typeof currency !== 'object') {
+    throw new Error('The currency must be an object');
+  }
+
+  const [isValidCoinDiv, divisErr] = isValidCoinDivisibility(currency.divisibility);
+
+  if (!isValidCoinDiv) {
+    throw new Error(divisErr);
+  }
+
+  return integerToDecimal(curDef.amount, currency.divisibility);
 }
 
 export const CUR_VAL_RANGE_TYPES = {
