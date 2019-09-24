@@ -1,8 +1,14 @@
 import app from '../../../app';
+import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
-import BaseView from '../../baseVw';
+import {
+  getCoinDivisibility,
+  nativeNumberFormatSupported,
+  defaultCryptoCoinDivisibility,
+} from '../../../utils/currency';
 import Order from '../../../models/purchase/Order';
 import Listing from '../../../models/listing/Listing';
+import BaseView from '../../baseVw';
 
 export default class extends BaseView {
   constructor(options = {}) {
@@ -45,13 +51,51 @@ export default class extends BaseView {
 
   render() {
     loadTemplate('modals/purchase/receipt.html', t => {
+      const displayCurrency = app.settings.get('localCurrency');
+
+      console.log('test quants above and below native number threshold support');
+
       this.$el.html(t({
         ...this.model.toJSON(),
         listing: this.listing.toJSON(),
         listingCurrency: this.listing.price.currencyCode,
         coupons: this.coupons,
-        displayCurrency: app.settings.get('localCurrency'),
-        prices: this.prices,
+        displayCurrency,
+        prices: this.prices.map(priceObj => {
+          let coinDiv;
+          let formattedQuantity;
+
+          if (
+            !(
+              priceObj.quantity instanceof bigNumber &&
+              !priceObj.quantity.isNaN()
+            )
+          ) {
+            return '';
+          }
+
+          try {
+            coinDiv = getCoinDivisibility(displayCurrency);
+          } catch (e) {
+            // pass
+          }
+
+          if (coinDiv === undefined) coinDiv = defaultCryptoCoinDivisibility;
+
+          if (nativeNumberFormatSupported(priceObj.quantity, coinDiv)) {
+            formattedQuantity = new Intl.NumberFormat(displayCurrency, {
+              minimumFractionDigits: 0,
+              maximumFractionDigits: coinDiv,
+            }).format(priceObj.quantity.toNumber());
+          } else {
+            formattedQuantity = priceObj.quantity.toFormat();
+          }
+
+          return {
+            ...priceObj,
+            formattedQuantity,
+          };
+        }),
         isCrypto: this.listing.isCrypto,
       }));
     });

@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../app';
+import bigNumber from 'bignumber.js';
 import {
   convertAndFormatCurrency,
   convertCurrency,
@@ -121,7 +122,9 @@ const crypto = {
   getWalletCurByCode,
 };
 
+console.log('put number exports into number namespace');
 export {
+  bigNumber,
   currencyExport as currencyMod,
   crypto,
   isHiRez,

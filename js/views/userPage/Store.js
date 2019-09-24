@@ -17,7 +17,10 @@ import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import TypeFilter from './TypeFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
-import { localizeNumber } from '../../utils/number';
+import {
+  localizeNumber,
+  isValidNumber,
+} from '../../utils/number';
 
 class Store extends BaseVw {
   constructor(options = {}) {
@@ -131,9 +134,13 @@ class Store extends BaseVw {
         md.searchTitle = md.get('title').toLocaleLowerCase();
         const price = md.get('price');
 
-        if (price.amount !== undefined) {
-          // An undefined price means it was likely an unrecognized currency that we
-          // weren't able to convert from decimal/base units to integer/non-base units.
+        if (
+          isValidNumber(price.amount, {
+            allowNumber: false,
+            allowBigNumber: false,
+            allowString: true,
+          })
+        ) {
           try {
             md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
               app.settings.get('localCurrency'));

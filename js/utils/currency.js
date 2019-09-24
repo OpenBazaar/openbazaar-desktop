@@ -326,7 +326,8 @@ function getMaxDisplayDigits(amount, desiredMax) {
  * option will properly show an untruncated / unreounded number, but it will not localize
  * the number at all).
  */
-function nativeNumberFormatSupported(val, maxDecimals = 20) {
+console.log('unit testify me.');
+export function nativeNumberFormatSupported(val, maxDecimals = 20) {
   validateNumberType(val);
 
   if (!(Number.isInteger(maxDecimals) && maxDecimals >= 0)) {
@@ -650,26 +651,10 @@ export function getExchangeRates() {
 /**
  * Converts an amount from one currency to another based on exchange rate data.
  */
+// todo: note about precision loss with numbers.
 console.log('doc different return types base on provided val');
 export function convertCurrency(amount, fromCur, toCur) {
-  if (
-    typeof amount !== 'number' &&
-    typeof amount !== 'string'
-  ) {
-    throw new Error('The amount must be provided as a number or string.');
-  }
-
-  let bigNumAmount;
-
-  if (typeof amount === 'string') {
-    bigNumAmount = bigNumber(amount);
-
-    if (bigNumAmount.isNaN()) {
-      throw new Error('The string based number evaluates to NaN.');
-    }
-  } else if (isNaN(amount)) {
-    throw new Error('If providing an amount as a number, it cannot be NaN.');
-  }
+  validateNumberType(amount);
 
   if (typeof fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string');
@@ -699,16 +684,21 @@ export function convertCurrency(amount, fromCur, toCur) {
   const fromRate = getExchangeRate(fromCurCode);
   const toRate = getExchangeRate(toCurCode);
 
-  if (bigNumAmount) {
-    return (
-      bigNumAmount
-        .dividedBy(fromRate)
-        .multipliedBy(toRate)
-        .toString()
-    );
+  const bigNum = amount instanceof bigNumber ?
+    amount : bigNumber(amount);
+
+  const converted =
+    bigNum
+      .dividedBy(fromRate)
+      .multipliedBy(toRate);
+
+  if (amount instanceof bigNumber) {
+    return converted;
+  } else if (typeof amount === 'string') {
+    return converted.toString();
   }
 
-  return (amount / fromRate) * toRate;
+  return Number(converted.toString());
 }
 
 /**

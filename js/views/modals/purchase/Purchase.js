@@ -638,7 +638,7 @@ export default class extends BaseModal {
         sPrice: bigNumber(sOptService ? sOptService.get('price') : 0),
         aPrice: bigNumber(sOptService ? sOptService.get('additionalItemPrice') : 0),
         vPrice: bigNumber(sku ? sku.get('surcharge') : 0),
-        quantity: item.get('quantity'),
+        quantity: bigNumber(item.get('quantity')),
       };
     });
   }

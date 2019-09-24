@@ -6,42 +6,57 @@
 
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
-    let basePrice;
-
-    if (!ob.isCrypto) {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
-    } else {
-      basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
-    }
+<!--     const basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency); -->
+    const basePrice = ob.bigNumber('23');
     
-    const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency);
-    const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency);
-    const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency);
-    let quantity = Number.isInteger(priceObj.quantity) && priceObj.quantity > 0 ? priceObj.quantity : 1;
+<!--     const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency); -->
+    const shippingPrice = ob.bigNumber('9');
+<!--     const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency); -->
+    const additionalShippingPrice = ob.bigNumber('1');
+<!--     const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency); -->
+    const surcharge = ob.bigNumber('84');
+    let quantity =
+      !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
+        priceObj.quantity : ob.bigNumber(1);
     
     if (ob.isCrypto) {
-      console.log('update and test me here');
-      console.log('quantity will need to be a string at least for crypto')
-      quantity = typeof priceObj.quantity === 'number' && priceObj.quantity > 0 ?
-        priceObj.quantity :
-        0;
+      quantity =
+        !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
+          priceObj.quantity : ob.bigNumber(0);
     }
 
-    let itemTotal = basePrice + surcharge;
+    let itemTotal = basePrice.plus(surcharge);
     const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
-        itemTotal -= itemTotal * 0.01 * coupon.percentDiscount;
+        itemTotal = itemTotal.plus(
+          itemTotal.times(0.01).times(ob.bigNumber(coupon.percentDiscount))
+        );
       } else if (coupon.priceDiscount) {
-        itemTotal -= ob.currencyMod.convertCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency);
+        const convertPriceDiscount =
+            ob.currencyMod.convertCurrency(
+              coupon.priceDiscount,
+              ob.listingCurrency,
+              viewingCurrency
+            );
+        itemTotal = itemTotal.minus(bigNumber(convertPriceDiscount));
       }
     });
-    const subTotal = itemTotal * quantity;
-    const shippingTotal = shippingPrice + additionalShippingPrice * (quantity -1);
-    const formattedQuantity = new Intl.NumberFormat(ob.displayCurrency, {
-      minimumFractionDigits: 0,
-      maximumFractionDigits: 8,
-    }).format(quantity);
+    const subTotal = itemTotal.times(quantity);
+    const shippingTotal =
+      shippingPrice
+        .plus(
+          additionalShippingPrice
+            .times(quantity.minus(1))
+        );
+
+    let displayCurCoinDiv;
+
+    try {
+      displayCurCoinDiv = ob.getCoinDivisibility(ob.displayCurrency);
+    } catch (e) {
+      // pass
+    }
 %>
   <div class="flexRow gutterHSm">
     <span class="flexExpand">
@@ -57,7 +72,7 @@
           }),
           cryptoIconsAmount:
             `<span class="cryptoQuantity">${ob.polyT('purchase.receipt.cryptoIconsAmount',
-              { amount: formattedQuantity })}</span>`,
+              { amount: priceObj.formattedQuantity })}</span>`,
         }) %>
 
       <% } %>
@@ -67,9 +82,9 @@
         <b>
           <%
             if (!ob.isCrypto) {
-              <!-- print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency)); -->
+              print(ob.currencyMod.formatCurrency(preCouponPrice, viewingCurrency));
             } else {
-              print(ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency));
+              print(ob.currencyMod.formatCurrency(subTotal.plus(shippingTotal), viewingCurrency));
             }
           %>
         </b>
@@ -87,7 +102,7 @@
             <% if (coupon.percentDiscount) {
                  print(`-${coupon.percentDiscount}%`);
             } else if (coupon.priceDiscount) {
-<!--               print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`); -->
+              print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
             } %>
           </b>
         </div>
@@ -144,7 +159,7 @@
     <% if (!ob.isCrypto) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">
-          <%= ob.polyT('purchase.receipt.subtotal', { quantity: formattedQuantity }) %>
+          <%= ob.polyT('purchase.receipt.subtotal', { quantity: priceObj.formattedQuantity }) %>
         </span>
         <div class="constrainedWidth">
           <div class="flexHRight">      
@@ -177,7 +192,7 @@
     <div class="constrainedWidth">
       <div class="flexHRight">    
         <b>
-          <%= ob.currencyMod.formatCurrency(subTotal + shippingTotal, viewingCurrency) %>
+          <%= ob.currencyMod.formatCurrency(subTotal.plus(shippingTotal), viewingCurrency) %>
         </b>
       </div>
     </div>

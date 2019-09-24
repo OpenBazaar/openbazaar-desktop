@@ -9,6 +9,8 @@ export default class extends BaseModel {
   parse(response = {}) {
     const converted = { ...response };
 
+    console.log('throttle those logged errors');
+
     try {
       converted.confirmed = integerToDecimal(
         response.confirmed,
@@ -16,8 +18,8 @@ export default class extends BaseModel {
         { returnUndefinedOnError: false }
       );
     } catch (e) {
-      console.error(`Unable to convert the ${response.code} confirmed balance from base ` +
-        `units: ${e.message}`);
+      // console.error(`Unable to convert the ${response.code} confirmed balance from base ` +
+      //   `units: ${e.message}`);
     }
 
     try {
@@ -27,13 +29,13 @@ export default class extends BaseModel {
         { returnUndefinedOnError: false }
       );
     } catch (e) {
-      console.error(`Unable to convert the ${response.code} unconfirmed balance from base ` +
-        `units: ${e.message}`);
+      // console.error(`Unable to convert the ${response.code} unconfirmed balance from base ` +
+      //   `units: ${e.message}`);
     }
 
     delete converted.currency;
 
-    console.log('todo - test if either confirmed or unconfirmed end up as undefined due to error. What happens in the UI?');
+    // console.log('todo - test if either confirmed or unconfirmed end up as undefined due to error. What happens in the UI?');
 
     return converted;
   }

@@ -122,20 +122,21 @@ export function preciseRound(value, precision) {
   return Math.round(value * multiplier) / multiplier;
 }
 
+const isValidNumberDefaultAllows = {
+  allowNumber: true,
+  allowBigNumber: true,
+  allowString: true,
+};
+
 console.log('unit test me silly style');
 console.log('doc me up more');
 /*
  * Returns true if the provided string is a valid number as determined by
  * bigNumber.js.
  */
-// export function isValidStringBasedNumber(strNumber, options = {}) {
-// allowNumber: false,
-// allowBigNumber: false,
 export function isValidNumber(num, options = {}) {
   const opts = {
-    allowNumber: true,
-    allowBigNumber: true,
-    allowString: true,
+    ...isValidNumberDefaultAllows,
     ...options,
   };
 
@@ -179,19 +180,24 @@ export function validateNumberType(num, options = {}) {
     ...options,
   };
 
-  if (!isValidNumber(num)) {
-    const errStr = `The ${opts.fieldName} must be provided as one of: `;
+  const isValidNumberAllows = {
+    ...isValidNumberDefaultAllows,
+    ...opts.isValidNumberOpts,
+  };
+
+  if (!isValidNumber(num, opts.isValidNumberOpts)) {
+    const errStr = `The ${opts.fieldName} must be provided as one of`;
     const allowedTypes = [];
 
-    if (opts.isValidNumberOpts.allowNumber) {
+    if (isValidNumberAllows.allowNumber) {
       allowedTypes.push('number');
     }
 
-    if (opts.isValidNumberOpts.allowBigNumber) {
+    if (isValidNumberAllows.allowBigNumber) {
       allowedTypes.push('bigNumber.js instance');
     }
 
-    if (opts.isValidNumberOpts.string) {
+    if (isValidNumberAllows.allowString) {
       allowedTypes.push('string based representation of a number');
     }
 

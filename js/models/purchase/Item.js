@@ -1,5 +1,9 @@
 import _ from 'underscore';
-import { decimalPlaces, toStandardNotation } from '../../utils/number';
+import bigNumber from 'bignumber.js';
+import {
+  decimalPlaces,
+  toStandardNotation,
+} from '../../utils/number';
 import { minValueByCoinDiv } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
@@ -69,26 +73,24 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.quantity === undefined) {
+    if (
+      attrs.quantity === undefined ||
+      attrs.quantity === null ||
+      attrs.quantity === ''
+    ) {
       const isCrypto = this.isCrypto ? 'Crypto' : '';
       addError('quantity', app.polyglot.t(`purchaseItemModelErrors.provide${isCrypto}Quantity`));
-    }
+    } else {
+      const bigNumQuantity = bigNumber(attrs.quantity);
 
-    if (!this.isCrypto) {
-      if (attrs.quantity !== undefined) {
-        if (!Number.isInteger(attrs.quantity)) {
+      if (!this.isCrypto) {
+        if (!bigNumQuantity.isInteger()) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
-        } else if (attrs.quantity < 1) {
+        } else if (bigNumQuantity.lt(1)) {
           addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
         }
-      }
-
-      if (typeof attrs.paymentAddress !== 'undefined') {
-        addError('paymentAddress', 'The payment address should only be provide on ' +
-          'crypto listings');
-      }
-    } else {
-      if (attrs.quantity !== undefined) {
+      } else {
+        console.log('test me silly');
         const inventory = this.getInventory();
 
         let coinDiv = this.getCoinDiv();
@@ -124,7 +126,14 @@ export default class extends BaseModel {
           }));
         }
       }
+    }
 
+    if (!this.isCrypto) {
+      if (typeof attrs.paymentAddress !== 'undefined') {
+        addError('paymentAddress', 'The payment address should only be provide on ' +
+          'crypto listings');
+      }
+    } else {
       if (typeof attrs.paymentAddress !== 'string' || !attrs.paymentAddress) {
         addError('paymentAddress', app.polyglot.t('purchaseItemModelErrors.providePaymentAddress'));
       } else if (attrs.paymentAddress.length < this.constraints.minPaymentAddressLength ||
