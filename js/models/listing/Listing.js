@@ -10,7 +10,7 @@ import {
   integerToDecimal,
   getCurMeta,
 } from '../../utils/currency';
-import { isValidStringBasedNumber } from '../../utils/number';
+import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
@@ -620,7 +620,12 @@ export default class extends BaseModel {
 
       if (parsedResponse.coupons && parsedResponse.coupons.length) {
         parsedResponse.coupons.forEach((coupon, couponIndex) => {
-          if (isValidStringBasedNumber(coupon.priceDiscount)) {
+          if (
+            isValidNumber(coupon.priceDiscount, {
+              allowNumber: false,
+              allowBigNumber: false,
+            })
+          ) {
             const price = parsedResponse.coupons[couponIndex].priceDiscount;
 
             parsedResponse.coupons[couponIndex].priceDiscount =

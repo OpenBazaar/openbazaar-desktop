@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import multihashes from 'multihashes';
 import loadTemplate from '../../../utils/loadTemplate';
-import { isValidStringBasedNumber } from '../../../utils/number';
+import { isValidNumber } from '../../../utils/number';
 import BaseModal from '../BaseModal';
 
 export default class extends BaseModal {
@@ -9,7 +9,7 @@ export default class extends BaseModal {
     super(options);
     this.options = options;
 
-    if (!isValidStringBasedNumber(options.listingPrice)) {
+    if (!isValidNumber(options.listingPrice)) {
       throw new Error('Please provide a string based number as the price of the listing.');
     }
 

@@ -2,7 +2,7 @@ import $ from 'jquery';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
-import { isValidStringBasedNumber } from '../../../utils/number';
+import { validateNumberType } from '../../../utils/number';
 import {
   startPrefixedAjaxEvent,
   endPrefixedAjaxEvent,
@@ -78,13 +78,14 @@ export default class extends baseVw {
     amount,
     coinType = this.getState().coinType,
     feeLevel = app.localSettings.get('defaultTransactionFee')) {
-    if (
-      typeof amount !== 'number' &&
-      !isValidStringBasedNumber(amount)
-    ) {
-      throw new Error('Please provide an amount as a number or a valid string based ' +
-        'representation of a number.');
-    }
+    validateNumberType(amount, {
+      fieldName: 'amount',
+      isValidNumberOpts: {
+        allowNumber: false,
+        allowBigNumber: false,
+        allowString: true,
+      },
+    });
 
     if (typeof coinType !== 'string' || !coinType) {
       throw new Error('Please provide the coinType as a string.');

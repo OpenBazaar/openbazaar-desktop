@@ -128,49 +128,73 @@ console.log('doc me up more');
  * Returns true if the provided string is a valid number as determined by
  * bigNumber.js.
  */
-export function isValidStringBasedNumber(strNumber, options = {}) {
+// export function isValidStringBasedNumber(strNumber, options = {}) {
+// allowNumber: false,
+// allowBigNumber: false,
+export function isValidNumber(num, options = {}) {
   const opts = {
-    allowNumber: false,
-    allowBigNumber: false,
+    allowNumber: true,
+    allowBigNumber: true,
+    allowString: true,
     ...options,
   };
 
   if (
-    typeof strNumber !== 'string' &&
-    (
-      !opts.allowNumber &&
-      typeof strNumber === 'number'
-    )
+    !opts.allowNumber &&
+    !opts.allowBigNumber &&
+    !opts.allowString
   ) {
-    return false;
+    throw new Error('At least one of allowNumber, allowBigNumber or allowString must ' +
+      'be true.');
   }
 
-  try {
-    const bigNum = bigNumber(strNumber);
-    return !bigNum.isNaN();
-  } catch (e) {
-    return false;
+  if (
+    opts.allowNumber &&
+    typeof num === 'number' &&
+    !isNaN(num)
+  ) {
+    return true;
   }
+
+  if (
+    opts.allowBigNumber &&
+    num instanceof bigNumber
+  ) {
+    return true;
+  }
+
+  if (opts.allowString) {
+    const bigNum = bigNumber(num);
+    return !bigNum.isNaN();
+  }
+
+  return false;
 }
 
 console.log('docs me uppers and write unit testy.');
-export function validateNumberType(strNumber, options = {}) {
+export function validateNumberType(num, options = {}) {
   const opts = {
     fieldName: 'value',
-    allowStringBasedNumber: true,
-    allowBigNumber: false,
+    isValidNumberOpts: {},
     ...options,
   };
 
-  let isValid = true;
+  if (!isValidNumber(num)) {
+    const errStr = `The ${opts.fieldName} must be provided as one of: `;
+    const allowedTypes = [];
 
-  if (typeof strNumber !== 'number') {
-    isValid = opts.allowStringBasedNumber ?
-      isValidStringBasedNumber(strNumber) : false;
-  }
+    if (opts.isValidNumberOpts.allowNumber) {
+      allowedTypes.push('number');
+    }
 
-  if (!isValid) {
-    throw new Error(`The ${opts.fieldName} must be provided as a number or a string based ` +
-      'representation of a number.');
+    if (opts.isValidNumberOpts.allowBigNumber) {
+      allowedTypes.push('bigNumber.js instance');
+    }
+
+    if (opts.isValidNumberOpts.string) {
+      allowedTypes.push('string based representation of a number');
+    }
+
+    throw new Error(`${errStr}: ${allowedTypes.join(', ')}`);
   }
 }

@@ -2,7 +2,7 @@ import { guid } from '../../utils';
 import is from 'is_js';
 import { Collection } from 'backbone';
 import app from '../../app';
-import { isValidStringBasedNumber } from '../../utils/number';
+// import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';

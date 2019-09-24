@@ -8,7 +8,7 @@ import {
   minValueByCoinDiv,
 } from '../../utils/currency';
 import {
-  isValidStringBasedNumber,
+  isValidNumber,
   toStandardNotation,
   decimalPlaces,
 } from '../../utils/number';
@@ -118,7 +118,14 @@ class Spend extends BaseModel {
           }
         }
 
-        if (!isValidStringBasedNumber(attrs.amount)) {
+
+        console.log('test all these validations');
+        if (
+          !isValidNumber(attrs.amount, {
+            allowNumber: false,
+            allowBigNumber: false,
+          })
+        ) {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));

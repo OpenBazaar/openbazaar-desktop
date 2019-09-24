@@ -1,5 +1,5 @@
 import app from '../../app';
-import { isValidStringBasedNumber } from '../../utils/number';
+import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -68,7 +68,15 @@ export default class extends BaseModel {
       } else if (attrs.percentDiscount >= 100) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
       }
-    } else if (!isValidStringBasedNumber(attrs.priceDiscount)) {
+    } else if (
+      // todo: replace this with full cur def validation
+      // todo: replace this with full cur def validation
+      // todo: replace this with full cur def validation
+      !isValidNumber(attrs.priceDiscount, {
+        allowNumber: false,
+        allowBigNumber: false,
+      })
+    ) {
       addError('priceDiscount',
         app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
     }
