@@ -131,7 +131,7 @@ export default class extends BaseModal {
 
     this.coupons = this.createChild(Coupons, {
       coupons: this.listing.get('coupons'),
-      listingPrice: this.listing.price.amount,
+      listingPrice: bigNumber(this.listing.price.amount),
     });
     this.listenTo(this.coupons, 'changeCoupons',
       (hashes, codes) => this.changeCoupons(hashes, codes));
@@ -416,13 +416,14 @@ export default class extends BaseModal {
   }
 
   applyCoupon() {
-    const code = this.coupons.addCode(this.$couponField.val());
-    code.then(result => {
-      // if the result is valid, clear the input field
-      if (result.type === 'valid') {
-        this.$couponField.val('');
-      }
-    });
+    this.coupons
+      .addCode(this.$couponField.val())
+      .then(result => {
+        // if the result is valid, clear the input field
+        if (result.type === 'valid') {
+          this.$couponField.val('');
+        }
+      });
   }
 
   onKeyUpCouponCode(e) {
@@ -698,6 +699,9 @@ export default class extends BaseModal {
       uiQuantity = typeof quantity === 'number' ?
         toStandardNotation(this._cryptoQuantity) : this._cryptoQuantity;
     }
+
+    console.log('moo');
+    window.moo = this.listing;
 
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({

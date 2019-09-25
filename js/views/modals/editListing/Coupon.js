@@ -52,6 +52,10 @@ export default class extends BaseView {
   setModelData() {
     const formData = this.getFormData();
 
+    console.log('form data');
+    console.dir(formData);
+    console.log('<== form data');
+
     if (formData.priceDiscount !== undefined) {
       this.model.unset('percentDiscount');
     } else {
@@ -59,6 +63,9 @@ export default class extends BaseView {
     }
 
     this.model.set(formData);
+    console.log('model');
+    console.dir(this.model.toJSON());
+    console.log('model moo');
   }
 
   get $inputDiscountAmount() {

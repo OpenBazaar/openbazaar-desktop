@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import bigNumber from 'bignumber.js';
 import multihashes from 'multihashes';
 import loadTemplate from '../../../utils/loadTemplate';
 import { isValidNumber } from '../../../utils/number';
@@ -16,7 +17,7 @@ export default class extends BaseModal {
     this.couponCodes = [];
     this.couponHashes = [];
     this.listingPrice = options.listingPrice;
-    this.totalDiscount = 0;
+    this.totalDiscount = bigNumber(0);
     this.coupons = options.coupons;
     this.codeResult = {};
   }
@@ -52,7 +53,6 @@ export default class extends BaseModal {
     return hexCodes.join('');
   }
 
-
   addCode(code) {
     return this.sha256(code).then(hash => {
       const buf = new Buffer(hash, 'hex');
@@ -67,8 +67,9 @@ export default class extends BaseModal {
         if (this.couponCodes.indexOf(code) !== -1) {
           this.codeResult = { type: 'duplicate', code };
           // don't add if the total discount is more than the price of the listing
-        } else if (this.totalDiscount + discount < this.listingPrice) {
-          this.totalDiscount += discount;
+        } else if (this.totalDiscount.plus(discount).lt(this.listingPrice)) {
+          this.totalDiscount = this.totalDiscount.plus(discount);
+          console.log(`the total discount is now: ${this.totalDiscount}`);
           this.couponCodes.push(code);
           this.couponHashes.push(hashedCode);
           this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
@@ -89,16 +90,21 @@ export default class extends BaseModal {
   }
 
   couponDiscount(coupon) {
+    console.dir(coupon.toJSON());
     const percDis = coupon && coupon.get('percentDiscount') || 0;
     const pricDis = coupon && coupon.get('priceDiscount') || 0;
-    return (this.listingPrice * percDis * 0.01) + pricDis;
+    console.log(`the discount is ${this.listingPrice.times(percDis * 0.01).plus(pricDis)}`);
+    return (this.listingPrice.times(percDis * 0.01).plus(pricDis));
   }
 
   removeCode(code) {
     const index = this.couponCodes.indexOf(code);
     this.couponCodes.splice(index, 1);
     this.couponHashes.splice(index, 1);
-    this.totalDiscount -= this.couponDiscount(this.findCoupon('', code));
+    this.totalDiscount =
+      this.totalDiscount.minus(
+        this.couponDiscount(this.findCoupon('', code))
+      );
     this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
     this.codeResult = { type: 'valid', code };
     this.render();

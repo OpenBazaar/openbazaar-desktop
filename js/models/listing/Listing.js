@@ -398,11 +398,15 @@ export default class extends BaseModel {
           });
         });
 
-        options.attrs.coupons.forEach(coupon => {
+        options.attrs.coupons.forEach((coupon, index) => {
           console.log('only on valid numeric string');
           // coupon.priceDiscount =
           //   decimalToInteger(coupon.priceDiscount, coinDiv);
-          coupon.priceDiscount = 145;
+          if (!index) {
+            coupon.priceDiscount = 145;
+          } else {
+            coupon.percentDiscount = 3.21;
+          }
         });
 
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {

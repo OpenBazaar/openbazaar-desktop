@@ -6,15 +6,14 @@
 
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
-<!--     const basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency); -->
-    const basePrice = ob.bigNumber('23');
+    const basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
     
-<!--     const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency); -->
-    const shippingPrice = ob.bigNumber('9');
-<!--     const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency); -->
-    const additionalShippingPrice = ob.bigNumber('1');
-<!--     const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency); -->
-    const surcharge = ob.bigNumber('84');
+    const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency);
+
+    const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency);
+    
+    const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency);
+    
     let quantity =
       priceObj.quantity && !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
         priceObj.quantity : ob.bigNumber(1);
