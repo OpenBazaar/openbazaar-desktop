@@ -16,12 +16,12 @@
 <!--     const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency); -->
     const surcharge = ob.bigNumber('84');
     let quantity =
-      !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
+      priceObj.quantity && !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
         priceObj.quantity : ob.bigNumber(1);
     
     if (ob.isCrypto) {
       quantity =
-        !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
+        priceObj.quantity && !priceObj.quantity.isNaN() && priceObj.quantity.gt(0) ?
           priceObj.quantity : ob.bigNumber(0);
     }
 
@@ -39,7 +39,7 @@
               ob.listingCurrency,
               viewingCurrency
             );
-        itemTotal = itemTotal.minus(bigNumber(convertPriceDiscount));
+        itemTotal = itemTotal.minus(ob.bigNumber(convertPriceDiscount));
       }
     });
     const subTotal = itemTotal.times(quantity);
@@ -155,7 +155,8 @@
     </div>
   <% } %>
   <hr class="clrBr">
-  <% if (quantity) { %>
+  <% console.log(`the quant is ${quantity}`); %>
+  <% if (quantity && quantity.gt(0)) { %>
     <% if (!ob.isCrypto) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">

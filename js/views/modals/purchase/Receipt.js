@@ -62,17 +62,22 @@ export default class extends BaseView {
         coupons: this.coupons,
         displayCurrency,
         prices: this.prices.map(priceObj => {
+          let quantity =
+            priceObj.quantity &&
+            !priceObj.quantity.isNaN() &&
+            priceObj.quantity.gt(0) ?
+              priceObj.quantity : bigNumber(1);
+
+          if (this.listing.isCrypto) {
+            quantity =
+              priceObj.quantity &&
+              !priceObj.quantity.isNaN() &&
+              priceObj.quantity.gt(0) ?
+                priceObj.quantity : bigNumber(0);
+          }
+
           let coinDiv;
           let formattedQuantity;
-
-          if (
-            !(
-              priceObj.quantity instanceof bigNumber &&
-              !priceObj.quantity.isNaN()
-            )
-          ) {
-            return '';
-          }
 
           try {
             coinDiv = getCoinDivisibility(displayCurrency);
@@ -82,18 +87,19 @@ export default class extends BaseView {
 
           if (coinDiv === undefined) coinDiv = defaultCryptoCoinDivisibility;
 
-          if (nativeNumberFormatSupported(priceObj.quantity, coinDiv)) {
+          if (nativeNumberFormatSupported(quantity, coinDiv)) {
             formattedQuantity = new Intl.NumberFormat(displayCurrency, {
               minimumFractionDigits: 0,
               maximumFractionDigits: coinDiv,
-            }).format(priceObj.quantity.toNumber());
+            }).format(quantity.toNumber());
           } else {
-            formattedQuantity = priceObj.quantity.toFormat();
+            formattedQuantity = quantity.toFormat();
           }
 
           return {
             ...priceObj,
             formattedQuantity,
+            quantity,
           };
         }),
         isCrypto: this.listing.isCrypto,
