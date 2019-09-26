@@ -42,6 +42,7 @@ export default class extends BaseView {
 
   set coupons(coupons) {
     this._coupons = coupons;
+    this.render();
   }
 
   updatePrices(prices) {

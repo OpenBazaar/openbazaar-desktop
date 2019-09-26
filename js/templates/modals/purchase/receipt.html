@@ -28,8 +28,8 @@
     const preCouponPrice = itemTotal;
     ob.coupons.forEach((coupon) => {
       if (coupon.percentDiscount) {
-        itemTotal = itemTotal.plus(
-          itemTotal.times(0.01).times(ob.bigNumber(coupon.percentDiscount))
+        itemTotal = itemTotal.minus(
+          itemTotal.times(0.01).times(coupon.percentDiscount)
         );
       } else if (coupon.priceDiscount) {
         const convertPriceDiscount =
@@ -38,7 +38,7 @@
               ob.listingCurrency,
               viewingCurrency
             );
-        itemTotal = itemTotal.minus(ob.bigNumber(convertPriceDiscount));
+        itemTotal = itemTotal.minus(convertPriceDiscount);
       }
     });
     const subTotal = itemTotal.times(quantity);
@@ -101,7 +101,7 @@
             <% if (coupon.percentDiscount) {
                  print(`-${coupon.percentDiscount}%`);
             } else if (coupon.priceDiscount) {
-              print(`-${ob.currencyMod.convertAndFormatCurrency(Number(coupon.priceDiscount), ob.listingCurrency, viewingCurrency)}`);
+              print(`-${ob.currencyMod.convertAndFormatCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency)}`);
             } %>
           </b>
         </div>
