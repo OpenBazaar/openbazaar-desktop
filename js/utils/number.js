@@ -6,7 +6,6 @@ import app from '../app';
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
-console.log('bignum config bump up from 20 max decimalz');
 console.log('unit test me.');
 export function toStandardNotation(number, options) {
   const opts = {
@@ -159,7 +158,8 @@ export function isValidNumber(num, options = {}) {
 
   if (
     opts.allowBigNumber &&
-    num instanceof bigNumber
+    num instanceof bigNumber &&
+    !num.isNaN()
   ) {
     return true;
   }
@@ -194,7 +194,7 @@ export function validateNumberType(num, options = {}) {
     }
 
     if (isValidNumberAllows.allowBigNumber) {
-      allowedTypes.push('bigNumber.js instance');
+      allowedTypes.push('non NaN bigNumber.js instance');
     }
 
     if (isValidNumberAllows.allowString) {

@@ -69,7 +69,6 @@ export default class extends BaseModal {
           // don't add if the total discount is more than the price of the listing
         } else if (this.totalDiscount.plus(discount).lt(this.listingPrice)) {
           this.totalDiscount = this.totalDiscount.plus(discount);
-          console.log(`the total discount is now: ${this.totalDiscount}`);
           this.couponCodes.push(code);
           this.couponHashes.push(hashedCode);
           this.trigger('changeCoupons', this.couponHashes, this.couponCodes);
@@ -90,10 +89,8 @@ export default class extends BaseModal {
   }
 
   couponDiscount(coupon) {
-    console.dir(coupon.toJSON());
     const percDis = coupon && coupon.get('percentDiscount') || 0;
     const pricDis = coupon && coupon.get('priceDiscount') || 0;
-    console.log(`the discount is ${this.listingPrice.times(percDis * 0.01).plus(pricDis)}`);
     return (this.listingPrice.times(percDis * 0.01).plus(pricDis));
   }
 

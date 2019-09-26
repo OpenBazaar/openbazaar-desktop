@@ -4,6 +4,7 @@ import Backbone from 'backbone';
 import Polyglot from './utils/Polyglot';
 import './lib/whenAll.jquery';
 import moment from 'moment';
+import bigNumber from 'bignumber.js';
 import app from './app';
 import { serverVersionRequired } from '../package.json';
 import { getCurrencyByCode } from './data/currencies';
@@ -56,6 +57,10 @@ window.c = c;
 
 fixLinuxZoomIssue();
 handleServerShutdownRequests();
+
+// Will allow us to handle numbers with greater than 20 decimals places. Probably
+// unlikely this will be needed, but just in case.
+bigNumber.config({ RANGE: [-1e+9, 1e+9], DECIMAL_PLACES: 1e+9 });
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());

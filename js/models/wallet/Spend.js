@@ -146,6 +146,7 @@ class Spend extends BaseModel {
 
           if (isValidCoinDiv) {
             if (ensureMainnetCode(attrs.wallet) !== ensureMainnetCode(attrs.currency)) {
+              console.log('no less than on big number instance');
               if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
                 addError('amount', app.polyglot.t('spendModelErrors.convertedAmountTooLow', {
                   min: toStandardNotation(minValueByCoinDiv(coinDiv)),
@@ -155,6 +156,7 @@ class Spend extends BaseModel {
                 foundErr = true;
               }
             } else {
+              console.log('no less than on big number instance');
               if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
                 addError('amount', app.polyglot.t('spendModelErrors.amountTooLow', {
                   cur: attrs.wallet,

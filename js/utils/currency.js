@@ -151,24 +151,14 @@ export function getCoinDivisibility(currency, options = {}) {
  * @returns {number} - The minimum supported value for the given
  *   coin divisibility.
  */
-export function minValueByCoinDiv(coinDivisibility, options = {}) {
-  const opts = {
-    returnInStandardNotation: false,
-    ...options,
-  };
-
+export function minValueByCoinDiv(coinDivisibility) {
   const [isValidCoinDiv] = isValidCoinDivisibility(coinDivisibility);
 
   if (!isValidCoinDiv) {
     throw new Error('The provided coinDivisibility is not valid.');
   }
 
-  const minVal = bigNumber(1).div(bigNumber(10).pow(coinDivisibility));
-
-  return Number(
-    opts.returnInStandardNotation ?
-      minVal.toFormat() : minVal.toString()
-  );
+  return 1 / Math.pow(10, coinDivisibility);
 }
 
 /**
@@ -325,8 +315,12 @@ function getMaxDisplayDigits(amount, desiredMax) {
  * to use other functionality, e.g. BigNumber.toFixed() (keep in mind though, that
  * option will properly show an untruncated / unreounded number, but it will not localize
  * the number at all).
+ * @param {number|string|BigNumber} val
+ * @param {number} maxDecimals - An integer indicating the maximum number of decimals
+     places allowed.
+ * @returns {boolean} - A boolean indicating whether the number can properly be formatted
+     by Intl.NumberFormat.
  */
-console.log('unit testify me.');
 export function nativeNumberFormatSupported(val, maxDecimals = 20) {
   validateNumberType(val);
 
@@ -335,13 +329,20 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
   }
 
   const bigNum = bigNumber(val).dp(maxDecimals);
-  const split = bigNum.toString().split('.');
-  const int = bigNumber(split[0]);
-  const fraction = bigNumber(split[1]);
+  const split = bigNum
+    .toFormat({
+      ...bigNumber.config().FORMAT,
+      groupSeparator: '',
+      fractionGroupSeparator: '',
+    })
+    .split('.');
 
-  if (int.toString() === '0' && fraction.toString().length > 20) {
+  if (split[0] === '0' && split[1].length > 20) {
     return false;
   }
+
+  const int = bigNumber(split[0]);
+  const fraction = bigNumber(split[1]);
 
   if (
     !int.isNaN() &&
@@ -374,6 +375,8 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
  * unrecognized currency codes and/or conversion problems due to unavailable exchange
  * rate data.
  */
+console.log('skippy');
+window.skippy = formatCurrency;
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -493,11 +496,11 @@ export function formatCurrency(amount, currency, options) {
     opts.maxDisplayDecimals = getMaxDisplayDigits(amount, opts.maxDisplayDecimals);
   }
 
-  if (opts.maxDisplayDecimals > MAX_NUMBER_FORMAT_DISPLAY_DECIMALS) {
-    opts.maxDisplayDecimals = MAX_NUMBER_FORMAT_DISPLAY_DECIMALS;
-    console.warn(`Using ${MAX_NUMBER_FORMAT_DISPLAY_DECIMALS} for maxDisplayDecimals since it ' +
-      'is the maximum supported by Intl.NumberFormat`);
-  }
+  // if (opts.maxDisplayDecimals > MAX_NUMBER_FORMAT_DISPLAY_DECIMALS) {
+  //   opts.maxDisplayDecimals = MAX_NUMBER_FORMAT_DISPLAY_DECIMALS;
+  //   console.warn(`Using ${MAX_NUMBER_FORMAT_DISPLAY_DECIMALS} for maxDisplayDecimals since it ` +
+  //     'is the maximum supported by Intl.NumberFormat');
+  // }
 
   if (isWalletCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;

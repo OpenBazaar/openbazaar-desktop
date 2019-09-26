@@ -386,15 +386,20 @@ export default class extends BaseModel {
           options.attrs.item.price = 12345;
         }
 
-        options.attrs.shippingOptions.forEach(shipOpt => {
+        options.attrs.shippingOptions.forEach((shipOpt, index) => {
           shipOpt.services.forEach(service => {
             console.log('only on valid numeric string');
-            // service.price = decimalToInteger(service.price, coinDiv);
-            service.price = 23;
+            if (!index) {
+              // service.price = decimalToInteger(service.price, coinDiv);
+              service.price = 23;
 
-            // service.additionalItemPrice =
-            //   decimalToInteger(service.additionalItemPrice, coinDiv);
-            service.additionalItemPrice = 12;
+              // service.additionalItemPrice =
+              //   decimalToInteger(service.additionalItemPrice, coinDiv);
+              service.additionalItemPrice = 12;
+            } else {
+              service.price = 46;
+              service.additionalItemPrice = 24;
+            }
           });
         });
 

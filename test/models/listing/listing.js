@@ -270,13 +270,6 @@ describe('the Listing model', () => {
         .to.equal(true);
   });
 
-  validateModelFieldDivisibilityRanges(
-    Listing,
-    modelField,
-    itText,
-    coinDiv,
-    options = {}
-
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync
 
