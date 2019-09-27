@@ -164,16 +164,14 @@ export function minValueByCoinDiv(coinDivisibility) {
 /**
  * Converts the amount from a decimal to an integer based on the provided
  * coin divisibility.
- * @param {number|string} value - A number or a string representation of a number that
- *   should be converted to an integer.
+ * @param {number|string|BigNumber} value - The number that should be converted to an
+ *   integer.
  * @param {number} divisibility - An integer representing the coin divisibility (e.g. for
  *   bitcoin, it is 8)
- * @returns {string} - A string representation of the integer number.
+ * @returns {BigNumber} - A BigNumber instance representing the integer number.
  */
 export function decimalToInteger(value, divisibility) {
-  if (!['number', 'string'].includes(typeof value)) {
-    throw new Error('The value must be provided as a number or a string.');
-  }
+  validateNumberType(value);
 
   const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
 
@@ -186,35 +184,34 @@ export function decimalToInteger(value, divisibility) {
       bigNumber(10)
         .pow(divisibility)
     )
-    .decimalPlaces(0)
-    .toString();
+    .decimalPlaces(0);
 }
 
 /**
  * Converts the amount from an integer to a decimal based on the provided
  * divisibility.
- * @param {number|string} value - A number or string based representation of a number that
- *   should be converted to an integer.
+ * @param {number|string|BigNumber} value - The number that should be converted to
+ *   an integer.
  * @param {number} divisibility - An integer representing the coin divisibility
  *   (e.g. for bitcoin, it is 8)
  * @param {object} options
  * @param {boolean} [options.returnUndefinedOnError = true] - if true and there's
- *   an error, rather than an exception being thrown, undefined will be return. This
- *   will allow templates to just display nothing instead of bombing on render.
- * @returns {string} - A string representation of the integer number.
+ *   an error, rather than an exception being thrown, a BigNumber instance evaluating
+ *   to NaN will be returned. This will allow templates to just NaN instead of bombing
+ *   on render. It will also allow BigNumber ops (e.g. minus, times, etc...) to not
+ *   bomb.
+ * @returns {BigNumber} - A BigNumber instance representing the decimal number.
  */
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
-    returnUndefinedOnError: true,
+    returnNaNOnError: true,
     ...options,
   };
 
   let returnVal;
 
   try {
-    if (!['number', 'string'].includes(typeof value)) {
-      throw new Error('The value must be provided as a number or a string.');
-    }
+    validateNumberType(value);
 
     const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
 
@@ -232,9 +229,9 @@ export function integerToDecimal(value, divisibility, options = {}) {
       throw new Error('result is not a number');
     }
 
-    returnVal = result.toString();
+    returnVal = result;
   } catch (e) {
-    if (!opts.returnUndefinedOnError) {
+    if (!opts.returnNaNOnError) {
       throw e;
     } else {
       console.error(`Unable to convert ${value} from an integer to a decimal: ${e.message}`);
@@ -651,9 +648,14 @@ export function getExchangeRates() {
 
 /**
  * Converts an amount from one currency to another based on exchange rate data.
+ * @param {number|string|BigNumber} amount - Note that if you do provide the number as
+ *   as a string, you do risk precision loss if the number is beyonf the bounds that
+ *   JS can natively handle.
+ * @param {string} fromCur - The currency you are converting from.
+ * @param {string} toCur - The currency you are converting to.
+ * @returns {number|string|BigNumber} - The converted amount. The return type will
+ *   match the type of the provided amount.
  */
-// todo: note about precision loss with numbers.
-console.log('doc different return types base on provided val');
 export function convertCurrency(amount, fromCur, toCur) {
   validateNumberType(amount);
 
@@ -810,15 +812,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
   try {
     const fromCurValidity = getCurrencyValidity(fromCur);
-
-    console.log('maybe just catch any error and render an empty string');
-
-    // if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    //   // Sometimes when prices are in an unsupported currency, they will be
-    //   // saved as empty strings or undefined. We'll ignore those and just render an
-    //   // empty string.
-    //   return '';
-    // }
     const toCurValidity = getCurrencyValidity(toCur);
     const formattedBase = formatCurrency(price, fromCur);
     const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
@@ -849,10 +842,9 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @param {object} [options={}] - Function options
  * @param {number} [options.divisibility] - The divisibility of the amount. If not
  *   provided, it will be obtained from getCoinDivisibility().
- * @returns {string} - An object containing a string based amount along with a
+ * @returns {object} - An object containing a string based amount along with a
  *   currency definition.
  */
-// export function createCurrencyDefinition(amount, curCode, options = {}) {
 console.log('unit testify me');
 export function decimalToCurDef(amount, curCode, options = {}) {
   validateNumberType(amount);

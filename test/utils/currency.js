@@ -25,38 +25,166 @@ describe('the currency utility module', () => {
   });
 
   it('correctly converts an amount as a number from an integer to decimal', () => {
-    expect(cur.integerToDecimal(123, 2)).to.equal('1.23');
-    expect(cur.integerToDecimal(123, 8)).to.equal('0.00000123');
-    expect(cur.integerToDecimal(123, 18)).to.equal('1.23e-16');
-    expect(cur.integerToDecimal(1.23, 18)).to.equal('1.23e-18');
+    expect(
+      cur
+        .integerToDecimal(123, 2)
+        .toString()
+    ).to.equal('1.23');
+
+    expect(
+      cur
+        .integerToDecimal(123, 8)
+        .toString()
+    ).to.equal('0.00000123');
+
+    expect(
+      cur
+        .integerToDecimal(123, 18)
+        .toString()
+    ).to.equal('1.23e-16');
+
+    expect(
+      cur
+        .integerToDecimal(1.23, 18)
+        .toString()
+    ).to.equal('1.23e-18');
   });
 
   it('correctly converts an amount as a string from an integer to decimal', () => {
-    expect(cur.integerToDecimal('123', 2)).to.equal('1.23');
-    expect(cur.integerToDecimal('123', 8)).to.equal('0.00000123');
-    expect(cur.integerToDecimal('123', 18)).to.equal('1.23e-16');
-    expect(cur.integerToDecimal('1.23', 18)).to.equal('1.23e-18');
+    expect(
+      cur
+        .integerToDecimal('123', 2)
+        .toString()
+    ).to.equal('1.23');
+
+    expect(
+      cur
+        .integerToDecimal('123', 8)
+        .toString()
+    ).to.equal('0.00000123');
+
+    expect(
+      cur
+        .integerToDecimal('123', 18)
+        .toString()
+    ).to.equal('1.23e-16');
+
+    expect(
+      cur
+        .integerToDecimal('1.23', 18)
+        .toString()
+    ).to.equal('1.23e-18');
+  });
+
+  it('correctly converts an amount as a BigNumber instance from an integer to ' +
+    'decimal', () => {
+    expect(
+      cur
+        .integerToDecimal(bigNumber('123'), 2)
+        .toString()
+    ).to.equal('1.23');
+
+    expect(
+      cur
+        .integerToDecimal(bigNumber('123'), 8)
+        .toString()
+    ).to.equal('0.00000123');
+
+    expect(
+      cur
+        .integerToDecimal(bigNumber('123'), 18)
+        .toString()
+    ).to.equal('1.23e-16');
+
+    expect(
+      cur
+        .integerToDecimal(bigNumber('1.23'), 18)
+        .toString()
+    ).to.equal('1.23e-18');
   });
 
   it('correctly converts an amount as a number from a decimal to an integer', () => {
-    expect(cur.decimalToInteger(1.23, 2)).to.equal('123');
-    expect(cur.decimalToInteger(1.23, 8)).to.equal('123000000');
-    expect(cur.decimalToInteger(1.23, 18)).to.equal('1230000000000000000');
+    expect(
+      cur
+        .decimalToInteger(1.23, 2)
+        .toString()
+    ).to.equal('123');
+
+    expect(
+      cur
+        .decimalToInteger(1.23, 8)
+        .toString()
+    ).to.equal('123000000');
+
+    expect(
+      cur
+        .decimalToInteger(1.23, 18)
+        .toString()
+    ).to.equal('1230000000000000000');
   });
 
   it('correctly converts an amount as a string from a decimal to an integer', () => {
-    expect(cur.decimalToInteger('1.23', 2)).to.equal('123');
-    expect(cur.decimalToInteger('1.23', 8)).to.equal('123000000');
-    expect(cur.decimalToInteger('1.23', 18)).to.equal('1230000000000000000');
+    expect(
+      cur
+        .decimalToInteger('1.23', 2)
+        .toString()
+    ).to.equal('123');
+
+    expect(
+      cur
+        .decimalToInteger('1.23', 8)
+        .toString()
+    ).to.equal('123000000');
+
+    expect(
+      cur
+        .decimalToInteger('1.23', 18)
+        .toString()
+    ).to.equal('1230000000000000000');
+  });
+
+  it('correctly converts an amount as a BigNumber instance from a decimal to an ' +
+    'integer', () => {
+    expect(
+      cur
+        .decimalToInteger(bigNumber('1.23'), 2)
+        .toString()
+    ).to.equal('123');
+
+    expect(
+      cur
+        .decimalToInteger(bigNumber('1.23'), 8)
+        .toString()
+    ).to.equal('123000000');
+
+    expect(
+      cur
+        .decimalToInteger(bigNumber('1.23'), 18)
+        .toString()
+    ).to.equal('1230000000000000000');
   });
 
   it('correctly converts an amount from a decimal to an integer' +
     ' rounding to the correct place.', () => {
-    expect(cur.decimalToInteger(1.2367832894, 2)).to.equal('124');
-    expect(cur.decimalToInteger(1.2367832894, 8))
+    expect(
+      cur
+        .decimalToInteger(1.2367832894, 2)
+        .toString()
+    ).to.equal('124');
+
+    expect(
+      cur
+        .decimalToInteger(1.2367832894, 8)
+        .toString()
+    )
       .to
       .equal('123678329');
-    expect(cur.decimalToInteger('1.2367832894239473246342349734', 18))
+
+    expect(
+      cur
+        .decimalToInteger('1.2367832894239473246342349734', 18)
+        .toString()
+    )
       .to
       .equal('1236783289423947325');
   });
