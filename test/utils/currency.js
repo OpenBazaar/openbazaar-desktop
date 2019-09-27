@@ -244,6 +244,24 @@ describe('the currency utility module', () => {
         .equal('$123.45');
     });
 
+    it('properly formats a currency when passing in an amount as a BigNuber instance', () => {
+      expect(cur.formatCurrency(bigNumber('123.4567891234'), 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678912');
+
+      expect(cur.formatCurrency(bigNumber('123.4567891294'), 'BTC', cryptoOpts))
+        .to
+        .equal('₿123.45678913');
+
+      expect(cur.formatCurrency(bigNumber('123.4567891234'), 'USD', fiatOpts))
+        .to
+        .equal('$123.46');
+
+      expect(cur.formatCurrency(bigNumber('123.4527891294'), 'USD', fiatOpts))
+        .to
+        .equal('$123.45');
+    });
+
     it('handles numbers that are beyond the support of Intl.NumberFormat', () => {
       expect(cur.formatCurrency(strNumTooBig, 'BTC', {
         ...cryptoOpts,
@@ -385,6 +403,31 @@ describe('the currency utility module', () => {
       expect(
         cur.nativeNumberFormatSupported(bigNumber(Number.MAX_SAFE_INTEGER), 20)
       ).to.equal(true);
+    });
+
+    it('it returns false for supported numbers', () => {
+      // can handle "number" numbers
+      expect(
+        cur.nativeNumberFormatSupported(12345.678911234567, 20)
+      ).to.equal(false);
+
+      // can handle string based numbers
+      expect(
+        cur.nativeNumberFormatSupported(strNumTooBig, 20)
+      ).to.equal(false);
+
+      expect(
+        cur.nativeNumberFormatSupported(`0.${strNumTooBig}`, 20)
+      ).to.equal(false);
+
+      expect(
+        cur.nativeNumberFormatSupported('12345.678911234567', 20)
+      ).to.equal(false);
+
+      // can handle BigNumber instances
+      expect(
+        cur.nativeNumberFormatSupported(bigNumber(strNumTooBig), 20)
+      ).to.equal(false);
     });
   });
 });

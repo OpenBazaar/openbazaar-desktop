@@ -337,8 +337,13 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
     })
     .split('.');
 
-  if (split[0] === '0' && split[1].length > 20) {
-    return false;
+  if (split[0] === '0') {
+    if (split[1].length > 20) return false;
+  } else {
+    const intLen = split[0] && split[0].length || 0;
+    const fractionLen = split[1] && split[1].length || 0;
+
+    if (intLen + fractionLen > 16) return false;
   }
 
   const int = bigNumber(split[0]);
@@ -358,11 +363,6 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
     return false;
   }
 
-  const intLength = !int.isNaN() && int.toString().length || 0;
-  const fractionLength = !fraction.isNaN() && fraction.toString().length || 0;
-
-  if (intLength + fractionLength > 16) return false;
-
   return true;
 }
 
@@ -375,8 +375,6 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
  * unrecognized currency codes and/or conversion problems due to unavailable exchange
  * rate data.
  */
-console.log('skippy');
-window.skippy = formatCurrency;
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
