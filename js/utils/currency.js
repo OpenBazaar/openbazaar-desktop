@@ -1,3 +1,4 @@
+console.log('change "bigNumber()"" to "new BigNumber()"...?');
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
@@ -837,13 +838,13 @@ export function renderPairedCurrency(price, fromCur, toCur) {
 
 /**
  * Will return a string based amount along with a currency definition.
- * @param {number|string} amount
+ * @param {number|string|BigNumber} amount
  * @param {string} curCode - The currency the amount is in.
  * @param {object} [options={}] - Function options
  * @param {number} [options.divisibility] - The divisibility of the amount. If not
  *   provided, it will be obtained from getCoinDivisibility().
- * @returns {object} - An object containing a string based amount along with a
- *   currency definition.
+ * @returns {BigNumber} - An object containing a BigNumber instance of the amount as an
+ *   integer as well as a currency definition.
  */
 console.log('unit testify me');
 export function decimalToCurDef(amount, curCode, options = {}) {

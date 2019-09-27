@@ -189,6 +189,117 @@ describe('the currency utility module', () => {
       .equal('1236783289423947325');
   });
 
+  describe('has a decimalToCurDef function', () => {
+    it('that correctly converts a decimal number as a number to a currency definition ' +
+      'object', () => {
+      let curDef = cur.decimalToCurDef(10, 'USD');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000',
+          currency: {
+            code: 'USD',
+            divisibility: 2,
+          },
+        });
+
+      curDef = cur.decimalToCurDef(10, 'BTC');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000000000',
+          currency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
+        });
+    });
+
+    it('that correctly converts a decimal number as a string to a currency definition ' +
+      'object', () => {
+      let curDef = cur.decimalToCurDef('10', 'USD');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000',
+          currency: {
+            code: 'USD',
+            divisibility: 2,
+          },
+        });
+
+      curDef = cur.decimalToCurDef('10', 'BTC');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000000000',
+          currency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
+        });
+    });
+
+
+    it('that correctly converts a decimal number as a BigNumber instance to a currency ' +
+      'definition object', () => {
+      let curDef = cur.decimalToCurDef(bigNumber('10'), 'USD');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000',
+          currency: {
+            code: 'USD',
+            divisibility: 2,
+          },
+        });
+
+      curDef = cur.decimalToCurDef(bigNumber('10'), 'BTC');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount: '1000000000',
+          currency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
+        });
+    });
+
+    it('that correctly handles numbers that are beyond JavaScript\'s native capabilities as long ' +
+      'as the number is provided as a string or BigNumber instance.', () => {
+      let curDef = cur.decimalToCurDef(strNumTooBig, 'BTC');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount:
+            (
+              bigNumber(strNumTooBig)
+                .times(100000000)
+            ).toString(),
+          currency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
+        });
+
+      curDef = cur.decimalToCurDef(bigNumber('9.000000000000000001'), 'ETH');
+      curDef.amount = curDef.amount.toString();
+      expect(curDef)
+        .to.deep.equal({
+          amount:
+            (
+              bigNumber('9.000000000000000001')
+                .times('1000000000000000000')
+            ).toString(),
+          currency: {
+            code: 'ETH',
+            divisibility: 18,
+          },
+        });
+    });
+  });
+
   describe('has a minValueByCoinDiv function', () => {
     it('that correctly returns the minimum value for a given coin divisibility', () => {
       expect(cur.minValueByCoinDiv(2)).to.equal(0.01);
@@ -200,7 +311,6 @@ describe('the currency utility module', () => {
   describe('has functions that involve converting between currencies', () => {
     before(function () {
       sinon.stub($, 'ajax', () => {
-        console.log('pickles');
         const deferred = $.Deferred();
 
         deferred.resolve({
