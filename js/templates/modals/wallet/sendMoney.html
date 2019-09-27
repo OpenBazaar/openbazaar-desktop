@@ -20,7 +20,7 @@
       <% if (ob.errors.amount) print(ob.formErrorTmpl({ errors: ob.errors.amount })) %>
       <% if (ob.errors.currency) print(ob.formErrorTmpl({ errors: ob.errors.currency })) %>
       <div class="inputSelect <% if (ob.saveInProgress) print('disabled') %>">
-        <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.amount %>" placeholder="0.00">
+        <input type="text" class="clrBr clrP clrSh2" name="amount" id="walletSendAmount" value="<%= ob.toStandardNotation(ob.amount) %>" placeholder="0.00" data-var-type="bignumber">
         <select id="walletSendCurrency" name="currency" class="clrBr clrP nestInputRight">
           <% ob.currencies.forEach((currency) => {%>
           <option value="<%= currency.code %>" <% if (currency.code === ob.currencyCode) print('selected'); %>><%= currency.code %></option>

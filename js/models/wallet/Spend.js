@@ -1,4 +1,3 @@
-import bigNumber from 'bignumber.js';
 import {
   convertCurrency,
   getExchangeRate,
@@ -54,11 +53,11 @@ class Spend extends BaseModel {
     const amount = this.get('amount');
     const cur = this.get('currency');
     const wallet = this.get('wallet');
-    const cacheKey = `${amount}-${cur}-${wallet}`;
+    const cacheKey = `${amount.toString()}-${cur}-${wallet}`;
     const cachedVal = this._amountInWalletCurCache[cacheKey];
-    let converted;
+    let converted = cachedVal;
 
-    if (cachedVal !== 'undefined') {
+    if (cachedVal === undefined) {
       converted = convertCurrency(amount, cur, wallet);
       this._amountInWalletCurCache[cacheKey] = converted;
     }
@@ -118,12 +117,10 @@ class Spend extends BaseModel {
           }
         }
 
-
-        console.log('test all these validations');
         if (
           !isValidNumber(attrs.amount, {
             allowNumber: false,
-            allowBigNumber: false,
+            allowString: false,
           })
         ) {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
@@ -146,18 +143,15 @@ class Spend extends BaseModel {
 
           if (isValidCoinDiv) {
             if (ensureMainnetCode(attrs.wallet) !== ensureMainnetCode(attrs.currency)) {
-              console.log('no less than on big number instance');
-              if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
+              if (amountInWalletCur.lt(minValueByCoinDiv(coinDiv))) {
                 addError('amount', app.polyglot.t('spendModelErrors.convertedAmountTooLow', {
                   min: toStandardNotation(minValueByCoinDiv(coinDiv)),
                   walletCur: attrs.wallet,
-                  convertedAmount: toStandardNotation(amountInWalletCur),
                 }));
                 foundErr = true;
               }
             } else {
-              console.log('no less than on big number instance');
-              if (bigNumber(amountInWalletCur) < minValueByCoinDiv(coinDiv)) {
+              if (amountInWalletCur.lt(minValueByCoinDiv(coinDiv))) {
                 addError('amount', app.polyglot.t('spendModelErrors.amountTooLow', {
                   cur: attrs.wallet,
                   min: toStandardNotation(minValueByCoinDiv(coinDiv)),
@@ -165,8 +159,8 @@ class Spend extends BaseModel {
                 foundErr = true;
               } else if (decimalPlaces(amountInWalletCur) > coinDiv) {
                 addError(
-                  'item.cryptoQuantity',
-                  app.polyglot.t('genericModelErrors.fractionTooLow', {
+                  'amount',
+                  app.polyglot.t('spendModelErrors.fractionTooLow', {
                     cur: attrs.wallet,
                     coinDiv,
                   })
@@ -185,7 +179,7 @@ class Spend extends BaseModel {
 
             if (
               balanceMd &&
-              bigNumber(this.getAmountInWalletCur())
+              amountInWalletCur
                 .gte(balanceMd.get('confirmed'))
             ) {
               addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));

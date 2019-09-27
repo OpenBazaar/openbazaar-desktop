@@ -271,11 +271,20 @@ describe('the currency utility module', () => {
       it('which when called with a BigNumber instance, returns a BigNumber ' +
         'instance', () => {
         expect(
-          (cur.convertCurrency(bigNumber(strNumTooBig), 'USD', 'PLN'))
+          (
+            cur.convertCurrency(bigNumber(strNumTooBig), 'USD', 'PLN'))
             .toString()
-        )
+          )
           .to
           .equal('37781756873923412.33014392487936');
+
+        expect(
+          (
+            cur.convertCurrency(bigNumber('500'), 'USD', 'USD'))
+            .toString()
+          )
+          .to
+          .equal('500');
       });
     });
 

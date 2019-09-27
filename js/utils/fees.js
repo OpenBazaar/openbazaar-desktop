@@ -52,7 +52,7 @@ function watchTransactions() {
  * of the wallet.
  *
  * @param {string} feeLevel - The fee level
- * @param {amount} number - The amount of the transaction in the servers currency -
+ * @param {number|string|BigNumber} amount - The amount of the transaction in the servers currency -
  *   not in base units. (e.g. for BTC, provide a BTC amount, not Satoshi)
  * @param {object} options
  * @param {boolean} [options.divisibility] - You can provide the divisibility, otherwise

@@ -82,8 +82,8 @@ export default class extends baseVw {
       fieldName: 'amount',
       isValidNumberOpts: {
         allowNumber: false,
-        allowBigNumber: false,
-        allowString: true,
+        allowBigNumber: true,
+        allowString: false,
       },
     });
 
@@ -113,8 +113,17 @@ export default class extends baseVw {
           fetchingFee: false,
         };
 
-        if (app.walletBalances && app.walletBalances.get(coinType) &&
-          fee + amount > app.walletBalances.get(coinType).get('confirmed')) {
+        if (
+          app.walletBalances &&
+          app.walletBalances.get(coinType) &&
+          fee
+            .plus(amount)
+            .gt(
+              app.walletBalances
+                .get(coinType)
+                .get('confirmed')
+            )
+        ) {
           state = {
             // The fetch didn't actually fail, but since the server allows unconfirmed spends and
             // we don't want to allow that, we'll pretend it failed and simulate the server
