@@ -90,54 +90,64 @@ describe('the currency utility module', () => {
 
     describe('like convertCurrency', () => {
       it('which will convert between two fiat currencies', () => {
-        // expect(cur.convertCurrency(500, 'USD', 'PLN'))
-        //   .to
-        //   .equal(2097.308819610978);
+        expect(cur.convertCurrency(500, 'USD', 'PLN'))
+          .to
+          .equal(2097.3088196109775);
       });
 
       it('which will convert from a fiat currency to BTC', () => {
-        // expect(cur.convertCurrency(500, 'USD', 'BTC'))
-        //   .to
-        //   .equal(0.6661337596589395);
+        expect(cur.convertCurrency(500, 'USD', 'BTC'))
+          .to
+          .equal(0.6661337596589394);
       });
 
       it('which will convert from BTC to a fiat currency', () => {
-        // expect(cur.convertCurrency(500, 'BTC', 'USD'))
-        //   .to
-        //   .equal(375300);
+        expect(cur.convertCurrency(500, 'BTC', 'USD'))
+          .to
+          .equal(375300);
       });
 
       it('which correctly handles being called with the same' +
        'fiat currency for both the from and to currency', () => {
-        // expect(cur.convertCurrency(500, 'USD', 'USD'))
-        //   .to
-        //   .equal(500);
+        expect(cur.convertCurrency(500, 'USD', 'USD'))
+          .to
+          .equal(500);
       });
 
       it('which correctly handles being called with BTC as both' +
         'the from and to currency', () => {
-        // expect(cur.convertCurrency(500, 'BTC', 'BTC'))
-        //   .to
-        //   .equal(500);
+        expect(cur.convertCurrency(500, 'BTC', 'BTC'))
+          .to
+          .equal(500);
       });
 
       it('which when called with a string based amount, returns a string ' +
         'based amount', () => {
-        // expect(cur.convertCurrency('500', 'USD', 'PLN'))
-        //   .to
-        //   .equal('2097.308819610977884344624');
+        expect(cur.convertCurrency('500', 'USD', 'PLN'))
+          .to
+          .equal('2097.3088196109775');
 
-        // expect(cur.convertCurrency('500', 'BTC', 'USD'))
-        //   .to
-        //   .equal('375300');
+        expect(cur.convertCurrency('500', 'BTC', 'USD'))
+          .to
+          .equal('375300');
 
-        // expect(cur.convertCurrency('500', 'USD', 'USD'))
-        //   .to
-        //   .equal('500');
+        expect(cur.convertCurrency('500', 'USD', 'USD'))
+          .to
+          .equal('500');
 
-        // expect(cur.convertCurrency('500', 'BTC', 'BTC'))
-        //   .to
-        //   .equal('500');
+        expect(cur.convertCurrency('500', 'BTC', 'BTC'))
+          .to
+          .equal('500');
+      });
+
+      it('which when called with a BigNumber instance, returns a BigNumber ' +
+        'instance', () => {
+        expect(
+          (cur.convertCurrency(bigNumber(strNumTooBig), 'USD', 'PLN'))
+            .toString()
+        )
+          .to
+          .equal('37781756873923412.33014392487936');
       });
     });
 

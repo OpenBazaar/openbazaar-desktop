@@ -690,8 +690,7 @@ export function convertCurrency(amount, fromCur, toCur) {
 
   const converted =
     bigNum
-      .dividedBy(fromRate)
-      .multipliedBy(toRate);
+      .times(toRate / fromRate);
 
   if (amount instanceof bigNumber) {
     return converted;
