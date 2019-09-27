@@ -921,10 +921,11 @@ function isValidRangeType(type) {
 }
 
 console.log('doc me up');
+console.log('unit test me');
 // some validations skipped if dependants fail or args not provided.
 export function validateCurrencyAmount(curDef, options = {}) {
   const opts = {
-    requireStringBasedAmount: true,
+    requireBigNumAmount: true,
     rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO,
     ...options,
   };
@@ -954,8 +955,8 @@ export function validateCurrencyAmount(curDef, options = {}) {
 
   if (
     (
-      opts.requireStringBasedAmount &&
-      typeof curDef.amount !== 'string'
+      opts.requireBigNumAmount &&
+      !(curDef.amount instanceof bigNumber)
     ) ||
     (bigNum.isNaN())
   ) {
