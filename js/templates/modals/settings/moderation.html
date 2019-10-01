@@ -81,6 +81,7 @@
                 <input type="text"
                        class="noSpin clrBr clrSh2"
                        name="moderatorInfo.fee.fixedFee.amount"
+                       data-var-type="bignumber"
                        value="<%= amt %>">
               </div>
               <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
