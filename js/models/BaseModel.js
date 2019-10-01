@@ -1,3 +1,5 @@
+console.log('unit test validateCurrencyAmount');
+
 import _ from 'underscore';
 import { Model, Collection } from 'backbone';
 import app from '../app';
@@ -386,7 +388,10 @@ export default class extends Model {
       }
     }
 
-    const validation = validateCurrencyAmount(curDef, opts.validationOptions);
+    const validation = validateCurrencyAmount(
+      curDef.amount,
+      opts.validationOptions
+    );
 
     if (
       validation.validCoinDiv === false &&

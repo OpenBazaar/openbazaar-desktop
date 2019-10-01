@@ -926,10 +926,35 @@ function isValidRangeType(type) {
   return rangeTypeValues.includes(type);
 }
 
-console.log('doc me up');
-console.log('unit test me');
-// some validations skipped if dependants fail or args not provided.
-export function validateCurrencyAmount(curDef, options = {}) {
+/**
+ * Validates a given amount based on the provided divisibility.
+ * @param {numer|string|BigNumber} amount - The amount to validate.
+ * @param {object} options
+ * @param {boolean} [options.requireBigNumAmount = true] - if true, requires
+ *   the amount to be a BigNumber instance, otherwise numbers and strings are
+ *   also allowed.
+ * @param {string} [options.rangeType = CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO] -
+ *   the type of range validation to apply. See CUR_VAL_RANGE_TYPES.
+ * @returns {object} - An object containing a series of booleans indicating whether
+ *   particular validations passed:
+ *   - validCoinDiv: indicates whether the provided divisibility is valid
+ *   - validRequired: indicates whether the provided amount contains a value as
+ *     opposed to null, empty string or undefined. If this validation fails, the
+ *     others below will not be tested.
+ *   - validType: indicates whether the amount is the right type depending on
+ *     option.requireBigNumAmount. If this validation fails, the
+ *     others below will not be tested.
+ *   - validRange: indicates whether the amount falls within the correct range.
+ *     Depends on options.rangeType.
+ *   - validFractionDigitCount: indicates whether the fraction digits in the amount
+ *     exceed the maximum supported fraction digits for the given divisibility. This
+ *     will not be tested if validCoinDiv fails.
+ *   - minValue: This is not a boolean, rather an integer indicating the maximum
+ *     fraction digits supported by th divisibility. It potentially useful to show in
+ *     an error message if validFractionDigitCount fails. This will not be provided if
+ *     validCoinDiv fails.
+ */
+export function validateCurrencyAmount(amount, divisibility, options = {}) {
   const opts = {
     requireBigNumAmount: true,
     rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO,
@@ -940,16 +965,16 @@ export function validateCurrencyAmount(curDef, options = {}) {
     throw new Error('You have provided an invalid range type.');
   }
 
-  const [isValidCoinDiv] = isValidCoinDivisibility(curDef.divisibility);
+  const [isValidCoinDiv] = isValidCoinDivisibility(divisibility);
 
   const returnVal = {
     validCoinDiv: isValidCoinDiv,
   };
 
   if (
-    typeof curDef.amount === 'undefined' ||
-    curDef.amount === '' ||
-    curDef.amount === null
+    typeof amount === 'undefined' ||
+    amount === '' ||
+    amount === null
   ) {
     returnVal.validRequired = false;
     return returnVal;
@@ -957,12 +982,12 @@ export function validateCurrencyAmount(curDef, options = {}) {
 
   returnVal.validRequired = true;
 
-  const bigNum = bigNumber(curDef.amount);
+  const bigNum = bigNumber(amount);
 
   if (
     (
       opts.requireBigNumAmount &&
-      !(curDef.amount instanceof bigNumber)
+      !(amount instanceof bigNumber)
     ) ||
     (bigNum.isNaN())
   ) {
@@ -985,8 +1010,8 @@ export function validateCurrencyAmount(curDef, options = {}) {
 
   if (isValidCoinDiv) {
     returnVal.validFractionDigitCount =
-      decimalPlaces(curDef.amount) <= curDef.divisibility;
-    returnVal.minValue = minValueByCoinDiv(curDef.divisibility, { returnInStandardNotation: true });
+      decimalPlaces(amount) <= divisibility;
+    returnVal.minValue = minValueByCoinDiv(divisibility);
   }
 
   return returnVal;

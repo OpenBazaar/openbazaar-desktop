@@ -674,45 +674,7 @@ describe('the currency utility module', () => {
     });
   });
 
-  it('has a function to create an amount object that includes a currency ' +
-    'definition', () => {
-    expect(cur.decimalToCurDef(23.12, 'USD'))
-      .to
-      .deep
-      .equal({
-        amount: '2312',
-        currency: {
-          code: 'USD',
-          divisibility: 2,
-        },
-      });
-
-    expect(cur.decimalToCurDef('23.12', 'USD'))
-      .to
-      .deep
-      .equal({
-        amount: '2312',
-        currency: {
-          code: 'USD',
-          divisibility: 2,
-        },
-      });
-
-    expect(cur.decimalToCurDef(strNumTooBig, 'BTC', {
-      divisibility: 4,
-    }))
-      .to
-      .deep
-      .equal({
-        amount: '90071992547409920000',
-        currency: {
-          code: 'BTC',
-          divisibility: 4,
-        },
-      });
-  });
-
-  describe('has function that let\'s you know whether a given amount exceeds the  ' +
+  describe('has function that let\'s you know whether a given amount exceeds the ' +
     'range supported by the native Intl.NumberFormat function and', () => {
     it('it returns true for supported numbers', () => {
       // can handle "number" numbers
@@ -761,6 +723,199 @@ describe('the currency utility module', () => {
       // can handle BigNumber instances
       expect(
         cur.nativeNumberFormatSupported(bigNumber(strNumTooBig), 20)
+      ).to.equal(false);
+    });
+  });
+
+  describe('has a function that validates a currency amount', () => {
+    it('checks for a valid divisibility', () => {
+      expect(
+        cur
+          .validateCurrencyAmount('100', 8)
+          .validCoinDiv
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount('100', 'howdy')
+          .validCoinDiv
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('100', null)
+          .validCoinDiv
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('100', '8')
+          .validCoinDiv
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('100')
+          .validCoinDiv
+      ).to.equal(false);
+    });
+
+    it('checks whether you provide an amount', () => {
+      expect(
+        cur
+          .validateCurrencyAmount('100', 8)
+          .validRequired
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount()
+          .validRequired
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount(null, 8)
+          .validRequired
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('', 8)
+          .validRequired
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount(undefined, 8)
+          .validRequired
+      ).to.equal(false);
+    });
+
+    it('checks whether the amount is provided in the correct type', () => {
+      expect(
+        cur
+          .validateCurrencyAmount(8, 8, { requireBigNumAmount: false })
+          .validType
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount('8', 8, { requireBigNumAmount: false })
+          .validType
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber('8'), 8, { requireBigNumAmount: false })
+          .validType
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount('pickles', 8, { requireBigNumAmount: false })
+          .validType
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber('8'), 8, { requireBigNumAmount: true })
+          .validType
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(8, 8, { requireBigNumAmount: true })
+          .validType
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('8', 8, { requireBigNumAmount: true })
+          .validType
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount('chowdah', 8, { requireBigNumAmount: true })
+          .validType
+      ).to.equal(false);
+    });
+
+    it('validates the amount falls within the correct range', () => {
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber(0), 8,
+          {
+            rangeType: cur
+              .CUR_VAL_RANGE_TYPES
+              .GREATER_THAN_ZERO,
+          }
+        )
+          .validRange
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber(1), 8,
+          {
+            rangeType: cur
+              .CUR_VAL_RANGE_TYPES
+              .GREATER_THAN_ZERO,
+          }
+        )
+          .validRange
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber(0), 8,
+          {
+            rangeType: cur
+              .CUR_VAL_RANGE_TYPES
+              .GREATER_THAN_OR_EQUAL_ZERO,
+          }
+        )
+          .validRange
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(bigNumber(-2), 8,
+          {
+            rangeType: cur
+              .CUR_VAL_RANGE_TYPES
+              .GREATER_THAN_OR_EQUAL_ZERO,
+          }
+        )
+          .validRange
+      ).to.equal(false);
+    });
+
+    it('validates the amount does not exceed the maximum supported fraction digits ' +
+      'the provided divisibility supports', () => {
+      expect(
+        cur
+          .validateCurrencyAmount(1.00000001, 8, { requireBigNumAmount: false })
+          .validFractionDigitCount
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(1.000000001, 8, { requireBigNumAmount: false })
+          .validFractionDigitCount
+      ).to.equal(false);
+
+      expect(
+        cur
+          .validateCurrencyAmount(1.01, 2, { requireBigNumAmount: false })
+          .validFractionDigitCount
+      ).to.equal(true);
+
+      expect(
+        cur
+          .validateCurrencyAmount(1.009, 2, { requireBigNumAmount: false })
+          .validFractionDigitCount
       ).to.equal(false);
     });
   });
