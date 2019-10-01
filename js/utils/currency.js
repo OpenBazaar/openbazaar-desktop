@@ -846,7 +846,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  * @returns {BigNumber} - An object containing a BigNumber instance of the amount as an
  *   integer as well as a currency definition.
  */
-console.log('unit testify me');
 export function decimalToCurDef(amount, curCode, options = {}) {
   validateNumberType(amount);
 
@@ -882,7 +881,13 @@ export function decimalToCurDef(amount, curCode, options = {}) {
   };
 }
 
-console.log('doc me up');
+/**
+ * Will return a BigNumber representation of a decimal number based off of the
+ * provided currency definition.
+ * @param {object} A currency definition matching the OB-go cur def schema.
+ * @returns {BigNumber} - a BigNumber representation of a decimal number based off
+ * of the provided currency definition.
+ */
 export function curDefToDecimal(curDef) {
   validateNumberType(curDef.amount, {
     fieldName: 'curDef.amount',

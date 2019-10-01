@@ -22,6 +22,9 @@ describe('the currency utility module', () => {
       wallets: walletCurs,
     };
     app.walletCurDef = walletCurDef;
+
+    // this should match what's in start.js
+    bigNumber.config({ RANGE: [-1e+9, 1e+9], DECIMAL_PLACES: 1e+9 });
   });
 
   it('correctly converts an amount as a number from an integer to decimal', () => {
@@ -297,6 +300,80 @@ describe('the currency utility module', () => {
             divisibility: 18,
           },
         });
+    });
+  });
+
+  describe('has a curDefToDecimal function', () => {
+    it('that correctly converts a currency definition to a BigNumber instance ' +
+      'representing a converted decimal number', () => {
+      let result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'USD',
+            divisibility: 2,
+          },
+          amount: '100',
+        })
+      ).toString();
+      expect(result).to.equal('1');
+
+      result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
+          amount: '100',
+        })
+      ).toString();
+      expect(result).to.equal('0.000001');
+
+      result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'ETH',
+            divisibility: 18,
+          },
+          amount: '100',
+        })
+      ).toString();
+      expect(result).to.equal('1e-16');
+    });
+
+    it('that correctly handles numbers that are beyond JavaScript\'s native number '
+      + 'capabilities.', () => {
+      let result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'USD',
+            divisibility: 2,
+          },
+          amount: strNumTooBig,
+        })
+      ).toString();
+      expect(result).to.equal('90071992547409.92');
+
+      result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'DONT_MATTAH',
+            divisibility: 20,
+          },
+          amount: strNumTooBig,
+        })
+      ).toString();
+      expect(result).to.equal('0.00009007199254740992');
+
+      result = (
+        cur.curDefToDecimal({
+          currency: {
+            code: 'DONT_MATTAH',
+            divisibility: 20,
+          },
+          amount: `0.00000${strNumTooBig}`,
+        })
+      ).toString();
+      expect(result).to.equal('9.007199254740992e-26');
     });
   });
 
