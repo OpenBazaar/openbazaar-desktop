@@ -847,13 +847,19 @@ export function renderPairedCurrency(price, fromCur, toCur) {
  *   integer as well as a currency definition.
  */
 export function decimalToCurDef(amount, curCode, options = {}) {
+  const opts = {
+    amountKey: 'amount',
+    currencyKey: 'currency',
+    ...options,
+  };
+
   validateNumberType(amount);
 
   if (typeof curCode !== 'string' || !curCode) {
     throw new Error('The curCode must be provided as a non-empty string.');
   }
 
-  let divisibility = options.divisibility;
+  let divisibility = opts.divisibility;
 
   try {
     divisibility = divisibility === undefined ?
@@ -873,8 +879,8 @@ export function decimalToCurDef(amount, curCode, options = {}) {
   const convertedAmount = decimalToInteger(amount, divisibility);
 
   return {
-    amount: convertedAmount,
-    currency: {
+    [opts.amountKey]: convertedAmount,
+    [opts.currencyKey]: {
       code: curCode,
       divisibility,
     },
@@ -888,12 +894,23 @@ export function decimalToCurDef(amount, curCode, options = {}) {
  * @returns {BigNumber} - a BigNumber representation of a decimal number based off
  * of the provided currency definition.
  */
-export function curDefToDecimal(curDef) {
-  validateNumberType(curDef.amount, {
-    fieldName: 'curDef.amount',
-  });
+export function curDefToDecimal(curDef, options = {}) {
+  const opts = {
+    amountKey: 'amount',
+    currencyKey: 'currency',
+    ...options,
+  };
 
-  const currency = curDef.currency;
+  if (typeof curDef !== 'object') {
+    throw new Error('The curDef must be provided as an object.');
+  }
+
+  const amount = curDef[opts.amountKey];
+  const currency = curDef[opts.currencyKey];
+
+  validateNumberType(amount, {
+    fieldName: `curDef.${opts.amountKey}`,
+  });
 
   if (typeof currency !== 'object') {
     throw new Error('The currency must be an object');
@@ -905,7 +922,12 @@ export function curDefToDecimal(curDef) {
     throw new Error(divisErr);
   }
 
-  return integerToDecimal(curDef.amount, currency.divisibility);
+  return (
+    integerToDecimal(
+      amount,
+      currency.divisibility
+    )
+  );
 }
 
 export const CUR_VAL_RANGE_TYPES = {

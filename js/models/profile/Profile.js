@@ -150,7 +150,10 @@ export default class Profile extends BaseModel {
     ) {
       try {
         response.moderatorInfo.fee.fixedFee = {
-          amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee),
+          amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee, {
+            amountKey: 'bigAmount',
+            currencyKey: 'amountCurrency',
+          }),
           currencyCode: response.moderatorInfo.fee.fixedFee.currency &&
             response.moderatorInfo.fee.fixedFee.currency.code || 'USD',
         };
@@ -218,7 +221,10 @@ export default class Profile extends BaseModel {
             const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
             const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
             options.attrs.moderatorInfo.fee.fixedFee =
-              decimalToCurDef(amount, cur);
+              decimalToCurDef(amount, cur, {
+                amountKey: 'bigAmount',
+                currencyKey: 'amountCurrency',
+              });
           }
         }
       }

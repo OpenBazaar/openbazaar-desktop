@@ -390,6 +390,7 @@ export default class extends Model {
 
     const validation = validateCurrencyAmount(
       curDef.amount,
+      curDef.divisibility,
       opts.validationOptions
     );
 
