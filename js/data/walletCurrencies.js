@@ -9,7 +9,7 @@ import bech32 from 'bech32';
 let _currencies = [
   {
     code: 'BTC',
-    // testnetCode: 'TBTC',
+    testnetCode: 'TBTC',
     symbol: '₿',
     // todo: transition away from base units
     // todo: transition away from base units
@@ -56,9 +56,7 @@ let _currencies = [
   },
   {
     code: 'BCH',
-    // testnetCode: 'TBCH',
-    // baseUnit: 100000000,
-    // coinDivisibility: 8,
+    testnetCode: 'TBCH',
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => {
@@ -87,9 +85,7 @@ let _currencies = [
   },
   {
     code: 'ETH',
-    // testnetCode: 'TBCH',
-    // baseUnit: 100000000,
-    // coinDivisibility: 8,
+    testnetCode: 'TETH',
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `ethereum:${address}`,
@@ -110,9 +106,7 @@ let _currencies = [
   },
   {
     code: 'LTC',
-    // testnetCode: 'TLTC',
-    // baseUnit: 100000000,
-    // coinDivisibility: 8,
+    testnetCode: 'TLTC',
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `litecoin:${address}`,
@@ -133,9 +127,7 @@ let _currencies = [
   },
   {
     code: 'ZEC',
-    // testnetCode: 'TZEC',
-    // baseUnit: 100000000,
-    // coinDivisibility: 8,
+    testnetCode: 'TZEC',
     averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
@@ -200,26 +192,19 @@ export function init(walletCurs, walletCurDef) {
   _indexedCurrencies = null;
 
   Object
-    .keys(walletCurDef)
+    .keys(indexedCurs)
     .forEach(curCode => {
       const curDef = walletCurDef[curCode];
       const clientCur = indexedCurs[curDef.code];
 
       if (
-        (
-          walletCurs.includes(curDef.code) ||
-          walletCurs.includes(curDef.testnetCode)
-        ) &&
-        clientCur
+        walletCurs.includes(curDef.code) &&
+        curDef
       ) {
         const curData = {
           ...clientCur,
           coinDivisibility: curDef.divisibility,
         };
-
-        if (curDef.testnetCode) {
-          curData.testnetCode = curDef.testnetCode;
-        }
 
         curs.push(curData);
       }

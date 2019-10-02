@@ -8,7 +8,7 @@
   const showDisplayCur = isValidCryptoCur && isValidDisplayCur &&
     cryptoCurHasExchangeRate && displayCurHasExchangeRate && 
     ob.displayCur !== ob.cryptoCur;
-  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';  
+  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';
   let confirmedText = isValidCryptoCur ?
       ob.currencyMod.formatCurrency(ob.confirmed, ob.cryptoCur, { includeCryptoCurIdentifier: false }) : '';
   let confirmedTextSizeClass = 'tx2';
@@ -52,8 +52,10 @@
             ob.currencyMod.convertAndFormatCurrency(ob.confirmed, ob.cryptoCur, ob.displayCur, {
               includeCryptoCurIdentifier: false,
             });
+          console.log('likes sugar');
           let valueInDisplayCurSizeClass = valueInDisplayCur.length > 14 ?
             'tx3' : 'tx2';
+          console.log('off the truck');
           valueInDisplayCurSizeClass = valueInDisplayCur.length > 20 ?
             'tx4' : valueInDisplayCurSizeClass;
         %>

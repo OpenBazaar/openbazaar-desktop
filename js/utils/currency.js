@@ -335,7 +335,7 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
     })
     .split('.');
 
-  if (split[0] === '0') {
+  if (split[0] === '0' && split[1]) {
     if (split[1].length > 20) return false;
   } else {
     const intLen = split[0] && split[0].length || 0;
@@ -373,6 +373,8 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
  * unrecognized currency codes and/or conversion problems due to unavailable exchange
  * rate data.
  */
+console.log('doc the param types');
+console.log('unit test that amount ccan be of various numeric typees');
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
