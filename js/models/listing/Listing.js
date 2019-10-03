@@ -9,6 +9,7 @@ import {
   decimalToInteger,
   integerToDecimal,
   getCurMeta,
+  getCoinDivisibility,
 } from '../../utils/currency';
 import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
@@ -168,7 +169,26 @@ export default class extends BaseModel {
       ...attrs.item,
     };
 
-    let coinDiv;
+    let pricingCurrency;
+
+    try {
+      pricingCurrency = attrs.get('item')
+        .get('priceCurrency')
+        .code;
+    } catch (e) {
+      // pass
+    }
+
+    console.dir(attrs);
+    console.dir(item);
+
+    const curDefCurrency = {
+      code: pricingCurrency,
+      divisibility: () => getCoinDivisibility(pricingCurrency),
+    };
+
+    console.log('charlie');
+    window.charlie = curDefCurrency;
 
     if (!(attrs.metadata instanceof Metadata)) {
       addError('metadata', 'metadata must be provided as a nested Metadata model instance.');
@@ -250,6 +270,32 @@ export default class extends BaseModel {
       //     validateGreaterThanZero: false,
       //   }
       // );
+
+      if (Array.isArray(attrs.shippingOptions)) {
+        attrs.shippingOptions.forEach(shipOpt => {
+          this.validateCurrencyAmount(
+            {
+              amount: shipOpt.bigPrice,
+              currency: curDefCurrency,
+            },
+            addError,
+            errObj,
+            `shippingOptions[${shipOpt.cid}].bigPrice`
+          );
+        });
+
+        attrs.shippingOptions.forEach(shipOpt => {
+          this.validateCurrencyAmount(
+            {
+              amount: shipOpt.bigAdditionalItemPrice,
+              currency: curDefCurrency,
+            },
+            addError,
+            errObj,
+            `shippingOptions[${shipOpt.cid}].bigAdditionalItemPrice`
+          );
+        });
+      }
     }
 
     if (attrs.coupons.length) {

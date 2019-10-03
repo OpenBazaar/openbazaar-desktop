@@ -393,8 +393,8 @@ export default class extends Model {
 
     try {
       const curObj = _.result(curDef, 'currency');
-      divisibility = curObj.divisibility;
-      currency = curObj.code;
+      divisibility = _.result(curDef.currency, 'divisibility');
+      currency = _.result(curDef.currency, 'code');
     } catch (e) {
       // pass
     }
