@@ -8,8 +8,10 @@ import { events as listingEvents, shipsFreeToMe } from './';
 import {
   decimalToInteger,
   integerToDecimal,
+  decimalToCurDef,
   getCurMeta,
   getCoinDivisibility,
+  CUR_VAL_RANGE_TYPES,
 } from '../../utils/currency';
 import { isValidNumber } from '../../utils/number';
 import BaseModel, { flattenAttrs } from '../BaseModel';
@@ -180,10 +182,6 @@ export default class extends BaseModel {
       divisibility: () => getCoinDivisibility(pricingCurrency),
     };
 
-    if (!(attrs.metadata instanceof Metadata)) {
-      addError('metadata', 'metadata must be provided as a nested Metadata model instance.');
-    }
-
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
@@ -270,7 +268,12 @@ export default class extends BaseModel {
             },
             addError,
             errObj,
-            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigPrice`
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigPrice`,
+            {
+              validationOptions: {
+                rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+              },
+            }
           );
 
           this.validateCurrencyAmount(
@@ -280,7 +283,12 @@ export default class extends BaseModel {
             },
             addError,
             errObj,
-            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigAdditionalItemPrice`
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigAdditionalItemPrice`,
+            {
+              validationOptions: {
+                rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+              },
+            }
           );
         });
       });
@@ -402,23 +410,23 @@ export default class extends BaseModel {
         );
     } else {
       if (method !== 'delete') {
-        options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
+
+        options.url = options.url || app.getServerUrl('ob/listing/');
         options.attrs = options.attrs || this.toJSON();
 
-        let coinDiv = options.attrs.metadata.coinDivisibility;
-
-        // TODO: temp conversion until the server adjusts the format
-        // TODO: temp converesion to new format until the server follows suit.
-        coinDiv = coinDiv > 99 ?
-          Math.log(coinDiv) / Math.log(10) : coinDiv;
-
         // convert price fields
-        if (options.attrs.item.price) {
-          const price = options.attrs.item.price;
-          // options.attrs.item.price = decimalToInteger(price, coinDiv);
-          options.attrs.item.price = 12345;
-        }
+        options.attrs.item = {
+          ...options.attrs.item,
+          ...decimalToCurDef(
+            options.attrs.item.bigPrice,
+            options.attrs.item.priceCurrency.code,
+            {
+              amountKey: 'bigPrice',
+              currencyKey: 'priceCurrency',
+            }
+          ),
+        };
 
         options.attrs.shippingOptions.forEach((shipOpt, index) => {
           shipOpt.services.forEach(service => {

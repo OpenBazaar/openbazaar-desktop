@@ -378,12 +378,12 @@ export default class extends Model {
     if (!opts.translations.range) {
       const range =
         options.validationOptions &&
-        options.validationOptions.range ||
+        options.validationOptions.rangeType ||
         defaultRange;
 
       if (range === CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO) {
         opts.translations.range = 'currencyAmountErrors.greaterThanZero';
-      } else if (range === CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO) {
+      } else if (range === CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO) {
         opts.translations.range = 'currencyAmountErrors.greaterThanEqualZero';
       }
     }
@@ -451,6 +451,8 @@ export default class extends Model {
 }
 
 console.log('doc me up');
+console.log('better instead of toJSON to recurse and only convert model and collection ' +
+  'instances - ie dont want to lose bigNum instances');
 export function flattenAttrs(attrs = {}) {
   const result = {};
 
