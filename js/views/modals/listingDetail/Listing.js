@@ -494,8 +494,14 @@ export default class extends BaseModal {
     const _totalPrice = this.model.get('item').get('price') + surcharge;
     if (_totalPrice !== this.totalPrice) {
       this.totalPrice = _totalPrice;
-      const adjPrice = renderFormattedCurrency(this.totalPrice,
-        this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
+      const adjPrice = renderFormattedCurrency(
+        this.totalPrice,
+        this.model
+          .get('item')
+          .get('pricingCurrency')
+          .code,
+        app.settings.get('localCurrency')
+      );
       this.getCachedEl('.js-price').html(adjPrice);
     }
   }

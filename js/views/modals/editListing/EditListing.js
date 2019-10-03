@@ -780,7 +780,7 @@ export default class extends BaseModal {
 
     const segmentation = {
       type: serverData.metadata.contractType,
-      currency: serverData.metadata.pricingCurrency,
+      currency: serverData.item.priceCurrency.code,
       moderated: serverData.moderators && !!serverData.moderators.length,
       isNew: this.model.isNew(),
     };
@@ -985,7 +985,12 @@ export default class extends BaseModal {
       let cur;
 
       try {
-        cur = this._origModel.unparsedResponse.listing.metadata.pricingCurrency;
+        cur = this._origModel
+          .unparsedResponse
+          .listing
+          .item
+          .pricingCurrency
+          .code;
       } catch (e) {
         return this;
       }
@@ -997,6 +1002,7 @@ export default class extends BaseModal {
       // todo is this still valid
       // todo is this still valid
       if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
+        console.log('test me yo');
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,
         }).render().open();
@@ -1004,7 +1010,7 @@ export default class extends BaseModal {
         this.listenTo(unsupportedCurrencyDialog, 'close', () => {
           const response = JSON.parse(JSON.stringify(this._origModel.unparsedResponse));
           const newCur = unsupportedCurrencyDialog.getCurrency();
-          setDeepValue(response, 'listing.metadata.pricingCurrency', newCur);
+          setDeepValue(response, 'listing.item.pricingCurrency.code', newCur);
           this.model.set(this.model.parse(response));
           this.$currencySelect.val(newCur);
           this.render();

@@ -388,9 +388,20 @@ export default class extends Model {
       }
     }
 
+    let divisibility;
+    let currency;
+
+    try {
+      const curObj = _.result(curDef, 'currency');
+      divisibility = curObj.divisibility;
+      currency = curObj.code;
+    } catch (e) {
+      // pass
+    }
+
     const validation = validateCurrencyAmount(
       curDef.amount,
-      curDef.divisibility,
+      divisibility,
       opts.validationOptions
     );
 
@@ -430,8 +441,8 @@ export default class extends Model {
         typeof opts.translations.fractionDigitCount === 'string'
       ) {
         addError(errKey, app.polyglot.t(opts.translations.fractionDigitCount, {
-          cur: curDef.currency,
-          coinDiv: curDef.divisibility,
+          cur: currency,
+          coinDiv: divisibility,
         }));
       }
     }

@@ -3,6 +3,8 @@ import is from 'is_js';
 import { Collection } from 'backbone';
 import app from '../../app';
 // import { isValidNumber } from '../../utils/number';
+import { getCurrencyByCode } from '../../data/currencies';
+import { getCoinDivisibility } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
@@ -116,7 +118,37 @@ export default class extends BaseModel {
     //   addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
     // }
 
-    
+    // validateCurrencyAmount(
+    //   curDef,
+    //   addError,
+    //   errObj,
+    //   errKey,
+    //   options = {}
+    // ) {
+
+    if (
+      !attrs.priceCurrency ||
+      !attrs.priceCurrency.code ||
+      !getCurrencyByCode(attrs.priceCurrency.code)
+    ) {
+      addError('priceCurrency.code', 'The currency is not one of the available ones.');
+    }
+
+    this.validateCurrencyAmount(
+      {
+        amount: attrs.bigPrice,
+        currency: () => {
+          const code = attrs.priceCurrency.code;
+          return {
+            code,
+            divisibility: getCoinDivisibility(code),
+          };
+        },
+      },
+      addError,
+      errObj,
+      'bigPrice'
+    );
 
     if (!attrs.images.length) {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));

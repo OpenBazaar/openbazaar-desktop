@@ -2,8 +2,8 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
-import { isValidCoinDivisibility } from '../../utils/currency';
-import { getCurrencyByCode } from '../../data/currencies';
+// import { isValidCoinDivisibility } from '../../utils/currency';
+// import { getCurrencyByCode } from '../../data/currencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
@@ -96,16 +96,16 @@ export default class extends BaseModel {
       addError('expiry', 'The expiration date must be between now and the year 2038.');
     }
 
-    const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(attrs.coinDivisibility);
+    // const [isValidCoinDiv, coinDivErr] = isValidCoinDivisibility(attrs.coinDivisibility);
 
-    if (!isValidCoinDiv) {
-      // This should never be user facing - it would be a dev error.
-      addError('coinDivisibility', coinDivErr);
-    }
+    // if (!isValidCoinDiv) {
+    //   // This should never be user facing - it would be a dev error.
+    //   addError('coinDivisibility', coinDivErr);
+    // }
 
-    if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
-      addError('pricingCurrency', 'The currency is not one of the available ones.');
-    }
+    // if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
+    //   addError('pricingCurrency', 'The currency is not one of the available ones.');
+    // }
 
     if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies.length) {
       const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
