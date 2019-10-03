@@ -957,10 +957,6 @@ export default class extends BaseModal {
         categories: formData.item.categories.length ?
           formData.item.categories.split(tagsDelimiter) : [],
       },
-      metadata: {
-        ...formData.metadata,
-        coinDivisibility: this.coinDivisibility,
-      },
     });
 
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.

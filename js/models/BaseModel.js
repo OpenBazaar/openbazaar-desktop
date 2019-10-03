@@ -392,7 +392,6 @@ export default class extends Model {
     let currency;
 
     try {
-      const curObj = _.result(curDef, 'currency');
       divisibility = _.result(curDef.currency, 'divisibility');
       currency = _.result(curDef.currency, 'code');
     } catch (e) {
@@ -449,4 +448,20 @@ export default class extends Model {
 
     return validation;
   }
+}
+
+console.log('doc me up');
+export function flattenAttrs(attrs = {}) {
+  const result = {};
+
+  Object
+    .keys(attrs)
+    .forEach(attrKey => {
+      result[attrKey] =
+        attrs[attrKey] instanceof Model ||
+        attrs[attrKey] instanceof Collection ?
+          attrs[attrKey].toJSON() : attrs[attrKey];
+    });
+
+  return result;
 }

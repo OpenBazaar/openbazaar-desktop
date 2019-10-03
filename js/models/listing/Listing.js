@@ -12,7 +12,7 @@ import {
   getCoinDivisibility,
 } from '../../utils/currency';
 import { isValidNumber } from '../../utils/number';
-import BaseModel from '../BaseModel';
+import BaseModel, { flattenAttrs } from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
 import ShippingOptions from '../../collections/listing/ShippingOptions.js';
@@ -153,42 +153,32 @@ export default class extends BaseModel {
     return clone;
   }
 
-  validate(attrs) {
+  validate(attributes) {
     let errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
-    const metadata = {
-      ...this.get('metadata').toJSON(),
-      ...attrs.metadata,
+    const attrs = {
+      ...this.toJSON(),
+      ...flattenAttrs(attributes),
     };
+    const metadata = attrs.metadata;
     const contractType = metadata.contractType;
-    const item = {
-      ...this.get('item').toJSON(),
-      ...attrs.item,
-    };
+    const item = attrs.item;
 
     let pricingCurrency;
 
     try {
-      pricingCurrency = attrs.get('item')
-        .get('priceCurrency')
-        .code;
+      pricingCurrency = item.priceCurrency.code;
     } catch (e) {
       // pass
     }
-
-    console.dir(attrs);
-    console.dir(item);
 
     const curDefCurrency = {
       code: pricingCurrency,
       divisibility: () => getCoinDivisibility(pricingCurrency),
     };
-
-    console.log('charlie');
-    window.charlie = curDefCurrency;
 
     if (!(attrs.metadata instanceof Metadata)) {
       addError('metadata', 'metadata must be provided as a nested Metadata model instance.');
@@ -271,31 +261,29 @@ export default class extends BaseModel {
       //   }
       // );
 
-      if (Array.isArray(attrs.shippingOptions)) {
-        attrs.shippingOptions.forEach(shipOpt => {
+      (attrs.shippingOptions || []).forEach(shipOpt => {
+        (shipOpt.services || []).forEach(service => {
           this.validateCurrencyAmount(
             {
-              amount: shipOpt.bigPrice,
+              amount: service.bigPrice,
               currency: curDefCurrency,
             },
             addError,
             errObj,
-            `shippingOptions[${shipOpt.cid}].bigPrice`
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigPrice`
           );
-        });
 
-        attrs.shippingOptions.forEach(shipOpt => {
           this.validateCurrencyAmount(
             {
-              amount: shipOpt.bigAdditionalItemPrice,
+              amount: service.bigAdditionalItemPrice,
               currency: curDefCurrency,
             },
             addError,
             errObj,
-            `shippingOptions[${shipOpt.cid}].bigAdditionalItemPrice`
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigAdditionalItemPrice`
           );
         });
-      }
+      });
     }
 
     if (attrs.coupons.length) {

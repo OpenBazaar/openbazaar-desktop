@@ -36,39 +36,6 @@ export default class extends BaseModel {
       addError('estimatedDelivery', app.polyglot.t('serviceModelErrors.provideEstDeliveryTime'));
     }
 
-    console.log('TBD where the hard coders below will come from');
-    this.validateCurrencyAmount(
-      {
-        currency: 'USD',
-        divisibility: 2,
-        amount: attrs.price,
-      },
-      addError,
-      errObj,
-      'price',
-      {
-        validationOptions: {
-          rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
-        },
-      }
-    );
-
-    this.validateCurrencyAmount(
-      {
-        currency: 'USD',
-        divisibility: 2,
-        amount: attrs.additionalItemPrice,
-      },
-      addError,
-      errObj,
-      'additionalItemPrice',
-      {
-        validationOptions: {
-          rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
-        },
-      }
-    );
-
     if (Object.keys(errObj).length) return errObj;
 
     return undefined;
