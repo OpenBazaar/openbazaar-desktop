@@ -10,6 +10,7 @@ import {
   integerToDecimal,
   decimalToCurDef,
   getCurMeta,
+  isValidCoinDivisibility,
   getCoinDivisibility,
   CUR_VAL_RANGE_TYPES,
 } from '../../utils/currency';
@@ -428,20 +429,32 @@ export default class extends BaseModel {
           ),
         };
 
-        options.attrs.shippingOptions.forEach((shipOpt, index) => {
-          shipOpt.services.forEach(service => {
-            console.log('only on valid numeric string');
-            if (!index) {
-              // service.price = decimalToInteger(service.price, coinDiv);
-              service.price = 23;
+        let coinDiv;
 
-              // service.additionalItemPrice =
-              //   decimalToInteger(service.additionalItemPrice, coinDiv);
-              service.additionalItemPrice = 12;
-            } else {
-              service.price = 46;
-              service.additionalItemPrice = 24;
-            }
+        try {
+          coinDiv = getCoinDivisibility(
+            options
+              .attrs
+              .item
+              .priceCurrency
+              .code
+          );
+        } catch (e) {
+          throw new Error(`Unable to obtain the coin divisibility from the ' +
+            'pricing currency: ${e.message}`);
+        }
+
+        options.attrs.shippingOptions.forEach(shipOpt => {
+          shipOpt.services.forEach(service => {
+            service.bigPrice = decimalToInteger(
+              service.bigPrice,
+              coinDiv
+            );
+            service.bigAdditionalItemPrice =
+              decimalToInteger(
+                service.bigAdditionalItemPrice,
+                coinDiv
+              );
           });
         });
 
@@ -603,59 +616,52 @@ export default class extends BaseModel {
     if (parsedResponse) {
       const isCrypto = parsedResponse.metadata &&
         parsedResponse.metadata.contractType === 'CRYPTOCURRENCY';
-      let coinDiv;
-
-      try {
-        coinDiv = parsedResponse.metadata.coinDivisibility;
-
-        // TODO: temp converesion to new format until the server follows suit.
-        // TODO: also temp fiat check since server is sending 100000000 for all curs
-        //   including fiat.
-        const { isFiat } = getCurMeta(parsedResponse.metadata.pricingCurrency);
-        coinDiv = isFiat ? 100 : coinDiv;
-        coinDiv = coinDiv > 99 ?
-          Math.log(coinDiv) / Math.log(10) : coinDiv;
-      } catch (e) {
-        // pass
-      }
 
       // set the hash
       parsedResponse.hash = response.hash;
 
-      // convert price fields
-      if (parsedResponse.item) {
-        const price = parsedResponse.item.price;
+      let coinDiv;
 
-        if (price) {
-          parsedResponse.item.price = integerToDecimal(price, coinDiv);
-        }
+      try {
+        coinDiv =
+          parsedResponse
+            .item
+            .priceCurrency
+            .divisibility;
+      } catch (e) {
+        // pass
+      }
+
+      const [isValidCoinDiv] = isValidCoinDivisibility(coinDiv);
+
+      if (!isValidCoinDiv) {
+        console.error('Unable to convert price fields. The coin divisibility is not valid.');
+      }
+
+      try {
+        parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
+      } catch (e) {
+        parsedResponse.item.bigPrice = '';
+        console.error(`Unable to convert the bigPrice: ${e.message}`);
       }
 
       if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
         parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
           if (shipOpt.services && shipOpt.services.length) {
-            shipOpt.services.forEach((service, serviceIndex) => {
-              const price = service.price;
-
-              if (typeof price === 'number') {
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = integerToDecimal(price, coinDiv);
-              } else {
-                // This is necessary because of this bug:
-                // https://github.com/OpenBazaar/openbazaar-go/issues/178
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = 0;
+            shipOpt.services.forEach(service => {
+              try {
+                service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
+              } catch (e) {
+                service.bigPrice = '';
+                console.error(`Unable to convert the bigPrice: ${e.message}`);
               }
 
-              const price2 = service.additionalItemPrice;
-              if (typeof price2 === 'number') {
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, coinDiv);
-              } else {
-                // This is necessary because of this bug:
-                // https://github.com/OpenBazaar/openbazaar-go/issues/178
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = 0;
+              try {
+                service.bigAdditionalItemPrice =
+                  integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
+              } catch (e) {
+                service.bigAdditionalItemPrice = '';
+                console.error(`Unable to convert the bigPrice: ${e.message}`);
               }
             });
           }
@@ -669,57 +675,56 @@ export default class extends BaseModel {
         });
       }
 
-      if (parsedResponse.coupons && parsedResponse.coupons.length) {
-        parsedResponse.coupons.forEach((coupon, couponIndex) => {
-          if (
-            isValidNumber(coupon.priceDiscount, {
-              allowNumber: false,
-              allowBigNumber: false,
-            })
-          ) {
-            const price = parsedResponse.coupons[couponIndex].priceDiscount;
+      // if (parsedResponse.coupons && parsedResponse.coupons.length) {
+      //   parsedResponse.coupons.forEach((coupon, couponIndex) => {
+      //     if (
+      //       isValidNumber(coupon.priceDiscount, {
+      //         allowNumber: false,
+      //         allowBigNumber: false,
+      //       })
+      //     ) {
+      //       const price = parsedResponse.coupons[couponIndex].priceDiscount;
 
-            parsedResponse.coupons[couponIndex].priceDiscount =
-              integerToDecimal(price, coinDiv);
-          }
-        });
-      }
+      //       parsedResponse.coupons[couponIndex].priceDiscount =
+      //         integerToDecimal(price, coinDiv);
+      //     }
+      //   });
+      // }
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
-      if (parsedResponse.item && parsedResponse.item.skus &&
-        parsedResponse.item.skus.length === 1 &&
-        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
-        const dummySku = parsedResponse.item.skus[0];
+      // if (parsedResponse.item && parsedResponse.item.skus &&
+      //   parsedResponse.item.skus.length === 1 &&
+      //   typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+      //   const dummySku = parsedResponse.item.skus[0];
 
-        if (isCrypto) {
-          parsedResponse.item.cryptoQuantity = dummySku.quantity /
-            parsedResponse.metadata.coinDivisibility;
-        } else {
-          parsedResponse.item.quantity = dummySku.quantity;
-        }
+      //   if (isCrypto) {
+      //     parsedResponse.item.cryptoQuantity = dummySku.quantity /
+      //       parsedResponse.metadata.coinDivisibility;
+      //   } else {
+      //     parsedResponse.item.quantity = dummySku.quantity;
+      //   }
 
-        parsedResponse.item.productID = dummySku.productID;
-      }
+      //   parsedResponse.item.productID = dummySku.productID;
+      // }
 
-      if (parsedResponse.item && parsedResponse.item.skus) {
-        parsedResponse.item.skus.forEach(sku => {
-          // If a sku quantity is set to less than 0, we'll set the
-          // infinite inventory flag.
-          if (sku.quantity < 0) {
-            sku.infiniteInventory = true;
-          } else {
-            sku.infiniteInventory = false;
-          }
-          // convert the surcharge
-          const surcharge = sku.surcharge;
+      // if (parsedResponse.item && parsedResponse.item.skus) {
+      //   parsedResponse.item.skus.forEach(sku => {
+      //     // If a sku quantity is set to less than 0, we'll set the
+      //     // infinite inventory flag.
+      //     if (sku.quantity < 0) {
+      //       sku.infiniteInventory = true;
+      //     } else {
+      //       sku.infiniteInventory = false;
+      //     }
+      //     // convert the surcharge
+      //     const surcharge = sku.surcharge;
 
-          if (surcharge) {
-            sku.surcharge = integerToDecimal(surcharge, coinDiv);
-          }
-        });
-        // END - convert price fields
-      }
+      //     if (surcharge) {
+      //       sku.surcharge = integerToDecimal(surcharge, coinDiv);
+      //     }
+      //   });
+      // }
 
       if (parsedResponse.metadata) {
         parsedResponse.metadata.acceptedCurrencies =

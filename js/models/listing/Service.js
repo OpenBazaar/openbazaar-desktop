@@ -1,14 +1,13 @@
 import app from '../../app';
 import is from 'is_js';
-import { CUR_VAL_RANGE_TYPES } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      price: '',
-      additionalItemPrice: '',
+      bigPrice: '',
+      bigAdditionalItemPrice: '',
       estimatedDelivery: '',
     };
   }

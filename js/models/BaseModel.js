@@ -331,6 +331,7 @@ export default class extends Model {
   sync(method, model, options) {
     if ((method === 'create' || method === 'update') && options.attrs) {
       options.attrs = removeProp(options.attrs, '_clientID');
+      options.attrs = removeProp(options.attrs, 'cid');
     }
 
     return super.sync(method, model, options);
