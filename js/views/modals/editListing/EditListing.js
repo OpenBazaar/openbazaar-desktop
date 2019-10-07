@@ -1150,7 +1150,7 @@ export default class extends BaseModal {
 
   get $itemPrice() {
     return this._$itemPrice ||
-      (this._$itemPrice = this.$('[name="item.price"]'));
+      (this._$itemPrice = this.$('[name="item.bigPrice"]'));
   }
 
   showMaxTagsWarning() {
@@ -1457,7 +1457,7 @@ export default class extends BaseModal {
         this.variantInventory = this.createChild(VariantInventory, {
           collection: item.get('skus'),
           optionsCl: item.get('options'),
-          getPrice: () => this.getFormData(this.$itemPrice).item.price,
+          getPrice: () => this.getFormData(this.$itemPrice).item.bigPrice,
           getCurrency: () => this.currency,
         });
 

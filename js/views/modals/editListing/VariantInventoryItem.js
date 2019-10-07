@@ -40,7 +40,7 @@ export default class extends BaseView {
   }
 
   onKeyupSurcharge(e) {
-    this.$totalPrice.text(this.calculateTotalPrice(Number(e.target.value)));
+    this.$totalPrice.text(this.calculateTotalPrice(e.target.value));
   }
 
   onFocusQuantity(e) {
@@ -84,13 +84,17 @@ export default class extends BaseView {
   calculateTotalPrice(surcharge) {
     const listingPrice = this.options.getPrice();
 
-    if (typeof listingPrice !== 'number' || isNaN(listingPrice) ||
-      typeof surcharge !== 'number' && isNaN(surcharge)) {
+    let formatted;
+
+    try {
+      formatted = formatCurrency(
+        listingPrice.plus(surcharge), this.options.getCurrency()
+      );
+    } catch (e) {
       return '';
     }
 
-    return formatCurrency((this.options.getPrice() || 0) +
-      surcharge, this.options.getCurrency());
+    return formatted;
   }
 
   get $formFields() {

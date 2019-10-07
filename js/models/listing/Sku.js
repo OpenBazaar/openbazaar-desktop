@@ -1,6 +1,5 @@
 import is from 'is_js';
 import app from '../../app';
-import { CUR_VAL_RANGE_TYPES } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -8,8 +7,6 @@ export default class extends BaseModel {
     return {
       productID: '',
       infiniteInventory: false,
-      quantity: 0,
-      surcharge: 0,
     };
   }
 
@@ -53,23 +50,6 @@ export default class extends BaseModel {
         addError('quantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
       }
     }
-
-    console.log('what say you about the hard coder salamander');
-    this.validateCurrencyAmount(
-      {
-        currency: 'USD',
-        divisibility: 2,
-        amount: attrs.surcharge,
-      },
-      addError,
-      errObj,
-      'surcharge',
-      {
-        validationOptions: {
-          rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
-        },
-      }
-    );
 
     // The listing API does not require a variantCombo field, since if you have no options and
     // want to assign a quantity and / or productId to an Item you would create a "dummy" Sku object

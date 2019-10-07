@@ -340,67 +340,59 @@ export default class extends BaseModel {
           );
         });
       });
-    }
 
-    if (attrs.coupons.length) {
-      const coupons = attrs.coupons.toJSON();
-
-      if (coupons.length > this.max.couponCount) {
-        addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
-          { maxCouponCount: this.max.couponCount }));
-      }
-
-      coupons.forEach(coupon => {
-        // this.validateDivisibilityRanges(
-        //   coupon.priceDiscount,
-        //   coinDiv,
-        //   metadata.pricingCurrency,
-        //   addError,
-        //   errObj,
-        //   `coupons[${coupon.cid}].priceDiscount`
-        // );
-
-        const priceDiscount = bigNumber(coupon.priceDiscount);
-
-        if (!priceDiscount.isNaN()) {
-          // Coupon price discount cannot exceed the item price.
-          const price = bigNumber(attrs.item.get('price'));
-
-          if (
-            !price.isNaN() &&
-            priceDiscount.gte(price)
-          ) {
-            addError(`coupons[${coupon.cid}].priceDiscount`,
-              app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
+      (item.skus || []).forEach(sku => {
+        this.validateCurrencyAmount(
+          {
+            amount: sku.bigSurcharge,
+            currency: curDefCurrency,
+          },
+          addError,
+          errObj,
+          `item.skus[${sku.cid}].bigSurcharge`,
+          {
+            validationOptions: {
+              rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+            },
           }
-        }
+        );
       });
     }
 
-    if (Array.isArray(item.skus)) {
-      item.skus.forEach(sku => {
-        // this.validateDivisibilityRanges(
-        //   sku.surcharge,
-        //   coinDiv,
-        //   metadata.pricingCurrency,
-        //   addError,
-        //   errObj,
-        //   `item.skus[${sku.cid}].surcharge`,
-        //   {
-        //     addErrorValueTooLow: false,
-        //     onInvalid(e) {
-        //       if (e.valueTooLow) {
-        //         addError(`item.skus[${sku.cid}].surcharge`,
-        //           app.polyglot.t('listingModelErrors.skuPriceTooLow', {
-        //             cur: metadata.pricingCurrency,
-        //             min: e.minValue,
-        //           }));
-        //       }
-        //     },
-        //   }
-        // );
-      });
-    }
+    // if (attrs.coupons.length) {
+    //   const coupons = attrs.coupons.toJSON();
+
+    //   if (coupons.length > this.max.couponCount) {
+    //     addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
+    //       { maxCouponCount: this.max.couponCount }));
+    //   }
+
+    //   coupons.forEach(coupon => {
+    //     // this.validateDivisibilityRanges(
+    //     //   coupon.priceDiscount,
+    //     //   coinDiv,
+    //     //   metadata.pricingCurrency,
+    //     //   addError,
+    //     //   errObj,
+    //     //   `coupons[${coupon.cid}].priceDiscount`
+    //     // );
+
+    //     const priceDiscount = bigNumber(coupon.priceDiscount);
+
+    //     if (!priceDiscount.isNaN()) {
+    //       // Coupon price discount cannot exceed the item price.
+    //       const price = bigNumber(attrs.item.get('price'));
+
+    //       if (
+    //         !price.isNaN() &&
+    //         priceDiscount.gte(price)
+    //       ) {
+    //         addError(`coupons[${coupon.cid}].priceDiscount`,
+    //           app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
+    //       }
+    //     }
+    //   });
+    // }
 
     errObj = this.mergeInNestedErrors(errObj);
 
@@ -521,7 +513,6 @@ export default class extends BaseModel {
           // Don't send over the price on crypto listings.
           delete options.attrs.price;
         }
-        // END - convert price fields
 
         // If providing a quanitity and / or productID on the Item and not
         // providing any SKUs, then we'll send item.quantity and item.productID
@@ -547,9 +538,7 @@ export default class extends BaseModel {
           }
         } else {
           options.attrs.item.skus.forEach(sku => {
-            console.log('only on valid numeric string');
-            // sku.surcharge = decimalToInteger(sku.surcharge, coinDiv);
-            sku.surcharge = 846;
+            sku.bigSurcharge = decimalToInteger(sku.bigSurcharge, coinDiv);
           });
         }
 
@@ -688,7 +677,7 @@ export default class extends BaseModel {
                 service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
               } catch (e) {
                 service.bigPrice = '';
-                console.error(`Unable to convert the bigPrice: ${e.message}`);
+                console.error(`Unable to convert the service bigPrice: ${e.message}`);
               }
 
               try {
@@ -696,7 +685,7 @@ export default class extends BaseModel {
                   integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
               } catch (e) {
                 service.bigAdditionalItemPrice = '';
-                console.error(`Unable to convert the bigPrice: ${e.message}`);
+                console.error(`Unable to convert the service bigAdditionalItemPrice: ${e.message}`);
               }
             });
           }
@@ -728,38 +717,43 @@ export default class extends BaseModel {
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
-      // if (parsedResponse.item && parsedResponse.item.skus &&
-      //   parsedResponse.item.skus.length === 1 &&
-      //   typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
-      //   const dummySku = parsedResponse.item.skus[0];
+      if (parsedResponse.item && parsedResponse.item.skus &&
+        parsedResponse.item.skus.length === 1 &&
+        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+        const dummySku = parsedResponse.item.skus[0];
 
-      //   if (isCrypto) {
-      //     parsedResponse.item.cryptoQuantity = dummySku.quantity /
-      //       parsedResponse.metadata.coinDivisibility;
-      //   } else {
-      //     parsedResponse.item.quantity = dummySku.quantity;
-      //   }
+        if (isCrypto) {
+          parsedResponse.item.cryptoQuantity = dummySku.quantity /
+            parsedResponse.metadata.coinDivisibility;
+        } else {
+          parsedResponse.item.quantity = dummySku.quantity;
+        }
 
-      //   parsedResponse.item.productID = dummySku.productID;
-      // }
+        parsedResponse.item.productID = dummySku.productID;
+      }
 
-      // if (parsedResponse.item && parsedResponse.item.skus) {
-      //   parsedResponse.item.skus.forEach(sku => {
-      //     // If a sku quantity is set to less than 0, we'll set the
-      //     // infinite inventory flag.
-      //     if (sku.quantity < 0) {
-      //       sku.infiniteInventory = true;
-      //     } else {
-      //       sku.infiniteInventory = false;
-      //     }
-      //     // convert the surcharge
-      //     const surcharge = sku.surcharge;
+      if (parsedResponse.item && parsedResponse.item.skus) {
+        parsedResponse.item.skus.forEach(sku => {
+          // If a sku quantity is set to less than 0, we'll set the
+          // infinite inventory flag.
+          if (sku.quantity < 0) {
+            sku.infiniteInventory = true;
+          } else {
+            sku.infiniteInventory = false;
+          }
+          // convert the surcharge
+          const bigSurcharge = sku.bigSurcharge;
 
-      //     if (surcharge) {
-      //       sku.surcharge = integerToDecimal(surcharge, coinDiv);
-      //     }
-      //   });
-      // }
+          if (bigSurcharge) {
+            try {
+              sku.bigSurcharge = integerToDecimal(bigSurcharge, coinDiv);
+            } catch (e) {
+              sku.bigSurcharge = '';
+              console.error(`Unable to convert the bigSurcharge: ${e.message}`);
+            }
+          }
+        });
+      }
 
       if (parsedResponse.metadata) {
         parsedResponse.metadata.acceptedCurrencies =
