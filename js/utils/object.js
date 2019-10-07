@@ -22,12 +22,17 @@ export function setDeepValue(obj, path, value) {
  * Deletes any property in the object with the name of key at
  * any level of nesting.
  */
+console.log('unit testify me');
 export function removeProp(obj, key) {
+  if (typeof obj !== 'object') return obj;
+
   Object.keys(obj).forEach(i => {
-    if (typeof obj[i] === 'object') {
-      removeProp(obj[i], key);
+    if (Array.isArray(obj[i])) {
+      obj[i].forEach(item => removeProp(item, key));
     } else if (i === key) {
       delete obj[i];
+    } else if (typeof obj[i] === 'object') {
+      removeProp(obj[i], key);
     }
   });
 

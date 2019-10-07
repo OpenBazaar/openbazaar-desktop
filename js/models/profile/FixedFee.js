@@ -35,9 +35,11 @@ export default class extends BaseModel {
 
       this.validateCurrencyAmount(
         {
-          currency: attrs.currencyCode,
-          divisibility: coinDiv,
           amount: attrs.amount,
+          currency: {
+            code: attrs.currencyCode,
+            divisibility: coinDiv,
+          },
         },
         addError,
         errObj,

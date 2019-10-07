@@ -64,6 +64,7 @@ export default class extends baseVw {
 
   save() {
     const formData = this.getFormData();
+    console.dir(formData);
 
     // The user must check both boxes at the bottom of the page if they want to be a moderator,
     // but the values aren't part of the model, they only exist in the DOM and aren't saved.

@@ -1,3 +1,5 @@
+console.log('overshowing save verification modal');
+
 import _ from 'underscore';
 import is from 'is_js';
 import bigNumber from 'bignumber.js';
@@ -141,6 +143,56 @@ export default class extends BaseModel {
     };
   }
 
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    let setCurCode;
+
+    try {
+      setCurCode =
+        attrs.item
+          .priceCurrency
+          .code;
+    } catch (e) {
+      // pass
+    }
+
+    if (
+      typeof setCurCode === 'string' &&
+      setCurCode
+    ) {
+      try {
+        attrs.item = {
+          ...attrs.item,
+          priceCurrency: {
+            code: setCurCode,
+            divisibility: getCoinDivisibility(setCurCode),
+          },
+        };
+      } catch (e) {
+        if (
+          attrs.item &&
+          typeof attrs.item.priceCurrency === 'object'
+        ) {
+          delete attrs.item.priceCurrency.divisibility;
+          // validate will fail validation on the model in this scenario -
+          // it's almost certainly a dev error
+        }
+      }
+    }
+
+    return super.set(attrs, opts);
+  }
+
   /**
    * Returns a new instance of the listing with mostly identical attributes. Certain
    * attributes like slug and hash will be stripped since they are not appropriate
@@ -166,21 +218,16 @@ export default class extends BaseModel {
       ...this.toJSON(),
       ...flattenAttrs(attributes),
     };
+
+    console.dir(attrs);
+
     const metadata = attrs.metadata;
     const contractType = metadata.contractType;
     const item = attrs.item;
 
-    let pricingCurrency;
-
-    try {
-      pricingCurrency = item.priceCurrency.code;
-    } catch (e) {
-      // pass
-    }
-
     const curDefCurrency = {
-      code: pricingCurrency,
-      divisibility: () => getCoinDivisibility(pricingCurrency),
+      code: () => item.priceCurrency.code,
+      divisibility: () => item.priceCurrency.divisibility,
     };
 
     if (attrs.refundPolicy) {
@@ -211,10 +258,10 @@ export default class extends BaseModel {
         addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
-      if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
-        addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
-          'cryptocurrency listings.');
-      }
+      // if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
+      //   addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
+      //     'cryptocurrency listings.');
+      // }
 
       if (item && typeof item.price !== 'undefined') {
         addError('item.price', 'The price should not be set on cryptocurrency ' +
@@ -416,6 +463,8 @@ export default class extends BaseModel {
         options.url = options.url || app.getServerUrl('ob/listing/');
         options.attrs = options.attrs || this.toJSON();
 
+        const coinDiv = options.attrs.item.priceCurrency.divisibility;
+
         // convert price fields
         options.attrs.item = {
           ...options.attrs.item,
@@ -425,24 +474,10 @@ export default class extends BaseModel {
             {
               amountKey: 'bigPrice',
               currencyKey: 'priceCurrency',
+              divisibility: coinDiv,
             }
           ),
         };
-
-        let coinDiv;
-
-        try {
-          coinDiv = getCoinDivisibility(
-            options
-              .attrs
-              .item
-              .priceCurrency
-              .code
-          );
-        } catch (e) {
-          throw new Error(`Unable to obtain the coin divisibility from the ' +
-            'pricing currency: ${e.message}`);
-        }
 
         options.attrs.shippingOptions.forEach(shipOpt => {
           shipOpt.services.forEach(service => {
