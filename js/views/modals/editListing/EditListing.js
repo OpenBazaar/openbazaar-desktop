@@ -1,3 +1,5 @@
+console.log('what up with js-price?');
+
 import $ from 'jquery';
 import '../../../utils/lib/velocity';
 import '../../../lib/select2';
@@ -787,7 +789,7 @@ export default class extends BaseModal {
 
     startAjaxEvent('Listing_Save');
 
-    const save = this.model.save({}, {
+    const save = this.model.save(null, {
       attrs: serverData,
     });
 

@@ -117,7 +117,7 @@ export default class baseVw extends View {
       } else if (field.type === 'checkbox') {
         data[name] = field.checked;
       } else {
-        data[name] = typeof val === 'string' ? sanitizeHtml(val) : val;
+        data[name] = typeof val === 'string' && val ? sanitizeHtml(val) : val;
       }
     });
 

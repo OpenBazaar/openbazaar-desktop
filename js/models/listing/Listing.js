@@ -215,12 +215,11 @@ export default class extends BaseModel {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
+
     const attrs = {
       ...this.toJSON(),
       ...flattenAttrs(attributes),
     };
-
-    console.dir(attrs);
 
     const metadata = attrs.metadata;
     const contractType = metadata.contractType;
@@ -366,16 +365,14 @@ export default class extends BaseModel {
       const coupons = attrs.coupons;
 
       if (coupons.length > this.max.couponCount) {
-        console.log('check me sid');
         addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
           { maxCouponCount: this.max.couponCount }));
       }
 
       coupons.forEach(coupon => {
-        const priceDiscount = coupon.priceDiscount;
-        const itemPrice = item.price;
+        const priceDiscount = coupon.bigPriceDiscount;
+        const itemPrice = item.bigPrice;
 
-        console.log('test the currency funky time maneesha');
         this.validateCurrencyAmount(
           {
             amount: priceDiscount,
@@ -383,17 +380,22 @@ export default class extends BaseModel {
           },
           addError,
           errObj,
-          `coupons[${coupon.cid}].priceDiscount`
+          `coupons[${coupon.cid}].priceDiscount`,
+          {
+            translations: {
+              required: false,
+            },
+          }
         );
 
         if (
+          priceDiscount &&
           priceDiscount.isNaN &&
           !priceDiscount.isNaN() &&
+          itemPrice &&
           itemPrice.isNaN &&
           !itemPrice.isNaN()
         ) {
-          console.log('test me chuckles');
-
           if (priceDiscount.gte(itemPrice)) {
             addError(`coupons[${coupon.cid}].priceDiscount`,
               app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));

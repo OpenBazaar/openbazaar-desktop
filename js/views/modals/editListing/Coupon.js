@@ -1,4 +1,5 @@
 import '../../../lib/select2';
+import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -30,16 +31,15 @@ export default class extends BaseView {
     const formData = super.getFormData(fields);
 
     if (formData.discountType === 'FIXED') {
-      formData.priceDiscount = formData.discountAmount;
+      const bigNumDiscount = bigNumber(formData.discountAmount);
+      formData.bigPriceDiscount = bigNumDiscount.isNaN() ?
+        formData.discountAmount : bigNumDiscount;
     } else {
-      const priceDiscount = Number(formData.discountAmount);
+      // discountAmount
+      const percentDiscount = Number(formData.discountAmount);
 
-      formData.percentDiscount =
-        !isNaN(priceDiscount) && formData.discountAmount ?
-          priceDiscount : formData.discountAmount;
-
-      formData.percentDiscount = formData.percentDiscount === '' ?
-        undefined : formData.percentDiscount;
+      formData.percentDiscount = formData.discountAmount && !isNaN(percentDiscount) ?
+          percentDiscount : formData.discountAmount;
     }
 
     delete formData.discountType;
@@ -52,20 +52,13 @@ export default class extends BaseView {
   setModelData() {
     const formData = this.getFormData();
 
-    console.log('form data');
-    console.dir(formData);
-    console.log('<== form data');
-
-    if (formData.priceDiscount !== undefined) {
+    if (formData.bigPriceDiscount !== undefined) {
       this.model.unset('percentDiscount');
     } else {
-      this.model.unset('priceDiscount');
+      this.model.unset('bigPriceDiscount');
     }
 
     this.model.set(formData);
-    console.log('model');
-    console.dir(this.model.toJSON());
-    console.log('model moo');
   }
 
   get $inputDiscountAmount() {

@@ -14,16 +14,16 @@
       <%
         let discountAmount;
 
-        if (ob.priceDiscount) {
-          discountAmount = ob.toStandardNotation(ob.priceDiscount);
+        if (ob.bigPriceDiscount) {
+          discountAmount = ob.toStandardNotation(ob.bigPriceDiscount);
         } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount = ob.percentDiscount;
         }
       %>
-      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>">
+      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" placeholder="0.00">
       <select name="discountType" class="clrBr clrP nestInputRight">
         <option value="PERCENTAGE" <% if (typeof ob.percentDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
-        <option value="FIXED" <% if (typeof ob.priceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+        <option value="FIXED" <% if (typeof ob.bigPriceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
       </select>
     </div>
 

@@ -253,6 +253,8 @@ export default class extends Model {
         try {
           const split = errKey.split('.');
 
+          console.log(`the err key is ${errKey}`);
+
           let baseInstance = this;
 
           split
@@ -452,8 +454,6 @@ export default class extends Model {
 }
 
 console.log('doc me up big billz');
-console.log('better instead of toJSON to recurse and only convert model and collection ' +
-  'instances - ie dont want to lose bigNum instances');
 console.log('make an instance variation');
 export function flattenAttrs(attrs = {}) {
   const result = {};
@@ -462,11 +462,18 @@ export function flattenAttrs(attrs = {}) {
     .keys(attrs)
     .forEach(attrKey => {
       if (attrs[attrKey] instanceof Model) {
-        result[attrKey] = flattenAttrs(attrs[attrKey].attributes);
+        result[attrKey] = flattenAttrs({
+          ...attrs[attrKey].attributes,
+          cid: attrs[attrKey].cid,
+        });
+        result[attrKey].cid = attrs[attrKey].cid;
       } else if (attrs[attrKey] instanceof Collection) {
         result[attrKey] =
-          attrs[attrKey].map(
-            mod => flattenAttrs(mod.attributes)
+          attrs[attrKey].models.map(
+            mod => flattenAttrs({
+              ...mod.attributes,
+              cid: mod.cid,
+            })
           );
       } else {
         result[attrKey] = attrs[attrKey];
