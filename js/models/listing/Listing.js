@@ -125,22 +125,52 @@ export default class extends BaseModel {
   }
 
   get price() {
+    const item = this.get('item');
     const metadata = this.get('metadata');
 
+    let coinType = '';
+
+    try {
+      coinType = metadata.get('coinType');
+    } catch (e) {
+      // pass
+    }
+
     if (this.isCrypto) {
-      const modifier = metadata.get('priceModifier') || 0;
+      let modifier = 0;
+
+      try {
+        modifier = item.get('priceModifier') || 0;
+      } catch (e) {
+        // pass
+      }
 
       return {
-        amount: 1 + (modifier / 100),
-        currencyCode: metadata.get('coinType'),
+        amount: bigNumber(1 + (modifier / 100)),
+        currencyCode: coinType,
         modifier,
       };
     }
 
+    let amount = bigNumber();
+
+    try {
+      amount = item.get('bigPrice');
+    } catch (e) {
+      // pass
+    }
+
+    let currencyCode = '';
+
+    try {
+      currencyCode = item.get('priceCurrency').code;
+    } catch (e) {
+      // pass
+    }
+
     return {
-      amount: this.get('item')
-        .get('price'),
-      currencyCode: metadata.get('pricingCurrency'),
+      amount,
+      currencyCode,
     };
   }
 
@@ -467,7 +497,6 @@ export default class extends BaseModel {
 
         const coinDiv = options.attrs.item.priceCurrency.divisibility;
 
-        // convert price fields
         options.attrs.item = {
           ...options.attrs.item,
           ...decimalToCurDef(
@@ -502,25 +531,7 @@ export default class extends BaseModel {
           }
         });
 
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          options.attrs.item.cryptoQuantity = decimalToInteger(
-            options.attrs.item.cryptoQuantity,
-            options.attrs.metadata.coinDivisibility
-          );
-
-          // TODO: temp until server supports new format and removes restriction
-          // forcing 100 mil
-          // TODO: temp until server supports new format and removes restriction
-          // forcing 100 mil
-          // TODO: temp until server supports new format and removes restriction
-          // forcing 100 mil
-          options.attrs.metadata.coinDivisibility = 100000000;
-
-          // Don't send over the price on crypto listings.
-          delete options.attrs.price;
-        }
-
-        // If providing a quanitity and / or productID on the Item and not
+        // If providing a quanitity and/or productID on the Item and not
         // providing any SKUs, then we'll send item.quantity and item.productID
         // in as a "dummy" SKU (as the server expects). If you are providing any
         // SKUs, then item.quantity and item.productID will be ignored.
@@ -528,7 +539,11 @@ export default class extends BaseModel {
           const dummySku = {};
 
           if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-            dummySku.quantity = options.attrs.item.cryptoQuantity;
+            dummySku.bigQuantity = decimalToInteger(
+              options.attrs.item.cryptoQuantity,
+              options.attrs.metadata.coinDivisibility
+            );
+
             delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
             dummySku.quantity = options.attrs.item.quantity;
@@ -572,9 +587,12 @@ export default class extends BaseModel {
           }
         });
 
-        // Update the crypto title based on the accepted currency and
-        // coin type.
         if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
+          // Don't send over the price on crypto listings.
+          delete options.attrs.item.bigPrice;
+
+          // Update the crypto title based on the accepted currency and
+          // coin type.
           const coinType = options.attrs.metadata.coinType;
           let fromCur = options.attrs.metadata.acceptedCurrencies &&
             options.attrs.metadata.acceptedCurrencies[0];
@@ -589,7 +607,7 @@ export default class extends BaseModel {
         } else {
           // Don't send over crypto currency specific fields if it's not a
           // crypto listing.
-          delete options.attrs.metadata.priceModifier;
+          delete options.attrs.item.priceModifier;
         }
       } else {
         options.url = options.url ||
@@ -725,8 +743,16 @@ export default class extends BaseModel {
         const dummySku = parsedResponse.item.skus[0];
 
         if (isCrypto) {
-          parsedResponse.item.cryptoQuantity = dummySku.quantity /
-            parsedResponse.metadata.coinDivisibility;
+          try {
+            parsedResponse.item.cryptoQuantity = integerToDecimal(
+              dummySku.bigQuantity,
+              parsedResponse.metadata.coinDivisibility
+            );
+          } catch (e) {
+            console.error(
+              `Unable to convert the crypto currency listing bigQuantity: ${e.message}`
+            );
+          }
         } else {
           parsedResponse.item.quantity = dummySku.quantity;
         }
