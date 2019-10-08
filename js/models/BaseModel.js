@@ -451,19 +451,26 @@ export default class extends Model {
   }
 }
 
-console.log('doc me up');
+console.log('doc me up big billz');
 console.log('better instead of toJSON to recurse and only convert model and collection ' +
   'instances - ie dont want to lose bigNum instances');
+console.log('make an instance variation');
 export function flattenAttrs(attrs = {}) {
   const result = {};
 
   Object
     .keys(attrs)
     .forEach(attrKey => {
-      result[attrKey] =
-        attrs[attrKey] instanceof Model ||
-        attrs[attrKey] instanceof Collection ?
-          attrs[attrKey].toJSON() : attrs[attrKey];
+      if (attrs[attrKey] instanceof Model) {
+        result[attrKey] = flattenAttrs(attrs[attrKey].attributes);
+      } else if (attrs[attrKey] instanceof Collection) {
+        result[attrKey] =
+          attrs[attrKey].map(
+            mod => flattenAttrs(mod.attributes)
+          );
+      } else {
+        result[attrKey] = attrs[attrKey];
+      }
     });
 
   return result;

@@ -105,7 +105,8 @@ export default class extends BaseModel {
     return {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
-      couponCount: 30,
+      // couponCount: 30,
+      couponCount: 2,
     };
   }
 
@@ -278,6 +279,8 @@ export default class extends BaseModel {
           'listings.');
       }
 
+      // no shipping
+
       // this.validateDivisibilityRanges(
       //   item.cryptoQuantity,
       //   coinDiv,
@@ -359,40 +362,45 @@ export default class extends BaseModel {
       });
     }
 
-    // if (attrs.coupons.length) {
-    //   const coupons = attrs.coupons.toJSON();
+    if (attrs.coupons.length) {
+      const coupons = attrs.coupons;
 
-    //   if (coupons.length > this.max.couponCount) {
-    //     addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
-    //       { maxCouponCount: this.max.couponCount }));
-    //   }
+      if (coupons.length > this.max.couponCount) {
+        console.log('check me sid');
+        addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
+          { maxCouponCount: this.max.couponCount }));
+      }
 
-    //   coupons.forEach(coupon => {
-    //     // this.validateDivisibilityRanges(
-    //     //   coupon.priceDiscount,
-    //     //   coinDiv,
-    //     //   metadata.pricingCurrency,
-    //     //   addError,
-    //     //   errObj,
-    //     //   `coupons[${coupon.cid}].priceDiscount`
-    //     // );
+      coupons.forEach(coupon => {
+        const priceDiscount = coupon.priceDiscount;
+        const itemPrice = item.price;
 
-    //     const priceDiscount = bigNumber(coupon.priceDiscount);
+        console.log('test the currency funky time maneesha');
+        this.validateCurrencyAmount(
+          {
+            amount: priceDiscount,
+            currency: curDefCurrency,
+          },
+          addError,
+          errObj,
+          `coupons[${coupon.cid}].priceDiscount`
+        );
 
-    //     if (!priceDiscount.isNaN()) {
-    //       // Coupon price discount cannot exceed the item price.
-    //       const price = bigNumber(attrs.item.get('price'));
+        if (
+          priceDiscount.isNaN &&
+          !priceDiscount.isNaN() &&
+          itemPrice.isNaN &&
+          !itemPrice.isNaN()
+        ) {
+          console.log('test me chuckles');
 
-    //       if (
-    //         !price.isNaN() &&
-    //         priceDiscount.gte(price)
-    //       ) {
-    //         addError(`coupons[${coupon.cid}].priceDiscount`,
-    //           app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
-    //       }
-    //     }
-    //   });
-    // }
+          if (priceDiscount.gte(itemPrice)) {
+            addError(`coupons[${coupon.cid}].priceDiscount`,
+              app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
+          }
+        }
+      });
+    }
 
     errObj = this.mergeInNestedErrors(errObj);
 

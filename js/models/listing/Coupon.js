@@ -68,17 +68,6 @@ export default class extends BaseModel {
       } else if (attrs.percentDiscount >= 100) {
         addError('percentDiscount', app.polyglot.t('couponModelErrors.percentageHigh'));
       }
-    } else if (
-      // todo: replace this with full cur def validation
-      // todo: replace this with full cur def validation
-      // todo: replace this with full cur def validation
-      !isValidNumber(attrs.priceDiscount, {
-        allowNumber: false,
-        allowBigNumber: false,
-      })
-    ) {
-      addError('priceDiscount',
-        app.polyglot.t('couponModelErrors.provideNumericDiscountAmount'));
     }
 
     if (Object.keys(errObj).length) return errObj;
