@@ -495,14 +495,10 @@ export default class extends BaseModel {
           });
         });
 
-        options.attrs.coupons.forEach((coupon, index) => {
-          console.log('only on valid numeric string');
-          // coupon.priceDiscount =
-          //   decimalToInteger(coupon.priceDiscount, coinDiv);
-          if (!index) {
-            coupon.priceDiscount = 145;
-          } else {
-            coupon.percentDiscount = 3.21;
+        options.attrs.coupons.forEach(coupon => {
+          if (coupon.bigPriceDiscount) {
+            coupon.bigPriceDiscount =
+              decimalToInteger(coupon.bigPriceDiscount, coinDiv);
           }
         });
 
@@ -709,21 +705,17 @@ export default class extends BaseModel {
         });
       }
 
-      // if (parsedResponse.coupons && parsedResponse.coupons.length) {
-      //   parsedResponse.coupons.forEach((coupon, couponIndex) => {
-      //     if (
-      //       isValidNumber(coupon.priceDiscount, {
-      //         allowNumber: false,
-      //         allowBigNumber: false,
-      //       })
-      //     ) {
-      //       const price = parsedResponse.coupons[couponIndex].priceDiscount;
-
-      //       parsedResponse.coupons[couponIndex].priceDiscount =
-      //         integerToDecimal(price, coinDiv);
-      //     }
-      //   });
-      // }
+      if (parsedResponse.coupons) {
+        parsedResponse.coupons.forEach(coupon => {
+          try {
+            coupon.bigPriceDiscount =
+              integerToDecimal(coupon.bigPriceDiscount, coinDiv);
+          } catch (e) {
+            coupon.bigPriceDiscount = '';
+            console.error(`Unable to convert the coupon bigPriceDiscount: ${e.message}`);
+          }
+        });
+      }
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
