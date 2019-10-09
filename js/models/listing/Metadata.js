@@ -129,7 +129,7 @@ export default class extends BaseModel {
     }
 
     if (attrs.contractType === 'CRYPTOCURRENCY') {
-      if (attrs.priceModifier === '') {
+      if (attrs.priceModifier === '' || attrs.priceModifier === undefined) {
         addError('priceModifier', app.polyglot.t('metadataModelErrors.providePriceModifier'));
       } else if (typeof attrs.priceModifier !== 'number') {
         addError('priceModifier', app.polyglot.t('metadataModelErrors.numericPriceModifier'));

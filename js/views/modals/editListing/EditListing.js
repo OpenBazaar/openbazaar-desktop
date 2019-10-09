@@ -780,20 +780,21 @@ export default class extends BaseModal {
       _.omit(sku, 'mappingId', 'choices')
     ));
 
-    const segmentation = {
-      type: serverData.metadata.contractType,
-      currency: serverData.item.priceCurrency.code,
-      moderated: serverData.moderators && !!serverData.moderators.length,
-      isNew: this.model.isNew(),
-    };
-
-    startAjaxEvent('Listing_Save');
-
     const save = this.model.save(null, {
       attrs: serverData,
     });
 
     if (save) {
+      const segmentation = {
+        type: serverData.metadata.contractType,
+        currency: serverData.metadata.contractType !== 'CRYPTOCURRENCY' ?
+          serverData.item.priceCurrency.code : serverData.metadata.coinType,
+        moderated: serverData.moderators && !!serverData.moderators.length,
+        isNew: this.model.isNew(),
+      };
+
+      startAjaxEvent('Listing_Save');
+
       const savingStatusMsg = app.statusBar.pushMessage({
         msg: 'Saving listing...',
         type: 'message',
@@ -858,8 +859,11 @@ export default class extends BaseModal {
         const msg = Object.keys(this.model.validationError)
           .reduce((str, errKey) =>
             `${str}${errKey}: ${this.model.validationError[errKey].join(', ')}<br>`, '');
+        // openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
+        //   msg);
+        console.log('clean the barbie sailor');
         openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
-          msg);
+          `CLIENT SIDE FUNK ===> ${msg}`);
       }
     }
   }

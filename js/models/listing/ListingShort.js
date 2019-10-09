@@ -39,25 +39,30 @@ export default class extends BaseModel {
       parsedResponse.categories : [];
 
     if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
-      const modifier = parsedResponse.price.modifier || 0;
+      const modifier = parsedResponse.modifier || 0;
+
+      console.log('cryptoCurrencyCode should maybe be coinType - ob-go - 1768');
 
       parsedResponse.price = {
-        ...parsedResponse.price,
         amount: 1 + (modifier / 100),
-        currencyCode: parsedResponse.coinType,
+        currencyCode: parsedResponse.cryptoCurrencyCode,
         modifier,
       };
 
-      if (parsedResponse.totalInventoryQuantity >= 0 &&
-        parsedResponse.coinDivisibility > 0) {
-        parsedResponse.totalInventoryQuantity =
-          parsedResponse.totalInventoryQuantity / parsedResponse.coinDivisibility;
-      } else {
-        // If they're not providing a inventory of 0 or more or a coinDivisibility > 0,
-        // we won't display the inventory since it's an invalid value or one we can't
-        // represent properly.
-        delete parsedResponse.totalInventoryQuantity;
-      }
+      console.log('help me rhonda');
+      // seems like totalInventoryQuantity was removed. Search code for other references that
+      // maybe need cleaning up.
+
+      // if (parsedResponse.totalInventoryQuantity >= 0 &&
+      //   parsedResponse.coinDivisibility > 0) {
+      //   parsedResponse.totalInventoryQuantity =
+      //     parsedResponse.totalInventoryQuantity / parsedResponse.coinDivisibility;
+      // } else {
+      //   // If they're not providing a inventory of 0 or more or a coinDivisibility > 0,
+      //   // we won't display the inventory since it's an invalid value or one we can't
+      //   // represent properly.
+      //   delete parsedResponse.totalInventoryQuantity;
+      // }
     } else {
       const priceObj = parsedResponse.price;
 

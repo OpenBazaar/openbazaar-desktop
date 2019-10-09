@@ -186,37 +186,81 @@ export default class extends BaseModel {
       (attrs = {})[key] = val;
     }
 
-    let setCurCode;
+    let contractType;
 
     try {
-      setCurCode =
-        attrs.item
-          .priceCurrency
-          .code;
+      contractType =
+        this.get('metadata')
+          .get('contractType');
     } catch (e) {
       // pass
     }
 
-    if (
-      typeof setCurCode === 'string' &&
-      setCurCode
-    ) {
+    try {
+      contractType = attrs.metadata.contractType;
+    } catch (e) {
+      // pass
+    }
+
+    if (contractType !== 'CRYPTOCURRENCY') {
+      let curCode;
+
       try {
-        attrs.item = {
-          ...attrs.item,
-          priceCurrency: {
-            code: setCurCode,
-            divisibility: getCoinDivisibility(setCurCode),
-          },
-        };
+        curCode =
+          attrs.item
+            .priceCurrency
+            .code;
       } catch (e) {
-        if (
-          attrs.item &&
-          typeof attrs.item.priceCurrency === 'object'
-        ) {
-          delete attrs.item.priceCurrency.divisibility;
-          // validate will fail validation on the model in this scenario -
-          // it's almost certainly a dev error
+        // pass
+      }
+
+      if (
+        typeof curCode === 'string' &&
+        curCode
+      ) {
+        try {
+          attrs.item = {
+            ...attrs.item,
+            priceCurrency: {
+              code: curCode,
+              divisibility: getCoinDivisibility(curCode),
+            },
+          };
+        } catch (e) {
+          if (
+            attrs.item &&
+            typeof attrs.item.priceCurrency === 'object'
+          ) {
+            delete attrs.item.priceCurrency.divisibility;
+            // validate will fail validation on the model in this scenario -
+            // it's almost certainly a dev error
+          }
+        }
+      }
+    } else {
+      let coinType;
+
+      try {
+        coinType =
+          attrs.metadata
+            .coinType;
+      } catch (e) {
+        // pass
+      }
+
+      if (
+        typeof coinType === 'string' &&
+        coinType
+      ) {
+        try {
+          // coinDivisibility
+          attrs.metadata.coinDivisibility = getCoinDivisibility(coinType);
+        } catch (e) {
+          if (attrs.metadata) {
+            delete attrs.metadata.coinDivisibility;
+            // validate will fail validation on the model in this scenario -
+            // it's almost certainly a dev error
+          }
         }
       }
     }
@@ -310,14 +354,23 @@ export default class extends BaseModel {
 
       // no shipping
 
-      // this.validateDivisibilityRanges(
-      //   item.cryptoQuantity,
-      //   coinDiv,
-      //   metadata.coinType,
-      //   addError,
-      //   errObj,
-      //   'item.cryptoQuantity'
-      // );
+      this.validateCurrencyAmount(
+        {
+          amount: item.cryptoQuantity,
+          currency: {
+            code: () => metadata.coinType,
+            divisibility: () => metadata.coinDivisibility,
+          },
+        },
+        addError,
+        errObj,
+        'item.cryptoQuantity',
+        {
+          validationOptions: {
+            rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+          },
+        }
+      );
     } else {
       if (item && typeof item.cryptoQuantity !== 'undefined') {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
@@ -439,8 +492,15 @@ export default class extends BaseModel {
     if (contractType === 'CRYPTOCURRENCY') {
       // Remove the validation of certain fields that should not be set for
       // cryptocurrency listings.
-      delete errObj['metadata.pricingCurrency'];
-      delete errObj['item.price'];
+      Object
+        .keys(errObj)
+        .forEach(errKey => {
+          if (errKey.startsWith('item.priceCurrency')) {
+            delete errObj[errKey];
+          }
+        });
+
+      delete errObj['item.bigPrice'];
       delete errObj['item.condition'];
       delete errObj['item.quantity'];
       delete errObj['item.title'];
@@ -495,41 +555,76 @@ export default class extends BaseModel {
         options.url = options.url || app.getServerUrl('ob/listing/');
         options.attrs = options.attrs || this.toJSON();
 
-        const coinDiv = options.attrs.item.priceCurrency.divisibility;
+        console.log('\n');
+        console.log('billy');
+        console.dir(options.attrs);
+        console.log('\n');
 
-        options.attrs.item = {
-          ...options.attrs.item,
-          ...decimalToCurDef(
-            options.attrs.item.bigPrice,
-            options.attrs.item.priceCurrency.code,
-            {
-              amountKey: 'bigPrice',
-              currencyKey: 'priceCurrency',
-              divisibility: coinDiv,
-            }
-          ),
-        };
+        let coinDiv;
 
-        options.attrs.shippingOptions.forEach(shipOpt => {
-          shipOpt.services.forEach(service => {
-            service.bigPrice = decimalToInteger(
-              service.bigPrice,
-              coinDiv
-            );
-            service.bigAdditionalItemPrice =
-              decimalToInteger(
-                service.bigAdditionalItemPrice,
+        if (options.attrs.metadata.contractType !== 'CRYPTOCURRENCY') {
+          // Don't send over crypto currency specific fields if it's not a
+          // crypto listing.
+          delete options.attrs.item.priceModifier;
+
+          coinDiv = options.attrs.item.priceCurrency.divisibility;
+
+          options.attrs.item = {
+            ...options.attrs.item,
+            ...decimalToCurDef(
+              options.attrs.item.bigPrice,
+              options.attrs.item.priceCurrency.code,
+              {
+                amountKey: 'bigPrice',
+                currencyKey: 'priceCurrency',
+                divisibility: coinDiv,
+              }
+            ),
+          };
+
+          options.attrs.shippingOptions.forEach(shipOpt => {
+            shipOpt.services.forEach(service => {
+              service.bigPrice = decimalToInteger(
+                service.bigPrice,
                 coinDiv
               );
+              service.bigAdditionalItemPrice =
+                decimalToInteger(
+                  service.bigAdditionalItemPrice,
+                  coinDiv
+                );
+            });
           });
-        });
 
-        options.attrs.coupons.forEach(coupon => {
-          if (coupon.bigPriceDiscount) {
-            coupon.bigPriceDiscount =
-              decimalToInteger(coupon.bigPriceDiscount, coinDiv);
+          options.attrs.coupons.forEach(coupon => {
+            if (coupon.bigPriceDiscount) {
+              coupon.bigPriceDiscount =
+                decimalToInteger(coupon.bigPriceDiscount, coinDiv);
+            }
+          });
+
+          options.attrs.item.skus.forEach(sku => {
+            sku.bigSurcharge = decimalToInteger(sku.bigSurcharge, coinDiv);
+          });
+        } else {
+          // Don't send over the price on crypto listings.
+          delete options.attrs.item.bigPrice;
+          delete options.attrs.item.priceCurrency;
+
+          // Update the crypto title based on the accepted currency and
+          // coin type.
+          const coinType = options.attrs.metadata.coinType;
+          let fromCur = options.attrs.metadata.acceptedCurrencies &&
+            options.attrs.metadata.acceptedCurrencies[0];
+          if (fromCur) {
+            const curObj = getCryptoCurrencyByCode(fromCur);
+            // if it's a recognized currency, ensure the mainnet code is used
+            fromCur = curObj ? curObj.code : fromCur;
+          } else {
+            fromCur = 'UNKNOWN';
           }
-        });
+          options.attrs.item.title = `${fromCur}-${coinType}`;
+        }
 
         // If providing a quanitity and/or productID on the Item and not
         // providing any SKUs, then we'll send item.quantity and item.productID
@@ -557,10 +652,6 @@ export default class extends BaseModel {
           if (Object.keys(dummySku).length) {
             options.attrs.item.skus = [dummySku];
           }
-        } else {
-          options.attrs.item.skus.forEach(sku => {
-            sku.bigSurcharge = decimalToInteger(sku.bigSurcharge, coinDiv);
-          });
         }
 
         delete options.attrs.item.productID;
@@ -586,29 +677,6 @@ export default class extends BaseModel {
             shipOpt.regions = ['ALL'];
           }
         });
-
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          // Don't send over the price on crypto listings.
-          delete options.attrs.item.bigPrice;
-
-          // Update the crypto title based on the accepted currency and
-          // coin type.
-          const coinType = options.attrs.metadata.coinType;
-          let fromCur = options.attrs.metadata.acceptedCurrencies &&
-            options.attrs.metadata.acceptedCurrencies[0];
-          if (fromCur) {
-            const curObj = getCryptoCurrencyByCode(fromCur);
-            // if it's a recognized currency, ensure the mainnet code is used
-            fromCur = curObj ? curObj.code : fromCur;
-          } else {
-            fromCur = 'UNKNOWN';
-          }
-          options.attrs.item.title = `${fromCur}-${coinType}`;
-        } else {
-          // Don't send over crypto currency specific fields if it's not a
-          // crypto listing.
-          delete options.attrs.item.priceModifier;
-        }
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/listing/${this.get('slug')}`);
@@ -686,53 +754,61 @@ export default class extends BaseModel {
         console.error('Unable to convert price fields. The coin divisibility is not valid.');
       }
 
-      try {
-        parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
-      } catch (e) {
-        parsedResponse.item.bigPrice = '';
-        console.error(`Unable to convert the bigPrice: ${e.message}`);
-      }
+      if (!isCrypto) {
+        if (parsedResponse.metadata) {
+          delete parsedResponse.metadata.priceModifier;
+        }
 
-      if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
-        parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
-          if (shipOpt.services && shipOpt.services.length) {
-            shipOpt.services.forEach(service => {
-              try {
-                service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
-              } catch (e) {
-                service.bigPrice = '';
-                console.error(`Unable to convert the service bigPrice: ${e.message}`);
-              }
+        try {
+          parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
+        } catch (e) {
+          parsedResponse.item.bigPrice = '';
+          console.error(`Unable to convert the bigPrice: ${e.message}`);
+        }
 
-              try {
-                service.bigAdditionalItemPrice =
-                  integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
-              } catch (e) {
-                service.bigAdditionalItemPrice = '';
-                console.error(`Unable to convert the service bigAdditionalItemPrice: ${e.message}`);
-              }
-            });
-          }
+        if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
+          parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
+            if (shipOpt.services && shipOpt.services.length) {
+              shipOpt.services.forEach(service => {
+                try {
+                  service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
+                } catch (e) {
+                  service.bigPrice = '';
+                  console.error(`Unable to convert the service bigPrice: ${e.message}`);
+                }
 
-          // If the shipping regions are set to 'ALL', we'll replace with a list of individual
-          // countries, which is what our UI is designed to work with.
-          if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
-            parsedResponse.shippingOptions[shipOptIndex].regions =
-              Object.keys(getIndexedCountries());
-          }
-        });
-      }
+                try {
+                  service.bigAdditionalItemPrice =
+                    integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
+                } catch (e) {
+                  service.bigAdditionalItemPrice = '';
+                  console.error(
+                    `Unable to convert the service bigAdditionalItemPrice: ${e.message}`
+                  );
+                }
+              });
+            }
 
-      if (parsedResponse.coupons) {
-        parsedResponse.coupons.forEach(coupon => {
-          try {
-            coupon.bigPriceDiscount =
-              integerToDecimal(coupon.bigPriceDiscount, coinDiv);
-          } catch (e) {
-            coupon.bigPriceDiscount = '';
-            console.error(`Unable to convert the coupon bigPriceDiscount: ${e.message}`);
-          }
-        });
+            // If the shipping regions are set to 'ALL', we'll replace with a list of individual
+            // countries, which is what our UI is designed to work with.
+            if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
+              parsedResponse.shippingOptions[shipOptIndex].regions =
+                Object.keys(getIndexedCountries());
+            }
+          });
+        }
+
+        if (parsedResponse.coupons) {
+          parsedResponse.coupons.forEach(coupon => {
+            try {
+              coupon.bigPriceDiscount =
+                integerToDecimal(coupon.bigPriceDiscount, coinDiv);
+            } catch (e) {
+              coupon.bigPriceDiscount = '';
+              console.error(`Unable to convert the coupon bigPriceDiscount: ${e.message}`);
+            }
+          });
+        }
       }
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
@@ -758,9 +834,7 @@ export default class extends BaseModel {
         }
 
         parsedResponse.item.productID = dummySku.productID;
-      }
-
-      if (parsedResponse.item && parsedResponse.item.skus) {
+      } else if (parsedResponse.item && parsedResponse.item.skus) {
         parsedResponse.item.skus.forEach(sku => {
           // If a sku quantity is set to less than 0, we'll set the
           // infinite inventory flag.
@@ -786,6 +860,13 @@ export default class extends BaseModel {
       if (parsedResponse.metadata) {
         parsedResponse.metadata.acceptedCurrencies =
           parsedResponse.metadata.acceptedCurrencies || [];
+      }
+
+      // delete some deprecated properties
+      if (parsedResponse.item) {
+        delete parsedResponse.item.priceModifier;
+        delete parsedResponse.item.price;
+        delete parsedResponse.item.bigPrice;
       }
     }
 

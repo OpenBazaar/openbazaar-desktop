@@ -112,20 +112,6 @@ export default class extends BaseModel {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
 
-    // if (attrs.price === '') {
-    //   addError('price', app.polyglot.t('itemModelErrors.provideAmount'));
-    // } else if (!isValidStringBasedNumber(attrs.price)) {
-    //   addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
-    // }
-
-    // validateCurrencyAmount(
-    //   curDef,
-    //   addError,
-    //   errObj,
-    //   errKey,
-    //   options = {}
-    // ) {
-
     if (
       !attrs.priceCurrency ||
       !attrs.priceCurrency.code ||
@@ -186,7 +172,7 @@ export default class extends BaseModel {
     }
 
     // If providing a top-level quantity or cryptoQuantity (for cryptolistings), we'll validate
-    // them. Quantity should only be provided for non-crypto listings where  you are tracking
+    // them. Quantity should only be provided for non-crypto listings where you are tracking
     // inventory and have no options (i.e. are not tracking inventory on the variant level).
     // cryptoQuantity is required for crypto listings.
     if (typeof attrs.quantity !== 'undefined') {
@@ -196,15 +182,6 @@ export default class extends BaseModel {
         addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
       }
     }
-
-    if (typeof attrs.cryptoQuantity !== 'undefined') {
-      if (typeof attrs.cryptoQuantity === 'string' && !attrs.cryptoQuantity) {
-        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideQuantity'));
-      } else if (typeof attrs.cryptoQuantity !== 'number') {
-        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
-      }
-    }
-    // END - quantity, cryptoQuantity and productId
 
     let maxCombos = 1;
 
