@@ -377,21 +377,6 @@ export default class extends BaseModel {
           'listings.');
       }
 
-      // this.validateCurrencyAmount(
-      //   item.price,
-      //   addError,
-      //   errObj,
-      //   'item.price',
-      //   {
-      //     coinDiv,
-      //     cur: metadata.pricingCurrency,
-      //     // these 3 are validated in the Item model
-      //     validateRequired: false,
-      //     validateType: false,
-      //     validateGreaterThanZero: false,
-      //   }
-      // );
-
       (attrs.shippingOptions || []).forEach(shipOpt => {
         (shipOpt.services || []).forEach(service => {
           this.validateCurrencyAmount(
@@ -555,11 +540,6 @@ export default class extends BaseModel {
         options.url = options.url || app.getServerUrl('ob/listing/');
         options.attrs = options.attrs || this.toJSON();
 
-        console.log('\n');
-        console.log('billy');
-        console.dir(options.attrs);
-        console.log('\n');
-
         let coinDiv;
 
         if (options.attrs.metadata.contractType !== 'CRYPTOCURRENCY') {
@@ -641,7 +621,7 @@ export default class extends BaseModel {
 
             delete options.attrs.item.cryptoQuantity;
           } else if (typeof options.attrs.item.quantity === 'number') {
-            dummySku.quantity = options.attrs.item.quantity;
+            dummySku.bigQuantity = options.attrs.item.quantity;
           }
 
           if (typeof options.attrs.item.productID === 'string' &&
@@ -657,11 +637,13 @@ export default class extends BaseModel {
         delete options.attrs.item.productID;
         delete options.attrs.item.quantity;
 
+        console.dir(JSON.parse(JSON.stringify(options.attrs)));
+
         // Our Sku has an infinteInventory boolean attribute, but the server
         // is expecting a quantity negative quantity in that case.
         options.attrs.item.skus.forEach(sku => {
           if (sku.infiniteInventory) {
-            sku.quantity = -1;
+            sku.bigQuantity = bigNumber('-1');
           }
 
           delete sku.infiniteInventory;
@@ -735,6 +717,20 @@ export default class extends BaseModel {
 
       // set the hash
       parsedResponse.hash = response.hash;
+
+      // delete some deprecated properties
+      if (parsedResponse.item) {
+        delete parsedResponse.item.priceModifier;
+        delete parsedResponse.item.price;
+        delete parsedResponse.item.bigPrice;
+
+        if (Array.isArray(parsedResponse.item.skus)) {
+          parsedResponse.item.skus.forEach(sku => {
+            delete sku.surcharge;
+            delete sku.quantity;
+          });
+        }
+      }
 
       let coinDiv;
 
@@ -830,7 +826,7 @@ export default class extends BaseModel {
             );
           }
         } else {
-          parsedResponse.item.quantity = dummySku.quantity;
+          parsedResponse.item.quantity = dummySku.bigQuantity;
         }
 
         parsedResponse.item.productID = dummySku.productID;
@@ -838,11 +834,12 @@ export default class extends BaseModel {
         parsedResponse.item.skus.forEach(sku => {
           // If a sku quantity is set to less than 0, we'll set the
           // infinite inventory flag.
-          if (sku.quantity < 0) {
+          if (bigNumber(sku.bigQuantity).lt(0)) {
             sku.infiniteInventory = true;
           } else {
             sku.infiniteInventory = false;
           }
+
           // convert the surcharge
           const bigSurcharge = sku.bigSurcharge;
 
@@ -860,13 +857,6 @@ export default class extends BaseModel {
       if (parsedResponse.metadata) {
         parsedResponse.metadata.acceptedCurrencies =
           parsedResponse.metadata.acceptedCurrencies || [];
-      }
-
-      // delete some deprecated properties
-      if (parsedResponse.item) {
-        delete parsedResponse.item.priceModifier;
-        delete parsedResponse.item.price;
-        delete parsedResponse.item.bigPrice;
       }
     }
 

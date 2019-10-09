@@ -1,4 +1,5 @@
 import { guid } from '../../utils';
+import bigNumber from 'bignumber.js';
 import is from 'is_js';
 import { Collection } from 'backbone';
 import app from '../../app';
@@ -80,7 +81,8 @@ export default class extends BaseModel {
     } else {
       // If you don't have any options and have the top level as a non-negative
       // value (i.e. not infiniteInventory), we'll consider you to be tracking inventory
-      isInventoryTracked = this.get('quantity') >= 0;
+      const quantity = this.get('quantity');
+      isInventoryTracked = quantity instanceof bigNumber && quantity.gte(0);
     }
 
     return isInventoryTracked;
@@ -175,6 +177,14 @@ export default class extends BaseModel {
     // them. Quantity should only be provided for non-crypto listings where you are tracking
     // inventory and have no options (i.e. are not tracking inventory on the variant level).
     // cryptoQuantity is required for crypto listings.
+    if (
+      attrs.quantity === undefined ||
+      attrs.quantity === null ||
+      attrs.quantity === ''
+    ) {
+      addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));      
+    }
+    
     if (typeof attrs.quantity !== 'undefined') {
       if (typeof attrs.quantity === 'string' && !attrs.quantity) {
         addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
