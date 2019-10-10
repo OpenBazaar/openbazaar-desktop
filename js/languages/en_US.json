@@ -2011,7 +2011,10 @@
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
     "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
-    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}."
+    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}.",
+    "providePriceModifier": "Please provide a price modifier.",
+    "numericPriceModifier": "Please provide the price modifier as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -2031,9 +2034,6 @@
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
   "metadataModelErrors": {
-    "providePriceModifier": "Please provide a price modifier.",
-    "numericPriceModifier": "Please provide the price modifier as a number.",
-    "priceModifierRange": "The price modifier must be between %{min} and %{max}",
     "provideAcceptedCurrency": "Please select at least one accepted currency.",
     "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
     "provideCoinType": "Please select a coin to trade.",

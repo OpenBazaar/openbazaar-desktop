@@ -102,11 +102,13 @@ export default class extends BaseModel {
   }
 
   get max() {
+    console.log('test 30 coupon count');
     return {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
-      // couponCount: 30,
-      couponCount: 2,
+      couponCount: 30,
+      minPriceModifier: -99.99,
+      maxPriceModifier: 1000,
     };
   }
 
@@ -304,6 +306,22 @@ export default class extends BaseModel {
       divisibility: () => item.priceCurrency.divisibility,
     };
 
+    if (!(attributes.item instanceof Item)) {
+      addError('item', 'A nested Item model is required.');
+    }
+
+    if (!(attributes.metadata instanceof Metadata)) {
+      addError('metadata', 'A nested Metadata model is required.');
+    }
+
+    if (!(attributes.shippingOptions instanceof ShippingOptions)) {
+      addError('shippingOptions', 'A nested ShippingOptions collection is required.');
+    }
+
+    if (!(attributes.coupons instanceof Coupons)) {
+      addError('coupons', 'A nested Coupons collection is required.');
+    }
+
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
         addError('refundPolicy', 'The return policy must be of type string.');
@@ -337,19 +355,39 @@ export default class extends BaseModel {
       //     'cryptocurrency listings.');
       // }
 
-      if (item && typeof item.price !== 'undefined') {
-        addError('item.price', 'The price should not be set on cryptocurrency ' +
-          'listings.');
-      }
+      if (item) {
+        if (typeof item.price !== 'undefined') {
+          addError('item.price', 'The price should not be set on cryptocurrency ' +
+            'listings.');
+        }
 
-      if (item && typeof item.condition !== 'undefined') {
-        addError('item.condition', 'The condition should not be set on cryptocurrency ' +
-          'listings.');
-      }
+        if (typeof item.condition !== 'undefined') {
+          addError('item.condition', 'The condition should not be set on cryptocurrency ' +
+            'listings.');
+        }
 
-      if (item && typeof item.quantity !== 'undefined') {
-        addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
-          'listings.');
+        if (typeof item.quantity !== 'undefined') {
+          addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
+            'listings.');
+        }
+
+        if (
+          item.priceModifier === '' ||
+          item.priceModifier === undefined ||
+          item.priceModifier === null
+        ) {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.providePriceModifier'));
+        } else if (typeof item.priceModifier !== 'number') {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.numericPriceModifier'));
+        } else if (
+          item.priceModifier < this.max.minPriceModifier ||
+          item.priceModifier > this.max.maxPriceModifier
+        ) {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.priceModifierRange', {
+            min: this.max.minPriceModifier,
+            max: this.max.maxPriceModifier,
+          }));
+        }
       }
 
       // no shipping
@@ -491,6 +529,7 @@ export default class extends BaseModel {
       delete errObj['item.title'];
     } else {
       delete errObj['item.cryptoQuantity'];
+      delete errObj['item.priceModifier'];
     }
 
     if (Object.keys(errObj).length) return errObj;
