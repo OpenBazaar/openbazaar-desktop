@@ -1,15 +1,37 @@
-import { guid } from '../../utils';
-import bigNumber from 'bignumber.js';
+// import bigNumber from 'bignumber.js';
 import is from 'is_js';
 import { Collection } from 'backbone';
+import { guid } from '../../utils';
+import { isValidNumber } from '../../utils/number';
 import app from '../../app';
-// import { isValidNumber } from '../../utils/number';
 import { getCurrencyByCode } from '../../data/currencies';
 import { getCoinDivisibility } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
 import Skus from '../../collections/listing/Skus';
+
+/*
+ * This model has a few inventory related properties that don't directly map to the
+ * API. When a listing does not have variants but tracks inventory, the server handles
+ * the quantity and productId values in a "dummy" SKU, e.g:
+ *
+ * skus: [{ bigQuantity: "123", productId: "54321" }]
+ *
+ * Since that is, arguably, awkward, instead this model offers a few properties to track
+ * non-variant inventory:
+ *
+ * productId - a string that maps to "skus: [{ productId: "54321" }]"
+ * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
+ * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]"
+ *
+ * Parse/Sync of the listing model will handle mapping to/from the server version
+ * and what's in this model.
+ *
+ * Please note: If your listing does include variants, you will want to use the
+ * bigQuantity and infiniteInventory fields on the SKU model instead of setting
+ * anything on this model related to those fields.
+ */
 
 class ListingImages extends Collection {
   model(attrs, options) {
@@ -81,8 +103,7 @@ export default class extends BaseModel {
     } else {
       // If you don't have any options and have the top level as a non-negative
       // value (i.e. not infiniteInventory), we'll consider you to be tracking inventory
-      const quantity = this.get('quantity');
-      isInventoryTracked = quantity instanceof bigNumber && quantity.gte(0);
+      isInventoryTracked = this.get('quantity') >= 0;
     }
 
     return isInventoryTracked;
@@ -90,6 +111,9 @@ export default class extends BaseModel {
 
   validate(attrs) {
     let errObj = {};
+
+    console.log('moo');
+    window.moo = attrs;
 
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
@@ -173,23 +197,32 @@ export default class extends BaseModel {
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    // If providing a top-level quantity or cryptoQuantity (for cryptolistings), we'll validate
-    // them. Quantity should only be provided for non-crypto listings where you are tracking
-    // inventory and have no options (i.e. are not tracking inventory on the variant level).
-    // cryptoQuantity is required for crypto listings.
-    if (
-      attrs.quantity === undefined ||
-      attrs.quantity === null ||
-      attrs.quantity === ''
-    ) {
-      addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));      
-    }
-    
     if (typeof attrs.quantity !== 'undefined') {
-      if (typeof attrs.quantity === 'string' && !attrs.quantity) {
-        addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
-      } else if (typeof attrs.quantity !== 'number') {
+      if (
+        !isValidNumber(attrs.quantity, {
+          allowNumber: false,
+          allowBigNumber: true,
+          allowString: false,
+        })
+      ) {
         addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
+      } else if (attrs.quantity.lt(0)) {
+        addError('quantity', app.polyglot.t('itemModelErrors.quantityMustBePositive'));
+      }
+    }
+
+    if (typeof attrs.cryptoQuantity !== 'undefined') {
+      if (
+        !isValidNumber(attrs.cryptoQuantity, {
+          allowNumber: false,
+          allowBigNumber: true,
+          allowString: false,
+        })
+      ) {
+        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideNumericCryptoQuantity'));
+      } else if (attrs.cryptoQuantity.lt(0)) {
+        addError('cryptoQuantity',
+          app.polyglot.t('itemModelErrors.provideNonNegativeCryptoQuantity'));
       }
     }
 

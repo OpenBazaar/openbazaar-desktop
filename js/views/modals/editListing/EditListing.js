@@ -851,6 +851,7 @@ export default class extends BaseModal {
     this.render(!!save);
 
     if (!save) {
+      console.dir(this.model.validationError);
       const $firstErr = this.$('.errorList:visible').eq(0);
       if ($firstErr.length) {
         $firstErr[0].scrollIntoViewIfNeeded();
@@ -911,18 +912,12 @@ export default class extends BaseModal {
         // flag for any skus.
         if (this.trackInventoryBy === 'DO_NOT_TRACK') {
           item.get('skus')
-            .forEach(sku => {
-              sku.set({
-                infiniteInventory: true,
-                // quantity: bigNumber('-1'),
-                quantity: -1,
-              });
-            });
+            .forEach(sku => sku.set({ infiniteInventory: true }));
         }
       } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
         // If we're not tracking inventory and don't have any variants, we should provide
         // a top-level quantity as -1, so it's considered infinite.
-        formData.item.quantity = -1;
+        formData.item.quantity = bigNumber('-1');
       }
 
       formData.metadata = {

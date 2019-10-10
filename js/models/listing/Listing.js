@@ -255,7 +255,6 @@ export default class extends BaseModel {
         coinType
       ) {
         try {
-          // coinDivisibility
           attrs.metadata.coinDivisibility = getCoinDivisibility(coinType);
         } catch (e) {
           if (attrs.metadata) {
@@ -389,8 +388,6 @@ export default class extends BaseModel {
           }));
         }
       }
-
-      // no shipping
 
       this.validateCurrencyAmount(
         {
@@ -676,8 +673,6 @@ export default class extends BaseModel {
         delete options.attrs.item.productID;
         delete options.attrs.item.quantity;
 
-        console.dir(JSON.parse(JSON.stringify(options.attrs)));
-
         // Our Sku has an infinteInventory boolean attribute, but the server
         // is expecting a quantity negative quantity in that case.
         options.attrs.item.skus.forEach(sku => {
@@ -761,7 +756,6 @@ export default class extends BaseModel {
       if (parsedResponse.item) {
         delete parsedResponse.item.priceModifier;
         delete parsedResponse.item.price;
-        delete parsedResponse.item.bigPrice;
 
         if (Array.isArray(parsedResponse.item.skus)) {
           parsedResponse.item.skus.forEach(sku => {
@@ -794,33 +788,15 @@ export default class extends BaseModel {
           delete parsedResponse.metadata.priceModifier;
         }
 
-        try {
-          parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
-        } catch (e) {
-          parsedResponse.item.bigPrice = '';
-          console.error(`Unable to convert the bigPrice: ${e.message}`);
-        }
+        parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
 
         if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
           parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
             if (shipOpt.services && shipOpt.services.length) {
               shipOpt.services.forEach(service => {
-                try {
-                  service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
-                } catch (e) {
-                  service.bigPrice = '';
-                  console.error(`Unable to convert the service bigPrice: ${e.message}`);
-                }
-
-                try {
-                  service.bigAdditionalItemPrice =
-                    integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
-                } catch (e) {
-                  service.bigAdditionalItemPrice = '';
-                  console.error(
-                    `Unable to convert the service bigAdditionalItemPrice: ${e.message}`
-                  );
-                }
+                service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
+                service.bigAdditionalItemPrice =
+                  integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
               });
             }
 
@@ -835,40 +811,32 @@ export default class extends BaseModel {
 
         if (parsedResponse.coupons) {
           parsedResponse.coupons.forEach(coupon => {
-            try {
-              coupon.bigPriceDiscount =
-                integerToDecimal(coupon.bigPriceDiscount, coinDiv);
-            } catch (e) {
-              coupon.bigPriceDiscount = '';
-              console.error(`Unable to convert the coupon bigPriceDiscount: ${e.message}`);
-            }
+            coupon.bigPriceDiscount =
+              integerToDecimal(coupon.bigPriceDiscount, coinDiv);
           });
         }
       }
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
-      if (parsedResponse.item && parsedResponse.item.skus &&
+      if (
+        parsedResponse.item && parsedResponse.item.skus &&
         parsedResponse.item.skus.length === 1 &&
-        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+        typeof parsedResponse.item.skus[0].variantCombo === 'undefined'
+      ) {
         const dummySku = parsedResponse.item.skus[0];
 
         if (isCrypto) {
-          try {
-            parsedResponse.item.cryptoQuantity = integerToDecimal(
-              dummySku.bigQuantity,
-              parsedResponse.metadata.coinDivisibility
-            );
-          } catch (e) {
-            console.error(
-              `Unable to convert the crypto currency listing bigQuantity: ${e.message}`
-            );
-          }
+          parsedResponse.item.cryptoQuantity = integerToDecimal(
+            dummySku.bigQuantity,
+            parsedResponse.metadata.coinDivisibility
+          );
         } else {
           parsedResponse.item.quantity = dummySku.bigQuantity;
         }
 
         parsedResponse.item.productID = dummySku.productID;
+        delete parsedResponse.item.skus;
       } else if (parsedResponse.item && parsedResponse.item.skus) {
         parsedResponse.item.skus.forEach(sku => {
           // If a sku quantity is set to less than 0, we'll set the
@@ -883,12 +851,7 @@ export default class extends BaseModel {
           const bigSurcharge = sku.bigSurcharge;
 
           if (bigSurcharge) {
-            try {
-              sku.bigSurcharge = integerToDecimal(bigSurcharge, coinDiv);
-            } catch (e) {
-              sku.bigSurcharge = '';
-              console.error(`Unable to convert the bigSurcharge: ${e.message}`);
-            }
+            sku.bigSurcharge = integerToDecimal(bigSurcharge, coinDiv);
           }
         });
       }

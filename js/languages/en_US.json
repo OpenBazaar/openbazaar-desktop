@@ -2014,7 +2014,8 @@
     "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}.",
     "providePriceModifier": "Please provide a price modifier.",
     "numericPriceModifier": "Please provide the price modifier as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
-    "priceModifierRange": "The price modifier must be between %{min} and %{max}"
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}",
+    "provideCryptoInventory": "Please provide the remaining inventory."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -2028,10 +2029,11 @@
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
     "duplicateOptionName": "You already have a variant with this name.",
     "tooManyOptions": "You cannot have more than %{maxOptionCount} options.",
-    "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "quantityMustBePositive": "The quantity must be more than zero.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
+    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique.",
+    "provideNumericCryptoQuantity": "Please provide the inventory as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNonNegativeCryptoQuantity": "The inventory must be greater than or equal to zero."
   },
   "metadataModelErrors": {
     "provideAcceptedCurrency": "Please select at least one accepted currency.",

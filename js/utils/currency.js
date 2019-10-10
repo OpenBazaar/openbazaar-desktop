@@ -196,13 +196,14 @@ export function decimalToInteger(value, divisibility) {
  * @param {number} divisibility - An integer representing the coin divisibility
  *   (e.g. for bitcoin, it is 8)
  * @param {object} options
- * @param {boolean} [options.returnUndefinedOnError = true] - if true and there's
+ * @param {boolean} [options.returnNaNOnError = true] - if true and there's
  *   an error, rather than an exception being thrown, a BigNumber instance evaluating
- *   to NaN will be returned. This will allow templates to just NaN instead of bombing
- *   on render. It will also allow BigNumber ops (e.g. minus, times, etc...) to not
- *   bomb.
+ *   to NaN will be returned. This will allow templates to just display NaN instead of
+ *   bombing on render. It will also allow BigNumber ops (e.g. minus, times, etc...) to
+ *   not bomb.
  * @returns {BigNumber} - A BigNumber instance representing the decimal number.
  */
+console.log('search for returnUndefinedOnError and ensure returnNaNOnError');
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnNaNOnError: true,
