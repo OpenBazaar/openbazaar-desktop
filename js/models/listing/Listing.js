@@ -349,11 +349,6 @@ export default class extends BaseModel {
         addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
-      // if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
-      //   addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
-      //     'cryptocurrency listings.');
-      // }
-
       if (item) {
         if (typeof item.price !== 'undefined') {
           addError('item.price', 'The price should not be set on cryptocurrency ' +
@@ -582,6 +577,7 @@ export default class extends BaseModel {
           // Don't send over crypto currency specific fields if it's not a
           // crypto listing.
           delete options.attrs.item.priceModifier;
+          delete options.attrs.item.cryptoQuantity;
 
           coinDiv = options.attrs.item.priceCurrency.divisibility;
 
@@ -626,6 +622,7 @@ export default class extends BaseModel {
           // Don't send over the price on crypto listings.
           delete options.attrs.item.bigPrice;
           delete options.attrs.item.priceCurrency;
+          delete options.attrs.item.options;
 
           // Update the crypto title based on the accepted currency and
           // coin type.
@@ -642,10 +639,9 @@ export default class extends BaseModel {
           options.attrs.item.title = `${fromCur}-${coinType}`;
         }
 
-        // If providing a quanitity and/or productID on the Item and not
-        // providing any SKUs, then we'll send item.quantity and item.productID
-        // in as a "dummy" SKU (as the server expects). If you are providing any
-        // SKUs, then item.quantity and item.productID will be ignored.
+        // If providing a quanitity, productID or infiniteInventory bool on the
+        // Item and not providing any SKUs, then we'll send them in as a "dummy" SKU
+        // (as the server expects).
         if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
@@ -656,18 +652,25 @@ export default class extends BaseModel {
             );
 
             delete options.attrs.item.cryptoQuantity;
-          } else if (typeof options.attrs.item.quantity === 'number') {
+          } else if (options.attrs.item.infiniteInventory) {
+            dummySku.bigQuantity = '-1';
+          } else if (options.attrs.item.quantity instanceof bigNumber) {
             dummySku.bigQuantity = options.attrs.item.quantity;
           }
 
-          if (typeof options.attrs.item.productID === 'string' &&
-            options.attrs.item.productID.length) {
+          if (
+            options.attrs.metadata.contractType !== 'CRYPTOCURRENCY' &&
+            typeof options.attrs.item.productID === 'string' &&
+            options.attrs.item.productID.length
+          ) {
             dummySku.productID = options.attrs.item.productID;
           }
 
           if (Object.keys(dummySku).length) {
             options.attrs.item.skus = [dummySku];
           }
+
+          delete options.attrs.item.infiniteInventory;
         }
 
         delete options.attrs.item.productID;
@@ -754,7 +757,7 @@ export default class extends BaseModel {
 
       // delete some deprecated properties
       if (parsedResponse.item) {
-        delete parsedResponse.item.priceModifier;
+        delete parsedResponse.metadata.priceModifier;
         delete parsedResponse.item.price;
 
         if (Array.isArray(parsedResponse.item.skus)) {

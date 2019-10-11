@@ -34,30 +34,39 @@ export default class extends BaseModel {
       addError('infiniteInventory', 'If provided, infiniteInventory should be a boolean.');
     }
 
-    if (
-      (
+    console.dir(attrs);
+
+    if (attrs.infiniteInventory) {
+      if (attrs.bigQuantity) {
+        addError('bigQuantity', 'bigQuantity should not be provided if provided if ' +
+          'infiniteInventory is truthy.');
+      }
+    } else {
+      if (
         attrs.bigQuantity === '' ||
         attrs.bigQuantity === undefined ||
         attrs.bigQuantity === null
-      ) && !attrs.infiniteInventory
-    ) {
-      addError('bigQuantity', app.polyglot.t('skuModelErrors.provideQuantity'));
-    } else if (
-      !isValidNumber(attrs.bigQuantity, {
-        allowNumber: false,
-        allowBigNumber: true,
-        allowString: false,
-      })
-    ) {
-      addError('bigQuantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
-    } else if (!attrs.infiniteInventory && attrs.bigQuantity.lt(0)) {
-      // The listing API allows the quantity to be set to < 0, which indicates an unlimited
-      // supply. This model does not allow that, but does have an infiniteInventory flag.
-      // The expectation is that sync / parse of the listing model will send the quantity
-      // over as "-1" if the infiniteInventory flag is set to true. Also the infiniteInventory
-      // flag should not be sent to the server.
+      ) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideQuantity'));
+      } else if (
+        !isValidNumber(attrs.bigQuantity, {
+          allowNumber: false,
+          allowBigNumber: true,
+          allowString: false,
+        })
+      ) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
+      } else if (!attrs.bigQuantity.isInteger()) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.quantityMustBeInteger'));
+      } else if (attrs.bigQuantity.lt(0)) {
+        // The listing API allows the quantity to be set to < 0, which indicates an unlimited
+        // supply. This model does not allow that, but does have an infiniteInventory flag.
+        // The expectation is that sync / parse of the listing model will send the quantity
+        // over as "-1" if the infiniteInventory flag is set to true. Also the infiniteInventory
+        // flag should not be sent to the server.
 
-      addError('bigQuantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
+      }
     }
 
     // The listing API does not require a variantCombo field, since if you have no options and

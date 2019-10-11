@@ -903,21 +903,34 @@ export default class extends BaseModal {
 
     if (!isCrypto) {
       if (item.get('options').length) {
-        // If we have options, we shouldn't be providing a top-level quantity or
-        // productID.
+        // If we have options, we shouldn't be providing certain properties on the Item
+        // model which track non-variant inventory
         item.unset('quantity');
         item.unset('productID');
+        item.unset('infiniteInventory');
+        delete formData.item.quantity;
+        delete formData.item.productID;
+        delete formData.item.infiniteInventory;
 
         // If we have options and are not tracking inventory, we'll set the infiniteInventory
         // flag for any skus.
         if (this.trackInventoryBy === 'DO_NOT_TRACK') {
           item.get('skus')
-            .forEach(sku => sku.set({ infiniteInventory: true }));
+            .forEach(sku => {
+              sku.unset('bigQuantity');
+              sku.set({ infiniteInventory: true });
+            });
         }
-      } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-        // If we're not tracking inventory and don't have any variants, we should provide
-        // a top-level quantity as -1, so it's considered infinite.
-        formData.item.quantity = bigNumber('-1');
+      } else {
+        formData.item.infiniteInventory = this.trackInventoryBy === 'DO_NOT_TRACK';
+
+        if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+          formData.item.infiniteInventory = true;
+          delete formData.item.quantity;
+          item.unset('quantity');
+        } else {
+          formData.item.infiniteInventory = false;
+        }
       }
 
       formData.metadata = {

@@ -1,4 +1,3 @@
-// import bigNumber from 'bignumber.js';
 import is from 'is_js';
 import { Collection } from 'backbone';
 import { guid } from '../../utils';
@@ -23,7 +22,7 @@ import Skus from '../../collections/listing/Skus';
  *
  * productId - a string that maps to "skus: [{ productId: "54321" }]"
  * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
- * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]"
+ * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]".
  *
  * Parse/Sync of the listing model will handle mapping to/from the server version
  * and what's in this model.
@@ -58,6 +57,7 @@ export default class extends BaseModel {
       images: new ListingImages(),
       options: new VariantOptions(),
       skus: new Skus(),
+      infiniteInventory: true,
     };
   }
 
@@ -197,8 +197,22 @@ export default class extends BaseModel {
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    if (typeof attrs.quantity !== 'undefined') {
+    if (attrs.infiniteInventory) {
+      if (typeof attrs.quantity !== 'undefined') {
+        addError('quantity', 'Quantity should not be set if infiniteInventory is truthy.');
+      }
+    } else if (attrs.skus && attrs.skus.length) {
+      if (attrs.quantity !== undefined) {
+        addError('quantity', 'Quantity should not be set if providing Skus.');
+      }
+    } else {
       if (
+        attrs.quantity === 'undefined' ||
+        attrs.quantity === null ||
+        attrs.quantity === ''
+      ) {
+        addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
+      } else if (
         !isValidNumber(attrs.quantity, {
           allowNumber: false,
           allowBigNumber: true,
@@ -208,10 +222,14 @@ export default class extends BaseModel {
         addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
       } else if (attrs.quantity.lt(0)) {
         addError('quantity', app.polyglot.t('itemModelErrors.quantityMustBePositive'));
+      } else if (!attrs.quantity.isInteger()) {
+        addError('quantity', app.polyglot.t('itemModelErrors.quantityMustBeInteger'));
       }
     }
 
-    if (typeof attrs.cryptoQuantity !== 'undefined') {
+    if (attrs.skus && attrs.skus.length && attrs.cryptoQuantity !== undefined) {
+      addError('cryptoQuantity', 'CryptoQuantity should not be set if providing Skus.');
+    } else if (typeof attrs.cryptoQuantity !== 'undefined') {
       if (
         !isValidNumber(attrs.cryptoQuantity, {
           allowNumber: false,
