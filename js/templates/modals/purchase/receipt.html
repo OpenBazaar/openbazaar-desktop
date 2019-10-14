@@ -31,10 +31,10 @@
         itemTotal = itemTotal.minus(
           itemTotal.times(0.01).times(coupon.percentDiscount)
         );
-      } else if (coupon.priceDiscount) {
+      } else if (coupon.bigPriceDiscount && !coupon.bigPriceDiscount.isNaN()) {
         const convertPriceDiscount =
             ob.currencyMod.convertCurrency(
-              coupon.priceDiscount,
+              coupon.bigPriceDiscount,
               ob.listingCurrency,
               viewingCurrency
             );

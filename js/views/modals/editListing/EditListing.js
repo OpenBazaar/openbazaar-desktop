@@ -1,4 +1,5 @@
 console.log('what up with js-price?');
+console.log('no track inventory revert to track - is it using bigPrice there?');
 
 import $ from 'jquery';
 import '../../../utils/lib/velocity';

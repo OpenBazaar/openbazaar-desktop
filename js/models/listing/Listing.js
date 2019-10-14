@@ -11,12 +11,10 @@ import {
   decimalToInteger,
   integerToDecimal,
   decimalToCurDef,
-  getCurMeta,
   isValidCoinDivisibility,
   getCoinDivisibility,
   CUR_VAL_RANGE_TYPES,
 } from '../../utils/currency';
-import { isValidNumber } from '../../utils/number';
 import BaseModel, { flattenAttrs } from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';

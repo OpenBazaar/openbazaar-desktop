@@ -636,9 +636,9 @@ export default class extends BaseModal {
 
       return {
         price: bigNumber(this.listing.price.amount),
-        sPrice: bigNumber(sOptService ? sOptService.get('price') : 0),
-        aPrice: bigNumber(sOptService ? sOptService.get('additionalItemPrice') : 0),
-        vPrice: bigNumber(sku ? sku.get('surcharge') : 0),
+        sPrice: bigNumber(sOptService ? sOptService.get('bigPrice') : 0),
+        aPrice: bigNumber(sOptService ? sOptService.get('bigAdditionalItemPrice') : 0),
+        vPrice: bigNumber(sku ? sku.get('bigSurcharge') : 0),
         quantity: bigNumber(item.get('quantity')),
       };
     });
