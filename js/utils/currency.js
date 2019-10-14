@@ -16,7 +16,6 @@ import {
   supportedWalletCurs,
 } from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
-import loadTemplate from '../utils/loadTemplate';
 
 const events = {
   ...Events,
