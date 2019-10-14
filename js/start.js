@@ -1,3 +1,5 @@
+console.log('general bad data everywhere and make sure we dont blow up');
+
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
 import Backbone from 'backbone';

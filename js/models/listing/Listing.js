@@ -771,7 +771,10 @@ export default class extends BaseModel {
       let coinDiv;
 
       try {
-        coinDiv =
+        coinDiv = isCrypto ?
+          parsedResponse
+            .metadata
+            .coinDivisibility :
           parsedResponse
             .item
             .priceCurrency

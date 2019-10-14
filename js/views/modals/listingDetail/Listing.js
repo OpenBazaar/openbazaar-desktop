@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone, { Collection } from 'backbone';
+import bigNumber from 'bignumber.js';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
@@ -52,7 +53,17 @@ export default class extends BaseModal {
 
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
-    this.totalPrice = this.model.get('item').get('price');
+
+    // Set to an empty bigNumber instance so if we can't fill it with a legitmate
+    // value, at least bigNumber ops won't fail.
+    this.totalPrice = bigNumber();
+
+    try {
+      this.totalPrice = this.model.get('item').get('bigPrice');
+    } catch (e) {
+      // pass
+    }
+
     this._purchaseModal = null;
     this._latestHash = this.model.get('hash');
     this._renderedHash = null;
@@ -490,20 +501,38 @@ export default class extends BaseModal {
     // each sku has a code that matches the selected variant index combos
     const sku = this.model.get('item').get('skus').find(v =>
       _.isEqual(v.get('variantCombo'), variantCombo));
-    const surcharge = sku ? sku.get('surcharge') : 0;
-    const _totalPrice = this.model.get('item').get('price') + surcharge;
-    if (_totalPrice !== this.totalPrice) {
-      this.totalPrice = _totalPrice;
-      const adjPrice = convertAndFormatCurrency(
-        this.totalPrice,
+    const surcharge = sku ? sku.get('surcharge') : bigNumber('0');
+
+    try {
+      const _totalPrice =
         this.model
           .get('item')
-          .get('pricingCurrency')
-          .code,
-        app.settings.get('localCurrency')
-      );
-      this.getCachedEl('.js-price').html(adjPrice);
+          .get('bigPrice')
+          .plus(surcharge);
+
+      if (!_totalPrice.eq(this.totalPrice)) {
+        this.totalPrice = _totalPrice;
+        let adjPrice = '';
+
+        try {
+          adjPrice = convertAndFormatCurrency(
+            this.totalPrice,
+            this.model
+              .get('item')
+              .get('priceCurrency')
+              .code,
+            app.settings.get('localCurrency')
+          );
+        } catch (e) {
+          // pass
+        }
+
+        this.getCachedEl('.js-price').html(adjPrice);
+      }
+    } catch (e) {
+      // pass
     }
+
   }
 
   showDataChangedMessage() {
@@ -601,7 +630,7 @@ export default class extends BaseModal {
 
   startPurchase() {
     if (!this.model.isCrypto) {
-      if (this.totalPrice <= 0) {
+      if (this.totalPrice.lte(0)) {
         openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
           app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
         return;

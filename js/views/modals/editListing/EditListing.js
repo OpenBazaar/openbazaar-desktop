@@ -3,7 +3,6 @@ console.log('what up with js-price?');
 import $ from 'jquery';
 import '../../../utils/lib/velocity';
 import '../../../lib/select2';
-import bigNumber from 'bignumber.js';
 import { tagsDelimiter } from '../../../utils/lib/selectize';
 import Sortable from 'sortablejs';
 import _ from 'underscore';

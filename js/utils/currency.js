@@ -705,6 +705,8 @@ export function convertCurrency(amount, fromCur, toCur) {
  * Convenience function to both convert and format a currency amount using convertCurrency()
  * and formatCurrency().
  */
+console.log('unit teest my pecularities');
+// skipConvertIfResultWillBeZero is probably not needed anymore
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -733,7 +735,10 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  if (amount > 0 &&
+  const bigAmount = bigNumber(amount);
+
+  if (
+    bigAmount.lt(0) &&
     opts.skipConvertIfResultWillBeZero &&
     isFormattedResultZero(convertedAmt, MAX_NUMBER_FORMAT_DISPLAY_DECIMALS)) {
     convertedAmt = amount;
