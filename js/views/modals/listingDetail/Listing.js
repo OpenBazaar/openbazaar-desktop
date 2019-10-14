@@ -498,16 +498,20 @@ export default class extends BaseModal {
     this.variantSelects.each((i, select) => {
       variantCombo.push($(select).prop('selectedIndex'));
     });
+
     // each sku has a code that matches the selected variant index combos
-    const sku = this.model.get('item').get('skus').find(v =>
-      _.isEqual(v.get('variantCombo'), variantCombo));
-    const surcharge = sku ? sku.get('surcharge') : bigNumber('0');
+    const sku = this.model
+      .get('item')
+      .get('skus')
+      .find(v =>
+        _.isEqual(v.get('variantCombo'), variantCombo));
+    const surcharge = sku ? sku.get('bigSurcharge') : bigNumber('0');
 
     try {
       const _totalPrice =
         this.model
-          .get('item')
-          .get('bigPrice')
+          .price
+          .amount
           .plus(surcharge);
 
       if (!_totalPrice.eq(this.totalPrice)) {
@@ -525,6 +529,7 @@ export default class extends BaseModal {
           );
         } catch (e) {
           // pass
+          console.error(e);
         }
 
         this.getCachedEl('.js-price').html(adjPrice);
@@ -597,7 +602,7 @@ export default class extends BaseModal {
       this.$shippingOptions.html(t({
         templateData,
         displayCurrency: app.settings.get('localCurrency'),
-        pricingCurrency: this.model.get('metadata').get('pricingCurrency'),
+        pricingCurrency: this.model.price.currencyCode,
       }));
     });
   }

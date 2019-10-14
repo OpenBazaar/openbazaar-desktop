@@ -489,12 +489,6 @@ export function formatCurrency(amount, currency, options) {
     opts.maxDisplayDecimals = getMaxDisplayDigits(amount, opts.maxDisplayDecimals);
   }
 
-  // if (opts.maxDisplayDecimals > MAX_NUMBER_FORMAT_DISPLAY_DECIMALS) {
-  //   opts.maxDisplayDecimals = MAX_NUMBER_FORMAT_DISPLAY_DECIMALS;
-  //   console.warn(`Using ${MAX_NUMBER_FORMAT_DISPLAY_DECIMALS} for maxDisplayDecimals since it ` +
-  //     'is the maximum supported by Intl.NumberFormat');
-  // }
-
   if (isWalletCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
     let amt = bigNumber(amount);
