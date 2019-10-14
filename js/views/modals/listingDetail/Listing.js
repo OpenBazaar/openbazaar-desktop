@@ -9,7 +9,7 @@ import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
 import {
   getCurrencyValidity,
-  renderFormattedCurrency,
+  convertAndFormatCurrency,
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
@@ -494,7 +494,7 @@ export default class extends BaseModal {
     const _totalPrice = this.model.get('item').get('price') + surcharge;
     if (_totalPrice !== this.totalPrice) {
       this.totalPrice = _totalPrice;
-      const adjPrice = renderFormattedCurrency(
+      const adjPrice = convertAndFormatCurrency(
         this.totalPrice,
         this.model
           .get('item')

@@ -6,7 +6,6 @@ import {
   convertCurrency,
   getCurrencyValidity,
   getExchangeRate,
-  renderFormattedCurrency,
   renderPairedCurrency,
   isFiatCur,
 } from './currency';
@@ -108,7 +107,6 @@ const currencyExport = {
   convertCurrency,
   getCurrencyValidity,
   getExchangeRate,
-  formattedCurrency: gracefulException(renderFormattedCurrency),
   pairedCurrency: gracefulException(renderPairedCurrency),
   isFiatCur: gracefulException(isFiatCur, false),
 };

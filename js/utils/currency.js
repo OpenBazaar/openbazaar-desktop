@@ -368,11 +368,6 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
 /**
  * Will format an amount in the given currency into the format appropriate for the given
  * locale.
- * In many cases, instead of using this method directly, you may want to use
- * renderFormattedCurrency() from this module or its corresponding template helper,
- * formattedCurrency, since those will more robustly handle (via tooltips and icons)
- * unrecognized currency codes and/or conversion problems due to unavailable exchange
- * rate data.
  */
 console.log('doc the param types');
 console.log('unit test that amount ccan be of various numeric typees');
@@ -709,10 +704,7 @@ export function convertCurrency(amount, fromCur, toCur) {
 
 /**
  * Convenience function to both convert and format a currency amount using convertCurrency()
- * and formatCurrency(). In many cases, instead of using this method directly, you may want
- * to use renderFormattedCurrency() from this module or its corresponding template helper,
- * formattedCurrency, since those will more robustly handle (via tooltips and icons)
- * unrecognized currency codes and/or conversion problems due to unavailable exchange rate data.
+ * and formatCurrency().
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
@@ -774,35 +766,6 @@ export function getCurrencyValidity(cur) {
   }
 
   return returnVal;
-}
-
-/**
- * Will render a formattedCurrency template. The main function of the template is that it will
- * render a localized price when possible. When it is not possible (e.g. an unrecognized currency),
- * it will render an alert icon with a tooltip containing an explanation (assuming you don't pass in
- * the showTooltipOnUnrecognizedCur option as false).
- */
-export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
-  if (typeof fromCur !== 'string' || !fromCur) {
-    throw new Error('Please provide a "from currency" as a string.');
-  }
-
-  if (toCur && typeof toCur !== 'string') {
-    throw new Error('If providing a "to currency", it must be provided as a string.');
-  }
-
-  let result = '';
-
-  loadTemplate('components/formattedCurrency.html', (t) => {
-    result = t({
-      price: amount,
-      fromCur,
-      toCur: toCur || fromCur,
-      ...options,
-    });
-  });
-
-  return result;
 }
 
 /**

@@ -13,7 +13,7 @@
 <<%= ob.wrappingTag %> class="<%= ob.wrappingClass %> <%= colorClass %>">
   <span>
     <%=
-      ob.currencyMod.formattedCurrency(
+      ob.currencyMod.convertAndFormatCurrency(
         ob.priceAmount,
         ob.priceCurrencyCode,
         ob.displayCurrency

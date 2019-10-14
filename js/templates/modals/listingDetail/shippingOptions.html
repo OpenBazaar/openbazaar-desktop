@@ -21,7 +21,7 @@
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
             <%= 
-              ob.currencyMod.formattedCurrency(
+              ob.currencyMod.convertAndFormatCurrency(
                 service.price,
                 ob.pricingCurrency,
                 ob.displayCurrency
@@ -34,7 +34,7 @@
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
             <%= 
-              ob.currencyMod.formattedCurrency(
+              ob.currencyMod.convertAndFormatCurrency(
                 service.additionalItemPrice,
                 ob.pricingCurrency,
                 ob.displayCurrency

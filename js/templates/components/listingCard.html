@@ -119,13 +119,10 @@
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
         <div>
           <%=
-            ob.currencyMod.formattedCurrency(
+            ob.currencyMod.convertAndFormatCurrency(
               ob.price.amount,
               ob.price.currencyCode,
-              ob.displayCurrency,
-              {
-                toolTipClass: 'toolTipTop',
-              }
+              ob.displayCurrency
             )
           %>
         </div>
@@ -193,13 +190,10 @@
           <%
             if (ob.contractType !== 'CRYPTOCURRENCY') { %>
             <%=
-              ob.currencyMod.formattedCurrency(
+              ob.currencyMod.convertAndFormatCurrency(
                 ob.price.amount,
                 ob.price.currencyCode,
-                ob.displayCurrency,
-                {
-                  toolTipClass: 'toolTipTop',
-                }
+                ob.displayCurrency
               )
             %>
           <% } else { %>

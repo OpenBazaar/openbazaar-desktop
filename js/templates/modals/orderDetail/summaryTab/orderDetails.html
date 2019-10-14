@@ -57,7 +57,7 @@
           <% } %>
           <% if (isCrypto) { %>
             <div class="rowTn">
-              <span class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %>:</span> <%= ob.currencyMod.formattedCurrency(item.quantity, coinType) %> <a class="js-copyCryptoQuantity clrTEm" data-quantity="<%= item.quantity %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
+              <span class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %>:</span> <%= ob.currencyMod.convertAndFormatCurrency(item.quantity, coinType) %> <a class="js-copyCryptoQuantity clrTEm" data-quantity="<%= item.quantity %>"><%= ob.polyT('orderDetail.summaryTab.orderDetails.copyLink') %></a>
             </div>
             <div class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoQuantityCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></div>
           <% } %>          
