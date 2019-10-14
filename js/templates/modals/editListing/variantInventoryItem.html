@@ -11,7 +11,7 @@
   <td class="clrBr"><%= choice %></td>
   <td class="clrBr">
     <% if (ob.errors['bigSurcharge']) print(ob.formErrorTmpl({ errors: ob.errors['bigSurcharge'] })) %>
-    <input type="text" class="clrBr clrP clrSh2 js-surcharge" name="bigSurcharge" value="<%= ob.toStandardNotation(ob.bigSurcharge) %>" placeholder="0.00" data-var-type="bignumber" />
+    <input type="text" class="clrBr clrP clrSh2 js-surcharge" name="bigSurcharge" value="<%= ob.number.toStandardNotation(ob.bigSurcharge) %>" placeholder="0.00" data-var-type="bignumber" />
   </td>
   <td class="clrBr js-totalPrice"><%= ob.calculateTotalPrice(ob.bigSurcharge || ob.bigNumber('0')) %></td>
   <td class="clrBr">

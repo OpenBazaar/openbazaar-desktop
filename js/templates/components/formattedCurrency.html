@@ -1,6 +1,11 @@
 
 <%
+  ob.price = 'chester';
+
   const price = ob.price; // required
+
+  ob.fromCur = 'DUPA FACE WAGON';
+  ob.toCur = 'SUGAR';
 
   // If you only need to format a price and not convert, just provide the same currency code for both
   // the from and to currencies.
@@ -16,12 +21,8 @@
   const showTooltipOnUnrecognizedCur = ob.showTooltipOnUnrecognizedCur || true;
   const fromCurValidity = ob.currencyMod.getCurrencyValidity(fromCur);
 
-  // If the price is not a number, we'll show the unrecognized currency tooltip. This most likely happened
-  // because a model was unable to convert the price to/from base units because it doesn't recognize the
-  // currency and therefore doesn't know what base units to use.
-  const formattedPrice = typeof price === 'number' ?
-    ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur, { forceCryptoListingCur: true }) :
-    false;
+  const formattedPrice = ob.number.isValidNumber(price) ?
+    ob.currencyMod.convertAndFormatCurrency(price, fromCur, toCur) : '';
 %>
 
-<%= formattedPrice === false ? '' : formattedPrice %><% if (formattedPrice === false) %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>
+<%= formattedPrice === false ? '' : formattedPrice %><% if (formattedPrice === '') %>&nbsp;<span class="<%= toolTipFullClass %>" data-tip="<%= ob.polyT('formattedCurrency.unrecognizedCurrencyTip', { cur: fromCur }) %>"><span class="<%= iconFullClass %>"></span></span>

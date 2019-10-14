@@ -1,6 +1,6 @@
 import app from '../../app';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { integerToDecimal, getCoinDivisibility } from '../../utils/currency';
+import { curDefToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -33,25 +33,47 @@ export default class extends BaseModel {
   }
 
   parse(response) {
+    console.log('what happens in the UI with bad data?');
+    
     const parsedResponse = { ...response };
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
       parsedResponse.categories : [];
 
+    const modifier = parsedResponse.modifier || 0;
+    let amount = '';
+    let currencyCode = '';
+
+    try {
+      amount = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
+          1 : curDefToDecimal(parsedResponse.price);
+    } catch (e) {
+      console.error(`Unable to convert the listing price from base units: ${e.message}`);
+    }
+
+    try {
+      currencyCode = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
+        parsedResponse.cryptoCurrencyCode : parsedResponse.price.currency.code;
+    } catch (e) {
+      // pass
+    }
+
+    parsedResponse.price = {
+      amount,
+      currencyCode,
+      modifier,
+    };
+
+    try {
+      delete parsedResponse.cryptoCurrencyCode;
+      delete parsedResponse.modifier;
+    } catch (e) {
+      // pass
+    }
+
     if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
-      const modifier = parsedResponse.modifier || 0;
-
-      console.log('cryptoCurrencyCode should maybe be coinType - ob-go - 1768');
-
-      parsedResponse.price = {
-        amount: 1 + (modifier / 100),
-        currencyCode: parsedResponse.cryptoCurrencyCode,
-        modifier,
-      };
-
-      console.log('help me rhonda');
-      // seems like totalInventoryQuantity was removed. Search code for other references that
-      // maybe need cleaning up.
+      // Commenting out inventory related coded since its not functional (on the server
+      // at this time.
 
       // if (parsedResponse.totalInventoryQuantity >= 0 &&
       //   parsedResponse.coinDivisibility > 0) {
@@ -63,24 +85,6 @@ export default class extends BaseModel {
       //   // represent properly.
       //   delete parsedResponse.totalInventoryQuantity;
       // }
-    } else {
-      const priceObj = parsedResponse.price;
-
-      if (priceObj) {
-        // TODO: This is temp until the server provides this.
-        // TODO: This is temp until the server provides this.
-        // TODO: This is temp until the server provides this.
-        // TODO: This is temp until the server provides this.
-        // TODO: This is temp until the server provides this.
-        const coinDiv =
-          priceObj.currencyCode && typeof priceObj.currencyCode === 'string' ?
-            getCoinDivisibility(priceObj.currencyCode) : undefined;
-
-        parsedResponse.price = {
-          ...priceObj,
-          amount: integerToDecimal(priceObj.amount, coinDiv),
-        };
-      }
     }
 
     return parsedResponse;

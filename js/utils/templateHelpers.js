@@ -28,6 +28,7 @@ import {
   upToFixed,
   localizeNumber,
   toStandardNotation,
+  isValidNumber,
 } from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
@@ -122,19 +123,23 @@ const crypto = {
   getWalletCurByCode,
 };
 
-console.log('put number exports into number namespace');
+const number = {
+  upToFixed,
+  localizeNumber,
+  toStandardNotation,
+  isValidNumber,
+};
+
 export {
   bigNumber,
   currencyExport as currencyMod,
   crypto,
+  number,
   isHiRez,
   isLargeWidth,
   isSmallHeight,
   getAvatarBgImage,
   getListingBgImage,
-  localizeNumber,
-  upToFixed,
-  toStandardNotation,
   splitIntoRows,
   is,
   tagsDelimiter,

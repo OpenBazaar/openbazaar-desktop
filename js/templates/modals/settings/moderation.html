@@ -70,7 +70,7 @@
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
                 <%
                   const amt = ob.fee && ob.fee.fixedFee ?
-                    ob.toStandardNotation(ob.fee.fixedFee.amount) : 0;
+                    ob.number.toStandardNotation(ob.fee.fixedFee.amount) : 0;
                   const ccode =
                     ob.fee &&
                     ob.fee.fixedFee &&

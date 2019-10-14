@@ -893,7 +893,13 @@ export function decimalToCurDef(amount, curCode, options = {}) {
 /**
  * Will return a BigNumber representation of a decimal number based off of the
  * provided currency definition.
- * @param {object} A currency definition matching the OB-go cur def schema.
+ * @param {object} curDef - A currency definition matching the OB-go cur def
+ *   schema.
+ * @param {object} options
+ * @param {string} options.amount - The property name representing the amount
+ *   in the provided curDef object.
+ * @param {string} options.currency - The property name representing the currency
+ *   object in the provided curDef object.
  * @returns {BigNumber} - a BigNumber representation of a decimal number based off
  * of the provided currency definition.
  */

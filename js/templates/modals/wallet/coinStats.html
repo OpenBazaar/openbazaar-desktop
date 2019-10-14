@@ -89,7 +89,7 @@
       <div class="txB tx5"><%= ob.polyT('wallet.coinStats.transactionsHeader') %></div>
       <div class="clrTEm txB tx2">
         <%= typeof ob.transactionCount === 'number' ?
-          ob.localizeNumber(ob.transactionCount) : '' %>
+          ob.number.localizeNumber(ob.transactionCount) : '' %>
       </div>
     </div>
   </div>

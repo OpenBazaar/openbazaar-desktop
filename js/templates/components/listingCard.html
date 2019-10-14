@@ -105,7 +105,7 @@
             <%= ob.crypto.tradingPair({
               className: 'cryptoTradingPairSm',
               fromCur,
-              toCur: ob.coinType,
+              toCur: ob.price.currencyCode,
               truncateCurAfter: 5,
             }) %>
           </a>
@@ -172,7 +172,7 @@
           <%= ob.crypto.tradingPair({
             className: 'cryptoTradingPairSm',
             fromCur: ob.acceptedCurrencies[0],
-            toCur: ob.coinType,
+            toCur: ob.price.currencyCode,
             truncateCurAfter: 5,
           }) %>
         <% } %>

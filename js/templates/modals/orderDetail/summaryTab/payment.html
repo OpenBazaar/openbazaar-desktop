@@ -80,7 +80,7 @@
           if (ob.amountShort > 0) {
             subText =
               ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
-                amountShort: ob.upToFixed(ob.amountShort, 8),
+                amountShort: ob.number.upToFixed(ob.amountShort, 8),
               });
           }
         %>

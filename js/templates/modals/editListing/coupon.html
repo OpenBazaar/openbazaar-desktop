@@ -15,7 +15,7 @@
         let discountAmount;
 
         if (ob.bigPriceDiscount) {
-          discountAmount = ob.toStandardNotation(ob.bigPriceDiscount);
+          discountAmount = ob.number.toStandardNotation(ob.bigPriceDiscount);
         } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount = ob.percentDiscount;
         }
