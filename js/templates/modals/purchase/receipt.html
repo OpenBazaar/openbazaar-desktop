@@ -71,7 +71,7 @@
           }),
           cryptoIconsAmount:
             `<span class="cryptoQuantity">${ob.polyT('purchase.receipt.cryptoIconsAmount',
-              { amount: priceObj.formattedQuantity })}</span>`,
+              { amount: ob.number.toStandardNotation(priceObj.quantity) })}</span>`,
         }) %>
 
       <% } %>
@@ -158,7 +158,7 @@
     <% if (!ob.isCrypto) { %>
       <div class="flexRow gutterHSm">
         <span class="flexExpand">
-          <%= ob.polyT('purchase.receipt.subtotal', { quantity: priceObj.formattedQuantity }) %>
+          <%= ob.polyT('purchase.receipt.subtotal', { quantity: ob.number.toStandardNotation(priceObj.quantity) }) %>
         </span>
         <div class="constrainedWidth">
           <div class="flexHRight">      
@@ -189,7 +189,8 @@
       <%= ob.polyT('purchase.receipt.total') %>
     </span>
     <div class="constrainedWidth">
-      <div class="flexHRight">    
+      <div class="flexHRight">
+        <% console.log('sugar'); window.sugar = subTotal.plus(shippingTotal) %>
         <b>
           <%= ob.currencyMod.formatCurrency(subTotal.plus(shippingTotal), viewingCurrency) %>
         </b>

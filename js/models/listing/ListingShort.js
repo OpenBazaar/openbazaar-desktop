@@ -53,7 +53,7 @@ export default class extends BaseModel {
 
     try {
       currencyCode = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
-        parsedResponse.cryptoCurrencyCode : parsedResponse.price.currency.code;
+        parsedResponse.coinType : parsedResponse.price.currency.code;
     } catch (e) {
       // pass
     }

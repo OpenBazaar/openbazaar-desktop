@@ -26,7 +26,6 @@
         })
         .forEach((service, si) => {
     %>
-      <% console.log('spoon'); window.spoon = service %>
       <% if (service.bigPrice && service.bigPrice.eq(0)) var fShp = true; %>
       <tr class="<% if (fShp) print('txB') %> <% if (si === option.services.length -1) print('lastRow') %>">
         <td><%= service.name %></td>

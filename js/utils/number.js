@@ -103,6 +103,7 @@ export function decimalPlaces(num) {
 // todo: doc and put in our style
 // todo: doc and put in our style
 console.log('todo: doc and put in our style');
+console.log('update to expect 3 diff number types and match that on return');
 // https://stackoverflow.com/a/7343013/632806
 export function preciseRound(value, precision) {
   if (typeof value === 'string') {

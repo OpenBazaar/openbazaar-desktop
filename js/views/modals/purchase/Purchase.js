@@ -13,7 +13,12 @@ import {
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation, preciseRound } from '../../../utils/number';
-import { integerToDecimal, convertCurrency } from '../../../utils/currency';
+import {
+  decimalToInteger,
+  convertCurrency,
+  isValidCoinDivisibility,
+  curDefToDecimal,
+} from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
@@ -84,7 +89,7 @@ export default class extends BaseModal {
     const item = new Item(
       {
         listingHash: this.listing.get('hash'),
-        quantity: !this.listing.isCrypto ? 1 : undefined,
+        bigQuantity: !this.listing.isCrypto ? bigNumber('1') : undefined,
         options: opts.variants || [],
       },
       {
@@ -249,7 +254,6 @@ export default class extends BaseModal {
       'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
-      'change #purchaseQuantity': 'changeQuantityInput',
       'change #purchaseCryptoAddress': 'changeCryptoAddress',
       'click .js-newAddress': 'clickNewAddress',
       'click .js-applyCoupon': 'applyCoupon',
@@ -259,7 +263,7 @@ export default class extends BaseModal {
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       'change #cryptoAmountCurrency': 'changeCryptoAmountCurrency',
       'change #cryptoAmount': 'onChangeCryptoAmount',
-      'keyup [name="quantity"]': 'keyupQuantity',
+      'keyup [name="bigQuantity"]': 'keyupQuantity',
       ...super.events(),
     };
   }
@@ -339,19 +343,19 @@ export default class extends BaseModal {
     // result is zero, it means the price is lower than the base units allow. In that
     // case we'll do nothing and let the model error show in the UI and the user could
     // increase it.
-    const coinType = this.listing
-      .get('metadata')
-      .get('coinType');
+    // const coinType = this.listing
+    //   .get('metadata')
+    //   .get('coinType');
 
-    if (this.cryptoAmountCurrency !== coinType) return;
+    // if (this.cryptoAmountCurrency !== coinType) return;
 
-    const roundedAmount = preciseRound(Number(e.target.value), this.coinDivisibility);
+    // const roundedAmount = preciseRound(e.target.value, this.coinDivisibility);
 
-    if (roundedAmount === 0) return;
+    // if (roundedAmount === 0) return;
 
-    $(e.target).val(
-      toStandardNotation(roundedAmount)
-    );
+    // $(e.target).val(
+    //   toStandardNotation(roundedAmount)
+    // );
   }
 
   changeCryptoAddress(e) {
@@ -365,47 +369,55 @@ export default class extends BaseModal {
       throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
 
-    let mdQuantity = quantity;
-    const numericQuantity = parseFloat(quantity);
+    console.log('maya');
+    window.maya = quantity;
 
-    if (this.listing.isCrypto &&
-      cur !== this.listing.get('metadata')
-        .get('coinType') &&
-      !isNaN(numericQuantity)) {
-      mdQuantity = convertCurrency(
-        numericQuantity,
-        cur,
-        this.listing
-          .get('metadata')
-          .get('coinType')
-      );
-      const rounded = preciseRound(mdQuantity, this.coinDivisibility);
-      // If the quantity is so low that rounding to base units results in zero, we'll
-      // us the unrounded one and let the model error bubble up to the UI.
-      if (rounded > 0) mdQuantity = rounded;
-    }
+    // let mdQuantity = quantity;
+
+    // if (
+    //   quantity instanceof bigNumber &&
+    //   !quantity.isNaN() &&
+    //   this.listing.isCrypto
+    // ) {
+    //   const coinType = this.listing
+    //     .get('metadata')
+    //     .get('coinType');
+
+    //   mdQuantity = convertCurrency(
+    //     quantity,
+    //     cur,
+    //     coinType
+    //   );
+
+    //   const rounded = preciseRound(mdQuantity.toString(), this.coinDivisibility);
+    //   const bigRounded = bigNumber(rounded);
+
+    //   // If the quantity is so low that rounding to base units results in zero, we'll
+    //   // use the unrounded one and let the model error bubble up to the UI.
+    //   if (bigRounded.gt(0)) mdQuantity = bigRounded;
+    // }
 
     this.order.get('items')
       .at(0)
-      .set({ quantity: mdQuantity });
+      .set({ bigQuantity: quantity });
   }
 
   changeCryptoAmountCurrency(e) {
     this._cryptoAmountCurrency = e.target.value;
     const quantity = this.getFormData(
       this.getCachedEl('#cryptoAmount')
-    ).quantity;
+    ).bigQuantity;
     this.setModelQuantity(quantity);
   }
 
   keyupQuantity(e) {
     // wait until they stop typing
-    if (this.searchKeyUpTimer) {
-      clearTimeout(this.searchKeyUpTimer);
+    if (this.quantityKeyUpTimer) {
+      clearTimeout(this.quantityKeyUpTimer);
     }
 
-    this.searchKeyUpTimer = setTimeout(() => {
-      const quantity = this.getFormData($(e.target)).quantity;
+    this.quantityKeyUpTimer = setTimeout(() => {
+      const quantity = this.getFormData($(e.target)).bigQuantity;
       if (this.listing.isCrypto) this._cryptoQuantity = quantity;
       this.setModelQuantity(quantity);
     }, 150);
@@ -519,18 +531,47 @@ export default class extends BaseModal {
         });
       } else {
         const coinDivisibility = this.coinDivisibility;
+        const cryptoItems = [];
+
+        if (this.listing.isCrypto) {
+          if (!isValidCoinDivisibility(coinDivisibility)[0]) {
+            this.setState({ phase: 'pay' });
+            openSimpleMessage(
+              app.polyglot.t('purchase.errors.genericPurchaseErrTitle'),
+              app.polyglot.t('purchase.errors.invalidCoinDiv')
+            );
+            return;
+          }
+
+          try {
+            const items = this.order.get('items');
+            for (let i = 0; i < items.length; i++) {
+              const item = items.at(i);
+              cryptoItems.push({
+                ...item.toJSON(),
+                bigQuantity: decimalToInteger(
+                  item.get('bigQuantity'),
+                  coinDivisibility
+                ),
+              });
+            }
+          } catch (e) {
+            console.log('test this case with zest.');
+            openSimpleMessage(
+              app.polyglot.t('purchase.errors.genericPurchaseErrTitle'),
+              app.polyglot.t('purchase.errors.unableToConvertCryptoQuantity')
+            );
+            console.error(e);
+            return;
+          }
+        }
 
         $.post({
           url: app.getServerUrl('ob/purchase'),
           data: JSON.stringify({
             ...this.order.toJSON(),
-            items: this.order.get('items')
-              .map(item => ({
-                ...item.toJSON(),
-                quantity: this.listing.isCrypto ?
-                  integerToDecimal(item.get('quantity'), coinDivisibility) :
-                  item.get('quantity'),
-              })),
+            items: this.listing.isCrypto ?
+              cryptoItems : this.order.get('items'),
           }),
           dataType: 'json',
           contentType: 'application/json',
@@ -538,7 +579,7 @@ export default class extends BaseModal {
           .done((data) => {
             this.setState({ phase: 'pending' });
             this.payment = this.createChild(Payment, {
-              balanceRemaining: integerToDecimal(data.amount, coinDivisibility),
+              balanceRemaining: curDefToDecimal(data.amount),
               paymentAddress: data.paymentAddress,
               orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
@@ -639,7 +680,7 @@ export default class extends BaseModal {
         sPrice: bigNumber(sOptService ? sOptService.get('bigPrice') : 0),
         aPrice: bigNumber(sOptService ? sOptService.get('bigAdditionalItemPrice') : 0),
         vPrice: bigNumber(sku ? sku.get('bigSurcharge') : 0),
-        quantity: bigNumber(item.get('quantity')),
+        quantity: bigNumber(item.get('bigQuantity')),
       };
     });
   }
@@ -660,19 +701,14 @@ export default class extends BaseModal {
   }
 
   get coinDivisibility() {
-    let coinDiv = this.listing
-      .get('metadata')
-      .get('coinDivisibility');
-
-    // TODO: temp conversion until server migrates to new format
-    // TODO: temp conversion until server migrates to new format
-    // TODO: temp conversion until server migrates to new format
-    // TODO: temp conversion until server migrates to new format
-
-    coinDiv = coinDiv > 99 ?
-      Math.log(coinDiv) / Math.log(10) : coinDiv;
-
-    return coinDiv;
+    return this.listing.isCrypto ?
+      this.listing
+        .get('metadata')
+        .get('coinDivisibility') :
+      this.listing
+        .get('item')
+        .get('priceCurrency')
+        .divisibility;
   }
 
   get isModerated() {
@@ -682,6 +718,7 @@ export default class extends BaseModal {
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
+    clearTimeout(this.quantityKeyUpTimer);
     super.remove();
   }
 
@@ -690,13 +727,13 @@ export default class extends BaseModal {
     const state = this.getState();
     const item = this.order.get('items')
       .at(0);
-    const quantity = item.get('quantity');
+    const quantity = item.get('bigQuantity');
     const metadata = this.listing.get('metadata');
 
     let uiQuantity = quantity;
 
     if (this.listing.isCrypto && this._cryptoQuantity !== undefined) {
-      uiQuantity = typeof quantity === 'number' ?
+      uiQuantity = uiQuantity instanceof bigNumber && !uiQuantity.isNaN() ?
         toStandardNotation(this._cryptoQuantity) : this._cryptoQuantity;
     }
 

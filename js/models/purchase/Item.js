@@ -3,6 +3,7 @@ import bigNumber from 'bignumber.js';
 import {
   decimalPlaces,
   toStandardNotation,
+  isValidNumber,
 } from '../../utils/number';
 import { minValueByCoinDiv } from '../../utils/currency';
 import BaseModel from '../BaseModel';
@@ -73,58 +74,44 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (
-      attrs.quantity === undefined ||
-      attrs.quantity === null ||
-      attrs.quantity === ''
-    ) {
-      const isCrypto = this.isCrypto ? 'Crypto' : '';
-      addError('quantity', app.polyglot.t(`purchaseItemModelErrors.provide${isCrypto}Quantity`));
+    console.log('snoop');
+    window.snoop = attrs;
+
+    if (this.isCrypto) {
+      console.log('prune unecessary trans err keys');
+      this.validateCurrencyAmount(
+        {
+          amount: attrs.bigQuantity,
+          currency: {
+            code: this.getCoinType,
+            divisibility: this.getCoinDiv,
+          },
+        },
+        addError,
+        errObj,
+        'bigQuantity',
+        {
+          translations: {
+            required: 'purchaseItemModelErrors.provideCryptoQuantity',
+            type: 'purchaseItemModelErrors.quantityMustBeNumeric',
+            fractionDigitCount: 'purchaseItemModelErrors.fractionTooLow',
+          },
+        }
+      );
     } else {
-      const bigNumQuantity = bigNumber(attrs.quantity);
-
-      if (!this.isCrypto) {
-        if (!bigNumQuantity.isInteger()) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
-        } else if (bigNumQuantity.lt(1)) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
-        }
-      } else {
-        console.log('test me silly');
-        const inventory = this.getInventory();
-
-        let coinDiv = this.getCoinDiv();
-        // temp conversion until server updates to the new format
-        // temp conversion until server updates to the new format
-        // temp conversion until server updates to the new format
-        // temp conversion until server updates to the new format
-        coinDiv = coinDiv > 99 ?
-          Math.log(coinDiv) / Math.log(10) : coinDiv;
-
-        const minCoinDivPrice = minValueByCoinDiv(coinDiv);
-
-        if (typeof attrs.quantity !== 'number') {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
-        } else if (attrs.quantity <= 0) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
-        } else if (attrs.quantity < minCoinDivPrice) {
-          addError('quantity',
-            app.polyglot.t('purchaseItemModelErrors.cryptoQuantityTooLow', {
-              cur: this.getCoinType(),
-              min: toStandardNotation(minCoinDivPrice),
-            })
-          );
-        } else if (decimalPlaces(attrs.quantity) > coinDiv) {
-          // We're rounding in the view to avoid this error, so it should never be
-          // user facing.
-          addError('quantity',
-            `The quantity has too many decimal places. The maximum is ${coinDiv}.`);
-        } else if (typeof inventory === 'number' &&
-          attrs.quantity > inventory) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory', {
-            smart_count: inventory,
-          }));
-        }
+      if (
+        attrs.bigQuantity === null ||
+        attrs.bigQuantity === undefined ||
+        attrs.bigQuantity === ''
+      ) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
+      } else if (
+        !isValidNumber(attrs.bigQuantity) ||
+        !attrs.bigQuantity.isInteger()
+      ) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
+      } else if (attrs.bigQuantity.lt(1)) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
       }
     }
 

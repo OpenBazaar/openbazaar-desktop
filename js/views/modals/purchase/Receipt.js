@@ -1,11 +1,11 @@
 import app from '../../../app';
 import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
-import {
-  getCoinDivisibility,
-  nativeNumberFormatSupported,
-  defaultCryptoCoinDivisibility,
-} from '../../../utils/currency';
+// import {
+//   getCoinDivisibility,
+//   nativeNumberFormatSupported,
+//   defaultCryptoCoinDivisibility,
+// } from '../../../utils/currency';
 import Order from '../../../models/purchase/Order';
 import Listing from '../../../models/listing/Listing';
 import BaseView from '../../baseVw';
@@ -77,29 +77,29 @@ export default class extends BaseView {
                 priceObj.quantity : bigNumber(0);
           }
 
-          let coinDiv;
-          let formattedQuantity;
+          // let coinDiv;
+          // let formattedQuantity;
 
-          try {
-            coinDiv = getCoinDivisibility(displayCurrency);
-          } catch (e) {
-            // pass
-          }
+          // try {
+          //   coinDiv = getCoinDivisibility(displayCurrency);
+          // } catch (e) {
+          //   // pass
+          // }
 
-          if (coinDiv === undefined) coinDiv = defaultCryptoCoinDivisibility;
+          // if (coinDiv === undefined) coinDiv = defaultCryptoCoinDivisibility;
 
-          if (nativeNumberFormatSupported(quantity, coinDiv)) {
-            formattedQuantity = new Intl.NumberFormat(displayCurrency, {
-              minimumFractionDigits: 0,
-              maximumFractionDigits: coinDiv,
-            }).format(quantity.toNumber());
-          } else {
-            formattedQuantity = quantity.toFormat();
-          }
+          // if (nativeNumberFormatSupported(quantity, coinDiv)) {
+          //   formattedQuantity = new Intl.NumberFormat(displayCurrency, {
+          //     minimumFractionDigits: 0,
+          //     maximumFractionDigits: coinDiv,
+          //   }).format(quantity.toNumber());
+          // } else {
+          //   formattedQuantity = quantity.toFormat();
+          // }
 
           return {
             ...priceObj,
-            formattedQuantity,
+            // formattedQuantity,
             quantity,
           };
         }),

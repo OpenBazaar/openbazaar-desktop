@@ -1510,7 +1510,10 @@
       "insufficientInventoryTitle": "Insufficient Inventory",
       "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
       "reloadOutdatedHash": "load the latest version",
-      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process.",
+      "genericPurchaseErrTitle": "Unable To Complete The Purchase",
+      "invalidCoinDiv": "The listing does not have a valid coin divisibility.",
+      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units."
     }
   },
   "moderators": {
@@ -2114,11 +2117,11 @@
     "removeModerator": "An unmoderated purchase cannot have a moderator."
   },
   "purchaseItemModelErrors": {
-    "provideQuantity": "Please provide a quantity.",
     "provideCryptoQuantity": "Please provide the amount of this currency you wish to purchase.",
+    "provideQuantity": "Please provide a quantity",
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
-    "quantityMustBeNumeric": "The quantity must be numeric.",
+    "quantityMustBeNumeric": "The quantity must be a valid number.  If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "quantityMustBePositive": "The quantity must be greater than zero.",
     "missingShippingOption": "Please choose a valid shipping option.",
     "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
