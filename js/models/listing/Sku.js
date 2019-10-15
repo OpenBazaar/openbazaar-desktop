@@ -34,8 +34,6 @@ export default class extends BaseModel {
       addError('infiniteInventory', 'If provided, infiniteInventory should be a boolean.');
     }
 
-    console.dir(attrs);
-
     if (attrs.infiniteInventory) {
       if (attrs.bigQuantity) {
         addError('bigQuantity', 'bigQuantity should not be provided if provided if ' +

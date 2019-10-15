@@ -77,6 +77,7 @@ export default class extends BaseView {
 
     if (formData.infiniteInventory) {
       delete formData.bigQuantity;
+      this.model.unset('bigQuantity');
     }
 
     this.model.set(formData);

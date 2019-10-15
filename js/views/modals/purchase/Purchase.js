@@ -700,9 +700,6 @@ export default class extends BaseModal {
         toStandardNotation(this._cryptoQuantity) : this._cryptoQuantity;
     }
 
-    console.log('moo');
-    window.moo = this.listing;
-
     loadTemplate('modals/purchase/purchase.html', t => {
       this.$el.html(t({
         ...this.order.toJSON(),
