@@ -100,8 +100,8 @@
           <b>
             <% if (coupon.percentDiscount) {
                  print(`-${coupon.percentDiscount}%`);
-            } else if (coupon.priceDiscount) {
-              print(`-${ob.currencyMod.convertAndFormatCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency)}`);
+            } else if (coupon.bigPriceDiscount && !coupon.bigPriceDiscount.isNaN()) {
+              print(`-${ob.currencyMod.convertAndFormatCurrency(coupon.bigPriceDiscount, ob.listingCurrency, viewingCurrency)}`);
             } %>
           </b>
         </div>
