@@ -1,11 +1,5 @@
 import _ from 'underscore';
-import bigNumber from 'bignumber.js';
-import {
-  decimalPlaces,
-  toStandardNotation,
-  isValidNumber,
-} from '../../utils/number';
-import { minValueByCoinDiv } from '../../utils/currency';
+import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
 import Shipping from './Shipping';
@@ -74,11 +68,7 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    console.log('snoop');
-    window.snoop = attrs;
-
     if (this.isCrypto) {
-      console.log('prune unecessary trans err keys');
       this.validateCurrencyAmount(
         {
           amount: attrs.bigQuantity,
@@ -93,8 +83,9 @@ export default class extends BaseModel {
         {
           translations: {
             required: 'purchaseItemModelErrors.provideCryptoQuantity',
-            type: 'purchaseItemModelErrors.quantityMustBeNumeric',
+            type: 'purchaseItemModelErrors.cryptoQuantityMustBeNumeric',
             fractionDigitCount: 'purchaseItemModelErrors.fractionTooLow',
+            range: 'purchaseItemModelErrors.cryptoQuantityMustBePositive',
           },
         }
       );
