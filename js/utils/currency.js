@@ -255,8 +255,7 @@ export function isFormattedResultZero(amount, maxDecimals) {
   );
 }
 
-// This is the max supported by Intl.NumberFormat.
-const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 20;
+const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 100;
 
 /**
  * The idea of this function is that many times for display purposes, you want to
@@ -268,7 +267,6 @@ const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 20;
  * the result would be zero, it will increase the desired max until at least one
  * significant digit is shown. For example, a call of 0.0001 with a desired max of 2,
  * would return 4.
- * Note that max value returned with be MAX_NUMBER_FORMAT_DISPLAY_DECIMALS.
  * Note that this mimics the behavior of Intl.NumberFormat which will round up. So,
  * 0.005 with a desired max of 2 will return two because when formatted it will
  * result in 0.01.
@@ -400,10 +398,7 @@ export function formatCurrency(amount, currency, options) {
     if (nativeNumberFormatSupported(value, maxDecimals)) {
       return new Intl.NumberFormat(
         opts.locale,
-        {
-          ...formatAmountOpts,
-          style: 'decimal',
-        }
+        formatAmountOpts
       ).format(value);
     }
 
@@ -541,12 +536,11 @@ export function formatCurrency(amount, currency, options) {
       });
     }
   } else {
-    // Note if the amount provided is too large to has too many decimal places,
-    // Intl.NumberFormat may change (round, truncate) the number. It's unlikely
-    // though because this is being used for fiat which we round to two decimal
-    // places. So the main culprit would be an amount > Number.MAX_SAFE_INTEGER,
-    // which is unlikely you'll stumble upon such a fiat amount.
-    formattedCurrency = new Intl.NumberFormat(
+    // Note if the amount provided has too many decimals for Intl.NumberFormat to display,
+    // the formatting function for bigNumber.js will be used, but that will neither localize
+    // nor style the result as currency. It should be rare that is needed.
+    formattedCurrency = formatAmount(
+      amount,
       opts.locale,
       {
         style: 'currency',
@@ -554,7 +548,7 @@ export function formatCurrency(amount, currency, options) {
         minimumFractionDigits: opts.minDisplayDecimals,
         maximumFractionDigits: opts.maxDisplayDecimals,
       }
-    ).format(amount);
+    );
   }
 
   return formattedCurrency;

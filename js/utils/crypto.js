@@ -79,10 +79,6 @@ export function renderCryptoTradingPair(options = {}) {
 }
 
 export function renderCryptoPrice(options = {}) {
-  console.log(`hap dap: ${isValidNumber(options.priceAmount)}`);
-  window.hap = options.priceAmount;
-  window.dap = isValidNumber;
-
   if (!isValidNumber(options.priceAmount)) {
     throw new Error('Please provide a price amount as a number.');
   }

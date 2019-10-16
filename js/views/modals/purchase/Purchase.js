@@ -369,9 +369,6 @@ export default class extends BaseModal {
       throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
 
-    console.log('maya');
-    window.maya = quantity;
-
     // let mdQuantity = quantity;
 
     // if (
