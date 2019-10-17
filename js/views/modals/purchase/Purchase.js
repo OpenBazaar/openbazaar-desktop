@@ -12,10 +12,9 @@ import {
   events as inventoryEvents,
 } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
-import { toStandardNotation, preciseRound } from '../../../utils/number';
+import { toStandardNotation } from '../../../utils/number';
 import {
   decimalToInteger,
-  convertCurrency,
   isValidCoinDivisibility,
   curDefToDecimal,
 } from '../../../utils/currency';

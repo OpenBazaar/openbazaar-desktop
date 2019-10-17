@@ -3,9 +3,13 @@
  ensure they are compatible with both the Purchase and Order Detail flows.
  */
 
+import bigNumber from 'bignumber.js';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { formatCurrency, integerToDecimal } from '../../../utils/currency';
+import {
+  formatCurrency,
+  integerToDecimal,
+} from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
@@ -23,9 +27,9 @@ import {
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    if (typeof options.balanceRemaining !== 'number') {
+    if (!options.balanceRemaining instanceof bigNumber) {
       throw new Error('Please provide the balance remaining (in the server\'s' +
-        ' currency) as a number.');
+        ' currency) as a bigNumber instance.');
     }
 
     if (!options.paymentAddress) {
@@ -71,6 +75,8 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', e => {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
+          console.log('got that payment notification');
+          window.payment = e;
           if (e.jsonData.notification.orderId === this.orderId) {
             const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
               this.paymentCoin);
@@ -115,8 +121,11 @@ export default class extends BaseVw {
 
   clickPayFromWallet(e) {
     const walletBalance = app.walletBalances.get(this.paymentCoin);
-    const insufficientFunds = this.balanceRemaining >
-     (walletBalance ? walletBalance.get('confirmed') : 0);
+    console.log('the wal bal is salamander');
+    window.salamander = walletBalance;
+    const insufficientFunds =
+      this.balanceRemaining
+        .gt(walletBalance ? walletBalance.get('confirmed') : 0);
 
     if (insufficientFunds) {
       this.spendConfirmBox.setState({

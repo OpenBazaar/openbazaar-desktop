@@ -1,5 +1,6 @@
 import app from '../../app';
-import { integerToDecimal } from '../../utils/currency';
+import bigNumber from 'bignumber.js';
+import { integerToDecimal, curDefToDecimal } from '../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
@@ -101,17 +102,25 @@ export default class extends BaseModel {
       }
 
       const coinType = this.options ? this.options.coinType : options.coinType;
-      let value;
+      let value = bigNumber();
 
-      try {
-        value = integerToDecimal(
-          returnVal.value,
-          getWalletCurByCode(coinType).coinDivisibility,
-          { returnUndefinedOnError: false }
-        );
-      } catch (e) {
-        console.error(`Unable to convert the ${coinType} transaction value from base ` +
-          `units: ${e.message}`);
+      if (typeof returnVal.value === 'string') {
+        try {
+          value = integerToDecimal(
+            returnVal.value,
+            getWalletCurByCode(coinType).coinDivisibility,
+            { returnUndefinedOnError: false }
+          );
+        } catch (e) {
+          console.error(`Unable to convert the ${coinType} transaction value from base ` +
+            `units: ${e.message}`);
+        }
+      } else if (typeof returnVal.value === 'object') {
+        // If the data is coming from the API, the value will be a string and we get the
+        // divisibility from the wallet urrency definition. If the data comes from the socket
+        // it will be an object containing a fulll currency definition with its own divisibibility.
+        // The server hopes to clean up this inconsistency at some point.
+        value = curDefToDecimal(returnVal.value);
       }
 
       returnVal = {
