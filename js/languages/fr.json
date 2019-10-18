@@ -713,15 +713,15 @@
       "currenciesHelper": "Ces monnaies seront sélectionnées automatiquement sur les annonces que vous créerez.",
       "currenciesNote": "Accepter toutes les monnaies vous donnera le plus grand nombre de clients possible.",
       "bulkListingCoinUpdate": {
-        "mainButton": "Update All Current Listings",
-        "confirmTitle": "Are You Sure?",
-        "confirmMessage": "All of your current listings will be updated to accept the selected coins.",
+        "mainButton": "Mettre à jour toutes les annonces actuelles",
+        "confirmTitle": "Êtes vous sur?",
+        "confirmMessage": "Toutes vos annonces actuelles seront mises à jour pour accepter les cryptomonnaies sélectionnées",
         "cancel": "Annuler",
         "apply": "Appliquer",
         "errors": {
           "errorTitle": "There Was An Error When Updating Your Listings",
-          "errorMessage": "One or more listings failed to update.",
-          "noCoinsError": "You must select at least one coin when updating your listings.",
+          "errorMessage": "La mise à jour d'une ou plusieurs annonces à échoué.",
+          "noCoinsError": "Vous devez sélectionner au moins une cryptomonnaie lorsque vous mettez à jour vos annonces.",
           "reasonForError": "Raison : %{reason}"
         }
       },
@@ -915,7 +915,7 @@
     "coinStats": {
       "balanceHeader": "Solde",
       "unconfirmedBalance": "(%{amount} non confirmé)",
-      "valueInDisplayCur": "Value in %{cur}",
+      "valueInDisplayCur": "Valeur en %{cur}",
       "transactionsHeader": "Transactions"
     },
     "coinNav": {
@@ -972,7 +972,7 @@
         "feeBumpOf": "Augmentation des frais de %{adresse}"
       },
       "fetchFailedMsg": "Impossible de récupérer la liste de vos transactions.",
-      "noTransactionsPlaceholder": "No %{coinType} transactions found.",
+      "noTransactionsPlaceholder": "Aucune transaction en %{coinType} trouvée.",
       "newTransactionsPopin": "%{smart_count} nouvelle transaction |||| %{smart_count} nouvelles transactions",
       "backupWalletWarningTitle": "Sauvegarder la phrase de récupération du portefeuille",
       "recoverySeedLink": "sauvegarder votre phrase de récupération du portefeuille",
@@ -980,12 +980,12 @@
     },
     "reloadTransactionsWidget": {
       "resyncBtn": "Resynchroniser",
-      "resyncCompleteTitle": "%{cur} Resync Started",
-      "resyncComplete": "Vos transactions vont commencer à se resynchroniser. Cela peut durer de cinq à dix minutes ou plus.",
-      "syncUnavailable": "Vous ne pouvez recharger les transactions qu'une fois par heure."
+      "resyncCompleteTitle": "Resynchronisation de %{cur} Commencée",
+      "resyncComplete": "Vos transactions vont commencer à se resynchroniser. Cela peut prendre une minute ou deux.",
+      "syncUnavailable": "Vous ne pouvez recharger les transactions qu'une fois par minute."
     },
     "cryptoTeaser": {
-      "coinCount": "%{count}+ coins",
+      "coinCount": "%{count}+ cryptomonnaies",
       "bodyLine": "Trade %{coinCount} on OpenBazaar for free",
       "btnCreateListing": "Ajouter une annonce",
       "linkViewCryptoListings": "View crypto listings"
@@ -1048,8 +1048,8 @@
     "goToStore": "Aller à la boutique",
     "unableToPurchase": {
       "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts [%{acceptedCurs}], whereas your wallet supports [%{walletCurs}].",
-      "unrecognizedCur": "The item is priced in an unrecognized currency (%{cur}).",
-      "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable (%{cur}).",
+      "unrecognizedCur": "Le prix de l'article est fixé dans une devise inconnue (%{cur}).",
+      "noExchangeRateInfo": "Le prix de l'article est fixé dans une devise dont les taux d'échange ne sont pas actuellement disponibles (%{cur}).",
       "unpurchaseable": "Cette annonce n'est pas achetable."
     },
     "confirmDelete": {
@@ -1072,8 +1072,8 @@
       "noPurchaseTitle": "Vous ne pouvez pas acheter cette annonce",
       "zeroPriceMsg": "Vous ne pouvez pas acheter avec un prix de zero ou moins.",
       "outOfStock": "Vous ne pouvez pas effectuer d'achat car l'article est actuellement en rupture de stock.",
-      "reloadOutdatedHash": "try reloading the listing",
-      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
+      "reloadOutdatedHash": "essayer de recharger l'annonce",
+      "outdatedHash": "Vous êtes sur une version ancienne de l'annonce. Afin de l'acheter, veuillez %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1145,7 +1145,7 @@
       "coupons": "Codes promotionnels",
       "inventoryManagement": "Gestion de l'inventaire",
       "variantInventory": "Inventaire des variantes",
-      "acceptedCurrencies": "Accepted Currencies"
+      "acceptedCurrencies": "Devises acceptées"
     },
     "placeholderTitle": "Entrez votre titre...",
     "placeholderSKU": "SKU, Numéro d'article, ID, etc",
@@ -1166,7 +1166,7 @@
     "helperReturnPolicy": "Si laissé vide, l'annonce affichera \"Aucune condition de retour spécifiée\"",
     "helperTerms": "Si laissé vide, l'annonce affichera \"Aucune condition spécifiée\"",
     "helperPrice": "Définissez votre prix en euros, dollars, %{cur}, ou autre chose.",
-    "helperAcceptedCurrencies": "Accepting all coins will attract the largest audience",
+    "helperAcceptedCurrencies": "Accepter toutes les monnaies attirera un public plus large",
     "createListingLabel": "Ajouter une annonce",
     "editListingLabel": "Modifier l'annonce",
     "title": "Titre",
@@ -1196,9 +1196,9 @@
     },
     "cryptoCurrencyType": {
       "helperTypeCount": "Plus de 1500 cryptomonnaies",
-      "helperType": "Trade %{count} for free",
-      "helperCoinType": "The currency you’re offering for trade",
-      "helperReceive": "The currency you'll receive for the trade",
+      "helperType": "Echanger %{count} gratuitement",
+      "helperCoinType": "La monnaie que vous offrez à échanger",
+      "helperReceive": "La monnaie que vous recevrez de l'échange",
       "helperQuantity": "Les acheteurs peuvent acheter une fraction ou le montant total",
       "helperMarketValue": "Les acheteurs payent le prix du marché. Le prix de l'annonce reflétera automatiquement le prix du marché.",
       "marketValueLabel": "Prix du marché actuel",
@@ -1206,7 +1206,7 @@
       "coinType": "Échanger",
       "quantity": "Inventaire",
       "priceModifier": "Modificateur de prix (+/-)",
-      "priceModifierPlaceholder": "0.00 (market rate)",
+      "priceModifierPlaceholder": "0.00 (taux du marché)",
       "helperPriceModifier": "Échangez au prix du marché, ou spécifiez une variation.",
       "lblReceive": "Recevoir"
     },
@@ -1328,7 +1328,7 @@
       "myPage": "Ma page"
     },
     "categories": {
-      "seeAllBtn": "See All"
+      "seeAllBtn": "Tout Voir"
     },
     "cryptoListViewHeader": {
       "colTradeFrom": "Échanger",
@@ -1346,7 +1346,7 @@
       "searchFailData": "The search provider did not return compatible data.",
       "connection": "Vous n'êtes plus connecté à votre nœud. Reconnectez-vous pour continuer la recherche",
       "addError": "Ce fournisseur ne peut pas être ajouté. Vérifiez vos données et réessayez.",
-      "existsError": "This provider has already been added.",
+      "existsError": "Ce fournisseur a déjà été ajouté.",
       "invalidUrl": "The provided URL not valid. The default search provider has been used instead.",
       "locked": "Les fournisseurs de recherche par défaut ne peuvent pas être supprimés.",
       "resetToOriginal": "L'URL de votre fournisseur de recherche est invalide. Nous utiliserons le fournisseur par défaut."
@@ -1498,7 +1498,7 @@
     },
     "errors": {
       "moderatorsTitle": "Les données de modérateur ont échoué à charger",
-      "moderatorsMsg": "This listing has available moderators, but they could not be loaded.",
+      "moderatorsMsg": "Des modérateurs sont disponibles pour cet article, mais ils n'ont pas pu être chargés",
       "orderError": "Votre commande ne peut pas être traitée en raison des erreurs suivantes.",
       "ownIDTitle": "Vous ne pouvez pas acheter vos propres annonces",
       "ownIDMsg": "Vous pouvez prévisualiser le processus d'achat pour vos propres annonces, mais vous ne pouvez pas les acheter.",
@@ -1506,7 +1506,7 @@
       "zeroPrice": "Vous ne pouvez pas acheter une annonce avec un prix total de zéro.",
       "insufficientInventoryTitle": "Inventaire insuffisant",
       "insufficientInventoryBody": "Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} article. |||| Le vendeur n'a pas suffisamment de stock pour terminer l'achat. Il ne reste que %{remainingInventory} articles.",
-      "reloadOutdatedHash": "load the latest version",
+      "reloadOutdatedHash": "charger la dernière version",
       "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
     }
   },
@@ -1522,15 +1522,15 @@
       },
       "noVerifiedModerators": {
         "title": "Aucun modérateur vérifié n'est disponible",
-        "body": "Try viewing unverified moderators."
+        "body": "Essayer de voir les modérateurs non vérifiés"
       },
       "noMatchingModerators": {
-        "title": "No moderators that accept %{coin} are available.",
+        "title": "Aucun modérateur qui accepte %{coin} n'est disponible.",
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
-        "title": "No verified moderators that accept %{coin} have been loaded.",
-        "body": "Try viewing unverified moderators."
+        "title": "Aucun modérateur vérifié qui accepte %{coin} n'a été chargé.",
+        "body": "Essayer de voir les modérateurs non vérifiés"
       }
     },
     "showUnverified": "Afficher les modérateurs non vérifiés",
@@ -1654,7 +1654,7 @@
       "vendorContractNotArrivedPotentialProcErr": "Le contrat du vendeur n'est pas encore arrivé. Le contrat de l'acheteur indique que le vendeur a eu une erreur de traitement, mais cela ne peut être validé, car le contrat de l'acheteur comporte des erreurs de validation. Veuillez contacter le vendeur pour confirmer.",
       "contractHeadingVendor": "Contrat du vendeur :",
       "contractHeadingBuyer": "Contrat de l'acheteur :",
-      "copyContract": "Copy Contract",
+      "copyContract": "Copier le Contrat",
       "copyContractDone": "Copié"
     },
     "contractMenuItem": {
@@ -1848,7 +1848,7 @@
         "procErrVendorNoMsg": "Une erreur s'est produite lors du traitement de la commande.",
         "procErrVendor": "Vous n'avez pas pu traiter la commande en raison des erreurs suivantes :"
       },
-      "unableToShowPayments": "Unable to show the payment details. The order was paid for in a currency (%{cur}) this client does not currently support."
+      "unableToShowPayments": "Incapable de montrer les détails du paiement. La commande a été payée dans une devise (%{cur}) que ce client n'intègre pas actuellement."
     },
     "fulfillOrderTab": {
       "heading": "Réaliser la commande",
@@ -1911,8 +1911,6 @@
     "listTitle": "Les données suivantes seront partagées avec OB1 Company sur l'utilisation d'OpenBazaar :",
     "list": {
       "device": "Votre adresse IP et les informations de votre appareil, aux fins énumérées ci-dessous.",
-      "pages": "Les pages que vous chargez, telle que la page de recherche ou la page d'une boutique. Cela nous permet de savoir quelles parties de l'application sont les plus utilisées et comment les utilisateurs naviguent dans l'application.",
-      "clicks": "Les clics sur les éléments. Cela enregistre uniquement ce que vous avez cliqué. Cela nous donne des données sur la fréquence à laquelle les éléments sont cliqués, ce qui nous permet de concentrer nos efforts sur les parties les plus utilisées de l'application et d'améliorer ou de supprimer des éléments rarement utilisés.",
       "errors": "Les données de performance, telles que les erreurs et la durée de chargement du contenu. Cela nous permet de résoudre plus facilement les problèmes rencontrés par les utilisateurs sans attendre une demande spécifique pour résoudre un problème.",
       "system": "Les données système de base tels que l'OS, le CPU, la RAM et la définition d'écran. Cela nous aide à savoir si les problèmes sont liés à certains types d'ordinateurs.",
       "user": "Les informations publiques, y compris si vous êtes un vendeur ou un modérateur, et combien d’annonces et de critiques vous avez. Cela nous permet de mieux comprendre l’état du réseau et de nous concentrer sur les domaines à améliorer.",
@@ -2024,11 +2022,11 @@
     "providePriceModifier": "Veuillez fournir un modificateur de prix.",
     "numericPriceModifier": "Merci d'entrer le modificateur de prix sous la forme d'un nombre.",
     "priceModifierRange": "Le modificateur de prix doit être entre %{min} et %{max}",
-    "provideAcceptedCurrency": "Please select at least one accepted currency.",
-    "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
-    "provideCoinType": "Please select a coin to trade.",
-    "unsupportedAcceptedCur": "%{cur} is not supported by your wallet. Please select a different currency.",
-    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: ${curs}"
+    "provideAcceptedCurrency": "Veuillez sélectionner au moins une devise acceptée.",
+    "provideAcceptedCurrencyCrypto": "Veuillez fournir une devise réceptrice.",
+    "provideCoinType": "Veuillez sélectionner une cryptomonnaie à échanger.",
+    "unsupportedAcceptedCur": "1584\n%{cur} n'est pas intégré dans votre porte-monnaie. Veuillez sélectionner une devise différente.",
+    "unsupportedAcceptedCurs": "Les devises suivante ne sont pas intégrées dans votre porte-monnaie: ${curs}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Merci de saisir un code promotionnel.",
@@ -2101,7 +2099,7 @@
   },
   "purchaseItemModelErrors": {
     "provideQuantity": "Merci d'entrer une quantité.",
-    "provideCryptoQuantity": "Please provide the amount of this currency you wish to purchase.",
+    "provideCryptoQuantity": "Veuilez indiquer quelle quantité de cette devise vous voulez acheter.",
     "mustHaveQuantity": "La quantité doit être au moins égale à 1",
     "quantityMustBeInteger": "La quantité doit être un nombre non décimal valide.",
     "quantityMustBeNumeric": "La quantité doit être au format numérique.",
