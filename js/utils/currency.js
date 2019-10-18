@@ -206,6 +206,7 @@ console.log('search for returnUndefinedOnError and ensure returnNaNOnError');
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnNaNOnError: true,
+    fieldName: '',
     ...options,
   };
 
@@ -235,7 +236,8 @@ export function integerToDecimal(value, divisibility, options = {}) {
     if (!opts.returnNaNOnError) {
       throw e;
     } else {
-      console.error(`Unable to convert ${value} from an integer to a decimal: ${e.message}`);
+      console.error(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
+        `${value} from an integer to a decimal: ${e.message}`);
     }
   }
 
@@ -936,7 +938,7 @@ function isValidRangeType(type) {
  *     exceed the maximum supported fraction digits for the given divisibility. This
  *     will not be tested if validCoinDiv fails.
  *   - minValue: This is not a boolean, rather an integer indicating the maximum
- *     fraction digits supported by th divisibility. It potentially useful to show in
+ *     fraction digits supported by th divisibility. It's potentially useful to show in
  *     an error message if validFractionDigitCount fails. This will not be provided if
  *     validCoinDiv fails.
  */

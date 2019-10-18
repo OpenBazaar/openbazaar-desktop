@@ -1,5 +1,4 @@
 import app from '../../app';
-import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {

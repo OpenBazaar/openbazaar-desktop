@@ -1,4 +1,5 @@
 import app from '../../../js/app';
+import bigNumber from 'bignumber.js';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
 import { Collection } from 'backbone';
@@ -59,7 +60,7 @@ describe('the Coupon model', () => {
   it('fails validation if you don\'t provide either a price or percentage discount', () => {
     const coupon = new Coupon();
 
-    coupon.unset('priceDiscount');
+    coupon.unset('bigPriceDiscount');
     coupon.unset('percentDiscount');
     const valErr = coupon.validate(coupon.toJSON());
 
@@ -71,43 +72,12 @@ describe('the Coupon model', () => {
     const coupon = new Coupon();
 
     coupon.set({
-      priceDiscount: '123',
+      bigPriceDiscount: bigNumber('123'),
       percentDiscount: 25,
     }, { validate: true });
     const valErr = coupon.validationError;
 
     expect(valErr && valErr.percentDiscount && !!valErr.percentDiscount.length || false)
-      .to.equal(true);
-  });
-
-  it('fails validation if you provide the price discount as an invalid string based number', () => {
-    const coupon = new Coupon();
-
-    // This one is also valid.
-    coupon.set({ priceDiscount: '   123   ' }, { validate: true });
-    let valErr = coupon.validationError;
-    expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-      .to.equal(false);
-
-    // Also valid.
-    coupon.set({ priceDiscount: '   123.45   ' }, { validate: true });
-    valErr = coupon.validationError;
-    expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-      .to.equal(false);
-
-    coupon.set({ priceDiscount: true }, { validate: true });
-    valErr = coupon.validationError;
-    expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-      .to.equal(true);
-
-    coupon.set({ priceDiscount: 'charlie' }, { validate: true });
-    valErr = coupon.validationError;
-    expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-      .to.equal(true);
-
-    coupon.set({ priceDiscount: '12hiphop45' }, { validate: true });
-    valErr = coupon.validationError;
-    expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
       .to.equal(true);
   });
 
@@ -127,25 +97,6 @@ describe('the Coupon model', () => {
     expect(valErr && valErr.percentDiscount && !!valErr.percentDiscount.length || false)
       .to.equal(true);
   });
-
-  // it('fails validation if you provide a price discount less than or equal to zero', () => {
-  //   const coupon = new Coupon();
-
-  //   coupon.set({ priceDiscount: '0' }, { validate: true });
-  //   let valErr = coupon.validationError;
-  //   expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-  //     .to.equal(true);
-
-  //   coupon.set({ priceDiscount: '0.01' }, { validate: true });
-  //   valErr = coupon.validationError;
-  //   expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-  //     .to.equal(false);
-
-  //   coupon.set({ priceDiscount: '-1' }, { validate: true });
-  //   valErr = coupon.validationError;
-  //   expect(valErr && valErr.priceDiscount && !!valErr.priceDiscount.length || false)
-  //     .to.equal(true);
-  // });
 
   it('fails validation if you provide a percent discount less than or equal to zero', () => {
     const coupon = new Coupon();

@@ -6,8 +6,6 @@ import { describe, it, before, after } from 'mocha';
 import Polyglot from 'node-polyglot';
 import bigNumber from 'bignumber.js';
 import enUsTranslations from '../../js/languages/en_US.json';
-import { walletCurs, walletCurDef } from '../walletCurData';
-import { init as initWalletCurs } from '../../js/data/walletCurrencies';
 import * as cur from '../../js/utils/currency';
 
 // A string larger than JS can handle without precision loss
@@ -17,14 +15,6 @@ describe('the currency utility module', () => {
   before(function () {
     app.polyglot = new Polyglot();
     app.polyglot.extend(enUsTranslations);
-    app.serverConfig = {
-      ...(app.serverConfig || {}),
-      wallets: walletCurs,
-    };
-    app.walletCurDef = walletCurDef;
-
-    // this should match what's in start.js
-    bigNumber.config({ RANGE: [-1e+9, 1e+9], DECIMAL_PLACES: 1e+9 });
   });
 
   it('correctly converts an amount as a number from an integer to decimal', () => {
@@ -398,8 +388,7 @@ describe('the currency utility module', () => {
 
         return deferred;
       });
-
-      initWalletCurs(walletCurs, walletCurDef);
+      
       cur.fetchExchangeRates();
     });
 

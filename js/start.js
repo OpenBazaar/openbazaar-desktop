@@ -1,4 +1,5 @@
 console.log('general bad data everywhere and make sure we dont blow up');
+console.log('make a reusable function to test currency amounts in a model...?');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';

@@ -100,7 +100,6 @@ export default class extends BaseModel {
   }
 
   get max() {
-    console.log('test 30 coupon count');
     return {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
@@ -476,7 +475,7 @@ export default class extends BaseModel {
           },
           addError,
           errObj,
-          `coupons[${coupon.cid}].priceDiscount`,
+          `coupons[${coupon.cid}].bigPriceDiscount`,
           {
             translations: {
               required: false,
@@ -493,7 +492,7 @@ export default class extends BaseModel {
           !itemPrice.isNaN()
         ) {
           if (priceDiscount.gte(itemPrice)) {
-            addError(`coupons[${coupon.cid}].priceDiscount`,
+            addError(`coupons[${coupon.cid}].bigPriceDiscount`,
               app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
           }
         }
@@ -755,7 +754,10 @@ export default class extends BaseModel {
 
       // delete some deprecated properties
       if (parsedResponse.item) {
-        delete parsedResponse.metadata.priceModifier;
+        if (parsedResponse.metadata) {
+          delete parsedResponse.metadata.priceModifier;
+        }
+
         delete parsedResponse.item.price;
 
         if (Array.isArray(parsedResponse.item.skus)) {
@@ -792,15 +794,30 @@ export default class extends BaseModel {
           delete parsedResponse.metadata.priceModifier;
         }
 
-        parsedResponse.item.bigPrice = integerToDecimal(parsedResponse.item.bigPrice, coinDiv);
+        if (parsedResponse.item) {
+          parsedResponse.item.bigPrice =
+            integerToDecimal(
+              parsedResponse.item.bigPrice,
+              coinDiv,
+              { fieldName: 'item.bigPrice' }
+            );
+        }
 
         if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
           parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
             if (shipOpt.services && shipOpt.services.length) {
               shipOpt.services.forEach(service => {
-                service.bigPrice = integerToDecimal(service.bigPrice, coinDiv);
+                service.bigPrice = integerToDecimal(
+                  service.bigPrice,
+                  coinDiv,
+                  { fieldName: 'service.bigPrice' }
+                );
                 service.bigAdditionalItemPrice =
-                  integerToDecimal(service.bigAdditionalItemPrice, coinDiv);
+                  integerToDecimal(
+                    service.bigAdditionalItemPrice,
+                    coinDiv,
+                    { fieldName: 'service.bigAdditionalItemPrice' }
+                  );
               });
             }
 
@@ -816,7 +833,11 @@ export default class extends BaseModel {
         if (parsedResponse.coupons) {
           parsedResponse.coupons.forEach(coupon => {
             coupon.bigPriceDiscount =
-              integerToDecimal(coupon.bigPriceDiscount, coinDiv);
+              integerToDecimal(
+                coupon.bigPriceDiscount,
+                coinDiv,
+                { fieldName: 'coupon.bigPriceDiscount' }
+              );
           });
         }
       }
@@ -833,7 +854,8 @@ export default class extends BaseModel {
         if (isCrypto) {
           parsedResponse.item.cryptoQuantity = integerToDecimal(
             dummySku.bigQuantity,
-            parsedResponse.metadata.coinDivisibility
+            parsedResponse.metadata.coinDivisibility,
+            { fieldName: 'sku.bigQuantity' }
           );
         } else {
           parsedResponse.item.quantity = dummySku.bigQuantity;
@@ -855,7 +877,11 @@ export default class extends BaseModel {
           const bigSurcharge = sku.bigSurcharge;
 
           if (bigSurcharge) {
-            sku.bigSurcharge = integerToDecimal(bigSurcharge, coinDiv);
+            sku.bigSurcharge = integerToDecimal(
+              bigSurcharge,
+              coinDiv,
+              { fieldName: 'sku.bigSurcharge' }
+            );
           }
         });
       }

@@ -112,9 +112,6 @@ export default class extends BaseModel {
   validate(attrs) {
     let errObj = {};
 
-    console.log('moo');
-    window.moo = attrs;
-
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);

@@ -1,6 +1,7 @@
-import app from '../../../js/app';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
+import bigNumber from 'bignumber.js';
+import app from '../../../js/app';
 import Listing from '../../../js/models/listing/Listing';
 
 describe('the Listing model', () => {
@@ -56,92 +57,94 @@ describe('the Listing model', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
       listing: {
-        metadata: {
-          pricingCurrency: 'USD',
-        },
         item: {
-          price: 123,
+          bigPrice: '123',
+          priceCurrency: {
+            code: 'USD',
+            divisibility: 2,
+          },
         },
         shippingOptions: [
           {
             services: [
               {
-                price: 123,
+                bigPrice: '123',
               },
               {
-                price: 234,
+                bigPrice: '234',
               },
             ],
           },
           {
             services: [
               {
-                price: 456,
+                bigPrice: '456',
               },
             ],
           },
         ],
         coupons: [
           {
-            priceDiscount: 1333,
+            bigPriceDiscount: '1333',
           },
         ],
       },
     });
 
-    expect(parsed.item.price).to.equal(1.23);
-    expect(parsed.shippingOptions[0].services[0].price).to.equal(1.23);
-    expect(parsed.shippingOptions[0].services[1].price).to.equal(2.34);
-    expect(parsed.shippingOptions[1].services[0].price).to.equal(4.56);
-    expect(parsed.coupons[0].priceDiscount).to.equal(13.33);
+    expect(parsed.item.bigPrice.toString()).to.equal('1.23');
+    expect(parsed.shippingOptions[0].services[0].bigPrice.toString()).to.equal('1.23');
+    expect(parsed.shippingOptions[0].services[1].bigPrice.toString()).to.equal('2.34');
+    expect(parsed.shippingOptions[1].services[0].bigPrice.toString()).to.equal('4.56');
+    expect(parsed.coupons[0].bigPriceDiscount.toString()).to.equal('13.33');
   });
 
   it('converts BTC prices from Satoshi to BTC format in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
     const parsed = listing.parse({
       listing: {
-        metadata: {
-          pricingCurrency: 'BTC',
-        },
         item: {
-          price: 271453590,
+          bigPrice: '271453590',
+          priceCurrency: {
+            code: 'BTC',
+            divisibility: 8,
+          },
         },
         shippingOptions: [
           {
             services: [
               {
-                price: 271453590,
+                bigPrice: '271453590',
               },
               {
-                price: 873927651,
+                bigPrice: '873927651',
               },
             ],
           },
           {
             services: [
               {
-                price: 281649276,
+                bigPrice: '281649276',
               },
             ],
           },
         ],
         coupons: [
           {
-            priceDiscount: 1333,
+            bigPriceDiscount: '1333',
           },
           {
-            priceDiscount: 281649276,
+            bigPriceDiscount: '281649276',
           },
         ],
       },
     });
 
-    expect(parsed.item.price).to.equal(2.71453590);
-    expect(parsed.shippingOptions[0].services[0].price).to.equal(2.71453590);
-    expect(parsed.shippingOptions[0].services[1].price).to.equal(8.73927651);
-    expect(parsed.shippingOptions[1].services[0].price).to.equal(2.81649276);
-    expect(parsed.coupons[0].priceDiscount).to.equal(0.00001333);
-    expect(parsed.coupons[1].priceDiscount).to.equal(2.81649276);
+    expect(parsed.item.bigPrice.toString()).to.equal('2.7145359');
+    expect(parsed.shippingOptions[0].services[0].bigPrice.toString()).to.equal('2.7145359');
+    expect(parsed.shippingOptions[0].services[1].bigPrice.toString()).to.equal('8.73927651');
+    expect(parsed.shippingOptions[1].services[0].bigPrice.toString()).to.equal('2.81649276');
+    expect(parsed.coupons[0].bigPriceDiscount.toString()).to.equal('0.00001333');
+    expect(parsed.coupons[1].bigPriceDiscount.toString()).to.equal('2.81649276');
   });
 
   it('fails validation if the refund policy is not provided as a string', () => {
@@ -236,20 +239,24 @@ describe('the Listing model', () => {
 
     listing.set({
       item: {
-        price: 500,
+        bigPrice: bigNumber('500'),
+        priceCurrency: {
+          code: 'USD',
+          divisibility: 2,
+        },
       },
       coupons: [
         {
           discountCode: Date.now() + Math.random(),
-          priceDiscount: 499.99, // should not fail validation
+          bigPriceDiscount: bigNumber('499.99'), // should not fail validation
         },
         {
           discountCode: Date.now() + Math.random(),
-          priceDiscount: 501, // should fail validation
+          bigPriceDiscount: bigNumber('501'), // should fail validation
         },
         {
           discountCode: Date.now() + Math.random(),
-          priceDiscount: 1500, // should fail validation
+          bigPriceDiscount: bigNumber('1500'), // should fail validation
         },
       ],
     }, { validate: true });
@@ -257,16 +264,16 @@ describe('the Listing model', () => {
     const valErr = listing.validationError;
     const coupons = listing.get('coupons');
 
-    expect(valErr && valErr[`coupons[${coupons.at(0).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(0).cid}].priceDiscount`].length || false)
+    expect(valErr && valErr[`coupons[${coupons.at(0).cid}].bigPriceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(0).cid}].bigPriceDiscount`].length || false)
         .to.equal(false);
 
-    expect(valErr && valErr[`coupons[${coupons.at(1).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(1).cid}].priceDiscount`].length || false)
+    expect(valErr && valErr[`coupons[${coupons.at(1).cid}].bigPriceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(1).cid}].bigPriceDiscount`].length || false)
         .to.equal(true);
 
-    expect(valErr && valErr[`coupons[${coupons.at(2).cid}].priceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(2).cid}].priceDiscount`].length || false)
+    expect(valErr && valErr[`coupons[${coupons.at(2).cid}].bigPriceDiscount`] &&
+        !!valErr[`coupons[${coupons.at(2).cid}].bigPriceDiscount`].length || false)
         .to.equal(true);
   });
 
