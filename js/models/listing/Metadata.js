@@ -4,6 +4,8 @@ import is from 'is_js';
 import { upToFixed } from '../../utils/number';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
+console.log('remove those escrowTimeoutHours');
+
 export default class extends BaseModel {
   defaults() {
     return {
@@ -14,6 +16,7 @@ export default class extends BaseModel {
       acceptedCurrencies: [
         ...(app && app.profile && app.profile.get('currencies') || []),
       ],
+      escrowTimeoutHours: 1080,
     };
   }
 

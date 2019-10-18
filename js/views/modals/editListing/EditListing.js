@@ -1193,9 +1193,23 @@ export default class extends BaseModal {
 
   // return the currency associated with this listing
   get currency() {
-    return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
-          app.settings.get('localCurrency'));
+    if (this.$currencySelect.length) {
+      return this.$currencySelect.val();
+    }
+
+    let cur = app.settings.get('localCurrency');
+
+    try {
+      cur =
+        this.model
+          .get('item')
+          .get('priceCurrency')
+          .code;
+    } catch (e) {
+      // pass
+    }
+
+    return cur;
   }
 
   // Keep in mind this could return undefined if certain depndant form fields are not set yet

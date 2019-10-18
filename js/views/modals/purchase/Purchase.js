@@ -4,6 +4,7 @@ import Backbone from 'backbone';
 import bigNumber from 'bignumber.js';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
+import { removeProp } from '../../../utils/object';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
@@ -337,26 +338,6 @@ export default class extends BaseModal {
     this.render(); // always render even if the state didn't change
   }
 
-  onChangeCryptoAmount(e) {
-    // If the amount is grater than zero we'll round to base units. If the rounded
-    // result is zero, it means the price is lower than the base units allow. In that
-    // case we'll do nothing and let the model error show in the UI and the user could
-    // increase it.
-    // const coinType = this.listing
-    //   .get('metadata')
-    //   .get('coinType');
-
-    // if (this.cryptoAmountCurrency !== coinType) return;
-
-    // const roundedAmount = preciseRound(e.target.value, this.coinDivisibility);
-
-    // if (roundedAmount === 0) return;
-
-    // $(e.target).val(
-    //   toStandardNotation(roundedAmount)
-    // );
-  }
-
   changeCryptoAddress(e) {
     this.order.get('items')
       .at(0)
@@ -367,31 +348,6 @@ export default class extends BaseModal {
     if (this.listing.isCrypto && (typeof cur !== 'string' || !cur)) {
       throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
-
-    // let mdQuantity = quantity;
-
-    // if (
-    //   quantity instanceof bigNumber &&
-    //   !quantity.isNaN() &&
-    //   this.listing.isCrypto
-    // ) {
-    //   const coinType = this.listing
-    //     .get('metadata')
-    //     .get('coinType');
-
-    //   mdQuantity = convertCurrency(
-    //     quantity,
-    //     cur,
-    //     coinType
-    //   );
-
-    //   const rounded = preciseRound(mdQuantity.toString(), this.coinDivisibility);
-    //   const bigRounded = bigNumber(rounded);
-
-    //   // If the quantity is so low that rounding to base units results in zero, we'll
-    //   // use the unrounded one and let the model error bubble up to the UI.
-    //   if (bigRounded.gt(0)) mdQuantity = bigRounded;
-    // }
 
     this.order.get('items')
       .at(0)
@@ -562,13 +518,21 @@ export default class extends BaseModal {
           }
         }
 
-        $.post({
-          url: app.getServerUrl('ob/purchase'),
-          data: JSON.stringify({
+        // Strip the 'cid' so it doesn't go to the server. Normally this is
+        // done in the sync of the baseModel, but since we're POSTing outside of
+        // that, we'll replicate that cleanup here.
+        const postData = removeProp(
+          {
             ...this.order.toJSON(),
             items: this.listing.isCrypto ?
-              cryptoItems : this.order.get('items'),
-          }),
+              cryptoItems : this.order.get('items').toJSON(),
+          },
+          'cid'
+        );
+
+        $.post({
+          url: app.getServerUrl('ob/purchase'),
+          data: JSON.stringify(postData),
           dataType: 'json',
           contentType: 'application/json',
         })
