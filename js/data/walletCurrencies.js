@@ -195,12 +195,12 @@ export function init(walletCurs, walletCurDef) {
     .keys(indexedCurs)
     .forEach(curCode => {
       const curDef = walletCurDef[curCode];
-      const clientCur = indexedCurs[curDef.code];
 
       if (
-        walletCurs.includes(curDef.code) &&
-        curDef
+        curDef &&
+        walletCurs.includes(curDef.code)
       ) {
+        const clientCur = indexedCurs[curDef.code];
         const curData = {
           ...clientCur,
           coinDivisibility: curDef.divisibility,
