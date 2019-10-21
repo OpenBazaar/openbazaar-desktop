@@ -981,8 +981,8 @@
     "reloadTransactionsWidget": {
       "resyncBtn": "Ressincronizar",
       "resyncCompleteTitle": "Ressincronização da %{cur} iniciada",
-      "resyncComplete": "A sincronização de suas transações irá começar. Isso pode levar 5-10 minutos ou mais.",
-      "syncUnavailable": "Você só pode recarregar as transações uma vez a cada hora."
+      "resyncComplete": "Your transactions will begin resyncing. This may take a minute or two to complete.",
+      "syncUnavailable": "You can only reload transactions once every minute."
     },
     "cryptoTeaser": {
       "coinCount": "+ de %{count} moedas",
@@ -1911,8 +1911,6 @@
     "listTitle": "Os seguintes dados serão coletados pela OB1 Company enquanto você estiver usando o OpenBazaar:",
     "list": {
       "device": "Seu endereço IP e informações sobre o seu dispositivo, para as propostas listadas abaixo.",
-      "pages": "Quais páginas você carrega, tais como a página de busca ou a página da loja. Isso nos permite saber quais partes do app estão sendo mais utilizadas e como os usuários navegam através do app.",
-      "clicks": "Cliques em elementos. Somente será registra onde você clicou. Isso nos fornece dados sobre a frequência de clique em cada elemento, de maneira que possamos focar nossos esforços nas partes mais usadas do app, assim como melhorar ou remover elementos raramente utilizados.",
       "errors": "Dados de desempenho como erros e o tempo necessário para carregamento. Isso nos facilita na resolução de problemas dos usuários, sem que nós precisemos esperar até que algum usuário solicite uma correção.",
       "system": "Dados básicos sobre o seu computador, como sistema operacional, CPU, RAM e resolução da tela. Isso nos ajuda a verificar se os problemas estão relacionados a alguns tipos de computadores.",
       "user": "Informações públicas, incluindo se você é um vendedor ou moderador, e quantos anúncios e qualificações você tem. Isso nos fornece um melhor entendimento do estado da rede, de maneira que possamos nos focar nas áreas que precisam de melhorias.",

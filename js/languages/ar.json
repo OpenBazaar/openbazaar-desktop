@@ -981,8 +981,8 @@
     "reloadTransactionsWidget": {
       "resyncBtn": "أعد المزامنة",
       "resyncCompleteTitle": "%{cur} Resync Started",
-      "resyncComplete": "ستبدأ معاملاتك في إعادة المزامنة. قد يستغرق ذلك من خمس إلى عشر دقائق أو أكثر.",
-      "syncUnavailable": "يمكنك إعادة تحميل التحويلات مرة كل ساعة."
+      "resyncComplete": "Your transactions will begin resyncing. This may take a minute or two to complete.",
+      "syncUnavailable": "You can only reload transactions once every minute."
     },
     "cryptoTeaser": {
       "coinCount": "%{count}+ coins",
@@ -1911,8 +1911,6 @@
     "listTitle": "The following data will be collected by OB1 Company as you use OpenBazaar:",
     "list": {
       "device": "Your IP address and device information, for the purposes listed below.",
-      "pages": "Which pages you load, such as the search page or store page. This lets us know which parts of the app are being used the most, and how users navigate through the app.",
-      "clicks": "Clicks on elements. This records only what you clicked on. This gives us data on how often elements are clicked on, so we can focus our effort on the most used parts of the app and improve or remove rarely used elements.",
       "errors": "Performance data like errors and how long content takes to load. This makes it easier for us to fix problems users are experiencing without waiting for a specific request to fix something.",
       "system": "بيانات النظام الأساسية مثل نظام التشغيل ، وحدة المعالجة المركزية ، ذاكرة الوصول العشوائي ، ودقة الشاشة. يساعدنا ذلك في تتبع ما إذا كانت المشكلات مرتبطة بأنواع معينة من أجهزة الكمبيوتر.",
       "user": "Public information including whether you are a vendor or moderator, and how many listings and reviews you have. This gives us a better understanding of the state of the network, so we can focus on areas that need improvement.",
