@@ -9,6 +9,7 @@ import loadTemplate from '../../../utils/loadTemplate';
 import {
   formatCurrency,
   integerToDecimal,
+  getCoinDivisibility,
 } from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
@@ -75,18 +76,17 @@ export default class extends BaseVw {
       this.listenTo(serverSocket, 'message', e => {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
-          console.log('got that payment notification');
-          window.payment = e;
           if (e.jsonData.notification.orderId === this.orderId) {
-            const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
-              this.paymentCoin);
-            if (amount >= this.balanceRemaining) {
+            const amount = integerToDecimal(
+              e.jsonData.notification.fundingTotal,
+              getCoinDivisibility(this.paymentCoin)
+            );
+
+            if (amount.gte(this.balanceRemaining)) {
               this.getCachedEl('.js-payFromWallet').removeClass('processing');
               this.trigger('walletPaymentComplete', e.jsonData.notification);
             } else {
-              // Ensure the resulting balance has a maximum of 8 decimal places without any
-              // trailing zeros.
-              this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
+              this.balanceRemaining = this.balanceRemaining.minus(amount);
             }
           }
         }
@@ -95,7 +95,11 @@ export default class extends BaseVw {
   }
 
   set balanceRemaining(amount) {
-    if (amount !== this._balanceRemaining) {
+    if (!(amount instanceof bigNumber)) {
+      throw new Error('Please provide an amount as a BigNumber instance.');
+    }
+
+    if (!amount.eq(this._balanceRemaining)) {
       this._balanceRemaining = amount;
       this.getCachedEl('.js-amountDueLine').html(this.amountDueLine);
       this.getCachedEl('.js-qrCodeImg').attr('src', this.qrDataUri);
@@ -121,8 +125,6 @@ export default class extends BaseVw {
 
   clickPayFromWallet(e) {
     const walletBalance = app.walletBalances.get(this.paymentCoin);
-    console.log('the wal bal is salamander');
-    window.salamander = walletBalance;
     const insufficientFunds =
       this.balanceRemaining
         .gt(walletBalance ? walletBalance.get('confirmed') : 0);
@@ -216,8 +218,16 @@ export default class extends BaseVw {
   }
 
   get amountDueLine() {
+    let amountBTC = '';
+
+    try {
+      amountBTC = formatCurrency(this.balanceRemaining, this.paymentCoin);
+    } catch (e) {
+      // pass
+    }
+
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, this.paymentCoin) });
+      { amountBTC });
   }
 
   get qrDataUri() {
