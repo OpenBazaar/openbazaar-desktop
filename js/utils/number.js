@@ -130,6 +130,7 @@ const isValidNumberDefaultAllows = {
 
 console.log('unit test me silly style');
 console.log('doc me up more');
+console.log('bigNumber.isNaN should be valid');
 /*
  * Returns true if the provided string is a valid number as determined by
  * bigNumber.js.
