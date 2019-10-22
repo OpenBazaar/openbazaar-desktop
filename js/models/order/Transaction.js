@@ -1,4 +1,4 @@
-import { integerToDecimal } from '../../utils/currency';
+import { curDefToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -7,10 +7,13 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    console.log('test me bad data');
     return {
       ...response,
-      // Convert from base units
-      value: integerToDecimal(response.value, response.paymentCoin),
+      bigValue: curDefToDecimal({
+        amount: response.bigValue,
+        currency: response.currency,
+      }),
     };
   }
 }

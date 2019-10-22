@@ -101,10 +101,16 @@ export default class extends BaseModel {
   }
 
   static getPaymentCoin(attrs = {}) {
-    let paymentCoin;
+    console.log('test me as bull shiz nitters');
+    let paymentCoin = '';
 
     try {
-      paymentCoin = this.getContract(attrs).buyerOrder.payment.coin;
+      paymentCoin =
+        this.getContract(attrs)
+          .buyerOrder
+          .payment
+          .amountCurrency
+          .code;
     } catch (e) {
       // pass
     }

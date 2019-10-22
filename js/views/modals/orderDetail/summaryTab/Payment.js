@@ -22,7 +22,7 @@ export default class extends BaseVw {
         cancelInProgress: false,
         rejectConfirmOn: false,
         blockChainTxUrl: '',
-        paymentCoin: undefined,
+        paymentCoin: '',
         ...options.initialState || {},
       },
     });
@@ -82,19 +82,19 @@ export default class extends BaseVw {
     this.setState({ rejectConfirmOn: false });
   }
 
-  setState(state = {}, options = {}) {
-    const mergedState = {
-      ...this.getState(),
-      ...state,
-    };
+  // setState(state = {}, options = {}) {
+  //   const mergedState = {
+  //     ...this.getState(),
+  //     ...state,
+  //   };
 
-    if (!mergedState.paymentCoin ||
-      typeof mergedState.paymentCoin !== 'string') {
-      throw new Error('Please provide the paymentCoin as a string.');
-    }
+  //   if (!mergedState.paymentCoin ||
+  //     typeof mergedState.paymentCoin !== 'string') {
+  //     throw new Error('Please provide the paymentCoin as a string.');
+  //   }
 
-    return super.setState(state, options);
-  }
+  //   return super.setState(state, options);
+  // }
 
   remove() {
     $(document).off('click', this.boundOnDocClick);

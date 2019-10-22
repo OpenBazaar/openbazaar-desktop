@@ -1097,34 +1097,19 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
-        if (getWalletCurByCode(paymentCoin)) {
-          if (this.payments) this.payments.remove();
-          this.payments = this.createChild(Payments, {
-            orderId: this.model.id,
-            collection: this.model.paymentsIn,
-            orderPrice: this.model.orderPrice,
-            vendor: this.vendor,
-            isOrderCancelable: () => this.model.isOrderCancelable,
-            isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-            isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
-              this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
-            paymentCoin,
-          });
-          this.$('.js-paymentsWrap').html(this.payments.render().el);
-        } else {
-          this.getCachedEl('.js-paymentsWrap').html(
-            `
-            <div class="rowLg border clrBr padMd">
-              <i class="ion-alert-circled clrTAlert"></i>
-              <span>
-                ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayments', {
-                  cur: paymentCoin,
-                })}
-              </span>
-            </div>  
-            `
-          );
-        }
+        if (this.payments) this.payments.remove();
+        this.payments = this.createChild(Payments, {
+          orderId: this.model.id,
+          collection: this.model.paymentsIn,
+          orderPrice: this.model.orderPrice,
+          vendor: this.vendor,
+          isOrderCancelable: () => this.model.isOrderCancelable,
+          isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+          isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
+            this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
+          // paymentCoin,
+        });
+        this.$('.js-paymentsWrap').html(this.payments.render().el);
       }
 
       if (this.shouldShowAcceptedSection()) this.renderAcceptedView();
