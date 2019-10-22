@@ -77,7 +77,7 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t('notifications.text.orderConfirmation', {
       vendorName,
     });
-  } else if (attrs.type === 'declined') {
+  } else if (attrs.type === 'orderDeclined') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
       `<a class="clrTEm" href="#${attrs.vendorId}">` +
