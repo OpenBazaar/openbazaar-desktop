@@ -172,6 +172,10 @@ export default class extends baseVw {
     const inventoryData = this.buildInventoryData();
     this.collection.set(inventoryData.inventory);
 
+    console.dir(inventoryData);
+    console.log('slick');
+    window.slick = this.collection;
+
     loadTemplate('modals/editListing/variantInventory.html', (t) => {
       this.$el.html(t({
         columns: inventoryData.columns,
