@@ -226,19 +226,6 @@ export default class extends BaseModel {
 
     if (attrs.skus && attrs.skus.length && attrs.cryptoQuantity !== undefined) {
       addError('cryptoQuantity', 'CryptoQuantity should not be set if providing Skus.');
-    } else if (typeof attrs.cryptoQuantity !== 'undefined') {
-      if (
-        !isValidNumber(attrs.cryptoQuantity, {
-          allowNumber: false,
-          allowBigNumber: true,
-          allowString: false,
-        })
-      ) {
-        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideNumericCryptoQuantity'));
-      } else if (attrs.cryptoQuantity.lt(0)) {
-        addError('cryptoQuantity',
-          app.polyglot.t('itemModelErrors.provideNonNegativeCryptoQuantity'));
-      }
     }
 
     let maxCombos = 1;

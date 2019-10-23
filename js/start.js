@@ -3,6 +3,9 @@ console.log('make a reusable function to test currency amounts in a model...?');
 console.log('more centered <cancel> order transaction (and other) spinner designs');
 console.log('test order processing error');
 console.log('test order discussion tab');
+console.log('crypto listing - listing detail inventory not showing correctly - own listing');
+console.log('consider hiding inventory of crypto listing for not own listing since its broken');
+console.log('need purchase crypto amount validation to not go below base units');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';

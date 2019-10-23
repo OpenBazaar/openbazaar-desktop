@@ -103,6 +103,8 @@ export const defaultFiatCoinDivisibility = 2;
  * - When converting a decimal back to an integer, if the API accepts the divisibility, it's
  *   safest to send it over, so it's clear what value was used.
  */
+console.log('doc me up');
+console.log('should fiat not be hard-coded to 2?');
 export function getCoinDivisibility(currency, options = {}) {
   if (typeof currency !== 'string' || !currency) {
     throw new Error('Please provide a currrency as a non-empty string.');

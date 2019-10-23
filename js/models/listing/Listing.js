@@ -14,6 +14,8 @@ import {
   isValidCoinDivisibility,
   getCoinDivisibility,
   CUR_VAL_RANGE_TYPES,
+  defaultCryptoCoinDivisibility,
+  UnrecognizedCurrencyError,
 } from '../../utils/currency';
 import BaseModel, { flattenAttrs } from '../BaseModel';
 import Item from './Item';
@@ -251,13 +253,33 @@ export default class extends BaseModel {
         typeof coinType === 'string' &&
         coinType
       ) {
+        console.log('test all these sscenarios');
+
         try {
           attrs.metadata.coinDivisibility = getCoinDivisibility(coinType);
         } catch (e) {
-          if (attrs.metadata) {
-            delete attrs.metadata.coinDivisibility;
-            // validate will fail validation on the model in this scenario -
-            // it's almost certainly a dev error
+          if (e instanceof UnrecognizedCurrencyError) {
+            // If it's a coin we don't recognize and it has a valid divsibility
+            // set (maybe it came from another client that knows more about the coin
+            // than us), we'll use it. Otherwise, we'll use the default crypto coin
+            // divisibility.
+            let coinDiv = defaultCryptoCoinDivisibility;
+
+            try {
+              if (isValidCoinDivisibility(attrs.metadata.coinDivisibility)) {
+                coinDiv = attrs.metadata.coinDivisibility;
+              }
+            } catch (e) {
+              // pass
+            }
+
+            attrs.metadata.coinDivisibility = coinDiv;
+          } else {
+            if (attrs.metadata) {
+              delete attrs.metadata.coinDivisibility;
+              // validate will fail validation on the model in this scenario -
+              // it's almost certainly a dev error
+            }
           }
         }
       }
@@ -379,25 +401,25 @@ export default class extends BaseModel {
             max: this.max.maxPriceModifier,
           }));
         }
-      }
 
-      this.validateCurrencyAmount(
-        {
-          amount: item.cryptoQuantity,
-          currency: {
-            code: () => metadata.coinType,
-            divisibility: () => metadata.coinDivisibility,
+        this.validateCurrencyAmount(
+          {
+            amount: item.cryptoQuantity,
+            currency: {
+              code: () => metadata.coinType,
+              divisibility: () => metadata.coinDivisibility,
+            },
           },
-        },
-        addError,
-        errObj,
-        'item.cryptoQuantity',
-        {
-          validationOptions: {
-            rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
-          },
-        }
-      );
+          addError,
+          errObj,
+          'item.cryptoQuantity',
+          {
+            validationOptions: {
+              rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+            },
+          }
+        );
+      }
     } else {
       if (item && typeof item.cryptoQuantity !== 'undefined') {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +

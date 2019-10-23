@@ -2036,9 +2036,7 @@
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "quantityMustBePositive": "The quantity must be more than zero.",
     "quantityMustBeInteger": "Fractional quantites are not allowed. Please provide a whole number.",
-    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique.",
-    "provideNumericCryptoQuantity": "Please provide the inventory as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
-    "provideNonNegativeCryptoQuantity": "The inventory must be greater than or equal to zero."
+    "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
   "metadataModelErrors": {
     "provideAcceptedCurrency": "Please select at least one accepted currency.",

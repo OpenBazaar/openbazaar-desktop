@@ -64,6 +64,9 @@ export default class extends BaseModal {
     super(opts);
     this.options = opts;
 
+    console.log('moo model');
+    window.moo = this.model;
+
     // So the passed in model does not get any un-saved data,
     // we'll clone and update it on sync
     this._origModel = this.model;
@@ -1270,6 +1273,8 @@ export default class extends BaseModal {
 
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
+
+    console.dir(this.model.validationError || {});
 
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {
