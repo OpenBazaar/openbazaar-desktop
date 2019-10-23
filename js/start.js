@@ -2,6 +2,7 @@ console.log('general bad data everywhere and make sure we dont blow up');
 console.log('make a reusable function to test currency amounts in a model...?');
 console.log('more centered <cancel> order transaction (and other) spinner designs');
 console.log('test order processing error');
+console.log('test order discussion tab');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
