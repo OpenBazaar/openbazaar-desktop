@@ -142,7 +142,7 @@
               <% if (!isCrypto) { %>
                 <div class="col6">
                   <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
-                  <div><%= item.quantity %></div>
+                  <div><%= item.bigQuantity %></div>
                 </div>
               <% } %>
             </div>
@@ -158,10 +158,21 @@
               <div class="col6">
                 <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.totalHeading') %></div>
                 <div>
+                  <%
+                    let bigAmount;
+                    let bigAmountCur;
+
+                    try {
+                      bigAmount = ob.order.payment.bigAmount;
+                      bigAmountCur = ob.order.payment.amountCurrency.code;
+                    } catch (e) {
+                      // pass
+                    }
+                  %>
                   <%=
                     ob.currencyMod.pairedCurrency(
-                      ob.order.payment.amount,
-                      ob.order.payment.coin,
+                      bigAmount,
+                      bigAmountCur,
                       ob.userCurrency
                     )
                   %>
