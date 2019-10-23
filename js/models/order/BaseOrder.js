@@ -127,10 +127,7 @@ export default class extends BaseModel {
     let curData;
 
     try {
-      curData = getWalletCurByCode(
-        this.getContract(attrs).buyerOrder
-          .payment.coin
-      );
+      curData = getWalletCurByCode(this.paymentCoin(attrs));
     } catch (e) {
       // pass
     }

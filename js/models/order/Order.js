@@ -7,6 +7,8 @@ import Contract from './Contract';
 import Transactions from '../../collections/order/Transactions';
 import Transaction from '../../models/order/Transaction';
 
+console.log('is get paymentCoinData being used properly');
+
 export default class extends BaseOrder {
   constructor(attrs, options) {
     const opts = {
@@ -66,40 +68,18 @@ export default class extends BaseOrder {
     return orderPrice;
   }
 
-  /**
-   * Returns the order price in Satoshi. Useful if you intend to use it in
-   * arithmetic expression where you need to avoid floating point precision
-   * errors.
-   */
-  get rawOrderPrice() {
-    return this.rawResponse
-      .contract
-      .buyerOrder
-      .payment
-      .amount;
-  }
-
   get totalPaid() {
     return this.paymentsIn
-      .reduce((total, transaction) => total.plus(transaction.get('bigValue')), 0);
+      .reduce((total, transaction) => total.plus(transaction.get('bigValue')), bigNumber(0));
   }
 
-  getBalanceRemaining(options = {}) {
-    const opts = {
-      convertFromSat: false,
-      ...options,
-    };
-
-    const balanceRemaining = this.rawOrderPrice - this.totalPaid;
-
-    return opts.convertFromSat ?
-      integerToDecimal(balanceRemaining, this.paymentCoin) :
-      balanceRemaining;
+  getBalanceRemaining() {
+    return this.orderPrice.minus(this.totalPaid);
   }
 
   get isPartiallyFunded() {
     const balanceRemaining = this.getBalanceRemaining();
-    return balanceRemaining > 0 && balanceRemaining < this.rawOrderPrice;
+    return balanceRemaining.gt(0) && balanceRemaining.lt(this.orderPrice);
   }
 
   /**

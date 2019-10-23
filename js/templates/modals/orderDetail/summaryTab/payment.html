@@ -19,7 +19,7 @@
       let statusIconClass = 'clrTEm'; // full payment
       let statusIcon = 'ion-ios-checkmark-empty'; // full payment
       
-      if (ob.amountShort > 0) {  // partial payment
+      if (ob.amountShort.gt(0)) {  // partial payment
         statusIconClass = 'clrTErr';
         statusIcon = 'ion-ios-close-empty';
       }
@@ -76,16 +76,23 @@
         </div>
         <% 
           let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+          let roundedAmountShort = ob.amountShort;
 
-          if (ob.amountShort > 0) {
+          try {
+            roundedAmountShort = ob.amountShort.dp(paymentCoinDivis);
+          } catch (e) {
+            // pass
+          }
+
+          if (ob.amountShort.gt(0)) {
             subText =
               ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
-                amountShort: ob.number.upToFixed(ob.amountShort, 8),
+                amountShort: roundedAmountShort,
               });
           }
         %>
         <div>
-          <div class="noOverflow <%= ob.amountShort > 0 ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
+          <div class="noOverflow <%= ob.amountShort.gt(0) ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
         </div>
       </div>
     </div>

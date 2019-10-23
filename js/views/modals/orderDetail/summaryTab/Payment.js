@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
+import bigNumber from 'bignumber.js';
 import app from '../../../../app';
 import { abbrNum } from '../../../../utils';
 import loadTemplate from '../../../../utils/loadTemplate';
@@ -11,8 +12,8 @@ export default class extends BaseVw {
       ...options,
       initialState: {
         paymentNumber: 1,
-        amountShort: 0,
-        balanceRemaining: 0,
+        amountShort: bigNumber(0),
+        balanceRemaining: bigNumber(0),
         payee: '',
         userCurrency: app.settings.get('localCurrency') || 'BTC',
         showAcceptRejectButtons: false,
@@ -23,6 +24,7 @@ export default class extends BaseVw {
         rejectConfirmOn: false,
         blockChainTxUrl: '',
         paymentCoin: '',
+        paymentCoinDivis: 8,
         ...options.initialState || {},
       },
     });

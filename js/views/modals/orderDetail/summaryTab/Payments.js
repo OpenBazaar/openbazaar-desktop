@@ -196,12 +196,30 @@ export default class extends baseVw {
         // pass
       }
 
+      let paymentCoinData;
+
+      try {
+        paymentCoinData = getWalletCurByCode(payment.currency.code);
+      } catch (e) {
+        // pass
+      }
+
+      let paymentCoinDivis = 8;
+
+      try {
+        paymentCoinDivis = paymentCoinData.divisibility;
+      } catch (e) {
+        // pass
+      }
+
       let blockChainTxUrl = '';
 
       try {
         blockChainTxUrl =
-          getWalletCurByCode(payment.currency.code)
-            .getBlockChainTxUrl(payment.id, app.serverConfig.testnet);
+          paymentCoinData.getBlockChainTxUrl(
+            payment.id,
+            app.serverConfig.testnet
+          );
       } catch (e) {
         // pass
       }
@@ -218,6 +236,7 @@ export default class extends baseVw {
           isCrypto: this.options.isCrypto,
           blockChainTxUrl,
           paymentCoin,
+          paymentCoinDivis,
         },
       });
 
