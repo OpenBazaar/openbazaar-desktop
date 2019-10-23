@@ -767,6 +767,7 @@ export function getCurrencyValidity(cur) {
  * If the "from" currency is invalid, it will render an empty string.
  */
 console.log('update docs');
+console.log('dont throw dat e');
 export function renderPairedCurrency(price, fromCur, toCur) {
   let result;
 
@@ -792,7 +793,6 @@ export function renderPairedCurrency(price, fromCur, toCur) {
     result = '';
     console.error('Unable to render the paired currency. Returning an empty string. ' +
       `Error: ${e.message}`);
-    throw e;
   }
 
   return result;

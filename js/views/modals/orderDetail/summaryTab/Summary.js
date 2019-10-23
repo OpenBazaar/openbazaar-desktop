@@ -690,21 +690,39 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
-    const paymentCoinData = this.model.paymentCoinData;
 
-    if (!refundMd) {
-      throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
-        'data object has not been set.');
+    let paymentCoin = '';
+
+    try {
+      paymentCoin = refundMd.get('currency').code;
+    } catch (e) {
+      // pass
+    }
+
+    let blockChainTxUrl = false;
+
+    try {
+      blockChainTxUrl =
+        getWalletCurByCode(paymentCoin)
+          .getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet);
+    } catch (e) {
+      // pass
     }
 
     if (this.refunded) this.refunded.remove();
+
+    if (!refundMd) {
+      console.error('Unable to create the refunded view because the refundAddressTransaction ' +
+        'data object has not been set.');
+      return;
+    }
+
     this.refunded = this.createChild(Refunded, {
       model: refundMd,
       initialState: {
         isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-        blockChainTxUrl: paymentCoinData ?
-          paymentCoinData.getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet) :
-          '',
+        blockChainTxUrl,
+        paymentCoin,
       },
     });
     this.buyer.getProfile()

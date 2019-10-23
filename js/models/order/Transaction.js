@@ -7,7 +7,11 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    console.log('test me bad data');
+    console.log('temp pending ob-go/#1803');
+    if (response.bigValue.startsWith('--')) {
+      response.bigValue = response.bigValue.slice(1);
+    }
+
     return {
       ...response,
       bigValue: curDefToDecimal({

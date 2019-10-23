@@ -81,7 +81,7 @@ export default class extends BaseOrder {
 
   get totalPaid() {
     return this.paymentsIn
-      .reduce((total, transaction) => total + transaction.get('value'), 0);
+      .reduce((total, transaction) => total.plus(transaction.get('bigValue')), 0);
   }
 
   getBalanceRemaining(options = {}) {
@@ -149,7 +149,6 @@ export default class extends BaseOrder {
     return new Transactions(
       this.get('paymentAddressTransactions')
         .filter(payment => (payment.get('bigValue').gt(0)))
-      // { paymentCoin: this.paymentCoin }
     );
   }
 
@@ -178,7 +177,7 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    const paymentCoin = BaseOrder.getPaymentCoin(response);
+    // const paymentCoin = BaseOrder.getPaymentCoin(response);
     this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
 
     if (response.contract) {
@@ -245,16 +244,16 @@ export default class extends BaseOrder {
       }
     }
 
-    response.paymentAddressTransactions = response.paymentAddressTransactions || [];
+    // response.paymentAddressTransactions = response.paymentAddressTransactions || [];
 
     // Embed the payment type into each payment transaction.
-    const payments = [...response.paymentAddressTransactions];
+    // const payments = [...response.paymentAddressTransactions];
 
-    if (response.refundAddressTransaction) {
-      payments.push(response.refundAddressTransaction);
-    }
+    // if (response.refundAddressTransaction) {
+    //   payments.push(response.refundAddressTransaction);
+    // }
 
-    payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
+    // payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
 
     return response;
   }

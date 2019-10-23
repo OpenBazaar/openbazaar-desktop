@@ -170,7 +170,6 @@ export default class extends baseVw {
         .slice(0, index + 1)
         .reduce((total, model) => total.plus(model.get('bigValue')), bigNumber('0'));
 
-      // console.dir(payment);
       let divisibility;
 
       try {
@@ -189,10 +188,13 @@ export default class extends baseVw {
       let paymentCoin = '';
 
       try {
-        paymentCoin = payment.currency.code;
+        paymentCoin =
+          payment
+            .get('currency')
+            .code;
       } catch (e) {
         // pass
-      }      
+      }
 
       let blockChainTxUrl = '';
 
