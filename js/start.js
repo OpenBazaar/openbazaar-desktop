@@ -6,6 +6,7 @@ console.log('test order discussion tab');
 console.log('crypto listing - listing detail inventory not showing correctly - own listing');
 console.log('consider hiding inventory of crypto listing for not own listing since its broken');
 console.log('need purchase crypto amount validation to not go below base units');
+console.log('pass divisibility with order spend');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';

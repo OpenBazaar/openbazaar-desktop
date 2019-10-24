@@ -10,6 +10,8 @@ import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
 import Skus from '../../collections/listing/Skus';
 
+console.log('add crypto cur amount to the docs');
+
 /*
  * This model has a few inventory related properties that don't directly map to the
  * API. When a listing does not have variants but tracks inventory, the server handles

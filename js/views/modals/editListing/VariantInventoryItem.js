@@ -1,6 +1,5 @@
 import $ from 'jquery';
 import '../../../lib/select2';
-import bigNumber from 'bignumber.js';
 import { formatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
