@@ -1,4 +1,5 @@
 import is from 'is_js';
+import bigNumber from 'bignumber.js';
 import { isValidNumber } from '../../utils/number';
 import app from '../../app';
 import BaseModel from '../BaseModel';
@@ -8,6 +9,7 @@ export default class extends BaseModel {
     return {
       productID: '',
       infiniteInventory: false,
+      bigSurcharge: bigNumber('0'),
     };
   }
 
