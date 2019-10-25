@@ -3,8 +3,6 @@ import app from '../app';
 import bitcoreLib from 'bitcore-lib';
 import bech32 from 'bech32';
 
-console.log('add test for externallyfundablesugar');
-
 // If a currency does not support fee bumping or you want to disable it, do not provide a
 // feeBumpTransactionSize setting.
 

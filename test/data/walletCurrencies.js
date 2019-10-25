@@ -90,13 +90,6 @@ describe('the crypto currencies data module', () => {
       });
     });
 
-    it('that requires the averageModeratedTransactionSize to be a number > 0', () => {
-      currencies.forEach(cur => {
-        expect(typeof cur.averageModeratedTransactionSize === 'number' &&
-          cur.averageModeratedTransactionSize > 0).to.equal(true);
-      });
-    });
-
     it('that requires the feeBumpTransactionSize to be undefined or a number > 0', () => {
       currencies.forEach(cur => {
         expect(typeof cur.feeBumpTransactionSize === 'undefined' ||
@@ -182,6 +175,12 @@ describe('the crypto currencies data module', () => {
         if (cur.blockTime !== undefined) {
           expect(typeof cur.blockTime).to.equal('number');
         }
+      });
+    });
+
+    it('that require an externallyFundableOrders boolean', () => {
+      currencies.forEach(cur => {
+        expect(typeof cur.externallyFundableOrders).to.equal('boolean');
       });
     });
   });
