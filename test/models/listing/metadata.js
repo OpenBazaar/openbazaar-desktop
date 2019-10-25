@@ -58,17 +58,6 @@ describe('the Metadata model', () => {
     expect(valErr && valErr.expiry && !!valErr.expiry.length || false).to.equal(true);
   });
 
-  it('fails validation if a pricing currency is not one of the available ones', () => {
-    const metadata = new Metadata();
-    metadata.set({
-      pricingCurrency: 'FOOLS-GOLD_YALL',
-    }, { validate: true });
-    const valErr = metadata.validationError;
-
-    expect(valErr && valErr.pricingCurrency && !!valErr.pricingCurrency.length || false).to
-      .equal(true);
-  });
-
   it('fails validation if an accepted currency is not provided as an array', () => {
     const metadata = new Metadata();
     metadata.set({
@@ -157,15 +146,18 @@ describe('the Metadata model', () => {
     }, { validate: true });
     const valErr = metadata.validationError;
 
-    expect(valErr && valErr.acceptedCurrencies === undefined).to
+    expect(!valErr || valErr.acceptedCurrencies === undefined).to
       .equal(true);
   });
 
   it('ensures the acceptedCurrencies consist of only supported wallet currencies.', () => {
+    // todo: instead of hard-coding these accepted curs, it would be better to base them off of
+    // the walletCurData data file.
+
     const metadata = new Metadata();
     metadata.set({
       contractType: 'PHYSICAL_GOOD',
-      acceptedCurrencies: ['BTC', 'BCH'],
+      acceptedCurrencies: ['BTC', 'PICKLES'],
     }, { validate: true });
     const valErr1 = metadata.validationError;
 
@@ -179,22 +171,22 @@ describe('the Metadata model', () => {
     const metadata3 = new Metadata();
     metadata3.set({
       contractType: 'CRYPTOCURRENCY',
-      acceptedCurrencies: ['BCH'],
+      acceptedCurrencies: ['HIPPO'],
     }, { validate: true });
     const valErr3 = metadata3.validationError;
 
     const metadata4 = new Metadata();
     metadata4.set({
       contractType: 'CRYPTOCURRENCY',
-      acceptedCurrencies: ['ZEC'],
+      acceptedCurrencies: ['BTC'],
     }, { validate: true });
     const valErr4 = metadata4.validationError;
 
     expect(
-      valErr1 && valErr1.acceptedCurrencies && !!valErr1.acceptedCurrencies.length &&
-      !(valErr2 && valErr2.acceptedCurrencies && !!valErr2.acceptedCurrencies.length) &&
-      valErr3 && valErr3.acceptedCurrencies && !!valErr3.acceptedCurrencies.length &&
-      !(valErr4 && valErr4.acceptedCurrencies && !!valErr4.acceptedCurrencies.length) || false
+      valErr1 && valErr1.acceptedCurrencies && valErr1.acceptedCurrencies.length &&
+      !(valErr2 && valErr2.acceptedCurrencies && valErr2.acceptedCurrencies.length) &&
+      valErr3 && valErr3.acceptedCurrencies && valErr3.acceptedCurrencies.length &&
+      !(valErr4 && valErr4.acceptedCurrencies && valErr4.acceptedCurrencies.length) || false
     ).to
       .equal(true);
   });

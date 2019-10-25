@@ -4,7 +4,7 @@ import { guid } from '../../utils';
 import { isValidNumber } from '../../utils/number';
 import app from '../../app';
 import { getCurrencyByCode } from '../../data/currencies';
-import { getCoinDivisibility } from '../../utils/currency';
+import { isValidCoinDivisibility } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
@@ -137,12 +137,20 @@ export default class extends BaseModel {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
 
-    if (
-      !attrs.priceCurrency ||
-      !attrs.priceCurrency.code ||
-      !getCurrencyByCode(attrs.priceCurrency.code)
-    ) {
-      addError('priceCurrency.code', 'The currency is not one of the available ones.');
+    // The ones in this block should not be user facing unless there's a dev error.
+    if (typeof attrs.priceCurrency !== 'object') {
+      addError('priceCurrency', 'The priceCurrency must be provided as an object.');
+    } else {
+      if (
+        !attrs.priceCurrency.code ||
+        !getCurrencyByCode(attrs.priceCurrency.code)
+      ) {
+        addError('priceCurrency.code', 'The currency is not one of the available ones.');
+      }
+
+      if (!isValidCoinDivisibility(attrs.priceCurrency.divisibility)[0]) {
+        addError('priceCurrency.divisibility', 'The divisibility is not valid.');
+      }
     }
 
     this.validateCurrencyAmount(
@@ -150,7 +158,7 @@ export default class extends BaseModel {
         amount: attrs.bigPrice,
         currency: {
           code: () => attrs.priceCurrency.code,
-          divisibility: () => getCoinDivisibility(attrs.priceCurrency.code),
+          divisibility: () => attrs.priceCurrency.divisibility,
         },
       },
       addError,

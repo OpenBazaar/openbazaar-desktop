@@ -70,5 +70,121 @@ describe('the Item model', () => {
     expect(valErr && valErr.tags && !!valErr.tags.length || false).to.equal(true);
   });
 
+  it('fails validation if a price currency is not provided as an object', () => {
+    const item = new Item();
+    item.set({
+      priceCurrency: {
+        code: 'USD',
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr = item.validationError;
+    expect(valErr && valErr.priceCurrency && !!valErr.priceCurrency.length || false)
+      .to.equal(false);
+
+    const item2 = new Item();
+    item2.set({
+      priceCurrency: 'howdy',
+    }, { validate: true });
+    const valErr2 = item2.validationError;
+    expect(valErr2 && valErr2.priceCurrency && !!valErr2.priceCurrency.length || false)
+      .to.equal(true);
+  });
+
+  it('fails validation if a valid price currency code is not provided', () => {
+    const item = new Item();
+    item.set({
+      priceCurrency: {
+        code: 'USD',
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr = item.validationError;
+    expect(
+      valErr &&
+      valErr['priceCurrency.code'] &&
+      !!valErr['priceCurrency.code'].length || false
+    )
+      .to.equal(false);
+
+    const item2 = new Item();
+    item2.set({
+      priceCurrency: {
+        code: false,
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr2 = item2.validationError;
+    expect(
+      valErr2 &&
+      valErr2['priceCurrency.code'] &&
+      !!valErr2['priceCurrency.code'].length || false
+    )
+      .to.equal(true);
+
+    const item3 = new Item();
+    item3.set({
+      priceCurrency: {
+        code: 'biscuits-and-gravy',
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr3 = item3.validationError;
+    expect(
+      valErr3 &&
+      valErr3['priceCurrency.code'] &&
+      !!valErr3['priceCurrency.code'].length || false
+    )
+      .to.equal(true);
+  });
+
+  it('fails validation if a valid price currency divisibility is not provided', () => {
+    const item = new Item();
+    item.set({
+      priceCurrency: {
+        code: 'USD',
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr = item.validationError;
+    expect(
+      valErr &&
+      valErr['priceCurrency.divisibility'] &&
+      !!valErr['priceCurrency.divisibility'].length || false
+    )
+      .to.equal(false);
+
+    const item2 = new Item();
+    item2.set({
+      priceCurrency: {
+        code: 'USD',
+        divisibility: -1,
+      },
+    }, { validate: true });
+    const valErr2 = item2.validationError;
+    console.dir(valErr2);
+    expect(
+      valErr2 &&
+      valErr2['priceCurrency.divisibility'] &&
+      !!valErr2['priceCurrency.divisibility'].length || false
+    )
+      .to.equal(true);
+
+    const item3 = new Item();
+    item3.set({
+      priceCurrency: {
+        code: 'USD',
+        divisibility: 'big-charlie',
+      },
+    }, { validate: true });
+    const valErr3 = item3.validationError;
+    expect(
+      valErr3 &&
+      valErr3['priceCurrency.divisibility'] &&
+      !!valErr3['priceCurrency.divisibility'].length || false
+    )
+      .to.equal(true);
+  });
+
   // todo: spot check nested val errors
 });
