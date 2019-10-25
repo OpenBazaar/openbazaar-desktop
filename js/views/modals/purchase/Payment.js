@@ -257,6 +257,7 @@ export default class extends BaseVw {
           walletIconTmpl,
           isModerated: this.isModerated,
           paymentCoin: this.paymentCoin,
+          externallyFundable: this.paymentCoinData.externallyFundableOrders,
         }));
       });
 

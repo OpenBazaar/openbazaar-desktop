@@ -3,6 +3,8 @@ import app from '../app';
 import bitcoreLib from 'bitcore-lib';
 import bech32 from 'bech32';
 
+console.log('add test for externallyfundablesugar');
+
 // If a currency does not support fee bumping or you want to disable it, do not provide a
 // feeBumpTransactionSize setting.
 
@@ -18,7 +20,6 @@ let _currencies = [
     // todo: transition away from base units
     // baseUnit: 100000000,
     // coinDivisibility: 8,
-    averageModeratedTransactionSize: 184,
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
@@ -53,11 +54,11 @@ let _currencies = [
     },
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
+    externallyFundableOrders: true,
   },
   {
     code: 'BCH',
     testnetCode: 'TBCH',
-    averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => {
       let prefixedAddress = address;
@@ -82,12 +83,11 @@ let _currencies = [
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 10,
+    externallyFundableOrders: true,
   },
   {
     code: 'ETH',
     testnetCode: 'TETH',
-    averageModeratedTransactionSize: 184,
-    feeBumpTransactionSize: 154,
     qrCodeText: address => `ethereum:${address}`,
     icon: 'imgs/cryptoIcons/ETH.png',
     url: 'https://ethereum.org/',
@@ -103,11 +103,11 @@ let _currencies = [
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 10,
+    externallyFundableOrders: false,
   },
   {
     code: 'LTC',
     testnetCode: 'TLTC',
-    averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `litecoin:${address}`,
     icon: 'imgs/cryptoIcons/LTC.png',
@@ -124,11 +124,11 @@ let _currencies = [
     ),
     supportsEscrowTimeout: true,
     blockTime: 1000 * 60 * 2.5,
+    externallyFundableOrders: true,
   },
   {
     code: 'ZEC',
     testnetCode: 'TZEC',
-    averageModeratedTransactionSize: 184,
     feeBumpTransactionSize: 154,
     qrCodeText: address => `zcash:${address}`,
     icon: 'imgs/cryptoIcons/ZEC.png',
@@ -145,6 +145,7 @@ let _currencies = [
     ),
     supportsEscrowTimeout: false,
     blockTime: 1000 * 60 * 2.5,
+    externallyFundableOrders: true,
   },
 ];
 
