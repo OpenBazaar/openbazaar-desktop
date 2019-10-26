@@ -42,6 +42,8 @@ npm install grunt --save-dev --silent
 npm install grunt-electron-installer --save-dev --silent
 npm install --silent
 
+rvm reinstall ruby
+
 echo 'Building OpenBazaar app...'
 npm run build
 
