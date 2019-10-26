@@ -33,6 +33,10 @@ jobs:
         osx_image: xcode11.2
         env: BINARY=win
 script:
+- brew rm openssl
+- brew cleanup openssl
+- brew install openssl
+- rvm reinstall ruby
 - npm run lint
 - npm run test
 - if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
