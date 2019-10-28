@@ -199,7 +199,7 @@ export default class extends baseVw {
       let paymentCoinData;
 
       try {
-        paymentCoinData = getWalletCurByCode(payment.currency.code);
+        paymentCoinData = getWalletCurByCode(paymentCoin);
       } catch (e) {
         // pass
       }

@@ -695,7 +695,7 @@ export default class extends BaseVw {
     let paymentCoin = '';
 
     try {
-      paymentCoin = refundMd.get('amountCurrency').code;
+      paymentCoin = refundMd.get('currency').code;
     } catch (e) {
       // pass
     }

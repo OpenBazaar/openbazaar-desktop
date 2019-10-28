@@ -70,9 +70,15 @@
             });          
           }
         %>
-        <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
-        <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.blockChainTxUrl %>"><%= ob.txid %></a></div>
+        <div style="flex-shrink: 0"><%= confirmationsText %></div>
+        <div style="flex-shrink: 0;max-width: 80px">
+          <div class="noOverflow">
+            <% if (ob.blockChainTxUrl) { %>
+              <a class="clrT2 js-txidLink" href="<%= ob.blockChainTxUrl %>"><%= ob.txid %></a>
+            <% } else { %>
+              <span class="clrT2"><%= ob.txid %></span>
+            <% } %>
+          </div>
         </div>
         <% 
           let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
