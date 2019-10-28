@@ -135,7 +135,9 @@
                   });
               } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
                 !ob.currencyMod.getExchangeRate(ob.price.currencyCode)) {
-                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo', {
+                  cur: ob.price.currencyCode
+                });
               } else {
                 buyNowClass = '';
                 unpurchaseable = false;

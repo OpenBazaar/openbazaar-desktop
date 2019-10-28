@@ -150,6 +150,10 @@ export default class extends BaseModal {
     });
 
     const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
+    const activeCurs =
+      currencies.length && this.listing.isCrypto ?
+        [currencies[0]] : [];
+
     this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
       disabledMsg: app.polyglot.t('purchase.cryptoCurrencyInvalid'),
       initialState: {
@@ -157,8 +161,10 @@ export default class extends BaseModal {
         currencies,
         disabledCurs,
         sort: false,
+        activeCurs,
       },
     });
+
     this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
       if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
     });
