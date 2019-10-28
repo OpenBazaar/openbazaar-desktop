@@ -854,12 +854,14 @@ export default class extends BaseModel {
 
         if (parsedResponse.coupons) {
           parsedResponse.coupons.forEach(coupon => {
-            coupon.bigPriceDiscount =
-              integerToDecimal(
-                coupon.bigPriceDiscount,
-                coinDiv,
-                { fieldName: 'coupon.bigPriceDiscount' }
-              );
+            if (coupon.bigPriceDiscount) {
+              coupon.bigPriceDiscount =
+                integerToDecimal(
+                  coupon.bigPriceDiscount,
+                  coinDiv,
+                  { fieldName: 'coupon.bigPriceDiscount' }
+                );
+            }
           });
         }
       }
