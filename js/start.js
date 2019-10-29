@@ -4,9 +4,11 @@ console.log('more centered <cancel> order transaction (and other) spinner design
 console.log('test order processing error');
 console.log('test order discussion tab');
 console.log('crypto listing - listing detail inventory not showing correctly - own listing');
-console.log('consider hiding inventory of crypto listing for not own listing since its broken');
-console.log('need purchase crypto amount validation to not go below base units');
+console.log('consider hiding inventory of crypto listing for not own listing since its broken - even own listing broken');
 console.log('pass divisibility with order spend');
+console.log('save crypto listing with cur with no exchange rate and reverts to first one');
+console.log('protect purchase to not allow orders that will be priced below the based units of the payment cur.');
+console.log('sql: database is closed on settings if server was given manual kill command');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
