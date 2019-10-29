@@ -238,7 +238,7 @@ export function integerToDecimal(value, divisibility, options = {}) {
     if (!opts.returnNaNOnError) {
       throw e;
     } else {
-      console.error(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
+      console.warn(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
         `${value} from an integer to a decimal: ${e.message}`);
     }
   }
@@ -902,7 +902,7 @@ export function curDefToDecimal(curDef, options = {}) {
       currency.divisibility
     );
   } catch (e) {
-    console.error(`Unable to convert the given currency definition to a decimal: ${e.message}`);
+    console.warn(`Unable to convert the given currency definition to a decimal: ${e.message}`);
   }
 
   return converted;

@@ -9,6 +9,8 @@ console.log('pass divisibility with order spend');
 console.log('save crypto listing with cur with no exchange rate and reverts to first one');
 console.log('protect purchase to not allow orders that will be priced below the based units of the payment cur.');
 console.log('sql: database is closed on settings if server was given manual kill command');
+console.log('test the sockets on the order transactions page');
+console.log('test non-standard divis in a listing');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';

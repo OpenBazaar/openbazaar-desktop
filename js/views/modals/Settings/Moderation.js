@@ -25,7 +25,13 @@ export default class extends baseVw {
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      // (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      (md, resp, opts) => {
+        console.log('jen dis');
+        window.jen = opts;
+        window.dis = this.profile;
+        app.profile.set(this.profile.toJSON(opts.attrs));
+      });
 
     if (this.profile.get('moderatorInfo')) {
       this.moderator = this.profile.get('moderatorInfo');

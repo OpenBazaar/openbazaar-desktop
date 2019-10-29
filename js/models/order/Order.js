@@ -1,6 +1,9 @@
 import _ from 'underscore';
 import bigNumber from 'bignumber.js';
-import { curDefToDecimal } from '../../utils/currency';
+import {
+  curDefToDecimal,
+  integerToDecimal,
+} from '../../utils/currency';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
@@ -185,19 +188,20 @@ export default class extends BaseOrder {
 
       // convert crypto listing quantities
       response.contract.buyerOrder.items.forEach((item, index) => {
-        // const listing = response.contract
-        //   .vendorListings[index];
+        let divisibility;
 
-        // // standardize the quantity field
-        // item.quantity = item.quantity === 0 ?
-        //   item.quantity64 : item.quantity;
+        try {
+          divisibility = response
+            .contract
+            .vendorListings[index]
+            .metadata
+            .coinDivisibility;
+        } catch (e) {
+          item.bigQuantity = bigNumber();
+          return;
+        }
 
-        // if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-        //   const coinDivisibility = listing.metadata
-        //     .coinDivisibility;
-
-        //   item.quantity = item.quantity / coinDivisibility;
-        // }
+        item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
       });
 
       if (response.contract.disputeResolution) {
@@ -223,17 +227,6 @@ export default class extends BaseOrder {
         //       paymentCoin);
       }
     }
-
-    // response.paymentAddressTransactions = response.paymentAddressTransactions || [];
-
-    // Embed the payment type into each payment transaction.
-    // const payments = [...response.paymentAddressTransactions];
-
-    // if (response.refundAddressTransaction) {
-    //   payments.push(response.refundAddressTransaction);
-    // }
-
-    // payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
 
     return response;
   }
