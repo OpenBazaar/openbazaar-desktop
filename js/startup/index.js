@@ -10,14 +10,19 @@ import app from '../app';
 
 export function fixLinuxZoomIssue() {
   // fix zoom issue on Linux hiDPI
-  if (screen && process.platform === 'linux') {
-    let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
+  if (process.platform === 'linux') {
+    try {
+      let scaleFactor = screen.getPrimaryDisplay().scaleFactor;
 
-    if (scaleFactor === 0) {
-      scaleFactor = 1;
+      if (scaleFactor === 0) {
+        scaleFactor = 1;
+      }
+
+      getBody().css('zoom', 1 / scaleFactor);
+    } catch (e) {
+      console.error('Unable to fix the linux zoom issue due to an error.');
+      console.error(e);
     }
-
-    getBody().css('zoom', 1 / scaleFactor);
   }
 }
 
