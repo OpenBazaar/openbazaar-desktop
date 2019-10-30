@@ -160,7 +160,6 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    // const paymentCoin = BaseOrder.getPaymentCoin(response);
     this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
 
     if (response.contract) {
@@ -188,20 +187,21 @@ export default class extends BaseOrder {
 
       // convert crypto listing quantities
       response.contract.buyerOrder.items.forEach((item, index) => {
-        let divisibility;
-
         try {
-          divisibility = response
+          const listing = response
             .contract
-            .vendorListings[index]
-            .metadata
-            .coinDivisibility;
+            .vendorListings[index];
+
+          if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
+            const divisibility = listing
+              .metadata
+              .coinDivisibility;
+
+            item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
+          }
         } catch (e) {
           item.bigQuantity = bigNumber();
-          return;
         }
-
-        item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
       });
 
       if (response.contract.disputeResolution) {

@@ -149,15 +149,15 @@ export default class extends BaseOrder {
       response.resolution.payout.moderatorOutput =
         response.resolution.payout.moderatorOutput || {};
 
-      response.resolution.payout.buyerOutput.amount =
-        integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-          paymentCoin);
-      response.resolution.payout.vendorOutput.amount =
-        integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-          paymentCoin);
-      response.resolution.payout.moderatorOutput.amount =
-        integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-          paymentCoin);
+      // response.resolution.payout.buyerOutput.amount =
+      //   integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
+      //     paymentCoin);
+      // response.resolution.payout.vendorOutput.amount =
+      //   integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
+      //     paymentCoin);
+      // response.resolution.payout.moderatorOutput.amount =
+      //   integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
+      //     paymentCoin);
     }
 
     return response;
