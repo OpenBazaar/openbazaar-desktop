@@ -46,7 +46,7 @@ export default class extends BaseModel {
    * has elapsed from the provided seconds until now, for example
    * '25 days' or '2 hours'.
    */
-  timeFromNowVerbose(secs) {
+  timeFromNowVerbose(hours) {
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
 
     // temporarily upping the moment threshold of number of days before month is used,
@@ -55,7 +55,7 @@ export default class extends BaseModel {
 
     const str = moment(Date.now())
       .from(
-        moment(Date.now() + (secs * 60 * 60 * 1000)), true
+        moment(Date.now() + (hours * 60 * 60 * 1000)), true
       );
 
     // restore the days timeout threshold
