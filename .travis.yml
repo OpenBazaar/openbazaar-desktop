@@ -19,10 +19,20 @@ before_script:
 - if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
-script:
-- npm run lint
-- npm run test
-- if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
+jobs:
+  include:
+    - stage: prepare
+      script: npm run lint
+#      script: npm run test
+    - stage: build
+      os: osx
+      script: if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
+      os: linux
+      script: if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
+#script:
+#- npm run lint
+#- npm run test
+#- if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
