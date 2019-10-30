@@ -115,16 +115,12 @@ export default class extends Model {
       (attrs = {})[key] = val;
     }
 
-    // take a snapshot of the attrs provided to this method
-    const setAttrs = JSON.parse(JSON.stringify(attrs));
-
-    const previousAttrs = this.toJSON();
+    // take a snapshot of the attrs before updating so we can compare later
+    // to see if anything changed
+    const previousAttrs = JSON.parse(JSON.stringify(this.toJSON()));
 
     // todo: will it break things if we unset a nested attribute?
     if (!opts.unset) {
-      // let's work off of a clone since we modify attrs
-      // attrs = JSON.parse(JSON.stringify(attrs));
-
       if (this.nested) {
         const nested = _.result(this, 'nested', []);
 
@@ -160,8 +156,8 @@ export default class extends Model {
     // Since the standard change event doesn't properly take into
     // account nested models, we'll fire our own event if any part of the
     // model (including nested parts) change.
-    if (!_.isEqual(this.toJSON(), previousAttrs)) {
-      this.trigger('someChange', this, { setAttrs });
+    if (!_.isEqual(JSON.parse(JSON.stringify(this.toJSON())), previousAttrs)) {
+      this.trigger('someChange', this, { setAttrs: attrs });
     }
 
     return superSet;

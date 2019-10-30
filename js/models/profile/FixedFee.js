@@ -33,9 +33,6 @@ export default class extends BaseModel {
         // pass
       }
 
-      console.log(`check the funkers: ${coinDiv}`);
-      window.funkers = this;
-
       this.validateCurrencyAmount(
         {
           amount: attrs.amount,
