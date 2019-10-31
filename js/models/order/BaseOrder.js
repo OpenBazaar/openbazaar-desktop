@@ -1,4 +1,9 @@
+import bigNumber from 'bignumber.js';
 import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
+import {
+  curDefToDecimal,
+  integerToDecimal,
+} from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -137,5 +142,46 @@ export default class extends BaseModel {
 
   get paymentCoinData() {
     return this.constructor.getPaymentCoinData(this.toJSON());
+  }
+
+  static parseContract(contract) {
+    if (contract) {
+      let payment;
+
+      console.log('what happens if no payment?');
+
+      try {
+        payment = contract.buyerOrder.payment;
+      } catch (e) {
+        // pass
+      }
+
+      if (payment) {
+        console.log('test me with crap i oli');
+        payment.bigAmount = curDefToDecimal({
+          amount: payment.bigAmount,
+          currency: payment.amountCurrency,
+        });
+      }
+
+      // convert crypto listing quantities
+      contract.buyerOrder.items.forEach((item, index) => {
+        try {
+          const listing = contract.vendorListings[index];
+
+          if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
+            const divisibility = listing
+              .metadata
+              .coinDivisibility;
+
+            item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
+          }
+        } catch (e) {
+          item.bigQuantity = bigNumber();
+        }
+      });
+    }
+
+    return contract;
   }
 }

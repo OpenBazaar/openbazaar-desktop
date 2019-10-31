@@ -1,9 +1,5 @@
 import _ from 'underscore';
 import bigNumber from 'bignumber.js';
-import {
-  curDefToDecimal,
-  integerToDecimal,
-} from '../../utils/currency';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
@@ -12,7 +8,7 @@ import Transaction from '../../models/order/Transaction';
 
 console.log('is get paymentCoinData being used properly');
 
-export default class extends BaseOrder {
+class Order extends BaseOrder {
   constructor(attrs, options) {
     const opts = {
       type: 'sale',
@@ -167,42 +163,7 @@ export default class extends BaseOrder {
       // we'll store the original contract here.
       response.rawContract = this.rawResponse.contract;
 
-      let payment;
-
-      console.log('what happens if no payment?');
-
-      try {
-        payment = response.contract.buyerOrder.payment;
-      } catch (e) {
-        // pass
-      }
-
-      if (payment) {
-        console.log('test me with crap i oli');
-        payment.bigAmount = curDefToDecimal({
-          amount: payment.bigAmount,
-          currency: payment.amountCurrency,
-        });
-      }
-
-      // convert crypto listing quantities
-      response.contract.buyerOrder.items.forEach((item, index) => {
-        try {
-          const listing = response
-            .contract
-            .vendorListings[index];
-
-          if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-            const divisibility = listing
-              .metadata
-              .coinDivisibility;
-
-            item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
-          }
-        } catch (e) {
-          item.bigQuantity = bigNumber();
-        }
-      });
+      response.contract = Order.parseContract(response.contract);
 
       if (response.contract.disputeResolution) {
         console.log('im bringin disputes back');
@@ -231,3 +192,5 @@ export default class extends BaseOrder {
     return response;
   }
 }
+
+export default Order;
