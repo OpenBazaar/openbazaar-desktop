@@ -406,10 +406,6 @@ export default class extends BaseVw {
   get shouldShowTimeoutInfoView() {
     const paymentCurData = this.model.paymentCoinData;
 
-    console.log('saggy is our m nagy');
-    console.dir(paymentCurData);
-    console.log('\n');
-
     return (
       (paymentCurData && paymentCurData.supportsEscrowTimeout) &&
       (
