@@ -259,7 +259,7 @@ case "$TRAVIS_OS_NAME" in
         # Notarize the zip files
         UPLOAD_INFO_PLIST="uploadinfo.plist"
         REQUEST_INFO_PLIST="request.plist"
-        touch $UPLOAD_INFO_PLIST
+        touch ${UPLOAD_INFO_PLIST}
 
         wait_for_notarization() {
           while true; do \
@@ -281,7 +281,7 @@ case "$TRAVIS_OS_NAME" in
                    /usr/bin/xcrun altool --notarization-info ${requestUUID} -u $APPLE_ID -p $APPLE_PASS --output-format xml > "$REQUEST_INFO_PLIST" ;\
                fi ;\
 
-               if [[ `/usr/libexec/PlistBuddy -c "Print :notarization-info:Status" ${REQUEST_INFO_PLIST}` != "in progress" ]]; then \
+               if [[ `/usr/libexec/PlistBuddy -c "Print :notarization-info:Status" ${REQUEST_INFO_PLIST}` == "success" ]]; then \
                 echo "Binary has been notarized"; \
                 break; \
                fi; \
@@ -366,7 +366,6 @@ case "$TRAVIS_OS_NAME" in
             electron-installer-dmg dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app OpenBazaar2Client-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2Client-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
             # Client Only
-            cd ../../
             codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
             cd dist/OpenBazaar2Client-darwin-x64/
             zip -q -r OpenBazaar2Client-mac-$PACKAGE_VERSION.zip OpenBazaar2Client.app
