@@ -1,8 +1,5 @@
 language: node_js
 sudo: true
-os:
-- linux
-- osx
 cache:
   directories:
   - node_modules
@@ -21,18 +18,17 @@ before_script:
 - if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
 jobs:
   include:
-    - stage: prepare
-      script: npm run lint
-#      script: npm run test
-    - stage: build
-      os: osx
-      script: if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
-      os: linux
-      script: if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
-#script:
-#- npm run lint
-#- npm run test
-#- if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
+      - os: linux
+      - os: osx
+        env: BINARY=win
+      - os: osx
+        env: BINARY=osx
+      - os: osx
+        env: BINARY=osxclient
+script:
+- npm run lint
+- npm run test
+- if [ -n "$TRAVIS_TAG" ]; then ./build.sh; fi
 deploy:
   provider: releases
   api_key: "$GITHUB_TOKEN"
