@@ -277,6 +277,170 @@ describe('the Listing model', () => {
         .to.equal(true);
   });
 
+  
+  const servicePriceFields = ['bigPrice', 'bigAdditionalItemPrice'];
+
+  it('fails validation if service price fields do not contain a valid currency amount', () => {
+    servicePriceFields.forEach(field => {
+      const listing = new Listing();
+
+      listing.set({
+        item: {
+          priceCurrency: {
+            code: 'USD',
+            divisibility: 2,
+          }
+        },
+        shippingOptions: [
+          {
+            services: [
+              {
+                [field]: bigNumber('100'), // valid
+              },
+              {
+                [field]: bigNumber('0.01'), // valid
+              },
+              {
+                [field]: bigNumber('0'), // valid
+              },
+              {
+                [field]: true, // invalid
+              },
+              {
+                [field]: 100, // invalid
+              },
+              {
+                [field]: bigNumber('-1'), // invalid
+              },
+              {
+                [field]: bigNumber('0.009'), // invalid
+              },
+              {}, // invalid, bigPrice is required
+              {
+                [field]: '100', // invalid
+              },
+            ],
+          }
+        ],
+      }, { validate: true });
+
+      const valErr = listing.validationError;
+
+      const shippingOptions = listing.get('shippingOptions');
+      const services = shippingOptions
+        .at(0)
+        .get('services');
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(0).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(0).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(false);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(1).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(1).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(false);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(2).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(2).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(false);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(3).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(3).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(4).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(4).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(5).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(5).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(6).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(6).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(7).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(7).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+
+      expect(
+        valErr &&
+        valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(8).cid}].${field}`
+        ] &&
+        !!valErr[
+          `shippingOptions[${shippingOptions.at(0).cid}].services[${services.at(8).cid}].${field}`
+        ].length ||
+        false
+      )
+        .to.equal(true);
+    });
+  });
+
   // todo: figure out how to stub BaseModel.sync so we could test conversion
   // of prices from integers to decimals in sync
 
