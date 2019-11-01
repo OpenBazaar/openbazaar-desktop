@@ -7,7 +7,6 @@ export default class extends BaseModel {
   defaults() {
     return {
       currencyCode: 'USD',
-      amount: 0,
     };
   }
 

@@ -234,7 +234,7 @@ describe('the Listing model', () => {
         !!valErr.coupons.length || false).to.equal(true);
   });
 
-  it('fails validation if a coupon price exceeds the listing price', () => {
+ it('fails validation if a coupon price exceeds the listing price', () => {
     const listing = new Listing();
 
     listing.set({
@@ -260,24 +260,8 @@ describe('the Listing model', () => {
         },
       ],
     }, { validate: true });
+  });  
 
-    const valErr = listing.validationError;
-    const coupons = listing.get('coupons');
-
-    expect(valErr && valErr[`coupons[${coupons.at(0).cid}].bigPriceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(0).cid}].bigPriceDiscount`].length || false)
-        .to.equal(false);
-
-    expect(valErr && valErr[`coupons[${coupons.at(1).cid}].bigPriceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(1).cid}].bigPriceDiscount`].length || false)
-        .to.equal(true);
-
-    expect(valErr && valErr[`coupons[${coupons.at(2).cid}].bigPriceDiscount`] &&
-        !!valErr[`coupons[${coupons.at(2).cid}].bigPriceDiscount`].length || false)
-        .to.equal(true);
-  });
-
-  
   const servicePriceFields = ['bigPrice', 'bigAdditionalItemPrice'];
 
   it('fails validation if service price fields do not contain a valid currency amount', () => {
