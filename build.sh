@@ -173,7 +173,7 @@ case "$TRAVIS_OS_NAME" in
         brew remove osslsigncode
         brew install mono osslsigncode
 
-        rvm get stable
+        brew reinstall openssl@1.1
 
         # WINDOWS 32
         echo 'Building Windows 32-bit Installer...'
