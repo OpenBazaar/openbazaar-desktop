@@ -1,9 +1,13 @@
 language: node_js
 sudo: true
+before_cache:
+  - brew cleanup
 cache:
   directories:
   - node_modules
   - "/usr/local/Cellar"
+  - $HOME/Library/Caches/Homebrew
+
 node_js:
 - '8'
 addons:
@@ -18,15 +22,15 @@ before_script:
 - if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
 jobs:
   include:
-      - os: linux
-      - os: osx
-        env: BINARY=win
       - os: osx
         osx_image: xcode11
         env: BINARY=osx
       - os: osx
         osx_image: xcode11
         env: BINARY=osxclient
+      - os: linux
+      - os: osx
+        env: BINARY=win
 script:
 - npm run lint
 - npm run test

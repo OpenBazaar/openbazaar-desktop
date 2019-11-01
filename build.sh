@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 ## Version 2.0.0
 ##
@@ -291,6 +291,32 @@ case "$TRAVIS_OS_NAME" in
           done
         }
 
+        extract_app() {
+
+            # use process redirection to capture the mount point and dev entry
+            IFS=$'\n' read -rd '\n' mount_point dev_entry < <(
+                # mount the diskimage; leave out -readonly if making changes to the filesystem
+                hdiutil attach -readonly -plist "$1" | \
+
+                # convert output plist to json
+                plutil -convert json - -o - | \
+
+                # extract mount point and dev entry
+                jq -r '
+                    .[] | .[] |
+                    select(."volume-kind" == "hfs") |
+                    ."mount-point" + "\n" + ."dev-entry"
+                '
+            )
+
+            # work with the zip file
+            cp -rf "${mount_point}/${2}.app" dist/osx
+
+            # unmount the disk image
+            hdiutil detach "$dev_entry"
+
+        }
+
         if [[ ${BINARY} == 'osx' ]]; then
 
             echo 'Running Electron Packager...'
@@ -325,7 +351,11 @@ case "$TRAVIS_OS_NAME" in
             wait_for_notarization
 
             echo "Stapling ticket to the DMG..."
-            xcrun stapler staple dist/osx/OpenBazaar2-2.3.6.dmg
+            xcrun stapler staple dist/osx/OpenBazaar2-$PACKAGE_VERSION.dmg
+
+            extract_app "dist/osx/OpenBazaar2-$PACKAGE_VERSION.dmg" "OpenBazaar2"
+
+            zip -q -r dist/osx/OpenBazaar2-mac-$PACKAGE_VERSION.zip dist/osx/OpenBazaar2.app
 
         else
 
@@ -353,7 +383,11 @@ case "$TRAVIS_OS_NAME" in
             wait_for_notarization
 
             echo "Stapling ticket to the DMG..."
-            xcrun stapler staple dist/osx/OpenBazaar2Client-2.3.6.dmg
+            xcrun stapler staple dist/osx/OpenBazaar2Client-$PACKAGE_VERSION.dmg
+
+            extract_app "dist/osx/OpenBazaar2Client-$PACKAGE_VERSION.dmg" "OpenBazaar2Client"
+
+            zip -q -r dist/osx/OpenBazaar2Client-mac-$PACKAGE_VERSION.zip dist/osx/OpenBazaar2Client.app
         fi
 
     fi
