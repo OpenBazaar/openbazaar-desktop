@@ -173,6 +173,8 @@ case "$TRAVIS_OS_NAME" in
         brew remove osslsigncode
         brew install mono osslsigncode
 
+        rvm get stable
+
         # WINDOWS 32
         echo 'Building Windows 32-bit Installer...'
         mkdir dist/win32
