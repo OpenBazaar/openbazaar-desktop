@@ -1,12 +1,13 @@
 language: node_js
 sudo: true
-os:
-- linux
-- osx
+before_cache:
+  - brew cleanup
 cache:
   directories:
   - node_modules
   - "/usr/local/Cellar"
+  - $HOME/Library/Caches/Homebrew
+
 node_js:
 - '8'
 addons:
@@ -19,6 +20,17 @@ before_script:
 - if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.cert.spc; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -k "$OB1_SECRET" -in .travis/ob1.cert.spc.enc -d -a -out ./.travis/ob1.pvk; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
+jobs:
+  include:
+      - os: osx
+        osx_image: xcode11
+        env: BINARY=osx
+      - os: osx
+        osx_image: xcode11
+        env: BINARY=osxclient
+      - os: linux
+      - os: osx
+        env: BINARY=win
 script:
 - npm run lint
 - npm run test
