@@ -54,11 +54,7 @@ case "$TRAVIS_OS_NAME" in
   "linux")
 
     echo 'Linux builds'
-
-    echo 'Building Linux 32-bit Installer....'
-
     echo 'Making dist directories'
-    mkdir dist/linux32
     mkdir dist/linux64
 
     echo 'Install npm packages for Linux'
@@ -83,22 +79,6 @@ case "$TRAVIS_OS_NAME" in
 
     APPNAME="openbazaar2"
 
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --electronVersion=${ELECTRONVER} --ignore="OPENBAZAAR_TEMP" --overwrite --prune --out=dist
-
-    echo 'Move go server to electron app'
-    mkdir dist/${APPNAME}-linux-ia32/resources/openbazaar-go/
-    cp -rf OPENBAZAAR_TEMP/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go
-    mv dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaar-go-linux-386 dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
-    rm -rf dist/${APPNAME}-linux-ia32/resources/app/.travis
-    chmod +x dist/${APPNAME}-linux-ia32/resources/openbazaar-go/openbazaard
-
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_ia32.json
-
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_ia32.json
-
     echo 'Building Linux 64-bit Installer....'
 
     echo "Packaging Electron application"
@@ -119,15 +99,6 @@ case "$TRAVIS_OS_NAME" in
     electron-installer-redhat --config .travis/config_x86_64.json
 
     APPNAME="openbazaar2client"
-
-    echo "Packaging Electron application"
-    electron-packager . ${APPNAME} --platform=linux --arch=ia32 --ignore="OPENBAZAAR_TEMP" --electronVersion=${ELECTRONVER} --overwrite --prune --out=dist
-
-    echo 'Create debian archive'
-    electron-installer-debian --config .travis/config_ia32.client.json
-
-    echo 'Create RPM archive'
-    electron-installer-redhat --config .travis/config_ia32.client.json
 
     echo 'Building Linux 64-bit Installer....'
 
@@ -172,42 +143,7 @@ case "$TRAVIS_OS_NAME" in
 
         brew remove osslsigncode
         brew install mono osslsigncode
-
         brew reinstall openssl@1.1
-
-        # WINDOWS 32
-        echo 'Building Windows 32-bit Installer...'
-        mkdir dist/win32
-
-        echo 'Running Electron Packager...'
-        electron-packager . OpenBazaar2 --asar --out=dist --ignore="OPENBAZAAR_TEMP" --protocol-name=OpenBazaar --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
-
-        echo 'Copying server binary into application folder...'
-        cp -rf OPENBAZAAR_TEMP/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/
-        cp -rf OPENBAZAAR_TEMP/libwinpthread-1.win32.dll dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll
-        mkdir dist/OpenBazaar2-win32-ia32/resources/openbazaar-go
-        mv dist/OpenBazaar2-win32-ia32/resources/openbazaar-go-windows-4.0-386.exe dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/openbazaard.exe
-        mv dist/OpenBazaar2-win32-ia32/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-ia32/resources/openbazaar-go/libwinpthread-1.dll
-        rm -rf dist/OPENBAZAAR_TEMP
-
-        echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-ia32 --outdir=dist/win32
-        mv dist/win32/OpenBazaar2Setup.exe dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
-        mv dist/win32/RELEASES dist/RELEASES
-
-        #### CLIENT ONLY
-        echo 'Running Electron Packager...'
-        electron-packager . OpenBazaar2Client --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2Client" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2Client.exe --protocol=ob --platform=win32 --arch=ia32 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
-
-        echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-ia32 --outdir=dist/win32
-        mv dist/win32/OpenBazaar2ClientSetup.exe dist/win32/OpenBazaar2Client-$PACKAGE_VERSION-Setup-32.exe
-
-        echo 'Sign the installer'
-        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe -out dist/win32/OpenBazaar2-$PACKAGE_VERSION-Setup-32.exe
-        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win32/OpenBazaar2Client-$PACKAGE_VERSION-Setup-32.exe -out dist/win32/OpenBazaar2Client-$PACKAGE_VERSION-Setup-32.exe
-
-        rm dist/win32/RELEASES
 
         # WINDOWS 64
         echo 'Building Windows 64-bit Installer...'
