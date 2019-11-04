@@ -1,14 +1,9 @@
 console.log('general bad data everywhere and make sure we dont blow up');
-console.log('make a reusable function to test currency amounts in a model...?');
 console.log('more centered <cancel> order transaction (and other) spinner designs');
 console.log('test order processing error');
-console.log('test order discussion tab');
-console.log('crypto listing - listing detail inventory not showing correctly - own listing');
-console.log('consider hiding inventory of crypto listing for not own listing since its broken - even own listing broken');
 console.log('pass divisibility with order spend');
 console.log('save crypto listing with cur with no exchange rate and reverts to first one');
 console.log('protect purchase to not allow orders that will be priced below the based units of the payment cur.');
-console.log('sql: database is closed on settings if server was given manual kill command');
 console.log('test the sockets on the order transactions page');
 console.log('test non-standard divis in a listing');
 

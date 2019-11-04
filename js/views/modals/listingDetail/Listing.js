@@ -14,10 +14,10 @@ import {
 } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
-import {
-  getInventory,
-  events as inventoryEvents,
-} from '../../../utils/inventory';
+// import {
+//   getInventory,
+//   events as inventoryEvents,
+// } from '../../../utils/inventory';
 import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { getTranslatedCountries } from '../../../data/countries';
@@ -26,7 +26,7 @@ import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
-import QuantityDisplay from '../../components/QuantityDisplay';
+// import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
 import Listings from '../../../collections/Listings';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
@@ -170,26 +170,35 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startAjaxEvent('Listing_InventoryFetch');
-      this.inventoryFetch = getInventory(this.vendor.peerID, {
-        slug: this.model.get('slug'),
-        coinDivisibility: this.model.get('metadata')
-          .get('coinDivisibility'),
-      })
-        .done(e => {
-          this._inventory = e.inventory;
-          endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: this.model.isOwnListing,
-          });
-        })
-        .fail(e => {
-          endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: this.model.isOwnListing,
-            errors: e.error || e.errCode || 'unknown error',
-          });
-        });
-      this.listenTo(inventoryEvents, 'inventory-change',
-        e => (this._inventory = e.inventory));
+      // Commenting out for since inventory fetch is currently broken on the server.
+
+      // startAjaxEvent('Listing_InventoryFetch');
+      // this.inventoryFetch = getInventory(this.vendor.peerID, {
+      //   slug: this.model.get('slug'),
+      //   coinDivisibility: this.model.get('metadata')
+      //     .get('coinDivisibility'),
+      // })
+      //   .done(e => {
+      //     this._inventory = e.inventory;
+
+      //     if (this.cryptoInventory) {
+      //       this.cryptoInventory.setState({
+      //         amount: this._inventory,
+      //       });            
+      //     }
+
+      //     endAjaxEvent('Listing_InventoryFetch', {
+      //       ownListing: this.model.isOwnListing,
+      //     });
+      //   })
+      //   .fail(e => {
+      //     endAjaxEvent('Listing_InventoryFetch', {
+      //       ownListing: this.model.isOwnListing,
+      //       errors: e.error || e.errCode || 'unknown error',
+      //     });
+      //   });
+      // this.listenTo(inventoryEvents, 'inventory-change',
+      //   e => (this._inventory = e.inventory));
     }
 
     this.moreListingsCol = new Listings([], { guid: this.vendor.peerID });
@@ -640,13 +649,16 @@ export default class extends BaseModal {
           app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
         return;
       }
-    } else {
-      if (typeof this._inventory === 'number' &&
-        this._inventory <= 0) {
-        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
-          app.polyglot.t('listingDetail.errors.outOfStock'));
-        return;
-      }
+    // Commenting out inventory related stuff for now since it's broken on the server.
+    // } else {
+    //   if (
+    //     typeof this._inventory === 'number' &&
+    //     this._inventory <= 0
+    //   ) {
+    //     openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+    //       app.polyglot.t('listingDetail.errors.outOfStock'));
+    //     return;
+    //   }
     }
 
     const selectedVariants = [];
@@ -666,7 +678,7 @@ export default class extends BaseModal {
       removeOnClose: true,
       showCloseButton: false,
       phase: 'pay',
-      inventory: this._inventory,
+      // inventory: this._inventory,
     })
       .render()
       .open();
@@ -757,7 +769,7 @@ export default class extends BaseModal {
     if (this._purchaseModal) this._purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
-    if (this.inventoryFetch) this.inventoryFetch.abort();
+    // if (this.inventoryFetch) this.inventoryFetch.abort();
     if (this.moreListingsFetch) this.moreListingsFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
@@ -874,17 +886,17 @@ export default class extends BaseModal {
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');
 
-        if (this.cryptoInventory) this.cryptoInventory.remove();
-        this.cryptoInventory = this.createChild(QuantityDisplay, {
-          peerId: this.vendor.peerID,
-          slug: this.model.get('slug'),
-          initialState: {
-            coinType: metadata.get('coinType'),
-            amount: this._inventory,
-          },
-        });
-        this.getCachedEl('.js-cryptoInventory')
-          .html(this.cryptoInventory.render().el);
+        // if (this.cryptoInventory) this.cryptoInventory.remove();
+        // this.cryptoInventory = this.createChild(QuantityDisplay, {
+        //   peerId: this.vendor.peerID,
+        //   slug: this.model.get('slug'),
+        //   initialState: {
+        //     coinType: metadata.get('coinType'),
+        //     amount: this._inventory,
+        //   },
+        // });
+        // this.getCachedEl('.js-cryptoInventory')
+        //   .html(this.cryptoInventory.render().el);
 
         if (this.cryptoTitle) this.cryptoTitle.remove();
         this.cryptoTitle = this.createChild(CryptoTradingPair, {

@@ -8,10 +8,10 @@ import { removeProp } from '../../../utils/object';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import {
-  getInventory,
-  events as inventoryEvents,
-} from '../../../utils/inventory';
+// import {
+//   getInventory,
+//   events as inventoryEvents,
+// } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
 import {
@@ -95,8 +95,10 @@ export default class extends BaseModal {
       {
         isCrypto: this.listing.isCrypto,
         inventory: () =>
-          (typeof this.inventory === 'number' ?
-            this.inventory : 99999999999999999),
+          (
+            typeof this.inventory === 'number' ?
+              this.inventory : 99999999999999999
+          ),
         getCoinDiv: () => (this.coinDivisibility),
         getCoinType: () => (
           this.listing
@@ -209,22 +211,24 @@ export default class extends BaseModal {
     });
 
     // If the parent has the inventory, pass it in, otherwise we'll fetch it.
-    this.inventory = this.options.inventory;
-    if (this.listing.isCrypto &&
-      typeof this.inventory !== 'number') {
-      console.log('test this...');
-      this.inventoryFetch = getInventory(
-        this.listing.get('vendorID').peerID,
-        {
-          slug: this.listing.get('slug'),
-          coinDivisibility:
-            this.listing.get('metadata')
-              .get('coinDivisibility'),
-        }
-      ).done(e => (this.inventory = e.inventory));
-      this.listenTo(inventoryEvents, 'inventory-change',
-        e => (this.inventory = e.inventory));
-    }
+    // -- commenting out for now since inventory is not functioning properly on the server
+    // this.inventory = this.options.inventory;
+    // if (
+    //   this.listing.isCrypto &&
+    //   typeof this.inventory !== 'number'
+    // ) {
+    //   this.inventoryFetch = getInventory(
+    //     this.listing.get('vendorID').peerID,
+    //     {
+    //       slug: this.listing.get('slug'),
+    //       coinDivisibility:
+    //         this.listing.get('metadata')
+    //           .get('coinDivisibility'),
+    //     }
+    //   ).done(e => (this.inventory = e.inventory));
+    //   this.listenTo(inventoryEvents, 'inventory-change',
+    //     e => (this.inventory = e.inventory));
+    // }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());

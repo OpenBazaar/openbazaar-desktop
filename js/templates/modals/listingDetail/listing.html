@@ -169,7 +169,8 @@
           <div>
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
-          <% if (ob.isCrypto) { %>
+          <% // not showing the inventory for now since it's broken on the server %>
+          <% if (ob.isCrypto && false) { %>
             <div>
               <%= ob.polyT('listingDetail.inventory', {
                 inventory: '<span class="js-cryptoInventory"></span>'
