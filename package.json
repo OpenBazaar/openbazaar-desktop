@@ -8,7 +8,7 @@
   "scripts": {
     "start": "cross-env NODE_ENV=development npm-run-all sass:build process-index --parallel sass:watch index:watch browsersync start-app",
     "start-app": "cross-env NODE_ENV=development electron .",
-    "test": "cross-env BABEL_ENV=development mocha -g 'the Fixed Fee model' --compilers js:@babel/register --recursive --exit",
+    "test": "cross-env BABEL_ENV=development mocha --compilers js:@babel/register --recursive --exit",
     "test:watch": "npm run test -- --watch",
     "lint": "eslint .",
     "lint:watch": "nodemon -e js -x \"npm run lint\"",

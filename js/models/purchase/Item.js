@@ -97,8 +97,11 @@ export default class extends BaseModel {
       ) {
         addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
       } else if (
-        !isValidNumber(attrs.bigQuantity) ||
-        !attrs.bigQuantity.isInteger()
+        !isValidNumber(attrs.bigQuantity, {
+          allowNumber: false,
+          allowString: false,
+        }) ||
+        !Number.isInteger(attrs.bigQuantity)
       ) {
         addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
       } else if (attrs.bigQuantity.lt(1)) {
