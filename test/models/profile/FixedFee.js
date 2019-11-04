@@ -15,10 +15,7 @@ describe('the Fixed Fee model', () => {
     const fixedFee = new FixedFee();
     fixedFee.set({
       amount: bigNumber('100'), // valid
-      amountCurrency: {
-        code: 'BTC',
-        divisibility: 8,
-      }
+      currencyCode: 'BTC',
     }, { validate: true });
     let valErr = fixedFee.validationError;
     expect(valErr && valErr.amount && !!valErr.amount.length || false).to.equal(false);
@@ -27,14 +24,13 @@ describe('the Fixed Fee model', () => {
       amount: bigNumber('0.00000001'), // valid
     }, { validate: true });
     valErr = fixedFee.validationError;
-        console.dir(valErr);
     expect(valErr && valErr.amount && !!valErr.amount.length || false).to.equal(false);
 
     fixedFee.set({
       amount: bigNumber('0'), // invalid
     }, { validate: true });
     valErr = fixedFee.validationError;
-    expect(valErr && valErr.bigAmamountount && !!valErr.amount.length || false).to.equal(true);
+    expect(valErr && valErr.amount && !!valErr.amount.length || false).to.equal(true);
 
     fixedFee.set({
       amount: true, // invalid
