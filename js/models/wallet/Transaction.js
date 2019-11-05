@@ -109,7 +109,7 @@ export default class extends BaseModel {
           value = integerToDecimal(
             returnVal.value,
             getWalletCurByCode(coinType).coinDivisibility,
-            { returnUndefinedOnError: false }
+            { returnNaNOnError: false }
           );
         } catch (e) {
           console.error(`Unable to convert the ${coinType} transaction value from base ` +

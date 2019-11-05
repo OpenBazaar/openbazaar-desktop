@@ -14,7 +14,7 @@ export default class extends BaseModel {
       converted.confirmed = integerToDecimal(
         response.confirmed,
         response.currency.divisibility,
-        { returnUndefinedOnError: false }
+        { returnNaNOnError: false }
       );
     } catch (e) {
       if (
@@ -35,7 +35,7 @@ export default class extends BaseModel {
       converted.unconfirmed = integerToDecimal(
         response.unconfirmed,
         response.currency.divisibility,
-        { returnUndefinedOnError: false }
+        { returnNaNOnError: false }
       );
     } catch (e) {
       if (

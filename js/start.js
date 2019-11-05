@@ -163,23 +163,6 @@ function fetchStartupData1() {
   walletCurDefFetch = !walletCurDefFetch || walletCurDefFetch.state() === 'rejected' ?
     $.get(app.getServerUrl('wallet/currencies')) : walletCurDefFetch;
 
-  // walletCurDefFetch = $.Deferred().resolve({
-  //   "BTC": {
-  //       "code": "BTC",
-  //       "currencyType": "crypto",
-  //       "divisibility": 8,
-  //       "name": "yo fat ass mama",
-  //       "testnetCode": "TBTC",
-  //   },
-  //   "USD": {
-  //       "code": "USD",
-  //       "currencyType": "fiat",
-  //       "divisibility": 2,
-  //       "name": "yo punk ass sista",
-  //       "testnetCode": "",
-  //   },
-  // });
-
   const fetches = [
     configFetch,
     walletCurDefFetch,
@@ -578,6 +561,8 @@ function start() {
     app.settings = new Settings();
     initWalletCurs(app.serverConfig.wallets, data.walletCurDef);
     app.walletCurDef = data.walletCurDef;
+
+    console.dir(app.walletCurDef);
 
     const curConn = getCurrentConnection();
 

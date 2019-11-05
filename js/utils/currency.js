@@ -1,4 +1,3 @@
-console.log('change "bigNumber()"" to "new BigNumber()"...?');
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
@@ -20,9 +19,6 @@ import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurr
 const events = {
   ...Events,
 };
-
-console.log('big');
-window.big = bigNumber;
 
 export { events };
 
@@ -102,9 +98,18 @@ export const defaultFiatCoinDivisibility = 2;
  *   divisibility the server explicitly provides with that amount.
  * - When converting a decimal back to an integer, if the API accepts the divisibility, it's
  *   safest to send it over, so it's clear what value was used.
+ *
+ * Returns the coin divisibility for the given currency. The first attempt is to get it
+ * from the wallet currency map that's obtained from the server. If it's a currency not
+ * listed there, the function will attempt to decipher the type of currency (e.g. fiat,
+ * crypto listing cur, etc...) and fall back to an appropriate default value.
+ * @param {string} currency - currency code
+ * @param {object} options
+ * @param {object} [options.walletCurDef = app.walletCurDef] - The currency map
+ *  provided by the server. You should almost never need to pass this in. It was
+ *  really exposed as an option for testing purposes.
+ * @returns {number} - An integer representing the provided currency's divisibility.
  */
-console.log('doc me up');
-console.log('should fiat not be hard-coded to 2?');
 export function getCoinDivisibility(currency, options = {}) {
   if (typeof currency !== 'string' || !currency) {
     throw new Error('Please provide a currrency as a non-empty string.');
@@ -369,10 +374,12 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
 /**
  * Will format an amount in the given currency into the format appropriate for the given
  * locale.
+ * @param {number|string|BigNumber} amount
+ * @param {string} currency
+ * @returns {string} - A string representing the formatted amount in the given
+ *   currency and locale.
  */
-console.log('doc the param types');
-console.log('unit test that amount ccan be of various numeric typees');
-console.log('clear up the formatAmount comment');
+console.log('unit test that amount can be of various numeric typees');
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -384,18 +391,18 @@ export function formatCurrency(amount, currency, options) {
     // If you just want to format a number representing a crypto currency amount
     // but don't want any code or symbol used, set to false.
     includeCryptoCurIdentifier: true,
-    // If the formatted amount would be zero given the provided amount and
-    // maxDisplayDecimals, if true, the
     // If true and the amount is greater than zero, maxDisplayDecimals will be
     // raised as necessary to avoid a formatted result being 0.
     extendMaxDecimalsOnZero: true,
     ...options,
   };
 
-  // This is intended to be used for amounts that you want formatted in the
-  // 'decimal' style. This won't work for the other formats (e.g. currency, percent)
-  // because this function will fall back if necessary to BigNumber.toFormat() and that
-  // does not support those styles.
+  // If the value falls within the range supported by Intl.NumberFormat, which is quite
+  // large, then Intl.NumberFormat will be used and the number will be formatted in
+  // a localized way and in the desired style (e.g. decimal, currency, percent). If
+  // it falls outside of the supported range, then we will fallback to BigNumber.toFormat().
+  // Please keeep in mind though, BigNumber.toFormat() will not localize the number, nor
+  // does it support styles other than 'decimal'.
   const formatAmount = (value, locale, formatAmountOpts = {}) => {
     const maxDecimals = formatAmountOpts.maximumFractionDigits;
     const minDecimals = formatAmountOpts.minimumFractionDigits;
