@@ -234,7 +234,7 @@ describe('the Listing model', () => {
         !!valErr.coupons.length || false).to.equal(true);
   });
 
- it('fails validation if a coupon price exceeds the listing price', () => {
+  it('fails validation if a coupon price exceeds the listing price', () => {
     const listing = new Listing();
 
     listing.set({
@@ -260,7 +260,7 @@ describe('the Listing model', () => {
         },
       ],
     }, { validate: true });
-  });  
+  });
 
   const servicePriceFields = ['bigPrice', 'bigAdditionalItemPrice'];
 
@@ -273,7 +273,7 @@ describe('the Listing model', () => {
           priceCurrency: {
             code: 'USD',
             divisibility: 2,
-          }
+          },
         },
         shippingOptions: [
           {
@@ -304,7 +304,7 @@ describe('the Listing model', () => {
                 [field]: '100', // invalid
               },
             ],
-          }
+          },
         ],
       }, { validate: true });
 

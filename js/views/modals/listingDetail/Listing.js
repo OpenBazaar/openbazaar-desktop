@@ -15,7 +15,7 @@ import { launchEditListingModal } from '../../../utils/modalManager';
 //   getInventory,
 //   events as inventoryEvents,
 // } from '../../../utils/inventory';
-import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
+import { recordEvent } from '../../../utils/metrics';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
@@ -181,7 +181,7 @@ export default class extends BaseModal {
       //     if (this.cryptoInventory) {
       //       this.cryptoInventory.setState({
       //         amount: this._inventory,
-      //       });            
+      //       });
       //     }
 
       //     endAjaxEvent('Listing_InventoryFetch', {
@@ -543,7 +543,6 @@ export default class extends BaseModal {
     } catch (e) {
       // pass
     }
-
   }
 
   showDataChangedMessage() {

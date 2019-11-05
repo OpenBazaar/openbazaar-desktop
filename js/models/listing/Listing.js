@@ -269,7 +269,7 @@ export default class extends BaseModel {
               if (isValidCoinDivisibility(attrs.metadata.coinDivisibility)) {
                 coinDiv = attrs.metadata.coinDivisibility;
               }
-            } catch (e) {
+            } catch (err) {
               // pass
             }
 

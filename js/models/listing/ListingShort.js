@@ -34,7 +34,7 @@ export default class extends BaseModel {
 
   parse(response) {
     console.log('what happens in the UI with bad data?');
-    
+
     const parsedResponse = { ...response };
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?

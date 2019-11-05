@@ -1018,7 +1018,7 @@ export default class extends BaseModal {
           this.$currencySelect.val(newCur);
           this.render();
         });
-      }      
+      }
     }
 
     return this;

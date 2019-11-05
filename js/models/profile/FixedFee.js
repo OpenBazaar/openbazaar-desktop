@@ -32,7 +32,7 @@ export default class extends BaseModel {
         // pass
       }
 
-      const pickles = this.validateCurrencyAmount(
+      this.validateCurrencyAmount(
         {
           amount: attrs.amount,
           currency: {

@@ -388,7 +388,7 @@ describe('the currency utility module', () => {
 
         return deferred;
       });
-      
+
       cur.fetchExchangeRates();
     });
 

@@ -84,7 +84,7 @@ describe('the Purchase Item model', () => {
       getCoinDiv: () => 8,
       getCoinType: () => 'ZRX',
       inventory: 5,
-    });    
+    });
     item.set({ bigQuantity: 10 }, { validate: true });
     const valErr = item.validationError;
 
