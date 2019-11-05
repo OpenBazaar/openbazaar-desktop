@@ -379,7 +379,6 @@ export function nativeNumberFormatSupported(val, maxDecimals = 20) {
  * @returns {string} - A string representing the formatted amount in the given
  *   currency and locale.
  */
-console.log('unit test that amount can be of various numeric typees');
 export function formatCurrency(amount, currency, options) {
   const opts = {
     locale: app && app.localSettings && app.localSettings.standardizedTranslatedLang() || 'en-US',
@@ -399,10 +398,9 @@ export function formatCurrency(amount, currency, options) {
 
   // If the value falls within the range supported by Intl.NumberFormat, which is quite
   // large, then Intl.NumberFormat will be used and the number will be formatted in
-  // a localized way and in the desired style (e.g. decimal, currency, percent). If
-  // it falls outside of the supported range, then we will fallback to BigNumber.toFormat().
-  // Please keeep in mind though, BigNumber.toFormat() will not localize the number, nor
-  // does it support styles other than 'decimal'.
+  // a localized way. If it falls outside of the supported range, then we will fallback
+  // to BigNumber.toFormat(). Please keeep in mind though, BigNumber.toFormat() will not
+  // localize the number.
   const formatAmount = (value, locale, formatAmountOpts = {}) => {
     const maxDecimals = formatAmountOpts.maximumFractionDigits;
     const minDecimals = formatAmountOpts.minimumFractionDigits;
@@ -750,7 +748,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
  * Returns `VALID` if the given currency is valid, otherwise it will return a code
  * indicating why it's not valid.
  */
-console.log('is this stil being used?');
 export function getCurrencyValidity(cur) {
   if (typeof cur !== 'string') {
     throw new Error('A currency must be provided as a string.');

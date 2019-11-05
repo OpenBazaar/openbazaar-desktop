@@ -1051,8 +1051,8 @@
     "goToStore": "Go to store",
     "unableToPurchase": {
       "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts [%{acceptedCurs}], whereas your wallet supports [%{walletCurs}].",
-      "unrecognizedCur": "The item is priced in an unrecognized currency (%{cur}).",
       "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable (%{cur}).",
+      "noCryptoExchangeRateInfo": "Exchange rate data is not available for one or both of the coins being traded. (%{cur})",
       "unpurchaseable": "This listing is not purchasable."
     },
     "confirmDelete": {

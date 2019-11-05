@@ -8,10 +8,7 @@ import app from '../../../app';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import {
-  getCurrencyValidity,
-  convertAndFormatCurrency,
-} from '../../../utils/currency';
+import { convertAndFormatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
 // import {
@@ -806,9 +803,6 @@ export default class extends BaseModal {
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
-        currencyValidity: getCurrencyValidity(
-          this.model.get('metadata').get('pricingCurrency') || 'USD'
-        ),
         hasVerifiedMods: this.hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,

@@ -4,7 +4,6 @@ import bigNumber from 'bignumber.js';
 import {
   convertAndFormatCurrency,
   convertCurrency,
-  getCurrencyValidity,
   getExchangeRate,
   renderPairedCurrency,
   isFiatCur,
@@ -105,7 +104,6 @@ const currencyExport = {
   formatCurrency: gracefulException(convertAndFormatCurrency),
   convertAndFormatCurrency: gracefulException(convertAndFormatCurrency),
   convertCurrency,
-  getCurrencyValidity,
   getExchangeRate,
   pairedCurrency: gracefulException(renderPairedCurrency),
   isFiatCur: gracefulException(isFiatCur, false),
