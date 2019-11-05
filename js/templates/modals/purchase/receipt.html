@@ -1,7 +1,7 @@
 <hr class="clrBr">
 <b><%= ob.polyT('purchase.receipt.summary') %></b>
 <%
-  const viewingCurrency = ob.currencyMod.getCurrencyValidity(ob.displayCurrency) === 'VALID' ?
+  const viewingCurrency = ob.currencyMod.getExchangeRate(ob.displayCurrency) !== undefined ?
     ob.displayCurrency : ob.listingCurrency;
 
   ob.prices.forEach((priceObj, i) => {

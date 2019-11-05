@@ -745,28 +745,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
 }
 
 /**
- * Returns `VALID` if the given currency is valid, otherwise it will return a code
- * indicating why it's not valid.
- */
-export function getCurrencyValidity(cur) {
-  if (typeof cur !== 'string') {
-    throw new Error('A currency must be provided as a string.');
-  }
-
-  const curData = getCurrencyByCode(cur);
-  let returnVal;
-
-  if (curData) {
-    returnVal = getExchangeRate(ensureMainnetCode(cur)) ?
-      'VALID' : 'EXCHANGE_RATE_MISSING';
-  } else {
-    returnVal = 'UNRECOGNIZED_CURRENCY';
-  }
-
-  return returnVal;
-}
-
-/**
  * Will render a pairing of currencies, most commonly used to show a crypto currency
  * along with it's fiat equivalent (e.g. $2.33 (0.0002534 BTC)). If it cannot show the
  * "to" currency (e.g. exchange rate data not available), it will just show the "from".

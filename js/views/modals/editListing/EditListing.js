@@ -14,16 +14,16 @@ import app from '../../../app';
 import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
-import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import {
+  getCurrenciesSortedByCode,
+  getCurrencyByCode,
+} from '../../../data/currencies';
 import {
   getCurrenciesSortedByName as getCryptoCursByName,
   getCurrenciesSortedByCode as getCryptoCursByCode,
 } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
-import {
-  getCurrencyValidity,
-  getCoinDivisibility,
-} from '../../../utils/currency';
+import { getCoinDivisibility } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
@@ -63,9 +63,6 @@ export default class extends BaseModal {
 
     super(opts);
     this.options = opts;
-
-    console.log('moo model');
-    window.moo = this.model;
 
     // So the passed in model does not get any un-saved data,
     // we'll clone and update it on sync
@@ -854,7 +851,6 @@ export default class extends BaseModal {
     this.render(!!save);
 
     if (!save) {
-      console.dir(this.model.validationError);
       const $firstErr = this.$('.errorList:visible').eq(0);
       if ($firstErr.length) {
         $firstErr[0].scrollIntoViewIfNeeded();
@@ -864,11 +860,8 @@ export default class extends BaseModal {
         const msg = Object.keys(this.model.validationError)
           .reduce((str, errKey) =>
             `${str}${errKey}: ${this.model.validationError[errKey].join(', ')}<br>`, '');
-        // openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
-        //   msg);
-        console.log('clean the barbie sailor');
         openSimpleMessage(app.polyglot.t('editListing.errors.saveErrorTitle'),
-          `CLIENT SIDE FUNK ===> ${msg}`);
+          msg);
       }
     }
   }
@@ -1004,20 +997,15 @@ export default class extends BaseModal {
           .unparsedResponse
           .listing
           .item
-          .pricingCurrency
+          .priceCurrency
           .code;
       } catch (e) {
         return this;
       }
 
-      // todo is this still valid
-      // todo is this still valid
-      // todo is this still valid
-      // todo is this still valid
-      // todo is this still valid
-      // todo is this still valid
-      if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
-        console.log('test me yo');
+      cur = 'pooper';
+
+      if (!this.model.isCrypto && !getCurrencyByCode(cur)) {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,
         }).render().open();
@@ -1025,13 +1013,14 @@ export default class extends BaseModal {
         this.listenTo(unsupportedCurrencyDialog, 'close', () => {
           const response = JSON.parse(JSON.stringify(this._origModel.unparsedResponse));
           const newCur = unsupportedCurrencyDialog.getCurrency();
-          setDeepValue(response, 'listing.item.pricingCurrency.code', newCur);
+          setDeepValue(response, 'listing.metadata.pricingCurrency', newCur);
           this.model.set(this.model.parse(response));
           this.$currencySelect.val(newCur);
           this.render();
         });
-      }
+      }      
     }
+
     return this;
   }
 
@@ -1273,8 +1262,6 @@ export default class extends BaseModal {
 
     if (this.throttledOnScroll) this.$el.off('scroll', this.throttledOnScroll);
     this.currencies = this.currencies || getCurrenciesSortedByCode();
-
-    console.dir(this.model.validationError || {});
 
     loadTemplate('modals/editListing/viewListingLinks.html', viewListingsT => {
       loadTemplate('modals/editListing/editListing.html', t => {
