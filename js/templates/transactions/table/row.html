@@ -27,10 +27,6 @@
 <td class="clrBr dateCol">
   <span class="ulOnHover"><%= ob.moment(ob.timestamp).format('l LT') %></span>
 </td>
-<%
-  console.log('temp pending #1810');
-  delete ob.coinType;
-%>
 <% if (ob.type !== 'cases') { %>
   <td class="clrBr listingCol js-listingCol">
     <% if (!ob.coinType) { %>

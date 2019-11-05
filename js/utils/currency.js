@@ -209,7 +209,6 @@ export function decimalToInteger(value, divisibility) {
  *   not bomb.
  * @returns {BigNumber} - A BigNumber instance representing the decimal number.
  */
-console.log('search for returnUndefinedOnError and ensure returnNaNOnError');
 export function integerToDecimal(value, divisibility, options = {}) {
   const opts = {
     returnNaNOnError: true,
@@ -751,7 +750,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
  * If the "from" currency is invalid, it will render an empty string.
  */
 console.log('update docs');
-console.log('dont throw dat e');
 export function renderPairedCurrency(price, fromCur, toCur) {
   let result;
 

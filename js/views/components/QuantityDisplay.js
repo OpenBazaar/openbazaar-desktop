@@ -63,7 +63,6 @@ export default class extends baseVw {
     });
 
     this.listenTo(inventoryEvents, 'inventory-change', e => {
-      console.log(`less change me to ${e.inventory}`);
       if (e.peerId !== options.peerId || e.slug !== options.slug) return;
       this.setState({ amount: e.inventory });
     });

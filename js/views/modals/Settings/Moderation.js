@@ -27,9 +27,6 @@ export default class extends baseVw {
     this.listenTo(this.profile, 'sync',
       // (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
       (md, resp, opts) => {
-        console.log('jen dis');
-        window.jen = opts;
-        window.dis = this.profile;
         app.profile.set(this.profile.toJSON(opts.attrs));
       });
 

@@ -54,8 +54,6 @@ export default class extends BaseView {
     loadTemplate('modals/purchase/receipt.html', t => {
       const displayCurrency = app.settings.get('localCurrency');
 
-      console.log('test quants above and below native number threshold support');
-
       this.$el.html(t({
         ...this.model.toJSON(),
         listing: this.listing.toJSON(),
