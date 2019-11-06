@@ -27,9 +27,6 @@ export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
     this.guid = options.guid;
-
-    console.log('milly');
-    window.milly = this;
   }
 
   url() {
@@ -256,8 +253,6 @@ export default class extends BaseModel {
         typeof coinType === 'string' &&
         coinType
       ) {
-        console.log('test all these sscenarios');
-
         try {
           attrs.metadata.coinDivisibility = getCoinDivisibility(coinType);
         } catch (e) {
@@ -267,10 +262,12 @@ export default class extends BaseModel {
             // than us), we'll use it. Otherwise, we'll use the default crypto coin
             // divisibility.
             let coinDiv = defaultCryptoCoinDivisibility;
+            const curDivis = this.get('metadata') &&
+              this.get('metadata').get('coinDivisibility');
 
             try {
-              if (isValidCoinDivisibility(attrs.metadata.coinDivisibility)) {
-                coinDiv = attrs.metadata.coinDivisibility;
+              if (isValidCoinDivisibility(curDivis)[0]) {
+                coinDiv = curDivis;
               }
             } catch (err) {
               // pass
