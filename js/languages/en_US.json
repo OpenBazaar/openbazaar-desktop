@@ -1506,7 +1506,7 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
+      "zeroPrice": "You cannot purchase a listing with a total price that is less than or equal to zero.",
       "insufficientInventoryTitle": "Insufficient Inventory",
       "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
       "reloadOutdatedHash": "load the latest version",

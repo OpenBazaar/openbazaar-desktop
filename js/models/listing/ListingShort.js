@@ -33,7 +33,7 @@ export default class extends BaseModel {
   }
 
   parse(response) {
-    console.log('what happens in the UI with bad data?');
+    console.log('what happens in the UI with bad data? do as part of search.');
 
     const parsedResponse = { ...response };
 

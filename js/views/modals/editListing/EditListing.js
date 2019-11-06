@@ -1003,8 +1003,6 @@ export default class extends BaseModal {
         return this;
       }
 
-      cur = 'pooper';
-
       if (!this.model.isCrypto && !getCurrencyByCode(cur)) {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,

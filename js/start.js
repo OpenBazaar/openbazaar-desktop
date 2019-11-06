@@ -556,8 +556,6 @@ function start() {
     initWalletCurs(app.serverConfig.wallets, data.walletCurDef);
     app.walletCurDef = data.walletCurDef;
 
-    console.dir(app.walletCurDef);
-
     const curConn = getCurrentConnection();
 
     if (curConn && curConn.status !== 'disconnected') {

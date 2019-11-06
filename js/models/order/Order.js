@@ -6,8 +6,6 @@ import Contract from './Contract';
 import Transactions from '../../collections/order/Transactions';
 import Transaction from '../../models/order/Transaction';
 
-console.log('is get paymentCoinData being used properly');
-
 class Order extends BaseOrder {
   constructor(attrs, options) {
     const opts = {

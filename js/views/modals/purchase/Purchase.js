@@ -442,7 +442,6 @@ export default class extends BaseModal {
 
     // Don't allow a zero or negative price purchase.
     const priceObj = this.prices[0];
-    console.log('test this case');
     if (
       priceObj
         .price
