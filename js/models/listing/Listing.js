@@ -27,6 +27,9 @@ export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
     this.guid = options.guid;
+
+    console.log('milly');
+    window.milly = this;
   }
 
   url() {
@@ -411,7 +414,6 @@ export default class extends BaseModel {
             },
           },
           addError,
-          errObj,
           'item.cryptoQuantity',
           {
             validationOptions: {
@@ -434,7 +436,6 @@ export default class extends BaseModel {
               currency: curDefCurrency,
             },
             addError,
-            errObj,
             `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigPrice`,
             {
               validationOptions: {
@@ -449,7 +450,6 @@ export default class extends BaseModel {
               currency: curDefCurrency,
             },
             addError,
-            errObj,
             `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigAdditionalItemPrice`,
             {
               validationOptions: {
@@ -467,7 +467,6 @@ export default class extends BaseModel {
             currency: curDefCurrency,
           },
           addError,
-          errObj,
           `item.skus[${sku.cid}].bigSurcharge`,
           {
             validationOptions: {
@@ -496,7 +495,6 @@ export default class extends BaseModel {
             currency: curDefCurrency,
           },
           addError,
-          errObj,
           `coupons[${coupon.cid}].bigPriceDiscount`,
           {
             translations: {

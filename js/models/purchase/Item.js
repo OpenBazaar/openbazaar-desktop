@@ -78,7 +78,6 @@ export default class extends BaseModel {
           },
         },
         addError,
-        errObj,
         'bigQuantity',
         {
           translations: {

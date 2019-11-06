@@ -162,7 +162,6 @@ export default class extends BaseModel {
         },
       },
       addError,
-      errObj,
       'bigPrice'
     );
 

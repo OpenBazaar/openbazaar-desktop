@@ -41,7 +41,6 @@ export default class extends BaseModel {
           },
         },
         addError,
-        errObj,
         'amount',
         {
           translations: {

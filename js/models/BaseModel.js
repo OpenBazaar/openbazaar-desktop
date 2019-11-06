@@ -1,5 +1,3 @@
-console.log('unit test validateCurrencyAmount');
-
 import _ from 'underscore';
 import { Model, Collection } from 'backbone';
 import app from '../app';
@@ -336,26 +334,50 @@ export default class extends Model {
   // todo: would be nice to add addError to the base model rather than each validate
   // implementation having to repeat it. Would also be nice if it kept track of it's own
   // error object. Would probably need some type of clearError functionality. It would
-  // also save us from having to pass in addError and the errObj here.
+  // also save us from having to pass in addError here.
+  /*
+   * Will validate that the provided currency definition is valid. If it's not valid
+   * it will add appropriate errors via the provided addErr function. This method uses
+   * validateCurrencyAmount from the currency module to validate the given currency
+   * definition.
+   * @param {object} curDef - a currency definition object
+   * @param {object} curDef.currency - a currency object
+   * @param {string} curDef.currency.code - a string currency code, e.g 'BTC'
+   * @param {number} curDef.currency.divisibility - An integer representing the
+   *  the currency's divisibility.
+   * @param {object} curDef.amount - The amount of the currency. This should
+   *   likely be a BigNumber instance, but can also be a number or a string-based
+   *   number depending on the requireBigNumAmount option that defaults to true
+   *   in the currency module validateCurrencyAmount function.
+   * @param {function} addError - A function that takes the errKey and error string and
+   *   adds it to the model's errObj. This function is duplicated by most models in
+   *   their validate method. (there is a TODO to centralize this somewhere rather
+   *   than each validate having to duplicate it)
+   * @param {string} errKey - The error key corresponding to the field being validated.
+   *   This will be passed into the above addError function in the case of an error
+   *   being found.
+   * @param {object} options
+   * @param {object} options.translations - An object mapping error types to the
+   *   transalation keys that should be used when adding the error strings via addErr.
+   *   The translations have defaults, so only override if you need a specific error
+   *   message for a particular error or errors.
+   * @param {object} options.validationOptions - These options will be passed in as the
+   *   options to be used for validateCurrencyAmount from the currency module.
+   * @returns {object} - The return value of validateCurrencyAmount from the currency
+   *   module will be returned.
+   */
   validateCurrencyAmount(
     curDef,
     addError,
-    errObj,
     errKey,
     options = {}
   ) {
-    console.log('doc me up with a fury');
-
     if (typeof errKey !== 'string' || !errKey) {
       throw new Error('The errKey must be provided as a non-empty string.');
     }
 
     if (typeof addError !== 'function') {
       throw new Error('addError must be provided as a function.');
-    }
-
-    if (typeof errObj !== 'object') {
-      throw new Error('errObj must be provided as an object.');
     }
 
     const opts = {
@@ -447,8 +469,17 @@ export default class extends Model {
   }
 }
 
-console.log('doc me up big billz');
-console.log('make an instance variation');
+/*
+ * This works similar to Model.toJSON in that it will replace nested
+ * Models and Collection instances with objects containing their respective
+ * attributes. The difference of this function is you could pass in the
+ * attributes you want to flatten as opposed to toJSON which just works
+ * off of Model.attributes.
+ *
+ * One use-case is where Model.validate is given attributes that potentially
+ * contain nested model and collection instances. If you want to flatten that
+ * structure, it can be done via this method.
+ */
 export function flattenAttrs(attrs = {}) {
   const result = {};
 
