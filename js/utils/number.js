@@ -6,7 +6,6 @@ import app from '../app';
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
  */
-console.log('unit test me.');
 export function toStandardNotation(number, options) {
   const opts = {
     returnUnchangedOnError: true,
@@ -64,7 +63,7 @@ export function randomInt(min = 0, range = 0) {
 }
 
 /*
- * Uses local settings' language or provided optional language to return a localized
+ * Uses local setting's language or provided optional language to return a localized
  * string representing the provided number.
  *
  * ex: number='30000.05', lang='en-us' => 30,000.05
@@ -81,10 +80,12 @@ export function localizeNumber(number,
   return new Intl.NumberFormat(lang).format(number);
 }
 
+/*
+ * Returns the number of decimal places in a number (trailing 0's don't count).
+ * @param {number|string|BigNumber} num
+ * @returns {number} - The number of significant decimal places.
+ */
 // https://stackoverflow.com/a/10454560
-console.log('doc me up - note this only works on string based numbers');
-console.log('is this being called anywhere with the expectation it work on number numbrs?');
-console.log('can this without too much pain work on numbers?');
 export function decimalPlaces(num) {
   // trim trailing zeros
   const trimmed = String(num).replace(/0+$/, '');
@@ -99,27 +100,27 @@ export function decimalPlaces(num) {
  );
 }
 
-// todo: doc and put in our style
-// todo: doc and put in our style
-// todo: doc and put in our style
-console.log('todo: doc and put in our style');
-console.log('update to expect 3 diff number types and match that on return');
+/*
+ * Rounds the value to the given number of decimal places.
+ * @param {number|string|BigNumber} value
+ * @param {number} precision - The desired number of decimal places.
+ * @returns {number|string|BigNumber} - The rounded number with the return type
+ *   matching the type of the provided value.
+ */
 // https://stackoverflow.com/a/7343013/632806
 export function preciseRound(value, precision) {
-  if (typeof value === 'string') {
-    const bigNum = bigNumber(value);
+  const bigNum = bigNumber(value);
 
-    if (bigNum.isNaN()) {
-      throw new Error('The provided string does not evaluate to a valid number.');
-    }
+  const rounded = bigNum
+    .decimalPlaces(precision);
 
-    return bigNum
-      .decimalPlaces(precision)
-      .toString();
+  if (typeof value === 'number') {
+    return rounded.toNumber();
+  } else if (typeof value === 'string') {
+    return rounded.toString();
   }
 
-  const multiplier = Math.pow(10, precision || 0);
-  return Math.round(value * multiplier) / multiplier;
+  return rounded;
 }
 
 const isValidNumberDefaultAllows = {
@@ -128,11 +129,18 @@ const isValidNumberDefaultAllows = {
   allowString: true,
 };
 
-console.log('unit test me silly style');
-console.log('doc me up more');
 /*
- * Returns true if the provided string is a valid number as determined by
- * bigNumber.js.
+ * Returns true if the provided number is a valid number type.
+ * @param {number|string|BigNumber} num
+ * @param {object} options
+ * @param {boolean} [options.allowNumber = true] - If the num is the JS "number"
+ *   type, it will be considered valid. NaN is considered valid.
+ * @param {boolean} [options.allowBigNumber = true] - If the num is a BigNumber
+ *   instance, it will be considered valid (even if the instance evaluates to NaN).
+ * @param {boolean} [options.allowString = true] - If the num is a valid string based
+ *   number (as detrmined by BigNumber), it will be considered valid. If the BigNumber
+ *   evaluates the string to NaN, it will be considered invalid.
+ * @returns {boolean} - Boolean indicating whether num is a valid number.
  */
 export function isValidNumber(num, options = {}) {
   const opts = {
@@ -171,7 +179,16 @@ export function isValidNumber(num, options = {}) {
   return false;
 }
 
-console.log('docs me uppers and write unit testy.');
+/*
+ * Uses isValidNumber() to determine whether the provided num is a valid number. If it's
+ * not, a descriptive exception will be thrown.
+ * @param {number|string|BigNumber} num
+ * @param {object} options
+ * @param {string} [options.fieldName = 'value'] - The name of the variable you are trying
+ *   to validate. The name will be used in the exception string.
+ * @param {object} [options.isValidNumberOpts = {}] - The options to be passed to
+ *   isValidNumber().
+ */
 export function validateNumberType(num, options = {}) {
   const opts = {
     fieldName: 'value',
