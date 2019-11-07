@@ -130,7 +130,6 @@ const isValidNumberDefaultAllows = {
 
 console.log('unit test me silly style');
 console.log('doc me up more');
-console.log('bigNumber.isNaN should be valid');
 /*
  * Returns true if the provided string is a valid number as determined by
  * bigNumber.js.
@@ -152,16 +151,14 @@ export function isValidNumber(num, options = {}) {
 
   if (
     opts.allowNumber &&
-    typeof num === 'number' &&
-    !isNaN(num)
+    typeof num === 'number'
   ) {
     return true;
   }
 
   if (
     opts.allowBigNumber &&
-    num instanceof bigNumber &&
-    !num.isNaN()
+    num instanceof bigNumber
   ) {
     return true;
   }
@@ -196,7 +193,7 @@ export function validateNumberType(num, options = {}) {
     }
 
     if (isValidNumberAllows.allowBigNumber) {
-      allowedTypes.push('non NaN bigNumber.js instance');
+      allowedTypes.push('bigNumber.js instance');
     }
 
     if (isValidNumberAllows.allowString) {

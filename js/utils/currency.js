@@ -749,7 +749,6 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
  * "to" currency (e.g. exchange rate data not available), it will just show the "from".
  * If the "from" currency is invalid, it will render an empty string.
  */
-console.log('update docs');
 export function renderPairedCurrency(price, fromCur, toCur) {
   let result;
 
@@ -841,10 +840,12 @@ export function decimalToCurDef(amount, curCode, options = {}) {
  *   in the provided curDef object.
  * @param {string} options.currency - The property name representing the currency
  *   object in the provided curDef object.
+ * @param {any} [options.returnOnError = bigNumber()] - The value that will be returned
+ *   if there is an error in the process. Set the option to false if you'd rather the
+ *   function throw an exception on error.
  * @returns {BigNumber} - a BigNumber representation of a decimal number based off
  * of the provided currency definition.
  */
-console.log('doc returnNaNOnError');
 export function curDefToDecimal(curDef, options = {}) {
   const opts = {
     returnOnError: bigNumber(),
@@ -883,6 +884,7 @@ export function curDefToDecimal(curDef, options = {}) {
     );
   } catch (e) {
     console.warn(`Unable to convert the given currency definition to a decimal: ${e.message}`);
+    if (!opts.returnOnError) throw e;
   }
 
   return converted;

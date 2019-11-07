@@ -106,7 +106,6 @@ export default class extends BaseModel {
   }
 
   static getPaymentCoin(attrs = {}) {
-    console.log('test me as bull shiz nitters');
     let paymentCoin = '';
 
     try {
@@ -148,8 +147,6 @@ export default class extends BaseModel {
     if (contract) {
       let payment;
 
-      console.log('what happens if no payment?');
-
       try {
         payment = contract.buyerOrder.payment;
       } catch (e) {
@@ -157,7 +154,6 @@ export default class extends BaseModel {
       }
 
       if (payment) {
-        console.log('test me with crap i oli');
         payment.bigAmount = curDefToDecimal({
           amount: payment.bigAmount,
           currency: payment.amountCurrency,

@@ -50,7 +50,7 @@ class Order extends BaseOrder {
   }
 
   get orderPrice() {
-    let orderPrice = bigNumber();
+    let orderPrice;
 
     try {
       orderPrice =
@@ -62,7 +62,10 @@ class Order extends BaseOrder {
       // pass
     }
 
-    return orderPrice;
+    return (
+      orderPrice instanceof bigNumber ?
+        orderPrice : bigNumber()
+    );
   }
 
   get totalPaid() {

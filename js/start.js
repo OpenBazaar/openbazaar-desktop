@@ -1,4 +1,3 @@
-console.log('general bad data everywhere and make sure we dont blow up');
 console.log('more centered <cancel> order transaction (and other) spinner designs');
 console.log('test order processing error');
 console.log('pass divisibility with order spend');
@@ -190,14 +189,8 @@ function fetchStartupData1() {
         const btnFrag = 'manageConnections';
 
         if (configFetch.state() === 'rejected') {
-          console.log('test me bro');
-          console.log('test me bro');
-          console.log('test me bro');
           title = app.polyglot.t('startUp.dialogs.retryConfig.title');
         } else {
-          console.log('test me silly');
-          console.log('test me silly');
-          console.log('test me silly');
           title = app.polyglot.t('startUp.dialogs.unableToGetWalletCurDef.title');
         }
 

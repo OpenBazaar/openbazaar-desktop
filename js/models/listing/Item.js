@@ -10,8 +10,6 @@ import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
 import Skus from '../../collections/listing/Skus';
 
-console.log('add crypto cur amount to the docs');
-
 /*
  * This model has a few inventory related properties that don't directly map to the
  * API. When a listing does not have variants but tracks inventory, the server handles
@@ -23,7 +21,10 @@ console.log('add crypto cur amount to the docs');
  * non-variant inventory:
  *
  * productId - a string that maps to "skus: [{ productId: "54321" }]"
- * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
+ * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]" (used
+ *   for non-crypto listings)
+ * cryptoQuantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
+ *   (used for crypto listings)
  * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]".
  *
  * Parse/Sync of the listing model will handle mapping to/from the server version
