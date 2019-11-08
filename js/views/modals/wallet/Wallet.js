@@ -195,8 +195,6 @@ export default class extends BaseModal {
           }
 
           if (!e.jsonData.wallet.height) {
-            console.log('test this still works');
-
             // new transactions
 
             if (bigNumber(e.jsonData.wallet.value.amount).gt(0)) {
