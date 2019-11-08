@@ -99,8 +99,7 @@ export default class extends BaseModel {
         !isValidNumber(attrs.bigQuantity, {
           allowNumber: false,
           allowString: false,
-        }) ||
-        !Number.isInteger(attrs.bigQuantity)
+        })
       ) {
         addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
       } else if (attrs.bigQuantity.lt(1)) {

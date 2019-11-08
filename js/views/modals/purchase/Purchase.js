@@ -517,7 +517,7 @@ export default class extends BaseModal {
               });
             }
           } catch (e) {
-            console.log('test this case with zest.');
+            this.setState({ phase: 'pay' });
             openSimpleMessage(
               app.polyglot.t('purchase.errors.genericPurchaseErrTitle'),
               app.polyglot.t('purchase.errors.unableToConvertCryptoQuantity')
