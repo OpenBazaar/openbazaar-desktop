@@ -1,5 +1,3 @@
-console.log('no track inventory revert to track - is it using bigPrice there?');
-
 import $ from 'jquery';
 import '../../../utils/lib/velocity';
 import '../../../lib/select2';

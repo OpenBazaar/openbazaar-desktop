@@ -1,4 +1,4 @@
-console.log('overshowing save verification modal');
+console.log('overshowing save verification modal on crypto listing');
 
 import _ from 'underscore';
 import is from 'is_js';

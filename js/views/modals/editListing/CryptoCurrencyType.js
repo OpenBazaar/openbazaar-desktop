@@ -78,13 +78,34 @@ export default class extends BaseView {
     });
 
     this.getCoinTypes.done(curs => {
-      const selected = this.model.get('metadata')
-        .get('coinType') || curs[0].code;
+      const modelCur = this.model
+        .get('metadata')
+        .get('coinType');
+      const selected = modelCur || curs[0].code;
 
-      this.coinTypes = curs;
+      const currencies = [...curs];
+
+      if (
+        modelCur &&
+        !currencies.find(cur => (cur.code === modelCur))
+      ) {
+        // The saved coin type is not in the list. Maybe there's no
+        // exchange rate available. Maybe it's no longer on CMC. Anyhow,
+        // we'll manually add it to the list otherwise the coin type just
+        // defaults to the first coin and that's an odd experience to
+        // just have your coinType swapped out on you like that.
+        currencies.unshift({
+          code: modelCur,
+          name: app.polyglot.t(`cryptoCurrencies.${modelCur}`, {
+            _: modelCur,
+          }),
+        });
+      }
+
+      this.coinTypes = currencies;
 
       this.tradeField.setState({
-        curs,
+        curs: currencies,
         isFetching: false,
         selected,
       });

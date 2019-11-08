@@ -1,8 +1,4 @@
-console.log('more centered <cancel> order transaction (and other) spinner designs');
 console.log('test order processing error');
-console.log('pass divisibility with order spend');
-console.log('save crypto listing with cur with no exchange rate and reverts to first one');
-console.log('test the sockets on the order transactions page');
 console.log('test non-standard divis in a listing');
 
 import { remote, ipcRenderer } from 'electron';
