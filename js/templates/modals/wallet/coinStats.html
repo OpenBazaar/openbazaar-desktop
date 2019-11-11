@@ -27,7 +27,7 @@
          })
         }
       </div>` : '';
-  let unconfirmedText = typeof ob.unconfirmed === 'number' && isValidCryptoCur ?
+  let unconfirmedText = ob.unconfirmed instanceof ob.bigNumber && isValidCryptoCur ?
       ob.currencyMod.formatCurrency(ob.unconfirmed, ob.cryptoCur, { useCryptoSymbol: false }) : '';
   unconfirmedText = unconfirmedText ?
      ob.polyT('wallet.coinStats.unconfirmedBalance', { amount: unconfirmedText}) : '';
