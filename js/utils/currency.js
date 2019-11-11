@@ -639,8 +639,6 @@ export function getExchangeRate(currency) {
 
   const cur = isWalletCur ? ensureMainnetCode(currency) : currency;
 
-  return undefined;
-
   return exchangeRates[cur];
 }
 
