@@ -26,127 +26,139 @@ export default class extends baseVw {
       viewType: 'grid',
       reportsUrl: '',
       searchUrl: '',
+      showErrorCardOnError: true,
       ...options,
     };
 
     super(opts);
     this.options = opts;
 
-    if (!this.model || !(this.model instanceof ListingShort)) {
-      throw new Error('Please provide a ListingShort model.');
-    }
-
-    // Any provided profile model or vendor info object will also be passed into the
-    // listing detail modal.
-    if (opts.profile) {
-      // If a profile model of the listing owner is available, please pass it in.
-      this.ownerGuid = opts.profile.id;
-    } else if (this.model.get('vendor')) {
-      // If a vendor object is available (part of proposed search API), please pass it in.
-      this.ownerGuid = this.model.get('vendor').peerID;
-    } else {
-      // Otherwise please provide the store owner's guid.
-      this.ownerGuid = opts.ownerGuid;
-    }
-
-    if (typeof this.ownerGuid === 'undefined') {
-      throw new Error('Unable to determine ownership of the listing. Please either provide' +
-        ' a profile model or pass in an ownerGuid option.');
-    }
-
-    if (!opts.listingBaseUrl) {
-      // When the listing card is clicked and the listing detail modal is
-      // opened, the slug of the listing is concatenated with the listingBaseUrl
-      // and the route is updated (both history & address bar).
-      throw new Error('Please provide a listingBaseUrl.');
-    }
-
-    if (this.ownListing) {
-      this.$el.addClass('ownListing');
-    }
-
-    if (this.ownListing) {
-      this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
-        if (this.isRemoved()) return;
-
-        if (destroyingOpts.slug === this.model.get('slug')) {
-          this.$el.addClass('listingDeleting');
-        }
-
-        destroyingOpts.xhr.fail(() => (this.$el.removeClass('listingDeleting')));
-      });
-
-      this.listenTo(listingEvents, 'destroy', (md, destroyOpts) => {
-        if (this.isRemoved()) return;
-
-        if (destroyOpts.slug === this.model.get('slug')) {
-          this.$el.addClass('listingDeleted');
-        }
-      });
-    }
-
-    this.viewType = opts.viewType;
-    this.reportsUrl = opts.reportsUrl;
-    this.deleteConfirmOn = false;
-    this.boundDocClick = this.onDocumentClick.bind(this);
-    // This should be initialized as null, so we could determine whether the user
-    // never set this (null), or explicitly clicked to show / hide nsfw (true / false)
-    this._userClickedShowNsfw = null;
-    $(document).on('click', this.boundDocClick);
-
-    this.listenTo(blockEvents, 'blocked unblocked', data => {
-      if (data.peerIds.includes(this.ownerGuid)) {
-        this.setBlockedClass();
+    try {
+      if (!this.model || !(this.model instanceof ListingShort)) {
+        throw new Error('Please provide a ListingShort model.');
       }
-    });
 
-    this.listenTo(app.settings, 'change:showNsfw', () => {
+      // Any provided profile model or vendor info object will also be passed into the
+      // listing detail modal.
+      if (opts.profile) {
+        // If a profile model of the listing owner is available, please pass it in.
+        this.ownerGuid = opts.profile.id;
+      } else if (this.model.get('vendor')) {
+        // If a vendor object is available (part of proposed search API), please pass it in.
+        this.ownerGuid = this.model.get('vendor').peerID;
+      } else {
+        // Otherwise please provide the store owner's guid.
+        this.ownerGuid = opts.ownerGuid;
+      }
+
+      if (typeof this.ownerGuid === 'undefined') {
+        throw new Error('Unable to determine ownership of the listing. Please either provide' +
+          ' a profile model or pass in an ownerGuid option.');
+      }
+
+      if (!opts.listingBaseUrl) {
+        // When the listing card is clicked and the listing detail modal is
+        // opened, the slug of the listing is concatenated with the listingBaseUrl
+        // and the route is updated (both history & address bar).
+        throw new Error('Please provide a listingBaseUrl.');
+      }
+
+      if (this.ownListing) {
+        this.$el.addClass('ownListing');
+      }
+
+      if (this.ownListing) {
+        this.listenTo(listingEvents, 'destroying', (md, destroyingOpts) => {
+          if (this.isRemoved()) return;
+
+          if (destroyingOpts.slug === this.model.get('slug')) {
+            this.$el.addClass('listingDeleting');
+          }
+
+          destroyingOpts.xhr.fail(() => (this.$el.removeClass('listingDeleting')));
+        });
+
+        this.listenTo(listingEvents, 'destroy', (md, destroyOpts) => {
+          if (this.isRemoved()) return;
+
+          if (destroyOpts.slug === this.model.get('slug')) {
+            this.$el.addClass('listingDeleted');
+          }
+        });
+      }
+
+      this.viewType = opts.viewType;
+      this.reportsUrl = opts.reportsUrl;
+      this.deleteConfirmOn = false;
+      this.boundDocClick = this.onDocumentClick.bind(this);
+      // This should be initialized as null, so we could determine whether the user
+      // never set this (null), or explicitly clicked to show / hide nsfw (true / false)
       this._userClickedShowNsfw = null;
-      this.setHideNsfwClass();
-    });
+      $(document).on('click', this.boundDocClick);
 
-    this.verifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
-
-    this.listenTo(app.verifiedMods, 'update', () => {
-      const newVerifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
-      if ((this.verifiedMods.length && !newVerifiedMods.length) ||
-        (!this.verifiedMods.length && newVerifiedMods.length)) {
-        this.verifiedMods = newVerifiedMods;
-        this.render();
-      }
-    });
-
-    // load necessary images in a cancelable way
-    const thumbnail = this.model.get('thumbnail');
-    const listingImageSrc = this.viewType === 'grid' ?
-      app.getServerUrl(
-        `ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`
-      ) :
-      app.getServerUrl(
-        `ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
-      );
-
-    this.listingImage = new Image();
-    this.listingImage.addEventListener('load', () => {
-      this.listingImage.loaded = true;
-      this.$('.js-listingImage')
-        .css('backgroundImage', `url(${listingImageSrc})`);
-    });
-    this.listingImage.src = listingImageSrc;
-
-    const vendor = this.model.get('vendor');
-    if (vendor && vendor.avatarHashes) {
-      const avatarImageSrc = app.getServerUrl(
-        `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
-      );
-
-      this.avatarImage = new Image();
-      this.avatarImage.addEventListener('load', () => {
-        this.avatarImage.loaded = true;
-        this.$('.js-vendorIcon')
-          .css('backgroundImage', `url(${avatarImageSrc})`);
+      this.listenTo(blockEvents, 'blocked unblocked', data => {
+        if (data.peerIds.includes(this.ownerGuid)) {
+          this.setBlockedClass();
+        }
       });
-      this.avatarImage.src = avatarImageSrc;
+
+      this.listenTo(app.settings, 'change:showNsfw', () => {
+        this._userClickedShowNsfw = null;
+        this.setHideNsfwClass();
+      });
+
+      this.verifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+
+      this.listenTo(app.verifiedMods, 'update', () => {
+        const newVerifiedMods = app.verifiedMods.matched(this.model.get('moderators'));
+        if ((this.verifiedMods.length && !newVerifiedMods.length) ||
+          (!this.verifiedMods.length && newVerifiedMods.length)) {
+          this.verifiedMods = newVerifiedMods;
+          this.render();
+        }
+      });
+
+      // load necessary images in a cancelable way
+      const thumbnail = this.model.get('thumbnail');
+      const listingImageSrc = this.viewType === 'grid' ?
+        app.getServerUrl(
+          `ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`
+        ) :
+        app.getServerUrl(
+          `ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
+        );
+
+      this.listingImage = new Image();
+      this.listingImage.addEventListener('load', () => {
+        this.listingImage.loaded = true;
+        this.$('.js-listingImage')
+          .css('backgroundImage', `url(${listingImageSrc})`);
+      });
+      this.listingImage.src = listingImageSrc;
+
+      const vendor = this.model.get('vendor');
+      if (vendor && vendor.avatarHashes) {
+        const avatarImageSrc = app.getServerUrl(
+          `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
+        );
+
+        this.avatarImage = new Image();
+        this.avatarImage.addEventListener('load', () => {
+          this.avatarImage.loaded = true;
+          this.$('.js-vendorIcon')
+            .css('backgroundImage', `url(${avatarImageSrc})`);
+        });
+        this.avatarImage.src = avatarImageSrc;
+      }
+    } catch (e) {
+      this.cardError = e.message || true;
+
+      if (opts.showErrorCardOnError) {
+        this.render(e.message || true);
+        return;
+      }
+
+      throw e;
     }
   }
 
@@ -612,7 +624,7 @@ export default class extends baseVw {
   }
 
   remove() {
-    this.listingImage.src = '';
+    if (this.listingImage) this.listingImage.src = '';
     if (this.avatarImage) this.avatarImage.src = '';
     if (this.fullListingFetch) this.fullListingFetch.abort();
     if (this.destroyRequest) this.destroyRequest.abort();
@@ -623,62 +635,86 @@ export default class extends baseVw {
     super.remove();
   }
 
-  render() {
-    super.render();
+  render(cardError = false) {
+    let _cardError = cardError;
 
-    loadTemplate('components/listingCard.html', (t) => {
-      this.$el.html(t({
-        ...this.model.toJSON(),
-        ownListing: this.ownListing,
-        shipsFreeToMe: this.model.shipsFreeToMe,
-        viewType: this.viewType,
-        displayCurrency: app.settings.get('localCurrency'),
-        isBlocked,
-        isUnblocking,
-        listingImageSrc: this.listingImage.loaded &&
-          this.listingImage.src || '',
-        vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
-          this.avatarImage.src || '',
-        abbrNum,
-      }));
-    });
+    if (!_cardError) {
+      try {
+        super.render();
 
-    this._$btnEdit = null;
-    this._$btnDelete = null;
+        loadTemplate('components/listingCard.html', (t) => {
+          this.$el.html(t({
+            ...this.model.toJSON(),
+            ownListing: this.ownListing,
+            shipsFreeToMe: this.model.shipsFreeToMe,
+            viewType: this.viewType,
+            displayCurrency: app.settings.get('localCurrency'),
+            isBlocked,
+            isUnblocking,
+            listingImageSrc: this.listingImage.loaded &&
+              this.listingImage.src || '',
+            vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
+              this.avatarImage.src || '',
+            abbrNum,
+          }));
+        });
 
-    this.setBlockedClass();
-    this.setHideNsfwClass();
-    this.$el.toggleClass('isNsfw', this.model.get('nsfw'));
+        this._$btnEdit = null;
+        this._$btnDelete = null;
 
-    if (this.reportBtn) this.reportBtn.remove();
-    if (this.reportsUrl) {
-      this.reportBtn = this.createChild(ReportBtn);
-      this.listenTo(this.reportBtn, 'startReport', this.startReport);
-      this.getCachedEl('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+        this.setBlockedClass();
+        this.setHideNsfwClass();
+        this.$el.toggleClass('isNsfw', this.model.get('nsfw'));
+
+        if (this.reportBtn) this.reportBtn.remove();
+        if (this.reportsUrl) {
+          this.reportBtn = this.createChild(ReportBtn);
+          this.listenTo(this.reportBtn, 'startReport', this.startReport);
+          this.getCachedEl('.js-reportBtnWrapper').append(this.reportBtn.render().el);
+        }
+
+        if (!this.ownListing) {
+          this.getCachedEl('.js-blockBtnWrapper').html(
+            new BlockBtn({
+              targetId: this.ownerGuid,
+              initialState: { useIcon: true },
+            })
+              .render()
+              .el
+          );
+        }
+
+        const moderators = this.model.get('moderators') || [];
+        const verifiedIDs = app.verifiedMods.matched(moderators);
+        const verifiedID = verifiedIDs[0];
+
+        if (this.verifiedMod) this.verifiedMod.remove();
+        this.verifiedMod = this.createChild(VerifiedMod, getListingOptions({
+          model: verifiedID &&
+            app.verifiedMods.get(verifiedID),
+        }));
+        this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
+      } catch (e) {
+        if (!this.options.showErrorCardOnError) throw e;
+        _cardError = e.message || true;
+      }
     }
 
-    if (!this.ownListing) {
-      this.getCachedEl('.js-blockBtnWrapper').html(
-        new BlockBtn({
-          targetId: this.ownerGuid,
-          initialState: { useIcon: true },
-        })
-          .render()
-          .el
-      );
+    if (_cardError) {
+      this.$el.addClass('ListingCard-errorCard');
+      this.$el.removeClass('clrHover');
+
+      let messageHtml = 'There was an error displaying the listing card. It\'s possible the ' +
+        'listing data is malformed.';
+
+      if (typeof _cardError === 'string') {
+        messageHtml +=
+          `<span class="toolTip" data-tip="${_cardError}">` +
+          '<span class="ion-help-circled clrTErr"></span></span>';
+      }
+
+      this.$el.html(`<p class="padMd clrTErr tx5">${messageHtml}</p>`);
     }
-
-    const moderators = this.model.get('moderators') || [];
-    const verifiedIDs = app.verifiedMods.matched(moderators);
-    const verifiedID = verifiedIDs[0];
-
-    if (this.verifiedMod) this.verifiedMod.remove();
-    this.verifiedMod = this.createChild(VerifiedMod, getListingOptions({
-      model: verifiedID &&
-        app.verifiedMods.get(verifiedID),
-    }));
-    this.getCachedEl('.js-verifiedMod').append(this.verifiedMod.render().el);
-
 
     return this;
   }

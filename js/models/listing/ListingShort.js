@@ -32,9 +32,33 @@ export default class extends BaseModel {
     return this.get('contractType') === 'CRYPTOCURRENCY';
   }
 
-  parse(response) {
-    console.log('what happens in the UI with bad data? do as part of search.');
+  sync(method, model, options) {
+    let returnSync = 'will-set-later';
 
+    if (method === 'delete') {
+      options.url = options.url || app.getServerUrl(`ob/listing/${this.get('slug')}`);
+    }
+
+    returnSync = super.sync(method, model, options);
+
+    const eventOpts = {
+      xhr: returnSync,
+      url: options.url,
+      slug: this.get('slug'),
+    };
+
+    if (method === 'delete') {
+      listingEvents.trigger('destroying', this, eventOpts);
+
+      returnSync.done(() => {
+        listingEvents.trigger('destroy', this, eventOpts);
+      });
+    }
+
+    return returnSync;
+  }
+
+  parse(response) {
     const parsedResponse = { ...response };
 
     parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
@@ -88,31 +112,5 @@ export default class extends BaseModel {
     }
 
     return parsedResponse;
-  }
-
-  sync(method, model, options) {
-    let returnSync = 'will-set-later';
-
-    if (method === 'delete') {
-      options.url = options.url || app.getServerUrl(`ob/listing/${this.get('slug')}`);
-    }
-
-    returnSync = super.sync(method, model, options);
-
-    const eventOpts = {
-      xhr: returnSync,
-      url: options.url,
-      slug: this.get('slug'),
-    };
-
-    if (method === 'delete') {
-      listingEvents.trigger('destroying', this, eventOpts);
-
-      returnSync.done(() => {
-        listingEvents.trigger('destroy', this, eventOpts);
-      });
-    }
-
-    return returnSync;
   }
 }

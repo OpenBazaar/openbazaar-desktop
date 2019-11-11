@@ -128,17 +128,18 @@ class Store extends BaseVw {
   onUpdateCollection(cl, opts) {
     if (opts.changes.added) {
       opts.changes.added.forEach((md) => {
-        md.searchDescription = $('<div />').html(md.get('description'))
+        md.searchDescription = $('<div />').html(md.get('description') || '')
           .text()
           .toLocaleLowerCase();
-        md.searchTitle = md.get('title').toLocaleLowerCase();
+        md.searchTitle = (md.get('title') || '').toLocaleLowerCase();
         const price = md.get('price');
 
         if (
+          price &&
           isValidNumber(price.amount, {
             allowNumber: false,
-            allowBigNumber: false,
-            allowString: true,
+            allowBigNumber: true,
+            allowString: false,
           })
         ) {
           try {
