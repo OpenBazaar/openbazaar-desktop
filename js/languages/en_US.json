@@ -1099,7 +1099,8 @@
     "btnShowMatureContent": "Show Mature Content",
     "tipShowMatureContent": "Show Mature Content",
     "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "blockedUser": "You blocked this user",
+    "cardError": "There was an error displaying the listing card. It's possible the listing data is malformed."
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",

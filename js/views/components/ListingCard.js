@@ -704,12 +704,11 @@ export default class extends baseVw {
       this.$el.addClass('ListingCard-errorCard');
       this.$el.removeClass('clrHover');
 
-      let messageHtml = 'There was an error displaying the listing card. It\'s possible the ' +
-        'listing data is malformed.';
+      let messageHtml = app.polyglot.t('listingCard.cardError');
 
       if (typeof _cardError === 'string') {
         messageHtml +=
-          `<span class="toolTip" data-tip="${_cardError}">` +
+          `&nbsp;<span class="toolTip" data-tip="${_cardError}">` +
           '<span class="ion-help-circled clrTErr"></span></span>';
       }
 
