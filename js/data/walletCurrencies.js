@@ -11,13 +11,6 @@ let _currencies = [
     code: 'BTC',
     testnetCode: 'TBTC',
     symbol: '₿',
-    // todo: transition away from base units
-    // todo: transition away from base units
-    // todo: transition away from base units
-    // todo: transition away from base units
-    // todo: transition away from base units
-    // baseUnit: 100000000,
-    // coinDivisibility: 8,
     // Not allowing fee bump on BTC right now given the fees.
     // feeBumpTransactionSize: 154,
     qrCodeText: address => `bitcoin:${address}`,
