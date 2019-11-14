@@ -134,10 +134,10 @@ case "$TRAVIS_OS_NAME" in
 
     if [[ $BINARY == 'win' ]]; then
 
-        curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
-        chmod +x /tmp/7za
-        curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
-        /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
+#        curl -L https://dl.bintray.com/develar/bin/7za -o /tmp/7za
+#        chmod +x /tmp/7za
+#        curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
+#        /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
 
         brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
 
@@ -145,15 +145,23 @@ case "$TRAVIS_OS_NAME" in
         brew install mono osslsigncode
         brew reinstall openssl@1.1
 
+        brew cask install wine
+
         # WINDOWS 64
         echo 'Building Windows 64-bit Installer...'
         mkdir dist/win64
 
-        export DEBUG=*
-        export WINEARCH=win32
+#        export DEBUG=*
+        export WINEARCH=win64
+
+        npm install electron-packager
+
+        cd node_modules/electron-packager
+        npm install node-rcedit@2.1.0
+        cd ../..
 
         echo 'Running Electron Packager...'
-        electron-packager . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
+        node_modules/electron-packager/bin/electron-packager.js . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
         echo 'Copying server binary into application folder...'
         cp -rf OPENBAZAAR_TEMP/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
