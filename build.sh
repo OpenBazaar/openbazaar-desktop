@@ -145,7 +145,7 @@ case "$TRAVIS_OS_NAME" in
         brew install mono osslsigncode
         brew reinstall openssl@1.1
 
-        brew cask install wine
+        brew cask install wine-stable
 
         # WINDOWS 64
         echo 'Building Windows 64-bit Installer...'
@@ -157,7 +157,7 @@ case "$TRAVIS_OS_NAME" in
         npm install electron-packager
 
         cd node_modules/electron-packager
-        npm install node-rcedit@2.1.0
+        npm install rcedit@2.1.0
         cd ../..
 
         echo 'Running Electron Packager...'
