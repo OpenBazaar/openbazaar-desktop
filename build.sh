@@ -149,6 +149,8 @@ case "$TRAVIS_OS_NAME" in
         echo 'Building Windows 64-bit Installer...'
         mkdir dist/win64
 
+        export DEBUG=*
+
         echo 'Running Electron Packager...'
         electron-packager . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
