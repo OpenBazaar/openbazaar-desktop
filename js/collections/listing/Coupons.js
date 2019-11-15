@@ -3,11 +3,6 @@ import { Collection } from 'backbone';
 import Coupon from '../../models/listing/Coupon';
 
 export default class extends Collection {
-  constructor(models, options) {
-    super(models, options);
-    this.options = options;
-  }
-
   model(attrs, options) {
     return new Coupon({
       _clientID: attrs._clientID || guid(),
