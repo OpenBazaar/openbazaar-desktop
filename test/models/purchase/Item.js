@@ -25,16 +25,12 @@ describe('the Purchase Item model', () => {
     valErr = item.validationError;
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
 
-    item.set({ bigQuantity: bigNumber(100) }, { validate: true });
+    item.set({ bigQuantity: true }, { validate: true });
     valErr = item.validationError;
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
-  });
 
-  it('fails validation if it is a non-crypto item and has a non-integer quantity.', () => {
-    const item = new Item({}, { getCoinDiv: () => 8 });
-    item.set({ bigQuantity: '0.0001' }, { validate: true });
-    const valErr = item.validationError;
-
+    item.set({ bigQuantity: null }, { validate: true });
+    valErr = item.validationError;
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
   });
 
