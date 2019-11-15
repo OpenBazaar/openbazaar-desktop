@@ -25,6 +25,11 @@ describe('the Purchase Item model', () => {
     valErr = item.validationError;
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
 
+    // should pass
+    item.set({ bigQuantity: bigNumber(100) }, { validate: true });
+    valErr = item.validationError;
+    expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length || false).to.equal(false);
+
     item.set({ bigQuantity: true }, { validate: true });
     valErr = item.validationError;
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
@@ -36,7 +41,7 @@ describe('the Purchase Item model', () => {
 
   it('fails validation if it is a non-crypto item and has a negative quantity.', () => {
     const item = new Item({}, { getCoinDiv: () => 8 });
-    item.set({ bigQuantity: -1 }, { validate: true });
+    item.set({ bigQuantity: bigNumber(-1) }, { validate: true });
     const valErr = item.validationError;
 
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
@@ -68,20 +73,7 @@ describe('the Purchase Item model', () => {
       getCoinDiv: () => 8,
       getCoinType: () => 'ZRX',
     });
-    item.set({ bigQuantity: -1 }, { validate: true });
-    const valErr = item.validationError;
-
-    expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);
-  });
-
-  it('fails validation if it is a crypto item and has a quantity more than the inventory.', () => {
-    const item = new Item({}, {
-      isCrypto: true,
-      getCoinDiv: () => 8,
-      getCoinType: () => 'ZRX',
-      inventory: 5,
-    });
-    item.set({ bigQuantity: 10 }, { validate: true });
+    item.set({ bigQuantity: bigNumber(-1) }, { validate: true });
     const valErr = item.validationError;
 
     expect(valErr && valErr.bigQuantity && !!valErr.bigQuantity.length).to.equal(true);

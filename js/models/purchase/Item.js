@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
@@ -25,10 +24,11 @@ export default class extends BaseModel {
     this.getCoinType = options.getCoinType;
     this.getCoinDiv = options.getCoinDiv;
 
+    // TODO: Since bigQuantity is a bigNumber, should inventory be too?
     // If the inventory is for a crypto listing, be sure to convert it from base units
     // before sending it in.
-    this.getInventory = () =>
-      _.result(options, 'inventory', 99999999999999);
+    // this.getInventory = () =>
+    //   _.result(options, 'inventory', 99999999999999);
   }
 
   defaults() {

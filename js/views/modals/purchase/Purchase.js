@@ -94,11 +94,11 @@ export default class extends BaseModal {
       },
       {
         isCrypto: this.listing.isCrypto,
-        inventory: () =>
-          (
-            typeof this.inventory === 'number' ?
-              this.inventory : 99999999999999999
-          ),
+        // inventory: () =>
+        //   (
+        //     typeof this.inventory === 'number' ?
+        //       this.inventory : 99999999999999999
+        //   ),
         getCoinDiv: () => (this.coinDivisibility),
         getCoinType: () => (
           this.listing
