@@ -32,6 +32,7 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
+    this.cardError = false;
 
     try {
       if (!this.model || !(this.model instanceof ListingShort)) {
@@ -154,7 +155,7 @@ export default class extends baseVw {
       this.cardError = e.message || true;
 
       if (opts.showErrorCardOnError) {
-        this.render(e.message || true);
+        this.render();
         return;
       }
 
@@ -635,7 +636,7 @@ export default class extends baseVw {
     super.remove();
   }
 
-  render(cardError = false) {
+  render(cardError = this.cardError) {
     let _cardError = cardError;
 
     if (!_cardError) {

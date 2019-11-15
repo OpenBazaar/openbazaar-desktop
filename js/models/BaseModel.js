@@ -360,7 +360,8 @@ export default class extends Model {
    * @param {object} options.translations - An object mapping error types to the
    *   transalation keys that should be used when adding the error strings via addErr.
    *   The translations have defaults, so only override if you need a specific error
-   *   message for a particular error or errors.
+   *   message for a particular error or errors. Pass in false if you don't want a
+   *   particular error added to the error object.
    * @param {object} options.validationOptions - These options will be passed in as the
    *   options to be used for validateCurrencyAmount from the currency module.
    * @returns {object} - The return value of validateCurrencyAmount from the currency

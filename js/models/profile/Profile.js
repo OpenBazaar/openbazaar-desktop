@@ -155,7 +155,7 @@ export default class Profile extends BaseModel {
             currencyKey: 'amountCurrency',
           }),
           currencyCode: response.moderatorInfo.fee.fixedFee.currency &&
-            response.moderatorInfo.fee.fixedFee.currency.code || 'USD',
+            response.moderatorInfo.fee.fixedFee.currency.code,
         };
       } catch (e) {
         delete response.moderatorInfo.fixedFee;

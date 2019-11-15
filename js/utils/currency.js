@@ -198,7 +198,7 @@ export function decimalToInteger(value, divisibility) {
  * Converts the amount from an integer to a decimal based on the provided
  * divisibility.
  * @param {number|string|BigNumber} value - The number that should be converted to
- *   an integer.
+ *   an decimal.
  * @param {number} divisibility - An integer representing the coin divisibility
  *   (e.g. for bitcoin, it is 8)
  * @param {object} options

@@ -1,6 +1,7 @@
 console.log('test order processing error');
 console.log('test non-standard divis in a listing. test failed: #1853');
 console.log('ltc unconfirmed balance shows in confirmed');
+console.log('recheck card error scenario in listing card');
 
 import { remote, ipcRenderer } from 'electron';
 import $ from 'jquery';
