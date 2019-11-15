@@ -317,7 +317,7 @@ function getMaxDisplayDigits(amount, desiredMax) {
  * Intl.NumberFormat. In many cases, such a change of the number is not desired and
  * this function will allow you to identify if that will happen and have the potential
  * to use other functionality, e.g. BigNumber.toFixed() (keep in mind though, that
- * option will properly show an untruncated / unreounded number, but it will not localize
+ * option will properly show an untruncated / unrounded number, but it will not localize
  * the number at all).
  * @param {number|string|BigNumber} val
  * @param {number} maxDecimals - An integer indicating the maximum number of decimals
