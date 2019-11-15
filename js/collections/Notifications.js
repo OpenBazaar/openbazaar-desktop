@@ -77,7 +77,8 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t('notifications.text.orderConfirmation', {
       vendorName,
     });
-  } else if (attrs.type === 'orderDeclined') {
+    // Check for the new 'orderDeclined' value, but maintain compatibility with older notifications.
+  } else if (attrs.type === 'orderDeclined' || attrs.type === 'declined') {
     const vendorName = opts.native ?
       getName(attrs.vendorHandle, attrs.vendorId) :
       `<a class="clrTEm" href="#${attrs.vendorId}">` +
@@ -86,7 +87,8 @@ export function getNotifDisplayData(attrs, options = {}) {
     text = app.polyglot.t('notifications.text.declined', {
       vendorName,
     });
-  } else if (attrs.type === 'cancel') {
+    // Check for the new 'cancel' value, but maintain compatibility with older notifications.
+  } else if (attrs.type === 'cancel' || attrs.type === 'cancelled') {
     const buyerName = opts.native ?
       getName(attrs.buyerHandle, attrs.buyerId) :
       `<a class="clrTEm" href="#${attrs.buyerId}">` +
