@@ -30,6 +30,7 @@ jobs:
         env: BINARY=osxclient
       - os: linux
       - os: osx
+        osx_image: xcode11.2
         env: BINARY=win
 script:
 - npm run lint
