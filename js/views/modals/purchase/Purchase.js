@@ -1,18 +1,24 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone from 'backbone';
+import bigNumber from 'bignumber.js';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
+import { removeProp } from '../../../utils/object';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchSettingsModal } from '../../../utils/modalManager';
-import {
-  getInventory,
-  events as inventoryEvents,
-} from '../../../utils/inventory';
+// import {
+//   getInventory,
+//   events as inventoryEvents,
+// } from '../../../utils/inventory';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
 import { toStandardNotation } from '../../../utils/number';
-import { getExchangeRate, integerToDecimal } from '../../../utils/currency';
+import {
+  decimalToInteger,
+  isValidCoinDivisibility,
+  curDefToDecimal,
+} from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
@@ -83,14 +89,22 @@ export default class extends BaseModal {
     const item = new Item(
       {
         listingHash: this.listing.get('hash'),
-        quantity: !this.listing.isCrypto ? 1 : undefined,
+        bigQuantity: !this.listing.isCrypto ? bigNumber('1') : undefined,
         options: opts.variants || [],
       },
       {
         isCrypto: this.listing.isCrypto,
-        inventory: () =>
-          (typeof this.inventory === 'number' ?
-            this.inventory : 99999999999999999),
+        // inventory: () =>
+        //   (
+        //     typeof this.inventory === 'number' ?
+        //       this.inventory : 99999999999999999
+        //   ),
+        getCoinDiv: () => (this.coinDivisibility),
+        getCoinType: () => (
+          this.listing
+            .get('metadata')
+            .get('coinType')
+        ),
       }
     );
     // add the item to the order.
@@ -124,7 +138,7 @@ export default class extends BaseModal {
 
     this.coupons = this.createChild(Coupons, {
       coupons: this.listing.get('coupons'),
-      listingPrice: this.listing.price.amount,
+      listingPrice: bigNumber(this.listing.price.amount),
     });
     this.listenTo(this.coupons, 'changeCoupons',
       (hashes, codes) => this.changeCoupons(hashes, codes));
@@ -138,6 +152,10 @@ export default class extends BaseModal {
     });
 
     const disabledCurs = currencies.filter(c => !isSupportedWalletCur(c));
+    const activeCurs =
+      currencies.length && this.listing.isCrypto ?
+        [currencies[0]] : [];
+
     this.cryptoCurSelector = this.createChild(CryptoCurSelector, {
       disabledMsg: app.polyglot.t('purchase.cryptoCurrencyInvalid'),
       initialState: {
@@ -145,8 +163,10 @@ export default class extends BaseModal {
         currencies,
         disabledCurs,
         sort: false,
+        activeCurs,
       },
     });
+
     this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
       if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
     });
@@ -191,21 +211,24 @@ export default class extends BaseModal {
     });
 
     // If the parent has the inventory, pass it in, otherwise we'll fetch it.
-    this.inventory = this.options.inventory;
-    if (this.listing.isCrypto &&
-      typeof this.inventory !== 'number') {
-      this.inventoryFetch = getInventory(
-        this.listing.get('vendorID').peerID,
-        {
-          slug: this.listing.get('slug'),
-          coinDivisibility:
-            this.listing.get('metadata')
-              .get('coinDivisibility'),
-        }
-      ).done(e => (this.inventory = e.inventory));
-      this.listenTo(inventoryEvents, 'inventory-change',
-        e => (this.inventory = e.inventory));
-    }
+    // -- commenting out for now since inventory is not functioning properly on the server
+    // this.inventory = this.options.inventory;
+    // if (
+    //   this.listing.isCrypto &&
+    //   typeof this.inventory !== 'number'
+    // ) {
+    //   this.inventoryFetch = getInventory(
+    //     this.listing.get('vendorID').peerID,
+    //     {
+    //       slug: this.listing.get('slug'),
+    //       coinDivisibility:
+    //         this.listing.get('metadata')
+    //           .get('coinDivisibility'),
+    //     }
+    //   ).done(e => (this.inventory = e.inventory));
+    //   this.listenTo(inventoryEvents, 'inventory-change',
+    //     e => (this.inventory = e.inventory));
+    // }
 
     this.listenTo(app.settings, 'change:localCurrency', () => this.showDataChangedMessage());
     this.listenTo(app.localSettings, 'change:bitcoinUnit', () => this.showDataChangedMessage());
@@ -241,7 +264,6 @@ export default class extends BaseModal {
       'click .js-goToListing': 'clickGoToListing',
       'click .js-close': 'clickClose',
       'click .js-retryFee': 'clickRetryFee',
-      'change #purchaseQuantity': 'changeQuantityInput',
       'change #purchaseCryptoAddress': 'changeCryptoAddress',
       'click .js-newAddress': 'clickNewAddress',
       'click .js-applyCoupon': 'applyCoupon',
@@ -250,7 +272,8 @@ export default class extends BaseModal {
       'blur #memo': 'blurMemo',
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       'change #cryptoAmountCurrency': 'changeCryptoAmountCurrency',
-      'keyup [name="quantity"]': 'keyupQuantity',
+      'change #cryptoAmount': 'onChangeCryptoAmount',
+      'keyup [name="bigQuantity"]': 'keyupQuantity',
       ...super.events(),
     };
   }
@@ -336,40 +359,27 @@ export default class extends BaseModal {
       throw new Error('Please provide the currency code as a valid, non-empty string.');
     }
 
-    let mdQuantity = quantity;
-    const numericQuantity = parseFloat(quantity);
-
-    if (this.listing.isCrypto &&
-      cur !== this.listing.get('metadata')
-        .get('coinType') &&
-      !isNaN(numericQuantity)) {
-      mdQuantity = (numericQuantity / getExchangeRate(cur)) *
-        getExchangeRate(this.listing.get('metadata').get('coinType'));
-      // round to 4 decimal place
-      mdQuantity = Math.round(mdQuantity * 10000) / 10000;
-    }
-
     this.order.get('items')
       .at(0)
-      .set({ quantity: mdQuantity });
+      .set({ bigQuantity: quantity });
   }
 
   changeCryptoAmountCurrency(e) {
     this._cryptoAmountCurrency = e.target.value;
     const quantity = this.getFormData(
       this.getCachedEl('#cryptoAmount')
-    ).quantity;
+    ).bigQuantity;
     this.setModelQuantity(quantity);
   }
 
   keyupQuantity(e) {
     // wait until they stop typing
-    if (this.searchKeyUpTimer) {
-      clearTimeout(this.searchKeyUpTimer);
+    if (this.quantityKeyUpTimer) {
+      clearTimeout(this.quantityKeyUpTimer);
     }
 
-    this.searchKeyUpTimer = setTimeout(() => {
-      const quantity = this.getFormData($(e.target)).quantity;
+    this.quantityKeyUpTimer = setTimeout(() => {
+      const quantity = this.getFormData($(e.target)).bigQuantity;
       if (this.listing.isCrypto) this._cryptoQuantity = quantity;
       this.setModelQuantity(quantity);
     }, 150);
@@ -380,13 +390,14 @@ export default class extends BaseModal {
   }
 
   applyCoupon() {
-    const code = this.coupons.addCode(this.$couponField.val());
-    code.then(result => {
-      // if the result is valid, clear the input field
-      if (result.type === 'valid') {
-        this.$couponField.val('');
-      }
-    });
+    this.coupons
+      .addCode(this.$couponField.val())
+      .then(result => {
+        // if the result is valid, clear the input field
+        if (result.type === 'valid') {
+          this.$couponField.val('');
+        }
+      });
   }
 
   onKeyUpCouponCode(e) {
@@ -431,7 +442,12 @@ export default class extends BaseModal {
 
     // Don't allow a zero or negative price purchase.
     const priceObj = this.prices[0];
-    if (priceObj.price + priceObj.vPrice + priceObj.sPrice <= 0) {
+    if (
+      priceObj
+        .price
+        .plus(priceObj.vPrice)
+        .plus(priceObj.sPrice).lte(0)
+    ) {
       this.insertErrors(this.getCachedEl('.js-errors'),
         [app.polyglot.t('purchase.errors.zeroPrice')]);
       this.setState({ phase: 'pay' });
@@ -475,29 +491,64 @@ export default class extends BaseModal {
           errors: 'own listing',
         });
       } else {
-        const coinDivisibility = this.listing.get('metadata')
-          .get('coinDivisibility');
+        const coinDivisibility = this.coinDivisibility;
+        const cryptoItems = [];
+
+        if (this.listing.isCrypto) {
+          if (!isValidCoinDivisibility(coinDivisibility)[0]) {
+            this.setState({ phase: 'pay' });
+            openSimpleMessage(
+              app.polyglot.t('purchase.errors.genericPurchaseErrTitle'),
+              app.polyglot.t('purchase.errors.invalidCoinDiv')
+            );
+            return;
+          }
+
+          try {
+            const items = this.order.get('items');
+            for (let i = 0; i < items.length; i++) {
+              const item = items.at(i);
+              cryptoItems.push({
+                ...item.toJSON(),
+                bigQuantity: decimalToInteger(
+                  item.get('bigQuantity'),
+                  coinDivisibility
+                ),
+              });
+            }
+          } catch (e) {
+            this.setState({ phase: 'pay' });
+            openSimpleMessage(
+              app.polyglot.t('purchase.errors.genericPurchaseErrTitle'),
+              app.polyglot.t('purchase.errors.unableToConvertCryptoQuantity')
+            );
+            console.error(e);
+            return;
+          }
+        }
+
+        // Strip the 'cid' so it doesn't go to the server. Normally this is
+        // done in the sync of the baseModel, but since we're POSTing outside of
+        // that, we'll replicate that cleanup here.
+        const postData = removeProp(
+          {
+            ...this.order.toJSON(),
+            items: this.listing.isCrypto ?
+              cryptoItems : this.order.get('items').toJSON(),
+          },
+          'cid'
+        );
 
         $.post({
           url: app.getServerUrl('ob/purchase'),
-          data: JSON.stringify({
-            ...this.order.toJSON(),
-            items: this.order.get('items')
-              .map(item => ({
-                ...item.toJSON(),
-                quantity: this.listing.isCrypto ?
-                  // round to ensure integer
-                  Math.round(item.get('quantity') * coinDivisibility) :
-                  item.get('quantity'),
-              })),
-          }),
+          data: JSON.stringify(postData),
           dataType: 'json',
           contentType: 'application/json',
         })
           .done((data) => {
             this.setState({ phase: 'pending' });
             this.payment = this.createChild(Payment, {
-              balanceRemaining: integerToDecimal(data.amount, paymentCoin),
+              balanceRemaining: curDefToDecimal(data.amount),
               paymentAddress: data.paymentAddress,
               orderId: data.orderId,
               isModerated: !!this.order.get('moderator'),
@@ -519,8 +570,7 @@ export default class extends BaseModal {
               jqXHR.responseJSON.code === 'ERR_INSUFFICIENT_INVENTORY' &&
               typeof jqXHR.responseJSON.remainingInventory === 'number') {
               this.inventory = jqXHR.responseJSON.remainingInventory /
-                this.listing.get('metadata')
-                  .get('coinDivisibility');
+                coinDivisibility;
               errTitle = app.polyglot.t('purchase.errors.insufficientInventoryTitle');
               errMsg = app.polyglot.t('purchase.errors.insufficientInventoryBody', {
                 smart_count: this.inventory,
@@ -595,11 +645,11 @@ export default class extends BaseModal {
         _.isEqual(v.get('variantCombo'), variantCombo));
 
       return {
-        price: this.listing.price.amount,
-        sPrice: sOptService ? sOptService.get('price') : 0,
-        aPrice: sOptService ? sOptService.get('additionalItemPrice') : 0,
-        vPrice: sku ? sku.get('surcharge') : 0,
-        quantity: item.get('quantity'),
+        price: bigNumber(this.listing.price.amount),
+        sPrice: bigNumber(sOptService ? sOptService.get('bigPrice') : 0),
+        aPrice: bigNumber(sOptService ? sOptService.get('bigAdditionalItemPrice') : 0),
+        vPrice: bigNumber(sku ? sku.get('bigSurcharge') : 0),
+        quantity: bigNumber(item.get('bigQuantity')),
       };
     });
   }
@@ -619,6 +669,17 @@ export default class extends BaseModal {
         .get('coinType');
   }
 
+  get coinDivisibility() {
+    return this.listing.isCrypto ?
+      this.listing
+        .get('metadata')
+        .get('coinDivisibility') :
+      this.listing
+        .get('item')
+        .get('priceCurrency')
+        .divisibility;
+  }
+
   get isModerated() {
     return this.moderators.selectedIDs.length > 0;
   }
@@ -626,6 +687,7 @@ export default class extends BaseModal {
   remove() {
     if (this.orderSubmit) this.orderSubmit.abort();
     if (this.inventoryFetch) this.inventoryFetch.abort();
+    clearTimeout(this.quantityKeyUpTimer);
     super.remove();
   }
 
@@ -634,13 +696,13 @@ export default class extends BaseModal {
     const state = this.getState();
     const item = this.order.get('items')
       .at(0);
-    const quantity = item.get('quantity');
+    const quantity = item.get('bigQuantity');
     const metadata = this.listing.get('metadata');
 
     let uiQuantity = quantity;
 
     if (this.listing.isCrypto && this._cryptoQuantity !== undefined) {
-      uiQuantity = typeof quantity === 'number' ?
+      uiQuantity = uiQuantity instanceof bigNumber && !uiQuantity.isNaN() ?
         toStandardNotation(this._cryptoQuantity) : this._cryptoQuantity;
     }
 

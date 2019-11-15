@@ -1,6 +1,6 @@
 import app from '../../app';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { integerToDecimal } from '../../utils/currency';
+import { curDefToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -32,43 +32,6 @@ export default class extends BaseModel {
     return this.get('contractType') === 'CRYPTOCURRENCY';
   }
 
-  parse(response) {
-    const parsedResponse = { ...response };
-
-    parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
-      parsedResponse.categories : [];
-
-    if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
-      const modifier = parsedResponse.price.modifier || 0;
-
-      parsedResponse.price = {
-        ...parsedResponse.price,
-        amount: 1 + (modifier / 100),
-        currencyCode: parsedResponse.coinType,
-        modifier,
-      };
-
-      if (parsedResponse.totalInventoryQuantity >= 0 &&
-        parsedResponse.coinDivisibility > 0) {
-        parsedResponse.totalInventoryQuantity =
-          parsedResponse.totalInventoryQuantity / parsedResponse.coinDivisibility;
-      } else {
-        // If they're not providing a inventory of 0 or more or a coinDivisibility > 0,
-        // we won't display the inventory since it's an invalid value or one we can't
-        // represent properly.
-        delete parsedResponse.totalInventoryQuantity;
-      }
-    } else {
-      const priceObj = parsedResponse.price;
-      parsedResponse.price = {
-        ...priceObj,
-        amount: integerToDecimal(priceObj.amount, priceObj.currencyCode),
-      };
-    }
-
-    return parsedResponse;
-  }
-
   sync(method, model, options) {
     let returnSync = 'will-set-later';
 
@@ -93,5 +56,61 @@ export default class extends BaseModel {
     }
 
     return returnSync;
+  }
+
+  parse(response) {
+    const parsedResponse = { ...response };
+
+    parsedResponse.categories = Array.isArray(parsedResponse.categories) ?
+      parsedResponse.categories : [];
+
+    const modifier = parsedResponse.modifier || 0;
+    let amount = '';
+    let currencyCode = '';
+
+    try {
+      amount = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
+          1 : curDefToDecimal(parsedResponse.price);
+    } catch (e) {
+      console.error(`Unable to convert the listing price from base units: ${e.message}`);
+    }
+
+    try {
+      currencyCode = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
+        parsedResponse.coinType : parsedResponse.price.currency.code;
+    } catch (e) {
+      // pass
+    }
+
+    parsedResponse.price = {
+      amount,
+      currencyCode,
+      modifier,
+    };
+
+    try {
+      delete parsedResponse.cryptoCurrencyCode;
+      delete parsedResponse.modifier;
+    } catch (e) {
+      // pass
+    }
+
+    if (parsedResponse.contractType === 'CRYPTOCURRENCY') {
+      // Commenting out inventory related coded since its not functional (on the server
+      // at this time.
+
+      // if (parsedResponse.totalInventoryQuantity >= 0 &&
+      //   parsedResponse.coinDivisibility > 0) {
+      //   parsedResponse.totalInventoryQuantity =
+      //     parsedResponse.totalInventoryQuantity / parsedResponse.coinDivisibility;
+      // } else {
+      //   // If they're not providing a inventory of 0 or more or a coinDivisibility > 0,
+      //   // we won't display the inventory since it's an invalid value or one we can't
+      //   // represent properly.
+      //   delete parsedResponse.totalInventoryQuantity;
+      // }
+    }
+
+    return parsedResponse;
   }
 }

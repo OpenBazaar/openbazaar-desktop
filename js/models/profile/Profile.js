@@ -2,10 +2,14 @@ import $ from 'jquery';
 import app from '../../app';
 import { guid } from '../../utils/';
 import { getSocket } from '../../utils/serverConnect';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
+import {
+  decimalToCurDef,
+  curDefToDecimal,
+} from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import Moderator from './Moderator';
+import { feeTypes } from './Fee';
 import Colors from './Colors';
 import Contact from './Contact';
 import Stats from './Stats';
@@ -139,12 +143,24 @@ export default class Profile extends BaseModel {
   parse(resp) {
     const response = { ...resp };
 
-    if (response.moderatorInfo && response.moderatorInfo.fee &&
-      response.moderatorInfo.fee.fixedFee) {
-      const amount = response.moderatorInfo.fee.fixedFee.amount;
-      const cur = response.moderatorInfo.fee.fixedFee.currencyCode;
-
-      response.moderatorInfo.fee.fixedFee.amount = integerToDecimal(amount, cur);
+    if (
+      response.moderatorInfo &&
+      response.moderatorInfo.fee &&
+      response.moderatorInfo.fee.fixedFee
+    ) {
+      try {
+        response.moderatorInfo.fee.fixedFee = {
+          amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee, {
+            amountKey: 'bigAmount',
+            currencyKey: 'amountCurrency',
+          }),
+          currencyCode: response.moderatorInfo.fee.fixedFee.currency &&
+            response.moderatorInfo.fee.fixedFee.currency.code,
+        };
+      } catch (e) {
+        delete response.moderatorInfo.fixedFee;
+        console.error(`Unable to convert the moderator fee from base units: ${e.message}`);
+      }
     }
 
     if (response.handle && response.handle.startsWith('@')) {
@@ -195,13 +211,21 @@ export default class Profile extends BaseModel {
       });
 
       if (method !== 'delete') {
-        // convert the amount field
-        if (options.attrs.moderatorInfo && options.attrs.moderatorInfo.fee &&
-          options.attrs.moderatorInfo.fee.fixedFee &&
-          options.attrs.moderatorInfo.fee.fixedFee.amount) {
-          const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
-          const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
-          options.attrs.moderatorInfo.fee.fixedFee.amount = decimalToInteger(amount, cur);
+        if (
+          options.attrs.moderatorInfo &&
+          options.attrs.moderatorInfo.fee
+        ) {
+          if (options.attrs.moderatorInfo.fee === feeTypes.PERCENTAGE) {
+            delete options.attrs.moderatorInfo.fee.fixedFee;
+          } else {
+            const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
+            const cur = options.attrs.moderatorInfo.fee.fixedFee.currencyCode;
+            options.attrs.moderatorInfo.fee.fixedFee =
+              decimalToCurDef(amount, cur, {
+                amountKey: 'bigAmount',
+                currencyKey: 'amountCurrency',
+              });
+          }
         }
       }
     }

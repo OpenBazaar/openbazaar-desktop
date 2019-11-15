@@ -19,7 +19,7 @@
       let statusIconClass = 'clrTEm'; // full payment
       let statusIcon = 'ion-ios-checkmark-empty'; // full payment
       
-      if (ob.amountShort > 0) {  // partial payment
+      if (ob.amountShort.gt(0)) {  // partial payment
         statusIconClass = 'clrTErr';
         statusIcon = 'ion-ios-close-empty';
       }
@@ -37,7 +37,7 @@
     <div class="flexExpand tx5">
       <%
         const priceFrag = ob.currencyMod.pairedCurrency(
-          ob.value,
+          ob.bigValue,
           ob.paymentCoin,
           ob.userCurrency
         );
@@ -70,22 +70,35 @@
             });          
           }
         %>
-        <div class="" style="flex-shrink: 0"><%= confirmationsText %></div>
-        <div class="" style="flex-shrink: 0;max-width: 80px">
-          <div class="noOverflow"><a class="clrT2 js-txidLink" href="<%= ob.blockChainTxUrl %>"><%= ob.txid %></a></div>
+        <div style="flex-shrink: 0"><%= confirmationsText %></div>
+        <div style="flex-shrink: 0;max-width: 80px">
+          <div class="noOverflow">
+            <% if (ob.blockChainTxUrl) { %>
+              <a class="clrT2 js-txidLink" href="<%= ob.blockChainTxUrl %>"><%= ob.txid %></a>
+            <% } else { %>
+              <span class="clrT2"><%= ob.txid %></span>
+            <% } %>
+          </div>
         </div>
         <% 
           let subText = ob.polyT('orderDetail.summaryTab.payment.paidInFull');
+          let roundedAmountShort = ob.amountShort;
 
-          if (ob.amountShort > 0) {
+          try {
+            roundedAmountShort = ob.amountShort.dp(paymentCoinDivis);
+          } catch (e) {
+            // pass
+          }
+
+          if (ob.amountShort.gt(0)) {
             subText =
               ob.polyT('orderDetail.summaryTab.payment.underpaidAmountShort', {
-                amountShort: ob.upToFixed(ob.amountShort, 8),
+                amountShort: roundedAmountShort,
               });
           }
         %>
         <div>
-          <div class="noOverflow <%= ob.amountShort > 0 ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
+          <div class="noOverflow <%= ob.amountShort.gt(0) ? 'clrTErr' : 'clrTEm' %>"><%= subText %></div>
         </div>
       </div>
     </div>

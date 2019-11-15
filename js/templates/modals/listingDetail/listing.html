@@ -52,7 +52,7 @@
         <h2 class="txUnb flexExpand"><%= ob.item.title %></h2>
         <h2 class="txUnb flexNoShrink js-price">
           <%=
-            ob.currencyMod.formattedCurrency(
+            ob.currencyMod.convertAndFormatCurrency(
               ob.price.amount,
               ob.price.currencyCode,
               ob.displayCurrency
@@ -68,7 +68,7 @@
             priceAmount: ob.price.amount,
             priceCurrencyCode: ob.price.currencyCode,
             displayCurrency: ob.displayCurrency,
-            priceModifier: ob.metadata.priceModifier,
+            priceModifier: ob.price.modifier,
             wrappingTag: 'h2',
             wrappingClass: 'flexNoShrink txRgt tx3',
           })
@@ -106,13 +106,22 @@
               </div>
             <% }); %>
             <%
-              const priceCryptoCode = ob.crypto.getWalletCurByCode(ob.price.currencyCode);
               let tip;
               let buyNowClass = 'disabled';
               let buyNowTranslationKey = ob.metadata.contractType !== 'CRYPTOCURRENCY' ?
                 'listingDetail.buyNow' :
                 'listingDetail.buyCryptoNow';
               let unpurchaseable = true;
+
+              let coinTypeRateAvailable;
+              let cryptoPaymentCoinRateAvailable;
+
+              if (ob.metadata.contractType === 'CRYPTOCURRENCY') {
+                coinTypeRateAvailable =
+                  !!ob.currencyMod.getExchangeRate(ob.metadata.coinType);
+                cryptoPaymentCoinRateAvailable =
+                  !!ob.currencyMod.getExchangeRate(ob.metadata.acceptedCurrencies[0]);
+              }
 
               if (!ob.crypto.anySupportedByWallet(ob.metadata.acceptedCurrencies)) {
                 tip = ob.polyT('listingDetail.unableToPurchase.incompatibleCrypto',
@@ -121,21 +130,33 @@
                     walletCurs: ob.crypto.supportedWalletCurs()
                       .join(', '),
                   });
-              } else if (ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+              } else if (
+                ob.metadata.contractType !== 'CRYPTOCURRENCY' &&
+                !ob.currencyMod.getExchangeRate(ob.price.currencyCode) &&
                 !(
-                  priceCryptoCode &&
-                  ob.crypto.anySupportedByWallet([priceCryptoCode.code, priceCryptoCode.testnetCode])
-                ) &&
-                ob.currencyMod.getCurrencyValidity(ob.price.currencyCode) !== 'VALID') {
-                tip = ob.currencyValidity === 'UNRECOGNIZED_CURRENCY' ?
-                   ob.polyT('listingDetail.unableToPurchase.unrecognizedCur',
-                    { cur: ob.price.currencyCode }) :
-                  ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo', {
-                    cur: ob.price.currencyCode
-                  });
-              } else if (ob.metadata.contractType === 'CRYPTOCURRENCY' &&
-                !ob.currencyMod.getExchangeRate(ob.price.currencyCode)) {
-                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo');
+                  ob.crypto.supportedWalletCurs().includes(ob.price.currencyCode) &&
+                  ob.metadata.acceptedCurrencies.includes(ob.price.currencyCode)
+                )
+              ) {
+                // If it's priced in a wallet cur and that cur is one of the accepted
+                // curs, we won't disable purchase even if there's no exchange rate for the
+                // cur because they could still pay for it using that cur making the
+                // pricing and payment curs the same and therefore the exchange rate
+                // unnecessary.
+                tip = ob.polyT('listingDetail.unableToPurchase.noExchangeRateInfo', {
+                  cur: ob.price.currencyCode
+                });
+              } else if (
+                ob.metadata.contractType === 'CRYPTOCURRENCY' &&
+                ob.metadata.coinType !== ob.metadata.acceptedCurrencies[0] &&
+                (!coinTypeRateAvailable || !cryptoPaymentCoinRateAvailable)
+              ) {
+                const cursNoRate = [];
+                if (!coinTypeRateAvailable) cursNoRate.push(ob.metadata.coinType);
+                if (!cryptoPaymentCoinRateAvailable) cursNoRate.push(ob.metadata.acceptedCurrencies[0]);
+                tip = ob.polyT('listingDetail.unableToPurchase.noCryptoExchangeRateInfo', {
+                  cur: cursNoRate.join(', '),
+                });                 
               } else {
                 buyNowClass = '';
                 unpurchaseable = false;
@@ -167,7 +188,8 @@
           <div>
             <%= ob.polyT('listingDetail.type', { type: `<b>${ob.polyT(`formats.${ob.metadata.contractType}`)}</b>` }) %>
           </div>
-          <% if (ob.isCrypto) { %>
+          <% // not showing the inventory for now since it's broken on the server %>
+          <% if (ob.isCrypto && false) { %>
             <div>
               <%= ob.polyT('listingDetail.inventory', {
                 inventory: '<span class="js-cryptoInventory"></span>'

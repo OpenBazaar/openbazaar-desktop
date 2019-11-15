@@ -1,4 +1,4 @@
-import { integerToDecimal } from '../../utils/currency';
+import { curDefToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -7,10 +7,17 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
+    console.log('temp pending ob-go/#1803');
+    if (response.bigValue.startsWith('--')) {
+      response.bigValue = response.bigValue.slice(1);
+    }
+
     return {
       ...response,
-      // Convert from base units
-      value: integerToDecimal(response.value, response.paymentCoin),
+      bigValue: curDefToDecimal({
+        amount: response.bigValue,
+        currency: response.currency,
+      }),
     };
   }
 }

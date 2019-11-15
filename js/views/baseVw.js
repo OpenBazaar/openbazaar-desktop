@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import bigNumber from 'bignumber.js';
 import sanitizeHtml from 'sanitize-html';
 import { setDeepValue } from '../utils/object';
 import { View } from 'backbone';
@@ -86,6 +87,9 @@ export default class baseVw extends View {
           }
         } else if (varType === 'boolean') {
           val = val === 'true';
+        } else if (varType === 'bignumber') {
+          const bigNumVal = bigNumber(val);
+          val = bigNumVal.isNaN() ? val : bigNumVal;
         }
       }
 
@@ -113,7 +117,7 @@ export default class baseVw extends View {
       } else if (field.type === 'checkbox') {
         data[name] = field.checked;
       } else {
-        data[name] = typeof val === 'string' ? sanitizeHtml(val) : val;
+        data[name] = typeof val === 'string' && val ? sanitizeHtml(val) : val;
       }
     });
 

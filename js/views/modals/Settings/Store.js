@@ -30,7 +30,7 @@ export default class extends baseVw {
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, pOpts) => app.profile.set(this.profile.toJSON(pOpts.attrs)));
+      () => app.profile.set(this.profile.toJSON()));
 
     this.settings = app.settings.clone();
 

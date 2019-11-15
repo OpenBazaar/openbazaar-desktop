@@ -181,7 +181,7 @@ export default class extends BaseModal {
       // A notification the vendor will get when an order has been fully funded
       'order',
       // A notification the buyer will get when the vendor has rejected an offline order.
-      'declined',
+      'orderDeclined',
       // A notification the buyer will get when the vendor has accepted an offline order.
       'orderConfirmation',
       // A notification the buyer will get when the vendor has refunded their order.

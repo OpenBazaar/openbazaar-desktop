@@ -1,6 +1,10 @@
 <%
   // when multiple listings are supported, the prices array will have one price object for each
-  const totalPrice = ob.prices[0].price + ob.prices[0].vPrice;
+  const totalPrice =
+    ob.prices[0]
+      .price
+      .plus(ob.prices[0].vPrice);
+
   const pricingCurrency = ob.listingPrice.currencyCode;
 %>
 
@@ -54,10 +58,10 @@
                       type="text"
                       id="purchaseQuantity"
                       size="3"
-                      name="quantity"
+                      name="bigQuantity"
                       value="<%= ob.quantity %>"
-                      data-var-type="number"
-                      placeholder="0">
+                      placeholder="0"
+                      data-var-type="bignumber">
                 </div>
               </div>
             </div>
@@ -76,7 +80,7 @@
                 <div class="flexVCent gutterHLg">
                   <label for="cryptoAmount" class="clrT txB required"><%= ob.polyT('purchase.cryptoAmount') %></label>
                   <div class="inputSelect">
-                    <input type="text" class="clrBr clrP clrSh2" name="quantity" id="cryptoAmount" value="<%= ob.quantity %>" data-var-type="number" placeholder="0.0000" size="8">
+                    <input type="text" class="clrBr clrP clrSh2" name="bigQuantity" id="cryptoAmount" value="<%= ob.quantity %>" placeholder="0.0000" size="8" data-var-type="bignumber">
                     <% if (ob.displayCurrency !== ob.listing.metadata.coinType) { %>
                       <select id="cryptoAmountCurrency" class="clrBr clrP nestInputRight">
                         <% [ob.listing.metadata.coinType, ob.displayCurrency].forEach((cur) => {%>
@@ -94,7 +98,7 @@
                   priceAmount: totalPrice,
                   priceCurrencyCode: pricingCurrency,
                   displayCurrency: ob.displayCurrency,
-                  priceModifier: ob.listing.metadata.priceModifier,
+                  priceModifier: ob.listing.item.priceModifier,
                 })
               %>
             </div>

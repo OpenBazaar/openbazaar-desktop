@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import moment from 'moment';
+import bigNumber from 'bignumber.js';
 import app from '../../../../app';
 import { abbrNum } from '../../../../utils';
 import loadTemplate from '../../../../utils/loadTemplate';
@@ -11,8 +12,8 @@ export default class extends BaseVw {
       ...options,
       initialState: {
         paymentNumber: 1,
-        amountShort: 0,
-        balanceRemaining: 0,
+        amountShort: bigNumber(0),
+        balanceRemaining: bigNumber(0),
         payee: '',
         userCurrency: app.settings.get('localCurrency') || 'BTC',
         showAcceptRejectButtons: false,
@@ -22,7 +23,8 @@ export default class extends BaseVw {
         cancelInProgress: false,
         rejectConfirmOn: false,
         blockChainTxUrl: '',
-        paymentCoin: undefined,
+        paymentCoin: '',
+        paymentCoinDivis: 8,
         ...options.initialState || {},
       },
     });
@@ -80,20 +82,6 @@ export default class extends BaseVw {
 
   onDocumentClick() {
     this.setState({ rejectConfirmOn: false });
-  }
-
-  setState(state = {}, options = {}) {
-    const mergedState = {
-      ...this.getState(),
-      ...state,
-    };
-
-    if (!mergedState.paymentCoin ||
-      typeof mergedState.paymentCoin !== 'string') {
-      throw new Error('Please provide the paymentCoin as a string.');
-    }
-
-    return super.setState(state, options);
   }
 
   remove() {

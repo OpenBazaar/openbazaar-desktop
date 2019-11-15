@@ -28,7 +28,7 @@ export default class extends baseVw {
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, syncOpts) => app.profile.set(this.profile.toJSON(syncOpts.attrs)));
+      () => app.profile.set(this.profile.toJSON()));
 
     this.socialAccounts = this.createChild(SocialAccounts, {
       collection: this.profile.get('contactInfo').get('social'),

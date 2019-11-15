@@ -1,12 +1,12 @@
 import _ from 'underscore';
-import { integerToDecimal } from '../../utils/currency';
+import bigNumber from 'bignumber.js';
 import app from '../../app';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import Transactions from '../../collections/order/Transactions';
 import Transaction from '../../models/order/Transaction';
 
-export default class extends BaseOrder {
+class Order extends BaseOrder {
   constructor(attrs, options) {
     const opts = {
       type: 'sale',
@@ -50,53 +50,36 @@ export default class extends BaseOrder {
   }
 
   get orderPrice() {
-    return this.contract.get('buyerOrder').payment.amount;
-  }
+    let orderPrice;
 
-  /**
-   * Returns the order price in Satoshi. Useful if you intend to use it in
-   * arithmetic expression where you need to avoid floating point precision
-   * errors.
-   */
-  get rawOrderPrice() {
-    return this.rawResponse
-      .contract
-      .buyerOrder
-      .payment
-      .amount;
+    try {
+      orderPrice =
+        this.contract
+          .get('buyerOrder')
+          .payment
+          .bigAmount;
+    } catch (e) {
+      // pass
+    }
+
+    return (
+      orderPrice instanceof bigNumber ?
+        orderPrice : bigNumber()
+    );
   }
 
   get totalPaid() {
     return this.paymentsIn
-      .reduce((total, transaction) => total + transaction.get('value'), 0);
+      .reduce((total, transaction) => total.plus(transaction.get('bigValue')), bigNumber(0));
   }
 
-  /**
-   * Returns the total paid in Satoshi. Useful if you intend to use it in
-   * arithmetic expression where you need to avoid floating point precision
-   * errors.
-   */
-  get rawTotalPaid() {
-    return this.rawPaymentsIn
-      .reduce((total, transaction) => total + transaction.value, 0);
-  }
-
-  getBalanceRemaining(options = {}) {
-    const opts = {
-      convertFromSat: false,
-      ...options,
-    };
-
-    const balanceRemaining = this.rawOrderPrice - this.rawTotalPaid;
-
-    return opts.convertFromSat ?
-      integerToDecimal(balanceRemaining, this.paymentCoin) :
-      balanceRemaining;
+  getBalanceRemaining() {
+    return this.orderPrice.minus(this.totalPaid);
   }
 
   get isPartiallyFunded() {
     const balanceRemaining = this.getBalanceRemaining();
-    return balanceRemaining > 0 && balanceRemaining < this.rawOrderPrice;
+    return balanceRemaining.gt(0) && balanceRemaining.lt(this.orderPrice);
   }
 
   /**
@@ -145,21 +128,8 @@ export default class extends BaseOrder {
   get paymentsIn() {
     return new Transactions(
       this.get('paymentAddressTransactions')
-        .filter(payment => (payment.get('value') > 0)),
-      { paymentCoin: this.paymentCoin }
+        .filter(payment => (payment.get('bigValue').gt(0)))
     );
-  }
-
-  /**
-   * Returns a modified version of the transactions by filtering out any negative payments
-   * (e.g. money moving from the multisig to the vendor, refunds). This differs from
-   * paymentsIn, in that it won't convert prices from Satoshi and rather than returning
-   * a Collection, flat data will be returned.
-   */
-  get rawPaymentsIn() {
-    return this.rawResponse
-      .paymentAddressTransactions
-      .filter(payment => payment.value > 0);
   }
 
   get isOrderCancelable() {
@@ -187,7 +157,6 @@ export default class extends BaseOrder {
   }
 
   parse(response = {}) {
-    const paymentCoin = BaseOrder.getPaymentCoin(response);
     this.rawResponse = JSON.parse(JSON.stringify(response)); // deep clone;
 
     if (response.contract) {
@@ -195,30 +164,10 @@ export default class extends BaseOrder {
       // we'll store the original contract here.
       response.rawContract = this.rawResponse.contract;
 
-      const payment = response.contract.buyerOrder.payment;
-
-      // convert price fields
-      payment.amount =
-        integerToDecimal(payment.amount, payment.coin);
-
-      // convert crypto listing quantities
-      response.contract.buyerOrder.items.forEach((item, index) => {
-        const listing = response.contract
-          .vendorListings[index];
-
-        // standardize the quantity field
-        item.quantity = item.quantity === 0 ?
-          item.quantity64 : item.quantity;
-
-        if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-          const coinDivisibility = listing.metadata
-            .coinDivisibility;
-
-          item.quantity = item.quantity / coinDivisibility;
-        }
-      });
+      response.contract = Order.parseContract(response.contract);
 
       if (response.contract.disputeResolution) {
+        console.log('im bringin disputes back');
         response.contract.disputeResolution.payout.buyerOutput =
           response.contract.disputeResolution.payout.buyerOutput || {};
         response.contract.disputeResolution.payout.vendorOutput =
@@ -226,32 +175,23 @@ export default class extends BaseOrder {
         response.contract.disputeResolution.payout.moderatorOutput =
           response.contract.disputeResolution.payout.moderatorOutput || {};
 
-        response.contract.disputeResolution.payout.buyerOutput.amount =
-          integerToDecimal(
-            response.contract.disputeResolution.payout.buyerOutput.amount || 0,
-              paymentCoin);
-        response.contract.disputeResolution.payout.vendorOutput.amount =
-          integerToDecimal(
-            response.contract.disputeResolution.payout.vendorOutput.amount || 0,
-              paymentCoin);
-        response.contract.disputeResolution.payout.moderatorOutput.amount =
-          integerToDecimal(
-            response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
-              paymentCoin);
+        // response.contract.disputeResolution.payout.buyerOutput.amount =
+        //   integerToDecimal(
+        //     response.contract.disputeResolution.payout.buyerOutput.amount || 0,
+        //       paymentCoin);
+        // response.contract.disputeResolution.payout.vendorOutput.amount =
+        //   integerToDecimal(
+        //     response.contract.disputeResolution.payout.vendorOutput.amount || 0,
+        //       paymentCoin);
+        // response.contract.disputeResolution.payout.moderatorOutput.amount =
+        //   integerToDecimal(
+        //     response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
+        //       paymentCoin);
       }
     }
-
-    response.paymentAddressTransactions = response.paymentAddressTransactions || [];
-
-    // Embed the payment type into each payment transaction.
-    const payments = [...response.paymentAddressTransactions];
-
-    if (response.refundAddressTransaction) {
-      payments.push(response.refundAddressTransaction);
-    }
-
-    payments.forEach(pmt => (pmt.paymentCoin = paymentCoin));
 
     return response;
   }
 }
+
+export default Order;

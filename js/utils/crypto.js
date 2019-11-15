@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import app from '../app';
 import loadTemplate from './loadTemplate';
+import { isValidNumber } from '../utils/number';
 import { ensureMainnetCode } from '../data/walletCurrencies';
 
 /**
@@ -78,7 +79,7 @@ export function renderCryptoTradingPair(options = {}) {
 }
 
 export function renderCryptoPrice(options = {}) {
-  if (typeof options.priceAmount !== 'number') {
+  if (!isValidNumber(options.priceAmount)) {
     throw new Error('Please provide a price amount as a number.');
   }
 

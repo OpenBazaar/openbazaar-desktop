@@ -44,21 +44,4 @@ describe('the Service model', () => {
     expect(valErr && valErr.estimatedDelivery && !!valErr.estimatedDelivery.length || false)
       .to.equal(true);
   });
-
-  it('fails validation if a price is not provided as a number', () => {
-    const service = new Service();
-
-    service.unset('price');
-    service.isValid();
-
-    let valErr = service.validationError;
-    expect(valErr && valErr.price && !!valErr.price.length || false)
-      .to.equal(true);
-
-    service.set({ price: '99' }, { validate: true });
-
-    valErr = service.validationError;
-    expect(valErr && valErr.price && !!valErr.price.length || false)
-      .to.equal(true);
-  });
 });

@@ -182,15 +182,14 @@ export default class extends BaseVw {
       this.setState({
         fetchingEstimatedFee: false,
         // server doubles the fee when bumping
-        estimatedFee: (this.walletCur.feeBumpTransactionSize * fees.priority * 2) /
-          this.walletCur.baseUnit,
+        estimatedFee: this.walletCur.feeBumpTransactionSize * fees.priority * 2,
       });
-    }).fail(xhr => {
+    }).fail(reason => {
       if (this.isRemoved()) return;
       this.setState({
         fetchingEstimatedFee: false,
         fetchFeeFailed: true,
-        fetchFeeError: xhr && xhr.responseJSON && xhr.responseJSON.reason || '',
+        fetchFeeError: reason || '',
       });
     });
   }

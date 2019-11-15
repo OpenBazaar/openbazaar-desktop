@@ -1,5 +1,4 @@
 <%
-
   const isValidCryptoCur = typeof ob.cryptoCur === 'string' && ob.cryptoCur;
   const isValidDisplayCur = typeof ob.displayCur === 'string' && ob.displayCur;
   const cryptoCurHasExchangeRate = isValidCryptoCur &&
@@ -9,8 +8,8 @@
   const showDisplayCur = isValidCryptoCur && isValidDisplayCur &&
     cryptoCurHasExchangeRate && displayCurHasExchangeRate && 
     ob.displayCur !== ob.cryptoCur;
-  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';  
-  let confirmedText = typeof ob.confirmed === 'number' && isValidCryptoCur ?
+  const colClass = showDisplayCur ? 'col4 statCol' : 'col6 statCol';
+  let confirmedText = isValidCryptoCur ?
       ob.currencyMod.formatCurrency(ob.confirmed, ob.cryptoCur, { includeCryptoCurIdentifier: false }) : '';
   let confirmedTextSizeClass = 'tx2';
   confirmedTextSizeClass = confirmedText.length > 14 ? 'tx3' : confirmedTextSizeClass;
@@ -28,7 +27,7 @@
          })
         }
       </div>` : '';
-  let unconfirmedText = typeof ob.unconfirmed === 'number' && isValidCryptoCur ?
+  let unconfirmedText = ob.unconfirmed instanceof ob.bigNumber && isValidCryptoCur ?
       ob.currencyMod.formatCurrency(ob.unconfirmed, ob.cryptoCur, { useCryptoSymbol: false }) : '';
   unconfirmedText = unconfirmedText ?
      ob.polyT('wallet.coinStats.unconfirmedBalance', { amount: unconfirmedText}) : '';
@@ -88,7 +87,7 @@
       <div class="txB tx5"><%= ob.polyT('wallet.coinStats.transactionsHeader') %></div>
       <div class="clrTEm txB tx2">
         <%= typeof ob.transactionCount === 'number' ?
-          ob.localizeNumber(ob.transactionCount) : '' %>
+          ob.number.localizeNumber(ob.transactionCount) : '' %>
       </div>
     </div>
   </div>

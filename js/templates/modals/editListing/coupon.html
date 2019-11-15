@@ -8,29 +8,22 @@
 </div>
 <div class="col4 simpleFlexCol">
   <% if (ob.errors['percentDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['percentDiscount'] })) %>
-  <% if (ob.errors['priceDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['priceDiscount'] })) %>
+  <% if (ob.errors['bigPriceDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['bigPriceDiscount'] })) %>
   <div class="flexRow marginTopAuto">
     <div class="inputSelect marginTopAuto">
       <%
         let discountAmount;
 
-        if (typeof ob.priceDiscount !== 'undefined') {
-          discountAmount = typeof ob.priceDiscount === 'number' ?
-            ob.currencyMod.formatPrice(ob.priceDiscount, ob.getCurrency()) :
-            ob.priceDiscount
-        } else {
-          discountAmount = typeof ob.percentDiscount === 'number' ?
-            ob.upToFixed(ob.percentDiscount, 2) : ob.percentDiscount;
-        }
-
-        if (typeof ob.price === 'number') {
-          discountAmount = ob.currencyMod.formatPrice(ob.price, ob.getCurrency())
+        if (ob.bigPriceDiscount) {
+          discountAmount = ob.number.toStandardNotation(ob.bigPriceDiscount);
+        } else if (typeof ob.percentDiscount !== 'undefined') {
+          discountAmount = ob.percentDiscount;
         }
       %>
-      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" data-var-type="number">
+      <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" placeholder="0.00">
       <select name="discountType" class="clrBr clrP nestInputRight">
         <option value="PERCENTAGE" <% if (typeof ob.percentDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
-        <option value="FIXED" <% if (typeof ob.priceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+        <option value="FIXED" <% if (typeof ob.bigPriceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
       </select>
     </div>
 

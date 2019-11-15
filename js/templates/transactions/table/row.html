@@ -91,7 +91,7 @@
       if (ob.type === 'sales') {
         if (ob.rejectOrderInProgress) {
       %>
-        <span class="posR">
+        <span class="posR inlineBlock">
           <% // including invisible reject link to properly space the spinner %>
           <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnReject') %></a>
           <%= ob.spinner({ className: 'spinnerSm center' }) %>
@@ -110,7 +110,7 @@
         // they need to be funded and we don't know if they are. If funded, they can be canceled on the Order Detail overlay.
         if (ob.cancelOrderInProgress) {
     %>
-        <span class="posR">
+        <span class="posR inlineBlock">
           <% // including invisible cancel link to properly space the spinner %>
           <a class="txU tx6 invisible"><%= ob.polyT('transactions.transactionsTable.btnCancel') %></a>
           <%= ob.spinner({ className: 'spinnerSm center' }) %>

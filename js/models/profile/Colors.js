@@ -21,6 +21,7 @@ export default class extends BaseModel {
     };
 
     Object.keys(attrs).forEach((field) => {
+      if (field === 'cid') return;
       const clr = attrs[field];
 
       if (is.not.hexColor(clr)) {

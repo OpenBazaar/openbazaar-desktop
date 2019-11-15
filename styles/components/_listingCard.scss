@@ -11,6 +11,10 @@
     outline: none;
   }
 
+  &.ListingCard-errorCard {
+    cursor: default;
+  }
+
   .gridViewContent {
     .listingImage {
       width: 223px;

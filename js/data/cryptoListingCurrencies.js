@@ -86,8 +86,6 @@ let currenciesNeedRefresh = true;
 let exchangeRateChangeBound = false;
 let currenciesSortedByNameDeferred = null;
 
-export const defaultQuantityBaseUnit = 100000000;
-
 export function getCurrencies() {
   if (!exchangeRateChangeBound) {
     getCurrencyEvents().on('exchange-rate-change',
@@ -118,7 +116,7 @@ export function getCurrencies() {
   exchangeRateCurs = _exchangeRateCurs.sort();
   _exchangeRateCurs
     .forEach(cur => {
-      // If it's not a fiat currency code (base on our hard-code list),
+      // If it's not a fiat currency code (base on our hard-coded list),
       // or on our exclude list, we'll assume it's a crypto currency.
       if (!fiatCurrencyCodes.includes(cur) && !excludes.includes(cur)) {
         curs.add(cur);
