@@ -2062,7 +2062,7 @@
   "serviceModelErrors": {
     "provideName": "Please provide a service name.",
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
-    "provideService": "Please provide at least on shipping service."
+    "provideService": "Please provide at least one shipping service."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",

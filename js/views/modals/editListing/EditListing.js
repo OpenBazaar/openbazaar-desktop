@@ -1199,7 +1199,7 @@ export default class extends BaseModal {
     return cur;
   }
 
-  // Keep in mind this could return undefined if certain depndant form fields are not set yet
+  // Keep in mind this could return undefined if certain dependant form fields are not set yet
   // (e.g. rendering not complete, dependant async data not loaded) and the divisibility was
   // never set in the model.
   get coinDivisibility() {

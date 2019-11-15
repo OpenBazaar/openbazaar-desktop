@@ -236,7 +236,7 @@ export default class extends Model {
 
   /*
    * This will ensure that the validationError property is updated on all
-   * nested instances with any errors based on the provided errObj. This
+   * nested instances with any errors based on the provided errObj. This will
    * only be called on the top-level parent of a model with nested elements.
    * It will go as many levels deep as described by the structure of the
    * keys in the provided errObj.

@@ -317,7 +317,7 @@ function getMaxDisplayDigits(amount, desiredMax) {
  * Intl.NumberFormat. In many cases, such a change of the number is not desired and
  * this function will allow you to identify if that will happen and have the potential
  * to use other functionality, e.g. BigNumber.toFixed() (keep in mind though, that
- * option will properly show an untruncated / unreounded number, but it will not localize
+ * option will properly show an untruncated / unrounded number, but it will not localize
  * the number at all).
  * @param {number|string|BigNumber} val
  * @param {number} maxDecimals - An integer indicating the maximum number of decimals
@@ -653,7 +653,7 @@ export function getExchangeRates() {
 /**
  * Converts an amount from one currency to another based on exchange rate data.
  * @param {number|string|BigNumber} amount - Note that if you do provide the number as
- *   as a string, you do risk precision loss if the number is beyonf the bounds that
+ *   as a string, you do risk precision loss if the number is beyond the bounds that
  *   JS can natively handle.
  * @param {string} fromCur - The currency you are converting from.
  * @param {string} toCur - The currency you are converting to.
