@@ -320,7 +320,7 @@ function getMaxDisplayDigits(amount, desiredMax) {
  * option will properly show an untruncated / unrounded number, but it will not localize
  * the number at all).
  * @param {number|string|BigNumber} val
- * @param {number} maxDecimals - An integer indicating the maximum number of decimals
+ * @param {number} maxDecimals - An integer indicating the maximum number of decimal
      places allowed.
  * @returns {boolean} - A boolean indicating whether the number can properly be formatted
      by Intl.NumberFormat.
