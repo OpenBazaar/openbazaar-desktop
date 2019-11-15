@@ -653,7 +653,7 @@ export function getExchangeRates() {
 /**
  * Converts an amount from one currency to another based on exchange rate data.
  * @param {number|string|BigNumber} amount - Note that if you do provide the number as
- *   as a string, you do risk precision loss if the number is beyonf the bounds that
+ *   as a string, you do risk precision loss if the number is beyond the bounds that
  *   JS can natively handle.
  * @param {string} fromCur - The currency you are converting from.
  * @param {string} toCur - The currency you are converting to.
