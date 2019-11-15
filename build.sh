@@ -139,13 +139,13 @@ case "$TRAVIS_OS_NAME" in
 #        curl -L https://dl.bintray.com/develar/bin/wine.7z -o /tmp/wine.7z
 #        /tmp/7za x -o/usr/local/Cellar -y /tmp/wine.7z
 
-        brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp git-lfs gnu-tar dpkg xz
+        brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
 
         brew remove osslsigncode
         brew install mono osslsigncode
         brew reinstall openssl@1.1
 
-#        brew cask install wine-stable
+        brew cask install wine-stable
 
         # WINDOWS 64
         echo 'Building Windows 64-bit Installer...'
@@ -154,8 +154,6 @@ case "$TRAVIS_OS_NAME" in
 #        export DEBUG=*
         export WINEARCH=win64
 
-        npm install wine-darwin@1.9.17-1
-        ./node_modules/.bin/wine hostname
         npm install electron-packager
 
         cd node_modules/electron-packager
