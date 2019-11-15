@@ -189,6 +189,8 @@ case "$TRAVIS_OS_NAME" in
         osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
         osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
+        mv dist/win64/RELEASES-x64 dist/win64/RELEASES
+
     else
 
         # OSX
