@@ -177,21 +177,36 @@ export function minValueByCoinDiv(coinDivisibility) {
  *   bitcoin, it is 8)
  * @returns {BigNumber} - A BigNumber instance representing the integer number.
  */
-export function decimalToInteger(value, divisibility) {
-  validateNumberType(value);
+export function decimalToInteger(value, divisibility, options = {}) {
+  const opts = {
+    returnNaNOnError: true,
+    ...options,
+  };
 
-  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+  try {
+    validateNumberType(value);
 
-  if (!isValidDivis) {
-    throw new Error(divisErr);
+    const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+    if (!isValidDivis) {
+      throw new Error(divisErr);
+    }
+
+    return bigNumber(value)
+      .multipliedBy(
+        bigNumber(10)
+          .pow(divisibility)
+      )
+      .decimalPlaces(0);
+  } catch (e) {
+    if (!opts.returnNaNOnError) {
+      throw e;
+    } else {
+      console.error(`Unable to convert ${value} from an decimal to an ` +
+        `integer: ${e.message}`);
+      return bigNumber();
+    }
   }
-
-  return bigNumber(value)
-    .multipliedBy(
-      bigNumber(10)
-        .pow(divisibility)
-    )
-    .decimalPlaces(0);
 }
 
 /**
@@ -242,8 +257,9 @@ export function integerToDecimal(value, divisibility, options = {}) {
     if (!opts.returnNaNOnError) {
       throw e;
     } else {
-      console.warn(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
+      console.error(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
         `${value} from an integer to a decimal: ${e.message}`);
+      return bigNumber();
     }
   }
 
@@ -883,7 +899,7 @@ export function curDefToDecimal(curDef, options = {}) {
       currency.divisibility
     );
   } catch (e) {
-    console.warn(`Unable to convert the given currency definition to a decimal: ${e.message}`);
+    console.error(`Unable to convert the given currency definition to a decimal: ${e.message}`);
     if (!opts.returnOnError) throw e;
   }
 

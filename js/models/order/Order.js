@@ -166,28 +166,8 @@ class Order extends BaseOrder {
 
       response.contract = Order.parseContract(response.contract);
 
-      if (response.contract.disputeResolution) {
-        console.log('im bringin disputes back');
-        response.contract.disputeResolution.payout.buyerOutput =
-          response.contract.disputeResolution.payout.buyerOutput || {};
-        response.contract.disputeResolution.payout.vendorOutput =
-          response.contract.disputeResolution.payout.vendorOutput || {};
-        response.contract.disputeResolution.payout.moderatorOutput =
-          response.contract.disputeResolution.payout.moderatorOutput || {};
-
-        // response.contract.disputeResolution.payout.buyerOutput.amount =
-        //   integerToDecimal(
-        //     response.contract.disputeResolution.payout.buyerOutput.amount || 0,
-        //       paymentCoin);
-        // response.contract.disputeResolution.payout.vendorOutput.amount =
-        //   integerToDecimal(
-        //     response.contract.disputeResolution.payout.vendorOutput.amount || 0,
-        //       paymentCoin);
-        // response.contract.disputeResolution.payout.moderatorOutput.amount =
-        //   integerToDecimal(
-        //     response.contract.disputeResolution.payout.moderatorOutput.amount || 0,
-        //       paymentCoin);
-      }
+      response.contract.disputeResolution =
+        Order.parseDisputePayout(response.contract, response.contract.disputeResolution);
     }
 
     return response;

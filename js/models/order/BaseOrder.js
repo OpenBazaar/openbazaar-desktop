@@ -180,4 +180,50 @@ export default class extends BaseModel {
 
     return contract;
   }
+
+  static parseDisputePayout(contract, resolution) {
+    let divisibility;
+
+    try {
+      divisibility =
+        contract
+          .buyerOrder
+          .payment
+          .amountCurrency
+          .divisibility;
+    } catch (e) {
+      // pass
+    }
+
+    if (resolution && resolution.payout) {
+      if (resolution.payout.buyerOutput) {
+        resolution.payout.buyerOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.buyerOutput.bigAmount,
+            divisibility,
+            { fieldName: 'buyerOutput.bigAmount' }
+          );
+      }
+
+      if (resolution.payout.vendorOutput) {
+        resolution.payout.vendorOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.vendorOutput.bigAmount,
+            divisibility,
+            { fieldName: 'vendorOutput.bigAmount' }
+          );
+      }
+
+      if (resolution.payout.moderatorOutput) {
+        resolution.payout.moderatorOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.moderatorOutput.bigAmount,
+            divisibility,
+            { fieldName: 'moderatorOutput.bigAmount' }
+          );
+      }
+    }
+
+    return resolution;
+  }
 }

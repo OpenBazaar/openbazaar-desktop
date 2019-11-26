@@ -1,3 +1,4 @@
+import { integerToDecimal } from '../../utils/currency';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
@@ -109,24 +110,12 @@ class Case extends BaseOrder {
       response.vendorContract = Case.parseContract(response.vendorContract);
     }
 
-    if (response.resolution) {
-      response.resolution.payout.buyerOutput =
-        response.resolution.payout.buyerOutput || {};
-      response.resolution.payout.vendorOutput =
-        response.resolution.payout.vendorOutput || {};
-      response.resolution.payout.moderatorOutput =
-        response.resolution.payout.moderatorOutput || {};
-
-      // response.resolution.payout.buyerOutput.amount =
-      //   integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-      //     paymentCoin);
-      // response.resolution.payout.vendorOutput.amount =
-      //   integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-      //     paymentCoin);
-      // response.resolution.payout.moderatorOutput.amount =
-      //   integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-      //     paymentCoin);
-    }
+    response.resolution =
+      Case.parseDisputePayout(
+        response.buyerOpened ?
+          response.buyerContract : response.vendorContract,
+        response.resolution
+      );
 
     return response;
   }
