@@ -1,4 +1,3 @@
-import { integerToDecimal } from '../../utils/currency';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
