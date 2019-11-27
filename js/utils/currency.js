@@ -202,7 +202,7 @@ export function decimalToInteger(value, divisibility, options = {}) {
     if (!opts.returnNaNOnError) {
       throw e;
     } else {
-      console.error(`Unable to convert ${value} from an decimal to an ` +
+      console.error(`Unable to convert ${value} from a decimal to an ` +
         `integer: ${e.message}`);
       return bigNumber();
     }
