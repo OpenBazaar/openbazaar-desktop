@@ -70,7 +70,7 @@
               <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
                 <%
                   const amt = ob.fee && ob.fee.fixedFee ?
-                    ob.number.toStandardNotation(ob.fee.fixedFee.amount) : 0;
+                    ob.number.toStandardNotation(ob.fee.fixedFee.amount) : '';
                   const ccode =
                     ob.fee &&
                     ob.fee.fixedFee &&
@@ -81,6 +81,7 @@
                        class="noSpin clrBr clrSh2"
                        name="moderatorInfo.fee.fixedFee.amount"
                        data-var-type="bignumber"
+                       placeholder="0.00"
                        value="<%= amt %>">
               </div>
               <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
@@ -96,6 +97,7 @@
                          maxlength="5"
                          name="moderatorInfo.fee.percentage"
                          value="<%= ob.fee.percentage %>"
+                         placeholder="0"
                          data-var-type="number">
                 </div>
               </div>

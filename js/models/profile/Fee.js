@@ -13,7 +13,6 @@ export default class extends BaseModel {
   defaults() {
     return {
       feeType: feeTypes.PERCENTAGE,
-      percentage: 0,
       fixedFee: new FixedFee(),
     };
   }
