@@ -1,7 +1,5 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import '../../../utils/lib/selectize';
-import bigNumber from 'bignumber.js';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
