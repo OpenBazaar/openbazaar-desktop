@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import '../../../utils/lib/selectize';
+import bigNumber from 'bignumber.js';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -39,11 +40,6 @@ export default class extends baseVw {
       this.profile.set('moderatorInfo', this.moderator);
     }
 
-    // retrieve the moderation default values
-    const profileFee = this.profile.get('moderatorInfo').get('fee');
-    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
-    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
-
     this.currencyList = getCurrencies();
 
     this.listenTo(this.profile, 'sync', () => {
@@ -67,7 +63,6 @@ export default class extends baseVw {
 
   save() {
     const formData = this.getFormData();
-    console.dir(formData);
 
     // The user must check both boxes at the bottom of the page if they want to be a moderator,
     // but the values aren't part of the model, they only exist in the DOM and aren't saved.
@@ -75,13 +70,6 @@ export default class extends baseVw {
       this.getCachedEl('#acceptGuidelines').prop('checked'))) {
       this.getCachedEl('.js-moderationConfirmError').removeClass('hide');
       return;
-    }
-
-    // clear unused values by setting them to the default, if it exists
-    if (formData.moderatorInfo.fee.feeType === feeTypes.PERCENTAGE) {
-      formData.moderatorInfo.fee.fixedFee.amount = this.defaultAmount;
-    } else if (formData.moderatorInfo.fee.feeType === feeTypes.FIXED) {
-      formData.moderatorInfo.fee.percentage = this.defaultPercentage;
     }
 
     this.profile.set(formData);
