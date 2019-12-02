@@ -225,6 +225,10 @@ export default class Profile extends BaseModel {
                 amountKey: 'bigAmount',
                 currencyKey: 'amountCurrency',
               });
+
+            if (options.attrs.moderatorInfo.fee.feeType === feeTypes.FIXED) {
+              options.attrs.moderatorInfo.fee.percentage = 0;
+            }
           }
         }
       }
