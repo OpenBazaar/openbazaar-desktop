@@ -167,7 +167,7 @@ class Order extends BaseOrder {
       response.contract = Order.parseContract(response.contract);
 
       response.contract.disputeResolution =
-        Order.parseDisputePayout(response.contract, response.contract.disputeResolution);
+        Order.parseDisputePayout(response.contract.disputeResolution);
     }
 
     return response;

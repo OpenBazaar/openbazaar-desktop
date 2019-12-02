@@ -110,11 +110,7 @@ class Case extends BaseOrder {
     }
 
     response.resolution =
-      Case.parseDisputePayout(
-        response.buyerOpened ?
-          response.buyerContract : response.vendorContract,
-        response.resolution
-      );
+      Case.parseDisputePayout(response.resolution);
 
     return response;
   }

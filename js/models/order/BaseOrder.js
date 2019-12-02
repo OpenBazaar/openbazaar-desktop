@@ -181,15 +181,14 @@ export default class extends BaseModel {
     return contract;
   }
 
-  static parseDisputePayout(contract, resolution) {
+  static parseDisputePayout(resolution) {
     let divisibility;
 
     try {
       divisibility =
-        contract
-          .buyerOrder
-          .payment
-          .amountCurrency
+        resolution
+          .payout
+          .payoutCurrency
           .divisibility;
     } catch (e) {
       // pass
