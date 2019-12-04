@@ -51,7 +51,11 @@ export default class extends BaseModel {
     if (!is.existy(attrs.serverIp) || is.empty(attrs.serverIp)) {
       addError('serverIp', app.polyglot.t('serverConfigModelErrors.provideValue'));
     } else {
-      if (!is.ip(attrs.serverIp) && attrs.serverIp !== 'localhost') {
+      if (
+        !is.ip(attrs.serverIp) &&
+        !is.url(attrs.serverIp) &&
+        attrs.serverIp !== 'localhost'
+      ) {
         addError('serverIp', app.polyglot.t('serverConfigModelErrors.invalidIp'));
       }
     }
