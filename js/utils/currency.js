@@ -481,6 +481,8 @@ export function formatCurrency(amount, currency, options) {
   if (typeof opts.maxDisplayDecimals !== 'number') {
     try {
       opts.maxDisplayDecimals = getCoinDivisibility(cur);
+      console.log(`the cur is ${cur}`);
+      console.log(`the maxxers is ${opts.maxDisplayDecimals}`);
     } catch (e) {
       // It just means it might display with more zeros than it should - just a cosmetic thing.
       opts.maxDisplayDecimals = defaultCryptoCoinDivisibility;

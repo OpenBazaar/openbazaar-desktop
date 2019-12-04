@@ -80,7 +80,10 @@
       ob.currencyMod.convertAndFormatCurrency(
         ob.total,
         ob.paymentCoin,
-        ob.userCurrency
+        ob.userCurrency,
+        {
+          maxDisplayDecimals: 6,
+        },
       )
     %>
   </span>
