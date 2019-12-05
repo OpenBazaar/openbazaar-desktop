@@ -76,14 +76,23 @@
 <% }) %>
 <td class="clrBr priceCol txRgt">
   <span class="ulOnHover">
+    <%
+      let maxDisplayDecimals;
+
+      try {
+        if (!ob.currencyMod.isFiatCur(ob.userCurrency)) {
+          maxDisplayDecimals = 6;
+        }
+      } catch (e) {
+        // pass
+      }
+    %>
     <%=
       ob.currencyMod.convertAndFormatCurrency(
         ob.total,
         ob.paymentCoin,
         ob.userCurrency,
-        {
-          maxDisplayDecimals: 6,
-        },
+        { maxDisplayDecimals },
       )
     %>
   </span>
