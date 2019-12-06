@@ -19,11 +19,8 @@ let trayMenu;
 let closeConfirmed = false;
 const version = app.getVersion();
 
-function isOSWin64() {
-  return process.arch === 'x64' || process.env.hasOwnProperty('PROCESSOR_ARCHITEW6432');
-}
-
-const plat = process.platform === 'win32' ? `${isOSWin64() ? 'win64' : 'win32'}` : process.platform;
+// We no longer support win32, but process.platform returns Windows 64 bit as win32.
+const plat = process.platform === 'win32' ? 'win64' : process.platform;
 
 const feedURL = `https://updates2.openbazaar.org:5001/update/${plat}/${version}`;
 
