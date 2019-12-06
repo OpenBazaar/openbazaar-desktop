@@ -4,6 +4,16 @@
   const listingImageBgStyle =
     `background-image: ${listingImageSrc}url('../imgs/defaultItem.png')`;
 
+  let priceMaxDisplayDecimals;
+
+  try {
+    if (!ob.currencyMod.isFiatCur(ob.displayCurrency)) {
+      priceMaxDisplayDecimals = 6;
+    }
+  } catch (e) {
+    // pass
+  }
+
   if (ob.viewType === 'grid') {
 %>
 <div class="gridViewContent posR">
@@ -122,7 +132,8 @@
             ob.currencyMod.convertAndFormatCurrency(
               ob.price.amount,
               ob.price.currencyCode,
-              ob.displayCurrency
+              ob.displayCurrency,
+              { maxDisplayDecimals: priceMaxDisplayDecimals }
             )
           %>
         </div>
@@ -135,6 +146,9 @@
             priceModifier: ob.price.modifier,
             wrappingClass: '',
             marketRelativityClass: 'hide',
+            convertAndFormatOpts: {
+              maxDisplayDecimals: priceMaxDisplayDecimals
+            }
           })
         %>
       <% } %>
