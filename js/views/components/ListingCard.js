@@ -2,6 +2,7 @@ import $ from 'jquery';
 import app from '../../app';
 import loadTemplate from '../../utils/loadTemplate';
 import { abbrNum } from '../../utils';
+import { stripHtml } from '../../utils/dom';
 import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
@@ -657,6 +658,7 @@ export default class extends baseVw {
             vendorAvatarImageSrc: this.avatarImage && this.avatarImage.loaded &&
               this.avatarImage.src || '',
             abbrNum,
+            stripHtml,
           }));
         });
 
