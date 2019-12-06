@@ -725,14 +725,11 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   try {
     convertedAmt = convertCurrency(amount, fromCur, toCur);
   } catch (e) {
-    console.log('moon shine delight')
     if (opts.skipConvertOnError) {
-      console.log('debunk')
       // We'll use an unconverted amount
       convertedAmt = amount;
       outputFormat = fromCur;
     } else {
-      console.log('cm punk')
       throw e;
     }
   }
