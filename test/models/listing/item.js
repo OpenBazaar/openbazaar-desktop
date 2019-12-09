@@ -199,7 +199,7 @@ describe('the Item model', () => {
     const valErr = item.validationError;
     expect(valErr && !!valErr.bigPrice.length || false)
       .to.equal(true);
-  });   
+  });
 
   // todo: spot check nested val errors
 });

@@ -46,7 +46,7 @@ describe('the number utility module', () => {
     it('that correctly returns the number of decimals in a bigNumber', () => {
       expect(decimalPlaces(bigNumber('1.12345'))).to.equal(5);
       expect(decimalPlaces(bigNumber('0.12345678911234567892'))).to.equal(20);
-    });    
+    });
 
     it('that correctly handles number expressed in scientific notation', () => {
       expect(decimalPlaces(1e-20)).to.equal(20);
