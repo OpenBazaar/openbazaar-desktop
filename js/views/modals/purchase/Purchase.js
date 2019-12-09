@@ -591,7 +591,7 @@ export default class extends BaseModal {
             } else if (errMsg === ERROR_DUST_AMOUNT) {
               errMsg = app.polyglot.t('purchase.errors.serverErrorBelowDust');
             }
-            
+
             openSimpleMessage(errTitle, errMsg);
             endAjaxEvent('Purchase', {
               ...segmentation,
