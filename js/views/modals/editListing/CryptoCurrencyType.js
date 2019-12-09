@@ -121,11 +121,6 @@ export default class extends BaseView {
 
     this.tradeField.render();
     this.cryptoTradingPair.render();
-
-    this.listenTo(app.settings, 'change:localCurrency', () => {
-      this.getCachedEl('.js-marketValueWrap')
-        .html(this.tmplMarketValue({ getDataFromUi: true }));
-    });
   }
 
   className() {
