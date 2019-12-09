@@ -87,8 +87,10 @@ export function localizeNumber(number,
  */
 // https://stackoverflow.com/a/10454560
 export function decimalPlaces(num) {
+  const bigNum = bigNumber(num);
+
   // trim trailing zeros
-  const trimmed = String(num).replace(/0+$/, '');
+  const trimmed = String(bigNum.toFormat()).replace(/0+$/, '');
   const match = trimmed.match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
   if (!match) { return 0; }
   return Math.max(

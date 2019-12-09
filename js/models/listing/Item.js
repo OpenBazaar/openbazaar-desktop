@@ -154,7 +154,7 @@ export default class extends BaseModel {
       }
     }
 
-    this.validateCurrencyAmount(
+    const moo = this.validateCurrencyAmount(
       {
         amount: attrs.bigPrice,
         currency: {
