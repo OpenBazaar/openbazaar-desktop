@@ -1514,7 +1514,9 @@
       "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process.",
       "genericPurchaseErrTitle": "Unable To Complete The Purchase",
       "invalidCoinDiv": "The listing does not have a valid coin divisibility.",
-      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units."
+      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units.",
+      "serverErrorInsufficientFunds": "You do not have sufficient funds to complete the purchase.",
+      "serverErrorBelowDust": "The purchase price is below the minimum spend amount for the payment currency."
     }
   },
   "moderators": {

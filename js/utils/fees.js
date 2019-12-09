@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import {
+  ERROR_INSUFFICIENT_FUNDS,
+  ERROR_DUST_AMOUNT,
+} from '../constants';
+import {
   integerToDecimal,
   decimalToInteger,
   isValidCoinDivisibility,
@@ -140,7 +144,7 @@ export function estimateFee(coinType, feeLevel, amount, options = {}) {
           const reason = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
           deferred.reject(reason, xhr);
 
-          const knownReasons = ['ERROR_INSUFFICIENT_FUNDS', 'ERROR_DUST_AMOUNT'];
+          const knownReasons = [ERROR_INSUFFICIENT_FUNDS, ERROR_DUST_AMOUNT];
 
           // don't cache calls that failed with an unknown reason
           if (

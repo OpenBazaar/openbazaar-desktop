@@ -1,5 +1,9 @@
 import $ from 'jquery';
 import app from '../../../app';
+import {
+  ERROR_INSUFFICIENT_FUNDS,
+  ERROR_DUST_AMOUNT,
+} from '../../../constants';
 import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
 import { validateNumberType } from '../../../utils/number';
@@ -165,6 +169,8 @@ export default class extends baseVw {
     loadTemplate('modals/wallet/spendConfirmBox.html', (t) => {
       this.$el.html(t({
         ...this._state,
+        ERROR_INSUFFICIENT_FUNDS,
+        ERROR_DUST_AMOUNT,
       }));
     });
 
