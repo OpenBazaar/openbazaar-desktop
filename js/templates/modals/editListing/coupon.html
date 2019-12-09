@@ -19,11 +19,13 @@
         } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount = ob.percentDiscount;
         }
+
+        const isFixedDiscount = !!ob.bigPriceDiscount;
       %>
       <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" placeholder="0.00">
       <select name="discountType" class="clrBr clrP nestInputRight">
-        <option value="PERCENTAGE" <% if (typeof ob.percentDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
-        <option value="FIXED" <% if (typeof ob.bigPriceDiscount !== 'undefined') print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
+        <option value="PERCENTAGE" <% if (!isFixedDiscount) print('selected') %>><%= ob.polyT('editListing.coupons.discountTypePercent') %></option>
+        <option value="FIXED" <% if (isFixedDiscount) print('selected') %>><%= ob.polyT('editListing.coupons.discountTypeFixed') %></option>
       </select>
     </div>
 
