@@ -4,10 +4,7 @@ import Backbone from 'backbone';
 import bigNumber from 'bignumber.js';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
-import {
-  ERROR_INSUFFICIENT_FUNDS,
-  ERROR_DUST_AMOUNT,
-} from '../../../constants';
+import { ERROR_DUST_AMOUNT } from '../../../constants';
 import { removeProp } from '../../../utils/object';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -584,10 +581,6 @@ export default class extends BaseModal {
                 }).format(this.inventory),
               });
               if (this.inventoryFetch) this.inventoryFetch.abort();
-            } else if (errMsg === ERROR_INSUFFICIENT_FUNDS) {
-              // This one really shouldn't show because the client checks that funds
-              // are available locally.
-              errMsg = app.polyglot.t('purchase.errors.serverErrorInsufficientFunds');
             } else if (errMsg === ERROR_DUST_AMOUNT) {
               errMsg = app.polyglot.t('purchase.errors.serverErrorBelowDust');
             }
