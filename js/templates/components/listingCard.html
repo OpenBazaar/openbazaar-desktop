@@ -4,6 +4,16 @@
   const listingImageBgStyle =
     `background-image: ${listingImageSrc}url('../imgs/defaultItem.png')`;
 
+  let priceMaxDisplayDecimals;
+
+  try {
+    if (!ob.currencyMod.isFiatCur(ob.displayCurrency)) {
+      priceMaxDisplayDecimals = 6;
+    }
+  } catch (e) {
+    // pass
+  }
+
   if (ob.viewType === 'grid') {
 %>
 <div class="gridViewContent posR">
@@ -112,9 +122,24 @@
         </div>
       <% } %>
     </div>
-    <div class="flex">
-      <div class="flexExpand tx5b ratingStrip">
-        <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
+    <%
+      const formattedRating = ob.formatRating(ob.averageRating, ob.ratingCount);
+      let priceRowTextClass = '';
+
+      try {
+        const priceLength = ob.price.amount.toFormat().length;
+        const ratingLength = ($(`<div>${formattedRating}</div>`).text()).length;
+
+        if (priceLength + ratingLength > 17) {
+          priceRowTextClass = 'txBase'
+        }
+      } catch (e) {
+        // pass
+      }
+    %>
+    <div class="flexVCent <%= priceRowTextClass %>">
+      <div class="flexExpand ratingStrip">
+        <%= formattedRating %>
       </div>
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
         <div>
@@ -122,7 +147,8 @@
             ob.currencyMod.convertAndFormatCurrency(
               ob.price.amount,
               ob.price.currencyCode,
-              ob.displayCurrency
+              ob.displayCurrency,
+              { maxDisplayDecimals: priceMaxDisplayDecimals }
             )
           %>
         </div>
@@ -135,6 +161,9 @@
             priceModifier: ob.price.modifier,
             wrappingClass: '',
             marketRelativityClass: 'hide',
+            convertAndFormatOpts: {
+              maxDisplayDecimals: priceMaxDisplayDecimals
+            }
           })
         %>
       <% } %>
@@ -193,7 +222,8 @@
               ob.currencyMod.convertAndFormatCurrency(
                 ob.price.amount,
                 ob.price.currencyCode,
-                ob.displayCurrency
+                ob.displayCurrency,
+                { maxDisplayDecimals: priceMaxDisplayDecimals }
               )
             %>
           <% } else { %>
@@ -204,6 +234,9 @@
                 displayCurrency: ob.displayCurrency,
                 priceModifier: ob.price.modifier,
                 wrappingClass: '',
+                convertAndFormatOpts: {
+                  maxDisplayDecimals: priceMaxDisplayDecimals
+                }                
               })
             %>
           <% } %>

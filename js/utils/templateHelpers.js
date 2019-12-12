@@ -2,6 +2,7 @@ import $ from 'jquery';
 import app from '../app';
 import bigNumber from 'bignumber.js';
 import {
+  formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
   getExchangeRate,
@@ -101,10 +102,10 @@ export function formatRating(average, count, skipCount) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 const currencyExport = {
-  formatCurrency: gracefulException(convertAndFormatCurrency),
+  formatCurrency: gracefulException(formatCurrency),
   convertAndFormatCurrency: gracefulException(convertAndFormatCurrency),
   convertCurrency,
-  getExchangeRate,
+  getExchangeRate: gracefulException(getExchangeRate, undefined),
   pairedCurrency: gracefulException(renderPairedCurrency),
   isFiatCur: gracefulException(isFiatCur, false),
 };
