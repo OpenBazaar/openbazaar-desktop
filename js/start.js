@@ -42,7 +42,7 @@ import Profile from './models/profile/Profile';
 import Settings from './models/settings/Settings';
 import WalletBalances from './collections/wallet/Balances';
 import Followers from './collections/Followers';
-import { fetchExchangeRates, getExchangeRate } from './utils/currency';
+import { fetchExchangeRates } from './utils/currency';
 import './utils/exchangeRateSyncer';
 import { launchDebugLogModal, launchSettingsModal } from './utils/modalManager';
 import listingDeleteHandler from './startup/listingDelete';
