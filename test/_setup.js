@@ -40,7 +40,7 @@ before(function () {
   };
 
   // this should match what's in start.js
-  bigNumber.config({ RANGE: [-1e+9, 1e+9], DECIMAL_PLACES: 1e+9 });
+  bigNumber.config({ DECIMAL_PLACES: 50 });
 
   app.walletCurDef = walletCurDef;
   initWalletCurs(walletCurs, walletCurDef);
