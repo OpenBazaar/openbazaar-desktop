@@ -168,8 +168,9 @@ export default class extends BaseModal {
       },
     });
 
-    this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
+    this.listenTo(this.cryptoCurSelector, 'currencyClicked', cOpts => {
       if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
+      this.receipt.paymentCoin = cOpts.active ? cOpts.currency : '';
     });
 
     this.moderators = this.createChild(Moderators, {

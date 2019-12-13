@@ -4,6 +4,26 @@
   const viewingCurrency = ob.currencyMod.getExchangeRate(ob.displayCurrency) !== undefined ?
     ob.displayCurrency : ob.listingCurrency;
 
+  const setTotalTip = tip =>
+    `<span class="toolTip clrTAlert" data-tip="${tip}"><span class="ion-alert-circled padSm"></span></span>`;
+  let totalTip = '';
+
+  if (viewingCurrency !== ob.listingCurrency) {
+    totalTip = setTotalTip(
+      ob.polyT('purchase.receipt.totalWarning1', { currency: viewingCurrency })
+    );
+  } else if (viewingCurrency !== ob.paymentCoin) {
+    if (ob.paymentCoin) {
+      totalTip = setTotalTip(
+        ob.polyT('purchase.receipt.totalWarning2', { currency: ob.paymentCoin })
+      );
+    } else {
+      totalTip = setTotalTip(
+        ob.polyT('purchase.receipt.totalWarning2NoCoin')
+      );
+    }
+  }
+
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
@@ -185,7 +205,7 @@
   <% } %>
   <div class="flexRow">
     <span class="flexExpand">
-      <%= ob.polyT('purchase.receipt.total') %>
+      <%= ob.polyT('purchase.receipt.total') %><%= totalTip %>
     </span>
     <div class="constrainedWidth">
       <div class="flexHRight">

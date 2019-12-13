@@ -1,6 +1,7 @@
 import app from '../../../app';
 import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
+import { ensureMainnetCode } from '../../../data/walletCurrencies';
 // import {
 //   getCoinDivisibility,
 //   nativeNumberFormatSupported,
@@ -14,6 +15,11 @@ export default class extends BaseView {
   constructor(options = {}) {
     super(options);
 
+    const opts = {
+      paymentCoin: '',
+      ...options,
+    }
+
     if (!this.model || !(this.model instanceof Order)) {
       throw new Error('Please provide an order model');
     }
@@ -26,14 +32,21 @@ export default class extends BaseView {
       throw new Error('Please provide the prices array');
     }
 
-    this.options = options;
-    this._coupons = options.couponObj || [];
-    this.listing = options.listing;
-    this.prices = options.prices;
+    this.options = opts;
+    this._coupons = opts.couponObj || [];
+    this.listing = opts.listing;
+    this.prices = opts.prices;
+    this.paymentCoin = opts.paymentCoin;
   }
 
   className() {
     return 'receipt flexColRows gutterVSm tx5b';
+  }
+
+  validatePaymentCoin(coin) {
+    if (typeof coin !== 'string') {
+      throw new Error('The payment coin must be provided as a string.');
+    }
   }
 
   get coupons() {
@@ -43,6 +56,22 @@ export default class extends BaseView {
   set coupons(coupons) {
     this._coupons = coupons;
     this.render();
+  }
+
+  set paymentCoin(coin) {
+    let paymentCoin = coin;
+
+    try {
+      paymentCoin = ensureMainnetCode(coin);
+    } catch (e) {
+      // pass
+    }
+
+    this.validatePaymentCoin(paymentCoin);
+    if (paymentCoin !== this._paymentCoin) {
+      this._paymentCoin = paymentCoin;
+      this.render();
+    }
   }
 
   updatePrices(prices) {
@@ -60,6 +89,7 @@ export default class extends BaseView {
         listingCurrency: this.listing.price.currencyCode,
         coupons: this.coupons,
         displayCurrency,
+        paymentCoin: this._paymentCoin,
         prices: this.prices.map(priceObj => {
           let quantity =
             priceObj.quantity &&

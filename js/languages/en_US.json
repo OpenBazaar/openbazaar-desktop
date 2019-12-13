@@ -1498,7 +1498,10 @@
       "shippingTotal": "Total Shipping",
       "total": "Total",
       "cryptoIconsAmount": "(%{amount})",
-      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
+      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}",
+      "totalWarning1": "Prices are estimated after converting from %{currency}, and may differ slightly from the final total for funding your order on the next screen.",
+      "totalWarning2": "Actual total may vary slightly on the next screen after conversion to %{currency}.",
+      "totalWarning2NoCoin": "Actual total may vary slightly on the next screen after conversion to the payment currency."
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
