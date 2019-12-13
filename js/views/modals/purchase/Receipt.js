@@ -18,17 +18,17 @@ export default class extends BaseView {
     const opts = {
       paymentCoin: '',
       ...options,
-    }
+    };
 
     if (!this.model || !(this.model instanceof Order)) {
       throw new Error('Please provide an order model');
     }
 
-    if (!options.listing || !(options.listing instanceof Listing)) {
+    if (!opts.listing || !(opts.listing instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
 
-    if (!options.prices) {
+    if (!opts.prices) {
       throw new Error('Please provide the prices array');
     }
 
