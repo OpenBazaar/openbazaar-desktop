@@ -216,7 +216,7 @@ export function integerToDecimal(value, divisibility, options = {}) {
     ...options,
   };
 
-  let returnVal = new bigNumber();
+  let returnVal = bigNumber();
 
   try {
     validateNumberType(value);

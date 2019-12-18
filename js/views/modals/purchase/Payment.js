@@ -9,7 +9,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import {
   formatCurrency,
   integerToDecimal,
-  getCoinDivisibility,
 } from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
@@ -86,9 +85,9 @@ export default class extends BaseVw {
                 e.jsonData.notification.fundingTotal.currency.divisibility,
                 { returnNaNOnError: false }
               );
-            } catch (e) {
+            } catch (err) {
               console.error('Unable to convert the payment notification amount ' +
-                `from base units: ${e}`);
+                `from base units: ${err}`);
             }
 
             if (amount && amount.isNaN && !amount.isNaN()) {
