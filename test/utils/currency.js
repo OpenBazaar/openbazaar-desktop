@@ -96,6 +96,23 @@ describe('the currency utility module', () => {
     ).to.equal('1.23e-18');
   });
 
+  it('that when converting an integer to a decimal, if an error occurs, returns a '
+    + 'BigNumber NaN instance if returnNaNOnError is set to true', () => {
+    expect(
+      (
+        cur
+          .integerToDecimal(bigNumber('123'), 'howdy', { returnNaNOnError: true })
+      ).isNaN()
+    ).to.equal(true);
+
+    expect(
+      (
+        cur
+          .integerToDecimal('pluto factory', 2, { returnNaNOnError: true })
+      ).isNaN()
+    ).to.equal(true);
+  });
+
   it('correctly converts an amount as a number from a decimal to an integer', () => {
     expect(
       cur
