@@ -37,6 +37,7 @@ describe('the currency utility module', () => {
           .integerToDecimal(123, 18)
           .toString()
       ).to.equal('1.23e-16');
+    });
 
     it('that when converting an integer to a decimal, if an error occurs, returns a '
       + 'BigNumber NaN instance if returnNaNOnError is set to true', () => {
@@ -998,3 +999,4 @@ describe('the currency utility module', () => {
     });
   });
 });
+
