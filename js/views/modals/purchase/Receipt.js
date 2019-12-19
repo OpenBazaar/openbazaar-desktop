@@ -17,6 +17,7 @@ export default class extends BaseView {
 
     const opts = {
       paymentCoin: '',
+      showTotalTip: true,
       ...options,
     };
 
@@ -37,16 +38,11 @@ export default class extends BaseView {
     this.listing = opts.listing;
     this.prices = opts.prices;
     this.paymentCoin = opts.paymentCoin;
+    this.showTotalTip = opts.showTotalTip;
   }
 
   className() {
     return 'receipt flexColRows gutterVSm tx5b';
-  }
-
-  validatePaymentCoin(coin) {
-    if (typeof coin !== 'string') {
-      throw new Error('The payment coin must be provided as a string.');
-    }
   }
 
   get coupons() {
@@ -58,6 +54,14 @@ export default class extends BaseView {
     this.render();
   }
 
+  get paymentCoin() {
+    return this._paymentCoin;
+  }
+
+  /*
+   * Specify the payment coin used for the purchase. If one is not yet available,
+   * an empty string can be provided.
+   */
   set paymentCoin(coin) {
     let paymentCoin = coin;
 
@@ -67,9 +71,30 @@ export default class extends BaseView {
       // pass
     }
 
-    this.validatePaymentCoin(paymentCoin);
+    if (typeof paymentCoin !== 'string') {
+      throw new Error('The payment coin must be provided as a string.');
+    }
+
     if (paymentCoin !== this._paymentCoin) {
       this._paymentCoin = paymentCoin;
+      this.render();
+    }
+  }
+
+  get showTotalTip() {
+    return this._showTotalTip;
+  }
+
+  set showTotalTip(bool) {
+    if (typeof bool !== 'boolean') {
+      throw new Error('Please provide a bool as a boolean.');
+    }
+
+    console.log(`set the tip to ${bool}`);
+
+    if (bool !== this._showTotalTip) {
+      console.log('hey ho less go');
+      this._showTotalTip = bool;
       this.render();
     }
   }
@@ -89,7 +114,8 @@ export default class extends BaseView {
         listingCurrency: this.listing.price.currencyCode,
         coupons: this.coupons,
         displayCurrency,
-        paymentCoin: this._paymentCoin,
+        paymentCoin: this.paymentCoin,
+        showTotalTip: this.showTotalTip,
         prices: this.prices.map(priceObj => {
           let quantity =
             priceObj.quantity &&

@@ -135,6 +135,7 @@ export default class extends BaseModal {
       listing: this.listing,
       prices: this.prices,
       couponObj: this.couponObj,
+      showTotalTip: this.getState().phase === 'pay',
     });
 
     this.coupons = this.createChild(Coupons, {
@@ -278,6 +279,19 @@ export default class extends BaseModal {
       'keyup [name="bigQuantity"]': 'keyupQuantity',
       ...super.events(),
     };
+  }
+
+  setState(state = {}, options = {}) {
+    const superReturn = super.setState(state, options);
+
+    if (
+      this.receipt &&
+      this.getState().phase !== 'pay'
+    ) {
+      this.receipt.showTotalTip = false;
+    }
+
+    return superReturn;
   }
 
   get inventory() {

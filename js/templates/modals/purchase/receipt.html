@@ -205,7 +205,7 @@
   <% } %>
   <div class="flexRow">
     <span class="flexExpand">
-      <%= ob.polyT('purchase.receipt.total') %><%= totalTip %>
+      <%= ob.polyT('purchase.receipt.total') %><% if (ob.showTotalTip) print(totalTip)%>
     </span>
     <div class="constrainedWidth">
       <div class="flexHRight">
