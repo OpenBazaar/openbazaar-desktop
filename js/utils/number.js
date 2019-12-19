@@ -5,7 +5,10 @@ import app from '../app';
  * Will return a string representation of a number ensuring that standard
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
+ * @param {number|string|BigNumber} number
+ * @returns {string} - String based number in standard notation.
  */
+console.log('unit test me, verify different number types including large nums');
 export function toStandardNotation(number, options) {
   const opts = {
     returnUnchangedOnError: true,
@@ -86,9 +89,11 @@ export function localizeNumber(number,
  * @returns {number} - The number of significant decimal places.
  */
 // https://stackoverflow.com/a/10454560
+console.log('unit test me');
 export function decimalPlaces(num) {
   // trim trailing zeros
-  const trimmed = String(num).replace(/0+$/, '');
+  const standardNotation = toStandardNotation(num);
+  const trimmed = String(standardNotation).replace(/0+$/, '');
   const match = trimmed.match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
   if (!match) { return 0; }
   return Math.max(

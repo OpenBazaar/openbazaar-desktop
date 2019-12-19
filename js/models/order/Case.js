@@ -109,24 +109,8 @@ class Case extends BaseOrder {
       response.vendorContract = Case.parseContract(response.vendorContract);
     }
 
-    if (response.resolution) {
-      response.resolution.payout.buyerOutput =
-        response.resolution.payout.buyerOutput || {};
-      response.resolution.payout.vendorOutput =
-        response.resolution.payout.vendorOutput || {};
-      response.resolution.payout.moderatorOutput =
-        response.resolution.payout.moderatorOutput || {};
-
-      // response.resolution.payout.buyerOutput.amount =
-      //   integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-      //     paymentCoin);
-      // response.resolution.payout.vendorOutput.amount =
-      //   integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-      //     paymentCoin);
-      // response.resolution.payout.moderatorOutput.amount =
-      //   integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-      //     paymentCoin);
-    }
+    response.resolution =
+      Case.parseDisputePayout(response.resolution);
 
     return response;
   }
