@@ -23,6 +23,11 @@ describe('the number utility module', () => {
       expect(
         toStandardNotation(bigNumber(1000000000000000000000))
       ).to.equal('1000000000000000000000');
+      expect(toStandardNotation(1e+25)).to.equal('10000000000000000000000000');
+      expect(toStandardNotation('1e+25')).to.equal('10000000000000000000000000');
+      expect(
+        toStandardNotation(bigNumber(1e+25))
+      ).to.equal('10000000000000000000000000');
     });
 
     it('optionally returns the value unchanged if it\'s not numeric', () => {

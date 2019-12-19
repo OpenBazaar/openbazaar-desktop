@@ -214,7 +214,7 @@ export default class Profile extends BaseModel {
           options.attrs.moderatorInfo &&
           options.attrs.moderatorInfo.fee
         ) {
-          if (options.attrs.moderatorInfo.fee === feeTypes.PERCENTAGE) {
+          if (options.attrs.moderatorInfo.fee.feeType === feeTypes.PERCENTAGE) {
             delete options.attrs.moderatorInfo.fee.fixedFee;
           } else {
             const amount = options.attrs.moderatorInfo.fee.fixedFee.amount;
@@ -224,6 +224,10 @@ export default class Profile extends BaseModel {
                 amountKey: 'bigAmount',
                 currencyKey: 'amountCurrency',
               });
+
+            if (options.attrs.moderatorInfo.fee.feeType === feeTypes.FIXED) {
+              options.attrs.moderatorInfo.fee.percentage = 0;
+            }
           }
         }
       }

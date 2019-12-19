@@ -5,6 +5,8 @@ import app from '../app';
  * Will return a string representation of a number ensuring that standard
  * notation is used (as opposed to the default JS representation which uses
  * scientific notation for small numbers, e.g. 0.00000001 => 1E-8).
+ * @param {number|string|BigNumber} number
+ * @returns {string} - String based number in standard notation.
  */
 export function toStandardNotation(number, options) {
   const opts = {

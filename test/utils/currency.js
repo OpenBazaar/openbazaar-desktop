@@ -17,186 +17,258 @@ describe('the currency utility module', () => {
     app.polyglot.extend(enUsTranslations);
   });
 
-  it('correctly converts an amount as a number from an integer to decimal', () => {
-    expect(
-      cur
-        .integerToDecimal(123, 2)
-        .toString()
-    ).to.equal('1.23');
-
-    expect(
-      cur
-        .integerToDecimal(123, 8)
-        .toString()
-    ).to.equal('0.00000123');
-
-    expect(
-      cur
-        .integerToDecimal(123, 18)
-        .toString()
-    ).to.equal('1.23e-16');
-
-    expect(
-      cur
-        .integerToDecimal(1.23, 18)
-        .toString()
-    ).to.equal('1.23e-18');
-  });
-
-  it('correctly converts an amount as a string from an integer to decimal', () => {
-    expect(
-      cur
-        .integerToDecimal('123', 2)
-        .toString()
-    ).to.equal('1.23');
-
-    expect(
-      cur
-        .integerToDecimal('123', 8)
-        .toString()
-    ).to.equal('0.00000123');
-
-    expect(
-      cur
-        .integerToDecimal('123', 18)
-        .toString()
-    ).to.equal('1.23e-16');
-
-    expect(
-      cur
-        .integerToDecimal('1.23', 18)
-        .toString()
-    ).to.equal('1.23e-18');
-  });
-
-  it('correctly converts an amount as a BigNumber instance from an integer to ' +
-    'decimal', () => {
-    expect(
-      cur
-        .integerToDecimal(bigNumber('123'), 2)
-        .toString()
-    ).to.equal('1.23');
-
-    expect(
-      cur
-        .integerToDecimal(bigNumber('123'), 8)
-        .toString()
-    ).to.equal('0.00000123');
-
-    expect(
-      cur
-        .integerToDecimal(bigNumber('123'), 18)
-        .toString()
-    ).to.equal('1.23e-16');
-
-    expect(
-      cur
-        .integerToDecimal(bigNumber('1.23'), 18)
-        .toString()
-    ).to.equal('1.23e-18');
-  });
-
-  it('that when converting an integer to a decimal, if an error occurs, returns a '
-    + 'BigNumber NaN instance if returnNaNOnError is set to true', () => {
-    expect(
-      (
+  describe('has a integer to decimal function', () => {
+    it('that correctly converts an amount as a number from an integer to ' +
+      'a decimal', () => {
+      expect(
         cur
-          .integerToDecimal(bigNumber('123'), 'howdy', { returnNaNOnError: true })
-      ).isNaN()
-    ).to.equal(true);
+          .integerToDecimal(123, 2)
+          .toString()
+      ).to.equal('1.23');
 
-    expect(
-      (
+      expect(
         cur
-          .integerToDecimal('pluto factory', 2, { returnNaNOnError: true })
-      ).isNaN()
-    ).to.equal(true);
+          .integerToDecimal(123, 8)
+          .toString()
+      ).to.equal('0.00000123');
+
+      expect(
+        cur
+          .integerToDecimal(123, 18)
+          .toString()
+      ).to.equal('1.23e-16');
+
+    it('that when converting an integer to a decimal, if an error occurs, returns a '
+      + 'BigNumber NaN instance if returnNaNOnError is set to true', () => {
+      expect(
+        (
+          cur
+            .integerToDecimal(bigNumber('123'), 'howdy', { returnNaNOnError: true })
+        ).isNaN()
+      ).to.equal(true);
+
+      expect(
+        (
+          cur
+            .integerToDecimal('pluto factory', 2, { returnNaNOnError: true })
+        ).isNaN()
+      ).to.equal(true);
+    });
+
+    it('correctly converts an amount as a number from a decimal to an integer', () => {
+      expect(
+        cur
+          .decimalToInteger(1.23, 2)
+          .toString()
+      ).to.equal('123');
+
+      expect(
+        cur
+          .decimalToInteger(1.23, 8)
+          .toString()
+      ).to.equal('123000000');
+
+      expect(
+        cur
+          .integerToDecimal(1.23, 18)
+          .toString()
+      ).to.equal('1.23e-18');
+    });
+
+    it('that correctly converts an amount as a string from an integer ' +
+      'to a decimal', () => {
+      expect(
+        cur
+          .integerToDecimal('123', 2)
+          .toString()
+      ).to.equal('1.23');
+
+      expect(
+        cur
+          .integerToDecimal('123', 8)
+          .toString()
+      ).to.equal('0.00000123');
+
+      expect(
+        cur
+          .integerToDecimal('123', 18)
+          .toString()
+      ).to.equal('1.23e-16');
+
+      expect(
+        cur
+          .integerToDecimal('1.23', 18)
+          .toString()
+      ).to.equal('1.23e-18');
+    });
+
+    it('that correctly converts an amount as a BigNumber instance from an integer ' +
+      'to a decimal', () => {
+      expect(
+        cur
+          .integerToDecimal(bigNumber('123'), 2)
+          .toString()
+      ).to.equal('1.23');
+
+      expect(
+        cur
+          .integerToDecimal(bigNumber('123'), 8)
+          .toString()
+      ).to.equal('0.00000123');
+
+      expect(
+        cur
+          .integerToDecimal(bigNumber('123'), 18)
+          .toString()
+      ).to.equal('1.23e-16');
+
+      expect(
+        cur
+          .integerToDecimal(bigNumber('1.23'), 18)
+          .toString()
+      ).to.equal('1.23e-18');
+    });
+
+    it('that returns a BigNumber NaN instance on error if the returnNaNOnError ' +
+      'option is true', () => {
+      expect(
+        cur
+          .integerToDecimal(null, 2, { returnNaNOnError: true })
+          .isNaN()
+      ).to.equal(true);
+
+      expect(
+        cur
+          .integerToDecimal(bigNumber('23'), 'chocolaty', { returnNaNOnError: true })
+          .isNaN()
+      ).to.equal(true);
+
+      let exceptionThrown = false;
+
+      try {
+        cur
+          .integerToDecimal(bigNumber('23'), 'chocolaty', { returnNaNOnError: false });
+      } catch (e) {
+        exceptionThrown = true;
+      }
+
+      expect(exceptionThrown).to.equal(true);
+    });
   });
 
-  it('correctly converts an amount as a number from a decimal to an integer', () => {
-    expect(
-      cur
-        .decimalToInteger(1.23, 2)
-        .toString()
-    ).to.equal('123');
+  describe('has a decimal to integer function', () => {
+    it('that correctly converts an amount as a number from a decimal to an integer',
+      () => {
+        expect(
+          cur
+            .decimalToInteger(1.23, 2)
+            .toString()
+        ).to.equal('123');
 
-    expect(
-      cur
-        .decimalToInteger(1.23, 8)
-        .toString()
-    ).to.equal('123000000');
+        expect(
+          cur
+            .decimalToInteger(1.23, 8)
+            .toString()
+        ).to.equal('123000000');
 
-    expect(
-      cur
-        .decimalToInteger(1.23, 18)
-        .toString()
-    ).to.equal('1230000000000000000');
-  });
+        expect(
+          cur
+            .decimalToInteger(1.23, 18)
+            .toString()
+        ).to.equal('1230000000000000000');
+      });
 
-  it('correctly converts an amount as a string from a decimal to an integer', () => {
-    expect(
-      cur
-        .decimalToInteger('1.23', 2)
-        .toString()
-    ).to.equal('123');
+    it('correctly converts an amount as a string from a decimal to an integer', () => {
+      expect(
+        cur
+          .decimalToInteger('1.23', 2)
+          .toString()
+      ).to.equal('123');
 
-    expect(
-      cur
-        .decimalToInteger('1.23', 8)
-        .toString()
-    ).to.equal('123000000');
+      expect(
+        cur
+          .decimalToInteger('1.23', 8)
+          .toString()
+      ).to.equal('123000000');
 
-    expect(
-      cur
-        .decimalToInteger('1.23', 18)
-        .toString()
-    ).to.equal('1230000000000000000');
-  });
+      expect(
+        cur
+          .decimalToInteger('1.23', 18)
+          .toString()
+      ).to.equal('1230000000000000000');
+    });
 
-  it('correctly converts an amount as a BigNumber instance from a decimal to an ' +
-    'integer', () => {
-    expect(
-      cur
-        .decimalToInteger(bigNumber('1.23'), 2)
-        .toString()
-    ).to.equal('123');
+    it('correctly converts an amount as a BigNumber instance from a decimal to an ' +
+      'integer', () => {
+      expect(
+        cur
+          .decimalToInteger(bigNumber('1.23'), 2)
+          .toString()
+      ).to.equal('123');
 
-    expect(
-      cur
-        .decimalToInteger(bigNumber('1.23'), 8)
-        .toString()
-    ).to.equal('123000000');
+      expect(
+        cur
+          .decimalToInteger(bigNumber('1.23'), 8)
+          .toString()
+      ).to.equal('123000000');
 
-    expect(
-      cur
-        .decimalToInteger(bigNumber('1.23'), 18)
-        .toString()
-    ).to.equal('1230000000000000000');
-  });
+      expect(
+        cur
+          .decimalToInteger(bigNumber('1.23'), 18)
+          .toString()
+      ).to.equal('1230000000000000000');
+    });
 
-  it('correctly converts an amount from a decimal to an integer' +
-    ' rounding to the correct place.', () => {
-    expect(
-      cur
-        .decimalToInteger(1.2367832894, 2)
-        .toString()
-    ).to.equal('124');
+    it('correctly converts an amount from a decimal to an integer' +
+      ' rounding to the correct place.', () => {
+      expect(
+        cur
+          .decimalToInteger(1.2367832894, 2)
+          .toString()
+      ).to.equal('124');
 
-    expect(
-      cur
-        .decimalToInteger(1.2367832894, 8)
-        .toString()
-    )
-      .to
-      .equal('123678329');
+      expect(
+        cur
+          .decimalToInteger(1.2367832894, 8)
+          .toString()
+      )
+        .to
+        .equal('123678329');
 
-    expect(
-      cur
-        .decimalToInteger('1.2367832894239473246342349734', 18)
-        .toString()
-    )
-      .to
-      .equal('1236783289423947325');
+      expect(
+        cur
+          .decimalToInteger('1.2367832894239473246342349734', 18)
+          .toString()
+      )
+        .to
+        .equal('1236783289423947325');
+    });
+
+    it('that returns a BigNumber NaN instance on error if the returnNaNOnError ' +
+      'option is true', () => {
+      expect(
+        cur
+          .decimalToInteger('chickpea stew', 2, { returnNaNOnError: true })
+          .isNaN()
+      ).to.equal(true);
+
+      expect(
+        cur
+          .decimalToInteger(23, 'chocolaty salamanca', { returnNaNOnError: true })
+          .isNaN()
+      ).to.equal(true);
+
+      let exceptionThrown = false;
+
+      try {
+        cur
+          .integerToDecimal(23, 'chocolaty salamanca', { returnNaNOnError: false });
+      } catch (e) {
+        exceptionThrown = true;
+      }
+
+      expect(exceptionThrown).to.equal(true);
+    });
   });
 
   describe('has a decimalToCurDef function', () => {
