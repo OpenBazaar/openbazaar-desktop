@@ -166,9 +166,6 @@ export default class extends BaseModel {
       'bigPrice'
     );
 
-    console.log('the faddie is *billy*');
-    window.billy = attrs.bigPrice;
-
     if (!attrs.images.length) {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));
     } else if (attrs.images.length > max.images) {
