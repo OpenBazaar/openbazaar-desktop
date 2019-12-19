@@ -90,10 +90,7 @@ export default class extends BaseView {
       throw new Error('Please provide a bool as a boolean.');
     }
 
-    console.log(`set the tip to ${bool}`);
-
     if (bool !== this._showTotalTip) {
-      console.log('hey ho less go');
       this._showTotalTip = bool;
       this.render();
     }

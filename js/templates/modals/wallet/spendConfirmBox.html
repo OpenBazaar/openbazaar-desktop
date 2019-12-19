@@ -11,11 +11,11 @@
     <% if (ob.fetchingFee) { %>
       <div class="txCtr"><%= ob.spinner({ className: 'spinnerMd' }) %></div>
     <% } else if (ob.fetchFailed) {
-      if (ob.fetchError === ERROR_INSUFFICIENT_FUNDS) { %>
+      if (ob.fetchError === ob.ERROR_INSUFFICIENT_FUNDS) { %>
         <p class="clrT2">
           <%= ob.polyT('wallet.spendConfirmBox.bodyInsufficientFunds') %>
         </p>
-      <% } else if (ob.fetchError === ERROR_DUST_AMOUNT) { %>
+      <% } else if (ob.fetchError === ob.ERROR_DUST_AMOUNT) { %>
         <p class="clrT2">
           <%= ob.polyT('wallet.spendConfirmBox.bodyDustAmount') %>
         </p>
