@@ -710,6 +710,12 @@ export default class extends BaseModel {
             shipOpt.regions = ['ALL'];
           }
         });
+
+        if (app.serverConfig.testnet) {
+          options.attrs.metadata.escrowTimeoutHours =
+            options.attrs.metadata.escrowTimeoutHours === undefined ?
+              1 : options.attrs.metadata.escrowTimeoutHours;
+        }
       } else {
         options.url = options.url ||
           app.getServerUrl(`ob/listing/${this.get('slug')}`);
