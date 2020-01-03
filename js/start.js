@@ -59,7 +59,7 @@ handleServerShutdownRequests();
 
 // Will allow us to handle numbers with greater than 20 decimals places. Probably
 // unlikely this will be needed, but just in case.
-bigNumber.config({ RANGE: [-1e+9, 1e+9], DECIMAL_PLACES: 1e+9 });
+bigNumber.config({ DECIMAL_PLACES: 50 });
 
 app.localSettings = new LocalSettings({ id: 1 });
 app.localSettings.fetch().fail(() => app.localSettings.save());

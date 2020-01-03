@@ -1,6 +1,7 @@
 import app from '../../../js/app';
 import { expect } from 'chai';
 import { describe, it, before } from 'mocha';
+import bigNumber from 'bignumber.js';
 import Item from '../../../js/models/listing/Item';
 
 describe('the Item model', () => {
@@ -183,6 +184,20 @@ describe('the Item model', () => {
       valErr3['priceCurrency.divisibility'] &&
       !!valErr3['priceCurrency.divisibility'].length || false
     )
+      .to.equal(true);
+  });
+
+  it('fails validation if the bigPrice is not valid', () => {
+    const item = new Item();
+    item.set({
+      bigPrice: bigNumber(100.001),
+      priceCurrency: {
+        code: 'USD',
+        divisibility: 2,
+      },
+    }, { validate: true });
+    const valErr = item.validationError;
+    expect(valErr && !!valErr.bigPrice.length || false)
       .to.equal(true);
   });
 

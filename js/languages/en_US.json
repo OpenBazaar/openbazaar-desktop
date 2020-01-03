@@ -1498,7 +1498,10 @@
       "shippingTotal": "Total Shipping",
       "total": "Total",
       "cryptoIconsAmount": "(%{amount})",
-      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
+      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}",
+      "totalWarning1": "Prices are estimated after converting from %{currency}, and may differ slightly from the final total for funding your order on the next screen.",
+      "totalWarning2": "Actual total may vary slightly on the next screen after conversion to %{currency}.",
+      "totalWarning2NoCoin": "Actual total may vary slightly on the next screen after conversion to the payment currency."
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1514,7 +1517,8 @@
       "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process.",
       "genericPurchaseErrTitle": "Unable To Complete The Purchase",
       "invalidCoinDiv": "The listing does not have a valid coin divisibility.",
-      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units."
+      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units.",
+      "serverErrorBelowDust": "The purchase price is below the minimum spend amount for the payment currency."
     }
   },
   "moderators": {

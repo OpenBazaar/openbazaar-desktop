@@ -231,7 +231,7 @@ export function integerToDecimal(value, divisibility, options = {}) {
     ...options,
   };
 
-  let returnVal;
+  let returnVal = bigNumber();
 
   try {
     validateNumberType(value);
@@ -247,10 +247,6 @@ export function integerToDecimal(value, divisibility, options = {}) {
         bigNumber(10)
           .pow(divisibility)
       );
-
-    if (result.isNaN()) {
-      throw new Error('result is not a number');
-    }
 
     returnVal = result;
   } catch (e) {

@@ -8,7 +8,6 @@ import app from '../app';
  * @param {number|string|BigNumber} number
  * @returns {string} - String based number in standard notation.
  */
-console.log('unit test me, verify different number types including large nums');
 export function toStandardNotation(number, options) {
   const opts = {
     returnUnchangedOnError: true,
@@ -89,11 +88,11 @@ export function localizeNumber(number,
  * @returns {number} - The number of significant decimal places.
  */
 // https://stackoverflow.com/a/10454560
-console.log('unit test me');
 export function decimalPlaces(num) {
+  const bigNum = bigNumber(num);
+
   // trim trailing zeros
-  const standardNotation = toStandardNotation(num);
-  const trimmed = String(standardNotation).replace(/0+$/, '');
+  const trimmed = String(bigNum.toFormat()).replace(/0+$/, '');
   const match = trimmed.match(/(?:\.(\d+))?(?:[eE]([+-]?\d+))?$/);
   if (!match) { return 0; }
   return Math.max(

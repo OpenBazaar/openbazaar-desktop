@@ -9,7 +9,6 @@ import loadTemplate from '../../../utils/loadTemplate';
 import {
   formatCurrency,
   integerToDecimal,
-  getCoinDivisibility,
 } from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
@@ -62,6 +61,7 @@ export default class extends BaseVw {
     }
 
     super(options);
+
     this.options = options;
     this._balanceRemaining = options.balanceRemaining;
     this.paymentAddress = options.paymentAddress;
@@ -77,16 +77,26 @@ export default class extends BaseVw {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
-            const amount = integerToDecimal(
-              e.jsonData.notification.fundingTotal,
-              getCoinDivisibility(this.paymentCoin)
-            );
+            let amount;
 
-            if (amount.gte(this.balanceRemaining)) {
-              this.getCachedEl('.js-payFromWallet').removeClass('processing');
-              this.trigger('walletPaymentComplete', e.jsonData.notification);
-            } else {
-              this.balanceRemaining = this.balanceRemaining.minus(amount);
+            try {
+              amount = integerToDecimal(
+                e.jsonData.notification.fundingTotal.amount,
+                e.jsonData.notification.fundingTotal.currency.divisibility,
+                { returnNaNOnError: false }
+              );
+            } catch (err) {
+              console.error('Unable to convert the payment notification amount ' +
+                `from base units: ${err}`);
+            }
+
+            if (amount && amount.isNaN && !amount.isNaN()) {
+              if (amount.gte(this.balanceRemaining)) {
+                this.getCachedEl('.js-payFromWallet').removeClass('processing');
+                this.trigger('walletPaymentComplete', e.jsonData.notification);
+              } else {
+                this.balanceRemaining = this.balanceRemaining.minus(amount);
+              }
             }
           }
         }

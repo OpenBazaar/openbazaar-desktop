@@ -4,6 +4,7 @@ import Backbone from 'backbone';
 import bigNumber from 'bignumber.js';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
+import { ERROR_DUST_AMOUNT } from '../../../constants';
 import { removeProp } from '../../../utils/object';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -134,6 +135,7 @@ export default class extends BaseModal {
       listing: this.listing,
       prices: this.prices,
       couponObj: this.couponObj,
+      showTotalTip: this.getState().phase === 'pay',
     });
 
     this.coupons = this.createChild(Coupons, {
@@ -167,8 +169,9 @@ export default class extends BaseModal {
       },
     });
 
-    this.listenTo(this.cryptoCurSelector, 'currencyClicked', (cOpts) => {
+    this.listenTo(this.cryptoCurSelector, 'currencyClicked', cOpts => {
       if (cOpts.active) this.moderators.setState({ showOnlyCur: cOpts.currency });
+      this.receipt.paymentCoin = cOpts.active ? cOpts.currency : '';
     });
 
     this.moderators = this.createChild(Moderators, {
@@ -276,6 +279,19 @@ export default class extends BaseModal {
       'keyup [name="bigQuantity"]': 'keyupQuantity',
       ...super.events(),
     };
+  }
+
+  setState(state = {}, options = {}) {
+    const superReturn = super.setState(state, options);
+
+    if (
+      this.receipt &&
+      this.getState().phase !== 'pay'
+    ) {
+      this.receipt.showTotalTip = false;
+    }
+
+    return superReturn;
   }
 
   get inventory() {
@@ -580,6 +596,8 @@ export default class extends BaseModal {
                 }).format(this.inventory),
               });
               if (this.inventoryFetch) this.inventoryFetch.abort();
+            } else if (errMsg === ERROR_DUST_AMOUNT) {
+              errMsg = app.polyglot.t('purchase.errors.serverErrorBelowDust');
             }
 
             openSimpleMessage(errTitle, errMsg);

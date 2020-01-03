@@ -42,11 +42,18 @@
             <% } %>
             <div class="flex gutterH tx5 detailsRow">
               <% if (ob.hasValidCurrency) { %>
-                <div class="flexNoShrink TODO">
-                  <%= ob.parseEmojis('👍') %> XX<% // placeholder for reputation %>
-                </div>
-                <div class="flexNoShrink">
-                  <% const amount = ob.currencyMod.convertAndFormatCurrency(ob.moderatorInfo.fee.fixedFee.amount, ob.moderatorInfo.fee.fixedFee.currencyCode, ob.displayCurrency) %>
+                <div class="flexNoShrink modFee">
+                  <%
+                    const amount = ob.currencyMod.convertAndFormatCurrency(
+                      ob.moderatorInfo.fee.fixedFee.amount,
+                      ob.moderatorInfo.fee.fixedFee.currencyCode,
+                      ob.displayCurrency,
+                      {
+                        maxDisplayDecimals:
+                          !ob.currencyMod.isFiatCur(ob.displayCurrency) ? 6 : undefined
+                      }
+                    )
+                  %>
                   <%= ob.polyT(`moderatorCard.${ob.moderatorInfo.fee.feeType}`, { amount, percentage: ob.moderatorInfo.fee.percentage }) %>
                 </div>
                 <div>

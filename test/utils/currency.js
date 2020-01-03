@@ -37,6 +37,37 @@ describe('the currency utility module', () => {
           .integerToDecimal(123, 18)
           .toString()
       ).to.equal('1.23e-16');
+    });
+
+    it('that when converting an integer to a decimal, if an error occurs, returns a '
+      + 'BigNumber NaN instance if returnNaNOnError is set to true', () => {
+      expect(
+        (
+          cur
+            .integerToDecimal(bigNumber('123'), 'howdy', { returnNaNOnError: true })
+        ).isNaN()
+      ).to.equal(true);
+
+      expect(
+        (
+          cur
+            .integerToDecimal('pluto factory', 2, { returnNaNOnError: true })
+        ).isNaN()
+      ).to.equal(true);
+    });
+
+    it('correctly converts an amount as a number from a decimal to an integer', () => {
+      expect(
+        cur
+          .decimalToInteger(1.23, 2)
+          .toString()
+      ).to.equal('123');
+
+      expect(
+        cur
+          .decimalToInteger(1.23, 8)
+          .toString()
+      ).to.equal('123000000');
 
       expect(
         cur
@@ -968,3 +999,4 @@ describe('the currency utility module', () => {
     });
   });
 });
+

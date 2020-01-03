@@ -14,7 +14,7 @@ describe('the Listing model', () => {
     };
   });
 
-  it('throws an error if you attempt to fetcha listing without a guid set.', () => {
+  it('throws an error if you attempt to fetch a listing without a peerID set.', () => {
     const listing = new Listing({
       slug: 'a-happy-slug',
     });

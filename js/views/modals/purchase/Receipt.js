@@ -1,6 +1,7 @@
 import app from '../../../app';
 import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
+import { ensureMainnetCode } from '../../../data/walletCurrencies';
 // import {
 //   getCoinDivisibility,
 //   nativeNumberFormatSupported,
@@ -14,22 +15,30 @@ export default class extends BaseView {
   constructor(options = {}) {
     super(options);
 
+    const opts = {
+      paymentCoin: '',
+      showTotalTip: true,
+      ...options,
+    };
+
     if (!this.model || !(this.model instanceof Order)) {
       throw new Error('Please provide an order model');
     }
 
-    if (!options.listing || !(options.listing instanceof Listing)) {
+    if (!opts.listing || !(opts.listing instanceof Listing)) {
       throw new Error('Please provide a listing model');
     }
 
-    if (!options.prices) {
+    if (!opts.prices) {
       throw new Error('Please provide the prices array');
     }
 
-    this.options = options;
-    this._coupons = options.couponObj || [];
-    this.listing = options.listing;
-    this.prices = options.prices;
+    this.options = opts;
+    this._coupons = opts.couponObj || [];
+    this.listing = opts.listing;
+    this.prices = opts.prices;
+    this.paymentCoin = opts.paymentCoin;
+    this.showTotalTip = opts.showTotalTip;
   }
 
   className() {
@@ -43,6 +52,48 @@ export default class extends BaseView {
   set coupons(coupons) {
     this._coupons = coupons;
     this.render();
+  }
+
+  get paymentCoin() {
+    return this._paymentCoin;
+  }
+
+  /*
+   * Specify the payment coin used for the purchase. If one is not yet available,
+   * an empty string can be provided.
+   */
+  set paymentCoin(coin) {
+    let paymentCoin = coin;
+
+    try {
+      paymentCoin = ensureMainnetCode(coin);
+    } catch (e) {
+      // pass
+    }
+
+    if (typeof paymentCoin !== 'string') {
+      throw new Error('The payment coin must be provided as a string.');
+    }
+
+    if (paymentCoin !== this._paymentCoin) {
+      this._paymentCoin = paymentCoin;
+      this.render();
+    }
+  }
+
+  get showTotalTip() {
+    return this._showTotalTip;
+  }
+
+  set showTotalTip(bool) {
+    if (typeof bool !== 'boolean') {
+      throw new Error('Please provide a bool as a boolean.');
+    }
+
+    if (bool !== this._showTotalTip) {
+      this._showTotalTip = bool;
+      this.render();
+    }
   }
 
   updatePrices(prices) {
@@ -60,6 +111,8 @@ export default class extends BaseView {
         listingCurrency: this.listing.price.currencyCode,
         coupons: this.coupons,
         displayCurrency,
+        paymentCoin: this.paymentCoin,
+        showTotalTip: this.showTotalTip,
         prices: this.prices.map(priceObj => {
           let quantity =
             priceObj.quantity &&
