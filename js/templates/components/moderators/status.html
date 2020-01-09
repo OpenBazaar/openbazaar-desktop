@@ -2,7 +2,7 @@
   <% if (ob.showSpinner && ob.loading) { %>
     <%= ob.spinner({ className: 'spinnerTxt js-spinner' }) %>
   <% } %>
-  <span class="clrT4">
+  <span class="clrTEmph1">
     <% if (ob.mode === 'loaded') {
          print(ob.polyT('moderators.moderatorsLoaded', { total: ob.total, smart_count: ob.total }));
        } else if (ob.mode === 'loadingXofY') {
