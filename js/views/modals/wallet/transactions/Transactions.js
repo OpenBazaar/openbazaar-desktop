@@ -40,7 +40,7 @@ export default class extends BaseVw {
     this.transactionViews = [];
     this.fetchFailed = false;
     this.fetchErrorMessage = '';
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs = new Set();
     this.popInTimeouts = [];
     this.coinType = this.collection.options.coinType;
     this.countAtFirstFetch = opts.countAtFirstFetch;
@@ -83,7 +83,7 @@ export default class extends BaseVw {
             transaction.set(transaction.parse(_.omit(e.jsonData.wallet, 'wallet')));
           } else {
             // new transaction
-            this.newTransactionCount += 1;
+            this.newTransactionsTXs.add(e.jsonData.wallet.txid);
 
             // This is a bit ugly... but most incoming transactions (ones sent via our UI)
             // are immediately added to the list when their respective APIs succeeds and
@@ -93,7 +93,7 @@ export default class extends BaseVw {
             // of the socket coming in before the AJAX call returns.
             const timeout = setTimeout(() => {
               if (this.collection.get(e.jsonData.wallet.txid)) {
-                this.newTransactionCount -= 1;
+                this.newTransactionsTXs.delete(e.jsonData.wallet.txid);
               } else {
                 this.showNewTransactionPopup();
               }
@@ -252,13 +252,13 @@ export default class extends BaseVw {
       this.newTransactionPopIn.setState({
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
     } else {
       this.newTransactionPopIn = this.createChild(PopInMessage, {
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
 
       this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => {
@@ -337,7 +337,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs.clear();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
     this.popInTimeouts = [];
     if (this.newTransactionPopIn) {
