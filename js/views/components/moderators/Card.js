@@ -44,9 +44,6 @@ export default class extends BaseVw {
     const modInfo = this.model.get('moderatorInfo');
     this.modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
 
-    const fixedFee = modInfo && modInfo.get('fee').get('fixedFee');
-    this.feeCur = fixedFee && fixedFee.get('currencyCode');
-
     this.modLanguages = [];
     if (this.model.isModerator) {
       this.modLanguages = this.model.get('moderatorInfo')
@@ -89,7 +86,7 @@ export default class extends BaseVw {
   }
 
   get hasValidCurrency() {
-    return this.feeCur && anySupportedByWallet([...this.modCurs, this.feeCur]);
+    return anySupportedByWallet(this.modCurs);
   }
 
   get hasPreferredCur() {
