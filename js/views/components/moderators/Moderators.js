@@ -153,7 +153,8 @@ export default class extends baseVw {
     const validCur = anySupportedByWallet(modCurs);
 
     if ((!!validMod && validCur || this.options.showInvalid)) {
-      this.moderatorsCol.add(new Moderator(data, { parse: true }));
+      const newMod = new Moderator(data, { parse: true });
+      if (newMod.isValid()) this.moderatorsCol.add(newMod);
       this.removeNotFetched(data.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
