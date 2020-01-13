@@ -383,6 +383,11 @@ export default class extends BaseVw {
           }
 
           break;
+        case 'PROCESSING_ERROR':
+          state.states.push(app.polyglot.t(
+            'orderDetail.summaryTab.orderDetails.progressBarStates.errored'));
+          state.currentState = state.states.length;
+          break;
         default:
           state.currentState = 0;
       }

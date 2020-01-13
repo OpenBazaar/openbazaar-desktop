@@ -1785,7 +1785,8 @@
           "refunded": "Refunded",
           "decided": "Decided",
           "resolved": "Resolved",
-          "disputed": "Disputed"
+          "disputed": "Disputed",
+          "errored": "Error"
         },
         "heading": "Order Details",
         "shipToHeading": "Ship to",
