@@ -18,6 +18,7 @@ export default class extends baseVw {
    * @param {boolean} options.useCache          - Use cached data for faster speed.
    * @param {array}   options.moderatorIDs      - list of moderators to retrieve. If none get all.
    * @param {array}   options.excludeIDs        - list of moderators to not use.
+   * @param {boolean} options.includeSelf       - allow fetching of the user as a moderator.
    * @param {string}  options.method            - POST or GET
    * @param {string}  options.include           - If apiPath is moderator, set to 'profile' or only
    *                                              the peerIDs of each moderator are returned.
@@ -48,6 +49,7 @@ export default class extends baseVw {
       useCache: true,
       moderatorIDs: [],
       excludeIDs: [],
+      includeSelf: false,
       method: 'POST',
       include: '',
       purchase: false,
@@ -93,7 +95,8 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
-    this.excludeIDs = opts.excludeIDs;
+    this.excludeIDs = opts.includeSelf ?
+      [...opts.excludeIDs] : [...opts.excludeIDs, app.profile.id];
     this.modsToFetch = [...opts.moderatorIDs];
     this.unfetchedMods = [];
     this.fetchingVerifiedMods = [];
@@ -177,8 +180,8 @@ export default class extends baseVw {
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
     const url = app.getServerUrl(urlString);
 
-    // don't get any that have already been added or excluded, or the user's own id.
-    const excluded = [app.profile.id, ...this.allIDs, ...this.excludeIDs];
+    // don't get any that have already been added or excluded.
+    const excluded = [...this.allIDs, ...this.excludeIDs];
     this.modsToFetch = _.without(op.moderatorIDs, excluded);
     this.unfetchedMods = [...this.modsToFetch];
     this.fetchingVerifiedMods = app.verifiedMods.matched(this.modsToFetch);
