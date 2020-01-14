@@ -286,22 +286,11 @@ export default class extends baseVw {
           const remAvail = this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
           this.modsByID.excludeIDs = this.currentMods;
-          this.modsByID.moderatorsStatus.setState({
-            hidden: true,
-          });
 
           this.modsSelected.moderatorsCol.add([...remByID, ...remAvail]);
-          this.modsSelected.moderatorsStatus.setState({
-            hidden: true,
-          });
 
           this.modsAvailable.excludeIDs = this.currentMods;
           this.modsAvailable.moderatorsCol.add(remSel);
-          this.modsAvailable.moderatorsStatus.setState({
-            hidden: false,
-            total: this.modsAvailable.modCount,
-            showSpinner: false,
-          });
 
           // If any of the mods moved to the available collect are unverified, show them
           if (app.verifiedMods.matched(unSel).length !== unSel.length) {
