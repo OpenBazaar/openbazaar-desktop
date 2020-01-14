@@ -48,7 +48,6 @@ export default class extends baseVw {
       useCache: true,
       moderatorIDs: [],
       excludeIDs: [],
-      includeSelf: false,
       method: 'POST',
       include: '',
       purchase: false,
@@ -183,7 +182,7 @@ export default class extends baseVw {
     this.modsToFetch = _.without(op.moderatorIDs, excluded);
     this.unfetchedMods = [...this.modsToFetch];
     this.fetchingVerifiedMods = app.verifiedMods.matched(this.modsToFetch);
-    
+
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (this.modsToFetch.length || op.method === 'GET') {
       this.setState({
