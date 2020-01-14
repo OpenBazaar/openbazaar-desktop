@@ -1517,20 +1517,20 @@
     "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
-        "title": "No Valid Moderators Are Available.",
-        "body": "None of the loaded moderators are valid. This order will be a direct payment."
+        "title": "No moderators have been loaded.",
+        "body": "This order will be a direct payment."
       },
       "noVerifiedModerators": {
-        "title": "No Verified Moderators Available",
+        "title": "No verified moderators have been loaded.",
         "body": "Try viewing unverified moderators."
       },
       "noMatchingModerators": {
-        "title": "No moderators that accept %{coin} are available.",
+        "title": "No moderators that accept %{coin} have been loaded.",
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
         "title": "No verified moderators that accept %{coin} have been loaded.",
-        "body": "Try viewing unverified moderators."
+        "body": "Try viewing unverified moderators or using another currency."
       }
     },
     "showUnverified": "Show Unverified Moderators",
