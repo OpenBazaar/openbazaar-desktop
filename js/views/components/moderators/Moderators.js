@@ -186,14 +186,14 @@ export default class extends baseVw {
     this.unfetchedMods = [...this.modsToFetch];
     this.fetchingVerifiedMods = app.verifiedMods.matched(this.modsToFetch);
 
-    this.setState({
-      loading: true,
-      noValidModerators: false,
-      noValidVerifiedModerators: !this.fetchingVerifiedMods.length,
-    });
-
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (this.modsToFetch.length || op.method === 'GET') {
+      this.setState({
+        loading: true,
+        noValidModerators: false,
+        noValidVerifiedModerators: !this.fetchingVerifiedMods.length,
+      });
+
       this.moderatorsStatus.setState({
         hidden: false,
         loaded: 0,
