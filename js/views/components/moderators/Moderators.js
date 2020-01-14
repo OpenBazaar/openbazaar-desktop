@@ -234,8 +234,6 @@ export default class extends baseVw {
               data.forEach(mod => {
                 if (!excluded.includes(mod.peerId)) this.processMod(mod.profile);
               });
-              this.unfetchedMods = [];
-              this.checkNotFetched();
               if (!data.length) this.trigger('noModsFound', { guids: this.modsToFetch });
             }
           })
