@@ -1517,7 +1517,7 @@
     "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
-        "title": "No moderators have been loaded.",
+        "title": "No valid moderators have been loaded.",
         "body": "This order will be a direct payment."
       },
       "noVerifiedModerators": {
