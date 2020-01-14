@@ -18,7 +18,6 @@ export default class extends baseVw {
    * @param {boolean} options.useCache          - Use cached data for faster speed.
    * @param {array}   options.moderatorIDs      - list of moderators to retrieve. If none get all.
    * @param {array}   options.excludeIDs        - list of moderators to not use.
-   * @param {boolean} options.includeSelf       - allow fetching of the user as a moderator.
    * @param {string}  options.method            - POST or GET
    * @param {string}  options.include           - If apiPath is moderator, set to 'profile' or only
    *                                              the peerIDs of each moderator are returned.
@@ -95,8 +94,7 @@ export default class extends baseVw {
 
     super(opts);
     this.options = opts;
-    this.excludeIDs = opts.includeSelf ?
-      [...opts.excludeIDs] : [...opts.excludeIDs, app.profile.id];
+    this.excludeIDs = [...opts.excludeIDs, app.profile.id];
     this.modsToFetch = [...opts.moderatorIDs];
     this.unfetchedMods = [];
     this.fetchingVerifiedMods = [];
@@ -185,7 +183,7 @@ export default class extends baseVw {
     this.modsToFetch = _.without(op.moderatorIDs, excluded);
     this.unfetchedMods = [...this.modsToFetch];
     this.fetchingVerifiedMods = app.verifiedMods.matched(this.modsToFetch);
-
+    
     // Either a list of IDs can be posted, or any available moderators can be retrieved with GET
     if (this.modsToFetch.length || op.method === 'GET') {
       this.setState({
@@ -405,8 +403,8 @@ export default class extends baseVw {
   render() {
     const state = this.getState();
     const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
-    const unVerCount = this.modCards.filter(mod =>
-      mod.model.hasModCurrency(state.showOnlyCur) && !mod.model.isVerified).length;
+    const unVerCount = this.modCards.filter(mod => (!state.showOnlyCur ||
+      mod.model.hasModCurrency(state.showOnlyCur)) && !mod.model.isVerified).length;
     clearTimeout(this.renderTimer);
     this.renderTimer = null;
 
