@@ -133,6 +133,7 @@ export default class extends BaseVw {
 
     loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
+        valid: !!this.model.isValid(),
         displayCurrency: app.settings.get('localCurrency'),
         isMod: this.model.isModerator,
         hasValidCurrency: this.hasValidCurrency,
