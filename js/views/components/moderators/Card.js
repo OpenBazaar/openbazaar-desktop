@@ -91,7 +91,9 @@ export default class extends BaseVw {
   }
 
   get hasValidCurrency() {
-    const validFeeCur = isFiatCur(this.fixedFeeCur) || anySupportedByWallet([this.fixedFeeCur]);
+    const isFeeFiat = this.fixedFeeCur && isFiatCur(this.fixedFeeCur);
+    const isFeeCrypto = this.fixedFeeCur && anySupportedByWallet([this.fixedFeeCur]);
+    const validFeeCur = isFeeFiat || isFeeCrypto;
     return validFeeCur && anySupportedByWallet(this.modCurs);
   }
 
@@ -131,7 +133,6 @@ export default class extends BaseVw {
 
     loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
-        valid: !!this.model.isValid(),
         displayCurrency: app.settings.get('localCurrency'),
         isMod: this.model.isModerator,
         hasValidCurrency: this.hasValidCurrency,

@@ -3,8 +3,7 @@
    const loaded = !!ob.name;
    /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
       The view should prevent the invalid card from being selected again, disabling it is redundant but important visually. */
-   const isOKMod = ob.valid && ob.isMod;
-   const isDisabled = (!isOKMod && !ob.controlsOnInvalid ) || (!isOKMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
+   const isDisabled = (!ob.isMod && !ob.controlsOnInvalid ) || (!ob.isMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
@@ -30,7 +29,7 @@
           <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
         </div>
         <div class="row">
-          <% if (isOKMod) { %>
+          <% if (ob.isMod) { %>
             <div class="rowTn clamp2"><%=ob.moderatorInfo.description %></div>
             <% if (ob.modLanguages && ob.modLanguages.length) { %>
               <div class="txSm rowTn">
@@ -73,9 +72,9 @@
       <% } %>
     </div>
     <div class="flexNoShrink">
-      <% if (isOKMod || ob.controlsOnInvalid) { %>
+      <% if (ob.isMod || ob.controlsOnInvalid) { %>
         <div class="flexCol gutterV">
-          <% if (isOKMod) { %>
+          <% if (ob.isMod) { %>
             <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
               <%= ob.polyT('moderatorCard.view') %>
             </button>
