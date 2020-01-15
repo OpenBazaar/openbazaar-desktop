@@ -7,7 +7,7 @@ import VerifiedMod, { getModeratorOptions } from '../VerifiedMod';
 import { handleLinks } from '../../../utils/dom';
 import { launchModeratorDetailsModal } from '../../../utils/modalManager';
 import { anySupportedByWallet } from '../../../data/walletCurrencies';
-import { isFiatCur} from "../../../data/currencies";
+import { isFiatCur } from '../../../data/currencies';
 import { getLangByCode } from '../../../data/languages';
 
 export default class extends BaseVw {
