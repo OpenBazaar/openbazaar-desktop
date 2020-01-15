@@ -402,7 +402,7 @@
     "PERCENTAGE": "%{percentage}%*",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "The information for this moderator failed to load.",
-    "invalid": "This user is not currently a moderator.",
+    "invalid": "This user is not currently a valid moderator.",
     "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
     "noPreferredSupport": "This moderator does not accept any of your preferred coins. They can only moderate transactions in the following currencies: %{coins}.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
