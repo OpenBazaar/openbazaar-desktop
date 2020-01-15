@@ -40,7 +40,7 @@ export default class extends BaseVw {
     this.transactionViews = [];
     this.fetchFailed = false;
     this.fetchErrorMessage = '';
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs = new Set();
     this.popInTimeouts = [];
     this.coinType = this.collection.options.coinType;
     this.countAtFirstFetch = opts.countAtFirstFetch;
@@ -230,13 +230,13 @@ export default class extends BaseVw {
       this.newTransactionPopIn.setState({
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
     } else {
       this.newTransactionPopIn = this.createChild(PopInMessage, {
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
 
       this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => this.refreshTransactions());
@@ -311,7 +311,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs.clear();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
     this.popInTimeouts = [];
     if (this.newTransactionPopIn) {

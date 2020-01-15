@@ -178,7 +178,7 @@ export default class extends BaseModal {
                   if (!cl.get(e.jsonData.wallet.txid)) {
                     // A new transaction for the active coin - rather than just add it to the
                     // collection causing a page jump, we'll utilize the new transaction pop-up.
-                    this.transactionsVw.newTransactionCount += 1;
+                    this.transactionsVw.newTransactionsTXs.add(e.jsonData.wallet.txid);
                     this.transactionsVw.showNewTransactionPopup();
                   }
                 } else {
