@@ -63,6 +63,15 @@
           <% } %>
           <% } else { %>
             <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
+          <%
+            if (ob.modelErrors) {
+              const translatedErrs = [];
+              Object.keys(ob.modelErrors).forEach(field => {
+                translatedErrs.push(ob.polyT('moderatorModelErrors.invalidData', { field }));
+              });
+              print(ob.formErrorTmpl({ errors: translatedErrs }));
+            }
+          %>
           <% } %>
         </div>
       <% } else { %>
