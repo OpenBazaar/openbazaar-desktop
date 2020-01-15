@@ -147,14 +147,15 @@ export default class extends baseVw {
   processMod(data) {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
-    const validMod = data.moderator && data.moderatorInfo;
+    const isAMod = data.moderator && data.moderatorInfo;
     // If the moderator has an invalid currency, remove them from the list.
     // With multi-wallet, this should be a very rare occurrence.
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const validCur = anySupportedByWallet(modCurs);
+    const supportedCur = anySupportedByWallet(modCurs);
 
-    if ((!!validMod && validCur || this.options.showInvalid)) {
-      this.moderatorsCol.add(new Moderator(data, { parse: true }));
+    if ((!!isAMod && supportedCur || this.options.showInvalid)) {
+      const newMod = new Moderator(data, { parse: true });
+      if (newMod.isValid()) this.moderatorsCol.add(newMod);
       this.removeNotFetched(data.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
