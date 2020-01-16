@@ -7,6 +7,7 @@ import VerifiedMod, { getModeratorOptions } from '../VerifiedMod';
 import { handleLinks } from '../../../utils/dom';
 import { launchModeratorDetailsModal } from '../../../utils/modalManager';
 import { anySupportedByWallet } from '../../../data/walletCurrencies';
+import { getCurrenciesSortedByCode } from '../../../data/currencies';
 import { getLangByCode } from '../../../data/languages';
 
 export default class extends BaseVw {
@@ -43,6 +44,10 @@ export default class extends BaseVw {
 
     const modInfo = this.model.get('moderatorInfo');
     this.modCurs = modInfo && modInfo.get('acceptedCurrencies') || [];
+
+    const fee = modInfo && modInfo.get('fee');
+    const fixedFee = fee && fee.get('fixedFee');
+    this.fixedFeeCur = fixedFee && fixedFee.get('currencyCode');
 
     this.modLanguages = [];
     if (this.model.isModerator) {
@@ -86,7 +91,9 @@ export default class extends BaseVw {
   }
 
   get hasValidCurrency() {
-    return anySupportedByWallet(this.modCurs);
+    const validFeeCur = this.fixedFeeCur &&
+      getCurrenciesSortedByCode().map(c => c.code).includes(this.fixedFeeCur);
+    return validFeeCur && anySupportedByWallet(this.modCurs);
   }
 
   get hasPreferredCur() {
@@ -125,8 +132,10 @@ export default class extends BaseVw {
 
     loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
+        valid: !!this.model.isValid(),
+        modelErrors: this.model.validationError,
         displayCurrency: app.settings.get('localCurrency'),
-        valid: this.model.isModerator,
+        isMod: this.model.isModerator,
         hasValidCurrency: this.hasValidCurrency,
         radioStyle: this.options.radioStyle,
         controlsOnInvalid: this.options.controlsOnInvalid,
@@ -136,7 +145,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         ...this.getState(),
       }));
-
+      
       if (this.verifiedMod) this.verifiedMod.remove();
 
       this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({

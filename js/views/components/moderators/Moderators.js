@@ -151,11 +151,11 @@ export default class extends baseVw {
     // If the moderator has an invalid currency, remove them from the list.
     // With multi-wallet, this should be a very rare occurrence.
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const supportedCur = anySupportedByWallet(modCurs);
+    const hasSupportedCur = anySupportedByWallet(modCurs);
+    const newMod = new Moderator(data, { parse: true });
 
-    if ((!!isAMod && supportedCur || this.options.showInvalid)) {
-      const newMod = new Moderator(data, { parse: true });
-      if (newMod.isValid()) this.moderatorsCol.add(newMod);
+    if ((!!isAMod && hasSupportedCur && newMod.isValid() || this.options.showInvalid)) {
+      this.moderatorsCol.add(newMod);
       this.removeNotFetched(data.peerID);
     } else {
       // remove the invalid moderator from the notFetched list
@@ -412,8 +412,8 @@ export default class extends baseVw {
   render() {
     const state = this.getState();
     const showMods = this.modCards.filter(mod => this.modShouldRender(mod.model));
-    const unVerCount = this.modCards.filter(mod =>
-      mod.model.hasModCurrency(state.showOnlyCur) && !mod.model.isVerified).length;
+    const unVerCount = this.modCards.filter(mod => (!state.showOnlyCur ||
+      mod.model.hasModCurrency(state.showOnlyCur)) && !mod.model.isVerified).length;
     clearTimeout(this.renderTimer);
     this.renderTimer = null;
 
