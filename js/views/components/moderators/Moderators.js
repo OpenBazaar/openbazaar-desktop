@@ -188,7 +188,7 @@ export default class extends baseVw {
 
     // don't get any that have already been added or excluded.
     const excluded = [...this.allIDs, ...this.excludeIDs];
-    this.modsToFetch = _.without(op.moderatorIDs, excluded);
+    this.modsToFetch = _.without(op.moderatorIDs, ...excluded);
     this.unfetchedMods = [...this.modsToFetch];
     this.fetchingVerifiedMods = app.verifiedMods.matched(this.modsToFetch);
 
