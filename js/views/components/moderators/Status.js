@@ -38,7 +38,7 @@ export default class extends BaseVw {
         let mode = this.getState().mode;
         if (mode === 'loadingXofY') mode = 'loadingXofYTimedOut';
         this.setState({ showSpinner: false, mode });
-      }, 10000);
+      }, 60000);
     }
     super.setState(state, options);
   }
