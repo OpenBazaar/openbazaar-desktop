@@ -749,9 +749,9 @@
         "selectedModsTitle": "Dine Nåværende Moderatorer Kunne Ikke Lastes.",
         "availableModsTitle": "Tilgjengelige Moderatorer Kunne Ikke Lastes",
         "modIsBlank": "Du må legge til en moderator ID eller kallenavn",
-        "notGUID": "%{guid} er ikke en gyldig node ID",
-        "ownGUID": "%{guid} er din node ID. Du kan ikke moderere dine egne bestillinger.",
-        "dupeGUID": "%{guid} er en av dine nåværende moderatorer."
+        "notPeerID": "%{guid} er ikke en gyldig node ID",
+        "ownPeerID": "%{guid} er din node ID. Du kan ikke moderere dine egne bestillinger.",
+        "dupePeerID": "%{guid} er en av dine nåværende moderatorer."
       }
     },
     "blockedTab": {

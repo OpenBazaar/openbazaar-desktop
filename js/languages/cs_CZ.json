@@ -749,9 +749,9 @@
         "selectedModsTitle": "Tvoje aktuální moderátory nelze načíst.",
         "availableModsTitle": "Dostupné moderátory nelze načíst",
         "modIsBlank": "Musíš přidat ID moderátora nebo handl",
-        "notGUID": "%{guid} není platné peer ID",
-        "ownGUID": "%{guid} je tvoje peer ID. Nemůžeš moderovat své vlastní objednávky.",
-        "dupeGUID": "%{guid} je jedním z tvých současných moderátorů."
+        "notPeerID": "%{guid} není platné peer ID",
+        "ownPeerID": "%{guid} je tvoje peer ID. Nemůžeš moderovat své vlastní objednávky.",
+        "dupePeerID": "%{guid} je jedním z tvých současných moderátorů."
       }
     },
     "blockedTab": {

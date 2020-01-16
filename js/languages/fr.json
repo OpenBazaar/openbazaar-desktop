@@ -749,9 +749,9 @@
         "selectedModsTitle": "Vos modérateurs actuels n'ont pas pu être chargés.",
         "availableModsTitle": "Les modérateurs disponibles n'ont pas pu être chargés",
         "modIsBlank": "Vous devez ajouter un ID de modérateur ou un handle",
-        "notGUID": "%{guid} n'est pas un peer ID valide",
-        "ownGUID": "%{guid} est votre peer ID. Vous ne pouvez pas modérer vos propres commandes.",
-        "dupeGUID": "%{guid} est l'un de vos modérateurs actuels."
+        "notPeerID": "%{guid} n'est pas un peer ID valide",
+        "ownPeerID": "%{guid} est votre peer ID. Vous ne pouvez pas modérer vos propres commandes.",
+        "dupePeerID": "%{guid} est l'un de vos modérateurs actuels."
       }
     },
     "blockedTab": {

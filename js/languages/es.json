@@ -749,9 +749,9 @@
         "selectedModsTitle": "Tus Moderadores Actuales No Se Cargaron",
         "availableModsTitle": "Los Moderadores Disponibles No Se Cargaron",
         "modIsBlank": "Debe añadir un ID de moderador o manija (@)",
-        "notGUID": "%{guid} no es un ID de par válido",
-        "ownGUID": "%{guid} es tu ID de par. No puedes moderar tus propios pedidos.",
-        "dupeGUID": "%{guid} es uno de tus moderadores actuales."
+        "notPeerID": "%{guid} no es un ID de par válido",
+        "ownPeerID": "%{guid} es tu ID de par. No puedes moderar tus propios pedidos.",
+        "dupePeerID": "%{guid} es uno de tus moderadores actuales."
       }
     },
     "blockedTab": {
