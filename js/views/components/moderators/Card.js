@@ -145,7 +145,7 @@ export default class extends BaseVw {
         ...this.model.toJSON(),
         ...this.getState(),
       }));
-      
+
       if (this.verifiedMod) this.verifiedMod.remove();
 
       this.verifiedMod = this.createChild(VerifiedMod, getModeratorOptions({
