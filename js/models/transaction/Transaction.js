@@ -1,8 +1,5 @@
 // used for sales, purchases
-import {
-  integerToDecimal,
-  getCoinDivisibility,
-} from '../../utils/currency';
+import { curDefToDecimal } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -11,24 +8,9 @@ export default class extends BaseModel {
   }
 
   parse(response = {}) {
-    let returnVal = { ...response };
-
-    // pending this issue, we'll get the divisibility from wallet cur def list
-    // https://github.com/OpenBazaar/openbazaar-go/issues/1826
-
-    let divisibility;
-
-    try {
-      divisibility = getCoinDivisibility(returnVal.paymentCoin);
-    } catch (e) {
-      // pass
-    }
-
-    returnVal = {
-      ...returnVal,
-      total: integerToDecimal(returnVal.total, divisibility, { fieldName: 'total' }),
+    return {
+      ...response,
+      total: curDefToDecimal(response.total),
     };
-
-    return returnVal;
   }
 }
