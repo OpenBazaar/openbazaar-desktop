@@ -11,9 +11,9 @@
                const title = ob.loading ?
                  ob.polyT('moderators.moderatorsLoading') : ob.polyT(`${msgPath}.title`, opts);
             %>
-            <h4><%= title %></h4>
             <% // The section below is only relevant if the moderators are loaded in a purchasing context. %>
             <% if (ob.purchase && !ob.loading) { %>
+              <h4><%= title %></h4>
               <div class="tx4 clrT2"><%= ob.polyT(`${msgPath}.body`) %></div>
               <% if (showOnlyVer) { %>
                 <div class="padTn"><% // just a spacer %></div>
@@ -29,4 +29,3 @@
   <% } %>
 </div>
 <div class="js-statusWrapper"></div>
-
