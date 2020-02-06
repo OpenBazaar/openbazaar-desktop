@@ -139,8 +139,11 @@ export default class extends baseVw {
     this.getModeratorsByID();
   }
 
-  removeNotFetched(ID) {
-    this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
+  removeNotFetched(IDs) {
+    const IDlist = Array.isArray(IDs) ? IDs : [IDs];
+    IDlist.forEach(ID => {
+      this.unfetchedMods = this.unfetchedMods.filter(peerID => peerID !== ID);
+    });
     this.checkNotFetched();
   }
 
@@ -241,7 +244,10 @@ export default class extends baseVw {
               data.forEach(mod => {
                 if (!excluded.includes(mod.peerId)) this.processMod(mod.profile);
               });
-              if (!data.length) this.trigger('noModsFound', { guids: this.modsToFetch });
+              if (!data.length) {
+                this.trigger('noModsFound', { guids: this.modsToFetch });
+                this.removeNotFetched(this.modsToFetch);
+              }
             }
           })
           .fail((xhr) => {
