@@ -5,7 +5,7 @@
    /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
     * The view should prevent the invalid card from being selected again, disabling it is redundant but important visually.
     */
-   const isOKMod = ob.valid && ob.isMod;
+   const isOKMod = ob.hasValidModel && ob.isMod;
    const disabledClass = (!isOKMod && !ob.controlsOnInvalid ) || (!isOKMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
@@ -67,9 +67,9 @@
                 <span class="clrTErr clamp2"><%= ob.polyT('moderatorCard.noCoinSupport') %></span>
               <% } %>
             </div>
-          <% if (ob.showPreferredWarning) { %>
-            <div class="clrTErr note"><%= ob.polyT('moderatorCard.noPreferredSupport', { coins: ob.moderatorInfo.acceptedCurrencies.join(', ') }) %></div>
-          <% } %>
+            <% if (ob.showPreferredWarning) { %>
+              <div class="clrTErr note"><%= ob.polyT('moderatorCard.noPreferredSupport', { coins: ob.moderatorInfo.acceptedCurrencies.join(', ') }) %></div>
+            <% } %>
           <% } else { %>
             <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
           <%
