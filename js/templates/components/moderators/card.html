@@ -1,14 +1,16 @@
 <%
    // Check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
+
    /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
-      The view should prevent the invalid card from being selected again, disabling it is redundant but important visually. */
+    * The view should prevent the invalid card from being selected again, disabling it is redundant but important visually.
+    */
    const isOKMod = ob.valid && ob.isMod;
-   const isDisabled = (!isOKMod && !ob.controlsOnInvalid ) || (!isOKMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
+   const disabledClass = (!isOKMod && !ob.controlsOnInvalid ) || (!isOKMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
-<div class="moderatorCardInner clrP <%= isDisabled %> <%= style %>">
+<div class="moderatorCardInner clrP <%= disabledClass %> <%= style %>">
   <div class="flexRow gutterH moderatorCardContent">
     <% if (ob.radioStyle) { %>
       <div class="flexNoShrink">

@@ -7,7 +7,7 @@ import VerifiedMod, { getModeratorOptions } from '../VerifiedMod';
 import { handleLinks } from '../../../utils/dom';
 import { launchModeratorDetailsModal } from '../../../utils/modalManager';
 import { anySupportedByWallet } from '../../../data/walletCurrencies';
-import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import { getCurrencyByCode } from '../../../data/currencies';
 import { getLangByCode } from '../../../data/languages';
 
 export default class extends BaseVw {
@@ -91,8 +91,7 @@ export default class extends BaseVw {
   }
 
   get hasValidCurrency() {
-    const validFeeCur = this.fixedFeeCur &&
-      getCurrenciesSortedByCode().map(c => c.code).includes(this.fixedFeeCur);
+    const validFeeCur = this.fixedFeeCur && getCurrencyByCode(this.fixedFeeCur);
     return validFeeCur && anySupportedByWallet(this.modCurs);
   }
 
@@ -132,7 +131,7 @@ export default class extends BaseVw {
 
     loadTemplate('components/moderators/card.html', (t) => {
       this.$el.html(t({
-        valid: !!this.model.isValid(),
+        hasValidModel: this.model.isValid(),
         modelErrors: this.model.validationError,
         displayCurrency: app.settings.get('localCurrency'),
         isMod: this.model.isModerator,

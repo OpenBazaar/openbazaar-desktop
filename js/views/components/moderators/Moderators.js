@@ -217,14 +217,13 @@ export default class extends baseVw {
             const eventData = event.jsonData;
             if (eventData.error) {
               // errors don't have a message id, check to see if the peerID matches
-              if (this.modsToFetch.includes(eventData.peerID)) {
+              if (this.modsToFetch.includes(eventData.peerId)) {
                 this.processMod(eventData);
               }
             } else if (
-              eventData.id &&
-              eventData.peerId &&
               eventData.id === asyncID &&
-              !excluded.includes(eventData.peerId)
+              !excluded.includes(eventData.peerId) &&
+              eventData.profile
             ) {
               this.processMod(eventData.profile);
             }
