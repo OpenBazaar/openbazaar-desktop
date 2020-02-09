@@ -206,7 +206,7 @@
     "discoverCalloutBody": "Відвідуй та досліджуй тисячі магазинів на OpenBazaar",
     "myPage": "Моя сторінка",
     "customizePage": "Налаштувати сторінку",
-    "createListing": "Створити список",
+    "createListing": "Створити товар",
     "purchases": "Покупки",
     "sales": "Продажі",
     "cases": "Історія",
@@ -686,7 +686,7 @@
       "percentage": "Процент",
       "fixedPlusPercentage": "Фіксована ставка плюс процент",
       "feeTypeHelper": "Сума яку ви берете за перегляд та вирішення суперечки.",
-      "description": "Про Вас",
+      "description": "Опис",
       "descriptionHelper": "Додайте опис (приклад. Яка ваша стратегія розгляду справ? Як швидко ви відповідаєте? Який ваш розклад роботи? На протязі якого часу ви доступні кожного дня? і т.д.)",
       "terms": "Умови",
       "termsHelper": "Додайте свої умови надання послуг (наприклад, чи є у вас законні обмеження ? Що відбувається після прийняття вами рішень ?  тощо)",
@@ -1072,8 +1072,8 @@
       "noPurchaseTitle": "Цей товар не можливо придбати",
       "zeroPriceMsg": "Ви не можете купити товар з ціною менше нуля. ",
       "outOfStock": "Ви не можете купити товар, тому що наразі його немає у наявності.",
-      "reloadOutdatedHash": "try reloading the listing",
-      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase this listing, please %{reloadLink}."
+      "reloadOutdatedHash": "спробуйте перезавантажити товар",
+      "outdatedHash": "Ви дивитесь застарілу версію товару. Щоб придбати цей товар, будь ласка, %{reloadLink}."
     }
   },
   "listingCard": {
@@ -1145,7 +1145,7 @@
       "coupons": "Купони",
       "inventoryManagement": "Керування інвентарем",
       "variantInventory": "Варіант інвентарю",
-      "acceptedCurrencies": "Accepted Currencies"
+      "acceptedCurrencies": "Доступні валюти"
     },
     "placeholderTitle": "Вкажіть заголовок...",
     "placeholderSKU": "SKU, номер партії, ідентифікатор, тощо",
@@ -1206,7 +1206,7 @@
       "coinType": "Обмін",
       "quantity": "Інвентар",
       "priceModifier": "Модифікатор ціни (+/-)",
-      "priceModifierPlaceholder": "0.00 (market rate)",
+      "priceModifierPlaceholder": "0.00 (тариф)",
       "helperPriceModifier": "Обміняйте за ринковим курсом або вкажіть модифікатор ціни (+/-)",
       "lblReceive": "Receive"
     },
