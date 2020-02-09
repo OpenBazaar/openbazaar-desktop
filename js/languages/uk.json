@@ -814,7 +814,7 @@
     "statusSaveComplete": "Налаштування збережені.",
     "btnYes": "Так",
     "btnNo": "Ні",
-    "btnSave": "Зберігти",
+    "btnSave": "Зберегти",
     "btnAddAddress": "Додати адресу",
     "errors": {
       "saveError": "Відбулась помилка під час зберігання налаштувань."
@@ -860,7 +860,7 @@
     "configurationForm": {
       "tabName": "Нове налаштування",
       "btnCancel": "Скасувати",
-      "btnSave": "Зберігти",
+      "btnSave": "Зберегти",
       "port": "Порт",
       "sslOn": "On",
       "sslOff": "Off",
