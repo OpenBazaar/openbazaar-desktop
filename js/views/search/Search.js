@@ -35,6 +35,7 @@ export default class extends baseVw {
         fetching: false,
         tab: 'listings',
         xhr: null,
+        fetchingFeatureStores: false,
         ...options.initialState,
       },
       ...options,
@@ -101,6 +102,7 @@ export default class extends baseVw {
       this._categorySearches.push({ ...this._categorySearch, q: cat });
     });
 
+    this.featureStoreIDs = [];
     this.categoryViews = [];
     this.searchFetches = [];
     this._setHistory = false; // The router has already set the history.
@@ -304,10 +306,11 @@ export default class extends baseVw {
           // update the defaults but do not save them
           if (!this.providerIsADefault(this._search.provider.id)) {
             this._search.provider.save(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
-            if (!dataUpdate.update.featureStores) {
-              tabUpdated = 'listings';
-            } else {
+            if (dataUpdate.update.featureStores) {
+              this.fetchFeatureStores();
               this.buildCategories();
+            } else {
+              tabUpdated = 'listings';
             }
           } else {
             this._search.provider.set(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
@@ -367,7 +370,10 @@ export default class extends baseVw {
       this.categoryViews = [];
     }
 
-    if (md.id === defaultSearchProviders[0].id || md.get('featureStores')) {
+    if (md.id === defaultSearchProviders[0].id) {
+      this.buildCategories();
+    } else if (md.get('featureStores')) {
+      this.fetchFeatureStores();
       this.buildCategories();
     } else {
       this.setSearch({ provider: md, p: 0 }, { force, tab: 'home' });
@@ -419,6 +425,16 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
+  }
+
+  fetchFeatureStores() {
+    this.setState({ fetchingFeatureStores: true });
+    $.get({
+      url: this._search.provider.get('featureStores'),
+      dataType: 'json',
+    })
+      .done((data) => { this.featureStoreIDs = data; })
+      .always(() => (this.setState({ fetchingFeatureStores: false })));
   }
 
   /**
@@ -548,37 +564,35 @@ export default class extends baseVw {
   }
 
   renderFeatureStores() {
-    $.get({
-      url: this._search.provider.get('featureStores'),
-      dataType: 'json',
-    })
-      .done((data) => {
-        const userIDs = data;
+    if (this.featureStoreIDs.length == 0) {
+      return;
+    }
 
-        const UserCardSwiper = Backbone.View.extend({
-          className: 'swiper-slide',
-          render: (guid) => {
-            const view = new UserCard({ guid });
-            this.$el.append(view.render().el);
-            return this;
-          },
-        });
+    const UserCardSwiper = Backbone.View.extend({
+      className: 'swiper-slide',
+      initialize: function (options) {
+        _.extend(this, _.pick(options, "guid"));
+      },
+      render: function () {
+        const view = new UserCard({ guid: this.guid });
+        this.$el.append(view.render().el);
+        return this;
+      },
+    });
 
-        const usersFrag = document.createDocumentFragment();
-        userIDs.forEach(userID => {
-          const view = new UserCardSwiper();
-          view.render(userID).$el.appendTo(usersFrag);
-        });
+    const usersFrag = document.createDocumentFragment();
+    this.featureStoreIDs.forEach(storeID => {
+      const view = new UserCardSwiper({ guid: storeID });
+      view.render().$el.appendTo(usersFrag);
+    });
 
-        this.getCachedEl('.swiper-wrapper').html(usersFrag);
+    this.getCachedEl('.swiper-wrapper').html(usersFrag);
 
-        this._swiper = new Swiper(this.getCachedEl('.swiper-container'), {
-          slidesPerView: 3,
-          spaceBetween: 10,
-          autoplay: true,
-        });
-      }
-      );
+    this._swiper = new Swiper(this.getCachedEl('.swiper-container'), {
+      slidesPerView: 3,
+      spaceBetween: 10,
+      autoplay: true,
+    });
   }
 
   renderCategories() {
