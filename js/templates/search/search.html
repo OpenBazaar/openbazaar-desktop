@@ -42,12 +42,16 @@
         <hr class="clrBr">
       </div>
       <% if (ob.showFeatureStores) { %>
+      <% if (!ob.fetchingFeatureStores) { %>
       <div class="featureStores">
-        <h1 style="float: left; width: auto">Featured Stores</h1>
+        <h2>Featured Stores</h2>
         <div class="swiper-container">
           <div class="swiper-wrapper userCardsContainer"></div>
         </div>
       </div>
+      <% } else { %>
+      <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+      <% } %>
       <% } %>
       <div class="js-categoryWrapper"></div>
       <div class="flexRow gutterHLg">
