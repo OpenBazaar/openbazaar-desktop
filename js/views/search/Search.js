@@ -564,16 +564,16 @@ export default class extends baseVw {
   }
 
   renderFeatureStores() {
-    if (this.featureStoreIDs.length == 0) {
+    if (this.featureStoreIDs.length === 0) {
       return;
     }
 
     const UserCardSwiper = Backbone.View.extend({
       className: 'swiper-slide',
-      initialize: function (options) {
-        _.extend(this, _.pick(options, "guid"));
+      initialize(options) {
+        _.extend(this, _.pick(options, 'guid'));
       },
-      render: function () {
+      render() {
         const view = new UserCard({ guid: this.guid });
         this.$el.append(view.render().el);
         return this;
