@@ -9,6 +9,7 @@ export default class extends BaseModel {
     return {
       name: '',
       logo: '',
+      featureStores: '',
       listings: '',
       torlistings: '',
       vendors: '',
@@ -28,6 +29,11 @@ export default class extends BaseModel {
 
   get tor() {
     return curConnOnTor() ? 'tor' : '';
+  }
+
+  get featureStoresUrl() {
+    // Fall back to clear endpoint on tor if no tor endpoint exists.
+    return this.get(`${this.tor}featureStores`) || this.get('featureStores');
   }
 
   get listingsUrl() {
@@ -52,7 +58,8 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
     const urlTypes = options.urlTypes ||
-      ['listings', 'torlistings', 'vendors', 'torvendors', 'reports', 'torreports'];
+      ['featureStores', 'listings', 'torlistings', 'vendors', 'torvendors',
+        'reports', 'torreports'];
 
     if (attrs.name && is.not.string(attrs.name)) {
       addError('name', app.polyglot.t('searchProviderModelErrors.invalidName'));

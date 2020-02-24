@@ -41,6 +41,14 @@
         <div class="js-suggestions"></div>
         <hr class="clrBr">
       </div>
+      <% if (ob.showFeatureStores) { %>
+      <div class="featureStores">
+        <h1 style="float: left; width: auto">Featured Stores</h1>
+        <div class="swiper-container">
+          <div class="swiper-wrapper userCardsContainer"></div>
+        </div>
+      </div>
+      <% } %>
       <div class="js-categoryWrapper"></div>
       <div class="flexRow gutterHLg">
         <% if (ob.hasFilters) { %>

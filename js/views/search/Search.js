@@ -1,8 +1,10 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
+import Swiper from 'swiper';
 import '../../lib/select2';
 import app from '../../app';
+import Backbone from 'backbone';
 import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
@@ -10,6 +12,7 @@ import Suggestions from './Suggestions';
 import Category from './Category';
 import SortBy from './SortBy';
 import Filters from './Filters';
+import UserCard from '../UserCard';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import ResultsCol from '../../collections/Results';
 import ProviderMd from '../../models/search/SearchProvider';
@@ -82,7 +85,6 @@ export default class extends baseVw {
 
     this._categorySearch = {
       ...this._search,
-      provider: app.searchProviders.at(0),
       ps: 8,
     };
 
@@ -162,7 +164,7 @@ export default class extends baseVw {
       if (this._search.provider.id === defaultSearchProviders[0].id) {
         this.buildCategories();
       } else {
-        this.setSearch({}, { force: true });
+        this.setSearch({}, { force: true, tab: 'home' });
       }
     }
   }
@@ -222,7 +224,11 @@ export default class extends baseVw {
     if (!_.isEqual(this._search, newSearch) || opts.force) {
       this._search = newSearch;
       scrollPageIntoView();
-      this.fetchSearch(this._search);
+      if (opts.tab) {
+        this.fetchSearch(this._search, opts.tab);
+      } else {
+        this.fetchSearch(this._search);
+      }
     }
   }
 
@@ -238,6 +244,10 @@ export default class extends baseVw {
     if (data.name && is.string(data.name)) update.name = data.name;
     if (data.logo && is.url(data.logo)) update.logo = data.logo;
     if (data.links) {
+      if (is.url(data.links.featureStores)) {
+        update.featureStores = data.links.featureStores;
+        urlTypes.push('featureStores');
+      }
       if (is.url(data.links.vendors)) {
         update.vendors = data.links.vendors;
         urlTypes.push('vendors');
@@ -272,11 +282,11 @@ export default class extends baseVw {
     };
   }
 
-  fetchSearch(opts = {}) {
+  fetchSearch(opts = {}, tab = 'listings') {
     this.removeFetches();
 
     this.setState({
-      tab: 'listings',
+      tab,
       fetching: true,
       xhr: null,
     });
@@ -289,15 +299,22 @@ export default class extends baseVw {
         // make sure minimal data is present. If it isn't, it's probably an invalid endpoint.
         if (data.name && data.links) {
           const dataUpdate = this.buildProviderUpdate(data);
+          let tabUpdated = tab;
 
           // update the defaults but do not save them
           if (!this.providerIsADefault(this._search.provider.id)) {
             this._search.provider.save(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
+            if (!dataUpdate.update.featureStores) {
+              tabUpdated = 'listings';
+            } else {
+              this.buildCategories();
+            }
           } else {
             this._search.provider.set(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
           }
 
           this.setState({
+            tab: tabUpdated,
             fetching: false,
             data,
           });
@@ -339,10 +356,21 @@ export default class extends baseVw {
 
     if (!this.currentDefaultProvider) this.makeDefaultProvider(md);
 
-    if (md.id === defaultSearchProviders[0].id) {
+    const force = md.id !== this._search.provider.id;
+    if (force) {
+      this._search.provider = md;
+
+      this._categorySearches.forEach(catSearch => {
+        catSearch.provider = this._search.provider;
+      });
+
+      this.categoryViews = [];
+    }
+
+    if (md.id === defaultSearchProviders[0].id || md.get('featureStores')) {
       this.buildCategories();
     } else {
-      this.setSearch({ provider: md, p: 0 });
+      this.setSearch({ provider: md, p: 0 }, { force, tab: 'home' });
     }
   }
 
@@ -406,9 +434,9 @@ export default class extends baseVw {
       app.router.navigate('search');
       // After either the first search or the first category load completes, set the history.
       this._setHistory = true;
-      this._search = { ...this._defaultSearch, provider: app.searchProviders.at(0) };
+      this._search = { ...this._defaultSearch, provider: this._search.provider };
       scrollPageIntoView();
-      const data = { name: defaultSearchProviders[0].name, logo: defaultSearchProviders[0].logo };
+      const data = { name: this._search.provider.name, logo: this._search.provider.logo };
       // The state may not be changed here, so always fire a render.
       this.setState({ tab: 'home', data }, { renderOnChange: false });
       this.render();
@@ -519,6 +547,40 @@ export default class extends baseVw {
     super.remove();
   }
 
+  renderFeatureStores() {
+    $.get({
+      url: this._search.provider.get('featureStores'),
+      dataType: 'json',
+    })
+      .done((data) => {
+        const userIDs = data;
+
+        const UserCardSwiper = Backbone.View.extend({
+          className: 'swiper-slide',
+          render: (guid) => {
+            const view = new UserCard({ guid });
+            this.$el.append(view.render().el);
+            return this;
+          },
+        });
+
+        const usersFrag = document.createDocumentFragment();
+        userIDs.forEach(userID => {
+          const view = new UserCardSwiper();
+          view.render(userID).$el.appendTo(usersFrag);
+        });
+
+        this.getCachedEl('.swiper-wrapper').html(usersFrag);
+
+        this._swiper = new Swiper(this.getCachedEl('.swiper-container'), {
+          slidesPerView: 3,
+          spaceBetween: 10,
+          autoplay: true,
+        });
+      }
+      );
+  }
+
   renderCategories() {
     const catsFrag = document.createDocumentFragment();
 
@@ -554,6 +616,7 @@ export default class extends baseVw {
         term,
         errTitle,
         errMsg,
+        showFeatureStores: state.tab === 'home' && !!this._search.provider.get('featureStores'),
         providerLocked: this.providerIsADefault(this._search.provider.id),
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
@@ -589,6 +652,9 @@ export default class extends baseVw {
     if (this.sortBy) this.sortBy.remove();
 
     if (state.tab === 'home') {
+      if (this._search.provider.get('featureStores')) {
+        this.renderFeatureStores();
+      }
       this.renderCategories();
     } else if (state.tab === 'listings') {
       if (hasFilters) {

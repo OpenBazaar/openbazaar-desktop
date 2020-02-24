@@ -114,6 +114,33 @@
       }
     }
   }
+  
+  .swiper-container {
+    width: 100%;
+    height: 100%;
+  }
+  
+  .swiper-slide {
+    /* Center slide text vertically */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .swiper-container {
+    --swiper-pagination-color: #eee;
+  }
+  
+  .userCardsContainer {
+    width: auto;
+
+    .userCard {
+      // width: 306px;
+      width: 100%;
+      flex: 0 0 auto;
+      box-sizing: border-box;
+    }
+  }
 
   .searchBar {
     display: flex;
