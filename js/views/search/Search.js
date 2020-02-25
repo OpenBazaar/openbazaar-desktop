@@ -1,10 +1,8 @@
 import _ from 'underscore';
 import $ from 'jquery';
 import is from 'is_js';
-import Swiper from 'swiper';
 import '../../lib/select2';
 import app from '../../app';
-import Backbone from 'backbone';
 import baseVw from '../baseVw';
 import Results from './Results';
 import Providers from './SearchProviders';
@@ -12,7 +10,7 @@ import Suggestions from './Suggestions';
 import Category from './Category';
 import SortBy from './SortBy';
 import Filters from './Filters';
-import UserCard from '../UserCard';
+import FeatureStores from './FeatureStores';
 import { openSimpleMessage } from '../modals/SimpleMessage';
 import ResultsCol from '../../collections/Results';
 import ProviderMd from '../../models/search/SearchProvider';
@@ -102,7 +100,6 @@ export default class extends baseVw {
       this._categorySearches.push({ ...this._categorySearch, q: cat });
     });
 
-    this.featureStoreIDs = [];
     this.categoryViews = [];
     this.searchFetches = [];
     this._setHistory = false; // The router has already set the history.
@@ -307,7 +304,6 @@ export default class extends baseVw {
           if (!this.providerIsADefault(this._search.provider.id)) {
             this._search.provider.save(dataUpdate.update, { urlTypes: dataUpdate.urlTypes });
             if (dataUpdate.update.featureStores) {
-              this.fetchFeatureStores();
               this.buildCategories();
             } else {
               tabUpdated = 'listings';
@@ -370,10 +366,7 @@ export default class extends baseVw {
       this.categoryViews = [];
     }
 
-    if (md.id === defaultSearchProviders[0].id) {
-      this.buildCategories();
-    } else if (md.get('featureStores')) {
-      this.fetchFeatureStores();
+    if (md.id === defaultSearchProviders[0].id || md.get('featureStores')) {
       this.buildCategories();
     } else {
       this.setSearch({ provider: md, p: 0 }, { force, tab: 'home' });
@@ -425,16 +418,6 @@ export default class extends baseVw {
 
   clickAddQueryProvider() {
     this.addQueryProvider();
-  }
-
-  fetchFeatureStores() {
-    this.setState({ fetchingFeatureStores: true });
-    $.get({
-      url: this._search.provider.get('featureStores'),
-      dataType: 'json',
-    })
-      .done((data) => { this.featureStoreIDs = data; })
-      .always(() => (this.setState({ fetchingFeatureStores: false })));
   }
 
   /**
@@ -564,35 +547,8 @@ export default class extends baseVw {
   }
 
   renderFeatureStores() {
-    if (this.featureStoreIDs.length === 0) {
-      return;
-    }
-
-    const UserCardSwiper = Backbone.View.extend({
-      className: 'swiper-slide',
-      initialize(options) {
-        _.extend(this, _.pick(options, 'guid'));
-      },
-      render() {
-        const view = new UserCard({ guid: this.guid });
-        this.$el.append(view.render().el);
-        return this;
-      },
-    });
-
-    const usersFrag = document.createDocumentFragment();
-    this.featureStoreIDs.forEach(storeID => {
-      const view = new UserCardSwiper({ guid: storeID });
-      view.render().$el.appendTo(usersFrag);
-    });
-
-    this.getCachedEl('.swiper-wrapper').html(usersFrag);
-
-    this._swiper = new Swiper(this.getCachedEl('.swiper-container'), {
-      slidesPerView: 3,
-      spaceBetween: 10,
-      autoplay: true,
-    });
+    const view = new FeatureStores({ fetchUrl: this._search.provider.get('featureStores') });
+    this.getCachedEl('.js-featureStores').html(view.render().$el);
   }
 
   renderCategories() {

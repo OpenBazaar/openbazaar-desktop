@@ -1,0 +1,9 @@
+<h2>Featured Stores</h2>
+<% if (!ob.loading) { %>
+<div class="swiper-container">
+    <div class="swiper-wrapper userCardsContainer"></div>
+</div>
+<% } else { %>
+<div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
+<% } %>
+<hr class="clrBr featureStoresRow">

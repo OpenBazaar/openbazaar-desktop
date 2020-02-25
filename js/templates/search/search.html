@@ -41,18 +41,7 @@
         <div class="js-suggestions"></div>
         <hr class="clrBr">
       </div>
-      <% if (ob.showFeatureStores) { %>
-      <% if (!ob.fetchingFeatureStores) { %>
-      <div class="featureStores">
-        <h2>Featured Stores</h2>
-        <div class="swiper-container">
-          <div class="swiper-wrapper userCardsContainer"></div>
-        </div>
-      </div>
-      <% } else { %>
-      <div class="flexCent loadingSearch clrS"><%= ob.spinner({ className: 'spinnerLg' }) %></div>
-      <% } %>
-      <% } %>
+      <div class="js-featureStores"></div>
       <div class="js-categoryWrapper"></div>
       <div class="flexRow gutterHLg">
         <% if (ob.hasFilters) { %>
