@@ -586,7 +586,6 @@ export default class extends baseVw {
         term,
         errTitle,
         errMsg,
-        showFeatureStores: state.tab === 'home' && !!this._search.provider.get('featureStores'),
         providerLocked: this.providerIsADefault(this._search.provider.id),
         isExistingProvider: this.isExistingProvider(this._search.provider),
         showMakeDefault: this._search.provider !== this.currentDefaultProvider,
