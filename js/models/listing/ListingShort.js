@@ -69,6 +69,22 @@ export default class extends BaseModel {
     let currencyCode = '';
 
     try {
+      // Check old style responses
+      if(parsedResponse.price.currencyCode != "" && typeof(parsedResponse.price.amount) != "string" ) {
+        parsedResponse.price = {
+          amount: parsedResponse.amount,
+          currency: parsedResponse.currency,
+        }
+      } else if(parsedResponse.bigPrice) {
+        parsedResponse.price = {
+          amount: parsedResponse.bigPrice.amount,
+          currency: {
+            code: parsedResponse.bigPrice.currencyCode,
+            divisibility: parsedResponse.bigPrice.divisibility,
+          }
+        }
+      }
+
       amount = parsedResponse.contractType === 'CRYPTOCURRENCY' ?
           1 : curDefToDecimal(parsedResponse.price);
     } catch (e) {
