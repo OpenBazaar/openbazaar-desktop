@@ -1,23 +1,21 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import Backbone, { Collection } from 'backbone';
+import bigNumber from 'bignumber.js';
 import 'jquery-zoom';
 import is from 'is_js';
 import app from '../../../app';
 import '../../../lib/select2';
 import '../../../utils/lib/velocity';
 import { getAvatarBgImage } from '../../../utils/responsive';
-import {
-  getCurrencyValidity,
-  renderFormattedCurrency,
-} from '../../../utils/currency';
+import { convertAndFormatCurrency } from '../../../utils/currency';
 import loadTemplate from '../../../utils/loadTemplate';
 import { launchEditListingModal } from '../../../utils/modalManager';
-import {
-  getInventory,
-  events as inventoryEvents,
-} from '../../../utils/inventory';
-import { endAjaxEvent, recordEvent, startAjaxEvent } from '../../../utils/metrics';
+// import {
+//   getInventory,
+//   events as inventoryEvents,
+// } from '../../../utils/inventory';
+import { recordEvent } from '../../../utils/metrics';
 import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
@@ -25,7 +23,7 @@ import Purchase from '../purchase/Purchase';
 import Rating from './Rating';
 import Reviews from '../../reviews/Reviews';
 import SocialBtns from '../../components/SocialBtns';
-import QuantityDisplay from '../../components/QuantityDisplay';
+// import QuantityDisplay from '../../components/QuantityDisplay';
 import { events as listingEvents } from '../../../models/listing/';
 import Listings from '../../../collections/Listings';
 import PopInMessage, { buildRefreshAlertMessage } from '../../components/PopInMessage';
@@ -52,7 +50,17 @@ export default class extends BaseModal {
 
     this._shipsFreeToMe = this.model.shipsFreeToMe;
     this.activePhotoIndex = 0;
-    this.totalPrice = this.model.get('item').get('price');
+
+    // Set to an empty bigNumber instance so if we can't fill it with a legitmate
+    // value, at least bigNumber ops won't fail.
+    this.totalPrice = bigNumber();
+
+    try {
+      this.totalPrice = this.model.get('item').get('bigPrice');
+    } catch (e) {
+      // pass
+    }
+
     this._purchaseModal = null;
     this._latestHash = this.model.get('hash');
     this._renderedHash = null;
@@ -159,26 +167,35 @@ export default class extends BaseModal {
     });
 
     if (this.model.isCrypto) {
-      startAjaxEvent('Listing_InventoryFetch');
-      this.inventoryFetch = getInventory(this.vendor.peerID, {
-        slug: this.model.get('slug'),
-        coinDivisibility: this.model.get('metadata')
-          .get('coinDivisibility'),
-      })
-        .done(e => {
-          this._inventory = e.inventory;
-          endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: this.model.isOwnListing,
-          });
-        })
-        .fail(e => {
-          endAjaxEvent('Listing_InventoryFetch', {
-            ownListing: this.model.isOwnListing,
-            errors: e.error || e.errCode || 'unknown error',
-          });
-        });
-      this.listenTo(inventoryEvents, 'inventory-change',
-        e => (this._inventory = e.inventory));
+      // Commenting out for since inventory fetch is currently broken on the server.
+
+      // startAjaxEvent('Listing_InventoryFetch');
+      // this.inventoryFetch = getInventory(this.vendor.peerID, {
+      //   slug: this.model.get('slug'),
+      //   coinDivisibility: this.model.get('metadata')
+      //     .get('coinDivisibility'),
+      // })
+      //   .done(e => {
+      //     this._inventory = e.inventory;
+
+      //     if (this.cryptoInventory) {
+      //       this.cryptoInventory.setState({
+      //         amount: this._inventory,
+      //       });
+      //     }
+
+      //     endAjaxEvent('Listing_InventoryFetch', {
+      //       ownListing: this.model.isOwnListing,
+      //     });
+      //   })
+      //   .fail(e => {
+      //     endAjaxEvent('Listing_InventoryFetch', {
+      //       ownListing: this.model.isOwnListing,
+      //       errors: e.error || e.errCode || 'unknown error',
+      //     });
+      //   });
+      // this.listenTo(inventoryEvents, 'inventory-change',
+      //   e => (this._inventory = e.inventory));
     }
 
     this.moreListingsCol = new Listings([], { guid: this.vendor.peerID });
@@ -487,16 +504,44 @@ export default class extends BaseModal {
     this.variantSelects.each((i, select) => {
       variantCombo.push($(select).prop('selectedIndex'));
     });
+
     // each sku has a code that matches the selected variant index combos
-    const sku = this.model.get('item').get('skus').find(v =>
-      _.isEqual(v.get('variantCombo'), variantCombo));
-    const surcharge = sku ? sku.get('surcharge') : 0;
-    const _totalPrice = this.model.get('item').get('price') + surcharge;
-    if (_totalPrice !== this.totalPrice) {
-      this.totalPrice = _totalPrice;
-      const adjPrice = renderFormattedCurrency(this.totalPrice,
-        this.model.get('metadata').get('pricingCurrency'), app.settings.get('localCurrency'));
-      this.getCachedEl('.js-price').html(adjPrice);
+    const sku = this.model
+      .get('item')
+      .get('skus')
+      .find(v =>
+        _.isEqual(v.get('variantCombo'), variantCombo));
+    const surcharge = sku ? sku.get('bigSurcharge') : bigNumber('0');
+
+    try {
+      const _totalPrice =
+        this.model
+          .price
+          .amount
+          .plus(surcharge);
+
+      if (!_totalPrice.eq(this.totalPrice)) {
+        this.totalPrice = _totalPrice;
+        let adjPrice = '';
+
+        try {
+          adjPrice = convertAndFormatCurrency(
+            this.totalPrice,
+            this.model
+              .get('item')
+              .get('priceCurrency')
+              .code,
+            app.settings.get('localCurrency')
+          );
+        } catch (e) {
+          // pass
+          console.error(e);
+        }
+
+        this.getCachedEl('.js-price').html(adjPrice);
+      }
+    } catch (e) {
+      // pass
     }
   }
 
@@ -562,7 +607,7 @@ export default class extends BaseModal {
       this.$shippingOptions.html(t({
         templateData,
         displayCurrency: app.settings.get('localCurrency'),
-        pricingCurrency: this.model.get('metadata').get('pricingCurrency'),
+        pricingCurrency: this.model.price.currencyCode,
       }));
     });
   }
@@ -595,18 +640,21 @@ export default class extends BaseModal {
 
   startPurchase() {
     if (!this.model.isCrypto) {
-      if (this.totalPrice <= 0) {
+      if (this.totalPrice.lte(0)) {
         openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
           app.polyglot.t('listingDetail.errors.zeroPriceMsg'));
         return;
       }
-    } else {
-      if (typeof this._inventory === 'number' &&
-        this._inventory <= 0) {
-        openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
-          app.polyglot.t('listingDetail.errors.outOfStock'));
-        return;
-      }
+    // Commenting out inventory related stuff for now since it's broken on the server.
+    // } else {
+    //   if (
+    //     typeof this._inventory === 'number' &&
+    //     this._inventory <= 0
+    //   ) {
+    //     openSimpleMessage(app.polyglot.t('listingDetail.errors.noPurchaseTitle'),
+    //       app.polyglot.t('listingDetail.errors.outOfStock'));
+    //     return;
+    //   }
     }
 
     const selectedVariants = [];
@@ -626,7 +674,7 @@ export default class extends BaseModal {
       removeOnClose: true,
       showCloseButton: false,
       phase: 'pay',
-      inventory: this._inventory,
+      // inventory: this._inventory,
     })
       .render()
       .open();
@@ -717,7 +765,7 @@ export default class extends BaseModal {
     if (this._purchaseModal) this._purchaseModal.remove();
     if (this.destroyRequest) this.destroyRequest.abort();
     if (this.ratingsFetch) this.ratingsFetch.abort();
-    if (this.inventoryFetch) this.inventoryFetch.abort();
+    // if (this.inventoryFetch) this.inventoryFetch.abort();
     if (this.moreListingsFetch) this.moreListingsFetch.abort();
     $(document).off('click', this.boundDocClick);
     super.remove();
@@ -754,9 +802,6 @@ export default class extends BaseModal {
         defaultCountry: this.defaultCountry,
         vendor: this.vendor,
         openedFromStore: this.options.openedFromStore,
-        currencyValidity: getCurrencyValidity(
-          this.model.get('metadata').get('pricingCurrency') || 'USD'
-        ),
         hasVerifiedMods: this.hasVerifiedMods,
         verifiedModsData: app.verifiedMods.data,
         defaultBadge,
@@ -834,17 +879,17 @@ export default class extends BaseModal {
       if (this.model.isCrypto) {
         const metadata = this.model.get('metadata');
 
-        if (this.cryptoInventory) this.cryptoInventory.remove();
-        this.cryptoInventory = this.createChild(QuantityDisplay, {
-          peerId: this.vendor.peerID,
-          slug: this.model.get('slug'),
-          initialState: {
-            coinType: metadata.get('coinType'),
-            amount: this._inventory,
-          },
-        });
-        this.getCachedEl('.js-cryptoInventory')
-          .html(this.cryptoInventory.render().el);
+        // if (this.cryptoInventory) this.cryptoInventory.remove();
+        // this.cryptoInventory = this.createChild(QuantityDisplay, {
+        //   peerId: this.vendor.peerID,
+        //   slug: this.model.get('slug'),
+        //   initialState: {
+        //     coinType: metadata.get('coinType'),
+        //     amount: this._inventory,
+        //   },
+        // });
+        // this.getCachedEl('.js-cryptoInventory')
+        //   .html(this.cryptoInventory.render().el);
 
         if (this.cryptoTitle) this.cryptoTitle.remove();
         this.cryptoTitle = this.createChild(CryptoTradingPair, {

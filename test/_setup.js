@@ -3,6 +3,9 @@ import fs from 'fs';
 import { before, after } from 'mocha';
 import sinon from 'sinon';
 import { JSDOM } from 'jsdom';
+import bigNumber from 'bignumber.js';
+import { walletCurs, walletCurDef } from './walletCurData';
+import { init as initWalletCurs } from '../js/data/walletCurrencies';
 import app from '../js/app';
 
 const tmpFolderPath = path.join(__dirname, '../.tmp');
@@ -30,6 +33,17 @@ before(function () {
   // getServerUrl.
   getServerUrl = sinon.stub(app, 'getServerUrl',
     (urlFrag) => `http://localhost:8080/ob/${urlFrag}`);
+
+  app.serverConfig = {
+    ...(app.serverConfig || {}),
+    wallets: walletCurs,
+  };
+
+  // this should match what's in start.js
+  bigNumber.config({ DECIMAL_PLACES: 50 });
+
+  app.walletCurDef = walletCurDef;
+  initWalletCurs(walletCurs, walletCurDef);
 });
 
 after(function () {

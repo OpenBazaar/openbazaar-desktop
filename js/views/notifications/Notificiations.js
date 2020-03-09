@@ -95,7 +95,7 @@ export default class extends BaseVw {
   createOrdersNotifList() {
     const notifList = this.createChild(NotificationsList, {
       collection: new Notifications(),
-      filter: 'order,declined,cancel,refund,fulfillment,orderComplete,disputeOpen,' +
+      filter: 'order,orderDeclined,cancel,refund,fulfillment,orderComplete,disputeOpen,' +
         'disputeUpdate,disputeClose,disputeAccepted,vendorDisputeTimeout,buyerDisputeTimeout' +
         'buyerDisputeExpiry,moderatorDisputeExpiry',
     });

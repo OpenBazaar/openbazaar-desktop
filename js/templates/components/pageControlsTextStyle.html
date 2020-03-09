@@ -11,7 +11,7 @@ const disabledNext = !ob.morePages;
       </button>
       <% if (typeof ob.currentPage === 'number'){%>
       <div class="btn clrP clrBr unclickable">
-        <span class="txUnb"><%= ob.localizeNumber(ob.currentPage) %></span>
+        <span class="txUnb"><%= ob.number.localizeNumber(ob.currentPage) %></span>
       </div>
       <% } %>
       <button class="btn clrP clrBr pageNext js-pageNext <% if (disabledNext) print('disabled') %>">

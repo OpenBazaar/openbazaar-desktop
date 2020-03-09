@@ -1,4 +1,16 @@
-import { decimalToInteger, convertCurrency, getExchangeRate } from '../../utils/currency';
+import {
+  convertCurrency,
+  getExchangeRate,
+  decimalToCurDef,
+  getCoinDivisibility,
+  isValidCoinDivisibility,
+  minValueByCoinDiv,
+} from '../../utils/currency';
+import {
+  isValidNumber,
+  toStandardNotation,
+  decimalPlaces,
+} from '../../utils/number';
 import {
   getCurrencyByCode as getWalletCurByCode,
   isSupportedWalletCur,
@@ -35,15 +47,22 @@ class Spend extends BaseModel {
     ];
   }
 
-  get amountInServerCur() {
-    let cryptoAmount = 0;
+  getAmountInWalletCur() {
+    this._amountInWalletCurCache =
+      this._amountInWalletCurCache || {};
     const amount = this.get('amount');
+    const cur = this.get('currency');
+    const wallet = this.get('wallet');
+    const cacheKey = `${amount.toString()}-${cur}-${wallet}`;
+    const cachedVal = this._amountInWalletCurCache[cacheKey];
+    let converted = cachedVal;
 
-    if (typeof amount === 'number') {
-      cryptoAmount = convertCurrency(amount, this.get('currency'), this.get('wallet'));
+    if (cachedVal === undefined) {
+      converted = convertCurrency(amount, cur, wallet);
+      this._amountInWalletCurCache[cacheKey] = converted;
     }
 
-    return cryptoAmount;
+    return converted;
   }
 
   validate(attrs) {
@@ -98,15 +117,73 @@ class Spend extends BaseModel {
           }
         }
 
-        if (typeof attrs.amount !== 'number') {
+        if (
+          !isValidNumber(attrs.amount, {
+            allowNumber: false,
+            allowString: false,
+          })
+        ) {
           addError('amount', app.polyglot.t('spendModelErrors.provideAmountNumber'));
         } else if (attrs.amount <= 0) {
           addError('amount', app.polyglot.t('spendModelErrors.amountGreaterThanZero'));
-        } else if (exchangeRatesAvailable &&
-          app.walletBalances) {
-          const balanceMd = app.walletBalances.get(attrs.wallet);
-          if (balanceMd && this.amountInServerCur >= balanceMd.get('confirmed')) {
-            addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+        } else {
+          const amountInWalletCur = this.getAmountInWalletCur();
+          let coinDiv;
+          let isValidCoinDiv;
+
+          try {
+            coinDiv = getCoinDivisibility(attrs.wallet);
+            [isValidCoinDiv] =
+              isValidCoinDivisibility(coinDiv);
+          } catch (e) {
+            // pass
+          }
+
+          let foundErr = false;
+
+          if (isValidCoinDiv) {
+            if (ensureMainnetCode(attrs.wallet) !== ensureMainnetCode(attrs.currency)) {
+              if (amountInWalletCur.lt(minValueByCoinDiv(coinDiv))) {
+                addError('amount', app.polyglot.t('spendModelErrors.convertedAmountTooLow', {
+                  min: toStandardNotation(minValueByCoinDiv(coinDiv)),
+                  walletCur: attrs.wallet,
+                }));
+                foundErr = true;
+              }
+            } else {
+              if (amountInWalletCur.lt(minValueByCoinDiv(coinDiv))) {
+                addError('amount', app.polyglot.t('spendModelErrors.amountTooLow', {
+                  cur: attrs.wallet,
+                  min: toStandardNotation(minValueByCoinDiv(coinDiv)),
+                }));
+                foundErr = true;
+              } else if (decimalPlaces(amountInWalletCur) > coinDiv) {
+                addError(
+                  'amount',
+                  app.polyglot.t('spendModelErrors.fractionTooLow', {
+                    cur: attrs.wallet,
+                    coinDiv,
+                  })
+                );
+                foundErr = true;
+              }
+            }
+          }
+
+          if (
+            !foundErr &&
+            exchangeRatesAvailable &&
+            app.walletBalances
+          ) {
+            const balanceMd = app.walletBalances.get(attrs.wallet);
+
+            if (
+              balanceMd &&
+              amountInWalletCur
+                .gte(balanceMd.get('confirmed'))
+            ) {
+              addError('amount', app.polyglot.t('spendModelErrors.insufficientFunds'));
+            }
           }
         }
 
@@ -137,20 +214,40 @@ class Spend extends BaseModel {
 
   sync(method, model, options) {
     options.attrs = options.attrs || this.toJSON();
-    const walletCur = getWalletCurByCode(options.attrs.wallet);
 
-    if (method === 'create' || method === 'update') {
-      let amount = options.attrs.amount;
+    // This will be overridden by decimalToCurDef below, unless that throws an exception
+    // (which should be rare). In that case we'll let the bool go through and have the
+    // server reject it, since otherwise it's not easy for sync to kick back an error
+    // that makes it back to the Model.save() call which initiated the sync call
+    options.attrs.amount = false;
 
-      if (options.attrs.currency !== walletCur.code) {
-        amount = this.amountInServerCur;
-      }
+    delete options.attrs.currency;
 
-      options.attrs.amount = decimalToInteger(amount, walletCur.code);
-      delete options.attrs.currency;
+    try {
+      options.attrs = {
+        ...options.attrs,
+        ...(
+          decimalToCurDef(
+            this.getAmountInWalletCur(),
+            options.attrs.wallet
+          )
+        ),
+      };
+    } catch (e) {
+      console.error(`Unable to create the amount object for spending: ${e.message}`);
     }
 
-    return super.sync(method, model, options);
+    delete options.attrs.wallet;
+    delete options.attrs.cid;
+
+    return super.sync(method, model, {
+      ...options,
+      success: () => {
+        // no-op - we just don't want backbone's standard success handler
+        // to execute since it overwrites the model with attributes returned
+        // by the server which have a different format than ours.
+      },
+    });
   }
 
   parse(response) {
@@ -206,6 +303,7 @@ export function _spend(fields, options = {}) {
               code: coinType,
               confirmed: data.confirmedBalance,
               unconfirmed: data.unconfirmedBalance,
+              currency: data.currency,
             })
           );
         }

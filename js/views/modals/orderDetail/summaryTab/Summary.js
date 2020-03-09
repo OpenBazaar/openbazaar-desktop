@@ -607,10 +607,11 @@ export default class extends BaseVw {
   }
 
   shouldShowPayForOrderSection() {
-    return this.buyer.id === app.profile.id &&
-      this.model.paymentCoinData &&
-      this.model.getBalanceRemaining() > 0 &&
-      !this.model.vendorProcessingError;
+    return (
+      this.buyer.id === app.profile.id &&
+      this.model.getBalanceRemaining().gt(0) &&
+      !this.model.vendorProcessingError
+    );
   }
 
   shouldShowAcceptedSection() {
@@ -690,21 +691,39 @@ export default class extends BaseVw {
 
   renderRefundView() {
     const refundMd = this.model.get('refundAddressTransaction');
-    const paymentCoinData = this.model.paymentCoinData;
 
-    if (!refundMd) {
-      throw new Error('Unable to create the refunded view because the refundAddressTransaction ' +
-        'data object has not been set.');
+    let paymentCoin = '';
+
+    try {
+      paymentCoin = refundMd.get('currency').code;
+    } catch (e) {
+      // pass
+    }
+
+    let blockChainTxUrl = false;
+
+    try {
+      blockChainTxUrl =
+        getWalletCurByCode(paymentCoin)
+          .getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet);
+    } catch (e) {
+      // pass
     }
 
     if (this.refunded) this.refunded.remove();
+
+    if (!refundMd) {
+      console.error('Unable to create the refunded view because the refundAddressTransaction ' +
+        'data object has not been set.');
+      return;
+    }
+
     this.refunded = this.createChild(Refunded, {
       model: refundMd,
       initialState: {
         isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-        blockChainTxUrl: paymentCoinData ?
-          paymentCoinData.getBlockChainTxUrl(refundMd.id, app.serverConfig.testnet) :
-          '',
+        blockChainTxUrl,
+        paymentCoin,
       },
     });
     this.buyer.getProfile()
@@ -880,7 +899,7 @@ export default class extends BaseVw {
       if (this.payForOrder) this.payForOrder.remove();
 
       this.payForOrder = this.createChild(PayForOrder, {
-        balanceRemaining: this.model.getBalanceRemaining({ convertFromSat: true }),
+        balanceRemaining: this.model.getBalanceRemaining(),
         paymentAddress: this.paymentAddress,
         orderId: this.model.id,
         isModerated: !!this.moderator,
@@ -1097,34 +1116,19 @@ export default class extends BaseVw {
       this.renderTimeoutInfoView();
 
       if (!this.model.isCase) {
-        if (getWalletCurByCode(paymentCoin)) {
-          if (this.payments) this.payments.remove();
-          this.payments = this.createChild(Payments, {
-            orderId: this.model.id,
-            collection: this.model.paymentsIn,
-            orderPrice: this.model.orderPrice,
-            vendor: this.vendor,
-            isOrderCancelable: () => this.model.isOrderCancelable,
-            isCrypto: this.contract.type === 'CRYPTOCURRENCY',
-            isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
-              this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
-            paymentCoin,
-          });
-          this.$('.js-paymentsWrap').html(this.payments.render().el);
-        } else {
-          this.getCachedEl('.js-paymentsWrap').html(
-            `
-            <div class="rowLg border clrBr padMd">
-              <i class="ion-alert-circled clrTAlert"></i>
-              <span>
-                ${app.polyglot.t('orderDetail.summaryTab.unableToShowPayments', {
-                  cur: paymentCoin,
-                })}
-              </span>
-            </div>  
-            `
-          );
-        }
+        if (this.payments) this.payments.remove();
+        this.payments = this.createChild(Payments, {
+          orderId: this.model.id,
+          collection: this.model.paymentsIn,
+          orderPrice: this.model.orderPrice,
+          vendor: this.vendor,
+          isOrderCancelable: () => this.model.isOrderCancelable,
+          isCrypto: this.contract.type === 'CRYPTOCURRENCY',
+          isOrderConfirmable: () => this.model.get('state') === 'PENDING' &&
+            this.vendor.id === app.profile.id && !this.contract.get('vendorOrderConfirmation'),
+          // paymentCoin,
+        });
+        this.$('.js-paymentsWrap').html(this.payments.render().el);
       }
 
       if (this.shouldShowAcceptedSection()) this.renderAcceptedView();

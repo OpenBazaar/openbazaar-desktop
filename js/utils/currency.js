@@ -1,17 +1,20 @@
 import _ from 'underscore';
 import app from '../app';
 import $ from 'jquery';
-import bitcoinConvert from 'bitcoin-convert';
-import { upToFixed } from './number';
+import bigNumber from 'bignumber.js';
+import {
+  preciseRound,
+  validateNumberType,
+  decimalPlaces,
+} from './number';
 import { Events } from 'backbone';
-import { getCurrencyByCode, isFiatCur } from '../data/currencies';
+import { getCurrencyByCode } from '../data/currencies';
 import {
   getCurrencyByCode as getWalletCurByCode,
   ensureMainnetCode,
   supportedWalletCurs,
 } from '../data/walletCurrencies';
 import { getCurrencies as getCryptoListingCurs } from '../data/cryptoListingCurrencies';
-import loadTemplate from '../utils/loadTemplate';
 
 const events = {
   ...Events,
@@ -26,61 +29,233 @@ export function getEvents() {
 
 export const btcSymbol = '₿';
 
-export function NoExchangeRateDataError(message) {
-  this.message = message || 'Missing exchange rate data';
-  this.name = 'NoExchangeRateDataError';
-  this.stack = (new Error()).stack;
+export class NoExchangeRateDataError extends Error {
+  constructor(message) {
+    return super(message || 'Missing exchange rate data');
+  }
 }
 
-NoExchangeRateDataError.prototype = Object.create(Error.prototype);
-NoExchangeRateDataError.prototype.constructor = NoExchangeRateDataError;
-
-export function UnrecognizedCurrencyError(message) {
-  this.message = message || 'The currency is not recognized.';
-  this.name = 'UnrecognizedCurrencyError';
-  this.stack = (new Error()).stack;
+export class UnrecognizedCurrencyError extends Error {
+  constructor(message) {
+    return super(message || 'The currency is not recognized.');
+  }
 }
 
-UnrecognizedCurrencyError.prototype = Object.create(Error.prototype);
-UnrecognizedCurrencyError.prototype.constructor = UnrecognizedCurrencyError;
+export function isValidCoinDivisibility(coinDivisibility) {
+  return [
+    Number.isInteger(coinDivisibility) && coinDivisibility > 0,
+    'The coin divisibility must be an integer greater than 0',
+  ];
+}
 
 /**
- * Converts the amount from a decimal to an integer. If the currency code is a crypto currency,
- * it will convert to its base units.
+ * Will return information about a currency including its currency data, if available.
  */
-export function decimalToInteger(amount, currency, options = {}) {
+export function getCurMeta(currency) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  const cur = currency.toUpperCase();
+  const curData = getCurrencyByCode(cur, {
+    includeWalletCurs: false,
+  });
+
+  const walletCur = getWalletCurByCode(cur);
+
+  const isFiat = !!curData;
+  const isCryptoListingCur = getCryptoListingCurs().includes(cur);
+  const isWalletCur = !!walletCur;
+
+  if (!(
+    isFiat || isCryptoListingCur || isWalletCur
+  )) {
+    throw new UnrecognizedCurrencyError();
+  }
+
+  return {
+    isFiat,
+    isWalletCur,
+    isCryptoListingCur,
+    // Crypto listing curs don't have any data at this time. They are just a string
+    // based code.
+    curData: curData || walletCur || null,
+  };
+}
+
+export function isFiatCur(cur) {
+  return getCurMeta(cur).isFiat;
+}
+
+export const defaultCryptoCoinDivisibility = 8;
+export const defaultFiatCoinDivisibility = 2;
+
+/*
+ * Keep in mind that while this function strives to get accurate coin divisibility values,
+ * it is always safest to:
+ *
+ * - When converting an integer obtained from the server to a decimal, if provided, use the
+ *   divisibility the server explicitly provides with that amount.
+ * - When converting a decimal back to an integer, if the API accepts the divisibility, it's
+ *   safest to send it over, so it's clear what value was used.
+ *
+ * Returns the coin divisibility for the given currency. The first attempt is to get it
+ * from the wallet currency map that's obtained from the server. If it's a currency not
+ * listed there, the function will attempt to decipher the type of currency (e.g. fiat,
+ * crypto listing cur, etc...) and fall back to an appropriate default value.
+ * @param {string} currency - currency code
+ * @param {object} options
+ * @param {object} [options.walletCurDef = app.walletCurDef] - The currency map
+ *  provided by the server. You should almost never need to pass this in. It was
+ *  really exposed as an option for testing purposes.
+ * @returns {number} - An integer representing the provided currency's divisibility.
+ */
+export function getCoinDivisibility(currency, options = {}) {
+  if (typeof currency !== 'string' || !currency) {
+    throw new Error('Please provide a currrency as a non-empty string.');
+  }
+
+  let walletCurDef = options.walletCurDef;
+
+  if (!walletCurDef) {
+    try {
+      walletCurDef = app.walletCurDef;
+    } catch (e) {
+      // pass
+    }
+  }
+
+  if (!walletCurDef) {
+    throw new Error('The wallet currency definition must be provide as an object either ' +
+      'passed in as an option or available on the app module.');
+  }
+
+  if (walletCurDef[currency]) {
+    return walletCurDef[currency].divisibility;
+  }
+
+  const curMeta = getCurMeta(currency);
+
+  if (curMeta.isFiat) {
+    return 2;
+  } else if (curMeta.isWalletCur) {
+    return curMeta.curData.coinDivisibility;
+  } else if (curMeta.isCryptoListingCur) {
+    return defaultCryptoCoinDivisibility;
+  }
+
+  throw new UnrecognizedCurrencyError();
+}
+
+/*
+ * Based on the provided coin divisibility, will return the minimum value
+ * that coin divisibility supports (e.g. for 8, 1e-8 will be returned).
+ * @param {number} coinDivisibility
+ * @param {object} options
+ * @param {boolean} [options.returnInStandardNotation = false] - if true wil return
+ *   the result in standard notation ('0.00000001' instead of 1e-8). Note the result
+ *   will be returned as a string when this option is true.
+ * @returns {number} - The minimum supported value for the given
+ *   coin divisibility.
+ */
+export function minValueByCoinDiv(coinDivisibility) {
+  const [isValidCoinDiv] = isValidCoinDivisibility(coinDivisibility);
+
+  if (!isValidCoinDiv) {
+    throw new Error('The provided coinDivisibility is not valid.');
+  }
+
+  return 1 / Math.pow(10, coinDivisibility);
+}
+
+/**
+ * Converts the amount from a decimal to an integer based on the provided
+ * coin divisibility.
+ * @param {number|string|BigNumber} value - The number that should be converted to an
+ *   integer.
+ * @param {number} divisibility - An integer representing the coin divisibility (e.g. for
+ *   bitcoin, it is 8)
+ * @returns {BigNumber} - A BigNumber instance representing the integer number.
+ */
+export function decimalToInteger(value, divisibility, options = {}) {
   const opts = {
-    returnUndefinedOnError: true,
+    returnNaNOnError: true,
     ...options,
   };
 
-  let returnVal;
+  try {
+    validateNumberType(value);
+
+    const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+    if (!isValidDivis) {
+      throw new Error(divisErr);
+    }
+
+    return bigNumber(value)
+      .multipliedBy(
+        bigNumber(10)
+          .pow(divisibility)
+      )
+      .decimalPlaces(0);
+  } catch (e) {
+    if (!opts.returnNaNOnError) {
+      throw e;
+    } else {
+      console.error(`Unable to convert ${value} from a decimal to an ` +
+        `integer: ${e.message}`);
+      return bigNumber();
+    }
+  }
+}
+
+/**
+ * Converts the amount from an integer to a decimal based on the provided
+ * divisibility.
+ * @param {number|string|BigNumber} value - The number that should be converted to
+ *   an decimal.
+ * @param {number} divisibility - An integer representing the coin divisibility
+ *   (e.g. for bitcoin, it is 8)
+ * @param {object} options
+ * @param {boolean} [options.returnNaNOnError = true] - if true and there's
+ *   an error, rather than an exception being thrown, a BigNumber instance evaluating
+ *   to NaN will be returned. This will allow templates to just display NaN instead of
+ *   bombing on render. It will also allow BigNumber ops (e.g. minus, times, etc...) to
+ *   not bomb.
+ * @returns {BigNumber} - A BigNumber instance representing the decimal number.
+ */
+export function integerToDecimal(value, divisibility, options = {}) {
+  const opts = {
+    returnNaNOnError: true,
+    fieldName: '',
+    ...options,
+  };
+
+  let returnVal = bigNumber();
 
   try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
+    validateNumberType(value);
+
+    const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+    if (!isValidDivis) {
+      throw new Error(divisErr);
     }
 
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
-    }
+    const result = bigNumber(value)
+      .dividedBy(
+        bigNumber(10)
+          .pow(divisibility)
+      );
 
-    const curData = getCurrencyByCode(currency);
-
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
-    } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Math.round(amount * curData.baseUnit);
-      } else {
-        returnVal = Math.round(amount * 100);
-      }
-    }
+    returnVal = result;
   } catch (e) {
-    if (!opts.returnUndefinedOnError) {
+    if (!opts.returnNaNOnError) {
       throw e;
+    } else {
+      console.error(`Unable to convert ${opts.fieldName ? `${opts.fieldName}: ` : ''}` +
+        `${value} from an integer to a decimal: ${e.message}`);
+      return bigNumber();
     }
   }
 
@@ -88,143 +263,132 @@ export function decimalToInteger(amount, currency, options = {}) {
 }
 
 /**
- * Converts the amount from an integer to a decimal, rounding to 2 decimal places. If the
- * currency code is for a crypto currency, it will convert from its base units.
+ * Returns true if the given amount with the given maxDecimals results
+ * in a value of zero.
  */
-export function integerToDecimal(amount, currency, options = {}) {
-  const opts = {
-    returnUndefinedOnError: true,
-    ...options,
-  };
+export function isFormattedResultZero(amount, maxDecimals) {
+  if (maxDecimals === 0) return true;
 
-  let returnVal;
-
-  try {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
-    }
-
-    if (typeof currency !== 'string') {
-      throw new Error('Please provide a currency as a string.');
-    }
-
-    const curData = getCurrencyByCode(currency);
-
-    if (!curData) {
-      if (!opts.returnUndefinedOnError) {
-        throw new UnrecognizedCurrencyError(`${currency} is not a recognized currency.`);
-      }
-    } else {
-      if (getWalletCurByCode(currency)) {
-        returnVal = Number(amount / curData.baseUnit);
-      } else {
-        returnVal = Number(amount / 100);
-      }
-    }
-  } catch (e) {
-    if (!opts.returnUndefinedOnError) {
-      throw e;
-    }
-  }
-
-  return returnVal;
+  return (
+    preciseRound(amount, maxDecimals) <
+      parseFloat(`.${'0'.repeat(maxDecimals - 1)}1`)
+  );
 }
 
+const MAX_NUMBER_FORMAT_DISPLAY_DECIMALS = 100;
+
 /**
- * Will increase the desired number of decimal places to display if the
- * desired amount would render a poorly represented price. For example,
- * having a USD amount of 0.001, would result in a price of $0.00 with
- * the desired max being 2 decimal places for fiat currency. This function
- * would have returned 3, which would leave the price represented as $0.001.
- *
- * It also helps with crypto currencies so in most places we could display
- * them with 4 decimal places and it will increase that number if the
- * resulting price would be zero.
- *
+ * The idea of this function is that many times for display purposes, you want to
+ * limit the number of decimals displayed on price (e.g. $1.34 instead of $1.3421,
+ * 0.0023 BTC instead of 0.00238734 BTC), but simply forcing it may result in a zero
+ * value on what is otherwise not a zero value (e.g. 0.001 with a maximum decimal
+ * places of 2 would result in 0).
+ * This function accepts the amount and the desired maximum decimal places and if
+ * the result would be zero, it will increase the desired max until at least one
+ * significant digit is shown. For example, a call of 0.0001 with a desired max of 2,
+ * would return 4.
+ * Note that this mimics the behavior of Intl.NumberFormat which will round up. So,
+ * 0.005 with a desired max of 2 will return two because when formatted it will
+ * result in 0.01.
+ * @param {number|string} amount
+ * @param {number} desiredMax - An integer intdicating the desired number of decimal
+ *   places.
+ * @returns {number} - An integer with the computed maximum decimal places.
  */
-// TODO: unit test this
-function getSmartMaxDisplayDigits(amount, desiredMax) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide the amount as a number.');
-  }
+function getMaxDisplayDigits(amount, desiredMax) {
+  validateNumberType(amount);
 
   if (typeof desiredMax !== 'number') {
     throw new Error('Please provide the desiredMax as a number.');
   }
 
+  if (amount === 0) {
+    return desiredMax;
+  }
+
   let max = desiredMax;
 
-  if (amount < 0.0000000005) {
-    max = 10;
-  } else if (amount < 0.000000005) {
-    max = 9;
-  } else if (amount < 0.00000005) {
-    max = 8;
-  } else if (amount < 0.0000005) {
-    max = 7;
-  } else if (amount < 0.000005) {
-    max = 6;
-  } else if (amount < 0.00005) {
-    max = 5;
-  } else if (amount < 0.0005) {
-    max = 4;
-  } else if (amount < 0.005) {
-    max = 3;
+  if (max === 0) {
+    return 0;
   }
 
-  return max > desiredMax ? max : desiredMax;
+  while (
+    isFormattedResultZero(amount, max) &&
+    max < MAX_NUMBER_FORMAT_DISPLAY_DECIMALS
+  ) {
+    max++;
+  }
+
+  return max < desiredMax ? desiredMax : max;
 }
 
 /**
- * Will take a number and return a string version of the number with the appropriate number of
- * decimal places based on whether the number represents a crypto or fiat price.
- *
- * This differs from formatCurrency in that this does not localize the number at all. It simply
- * returns the value with the appropriate number of decimal place, e.g:
- *
- * formatPrice(123.456, 'USD') // "123.46"
- * formatPrice(123.456, 'BTC')  // "123.45600000"
- *
- * It is more useful for <input>'s because we are not localizing the numbers in them.
- *
+ * Returns a boolean indicating whether the number can properly be formatted
+ * by Intl.NumberFormat. Certain numbers that are too big or have too many decimal
+ * places or too many significant digits will be rounded or otherwise adjusted by
+ * Intl.NumberFormat. In many cases, such a change of the number is not desired and
+ * this function will allow you to identify if that will happen and have the potential
+ * to use other functionality, e.g. BigNumber.toFixed() (keep in mind though, that
+ * option will properly show an untruncated / unrounded number, but it will not localize
+ * the number at all).
+ * @param {number|string|BigNumber} val
+ * @param {number} maxDecimals - An integer indicating the maximum number of decimal
+     places allowed.
+ * @returns {boolean} - A boolean indicating whether the number can properly be formatted
+     by Intl.NumberFormat.
  */
-export function formatPrice(price, currency) {
-  if (typeof price !== 'number') {
-    throw new Error('Please provide a price as a number');
+export function nativeNumberFormatSupported(val, maxDecimals = 20) {
+  validateNumberType(val);
+
+  if (!(Number.isInteger(maxDecimals) && maxDecimals >= 0)) {
+    throw new Error('maxDecimals must be provided as an integer >= 0.');
   }
 
-  if (isNaN(price)) {
-    throw new Error('Please provide a price that is not NaN');
-  }
+  const bigNum = bigNumber(val).dp(maxDecimals);
+  const split = bigNum
+    .toFormat({
+      ...bigNumber.config().FORMAT,
+      groupSeparator: '',
+      fractionGroupSeparator: '',
+    })
+    .split('.');
 
-  if (typeof currency !== 'string') {
-    throw new Error('Please provide a currency as a string');
-  }
-
-  let convertedPrice;
-  // todo: this needs to take into account crypto listing currency codes,
-  // which using the method below, would result in most of them being
-  // considered as fiat.
-  const cryptoCur = getWalletCurByCode(currency);
-
-  if (cryptoCur) {
-    // Format crypto price so it has up to the max decimal places (as specified in the crypto
-    // config), but without any trailing zeros
-    convertedPrice = upToFixed(price, getSmartMaxDisplayDigits(price, 8));
+  if (split[0] === '0' && split[1]) {
+    if (split[1].length > 20) return false;
   } else {
-    convertedPrice = price.toFixed(2);
+    const intLen = split[0] && split[0].length || 0;
+    const fractionLen = split[1] && split[1].length || 0;
+
+    if (intLen + fractionLen > 16) return false;
   }
 
-  return convertedPrice;
+  const int = bigNumber(split[0]);
+  const fraction = bigNumber(split[1]);
+
+  if (
+    !int.isNaN() &&
+    int.gt(Number.MAX_SAFE_INTEGER)
+  ) {
+    return false;
+  }
+
+  if (
+    !fraction.isNaN() &&
+    fraction.gt(Number.MAX_SAFE_INTEGER)
+  ) {
+    return false;
+  }
+
+  return true;
 }
 
 /**
- * Will format an amount in the given currency into the format appropriate for the given locale.
- * In many cases, instead of using this method directly, you may want to use
- * renderFormattedCurrency() from this module or its corresponding template helper,
- * formattedCurrency, since those will more robustly handle (via tooltips and icons)
- * unrecognized currency codes and/or conversion problems due to unavailable exchange
- * rate data.
+ * Will format an amount in the given currency into the format appropriate for the given
+ * locale.
+ * @param {number|string|BigNumber} amount
+ * @param {string} currency
+ * @returns {string} - A string representing the formatted amount in the given
+ *   currency and locale.
  */
 export function formatCurrency(amount, currency, options) {
   const opts = {
@@ -237,12 +401,52 @@ export function formatCurrency(amount, currency, options) {
     // If you just want to format a number representing a crypto currency amount
     // but don't want any code or symbol used, set to false.
     includeCryptoCurIdentifier: true,
+    // If true and the amount is greater than zero, maxDisplayDecimals will be
+    // raised as necessary to avoid a formatted result being 0.
+    extendMaxDecimalsOnZero: true,
     ...options,
   };
 
-  if (typeof amount !== 'number' || isNaN(amount)) {
-    return '';
-  }
+  // If the value falls within the range supported by Intl.NumberFormat, which is quite
+  // large, then Intl.NumberFormat will be used and the number will be formatted in
+  // a localized way. If it falls outside of the supported range, then we will fallback
+  // to BigNumber.toFormat(). Please keeep in mind though, BigNumber.toFormat() will not
+  // localize the number.
+  const formatAmount = (value, locale, formatAmountOpts = {}) => {
+    const maxDecimals = formatAmountOpts.maximumFractionDigits;
+    const minDecimals = formatAmountOpts.minimumFractionDigits;
+
+    if (nativeNumberFormatSupported(value, maxDecimals)) {
+      return new Intl.NumberFormat(
+        opts.locale,
+        formatAmountOpts
+      ).format(value);
+    }
+
+    let rounded = bigNumber(value)
+      .dp(maxDecimals)
+      .toString();
+
+    if (Number.isInteger(minDecimals)) {
+      const split = rounded.split('.');
+      const int = split[0];
+      const fraction = split[1];
+
+      if (fraction && fraction.length < minDecimals) {
+        const trailingZeros = '';
+        trailingZeros.padEnd(minDecimals - fraction.length, '0');
+        rounded = `${int}.${fraction}${trailingZeros}`;
+      }
+    }
+
+    const formattedValue = bigNumber(rounded).toFormat();
+
+    return formattedValue;
+  };
+
+  validateNumberType(amount);
+
+  const bigAmount = bigNumber(amount);
 
   if (typeof opts.locale !== 'string') {
     throw new Error('Please provide a locale as a string');
@@ -253,85 +457,120 @@ export function formatCurrency(amount, currency, options) {
   }
 
   const cur = currency.toUpperCase();
-  const curData = getCurrencyByCode(cur);
+  let isFiat = false;
+  let isWalletCur = false;
+  let isCryptoListingCur = false;
+  let curData = null;
 
-  let formattedCurrency;
-  const cryptoCur = getWalletCurByCode(cur);
-
-  // If we don't recognize the currency, we'll assume it's a crypto
-  // listing cur.
-  const isCryptoListingCur = getCryptoListingCurs().includes(cur) ||
-    (!cryptoCur && !curData);
-
-  if (cryptoCur || isCryptoListingCur) {
-    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
-      opts.minDisplayDecimals : 0;
-    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-      opts.maxDisplayDecimals : 8;
-  } else {
-    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
-      opts.minDisplayDecimals : 2;
-    opts.maxDisplayDecimals = typeof opts.maxDisplayDecimals === 'number' ?
-      opts.maxDisplayDecimals : 2;
+  try {
+    const curMeta = getCurMeta(cur);
+    isFiat = curMeta.isFiat;
+    isWalletCur = curMeta.isWalletCur;
+    isCryptoListingCur = curMeta.isCryptoListingCur;
+    curData = curMeta.curData;
+  } catch (e) {
+    if (e instanceof UnrecognizedCurrencyError) {
+      // We'll just assume it's a crypto listing currency. This function would only affect
+      // formatting - not any vital calculations.
+      isCryptoListingCur = true;
+    } else {
+      console.error('Unable to format the currency because the currency meta could not ' +
+        `be obtained: ${e.message}`);
+      return '';
+    }
   }
 
-  if (cryptoCur) {
+  let formattedCurrency;
+
+  if (isFiat) {
+    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
+      opts.minDisplayDecimals : 2;
+  } else {
+    opts.minDisplayDecimals = typeof opts.minDisplayDecimals === 'number' ?
+      opts.minDisplayDecimals : 0;
+  }
+
+  if (typeof opts.maxDisplayDecimals !== 'number') {
+    try {
+      opts.maxDisplayDecimals = getCoinDivisibility(cur);
+    } catch (e) {
+      // It just means it might display with more zeros than it should - just a cosmetic thing.
+      opts.maxDisplayDecimals = defaultCryptoCoinDivisibility;
+    }
+  }
+
+  if (
+    bigAmount.gt(0) &&
+    opts.extendMaxDecimalsOnZero
+  ) {
+    opts.maxDisplayDecimals = getMaxDisplayDigits(bigAmount, opts.maxDisplayDecimals);
+  }
+
+  if (isWalletCur) {
     let curSymbol = opts.useCryptoSymbol && curData.symbol || cur;
-    let bitcoinConvertUnit;
-    let amt = amount;
+    let amt = bigAmount;
 
     if (cur === 'BTC' || cur === 'TBTC') {
       switch (opts.btcUnit) {
         case 'MBTC':
-          bitcoinConvertUnit = curSymbol = 'mBTC';
+          curSymbol = 'mBTC';
+          amt = amt.multipliedBy(1000);
           break;
         case 'UBTC':
-          bitcoinConvertUnit = curSymbol = 'μBTC';
+          curSymbol = 'μBTC';
+          amt = amt.multipliedBy(1000000);
           break;
         case 'SATOSHI':
           curSymbol = 'sat';
-          bitcoinConvertUnit = 'Satoshi';
+          amt = amt.multipliedBy(100000000);
           break;
         default:
-          bitcoinConvertUnit = 'BTC';
+          // pass
       }
 
-      amt = bitcoinConvert(amount, 'BTC', bitcoinConvertUnit);
+      amt = amt.toString();
     }
 
-    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+    formattedCurrency = formatAmount(amt, opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-    }).format(amt);
+      maximumFractionDigits: opts.maxDisplayDecimals,
+    });
 
     if (opts.includeCryptoCurIdentifier) {
       const translationSubKey = curSymbol === curData.symbol ?
         'curSymbolAmount' : 'curCodeAmount';
       formattedCurrency = app.polyglot.t(`cryptoCurrencyFormat.${translationSubKey}`, {
-        amount: formattedAmount,
+        amount: formattedCurrency,
         [curSymbol === curData.symbol ? 'symbol' : 'code']: curSymbol,
       });
     }
   } else if (isCryptoListingCur) {
-    const formattedAmount = formattedCurrency = new Intl.NumberFormat(opts.locale, {
+    formattedCurrency = formatAmount(bigAmount, opts.locale, {
       minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-    }).format(amount);
+      maximumFractionDigits: opts.maxDisplayDecimals,
+    });
 
     if (opts.includeCryptoCurIdentifier) {
       formattedCurrency = app.polyglot.t('cryptoCurrencyFormat.curCodeAmount', {
-        amount: formattedAmount,
+        amount: formattedCurrency,
         code: cur.length > 8 ?
           `${cur.slice(0, 8)}…` : cur,
       });
     }
   } else {
-    formattedCurrency = new Intl.NumberFormat(opts.locale, {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: opts.minDisplayDecimals,
-      maximumFractionDigits: getSmartMaxDisplayDigits(amount, opts.maxDisplayDecimals),
-    }).format(amount);
+    // Note if the amount provided has too many decimals for Intl.NumberFormat to display,
+    // the formatting function for bigNumber.js will be used, but that will neither localize
+    // nor style the result as currency. It should be rare that is needed.
+    formattedCurrency = formatAmount(
+      bigAmount,
+      opts.locale,
+      {
+        style: 'currency',
+        currency,
+        minimumFractionDigits: opts.minDisplayDecimals,
+        maximumFractionDigits: opts.maxDisplayDecimals,
+      }
+    );
   }
 
   return formattedCurrency;
@@ -402,7 +641,15 @@ export function getExchangeRate(currency) {
     throw new Error('Please provide a currency.');
   }
 
-  const cur = isFiatCur(currency) ? currency : ensureMainnetCode(currency);
+  let isWalletCur = false;
+
+  try {
+    isWalletCur = getCurMeta(currency).isWalletCur;
+  } catch (e) {
+    // pass
+  }
+
+  const cur = isWalletCur ? ensureMainnetCode(currency) : currency;
 
   return exchangeRates[cur];
 }
@@ -417,15 +664,16 @@ export function getExchangeRates() {
 
 /**
  * Converts an amount from one currency to another based on exchange rate data.
+ * @param {number|string|BigNumber} amount - Note that if you do provide the number as
+ *   as a string, you do risk precision loss if the number is beyond the bounds that
+ *   JS can natively handle.
+ * @param {string} fromCur - The currency you are converting from.
+ * @param {string} toCur - The currency you are converting to.
+ * @returns {number|string|BigNumber} - The converted amount. The return type will
+ *   match the type of the provided amount.
  */
 export function convertCurrency(amount, fromCur, toCur) {
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number');
-  }
-
-  if (isNaN(amount)) {
-    throw new Error('Please provide an amount that is not NaN');
-  }
+  validateNumberType(amount);
 
   if (typeof fromCur !== 'string') {
     throw new Error('Please provide a fromCur as a string');
@@ -455,15 +703,25 @@ export function convertCurrency(amount, fromCur, toCur) {
   const fromRate = getExchangeRate(fromCurCode);
   const toRate = getExchangeRate(toCurCode);
 
-  return (amount / fromRate) * toRate;
+  const bigNum = amount instanceof bigNumber ?
+    amount : bigNumber(amount);
+
+  const converted =
+    bigNum
+      .times(toRate / fromRate);
+
+  if (amount instanceof bigNumber) {
+    return converted;
+  } else if (typeof amount === 'string') {
+    return converted.toString();
+  }
+
+  return Number(converted.toString());
 }
 
 /**
  * Convenience function to both convert and format a currency amount using convertCurrency()
- * and formatCurrency(). In many cases, instead of using this method directly, you may want
- * to use renderFormattedCurrency() from this module or its corresponding template helper,
- * formattedCurrency, since those will more robustly handle (via tooltips and icons)
- * unrecognized currency codes and/or conversion problems due to unavailable exchange rate data.
+ * and formatCurrency().
  */
 export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
   const opts = {
@@ -488,59 +746,13 @@ export function convertAndFormatCurrency(amount, fromCur, toCur, options = {}) {
     }
   }
 
-  return formatCurrency(convertedAmt, outputFormat,
-    _.omit(opts, 'skipConvertOnError'));
-}
-
-/**
- * Returns `VALID` if the given currency is valid, otherwise it will return a code
- * indicating why it's not valid.
- */
-export function getCurrencyValidity(cur) {
-  if (typeof cur !== 'string') {
-    throw new Error('A currency must be provided as a string.');
-  }
-
-  const curData = getCurrencyByCode(cur);
-  let returnVal;
-
-  if (curData) {
-    returnVal = getExchangeRate(ensureMainnetCode(cur)) ?
-      'VALID' : 'EXCHANGE_RATE_MISSING';
-  } else {
-    returnVal = 'UNRECOGNIZED_CURRENCY';
-  }
-
-  return returnVal;
-}
-
-/**
- * Will render a formattedCurrency template. The main function of the template is that it will
- * render a localized price when possible. When it is not possible (e.g. an unrecognized currency),
- * it will render an alert icon with a tooltip containing an explanation (assuming you don't pass in
- * the showTooltipOnUnrecognizedCur option as false).
- */
-export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
-  if (typeof fromCur !== 'string' || !fromCur) {
-    throw new Error('Please provide a "from currency" as a string.');
-  }
-
-  if (toCur && typeof toCur !== 'string') {
-    throw new Error('If providing a "to currency", it must be provided as a string.');
-  }
-
-  let result = '';
-
-  loadTemplate('components/formattedCurrency.html', (t) => {
-    result = t({
-      price: amount,
-      fromCur,
-      toCur: toCur || fromCur,
-      ...options,
-    });
-  });
-
-  return result;
+  return (
+    formatCurrency(
+      convertedAmt,
+      outputFormat,
+      _.omit(opts, ['skipConvertOnError'])
+    )
+  );
 }
 
 /**
@@ -550,29 +762,251 @@ export function renderFormattedCurrency(amount, fromCur, toCur, options = {}) {
  * If the "from" currency is invalid, it will render an empty string.
  */
 export function renderPairedCurrency(price, fromCur, toCur) {
-  const fromCurValidity = getCurrencyValidity(fromCur);
+  let result;
 
-  if (typeof price !== 'number' || fromCurValidity === 'UNRECOGNIZED_CURRENCY') {
-    // Sometimes when prices are in an unsupported currency, they will be
-    // saved as empty strings or undefined. We'll ignore those an just render an
-    // empty string.
-    return '';
-  }
+  try {
+    const fromCurExchangeRate = getExchangeRate(fromCur);
+    const toCurExchangeRate = getExchangeRate(toCur);
+    const formattedBase = formatCurrency(price, fromCur);
+    const formattedConverted =
+      fromCur === toCur ||
+      typeof fromCurExchangeRate !== 'number' ||
+      typeof toCurExchangeRate !== 'number' ?
+        '' : convertAndFormatCurrency(price, fromCur, toCur);
 
-  const toCurValidity = getCurrencyValidity(toCur);
-  const formattedBase = formatCurrency(price, fromCur);
-  const formattedConverted = fromCur === toCur || toCurValidity !== 'VALID' ||
-    fromCurValidity !== 'VALID' ?
-      '' : convertAndFormatCurrency(price, fromCur, toCur);
+    result = formattedBase;
 
-  let result = formattedBase;
-
-  if (formattedConverted !== '') {
-    result = app.polyglot.t('currencyPairing', {
-      baseCurValue: formattedBase,
-      convertedCurValue: formattedConverted,
-    });
+    if (formattedConverted) {
+      result = app.polyglot.t('currencyPairing', {
+        baseCurValue: formattedBase,
+        convertedCurValue: formattedConverted,
+      });
+    }
+  } catch (e) {
+    result = '';
+    console.error('Unable to render the paired currency. Returning an empty string. ' +
+      `Error: ${e.message}`);
   }
 
   return result;
+}
+
+/**
+ * Will return a string based amount along with a currency definition.
+ * @param {number|string|BigNumber} amount
+ * @param {string} curCode - The currency the amount is in.
+ * @param {object} [options={}] - Function options
+ * @param {number} [options.divisibility] - The divisibility of the amount. If not
+ *   provided, it will be obtained from getCoinDivisibility().
+ * @returns {BigNumber} - An object containing a BigNumber instance of the amount as an
+ *   integer as well as a currency definition.
+ */
+export function decimalToCurDef(amount, curCode, options = {}) {
+  const opts = {
+    amountKey: 'amount',
+    currencyKey: 'currency',
+    ...options,
+  };
+
+  validateNumberType(amount);
+
+  if (typeof curCode !== 'string' || !curCode) {
+    throw new Error('The curCode must be provided as a non-empty string.');
+  }
+
+  let divisibility = opts.divisibility;
+
+  try {
+    divisibility = divisibility === undefined ?
+      getCoinDivisibility(curCode) : divisibility;
+  } catch (e) {
+    // If unable to obtain a divisibility, we'll just default to the crypto listing curs
+    // default.
+    divisibility = defaultCryptoCoinDivisibility;
+  }
+
+  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
+
+  if (!isValidDivis) {
+    throw new Error(divisErr);
+  }
+
+  const convertedAmount = decimalToInteger(amount, divisibility);
+
+  return {
+    [opts.amountKey]: convertedAmount,
+    [opts.currencyKey]: {
+      code: curCode,
+      divisibility,
+    },
+  };
+}
+
+/**
+ * Will return a BigNumber representation of a decimal number based off of the
+ * provided currency definition.
+ * @param {object} curDef - A currency definition matching the OB-go cur def
+ *   schema.
+ * @param {object} options
+ * @param {string} options.amount - The property name representing the amount
+ *   in the provided curDef object.
+ * @param {string} options.currency - The property name representing the currency
+ *   object in the provided curDef object.
+ * @param {any} [options.returnOnError = bigNumber()] - The value that will be returned
+ *   if there is an error in the process. Set the option to false if you'd rather the
+ *   function throw an exception on error.
+ * @returns {BigNumber} - a BigNumber representation of a decimal number based off
+ * of the provided currency definition.
+ */
+export function curDefToDecimal(curDef, options = {}) {
+  const opts = {
+    returnOnError: bigNumber(),
+    amountKey: 'amount',
+    currencyKey: 'currency',
+    ...options,
+  };
+
+  let converted = opts.returnOnError;
+
+  try {
+    if (typeof curDef !== 'object') {
+      throw new Error('The curDef must be provided as an object.');
+    }
+
+    const amount = curDef[opts.amountKey];
+    const currency = curDef[opts.currencyKey];
+
+    validateNumberType(amount, {
+      fieldName: `curDef.${opts.amountKey}`,
+    });
+
+    if (typeof currency !== 'object') {
+      throw new Error('The currency must be an object');
+    }
+
+    const [isValidCoinDiv, divisErr] = isValidCoinDivisibility(currency.divisibility);
+
+    if (!isValidCoinDiv) {
+      throw new Error(divisErr);
+    }
+
+    converted = integerToDecimal(
+      amount,
+      currency.divisibility
+    );
+  } catch (e) {
+    console.error(`Unable to convert the given currency definition to a decimal: ${e.message}`);
+    if (!opts.returnOnError) throw e;
+  }
+
+  return converted;
+}
+
+export const CUR_VAL_RANGE_TYPES = {
+  GREATER_THAN_ZERO: 1,
+  GREATER_THAN_OR_EQUAL_ZERO: 2,
+};
+
+let rangeTypeValues;
+
+function isValidRangeType(type) {
+  if (!rangeTypeValues) {
+    rangeTypeValues =
+      Object
+        .keys(CUR_VAL_RANGE_TYPES)
+        .map(key => CUR_VAL_RANGE_TYPES[key]);
+  }
+
+  return rangeTypeValues.includes(type);
+}
+
+/**
+ * Validates a given amount based on the provided divisibility.
+ * @param {numer|string|BigNumber} amount - The amount to validate.
+ * @param {object} options
+ * @param {boolean} [options.requireBigNumAmount = true] - if true, requires
+ *   the amount to be a BigNumber instance, otherwise numbers and strings are
+ *   also allowed.
+ * @param {string} [options.rangeType = CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO] -
+ *   the type of range validation to apply. See CUR_VAL_RANGE_TYPES.
+ * @returns {object} - An object containing a series of booleans indicating whether
+ *   particular validations passed:
+ *   - validCoinDiv: indicates whether the provided divisibility is valid
+ *   - validRequired: indicates whether the provided amount contains a value as
+ *     opposed to null, empty string or undefined. If this validation fails, the
+ *     others below will not be tested.
+ *   - validType: indicates whether the amount is the right type depending on
+ *     option.requireBigNumAmount. If this validation fails, the
+ *     others below will not be tested.
+ *   - validRange: indicates whether the amount falls within the correct range.
+ *     Depends on options.rangeType.
+ *   - validFractionDigitCount: indicates whether the fraction digits in the amount
+ *     exceed the maximum supported fraction digits for the given divisibility. This
+ *     will not be tested if validCoinDiv fails.
+ *   - minValue: This is not a boolean, rather an integer indicating the maximum
+ *     fraction digits supported by th divisibility. It's potentially useful to show in
+ *     an error message if validFractionDigitCount fails. This will not be provided if
+ *     validCoinDiv fails.
+ */
+export function validateCurrencyAmount(amount, divisibility, options = {}) {
+  const opts = {
+    requireBigNumAmount: true,
+    rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO,
+    ...options,
+  };
+
+  if (!isValidRangeType(opts.rangeType)) {
+    throw new Error('You have provided an invalid range type.');
+  }
+
+  const [isValidCoinDiv] = isValidCoinDivisibility(divisibility);
+
+  const returnVal = {
+    validCoinDiv: isValidCoinDiv,
+  };
+
+  if (
+    typeof amount === 'undefined' ||
+    amount === '' ||
+    amount === null
+  ) {
+    returnVal.validRequired = false;
+    return returnVal;
+  }
+
+  returnVal.validRequired = true;
+
+  const bigNum = bigNumber(amount);
+
+  if (
+    (
+      opts.requireBigNumAmount &&
+      !(amount instanceof bigNumber)
+    ) ||
+    (bigNum.isNaN())
+  ) {
+    returnVal.validType = false;
+    return returnVal;
+  }
+
+  returnVal.validType = true;
+
+  switch (opts.rangeType) {
+    case CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO:
+      returnVal.validRange = bigNum.gt(0);
+      break;
+    case CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO:
+      returnVal.validRange = bigNum.gte(0);
+      break;
+    default:
+      // pass
+  }
+
+  if (isValidCoinDiv) {
+    returnVal.validFractionDigitCount =
+      decimalPlaces(amount) <= divisibility;
+    returnVal.minValue = minValueByCoinDiv(divisibility);
+  }
+
+  return returnVal;
 }

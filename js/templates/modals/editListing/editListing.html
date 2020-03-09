@@ -107,10 +107,14 @@
               <div class="flexRow gutterH">
                 <div class="col6 simpleFlexCol">
                   <label for="editListingPrice" class="required"><%= ob.polyT('editListing.price') %></label>
-                  <% if (ob.errors['item.price']) print(ob.formErrorTmpl({ errors: ob.errors['item.price'] })) %>
+                  <%
+                    if (ob.errors['item.bigPrice']) print(ob.formErrorTmpl({ errors: ob.errors['item.bigPrice'] }));
+
+                    if (ob.errors['item.pricingCurrency.code']) print(ob.formErrorTmpl({ errors: ob.errors['item.pricingCurrency.code'] }));                    
+                  %>
                   <div class="inputSelect marginTopAuto">
-                    <input type="text" class="clrBr clrP clrSh2 js-price" name="item.price" id="editListingPrice" value="<% print(typeof ob.item.price === 'number' && ob.metadata.pricingCurrency ? ob.currencyMod.formatPrice(ob.item.price, ob.metadata.pricingCurrency) : ob.item.price || '') %>" data-var-type="number" placeholder="0.00">
-                    <select id="editListingCurrency" name="metadata.pricingCurrency" class="clrBr clrP nestInputRight">
+                    <input type="text" class="clrBr clrP clrSh2 js-price" name="item.bigPrice" id="editListingPrice" value="<%= ob.number.toStandardNotation(ob.item.bigPrice) %>" placeholder="0.00" data-var-type="bignumber">
+                    <select id="editListingCurrency" name="item.priceCurrency.code" class="clrBr clrP nestInputRight">
                       <% ob.currencies.forEach((currency) => {%>
                       <option value="<%= currency.code %>" data-name="<%= currency.name %>" <% if (currency.code === ob.listingCurrency) print('selected'); %>><%= currency.code %></option>
                       <% }); %>
@@ -272,6 +276,11 @@
       <section class="js-scrollToSection contentBox padMd clrP clrBr clrSh3 tx3 couponsSection js-couponsSection <% ob.coupons.length && print('expandedCouponView') %>">
         <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.coupons') %></h2>
         <hr class="clrBr rowMd" />
+        <%
+          if (ob.errors['coupons']) {
+            print(ob.formErrorTmpl({ errors: ob.errors['coupons'] }));
+          }
+        %>        
         <div class="js-couponsContainer couponsContainer"></div>
         <a class="btn clrP clrBr clrSh2 btnAddCoupon js-btnAddCoupon"><%= ob.polyT('editListing.btnAddCoupon') %></a>
       </section>

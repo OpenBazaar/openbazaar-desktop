@@ -134,6 +134,9 @@
       "retryConfig": {
         "title": "Unable to obtain your server config."
       },
+      "unableToGetWalletCurDef": {
+        "title": "Unable to obtain the wallet currency definition."
+      },
       "retryOnboardingFetch": {
         "title": "Unable to get your profile and settings data."
       },
@@ -1048,8 +1051,8 @@
     "goToStore": "Go to store",
     "unableToPurchase": {
       "incompatibleCrypto": "Your wallet does not support payment in any of the currencies the listing accepts. The listing accepts [%{acceptedCurs}], whereas your wallet supports [%{walletCurs}].",
-      "unrecognizedCur": "The item is priced in an unrecognized currency (%{cur}).",
       "noExchangeRateInfo": "The item is priced in a currency for which exchange rate data is currently unavailable (%{cur}).",
+      "noCryptoExchangeRateInfo": "Exchange rate data is not available for one or both of the coins being traded. (%{cur})",
       "unpurchaseable": "This listing is not purchasable."
     },
     "confirmDelete": {
@@ -1096,7 +1099,8 @@
     "btnShowMatureContent": "Show Mature Content",
     "tipShowMatureContent": "Show Mature Content",
     "tipHideMatureContent": "Hide Mature Content",
-    "blockedUser": "You blocked this user"
+    "blockedUser": "You blocked this user",
+    "cardError": "There was an error displaying the listing card. It's possible the listing data is malformed."
   },
   "listingDelete": {
     "deletingListing": "Deleting listing %{listing}…",
@@ -1494,7 +1498,10 @@
       "shippingTotal": "Total Shipping",
       "total": "Total",
       "cryptoIconsAmount": "(%{amount})",
-      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}"
+      "cryptoIconsAmountCombo": "%{icons} %{cryptoIconsAmount}",
+      "totalWarning1": "Prices are estimated after converting from %{currency}, and may differ slightly from the final total for funding your order on the next screen.",
+      "totalWarning2": "Actual total may vary slightly on the next screen after conversion to %{currency}.",
+      "totalWarning2NoCoin": "Actual total may vary slightly on the next screen after conversion to the payment currency."
     },
     "errors": {
       "moderatorsTitle": "Moderator Data Failted to Load",
@@ -1503,11 +1510,15 @@
       "ownIDTitle": "You Can't Purchase Your Own Listings",
       "ownIDMsg": "You can preview the purchase process for your own listings, but you cannot purchase them.",
       "paymentFailed": "The Payment Could Not Be Completed",
-      "zeroPrice": "You cannot purchase a listing with a total price of zero.",
+      "zeroPrice": "You cannot purchase a listing with a total price that is less than or equal to zero.",
       "insufficientInventoryTitle": "Insufficient Inventory",
       "insufficientInventoryBody": "The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} item remains. |||| The vendor does not have sufficient inventory to complete the pruchase. Only %{remainingInventory} items remain.",
       "reloadOutdatedHash": "load the latest version",
-      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process."
+      "outdatedHash": "You are viewing an outdated version of the listing. In order to purchase the listing, please %{reloadLink} and re-start the purchase process.",
+      "genericPurchaseErrTitle": "Unable To Complete The Purchase",
+      "invalidCoinDiv": "The listing does not have a valid coin divisibility.",
+      "unableToConvertCryptoQuantity": "Unable to convert the crypto quantity to base units.",
+      "serverErrorBelowDust": "The purchase price is below the minimum spend amount for the payment currency."
     }
   },
   "moderators": {
@@ -1951,6 +1962,15 @@
   "debugLog": {
     "copyToClipboard": "Copy to clipboard"
   },
+  "currencyAmountErrors": {
+    "invalidCoinDiv": "The associated currency has an invalid coin div.",
+    "missingValue": "Please provide a value.",
+    "invalidType": "Please provide the value as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "greaterThanZero": "Please provide a value greater than zero.",
+    "greaterThanEqualZero": "Please provide a value greater than or equal to zero.",
+    "nonNegative": "Please provide a non-negative value.",
+    "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up so no more than %{coinDiv} decimal places are represented."
+  },
   "profileModelErrors": {
     "provideName": "You must provide a name.",
     "provideValidHexColor": "Please provide a valid hex color.",
@@ -1998,7 +2018,12 @@
     "termsAndConditionsTooLong": "The terms and conditions exceed the maximum allowable length.",
     "provideShippingOption": "For a physical good, at least one shipping option is required.",
     "tooManyCoupons": "You cannot have more than %{maxCouponCount} coupons.",
-    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price."
+    "couponsPriceTooLarge": "The discount amount cannot be equal to or greater than the listing price.",
+    "skuPriceTooLow": "A surcharge can be zero. But if providing a value larger than zero, the minimum value for a surcharge in %{cur} is %{min}.",
+    "providePriceModifier": "Please provide a price modifier.",
+    "numericPriceModifier": "Please provide the price modifier as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "priceModifierRange": "The price modifier must be between %{min} and %{max}",
+    "provideCryptoInventory": "Please provide the remaining inventory."
   },
   "itemModelErrors": {
     "provideTitle": "Please provide a title.",
@@ -2007,7 +2032,6 @@
     "badConditionType": "The condition is not one of the available types.",
     "provideAmount": "Please provide a price.",
     "provideNumericAmount": "Please provide the price as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
-    "provideAmountGreaterThanZero": "The price must be greater than 0.",
     "imageRequired": "Please provide at least one image",
     "tooManyTags": "You have exceeded the maximum allowable amount of %{maxTags} tags.",
     "tooManyCats": "You have exceeded the maximum allowable amount of %{maxCats} categories.",
@@ -2016,25 +2040,22 @@
     "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "quantityMustBePositive": "The quantity must be more than zero.",
+    "quantityMustBeInteger": "Fractional quantites are not allowed. Please provide a whole number.",
     "duplicateVariantName": "You have multiple \"%{name}\" choices. Choice names must be unique."
   },
   "metadataModelErrors": {
-    "providePriceModifier": "Please provide a price modifier.",
-    "numericPriceModifier": "Please provide the price modifier as a number.",
-    "priceModifierRange": "The price modifier must be between %{min} and %{max}",
     "provideAcceptedCurrency": "Please select at least one accepted currency.",
     "provideAcceptedCurrencyCrypto": "Please provide a receiving currency.",
     "provideCoinType": "Please select a coin to trade.",
     "unsupportedAcceptedCur": "%{cur} is not supported by your wallet. Please select a different currency.",
-    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: ${curs}"
+    "unsupportedAcceptedCurs": "The following currencies are not supported by your wallet: %{curs}"
   },
   "couponModelErrors": {
     "provideDiscountCode": "Please provide a coupon code.",
     "provideDiscountAmount": "Please provide a discount value.",
     "percentageLow": "The percentage value must be greater than zero.",
     "percentageHigh": "You cannot set a percentage above or equal to 100%",
-    "priceLow": "The price must be geater than zero.",
-    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "provideNumericDiscountAmount": "Please provide the discount amount as a number. If including a decimal, a period should be used as the seperator, for example \"1.25\".",
     "needUniqueDiscountCode": "You already have a coupon using that code. Please provide a unique coupon code."
   },
   "shippingOptionModelErrors": {
@@ -2045,10 +2066,7 @@
   "serviceModelErrors": {
     "provideName": "Please provide a service name.",
     "provideEstDeliveryTime": "Please provide an estimated delivery time.",
-    "provideService": "Please provide at least on shipping service.",
-    "provideAmount": "Please provide a price.",
-    "provideNumericAmount": "Please provide the price as a number.",
-    "provideNonNegativePrice": "The price must be greater than or equal to 0."
+    "provideService": "Please provide at least one shipping service."
   },
   "moderatorModelErrors": {
     "noDescription": "Please provide a description.",
@@ -2066,14 +2084,15 @@
   },
   "fixedFeeModelErrors": {
     "noCurrency": "If your fee type is fixed or fixed plus percentage, you must set a valid currency for your fee.",
-    "noAmount": "If your fee type is fixed or fixed plus percentage, you must set a valid amount for your fixed fee. If including a decimal, a period should be used as the seperator, for example \"0.00\"."
+    "fixedFeeAsNumber": "If your fee type is fixed or fixed plus percentage, the fixed fee must be provided as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "invalidCoinDiv": "%{cur} does not have a valid coin divisibility. Please select a different currency.",
+    "amountGreaterThanZero": "If your fee type is fixed or fixed plus percentage, the fixed fee amount must be greater than zero."
   },
   "skuModelErrors": {
     "provideQuantity": "Please provide a quantity.",
     "provideNumericQuantity": "Please provide the quantity as a number.",
     "providePositiveQuantity": "The quantity cannot be less than 0.",
-    "provideSurcharge": "Please provide a surcharge.",
-    "provideNumericSurcharge": "Please provide the surcharge as a number."
+    "quantityMustBeInteger": "Fractional quantites are not allowed. Please provide a whole number."
   },
   "variantOptionModelErrors": {
     "provideName": "Please provide a title.",
@@ -2087,6 +2106,9 @@
     "provideAddress": "Please provide an address.",
     "provideAmountNumber": "Please provide an amount as a number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "amountGreaterThanZero": "The amount must be greater than zero.",
+    "convertedAmountTooLow": "The amount converted to %{walletCur} is below the %{walletCur} minimum supported amount of %{min}. Please increase the amount.",
+    "amountTooLow": "The minimum amount in %{cur} is %{min}.",
+    "fractionTooLow": "%{cur} only supports up to %{coinDiv} decimal places. Please round up.",
     "insufficientFunds": "You have insufficient funds to send such an amount. Be sure to account for the transaction fee.",
     "missingExchangeRateData": "Unable to spend in %{cur} because there is no exchange rate data available between %{cur} and %{serverCur}. Please select another currency. If no data is available for any currency, you can always select %{serverCur}.",
     "invalidAddress": "The provided address does not appear to be a valid %{cur} address."
@@ -2098,16 +2120,19 @@
     "removeModerator": "An unmoderated purchase cannot have a moderator."
   },
   "purchaseItemModelErrors": {
-    "provideQuantity": "Please provide a quantity.",
     "provideCryptoQuantity": "Please provide the amount of this currency you wish to purchase.",
+    "provideQuantity": "Please provide a quantity",
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
-    "quantityMustBeNumeric": "The quantity must be numeric.",
-    "quantityMustBePositive": "The quantity must be greater than zero.",
+    "quantityMustBeNumeric": "The quantity must be a valid number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
+    "cryptoQuantityMustBeNumeric": "The amount must be a valid number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",    
+    "cryptoQuantityMustBePositive": "The amount must be greater than zero.",
+    "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up the amount so no more than %{coinDiv} decimal places are represented.",
     "missingShippingOption": "Please choose a valid shipping option.",
     "insufficientInventory": "The quantity exceeds the remaining inventory. Only %{smart_count} remains. |||| The quantity exceeds the remaining inventory. Only %{smart_count} remain.",
     "providePaymentAddress": "Please provide a payment address.",
-    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters."
+    "paymentAddressLength": "The payment address length must be between %{min} and %{max} characters.",
+    "cryptoQuantityTooLow": "For %{cur}, the minimum quantity value is %{min}. If converting to %{cur} from a different currency, ensure the amount is low enough that the resulting %{cur} value is below the minimum."
   },
   "orderFulfillmentModelErrors": {
     "provideShipper": "Please provide a shipping carrier.",

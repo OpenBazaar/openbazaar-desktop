@@ -1,5 +1,15 @@
 import $ from 'jquery';
-import { integerToDecimal, decimalToInteger } from './currency';
+import {
+  ERROR_INSUFFICIENT_FUNDS,
+  ERROR_DUST_AMOUNT,
+} from '../constants';
+import {
+  integerToDecimal,
+  decimalToInteger,
+  isValidCoinDivisibility,
+  getCoinDivisibility,
+} from './currency';
+import { validateNumberType } from './number';
 import { getSocket, events as serverConnectEvents } from './serverConnect';
 import app from '../app';
 
@@ -46,30 +56,39 @@ function watchTransactions() {
  * of the wallet.
  *
  * @param {string} feeLevel - The fee level
- * @param {amount} number - The amount of the transaction in the servers currency -
+ * @param {number|string|BigNumber} amount - The amount of the transaction in the servers currency -
  *   not in base units. (e.g. for BTC, provide a BTC amount, not Satoshi)
+ * @param {object} options
+ * @param {boolean} [options.divisibility] - You can provide the divisibility, otherwise
+ *   it will be obtained from the wallet currency definition.
  * @return {object} An jQuery promise which on success will resolve with the fee
- *   in Bitcoin. If the call fails, the deferred will fail and pass on the args the
- *   xhr fail handler receives.
+ *   (not in base units). If the call fails, the deferred will fail and pass on the
+ *   error reason as the first arg and the xhr as the second.
  */
-export function estimateFee(coinType, feeLevel, amount) {
+export function estimateFee(coinType, feeLevel, amount, options = {}) {
   if (feeLevels.indexOf(feeLevel) === -1) {
     throw new Error(`feelevel must be one of ${feeLevels.join(', ')}`);
   }
 
-  if (typeof amount !== 'number') {
-    throw new Error('Please provide an amount as a number.');
-  }
+  validateNumberType(amount);
 
   if (typeof coinType !== 'string' || !coinType) {
     throw new Error('Please provide the coinType as a string.');
   }
 
-  const amountInBaseUnits = decimalToInteger(amount, coinType);
+  const divisibility = options.divisibility || getCoinDivisibility(coinType);
+  const [isValidDivis, divisErr] = isValidCoinDivisibility(divisibility);
 
-  if (amountInBaseUnits === undefined) {
-    throw new Error('Unable to convert the given amount to base units of the given ' +
-      'coinType. The coinType is likely not a known wallet currency.');
+  if (!isValidDivis) {
+    throw new Error(divisErr);
+  }
+
+  let amountInBaseUnits;
+
+  try {
+    amountInBaseUnits = decimalToInteger(amount, divisibility, {});
+  } catch (e) {
+    throw new Error(`Unable to convert the amount to base units: ${e}`);
   }
 
   watchTransactions();
@@ -98,22 +117,43 @@ export function estimateFee(coinType, feeLevel, amount) {
 
     const queryArgs =
       `feeLevel=${feeLevel}&amount=${amountInBaseUnits}`;
-    $.get(app.getServerUrl(`wallet/estimatefee/${coinType}?${queryArgs}`))
-      .done((...args) => {
-        deferred.resolve(
-          integerToDecimal(args[0].estimatedFee, coinType), ...args.slice(1)
-        );
-      }).fail((xhr, ...args) => {
-        deferred.reject(xhr, ...args);
+    const estimateFeeXhr =
+      $.get(app.getServerUrl(`wallet/estimatefee/${coinType}?${queryArgs}`))
+        .done((...args) => {
+          let convertedAmount;
 
-        const knownReasons = ['ERROR_INSUFFICIENT_FUNDS', 'ERROR_DUST_AMOUNT'];
+          try {
+            convertedAmount = integerToDecimal(
+              args[0].amount,
+              args[0].currency.divisibility,
+              { returnNaNOnError: false }
+            );
+          } catch (e) {
+            deferred.reject(
+              `Unable to convert the estimated fee amount to base units: ${e.message}`,
+              estimateFeeXhr
+            );
+            return;
+          }
 
-        // don't cache calls that failed with an unknown reason
-        if (xhr.responseJSON && knownReasons.indexOf(xhr.responseJSON.reason) === -1 &&
-          estimateFeeCache[coinType]) {
-          estimateFeeCache[coinType].delete(cacheKey);
-        }
-      });
+          deferred.resolve(
+            convertedAmount,
+            ...args.slice(1)
+          );
+        }).fail(xhr => {
+          const reason = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
+          deferred.reject(reason, xhr);
+
+          const knownReasons = [ERROR_INSUFFICIENT_FUNDS, ERROR_DUST_AMOUNT];
+
+          // don't cache calls that failed with an unknown reason
+          if (
+            !knownReasons.includes(reason) &&
+            estimateFeeCache[coinType]
+          ) {
+            estimateFeeCache[coinType].delete(cacheKey);
+          }
+        });
   }
 
   return deferred.promise();
@@ -149,9 +189,39 @@ export function getFees(coinType) {
     };
 
     $.get(app.getServerUrl(`wallet/fees/${coinType}`))
-      .done((...args) => deferred.resolve(...args))
-      .fail((...args) => {
-        deferred.reject(...args);
+      .done(data => {
+        let economic;
+        let normal;
+        let priority;
+
+        try {
+          economic = integerToDecimal(
+            data.economic.amount,
+            data.economic.currency.divisibility
+          );
+          normal = integerToDecimal(
+            data.normal.amount,
+            data.normal.currency.divisibility
+          );
+          priority = integerToDecimal(
+            data.priority.amount,
+            data.priority.currency.divisibility
+          );
+        } catch (e) {
+          deferred.reject(`There was an error processing the reponse: ${e.message}`);
+          return;
+        }
+
+        deferred.resolve({
+          economic,
+          normal,
+          priority,
+        });
+      })
+      .fail(xhr => {
+        const reason =
+          xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
+        deferred.reject(reason);
         delete getFeesCache[coinType];
       });
   }

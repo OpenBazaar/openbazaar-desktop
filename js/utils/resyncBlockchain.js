@@ -1,6 +1,6 @@
 import $ from 'jquery';
 import { getServer } from './serverConnect';
-import walletCurs from '../data/walletCurrencies';
+import { supportedWalletCurs } from '../data/walletCurrencies';
 import { openSimpleMessage } from '../views/modals/SimpleMessage';
 import { Events } from 'backbone';
 import app from '../app';
@@ -11,7 +11,6 @@ const events = {
 
 export { events };
 
-let walletCurCodes = [];
 let server;
 
 // If you change this, be sure to change anywhere in the GUI you may have output how
@@ -97,8 +96,7 @@ export function init() {
       'Ensure that init is not called before that point.');
   }
 
-  walletCurCodes =
-    walletCurs.map(cur => (app.serverConfig.testnet ? cur.testnetCode : cur.code));
+  const walletCurCodes = supportedWalletCurs();
 
   walletCurCodes.forEach(cur => {
     setResyncAvailable(cur);

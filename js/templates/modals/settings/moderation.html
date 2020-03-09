@@ -45,38 +45,49 @@
             <label class="required" for="moderationFeeType"><%= ob.polyT('settings.moderationTab.feeTypeAmount') %></label>
           </div>
           <div class="col9">
-            <% if (ob.errors['moderatorInfo.fee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.feeType'] })) %>
-            <% if (ob.errors['moderatorInfo.fee.fixedFee.feeType']) print(ob.formErrorTmpl({ errors: ob.errors['moderatorInfo.fee.fixedFee.feeType'] })) %>
+            <%
+              const feeErrors = Object.keys(ob.errors)
+                .filter(errKey => errKey.startsWith('moderatorInfo.fee.'))
+                .map(errKey => ob.errors[errKey])
+              if (feeErrors.length) {
+                print(ob.formErrorTmpl({ errors: feeErrors }));
+              }
+            %>
             <div class="flexRow gutterH rowTn">
               <div class="col4">
                 <select id="moderationFeeType" name="moderatorInfo.fee.feeType" class="clrBr clrP clrSh2">
-                  <option value="PERCENTAGE" <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) print('selected') %>>
+                  <option value="<%= ob.feeTypes.PERCENTAGE %>" <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.percentage') %>
                   </option>
-                  <option value="FIXED" <% if (ob.fee && ob.fee.feeType === 'FIXED') print('selected') %>>
+                  <option value="<%= ob.feeTypes.FIXED %>" <% if (ob.fee && ob.fee.feeType === ob.feeTypes.FIXED) print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.fixed') %>
                   </option>
-                  <option value="FIXED_PLUS_PERCENTAGE" <% if (ob.fee && ob.fee.feeType === 'FIXED_PLUS_PERCENTAGE') print('selected') %>>
+                  <option value="<%= ob.feeTypes.FIXED_PLUS_PERCENTAGE %>" <% if (ob.fee && ob.fee.feeType === ob.feeTypes.FIXED_PLUS_PERCENTAGE) print('selected') %>>
                     <%= ob.polyT('settings.moderationTab.fixedPlusPercentage') %>
                   </option>
                 </select>
               </div>
-              <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
-                <% var amt = ob.fee && ob.fee.fixedFee ? ob.fee.fixedFee.amount : 0;
-                   var ccode = ob.fee && ob.fee.fixedFee && ob.fee.fixedFee.currencyCode ? ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
-                   amt = typeof amt === 'number' ? ob.currencyMod.formatPrice(amt, ccode) : amt;
+              <div class="col2 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
+                <%
+                  const amt = ob.fee && ob.fee.fixedFee ?
+                    ob.number.toStandardNotation(ob.fee.fixedFee.amount) : '';
+                  const ccode =
+                    ob.fee &&
+                    ob.fee.fixedFee &&
+                    ob.fee.fixedFee.currencyCode ?
+                      ob.fee.fixedFee.currencyCode : ob.defaultCurrency;
                 %>
-                <!-- use text and set max length so excess decimals can't be entered.-->
                 <input type="text"
                        class="noSpin clrBr clrSh2"
                        name="moderatorInfo.fee.fixedFee.amount"
-                       value="<%= amt %>"
-                       data-var-type="number">
+                       data-var-type="bignumber"
+                       placeholder="0.00"
+                       value="<%= amt %>">
               </div>
-              <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === 'PERCENTAGE')) { print('visuallyHidden') } %>">
+              <div class="col4 js-feeFixedInput <% if (!ob.fee || (ob.fee && ob.fee.feeType === ob.feeTypes.PERCENTAGE)) { print('visuallyHidden') } %>">
                 <select  id="moderationCurrency" name="moderatorInfo.fee.fixedFee.currencyCode" class="clrBr clrP clrSh2" style="width: 100%">
                   <% ob.currencyList.forEach((currency) => { %>
-                  <option value="<%= currency.code %>" <% if (currency.code == ccode) print('selected') %>><%= currency.nameWithCode %></option>
+                  <option value="<%= currency.code %>" <% if (currency.code === ccode) print('selected') %>><%= currency.nameWithCode %></option>
                   <% }); %>
                 </select>
               </div>
@@ -86,6 +97,7 @@
                          maxlength="5"
                          name="moderatorInfo.fee.percentage"
                          value="<%= ob.fee.percentage %>"
+                         placeholder="0"
                          data-var-type="number">
                 </div>
               </div>

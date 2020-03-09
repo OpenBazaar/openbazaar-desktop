@@ -46,7 +46,7 @@ export default class extends BaseModel {
    * has elapsed from the provided seconds until now, for example
    * '25 days' or '2 hours'.
    */
-  timeFromNowVerbose(secs) {
+  timeFromNowVerbose(hours) {
     const prevMomentDaysThreshold = moment.relativeTimeThreshold('d');
 
     // temporarily upping the moment threshold of number of days before month is used,
@@ -55,7 +55,7 @@ export default class extends BaseModel {
 
     const str = moment(Date.now())
       .from(
-        moment(Date.now() + (secs * 60 * 60 * 1000)), true
+        moment(Date.now() + (hours * 60 * 60 * 1000)), true
       );
 
     // restore the days timeout threshold
@@ -102,7 +102,9 @@ export default class extends BaseModel {
       ...response,
       // The parse of the Listing model is expecting the listings to be objects
       // with a key of 'listing' (e.g. listing: { slug: '', ... }, so we'll accomodate.
-      vendorListings: response.vendorListings.map(listing => ({ listing })),
+      vendorListings: Array.isArray(response.vendorListings) ?
+        response.vendorListings.map(listing => ({ listing })) :
+        response.vendorListings,
     };
   }
 }

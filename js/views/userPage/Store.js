@@ -17,7 +17,10 @@ import ListingsGrid, { LISTINGS_PER_PAGE } from './ListingsGrid';
 import CategoryFilter from './CategoryFilter';
 import TypeFilter from './TypeFilter';
 import PopInMessage, { buildRefreshAlertMessage } from '../components/PopInMessage';
-import { localizeNumber } from '../../utils/number';
+import {
+  localizeNumber,
+  isValidNumber,
+} from '../../utils/number';
 
 class Store extends BaseVw {
   constructor(options = {}) {
@@ -125,15 +128,20 @@ class Store extends BaseVw {
   onUpdateCollection(cl, opts) {
     if (opts.changes.added) {
       opts.changes.added.forEach((md) => {
-        md.searchDescription = $('<div />').html(md.get('description'))
+        md.searchDescription = $('<div />').html(md.get('description') || '')
           .text()
           .toLocaleLowerCase();
-        md.searchTitle = md.get('title').toLocaleLowerCase();
+        md.searchTitle = (md.get('title') || '').toLocaleLowerCase();
         const price = md.get('price');
 
-        if (price.amount !== undefined) {
-          // An undefined price means it was likely an unrecognized currency that we
-          // weren't able to convert from decimal/base units to integer/non-base units.
+        if (
+          price &&
+          isValidNumber(price.amount, {
+            allowNumber: false,
+            allowBigNumber: true,
+            allowString: false,
+          })
+        ) {
           try {
             md.convertedPrice = convertCurrency(price.amount, price.currencyCode,
               app.settings.get('localCurrency'));

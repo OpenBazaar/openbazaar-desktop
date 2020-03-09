@@ -177,7 +177,6 @@ export default class extends baseVw {
         columns: inventoryData.columns,
         inventory: this.collection.toJSON(),
         getPrice: this.options.getPrice,
-        getCurrency: this.options.getCurrency,
       }));
 
       this.itemViews.forEach(item => item.remove());

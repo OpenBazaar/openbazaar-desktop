@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import app from '../../../../app';
+import bigNumber from 'bignumber.js';
 import {
   acceptingOrder,
   acceptOrder,
@@ -9,6 +10,7 @@ import {
   cancelOrder,
   events as orderEvents,
 } from '../../../../utils/order';
+import { isValidCoinDivisibility } from '../../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../../data/walletCurrencies';
 import { checkValidParticipantObject } from '../OrderDetail.js';
 import baseVw from '../../../baseVw';
@@ -29,8 +31,9 @@ export default class extends baseVw {
       throw new Error('Please provide a transactions collection.');
     }
 
-    if (typeof options.orderPrice !== 'number') {
-      throw new Error('Please provide the price of the order.');
+    if (!(options.orderPrice instanceof bigNumber)) {
+      throw new Error('Please provide the price of the order as a BigNumber ' +
+        'instance.');
     }
 
     if (typeof options.isOrderCancelable !== 'function') {
@@ -49,12 +52,6 @@ export default class extends baseVw {
     this.options = opts;
     this.orderId = this.options.orderId;
     this.payments = [];
-
-    try {
-      this.paymentCoinData = getWalletCurByCode(this.options.paymentCoin);
-    } catch (e) {
-      throw new Error(`No wallet currency data is available for ${this.options.paymentCoin}`);
-    }
 
     this.listenTo(this.collection, 'update', () => this.render());
     this.listenTo(orderEvents, 'cancelingOrder', this.onCancelingOrder);
@@ -171,24 +168,75 @@ export default class extends baseVw {
     this.collection.models.forEach((payment, index) => {
       let paidSoFar = this.collection.models
         .slice(0, index + 1)
-        .reduce((total, model) => total + model.get('value'), 0);
-      // round based on the coins base units
-      const cryptoBaseUnit = this.paymentCoinData.baseUnit;
-      paidSoFar = Math.round(paidSoFar * cryptoBaseUnit) / cryptoBaseUnit;
+        .reduce((total, model) => total.plus(model.get('bigValue')), bigNumber('0'));
+
+      let divisibility;
+
+      try {
+        divisibility = payment.currency.divisibility;
+      } catch (e) {
+        // pass
+      }
+
+      if (isValidCoinDivisibility[0]) {
+        // round based on divisibility
+        paidSoFar = paidSoFar.dp(divisibility);
+      }
+
       const isMostRecentPayment = index === this.collection.length - 1;
+
+      let paymentCoin = '';
+
+      try {
+        paymentCoin =
+          payment
+            .get('currency')
+            .code;
+      } catch (e) {
+        // pass
+      }
+
+      let paymentCoinData;
+
+      try {
+        paymentCoinData = getWalletCurByCode(paymentCoin);
+      } catch (e) {
+        // pass
+      }
+
+      let paymentCoinDivis = 8;
+
+      try {
+        paymentCoinDivis = paymentCoinData.divisibility;
+      } catch (e) {
+        // pass
+      }
+
+      let blockChainTxUrl = '';
+
+      try {
+        blockChainTxUrl =
+          paymentCoinData.getBlockChainTxUrl(
+            payment.id,
+            app.serverConfig.testnet
+          );
+      } catch (e) {
+        // pass
+      }
+
       const paymentView = this.createPayment(payment, {
         initialState: {
           paymentNumber: index + 1,
-          amountShort: this.options.orderPrice - paidSoFar,
+          amountShort: this.options.orderPrice.minus(paidSoFar),
           showAcceptRejectButtons: isMostRecentPayment && this.options.isOrderConfirmable(),
           showCancelButton: isMostRecentPayment && this.options.isOrderCancelable(),
           cancelInProgress: cancelingOrder(this.orderId),
           acceptInProgress: acceptingOrder(this.orderId),
           rejectInProgress: rejectingOrder(this.orderId),
           isCrypto: this.options.isCrypto,
-          paymentCoin: this.options.paymentCoin,
-          blockChainTxUrl: this.paymentCoinData
-            .getBlockChainTxUrl(payment.id, app.serverConfig.testnet),
+          blockChainTxUrl,
+          paymentCoin,
+          paymentCoinDivis,
         },
       });
 

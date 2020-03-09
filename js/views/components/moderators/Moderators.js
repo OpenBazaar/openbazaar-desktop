@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import { guid } from '../../../utils/';
 import app from '../../../app';
 import { anySupportedByWallet } from '../../../data/walletCurrencies';
 import loadTemplate from '../../../utils/loadTemplate';
@@ -146,13 +147,13 @@ export default class extends baseVw {
   processMod(data) {
     // Don't add profiles that are not moderators unless showInvalid is true. The ID list may have
     // peerIDs that are out of date, and are no longer moderators.
-    const validMod = data.moderator && data.moderatorInfo;
+    const isAMod = data.moderator && data.moderatorInfo;
     // If the moderator has an invalid currency, remove them from the list.
     // With multi-wallet, this should be a very rare occurrence.
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
-    const validCur = anySupportedByWallet(modCurs);
+    const supportedCur = anySupportedByWallet(modCurs);
 
-    if ((!!validMod && validCur || this.options.showInvalid)) {
+    if ((!!isAMod && supportedCur || this.options.showInvalid)) {
       const newMod = new Moderator(data, { parse: true });
       if (newMod.isValid()) this.moderatorsCol.add(newMod);
       this.removeNotFetched(data.peerID);
@@ -176,8 +177,16 @@ export default class extends baseVw {
     const excluded = [app.profile.id, ...this.allIDs, ...this.excludeIDs];
     const IDs = _.without(op.moderatorIDs, excluded);
     const includeString = op.include ? `&include=${op.include}` : '';
-    const urlString =
+
+    let urlString =
       `ob/${op.apiPath}?async=${op.async}${includeString}&usecache=${op.useCache}`;
+    let asyncID;
+
+    if (op.async) {
+      asyncID = guid();
+      urlString += `&asyncID=${asyncID}`;
+    }
+
     const url = app.getServerUrl(urlString);
 
     this.unfetchedMods = IDs;
@@ -200,33 +209,34 @@ export default class extends baseVw {
         loading: true,
       });
 
+      if (op.async) {
+        if (this.serverSocket) {
+          this.listenTo(this.serverSocket, 'message', event => {
+            const eventData = event.jsonData;
+            if (eventData.error) {
+              // errors don't have a message id, check to see if the peerID matches
+              if (IDs.includes(eventData.peerId)) {
+                // provide the expected capitalization of peerID
+                eventData.peerID = eventData.peerId;
+                delete eventData.peerId;
+                this.processMod(eventData);
+              }
+            } else if (eventData.id === asyncID && !excluded.includes(eventData.peerId)) {
+              this.processMod(eventData.profile);
+            }
+          });
+        } else {
+          throw new Error('There is no connection to the server to listen to.');
+        }
+      }
+
       const fetch = $.ajax({
         url,
         data: JSON.stringify(IDs),
         method: op.method,
       })
           .done((data) => {
-            if (op.async) {
-              const socketID = data.id;
-              if (this.serverSocket) {
-                this.listenTo(this.serverSocket, 'message', (event) => {
-                  const eventData = event.jsonData;
-                  if (eventData.error) {
-                    // errors don't have a message id, check to see if the peerID matches
-                    if (IDs.includes(eventData.peerId)) {
-                      // provide the expected capitalization of peerID
-                      eventData.peerID = eventData.peerId;
-                      delete eventData.peerId;
-                      this.processMod(eventData);
-                    }
-                  } else if (eventData.id === socketID && !excluded.includes(eventData.peerId)) {
-                    this.processMod(eventData.profile);
-                  }
-                });
-              } else {
-                throw new Error('There is no connection to the server to listen to.');
-              }
-            } else {
+            if (!op.async) {
               data.forEach(mod => {
                 if (!excluded.includes(mod.peerId)) this.processMod(mod.profile);
               });
@@ -371,16 +381,16 @@ export default class extends baseVw {
     return IDs;
   }
 
-  deselectMod(guid) {
-    if (!guid) throw new Error('You must provide a guid.');
+  deselectMod(peerID) {
+    if (!peerID) throw new Error('You must provide a peerID.');
 
-    const mod = this.modCards.filter(card => card.model.get('peerID') === guid);
+    const mod = this.modCards.filter(card => card.model.get('peerID') === peerID);
     if (mod.length) mod[0].changeSelectState(this.options.notSelected);
   }
 
-  deselectOthers(guid = '') {
+  deselectOthers(peerID = '') {
     this.modCards.forEach((card) => {
-      if (card.model.get('peerID') !== guid) {
+      if (card.model.get('peerID') !== peerID) {
         card.changeSelectState(this.options.notSelected);
       }
     });

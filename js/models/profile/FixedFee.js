@@ -1,13 +1,12 @@
 import BaseModel from '../BaseModel';
 import app from '../../app';
 import { getCurrencyByCode } from '../../data/currencies';
-import is from 'is_js';
+import { getCoinDivisibility } from '../../utils/currency';
 
 export default class extends BaseModel {
   defaults() {
     return {
       currencyCode: 'USD',
-      amount: 0,
     };
   }
 
@@ -18,18 +17,39 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (is.not.existy(attrs.currencyCode) || typeof attrs.currencyCode !== 'string') {
-      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
-    }
+    let coinDiv;
 
-    if (typeof attrs.currencyCode !== 'string' ||
+    if (
+      typeof attrs.currencyCode !== 'string' ||
       !attrs.currencyCode ||
-      !getCurrencyByCode(attrs.currencyCode)) {
-      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
-    }
+      !getCurrencyByCode(attrs.currencyCode)
+    ) {
+      addError('currencyCode', app.polyglot.t('fixedFeeModelErrors.noCurrency'));
+    } else {
+      try {
+        coinDiv = getCoinDivisibility(attrs.currencyCode);
+      } catch (e) {
+        // pass
+      }
 
-    if (typeof attrs.amount !== 'number' || attrs.amount < 0) {
-      addError('feeType', app.polyglot.t('fixedFeeModelErrors.noAmount'));
+      this.validateCurrencyAmount(
+        {
+          amount: attrs.amount,
+          currency: {
+            code: attrs.currencyCode,
+            divisibility: coinDiv,
+          },
+        },
+        addError,
+        'amount',
+        {
+          translations: {
+            range: 'fixedFeeModelErrors.amountGreaterThanZero',
+            type: 'fixedFeeModelErrors.fixedFeeAsNumber',
+            required: 'fixedFeeModelErrors.fixedFeeAsNumber',
+          },
+        }
+      );
     }
 
     if (Object.keys(errObj).length) return errObj;

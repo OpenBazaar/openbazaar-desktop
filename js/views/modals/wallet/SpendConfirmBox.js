@@ -1,7 +1,12 @@
 import $ from 'jquery';
 import app from '../../../app';
+import {
+  ERROR_INSUFFICIENT_FUNDS,
+  ERROR_DUST_AMOUNT,
+} from '../../../constants';
 import loadTemplate from '../../../utils/loadTemplate';
 import { estimateFee } from '../../../utils/fees';
+import { validateNumberType } from '../../../utils/number';
 import {
   startPrefixedAjaxEvent,
   endPrefixedAjaxEvent,
@@ -77,9 +82,14 @@ export default class extends baseVw {
     amount,
     coinType = this.getState().coinType,
     feeLevel = app.localSettings.get('defaultTransactionFee')) {
-    if (typeof amount !== 'number') {
-      throw new Error('Please provide an amount as a number.');
-    }
+    validateNumberType(amount, {
+      fieldName: 'amount',
+      isValidNumberOpts: {
+        allowNumber: false,
+        allowBigNumber: true,
+        allowString: false,
+      },
+    });
 
     if (typeof coinType !== 'string' || !coinType) {
       throw new Error('Please provide the coinType as a string.');
@@ -107,8 +117,17 @@ export default class extends baseVw {
           fetchingFee: false,
         };
 
-        if (app.walletBalances && app.walletBalances.get(coinType) &&
-          fee + amount > app.walletBalances.get(coinType).get('confirmed')) {
+        if (
+          app.walletBalances &&
+          app.walletBalances.get(coinType) &&
+          fee
+            .plus(amount)
+            .gt(
+              app.walletBalances
+                .get(coinType)
+                .get('confirmed')
+            )
+        ) {
           state = {
             // The fetch didn't actually fail, but since the server allows unconfirmed spends and
             // we don't want to allow that, we'll pretend it failed and simulate the server
@@ -127,8 +146,8 @@ export default class extends baseVw {
         }
 
         this.setState(state);
-      }).fail(xhr => {
-        const fetchError = xhr && xhr.responseJSON && xhr.responseJSON.reason || '';
+      }).fail(err => {
+        const fetchError = err || '';
         this.setState({
           fetchingFee: false,
           fetchFailed: true,
@@ -150,6 +169,8 @@ export default class extends baseVw {
     loadTemplate('modals/wallet/spendConfirmBox.html', (t) => {
       this.$el.html(t({
         ...this._state,
+        ERROR_INSUFFICIENT_FUNDS,
+        ERROR_DUST_AMOUNT,
       }));
     });
 

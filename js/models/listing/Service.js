@@ -1,13 +1,13 @@
 import app from '../../app';
-import BaseModel from '../BaseModel';
 import is from 'is_js';
+import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      price: '',
-      additionalItemPrice: '',
+      bigPrice: '',
+      bigAdditionalItemPrice: '',
       estimatedDelivery: '',
     };
   }
@@ -33,22 +33,6 @@ export default class extends BaseModel {
       addError('estimatedDelivery', 'Please provide an estimated delivery time as a string.');
     } else if (!attrs.estimatedDelivery) {
       addError('estimatedDelivery', app.polyglot.t('serviceModelErrors.provideEstDeliveryTime'));
-    }
-
-    if (attrs.price === '') {
-      addError('price', app.polyglot.t('serviceModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.price)) {
-      addError('price', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
-    } else if (attrs.price < 0) {
-      addError('price', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
-    }
-
-    if (attrs.additionalItemPrice === '') {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.additionalItemPrice)) {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNumericAmount'));
-    } else if (attrs.additionalItemPrice < 0) {
-      addError('additionalItemPrice', app.polyglot.t('serviceModelErrors.provideNonNegativePrice'));
     }
 
     if (Object.keys(errObj).length) return errObj;

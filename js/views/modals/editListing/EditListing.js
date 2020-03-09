@@ -11,13 +11,16 @@ import app from '../../../app';
 import { isScrolledIntoView, openExternal } from '../../../utils/dom';
 import { installRichEditor } from '../../../utils/lib/trumbowyg';
 import { startAjaxEvent, endAjaxEvent } from '../../../utils/metrics';
-import { getCurrenciesSortedByCode } from '../../../data/currencies';
+import {
+  getCurrenciesSortedByCode,
+  getCurrencyByCode,
+} from '../../../data/currencies';
 import {
   getCurrenciesSortedByName as getCryptoCursByName,
   getCurrenciesSortedByCode as getCryptoCursByCode,
 } from '../../../data/cryptoListingCurrencies';
 import { supportedWalletCurs } from '../../../data/walletCurrencies';
-import { formatPrice, getCurrencyValidity } from '../../../utils/currency';
+import { getCoinDivisibility } from '../../../utils/currency';
 import { setDeepValue } from '../../../utils/object';
 import SimpleMessage, { openSimpleMessage } from '../SimpleMessage';
 import Dialog from '../Dialog';
@@ -297,18 +300,7 @@ export default class extends BaseModal {
     this.inProgressPhotoUploads.forEach(photoUpload => photoUpload.abort());
   }
 
-  onChangePrice(e) {
-    const trimmedVal = $(e.target).val().trim();
-    const numericVal = Number(trimmedVal);
-
-    if (!isNaN(numericVal) && trimmedVal) {
-      $(e.target).val(
-        formatPrice(numericVal, this.$currencySelect.val())
-      );
-    } else {
-      $(e.target).val(trimmedVal);
-    }
-
+  onChangePrice() {
     this.variantInventory.render();
   }
 
@@ -778,6 +770,7 @@ export default class extends BaseModal {
     this.setModelData();
 
     const serverData = this.model.toJSON();
+
     serverData.item.skus = serverData.item.skus.map(sku => (
       // The variant inventory view adds some stuff to the skus collection that
       // shouldn't go to the server. We'll ensure the extraneous stuff isn't sent
@@ -785,20 +778,21 @@ export default class extends BaseModal {
       _.omit(sku, 'mappingId', 'choices')
     ));
 
-    const segmentation = {
-      type: serverData.metadata.contractType,
-      currency: serverData.metadata.pricingCurrency,
-      moderated: serverData.moderators && !!serverData.moderators.length,
-      isNew: this.model.isNew(),
-    };
-
-    startAjaxEvent('Listing_Save');
-
-    const save = this.model.save({}, {
+    const save = this.model.save(null, {
       attrs: serverData,
     });
 
     if (save) {
+      const segmentation = {
+        type: serverData.metadata.contractType,
+        currency: serverData.metadata.contractType !== 'CRYPTOCURRENCY' ?
+          serverData.item.priceCurrency.code : serverData.metadata.coinType,
+        moderated: serverData.moderators && !!serverData.moderators.length,
+        isNew: this.model.isNew(),
+      };
+
+      startAjaxEvent('Listing_Save');
+
       const savingStatusMsg = app.statusBar.pushMessage({
         msg: 'Saving listing...',
         type: 'message',
@@ -902,26 +896,34 @@ export default class extends BaseModal {
 
     if (!isCrypto) {
       if (item.get('options').length) {
-        // If we have options, we shouldn't be providing a top-level quantity or
-        // productID.
+        // If we have options, we shouldn't be providing certain properties on the Item
+        // model which track non-variant inventory
         item.unset('quantity');
         item.unset('productID');
+        item.unset('infiniteInventory');
+        delete formData.item.quantity;
+        delete formData.item.productID;
+        delete formData.item.infiniteInventory;
 
         // If we have options and are not tracking inventory, we'll set the infiniteInventory
         // flag for any skus.
         if (this.trackInventoryBy === 'DO_NOT_TRACK') {
           item.get('skus')
             .forEach(sku => {
-              sku.set({
-                infiniteInventory: true,
-                quantity: -1,
-              });
+              sku.unset('bigQuantity');
+              sku.set({ infiniteInventory: true });
             });
         }
-      } else if (this.trackInventoryBy === 'DO_NOT_TRACK') {
-        // If we're not tracking inventory and don't have any variants, we should provide
-        // a top-level quantity as -1, so it's considered infinite.
-        formData.item.quantity = -1;
+      } else {
+        formData.item.infiniteInventory = this.trackInventoryBy === 'DO_NOT_TRACK';
+
+        if (this.trackInventoryBy === 'DO_NOT_TRACK') {
+          formData.item.infiniteInventory = true;
+          delete formData.item.quantity;
+          item.unset('quantity');
+        } else {
+          formData.item.infiniteInventory = false;
+        }
       }
 
       formData.metadata = {
@@ -988,12 +990,17 @@ export default class extends BaseModal {
       let cur;
 
       try {
-        cur = this._origModel.unparsedResponse.listing.metadata.pricingCurrency;
+        cur = this._origModel
+          .unparsedResponse
+          .listing
+          .item
+          .priceCurrency
+          .code;
       } catch (e) {
         return this;
       }
 
-      if (!this.model.isCrypto && getCurrencyValidity(cur) === 'UNRECOGNIZED_CURRENCY') {
+      if (!this.model.isCrypto && !getCurrencyByCode(cur)) {
         const unsupportedCurrencyDialog = new UnsupportedCurrency({
           unsupportedCurrency: cur,
         }).render().open();
@@ -1008,6 +1015,7 @@ export default class extends BaseModal {
         });
       }
     }
+
     return this;
   }
 
@@ -1145,7 +1153,7 @@ export default class extends BaseModal {
 
   get $itemPrice() {
     return this._$itemPrice ||
-      (this._$itemPrice = this.$('[name="item.price"]'));
+      (this._$itemPrice = this.$('[name="item.bigPrice"]'));
   }
 
   showMaxTagsWarning() {
@@ -1172,9 +1180,48 @@ export default class extends BaseModal {
 
   // return the currency associated with this listing
   get currency() {
-    return (this.$currencySelect.length ?
-        this.$currencySelect.val() : this.model.get('metadata').get('pricingCurrency') ||
-          app.settings.get('localCurrency'));
+    if (this.$currencySelect.length) {
+      return this.$currencySelect.val();
+    }
+
+    let cur = app.settings.get('localCurrency');
+
+    try {
+      cur =
+        this.model
+          .get('item')
+          .get('priceCurrency')
+          .code;
+    } catch (e) {
+      // pass
+    }
+
+    return cur;
+  }
+
+  // Keep in mind this could return undefined if certain dependant form fields are not set yet
+  // (e.g. rendering not complete, dependant async data not loaded) and the divisibility was
+  // never set in the model.
+  get coinDivisibility() {
+    let coinDiv;
+
+    if (this.getCachedEl('#editContractType').length) {
+      try {
+        coinDiv = getCoinDivisibility(
+          this.getCachedEl('#editContractType').val() === 'CRYPTOCURRENCY' ?
+            this.getCachedEl('#editListingCoinType').val() ||
+              this.model.get('metadata').get('coinType') :
+            this.currency
+        );
+      } catch (e) {
+        // pass
+      }
+    } else {
+      coinDiv = this.model.get('metadata')
+        .get('coinDivisibility');
+    }
+
+    return coinDiv;
   }
 
   createShippingOptionView(opts) {
@@ -1230,7 +1277,6 @@ export default class extends BaseModal {
           expandedReturnPolicy: this.expandedReturnPolicy || !!this.model.get('refundPolicy'),
           expandedTermsAndConditions: this.expandedTermsAndConditions ||
             !!this.model.get('termsAndConditions'),
-          formatPrice,
           maxCatsWarning: this.maxCatsWarning,
           maxTagsWarning: this.maxTagsWarning,
           max: {
@@ -1428,7 +1474,7 @@ export default class extends BaseModal {
         this.variantInventory = this.createChild(VariantInventory, {
           collection: item.get('skus'),
           optionsCl: item.get('options'),
-          getPrice: () => this.getFormData(this.$itemPrice).item.price,
+          getPrice: () => this.getFormData(this.$itemPrice).item.bigPrice,
           getCurrency: () => this.currency,
         });
 
@@ -1438,20 +1484,9 @@ export default class extends BaseModal {
         // render coupons
         if (this.couponsView) this.couponsView.remove();
 
-        const couponErrors = {};
-
-        Object.keys(this.model.validationError || {})
-          .forEach(errKey => {
-            if (errKey.startsWith('coupons[')) {
-              couponErrors[errKey] =
-                this.model.validationError[errKey];
-            }
-          });
-
         this.couponsView = this.createChild(Coupons, {
           collection: this.coupons,
           maxCouponCount: this.model.max.couponCount,
-          couponErrors,
         });
 
         this.$couponsSection.find('.js-couponsContainer').append(
@@ -1484,6 +1519,7 @@ export default class extends BaseModal {
           getCoinTypes: this.getCoinTypesDeferred.promise(),
           getReceiveCur: () => this._receiveCryptoCur,
         });
+
         this.getCachedEl('.js-cryptoTypeWrap')
           .html(this.cryptoCurrencyType.render().el);
 

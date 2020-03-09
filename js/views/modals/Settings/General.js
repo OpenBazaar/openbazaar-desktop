@@ -28,7 +28,7 @@ export default class extends baseVw {
 
     // Sync our clone with any changes made to the global local settings model.
     this.listenTo(this.localSettings, 'sync',
-      (md, resp, opts) => app.localSettings.set(this.localSettings.toJSON(opts.attrs)));
+      () => app.localSettings.set(this.localSettings.toJSON()));
 
     // Sync the global local settings model with any changes we save via our clone.
     this.listenTo(this.localSettings, 'sync',

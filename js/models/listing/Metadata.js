@@ -2,8 +2,6 @@ import app from '../../app';
 import BaseModel from '../BaseModel';
 import is from 'is_js';
 import { upToFixed } from '../../utils/number';
-import { getCurrencyByCode } from '../../data/currencies';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
 import { isSupportedWalletCur } from '../../data/walletCurrencies';
 
 export default class extends BaseModel {
@@ -13,7 +11,6 @@ export default class extends BaseModel {
       format: 'FIXED_PRICE', // this is not in the design at this time
       // by default, setting to "never" expire (due to a unix bug, the max is before 2038)
       expiry: (new Date(2037, 11, 31, 0, 0, 0, 0)).toISOString(),
-      coinDivisibility: defaultQuantityBaseUnit,
       acceptedCurrencies: [
         ...(app && app.profile && app.profile.get('currencies') || []),
       ],
@@ -44,13 +41,6 @@ export default class extends BaseModel {
       'FIXED_PRICE',
       'MARKET_PRICE',
     ];
-  }
-
-  get constraints() {
-    return {
-      minPriceModifier: -99.99,
-      maxPriceModifier: 1000,
-    };
   }
 
   set(key, val, options = {}) {
@@ -97,10 +87,6 @@ export default class extends BaseModel {
       addError('expiry', 'The expiration date must be between now and the year 2038.');
     }
 
-    if (!attrs.pricingCurrency || !getCurrencyByCode(attrs.pricingCurrency)) {
-      addError('pricingCurrency', 'The currency is not one of the available ones.');
-    }
-
     if (!Array.isArray(attrs.acceptedCurrencies) || !attrs.acceptedCurrencies.length) {
       const translationKey = attrs.contractType === 'CRYPTOCURRENCY' ?
         'metadataModelErrors.provideAcceptedCurrencyCrypto' :
@@ -117,27 +103,19 @@ export default class extends BaseModel {
         .filter(cur => !isSupportedWalletCur(cur));
 
       if (unsupportedCurrencies.length) {
-        addError('acceptedCurrencies', app.polyglot.t('unsupportedAcceptedCurs',
+        addError('acceptedCurrencies', app.polyglot.t('metadataModelErrors.unsupportedAcceptedCurs',
           { curs: unsupportedCurrencies.join(', ') }));
       }
     }
 
     if (attrs.contractType === 'CRYPTOCURRENCY') {
-      if (attrs.priceModifier === '') {
-        addError('priceModifier', app.polyglot.t('metadataModelErrors.providePriceModifier'));
-      } else if (typeof attrs.priceModifier !== 'number') {
-        addError('priceModifier', app.polyglot.t('metadataModelErrors.numericPriceModifier'));
-      } else if (attrs.priceModifier < this.constraints.minPriceModifier ||
-        attrs.priceModifier > this.constraints.maxPriceModifier) {
-        addError('priceModifier', app.polyglot.t('metadataModelErrors.priceModifierRange', {
-          min: this.constraints.minPriceModifier,
-          max: this.constraints.maxPriceModifier,
-        }));
-      }
-
       if (Array.isArray(attrs.acceptedCurrencies) && attrs.acceptedCurrencies.length > 1) {
         addError('acceptedCurrencies', 'For cryptocurrency listings, only one acccepted ' +
           'currency is allowed.');
+      }
+
+      if (!attrs.coinType || typeof attrs.coinType !== 'string') {
+        addError('coinType', 'Please provide a coinType.');
       }
     }
 

@@ -1,5 +1,5 @@
-import { formatPrice } from '../../../utils/currency';
 import '../../../lib/select2';
+import bigNumber from 'bignumber.js';
 import loadTemplate from '../../../utils/loadTemplate';
 import BaseView from '../../baseVw';
 
@@ -8,15 +8,6 @@ export default class extends BaseView {
     if (!options.model) {
       throw new Error('Please provide a model.');
     }
-
-    if (typeof options.getCurrency !== 'function') {
-      throw new Error('Please provide a function for me to obtain the current currency.');
-    }
-
-    // any parent level errors can be passed in options.couponErrors, e.g.
-    // options.couponErrors = {
-    //   <field-name>: ['err1', 'err2', 'err3']
-    // }
 
     super(options);
     this.options = options;
@@ -29,7 +20,6 @@ export default class extends BaseView {
   events() {
     return {
       'click .js-btnRemoveCoupon': 'onClickRemove',
-      'change [name=discountType]': 'onChangeDiscountType',
     };
   }
 
@@ -37,24 +27,19 @@ export default class extends BaseView {
     this.trigger('remove-click', { view: this });
   }
 
-  onChangeDiscountType(e) {
-    // Price fields are formatted on 'change' by the parent view, so we'll
-    // make sure to give the appropriate class if the user is providing
-    // a fixed amount for the discount amount.
-    if (e.target.value === 'FIXED') {
-      this.$inputDiscountAmount.addClass('js-price');
-    } else {
-      this.$inputDiscountAmount.removeClass('js-price');
-    }
-  }
-
   getFormData(fields = this.$formFields) {
     const formData = super.getFormData(fields);
 
     if (formData.discountType === 'FIXED') {
-      formData.priceDiscount = formData.discountAmount;
+      const bigNumDiscount = bigNumber(formData.discountAmount);
+      formData.bigPriceDiscount = bigNumDiscount.isNaN() ?
+        formData.discountAmount : bigNumDiscount;
     } else {
-      formData.percentDiscount = formData.discountAmount;
+      // discountAmount
+      const percentDiscount = Number(formData.discountAmount);
+
+      formData.percentDiscount = formData.discountAmount && !isNaN(percentDiscount) ?
+          percentDiscount : formData.discountAmount;
     }
 
     delete formData.discountType;
@@ -67,10 +52,10 @@ export default class extends BaseView {
   setModelData() {
     const formData = this.getFormData();
 
-    if (formData.priceDiscount !== undefined) {
+    if (formData.bigPriceDiscount !== undefined) {
       this.model.unset('percentDiscount');
     } else {
-      this.model.unset('priceDiscount');
+      this.model.unset('bigPriceDiscount');
     }
 
     this.model.set(formData);
@@ -93,18 +78,14 @@ export default class extends BaseView {
       this.$el.html(t({
         ...this.model.toJSON(),
         max: this.model.max,
-        errors: {
-          ...(this.model.validationError || {}),
-          ...(this.options.couponErrors || {}),
-        },
-        getCurrency: this.options.getCurrency,
-        formatPrice,
+        errors: this.model.validationError || {},
       }));
 
-      this.$('select[name=discountType]').select2({
-        // disables the search box
-        minimumResultsForSearch: Infinity,
-      });
+      this.getCachedEl('select[name=discountType]')
+        .select2({
+          // disables the search box
+          minimumResultsForSearch: Infinity,
+        });
 
       this._$formFields = null;
       this._$inputDiscountAmount = null;

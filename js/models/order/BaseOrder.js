@@ -1,4 +1,9 @@
+import bigNumber from 'bignumber.js';
 import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
+import {
+  curDefToDecimal,
+  integerToDecimal,
+} from '../../utils/currency';
 import BaseModel from '../BaseModel';
 
 export default class extends BaseModel {
@@ -101,10 +106,15 @@ export default class extends BaseModel {
   }
 
   static getPaymentCoin(attrs = {}) {
-    let paymentCoin;
+    let paymentCoin = '';
 
     try {
-      paymentCoin = this.getContract(attrs).buyerOrder.payment.coin;
+      paymentCoin =
+        this.getContract(attrs)
+          .buyerOrder
+          .payment
+          .amountCurrency
+          .code;
     } catch (e) {
       // pass
     }
@@ -121,10 +131,7 @@ export default class extends BaseModel {
     let curData;
 
     try {
-      curData = getWalletCurByCode(
-        this.getContract(attrs).buyerOrder
-          .payment.coin
-      );
+      curData = getWalletCurByCode(this.getPaymentCoin(attrs));
     } catch (e) {
       // pass
     }
@@ -134,5 +141,88 @@ export default class extends BaseModel {
 
   get paymentCoinData() {
     return this.constructor.getPaymentCoinData(this.toJSON());
+  }
+
+  static parseContract(contract) {
+    if (contract) {
+      let payment;
+
+      try {
+        payment = contract.buyerOrder.payment;
+      } catch (e) {
+        // pass
+      }
+
+      if (payment) {
+        payment.bigAmount = curDefToDecimal({
+          amount: payment.bigAmount,
+          currency: payment.amountCurrency,
+        });
+      }
+
+      // convert crypto listing quantities
+      contract.buyerOrder.items.forEach((item, index) => {
+        try {
+          const listing = contract.vendorListings[index];
+
+          if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
+            const divisibility = listing
+              .metadata
+              .coinDivisibility;
+
+            item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
+          }
+        } catch (e) {
+          item.bigQuantity = bigNumber();
+        }
+      });
+    }
+
+    return contract;
+  }
+
+  static parseDisputePayout(resolution) {
+    let divisibility;
+
+    try {
+      divisibility =
+        resolution
+          .payout
+          .payoutCurrency
+          .divisibility;
+    } catch (e) {
+      // pass
+    }
+
+    if (resolution && resolution.payout) {
+      if (resolution.payout.buyerOutput) {
+        resolution.payout.buyerOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.buyerOutput.bigAmount,
+            divisibility,
+            { fieldName: 'buyerOutput.bigAmount' }
+          );
+      }
+
+      if (resolution.payout.vendorOutput) {
+        resolution.payout.vendorOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.vendorOutput.bigAmount,
+            divisibility,
+            { fieldName: 'vendorOutput.bigAmount' }
+          );
+      }
+
+      if (resolution.payout.moderatorOutput) {
+        resolution.payout.moderatorOutput.bigAmount =
+          integerToDecimal(
+            resolution.payout.moderatorOutput.bigAmount,
+            divisibility,
+            { fieldName: 'moderatorOutput.bigAmount' }
+          );
+      }
+    }
+
+    return resolution;
   }
 }
