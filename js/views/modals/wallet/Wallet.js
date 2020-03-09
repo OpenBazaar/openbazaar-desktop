@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
+import bigNumber from 'bignumber.js';
 import {
   isSupportedWalletCur,
   ensureMainnetCode,
@@ -74,7 +75,11 @@ export default class extends BaseModal {
     }, {});
     // The majority of the TransactionsVw state is managed within the component, but
     // some of it we'll manage so as you nav from coin to coin, certain state is maintained.
-    this.transactionsState = {};
+    this.transactionsState = navCoins.reduce((acc, coin) => {
+      acc[coin] = { needsFetch: true };
+      return acc;
+    }, {});
+    this.popInTimeouts = [];
 
     this.navCoins = navCoins.map(coin => {
       const balanceMd = app.walletBalances.get(coin);
@@ -138,40 +143,66 @@ export default class extends BaseModal {
     if (initialActiveCoin && serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
         if (e.jsonData.wallet) {
-          const cl = this.transactionsState[e.jsonData.wallet.wallet] &&
-            this.transactionsState[e.jsonData.wallet.wallet].cl || null;
+          let walletCur;
 
+          try {
+            walletCur = e.jsonData.wallet.value.currency.code;
+          } catch (err) {
+            // pass
+            console.error('Unable to process a "wallet" socket because the wallet currency ' +
+              'could not be determined');
+            return;
+          }
+
+          const cl =
+            this.transactionsState[walletCur] &&
+            this.transactionsState[walletCur].cl || null;
           if (cl) {
-            const transaction = cl.get(e.jsonData.wallet.txid);
+            const data = e.jsonData.wallet;
+            const transaction = cl.get(data.txid);
 
-            if (this.activeCoin !== e.jsonData.wallet.wallet) {
-              // If this is a new / updated transaction for the active coin, we won't
-              // update the collection since the transactionsVw will handle that. Otherwise,
-              // we'll update the collection here.
-              const data = _.omit(e.jsonData.wallet, 'wallet');
+            if (transaction) {
+              // existing transaction has been confirmed
+              transaction.set(transaction.parse(data));
+            } else if (this.activeCoin !== walletCur) {
+              this.transactionsState[walletCur].needsFetch = true;
+            } else if (this.transactionsVw) {
+              // This is a bit ugly... but most incoming transactions (ones sent via our UI)
+              // are immediately added to the collection when their respective APIs succeeds and
+              // therefore should not be included in the "new transactions" pop in count.
+              // But, at this point we don't know if this is such a transaction, so we'll
+              // check back in a bit and see if it's already been added or not. It's a matter
+              // of the socket coming in before the AJAX call returns.
+              const timeout = setTimeout(() => {
+                if (this.activeCoin === walletCur) {
+                  if (!cl.get(e.jsonData.wallet.txid)) {
+                    // A new transaction for the active coin - rather than just add it to the
+                    // collection causing a page jump, we'll utilize the new transaction pop-up.
+                    this.transactionsVw.newTransactionsTXs.add(e.jsonData.wallet.txid);
+                    this.transactionsVw.showNewTransactionPopup();
+                  }
+                } else {
+                  this.transactionsState[walletCur].needsFetch = true;
+                }
+              }, 1500);
 
-              if (transaction) {
-                // existing transaction has been confirmed
-                transaction.set(transaction.parse(data));
-              } else {
-                cl.add(data, { parse: true, at: 0 });
-              }
+              this.popInTimeouts.push(timeout);
             }
 
             if (!transaction) {
-              this.incrementCountAtFirstFetch(e.jsonData.wallet.wallet);
+              this.incrementCountAtFirstFetch(walletCur);
             }
           }
 
           if (!e.jsonData.wallet.height) {
             // new transactions
 
-            if (e.jsonData.wallet.value > 0) {
+            if (bigNumber(e.jsonData.wallet.value.amount).gt(0)) {
               // for incoming new transactions, we'll need a new receiving address
-              if (this.activeCoin === e.jsonData.wallet.wallet) {
+              if (this.activeCoin === walletCur) {
                 this.fetchAddress();
               } else {
-                this.needAddress[e.jsonData.wallet.wallet] = true;
+                this.needAddress[walletCur] = true;
               }
             }
           }
@@ -458,6 +489,7 @@ export default class extends BaseModal {
                 .bumpFeeAttempts[txId].abort());
         }
       });
+    this.popInTimeouts.forEach(timeout => timeout.remove());
     super.remove();
   }
 
@@ -497,7 +529,7 @@ export default class extends BaseModal {
       this.listenToOnce(cl, 'sync', (md, response, options) => {
         if (options && options.xhr) {
           options.xhr.done(data => {
-            transactionsState.initialFetchComplete = true;
+            transactionsState.needsFetch = false;
             this.setCountAtFirstFetch(data.count, activeCoin);
           });
         }
@@ -518,10 +550,11 @@ export default class extends BaseModal {
     this.transactionsVw = this.createChild(TransactionsVw, {
       collection: cl,
       $scrollContainer: this.$el,
-      fetchOnInit: !transactionsState.initialFetchComplete,
+      fetchOnInit: transactionsState.needsFetch,
       countAtFirstFetch: transactionsState.countAtFirstFetch,
       bumpFeeXhrs: transactionsState.bumpFeeAttempts || undefined,
     });
+    transactionsState.needsFetch = false;
     this.getCachedEl('.js-transactionsContainer')
       .html(this.transactionsVw.render().el);
 

@@ -3,9 +3,13 @@
  ensure they are compatible with both the Purchase and Order Detail flows.
  */
 
+import bigNumber from 'bignumber.js';
 import app from '../../../app';
 import loadTemplate from '../../../utils/loadTemplate';
-import { formatCurrency, integerToDecimal } from '../../../utils/currency';
+import {
+  formatCurrency,
+  integerToDecimal,
+} from '../../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../../data/walletCurrencies';
 import { getSocket } from '../../../utils/serverConnect';
 import BaseVw from '../../baseVw';
@@ -23,9 +27,9 @@ import {
 
 export default class extends BaseVw {
   constructor(options = {}) {
-    if (typeof options.balanceRemaining !== 'number') {
+    if (!options.balanceRemaining instanceof bigNumber) {
       throw new Error('Please provide the balance remaining (in the server\'s' +
-        ' currency) as a number.');
+        ' currency) as a bigNumber instance.');
     }
 
     if (!options.paymentAddress) {
@@ -57,6 +61,7 @@ export default class extends BaseVw {
     }
 
     super(options);
+
     this.options = options;
     this._balanceRemaining = options.balanceRemaining;
     this.paymentAddress = options.paymentAddress;
@@ -72,15 +77,26 @@ export default class extends BaseVw {
         // listen for a payment socket message, to react to payments from all sources
         if (e.jsonData.notification && e.jsonData.notification.type === 'payment') {
           if (e.jsonData.notification.orderId === this.orderId) {
-            const amount = integerToDecimal(e.jsonData.notification.fundingTotal,
-              this.paymentCoin);
-            if (amount >= this.balanceRemaining) {
-              this.getCachedEl('.js-payFromWallet').removeClass('processing');
-              this.trigger('walletPaymentComplete', e.jsonData.notification);
-            } else {
-              // Ensure the resulting balance has a maximum of 8 decimal places without any
-              // trailing zeros.
-              this.balanceRemaining = parseFloat((this.balanceRemaining - amount).toFixed(8));
+            let amount;
+
+            try {
+              amount = integerToDecimal(
+                e.jsonData.notification.fundingTotal.amount,
+                e.jsonData.notification.fundingTotal.currency.divisibility,
+                { returnNaNOnError: false }
+              );
+            } catch (err) {
+              console.error('Unable to convert the payment notification amount ' +
+                `from base units: ${err}`);
+            }
+
+            if (amount && amount.isNaN && !amount.isNaN()) {
+              if (amount.gte(this.balanceRemaining)) {
+                this.getCachedEl('.js-payFromWallet').removeClass('processing');
+                this.trigger('walletPaymentComplete', e.jsonData.notification);
+              } else {
+                this.balanceRemaining = this.balanceRemaining.minus(amount);
+              }
             }
           }
         }
@@ -89,7 +105,11 @@ export default class extends BaseVw {
   }
 
   set balanceRemaining(amount) {
-    if (amount !== this._balanceRemaining) {
+    if (!(amount instanceof bigNumber)) {
+      throw new Error('Please provide an amount as a BigNumber instance.');
+    }
+
+    if (!amount.eq(this._balanceRemaining)) {
       this._balanceRemaining = amount;
       this.getCachedEl('.js-amountDueLine').html(this.amountDueLine);
       this.getCachedEl('.js-qrCodeImg').attr('src', this.qrDataUri);
@@ -115,8 +135,9 @@ export default class extends BaseVw {
 
   clickPayFromWallet(e) {
     const walletBalance = app.walletBalances.get(this.paymentCoin);
-    const insufficientFunds = this.balanceRemaining >
-     (walletBalance ? walletBalance.get('confirmed') : 0);
+    const insufficientFunds =
+      this.balanceRemaining
+        .gt(walletBalance ? walletBalance.get('confirmed') : 0);
 
     if (insufficientFunds) {
       this.spendConfirmBox.setState({
@@ -207,8 +228,16 @@ export default class extends BaseVw {
   }
 
   get amountDueLine() {
+    let amountBTC = '';
+
+    try {
+      amountBTC = formatCurrency(this.balanceRemaining, this.paymentCoin);
+    } catch (e) {
+      // pass
+    }
+
     return app.polyglot.t('purchase.pendingSection.pay',
-      { amountBTC: formatCurrency(this.balanceRemaining, this.paymentCoin) });
+      { amountBTC });
   }
 
   get qrDataUri() {
@@ -238,6 +267,7 @@ export default class extends BaseVw {
           walletIconTmpl,
           isModerated: this.isModerated,
           paymentCoin: this.paymentCoin,
+          externallyFundable: this.paymentCoinData.externallyFundableOrders,
         }));
       });
 

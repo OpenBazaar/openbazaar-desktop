@@ -16,7 +16,15 @@
             <div>
               <div class="tx5 rowSm txB"><%= service.name %>: <%= service.service %></div>
               <div class="tx5b clrT2 txUnb">
-                <% const price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency, ob.displayCurrency) %>
+                <%
+                  let price = '';
+
+                  try {
+                    price = ob.currencyMod.convertAndFormatCurrency(service.bigPrice, ob.item.priceCurrency.code, ob.displayCurrency);
+                  } catch (e) {
+                    // pass
+                  }
+                %>
                 <% if (service.estimatedDelivery) print(ob.polyT('purchase.serviceDetails', { price, delivery: service.estimatedDelivery })) %>
               </div>
             </div>

@@ -1,9 +1,8 @@
-import { integerToDecimal } from '../../utils/currency';
 import BaseOrder from './BaseOrder';
 import Contract from './Contract';
 import app from '../../app';
 
-export default class extends BaseOrder {
+class Case extends BaseOrder {
   url() {
     return app.getServerUrl(`ob/case/${this.id}`);
   }
@@ -77,28 +76,7 @@ export default class extends BaseOrder {
     return false;
   }
 
-  convertQuantity(contract = {}) {
-    contract.buyerOrder.items.forEach((item, index) => {
-      const listing = contract.vendorListings[index];
-
-      // standardize the quantity field
-      item.quantity = item.quantity === 0 ?
-        item.quantity64 : item.quantity;
-
-      if (listing.metadata.contractType === 'CRYPTOCURRENCY') {
-        const coinDivisibility = listing.metadata
-          .coinDivisibility;
-
-        item.quantity = item.quantity / coinDivisibility;
-      }
-    });
-
-    return contract;
-  }
-
   parse(response = {}) {
-    const paymentCoin = BaseOrder.getPaymentCoin(response);
-
     // If only one contract has arrived, we'll fire an event when the other one comes
     if (!this._otherContractEventBound &&
       !this.vendorProcessingError &&
@@ -119,12 +97,7 @@ export default class extends BaseOrder {
       response.rawBuyerContract =
         JSON.parse(JSON.stringify(response.buyerContract)); // deep clone
 
-      // convert price fields
-      response.buyerContract.buyerOrder.payment.amount =
-        integerToDecimal(response.buyerContract.buyerOrder.payment.amount,
-          paymentCoin);
-
-      response.buyerContract = this.convertQuantity(response.buyerContract);
+      response.buyerContract = Case.parseContract(response.buyerContract);
     }
 
     if (response.vendorContract) {
@@ -133,33 +106,14 @@ export default class extends BaseOrder {
       response.rawVendorContract =
         JSON.parse(JSON.stringify(response.vendorContract)); // deep clone
 
-      // convert price fields
-      response.vendorContract.buyerOrder.payment.amount =
-        integerToDecimal(response.vendorContract.buyerOrder.payment.amount,
-          paymentCoin);
-
-      response.vendorContract = this.convertQuantity(response.vendorContract);
+      response.vendorContract = Case.parseContract(response.vendorContract);
     }
 
-    if (response.resolution) {
-      response.resolution.payout.buyerOutput =
-        response.resolution.payout.buyerOutput || {};
-      response.resolution.payout.vendorOutput =
-        response.resolution.payout.vendorOutput || {};
-      response.resolution.payout.moderatorOutput =
-        response.resolution.payout.moderatorOutput || {};
-
-      response.resolution.payout.buyerOutput.amount =
-        integerToDecimal(response.resolution.payout.buyerOutput.amount || 0,
-          paymentCoin);
-      response.resolution.payout.vendorOutput.amount =
-        integerToDecimal(response.resolution.payout.vendorOutput.amount || 0,
-          paymentCoin);
-      response.resolution.payout.moderatorOutput.amount =
-        integerToDecimal(response.resolution.payout.moderatorOutput.amount || 0,
-          paymentCoin);
-    }
+    response.resolution =
+      Case.parseDisputePayout(response.resolution);
 
     return response;
   }
 }
+
+export default Case;

@@ -142,7 +142,7 @@ export function getInventory(peerId, options = {}) {
     // the inventory is converted into UI readable units. If fetching the
     // inventory for an entire store, this should be passed in as an object
     // keyed by slug, e.g:
-    // { zec-for-sale: 100000000, eth-for-sale: 100000000000 }
+    // { zec-for-sale: 8, eth-for-sale: 18 }
     coinDivisibility: undefined,
     ...options,
   };
@@ -169,7 +169,7 @@ export function getInventory(peerId, options = {}) {
           inventoryData = {
             ...data,
             inventory: typeof opts.coinDivisibility === 'number' ?
-              data.inventory / opts.coinDivisibility : data.inventory,
+              data.inventory / Math.pow(10, opts.coinDivisibility) : data.inventory,
           };
         } else {
           Object.keys(data)
@@ -178,7 +178,7 @@ export function getInventory(peerId, options = {}) {
                 ...data[slug],
                 inventory: typeof opts.coinDivisibility === 'object' &&
                   typeof opts.coinDivisibility[slug] === 'number' ?
-                  data[slug].inventory / opts.coinDivisibility[slug] :
+                  data[slug].inventory / Math.pow(10, opts.coinDivisibility[slug]) :
                     data[slug].inventory,
               };
             });

@@ -111,7 +111,7 @@ $crytoListViewPriceWidth: 32%;
         margin-bottom: $padMd;
       }
 
-      &:not(:last-child):not(:focus) {
+      &:not(:last-child):not(:focus):not(.ListingCard-errorCard) {
         border-bottom-color: transparent;
 
         &:hover {

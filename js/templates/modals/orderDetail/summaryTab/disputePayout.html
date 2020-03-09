@@ -2,16 +2,22 @@
   let priceLines = {};
   let partyHeadings = {};
 
-  ['buyer', 'vendor', 'moderator'].forEach(type => {
-    priceLines[type] = ob.currencyMod.pairedCurrency(
-      ob.payout[`${type}Output`].amount,
-      ob.paymentCoin,
-      ob.userCurrency
-    );
-
+  ['buyer', 'vendor', 'moderator'].forEach((type, index) => {
     partyHeadings[type] = ob[`${type}Name`] ?
       ob.polyT(`orderDetail.summaryTab.disputePayout.${type}HeadingWithName`, { name: ob[`${type}Name`] }) :
         ob.polyT(`orderDetail.summaryTab.disputePayout.${type}Heading`);
+
+    if (!ob.payout) {
+      return;
+    }
+
+    priceLines[type] = ob.currencyMod.pairedCurrency(
+      ob.payout[`${type}Output`] &&
+        ob.payout[`${type}Output`].bigAmount ||
+        ob.bigNumber(0),
+      ob.paymentCoin,
+      ob.userCurrency
+    );
   });
 %>
 <h2 class="tx4 margRTn"><%= ob.polyT('orderDetail.summaryTab.disputePayout.heading') %></h2>

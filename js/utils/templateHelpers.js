@@ -1,15 +1,13 @@
 import $ from 'jquery';
 import app from '../app';
-import { isFiatCur } from '../data/currencies';
+import bigNumber from 'bignumber.js';
 import {
   formatCurrency,
   convertAndFormatCurrency,
   convertCurrency,
-  formatPrice,
-  getCurrencyValidity,
   getExchangeRate,
-  renderFormattedCurrency,
   renderPairedCurrency,
+  isFiatCur,
 } from './currency';
 import {
   getCurrencyByCode as getWalletCurByCode,
@@ -25,7 +23,12 @@ import {
 import {
   isHiRez, isLargeWidth, isSmallHeight, getAvatarBgImage, getListingBgImage,
 } from './responsive';
-import { upToFixed, localizeNumber } from './number';
+import {
+  upToFixed,
+  localizeNumber,
+  toStandardNotation,
+  isValidNumber,
+} from './number';
 import twemoji from 'twemoji';
 import { splitIntoRows, abbrNum } from './';
 import { tagsDelimiter } from '../utils/lib/selectize';
@@ -99,15 +102,12 @@ export function formatRating(average, count, skipCount) {
 export const getServerUrl = app.getServerUrl.bind(app);
 
 const currencyExport = {
-  formatPrice,
-  formatCurrency,
-  convertAndFormatCurrency,
+  formatCurrency: gracefulException(formatCurrency),
+  convertAndFormatCurrency: gracefulException(convertAndFormatCurrency),
   convertCurrency,
-  getCurrencyValidity,
-  getExchangeRate,
-  formattedCurrency: gracefulException(renderFormattedCurrency),
+  getExchangeRate: gracefulException(getExchangeRate, undefined),
   pairedCurrency: gracefulException(renderPairedCurrency),
-  isFiatCur,
+  isFiatCur: gracefulException(isFiatCur, false),
 };
 
 const crypto = {
@@ -120,16 +120,23 @@ const crypto = {
   getWalletCurByCode,
 };
 
+const number = {
+  upToFixed,
+  localizeNumber,
+  toStandardNotation,
+  isValidNumber,
+};
+
 export {
+  bigNumber,
   currencyExport as currencyMod,
   crypto,
+  number,
   isHiRez,
   isLargeWidth,
   isSmallHeight,
   getAvatarBgImage,
   getListingBgImage,
-  localizeNumber,
-  upToFixed,
   splitIntoRows,
   is,
   tagsDelimiter,

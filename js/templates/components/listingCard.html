@@ -4,6 +4,16 @@
   const listingImageBgStyle =
     `background-image: ${listingImageSrc}url('../imgs/defaultItem.png')`;
 
+  let priceMaxDisplayDecimals;
+
+  try {
+    if (!ob.currencyMod.isFiatCur(ob.displayCurrency)) {
+      priceMaxDisplayDecimals = 6;
+    }
+  } catch (e) {
+    // pass
+  }
+
   if (ob.viewType === 'grid') {
 %>
 <div class="gridViewContent posR">
@@ -105,27 +115,40 @@
             <%= ob.crypto.tradingPair({
               className: 'cryptoTradingPairSm',
               fromCur,
-              toCur: ob.coinType,
+              toCur: ob.price.currencyCode,
               truncateCurAfter: 5,
             }) %>
           </a>
         </div>
       <% } %>
     </div>
-    <div class="flex">
-      <div class="flexExpand tx5b ratingStrip">
-        <%= ob.formatRating(ob.averageRating, ob.ratingCount) %>
+    <%
+      const formattedRating = ob.formatRating(ob.averageRating, ob.ratingCount);
+      let priceRowTextClass = '';
+
+      try {
+        const priceLength = ob.price.amount.toFormat().length;
+        const ratingLength = ($(`<div>${formattedRating}</div>`).text()).length;
+
+        if (priceLength + ratingLength > 17) {
+          priceRowTextClass = 'txBase'
+        }
+      } catch (e) {
+        // pass
+      }
+    %>
+    <div class="flexVCent <%= priceRowTextClass %>">
+      <div class="flexExpand ratingStrip">
+        <%= formattedRating %>
       </div>
       <% if (ob.contractType !== 'CRYPTOCURRENCY') { %>
         <div>
           <%=
-            ob.currencyMod.formattedCurrency(
+            ob.currencyMod.convertAndFormatCurrency(
               ob.price.amount,
               ob.price.currencyCode,
               ob.displayCurrency,
-              {
-                toolTipClass: 'toolTipTop',
-              }
+              { maxDisplayDecimals: priceMaxDisplayDecimals }
             )
           %>
         </div>
@@ -138,6 +161,9 @@
             priceModifier: ob.price.modifier,
             wrappingClass: '',
             marketRelativityClass: 'hide',
+            convertAndFormatOpts: {
+              maxDisplayDecimals: priceMaxDisplayDecimals
+            }
           })
         %>
       <% } %>
@@ -172,7 +198,7 @@
           <%= ob.crypto.tradingPair({
             className: 'cryptoTradingPairSm',
             fromCur: ob.acceptedCurrencies[0],
-            toCur: ob.coinType,
+            toCur: ob.price.currencyCode,
             truncateCurAfter: 5,
           }) %>
         <% } %>
@@ -193,13 +219,11 @@
           <%
             if (ob.contractType !== 'CRYPTOCURRENCY') { %>
             <%=
-              ob.currencyMod.formattedCurrency(
+              ob.currencyMod.convertAndFormatCurrency(
                 ob.price.amount,
                 ob.price.currencyCode,
                 ob.displayCurrency,
-                {
-                  toolTipClass: 'toolTipTop',
-                }
+                { maxDisplayDecimals: priceMaxDisplayDecimals }
               )
             %>
           <% } else { %>
@@ -210,6 +234,9 @@
                 displayCurrency: ob.displayCurrency,
                 priceModifier: ob.price.modifier,
                 wrappingClass: '',
+                convertAndFormatOpts: {
+                  maxDisplayDecimals: priceMaxDisplayDecimals
+                }                
               })
             %>
           <% } %>

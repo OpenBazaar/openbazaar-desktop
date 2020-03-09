@@ -1,5 +1,6 @@
 import app from '../../app';
-import { integerToDecimal } from '../../utils/currency';
+import bigNumber from 'bignumber.js';
+import { integerToDecimal, curDefToDecimal } from '../../utils/currency';
 import { getCurrencyByCode as getWalletCurByCode } from '../../data/walletCurrencies';
 import BaseModel from '../BaseModel';
 
@@ -100,18 +101,39 @@ export default class extends BaseModel {
           { address: returnVal.memo.slice(12) });
       }
 
-      // The UI has more stringent logic to determine when fee bumping is possible. This model will
-      // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
-      // server is just used to determine whether the fee was already bumped or not.
-      returnVal.feeBumped = returnVal.value > 0 && !returnVal.canBumpFee;
-      delete returnVal.canBumpFee;
+      const coinType = this.options ? this.options.coinType : options.coinType;
+      let value = bigNumber();
+
+      if (typeof returnVal.value === 'string') {
+        try {
+          value = integerToDecimal(
+            returnVal.value,
+            getWalletCurByCode(coinType).coinDivisibility,
+            { returnNaNOnError: false }
+          );
+        } catch (e) {
+          console.error(`Unable to convert the ${coinType} transaction value from base ` +
+            `units: ${e.message}`);
+        }
+      } else if (typeof returnVal.value === 'object') {
+        // If the data is coming from the API, the value will be a string and we get the
+        // divisibility from the wallet urrency definition. If the data comes from the socket
+        // it will be an object containing a fulll currency definition with its own divisibibility.
+        // The server hopes to clean up this inconsistency at some point.
+        value = curDefToDecimal(returnVal.value);
+      }
 
       returnVal = {
         ...returnVal,
-        // Convert from base units
-        value: integerToDecimal(returnVal.value,
-          this.options ? this.options.coinType : options.coinType),
+        value,
       };
+
+      // The UI has more stringent logic to determine when fee bumping is possible. This model will
+      // provide a allowFeeBump flag to indicate when it's allowed. The canBumpFee flag from the
+      // server is just used to determine whether the fee was already bumped or not.
+      returnVal.feeBumped = typeof value === 'number' ?
+        (returnVal.value > 0 && !returnVal.canBumpFee) : false;
+      delete returnVal.canBumpFee;
     }
 
     return returnVal;

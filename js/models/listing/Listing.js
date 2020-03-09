@@ -1,12 +1,23 @@
+console.log('overshowing save verification modal on crypto listing');
+
 import _ from 'underscore';
 import is from 'is_js';
+import bigNumber from 'bignumber.js';
 import app from '../../app';
 import { getCurrencyByCode as getCryptoCurrencyByCode } from '../../data/walletCurrencies';
 import { getIndexedCountries } from '../../data/countries';
 import { events as listingEvents, shipsFreeToMe } from './';
-import { decimalToInteger, integerToDecimal } from '../../utils/currency';
-import { defaultQuantityBaseUnit } from '../../data/cryptoListingCurrencies';
-import BaseModel from '../BaseModel';
+import {
+  decimalToInteger,
+  integerToDecimal,
+  decimalToCurDef,
+  isValidCoinDivisibility,
+  getCoinDivisibility,
+  CUR_VAL_RANGE_TYPES,
+  defaultCryptoCoinDivisibility,
+  UnrecognizedCurrencyError,
+} from '../../utils/currency';
+import BaseModel, { flattenAttrs } from '../BaseModel';
 import Item from './Item';
 import Metadata from './Metadata';
 import ShippingOptions from '../../collections/listing/ShippingOptions.js';
@@ -95,6 +106,8 @@ export default class extends BaseModel {
       refundPolicyLength: 10000,
       termsAndConditionsLength: 10000,
       couponCount: 30,
+      minPriceModifier: -99.99,
+      maxPriceModifier: 1000,
     };
   }
 
@@ -113,23 +126,166 @@ export default class extends BaseModel {
   }
 
   get price() {
+    const item = this.get('item');
     const metadata = this.get('metadata');
 
+    let coinType = '';
+
+    try {
+      coinType = metadata.get('coinType');
+    } catch (e) {
+      // pass
+    }
+
     if (this.isCrypto) {
-      const modifier = metadata.get('priceModifier') || 0;
+      let modifier = 0;
+
+      try {
+        modifier = item.get('priceModifier') || 0;
+      } catch (e) {
+        // pass
+      }
 
       return {
-        amount: 1 + (modifier / 100),
-        currencyCode: metadata.get('coinType'),
+        amount: bigNumber(1 + (modifier / 100)),
+        currencyCode: coinType,
         modifier,
       };
     }
 
+    let amount = bigNumber();
+
+    try {
+      amount = item.get('bigPrice');
+    } catch (e) {
+      // pass
+    }
+
+    let currencyCode = '';
+
+    try {
+      currencyCode = item.get('priceCurrency').code;
+    } catch (e) {
+      // pass
+    }
+
     return {
-      amount: this.get('item')
-        .get('price'),
-      currencyCode: metadata.get('pricingCurrency'),
+      amount,
+      currencyCode,
     };
+  }
+
+  set(key, val, options = {}) {
+    // Handle both `"key", value` and `{key: value}` -style arguments.
+    let attrs;
+    let opts = options;
+
+    if (typeof key === 'object') {
+      attrs = key;
+      opts = val || {};
+    } else {
+      (attrs = {})[key] = val;
+    }
+
+    let contractType;
+
+    try {
+      contractType =
+        this.get('metadata')
+          .get('contractType');
+    } catch (e) {
+      // pass
+    }
+
+    try {
+      contractType = attrs.metadata.contractType;
+    } catch (e) {
+      // pass
+    }
+
+    if (contractType !== 'CRYPTOCURRENCY') {
+      let curCode;
+
+      try {
+        curCode =
+          attrs.item
+            .priceCurrency
+            .code;
+      } catch (e) {
+        // pass
+      }
+
+      if (
+        typeof curCode === 'string' &&
+        curCode
+      ) {
+        try {
+          attrs.item = {
+            ...attrs.item,
+            priceCurrency: {
+              code: curCode,
+              divisibility: getCoinDivisibility(curCode),
+            },
+          };
+        } catch (e) {
+          if (
+            attrs.item &&
+            typeof attrs.item.priceCurrency === 'object'
+          ) {
+            delete attrs.item.priceCurrency.divisibility;
+            // validate will fail validation on the model in this scenario -
+            // it's almost certainly a dev error
+          }
+        }
+      }
+    } else {
+      let coinType;
+
+      try {
+        coinType =
+          attrs.metadata
+            .coinType;
+      } catch (e) {
+        // pass
+      }
+
+      if (
+        typeof coinType === 'string' &&
+        coinType
+      ) {
+        try {
+          attrs.metadata.coinDivisibility = getCoinDivisibility(coinType);
+        } catch (e) {
+          if (e instanceof UnrecognizedCurrencyError) {
+            // If it's a coin we don't recognize and it has a valid divsibility
+            // set (maybe it came from another client that knows more about the coin
+            // than us), we'll use it. Otherwise, we'll use the default crypto coin
+            // divisibility.
+            let coinDiv = defaultCryptoCoinDivisibility;
+            const curDivis = this.get('metadata') &&
+              this.get('metadata').get('coinDivisibility');
+
+            try {
+              if (isValidCoinDivisibility(curDivis)[0]) {
+                coinDiv = curDivis;
+              }
+            } catch (err) {
+              // pass
+            }
+
+            attrs.metadata.coinDivisibility = coinDiv;
+          } else {
+            if (attrs.metadata) {
+              delete attrs.metadata.coinDivisibility;
+              // validate will fail validation on the model in this scenario -
+              // it's almost certainly a dev error
+            }
+          }
+        }
+      }
+    }
+
+    return super.set(attrs, opts);
   }
 
   /**
@@ -147,21 +303,42 @@ export default class extends BaseModel {
     return clone;
   }
 
-  validate(attrs) {
+  validate(attributes) {
     let errObj = {};
     const addError = (fieldName, error) => {
       errObj[fieldName] = errObj[fieldName] || [];
       errObj[fieldName].push(error);
     };
-    const metadata = {
-      ...this.get('metadata').toJSON(),
-      ...attrs.metadata,
+
+    const attrs = {
+      ...this.toJSON(),
+      ...flattenAttrs(attributes),
     };
+
+    const metadata = attrs.metadata;
     const contractType = metadata.contractType;
-    const item = {
-      ...this.get('item').toJSON(),
-      ...attrs.item,
+    const item = attrs.item;
+
+    const curDefCurrency = {
+      code: () => item.priceCurrency.code,
+      divisibility: () => item.priceCurrency.divisibility,
     };
+
+    if (!(attributes.item instanceof Item)) {
+      addError('item', 'A nested Item model is required.');
+    }
+
+    if (!(attributes.metadata instanceof Metadata)) {
+      addError('metadata', 'A nested Metadata model is required.');
+    }
+
+    if (!(attributes.shippingOptions instanceof ShippingOptions)) {
+      addError('shippingOptions', 'A nested ShippingOptions collection is required.');
+    }
+
+    if (!(attributes.coupons instanceof Coupons)) {
+      addError('coupons', 'A nested Coupons collection is required.');
+    }
 
     if (attrs.refundPolicy) {
       if (is.not.string(attrs.refundPolicy)) {
@@ -191,35 +368,152 @@ export default class extends BaseModel {
         addError('metadata.coinType', app.polyglot.t('metadataModelErrors.provideCoinType'));
       }
 
-      if (metadata && typeof metadata.pricingCurrency !== 'undefined') {
-        addError('metadata.pricingCurrency', 'The pricing currency should not be set on ' +
-          'cryptocurrency listings.');
-      }
+      if (item) {
+        if (typeof item.price !== 'undefined') {
+          addError('item.price', 'The price should not be set on cryptocurrency ' +
+            'listings.');
+        }
 
-      if (item && typeof item.price !== 'undefined') {
-        addError('item.price', 'The price should not be set on cryptocurrency ' +
-          'listings.');
-      }
+        if (typeof item.condition !== 'undefined') {
+          addError('item.condition', 'The condition should not be set on cryptocurrency ' +
+            'listings.');
+        }
 
-      if (item && typeof item.condition !== 'undefined') {
-        addError('item.condition', 'The condition should not be set on cryptocurrency ' +
-          'listings.');
-      }
+        if (typeof item.quantity !== 'undefined') {
+          addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
+            'listings.');
+        }
 
-      if (item && typeof item.quantity !== 'undefined') {
-        addError('item.quantity', 'The quantity should not be set on cryptocurrency ' +
-          'listings.');
+        if (
+          item.priceModifier === '' ||
+          item.priceModifier === undefined ||
+          item.priceModifier === null
+        ) {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.providePriceModifier'));
+        } else if (typeof item.priceModifier !== 'number') {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.numericPriceModifier'));
+        } else if (
+          item.priceModifier < this.max.minPriceModifier ||
+          item.priceModifier > this.max.maxPriceModifier
+        ) {
+          addError('item.priceModifier', app.polyglot.t('listingModelErrors.priceModifierRange', {
+            min: this.max.minPriceModifier,
+            max: this.max.maxPriceModifier,
+          }));
+        }
+
+        this.validateCurrencyAmount(
+          {
+            amount: item.cryptoQuantity,
+            currency: {
+              code: () => metadata.coinType,
+              divisibility: () => metadata.coinDivisibility,
+            },
+          },
+          addError,
+          'item.cryptoQuantity',
+          {
+            validationOptions: {
+              rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+            },
+          }
+        );
       }
     } else {
       if (item && typeof item.cryptoQuantity !== 'undefined') {
         addError('item.cryptoQuantity', 'The cryptoQuantity should only be set on cryptocurrency ' +
           'listings.');
       }
+
+      (attrs.shippingOptions || []).forEach(shipOpt => {
+        (shipOpt.services || []).forEach(service => {
+          this.validateCurrencyAmount(
+            {
+              amount: service.bigPrice,
+              currency: curDefCurrency,
+            },
+            addError,
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigPrice`,
+            {
+              validationOptions: {
+                rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+              },
+            }
+          );
+
+          this.validateCurrencyAmount(
+            {
+              amount: service.bigAdditionalItemPrice,
+              currency: curDefCurrency,
+            },
+            addError,
+            `shippingOptions[${shipOpt.cid}].services[${service.cid}].bigAdditionalItemPrice`,
+            {
+              validationOptions: {
+                rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+              },
+            }
+          );
+        });
+      });
+
+      (item.skus || []).forEach(sku => {
+        this.validateCurrencyAmount(
+          {
+            amount: sku.bigSurcharge,
+            currency: curDefCurrency,
+          },
+          addError,
+          `item.skus[${sku.cid}].bigSurcharge`,
+          {
+            validationOptions: {
+              rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
+            },
+          }
+        );
+      });
     }
 
-    if (attrs.coupons.length > this.max.couponCount) {
-      addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
-        { maxCouponCount: this.max.couponCount }));
+    if (attrs.coupons.length) {
+      const coupons = attrs.coupons;
+
+      if (coupons.length > this.max.couponCount) {
+        addError('coupons', app.polyglot.t('listingModelErrors.tooManyCoupons',
+          { maxCouponCount: this.max.couponCount }));
+      }
+
+      coupons.forEach(coupon => {
+        const priceDiscount = coupon.bigPriceDiscount;
+        const itemPrice = item.bigPrice;
+
+        this.validateCurrencyAmount(
+          {
+            amount: priceDiscount,
+            currency: curDefCurrency,
+          },
+          addError,
+          `coupons[${coupon.cid}].bigPriceDiscount`,
+          {
+            translations: {
+              required: false,
+            },
+          }
+        );
+
+        if (
+          priceDiscount &&
+          priceDiscount.isNaN &&
+          !priceDiscount.isNaN() &&
+          itemPrice &&
+          itemPrice.isNaN &&
+          !itemPrice.isNaN()
+        ) {
+          if (priceDiscount.gte(itemPrice)) {
+            addError(`coupons[${coupon.cid}].bigPriceDiscount`,
+              app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
+          }
+        }
+      });
     }
 
     errObj = this.mergeInNestedErrors(errObj);
@@ -227,24 +521,22 @@ export default class extends BaseModel {
     if (contractType === 'CRYPTOCURRENCY') {
       // Remove the validation of certain fields that should not be set for
       // cryptocurrency listings.
-      delete errObj['metadata.pricingCurrency'];
-      delete errObj['item.price'];
+      Object
+        .keys(errObj)
+        .forEach(errKey => {
+          if (errKey.startsWith('item.priceCurrency')) {
+            delete errObj[errKey];
+          }
+        });
+
+      delete errObj['item.bigPrice'];
       delete errObj['item.condition'];
       delete errObj['item.quantity'];
       delete errObj['item.title'];
     } else {
       delete errObj['item.cryptoQuantity'];
+      delete errObj['item.priceModifier'];
     }
-
-    // Coupon price discount cannot exceed the item price.
-    attrs.coupons.forEach(coupon => {
-      const priceDiscount = coupon.get('priceDiscount');
-
-      if (typeof priceDiscount !== 'undefined' && priceDiscount >= attrs.item.get('price')) {
-        addError(`coupons[${coupon.cid}].priceDiscount`,
-          app.polyglot.t('listingModelErrors.couponsPriceTooLarge'));
-      }
-    });
 
     if (Object.keys(errObj).length) return errObj;
 
@@ -288,80 +580,111 @@ export default class extends BaseModel {
         );
     } else {
       if (method !== 'delete') {
-        options.url = options.url || app.getServerUrl('ob/listing/');
         // it's a create or update
+
+        options.url = options.url || app.getServerUrl('ob/listing/');
         options.attrs = options.attrs || this.toJSON();
 
-        // convert price fields
-        if (options.attrs.item.price) {
-          const price = options.attrs.item.price;
-          options.attrs.item.price = decimalToInteger(price,
-            options.attrs.metadata.pricingCurrency);
-        }
+        let coinDiv;
 
-        options.attrs.shippingOptions.forEach(shipOpt => {
-          shipOpt.services.forEach(service => {
-            if (typeof service.price === 'number') {
-              service.price = decimalToInteger(service.price,
-                options.attrs.metadata.pricingCurrency);
-            }
+        if (options.attrs.metadata.contractType !== 'CRYPTOCURRENCY') {
+          // Don't send over crypto currency specific fields if it's not a
+          // crypto listing.
+          delete options.attrs.item.priceModifier;
+          delete options.attrs.item.cryptoQuantity;
 
-            if (typeof service.additionalItemPrice === 'number') {
-              service.additionalItemPrice = decimalToInteger(service.additionalItemPrice,
-                options.attrs.metadata.pricingCurrency);
+          coinDiv = options.attrs.item.priceCurrency.divisibility;
+
+          options.attrs.item = {
+            ...options.attrs.item,
+            ...decimalToCurDef(
+              options.attrs.item.bigPrice,
+              options.attrs.item.priceCurrency.code,
+              {
+                amountKey: 'bigPrice',
+                currencyKey: 'priceCurrency',
+                divisibility: coinDiv,
+              }
+            ),
+          };
+
+          options.attrs.shippingOptions.forEach(shipOpt => {
+            shipOpt.services.forEach(service => {
+              service.bigPrice = decimalToInteger(
+                service.bigPrice,
+                coinDiv
+              );
+              service.bigAdditionalItemPrice =
+                decimalToInteger(
+                  service.bigAdditionalItemPrice,
+                  coinDiv
+                );
+            });
+          });
+
+          options.attrs.coupons.forEach(coupon => {
+            if (coupon.bigPriceDiscount) {
+              coupon.bigPriceDiscount =
+                decimalToInteger(coupon.bigPriceDiscount, coinDiv);
             }
           });
-        });
 
-        options.attrs.coupons.forEach(coupon => {
-          if (typeof coupon.priceDiscount === 'number') {
-            coupon.priceDiscount = decimalToInteger(coupon.priceDiscount,
-              options.attrs.metadata.pricingCurrency);
-          }
-        });
-
-        const baseUnit = options.attrs.metadata.coinDivisibility =
-          options.attrs.metadata.coinDivisibility || defaultQuantityBaseUnit;
-
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          // round to ensure integer
-          options.attrs.item.cryptoQuantity =
-            Math.round(options.attrs.item.cryptoQuantity * baseUnit);
-
+          options.attrs.item.skus.forEach(sku => {
+            sku.bigSurcharge = decimalToInteger(sku.bigSurcharge, coinDiv);
+          });
+        } else {
           // Don't send over the price on crypto listings.
-          delete options.attrs.price;
-        }
-        // END - convert price fields
+          delete options.attrs.item.bigPrice;
+          delete options.attrs.item.priceCurrency;
+          delete options.attrs.item.options;
 
-        // If providing a quanitity and / or productID on the Item and not
-        // providing any SKUs, then we'll send item.quantity and item.productID
-        // in as a "dummy" SKU (as the server expects). If you are providing any
-        // SKUs, then item.quantity and item.productID will be ignored.
+          // Update the crypto title based on the accepted currency and
+          // coin type.
+          const coinType = options.attrs.metadata.coinType;
+          let fromCur = options.attrs.metadata.acceptedCurrencies &&
+            options.attrs.metadata.acceptedCurrencies[0];
+          if (fromCur) {
+            const curObj = getCryptoCurrencyByCode(fromCur);
+            // if it's a recognized currency, ensure the mainnet code is used
+            fromCur = curObj ? curObj.code : fromCur;
+          } else {
+            fromCur = 'UNKNOWN';
+          }
+          options.attrs.item.title = `${fromCur}-${coinType}`;
+        }
+
+        // If providing a quanitity, productID or infiniteInventory bool on the
+        // Item and not providing any SKUs, then we'll send them in as a "dummy" SKU
+        // (as the server expects).
         if (!options.attrs.item.skus.length) {
           const dummySku = {};
 
           if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-            dummySku.quantity = options.attrs.item.cryptoQuantity;
+            dummySku.bigQuantity = decimalToInteger(
+              options.attrs.item.cryptoQuantity,
+              options.attrs.metadata.coinDivisibility
+            );
+
             delete options.attrs.item.cryptoQuantity;
-          } else if (typeof options.attrs.item.quantity === 'number') {
-            dummySku.quantity = options.attrs.item.quantity;
+          } else if (options.attrs.item.infiniteInventory) {
+            dummySku.bigQuantity = '-1';
+          } else if (options.attrs.item.quantity instanceof bigNumber) {
+            dummySku.bigQuantity = options.attrs.item.quantity;
           }
 
-          if (typeof options.attrs.item.productID === 'string' &&
-            options.attrs.item.productID.length) {
+          if (
+            options.attrs.metadata.contractType !== 'CRYPTOCURRENCY' &&
+            typeof options.attrs.item.productID === 'string' &&
+            options.attrs.item.productID.length
+          ) {
             dummySku.productID = options.attrs.item.productID;
           }
 
           if (Object.keys(dummySku).length) {
             options.attrs.item.skus = [dummySku];
           }
-        } else {
-          options.attrs.item.skus.forEach(sku => {
-            if (typeof sku.surcharge === 'number') {
-              sku.surcharge = decimalToInteger(sku.surcharge,
-                options.attrs.metadata.pricingCurrency);
-            }
-          });
+
+          delete options.attrs.item.infiniteInventory;
         }
 
         delete options.attrs.item.productID;
@@ -371,7 +694,7 @@ export default class extends BaseModel {
         // is expecting a quantity negative quantity in that case.
         options.attrs.item.skus.forEach(sku => {
           if (sku.infiniteInventory) {
-            sku.quantity = -1;
+            sku.bigQuantity = bigNumber('-1');
           }
 
           delete sku.infiniteInventory;
@@ -388,24 +711,10 @@ export default class extends BaseModel {
           }
         });
 
-        // Update the crypto title based on the accepted currency and
-        // coin type.
-        if (options.attrs.metadata.contractType === 'CRYPTOCURRENCY') {
-          const coinType = options.attrs.metadata.coinType;
-          let fromCur = options.attrs.metadata.acceptedCurrencies &&
-            options.attrs.metadata.acceptedCurrencies[0];
-          if (fromCur) {
-            const curObj = getCryptoCurrencyByCode(fromCur);
-            // if it's a recognized currency, ensure the mainnet code is used
-            fromCur = curObj ? curObj.code : fromCur;
-          } else {
-            fromCur = 'UNKNOWN';
-          }
-          options.attrs.item.title = `${fromCur}-${coinType}`;
-        } else {
-          // Don't send over crypto currency specific fields if it's not a
-          // crypto listing.
-          delete options.attrs.metadata.priceModifier;
+        if (app.serverConfig.testnet) {
+          options.attrs.metadata.escrowTimeoutHours =
+            options.attrs.metadata.escrowTimeoutHours === undefined ?
+              1 : options.attrs.metadata.escrowTimeoutHours;
         }
       } else {
         options.url = options.url ||
@@ -466,104 +775,140 @@ export default class extends BaseModel {
       // set the hash
       parsedResponse.hash = response.hash;
 
-      // convert price fields
+      // delete some deprecated properties
       if (parsedResponse.item) {
-        const price = parsedResponse.item.price;
-        const cur = parsedResponse.metadata &&
-          parsedResponse.metadata.pricingCurrency;
+        if (parsedResponse.metadata) {
+          delete parsedResponse.metadata.priceModifier;
+        }
 
-        if (price) {
-          parsedResponse.item.price = integerToDecimal(price, cur);
+        delete parsedResponse.item.price;
+
+        if (Array.isArray(parsedResponse.item.skus)) {
+          parsedResponse.item.skus.forEach(sku => {
+            delete sku.surcharge;
+            delete sku.quantity;
+          });
         }
       }
 
-      if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
-        parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
-          if (shipOpt.services && shipOpt.services.length) {
-            shipOpt.services.forEach((service, serviceIndex) => {
-              const price = service.price;
-              const cur = parsedResponse.metadata &&
-                parsedResponse.metadata.pricingCurrency;
+      let coinDiv;
 
-              if (typeof price === 'number') {
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = integerToDecimal(price, cur);
-              } else {
-                // This is necessary because of this bug:
-                // https://github.com/OpenBazaar/openbazaar-go/issues/178
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].price = 0;
-              }
-
-              const price2 = service.additionalItemPrice;
-              if (typeof price2 === 'number') {
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = integerToDecimal(price2, cur);
-              } else {
-                // This is necessary because of this bug:
-                // https://github.com/OpenBazaar/openbazaar-go/issues/178
-                parsedResponse.shippingOptions[shipOptIndex]
-                  .services[serviceIndex].additionalItemPrice = 0;
-              }
-            });
-          }
-
-          // If the shipping regions are set to 'ALL', we'll replace with a list of individual
-          // countries, which is what our UI is designed to work with.
-          if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
-            parsedResponse.shippingOptions[shipOptIndex].regions =
-              Object.keys(getIndexedCountries());
-          }
-        });
+      try {
+        coinDiv = isCrypto ?
+          parsedResponse
+            .metadata
+            .coinDivisibility :
+          parsedResponse
+            .item
+            .priceCurrency
+            .divisibility;
+      } catch (e) {
+        // pass
       }
 
-      if (parsedResponse.coupons && parsedResponse.coupons.length) {
-        parsedResponse.coupons.forEach((coupon, couponIndex) => {
-          if (typeof coupon.priceDiscount === 'number') {
-            const price = parsedResponse.coupons[couponIndex].priceDiscount;
-            const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
+      const [isValidCoinDiv] = isValidCoinDivisibility(coinDiv);
 
-            parsedResponse.coupons[couponIndex].priceDiscount =
-              integerToDecimal(price, cur);
-          }
-        });
+      if (!isValidCoinDiv) {
+        console.error('Unable to convert price fields. The coin divisibility is not valid.');
+      }
+
+      if (!isCrypto) {
+        if (parsedResponse.metadata) {
+          delete parsedResponse.metadata.priceModifier;
+        }
+
+        if (parsedResponse.item) {
+          parsedResponse.item.bigPrice =
+            integerToDecimal(
+              parsedResponse.item.bigPrice,
+              coinDiv,
+              { fieldName: 'item.bigPrice' }
+            );
+        }
+
+        if (parsedResponse.shippingOptions && parsedResponse.shippingOptions.length) {
+          parsedResponse.shippingOptions.forEach((shipOpt, shipOptIndex) => {
+            if (shipOpt.services && shipOpt.services.length) {
+              shipOpt.services.forEach(service => {
+                service.bigPrice = integerToDecimal(
+                  service.bigPrice,
+                  coinDiv,
+                  { fieldName: 'service.bigPrice' }
+                );
+                service.bigAdditionalItemPrice =
+                  integerToDecimal(
+                    service.bigAdditionalItemPrice,
+                    coinDiv,
+                    { fieldName: 'service.bigAdditionalItemPrice' }
+                  );
+              });
+            }
+
+            // If the shipping regions are set to 'ALL', we'll replace with a list of individual
+            // countries, which is what our UI is designed to work with.
+            if (shipOpt.regions && shipOpt.regions.length && shipOpt.regions[0] === 'ALL') {
+              parsedResponse.shippingOptions[shipOptIndex].regions =
+                Object.keys(getIndexedCountries());
+            }
+          });
+        }
+
+        if (parsedResponse.coupons) {
+          parsedResponse.coupons.forEach(coupon => {
+            if (coupon.bigPriceDiscount) {
+              coupon.bigPriceDiscount =
+                integerToDecimal(
+                  coupon.bigPriceDiscount,
+                  coinDiv,
+                  { fieldName: 'coupon.bigPriceDiscount' }
+                );
+            }
+          });
+        }
       }
 
       // Re-organize variant structure so a "dummy" SKU (if present) has its quanitity
       // and productID moved to be attributes of the Item model
-      if (parsedResponse.item && parsedResponse.item.skus &&
+      if (
+        parsedResponse.item && parsedResponse.item.skus &&
         parsedResponse.item.skus.length === 1 &&
-        typeof parsedResponse.item.skus[0].variantCombo === 'undefined') {
+        typeof parsedResponse.item.skus[0].variantCombo === 'undefined'
+      ) {
         const dummySku = parsedResponse.item.skus[0];
 
         if (isCrypto) {
-          parsedResponse.item.cryptoQuantity = dummySku.quantity /
-            parsedResponse.metadata.coinDivisibility;
+          parsedResponse.item.cryptoQuantity = integerToDecimal(
+            dummySku.bigQuantity,
+            parsedResponse.metadata.coinDivisibility,
+            { fieldName: 'sku.bigQuantity' }
+          );
         } else {
-          parsedResponse.item.quantity = dummySku.quantity;
+          parsedResponse.item.quantity = dummySku.bigQuantity;
         }
 
         parsedResponse.item.productID = dummySku.productID;
-      }
-
-      if (parsedResponse.item && parsedResponse.item.skus) {
+        delete parsedResponse.item.skus;
+      } else if (parsedResponse.item && parsedResponse.item.skus) {
         parsedResponse.item.skus.forEach(sku => {
           // If a sku quantity is set to less than 0, we'll set the
           // infinite inventory flag.
-          if (sku.quantity < 0) {
+          if (bigNumber(sku.bigQuantity).lt(0)) {
             sku.infiniteInventory = true;
           } else {
             sku.infiniteInventory = false;
           }
-          // convert the surcharge
-          const surcharge = sku.surcharge;
-          const cur = parsedResponse.metadata && parsedResponse.metadata.pricingCurrency;
 
-          if (surcharge) {
-            sku.surcharge = integerToDecimal(surcharge, cur);
+          // convert the surcharge
+          const bigSurcharge = sku.bigSurcharge;
+
+          if (bigSurcharge) {
+            sku.bigSurcharge = integerToDecimal(
+              bigSurcharge,
+              coinDiv,
+              { fieldName: 'sku.bigSurcharge' }
+            );
           }
         });
-        // END - convert price fields
       }
 
       if (parsedResponse.metadata) {

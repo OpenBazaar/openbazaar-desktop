@@ -40,7 +40,7 @@ export default class extends BaseVw {
     this.transactionViews = [];
     this.fetchFailed = false;
     this.fetchErrorMessage = '';
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs = new Set();
     this.popInTimeouts = [];
     this.coinType = this.collection.options.coinType;
     this.countAtFirstFetch = opts.countAtFirstFetch;
@@ -73,36 +73,6 @@ export default class extends BaseVw {
 
     if (serverSocket) {
       this.listenTo(serverSocket, 'message', e => {
-        // "wallet" sockets come for new transactions and when a transaction gets it's
-        // first confirmation.
-        if (e.jsonData.wallet && e.jsonData.wallet.wallet === this.coinType) {
-          const transaction = this.collection.get(e.jsonData.wallet.txid);
-
-          if (transaction) {
-            // existing transaction has been confirmed
-            transaction.set(transaction.parse(_.omit(e.jsonData.wallet, 'wallet')));
-          } else {
-            // new transaction
-            this.newTransactionCount += 1;
-
-            // This is a bit ugly... but most incoming transactions (ones sent via our UI)
-            // are immediately added to the list when their respective APIs succeeds and
-            // therefore should not be included in the "new transactions" pop in count.
-            // But, at this point we don't know if these are such transactions, so we'll
-            // check back in a bit and see if they've already been added or not. It's a matter
-            // of the socket coming in before the AJAX call returns.
-            const timeout = setTimeout(() => {
-              if (this.collection.get(e.jsonData.wallet.txid)) {
-                this.newTransactionCount -= 1;
-              } else {
-                this.showNewTransactionPopup();
-              }
-            }, 1500);
-
-            this.popInTimeouts.push(timeout);
-          }
-        }
-
         // The "walletUpdate" socket comes on a regular interval and gives us the current block
         // height which we can use to update the confirmations on a transaction.
         if (e.jsonData.walletUpdate && e.jsonData.walletUpdate[this.coinType]) {
@@ -121,7 +91,7 @@ export default class extends BaseVw {
     this.$scrollContainer = opts.$scrollContainer;
     this.throttledOnScroll = _.throttle(this.onScroll, 100).bind(this);
 
-    if (opts.fetchOnInit) this.fetchTransactions();
+    if (opts.fetchOnInit) this.refreshTransactions();
   }
 
   className() {
@@ -156,9 +126,17 @@ export default class extends BaseVw {
     return this.collection.length >= this.countAtFirstFetch;
   }
 
+  refreshTransactions() {
+    this.collection.reset();
+    this.fetchTransactions();
+    this.render();
+  }
+
   fetchTransactions() {
-    if (this.transactionsFetch &&
-      this.transactionsFetch.state() === 'pending') return;
+    if (
+      this.transactionsFetch &&
+      this.transactionsFetch.state() === 'pending'
+    ) return;
 
     const fetchParams = {
       limit: this.transactionsPerFetch,
@@ -252,20 +230,16 @@ export default class extends BaseVw {
       this.newTransactionPopIn.setState({
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
     } else {
       this.newTransactionPopIn = this.createChild(PopInMessage, {
         messageText:
           buildRefreshAlertMessage(app.polyglot.t('wallet.transactions.newTransactionsPopin',
-            { smart_count: this.newTransactionCount })),
+            { smart_count: this.newTransactionsTXs.size })),
       });
 
-      this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => {
-        this.collection.reset();
-        this.fetchTransactions();
-        this.render();
-      });
+      this.listenTo(this.newTransactionPopIn, 'clickRefresh', () => this.refreshTransactions());
 
       this.listenTo(this.newTransactionPopIn, 'clickDismiss', () => {
         this.newTransactionPopIn.remove();
@@ -337,7 +311,7 @@ export default class extends BaseVw {
   }
 
   render() {
-    this.newTransactionCount = 0;
+    this.newTransactionsTXs.clear();
     this.popInTimeouts.forEach(timeout => clearTimeout(timeout));
     this.popInTimeouts = [];
     if (this.newTransactionPopIn) {

@@ -1,4 +1,6 @@
 import is from 'is_js';
+import bigNumber from 'bignumber.js';
+import { isValidNumber } from '../../utils/number';
 import app from '../../app';
 import BaseModel from '../BaseModel';
 
@@ -7,8 +9,7 @@ export default class extends BaseModel {
     return {
       productID: '',
       infiniteInventory: false,
-      quantity: 0,
-      surcharge: 0,
+      bigSurcharge: bigNumber('0'),
     };
   }
 
@@ -30,33 +31,42 @@ export default class extends BaseModel {
       addError('productID', `The productID cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    if (attrs.quantity === '' && !attrs.infiniteInventory) {
-      addError('quantity', app.polyglot.t('skuModelErrors.provideQuantity'));
-    }
-
     if (typeof attrs.infiniteInventory !== 'undefined' &&
       typeof attrs.infiniteInventory !== 'boolean') {
       addError('infiniteInventory', 'If provided, infiniteInventory should be a boolean.');
     }
 
-    if (attrs.quantity !== '') {
-      if (typeof attrs.quantity !== 'number') {
-        addError('quantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
-      } else if (!attrs.infiniteInventory && attrs.quantity < 0) {
+    if (attrs.infiniteInventory) {
+      if (attrs.bigQuantity) {
+        addError('bigQuantity', 'bigQuantity should not be provided if provided if ' +
+          'infiniteInventory is truthy.');
+      }
+    } else {
+      if (
+        attrs.bigQuantity === '' ||
+        attrs.bigQuantity === undefined ||
+        attrs.bigQuantity === null
+      ) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideQuantity'));
+      } else if (
+        !isValidNumber(attrs.bigQuantity, {
+          allowNumber: false,
+          allowBigNumber: true,
+          allowString: false,
+        })
+      ) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
+      } else if (!attrs.bigQuantity.isInteger()) {
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.quantityMustBeInteger'));
+      } else if (attrs.bigQuantity.lt(0)) {
         // The listing API allows the quantity to be set to < 0, which indicates an unlimited
         // supply. This model does not allow that, but does have an infiniteInventory flag.
         // The expectation is that sync / parse of the listing model will send the quantity
-        // over as -1 if the infiniteInventory flag is set to true. Also the infiniteInventory
+        // over as "-1" if the infiniteInventory flag is set to true. Also the infiniteInventory
         // flag should not be sent to the server.
 
-        addError('quantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
+        addError('bigQuantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
       }
-    }
-
-    if (attrs.surcharge === '') {
-      addError('surcharge', app.polyglot.t('skuModelErrors.provideSurcharge'));
-    } else if (typeof attrs.surcharge !== 'number') {
-      addError('surcharge', app.polyglot.t('skuModelErrors.provideNumericSurcharge'));
     }
 
     // The listing API does not require a variantCombo field, since if you have no options and

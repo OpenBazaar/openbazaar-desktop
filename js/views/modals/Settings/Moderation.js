@@ -1,14 +1,13 @@
 import $ from 'jquery';
-import _ from 'underscore';
 import '../../../utils/lib/selectize';
 import app from '../../../app';
 import { openSimpleMessage } from '../SimpleMessage';
 import loadTemplate from '../../../utils/loadTemplate';
 import Moderator from '../../../models/profile/Moderator';
+import { feeTypes } from '../../../models/profile/Fee';
 import baseVw from '../../baseVw';
 import { getTranslatedLangs } from '../../../data/languages';
 import { getCurrencies } from '../../../data/currencies';
-import { formatPrice } from '../../../utils/currency';
 
 export default class extends baseVw {
   constructor(options = {}) {
@@ -25,7 +24,10 @@ export default class extends baseVw {
 
     // Sync the global profile with any changes we save via our clone.
     this.listenTo(this.profile, 'sync',
-      (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      // (md, resp, opts) => app.profile.set(this.profile.toJSON(opts.attrs)));
+      (md, resp, opts) => {
+        app.profile.set(this.profile.toJSON(opts.attrs));
+      });
 
     if (this.profile.get('moderatorInfo')) {
       this.moderator = this.profile.get('moderatorInfo');
@@ -35,11 +37,6 @@ export default class extends baseVw {
       });
       this.profile.set('moderatorInfo', this.moderator);
     }
-
-    // retrieve the moderation default values
-    const profileFee = this.profile.get('moderatorInfo').get('fee');
-    this.defaultPercentage = _.result(profileFee, 'defaults', {}).percentage || 0;
-    this.defaultAmount = _.result(profileFee.get('fixedFee'), 'defaults', {}).amount || 0;
 
     this.currencyList = getCurrencies();
 
@@ -71,13 +68,6 @@ export default class extends baseVw {
       this.getCachedEl('#acceptGuidelines').prop('checked'))) {
       this.getCachedEl('.js-moderationConfirmError').removeClass('hide');
       return;
-    }
-
-    // clear unused values by setting them to the default, if it exists
-    if (formData.moderatorInfo.fee.feeType === 'PERCENTAGE') {
-      formData.moderatorInfo.fee.fixedFee.amount = this.defaultAmount;
-    } else if (formData.moderatorInfo.fee.feeType === 'FIXED') {
-      formData.moderatorInfo.fee.percentage = this.defaultPercentage;
     }
 
     this.profile.set(formData);
@@ -126,7 +116,7 @@ export default class extends baseVw {
     if (save) {
       this.getCachedEl('.js-save').addClass('processing');
     } else {
-      const $firstErr = this.$('.errorList:first');
+      const $firstErr = this.$('.errorList:visible:first');
 
       if ($firstErr.length) {
         $firstErr[0].scrollIntoViewIfNeeded();
@@ -157,7 +147,7 @@ export default class extends baseVw {
           description: this.moderator.max.descriptionLength,
           terms: this.moderator.max.termsLength,
         },
-        formatPrice,
+        feeTypes,
         ...moderator.toJSON(),
       }));
 

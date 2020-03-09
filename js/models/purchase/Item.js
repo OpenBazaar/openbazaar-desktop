@@ -1,4 +1,4 @@
-import _ from 'underscore';
+import { isValidNumber } from '../../utils/number';
 import BaseModel from '../BaseModel';
 import Options from '../../collections/purchase/Options';
 import Shipping from './Shipping';
@@ -7,12 +7,28 @@ import app from '../../app';
 export default class extends BaseModel {
   constructor(attrs, options = {}) {
     super(attrs, options);
+
+    if (typeof options.getCoinDiv !== 'function') {
+      throw new Error('Please provide a function that returns the coin divisibility ' +
+        ' of the listing');
+    }
+
     this.shippable = options.shippable || false;
     this.isCrypto = options.isCrypto || false;
+
+    if (this.isCrypto && typeof options.getCoinType !== 'function') {
+      throw new Error('For crypto listings, please provide a function that returns ' +
+        'the coinType.');
+    }
+
+    this.getCoinType = options.getCoinType;
+    this.getCoinDiv = options.getCoinDiv;
+
+    // TODO: Since bigQuantity is a bigNumber, should inventory be too?
     // If the inventory is for a crypto listing, be sure to convert it from base units
     // before sending it in.
-    this.getInventory = () =>
-      _.result(options, 'inventory', 99999999999999);
+    // this.getInventory = () =>
+    //   _.result(options, 'inventory', 99999999999999);
   }
 
   defaults() {
@@ -52,40 +68,51 @@ export default class extends BaseModel {
       errObj[fieldName].push(error);
     };
 
-    if (attrs.quantity === undefined) {
-      const isCrypto = this.isCrypto ? 'Crypto' : '';
-      addError('quantity', app.polyglot.t(`purchaseItemModelErrors.provide${isCrypto}Quantity`));
+    if (this.isCrypto) {
+      this.validateCurrencyAmount(
+        {
+          amount: attrs.bigQuantity,
+          currency: {
+            code: this.getCoinType,
+            divisibility: this.getCoinDiv,
+          },
+        },
+        addError,
+        'bigQuantity',
+        {
+          translations: {
+            required: 'purchaseItemModelErrors.provideCryptoQuantity',
+            type: 'purchaseItemModelErrors.cryptoQuantityMustBeNumeric',
+            fractionDigitCount: 'purchaseItemModelErrors.fractionTooLow',
+            range: 'purchaseItemModelErrors.cryptoQuantityMustBePositive',
+          },
+        }
+      );
+    } else {
+      if (
+        attrs.bigQuantity === null ||
+        attrs.bigQuantity === undefined ||
+        attrs.bigQuantity === ''
+      ) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
+      } else if (
+        !isValidNumber(attrs.bigQuantity, {
+          allowNumber: false,
+          allowString: false,
+        })
+      ) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
+      } else if (attrs.bigQuantity.lt(1)) {
+        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
+      }
     }
 
     if (!this.isCrypto) {
-      if (attrs.quantity !== undefined) {
-        if (!Number.isInteger(attrs.quantity)) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
-        } else if (attrs.quantity < 1) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
-        }
-      }
-
       if (typeof attrs.paymentAddress !== 'undefined') {
         addError('paymentAddress', 'The payment address should only be provide on ' +
           'crypto listings');
       }
     } else {
-      const inventory = this.getInventory();
-
-      if (attrs.quantity !== undefined) {
-        if (typeof attrs.quantity !== 'number') {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeNumeric'));
-        } else if (attrs.quantity <= 0) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBePositive'));
-        } else if (typeof inventory === 'number' &&
-          attrs.quantity > inventory) {
-          addError('quantity', app.polyglot.t('purchaseItemModelErrors.insufficientInventory', {
-            smart_count: inventory,
-          }));
-        }
-      }
-
       if (typeof attrs.paymentAddress !== 'string' || !attrs.paymentAddress) {
         addError('paymentAddress', app.polyglot.t('purchaseItemModelErrors.providePaymentAddress'));
       } else if (attrs.paymentAddress.length < this.constraints.minPaymentAddressLength ||

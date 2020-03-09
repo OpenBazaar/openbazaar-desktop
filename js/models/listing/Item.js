@@ -1,11 +1,39 @@
-import { guid } from '../../utils';
 import is from 'is_js';
-import app from '../../app';
 import { Collection } from 'backbone';
+import { guid } from '../../utils';
+import { isValidNumber } from '../../utils/number';
+import app from '../../app';
+import { getCurrencyByCode } from '../../data/currencies';
+import { isValidCoinDivisibility } from '../../utils/currency';
 import BaseModel from '../BaseModel';
 import Image from './Image';
 import VariantOptions from '../../collections/listing/VariantOptions';
 import Skus from '../../collections/listing/Skus';
+
+/*
+ * This model has a few inventory related properties that don't directly map to the
+ * API. When a listing does not have variants but tracks inventory, the server handles
+ * the quantity and productId values in a "dummy" SKU, e.g:
+ *
+ * skus: [{ bigQuantity: "123", productId: "54321" }]
+ *
+ * Since that is, arguably, awkward, instead this model offers a few properties to track
+ * non-variant inventory:
+ *
+ * productId - a string that maps to "skus: [{ productId: "54321" }]"
+ * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]" (used
+ *   for non-crypto listings)
+ * cryptoQuantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
+ *   (used for crypto listings)
+ * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]".
+ *
+ * Parse/Sync of the listing model will handle mapping to/from the server version
+ * and what's in this model.
+ *
+ * Please note: If your listing does include variants, you will want to use the
+ * bigQuantity and infiniteInventory fields on the SKU model instead of setting
+ * anything on this model related to those fields.
+ */
 
 class ListingImages extends Collection {
   model(attrs, options) {
@@ -32,6 +60,7 @@ export default class extends BaseModel {
       images: new ListingImages(),
       options: new VariantOptions(),
       skus: new Skus(),
+      infiniteInventory: true,
     };
   }
 
@@ -109,13 +138,33 @@ export default class extends BaseModel {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
 
-    if (attrs.price === '') {
-      addError('price', app.polyglot.t('itemModelErrors.provideAmount'));
-    } else if (is.not.number(attrs.price)) {
-      addError('price', app.polyglot.t('itemModelErrors.provideNumericAmount'));
-    } else if (attrs.price <= 0) {
-      addError('price', app.polyglot.t('itemModelErrors.provideAmountGreaterThanZero'));
+    // The ones in this block should not be user facing unless there's a dev error.
+    if (typeof attrs.priceCurrency !== 'object') {
+      addError('priceCurrency', 'The priceCurrency must be provided as an object.');
+    } else {
+      if (
+        !attrs.priceCurrency.code ||
+        !getCurrencyByCode(attrs.priceCurrency.code)
+      ) {
+        addError('priceCurrency.code', 'The currency is not one of the available ones.');
+      }
+
+      if (!isValidCoinDivisibility(attrs.priceCurrency.divisibility)[0]) {
+        addError('priceCurrency.divisibility', 'The divisibility is not valid.');
+      }
     }
+
+    this.validateCurrencyAmount(
+      {
+        amount: attrs.bigPrice,
+        currency: {
+          code: () => attrs.priceCurrency.code,
+          divisibility: () => attrs.priceCurrency.divisibility,
+        },
+      },
+      addError,
+      'bigPrice'
+    );
 
     if (!attrs.images.length) {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));
@@ -155,26 +204,39 @@ export default class extends BaseModel {
       addError('productId', `The productId cannot exceed ${this.max.productIdLength} characters.`);
     }
 
-    // If providing a top-level quantity or cryptoQuantity (for cryptolistings), we'll validate
-    // them. Quantity should only be provided for non-crypto listings where  you are tracking
-    // inventory and have no options (i.e. are not tracking inventory on the variant level).
-    // cryptoQuantity is required for crypto listings.
-    if (typeof attrs.quantity !== 'undefined') {
-      if (typeof attrs.quantity === 'string' && !attrs.quantity) {
+    if (attrs.infiniteInventory) {
+      if (typeof attrs.quantity !== 'undefined') {
+        addError('quantity', 'Quantity should not be set if infiniteInventory is truthy.');
+      }
+    } else if (attrs.skus && attrs.skus.length) {
+      if (attrs.quantity !== undefined) {
+        addError('quantity', 'Quantity should not be set if providing Skus.');
+      }
+    } else {
+      if (
+        attrs.quantity === 'undefined' ||
+        attrs.quantity === null ||
+        attrs.quantity === ''
+      ) {
         addError('quantity', app.polyglot.t('itemModelErrors.provideQuantity'));
-      } else if (typeof attrs.quantity !== 'number') {
+      } else if (
+        !isValidNumber(attrs.quantity, {
+          allowNumber: false,
+          allowBigNumber: true,
+          allowString: false,
+        })
+      ) {
         addError('quantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
+      } else if (attrs.quantity.lt(0)) {
+        addError('quantity', app.polyglot.t('itemModelErrors.quantityMustBePositive'));
+      } else if (!attrs.quantity.isInteger()) {
+        addError('quantity', app.polyglot.t('itemModelErrors.quantityMustBeInteger'));
       }
     }
 
-    if (typeof attrs.cryptoQuantity !== 'undefined') {
-      if (typeof attrs.cryptoQuantity === 'string' && !attrs.cryptoQuantity) {
-        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideQuantity'));
-      } else if (typeof attrs.cryptoQuantity !== 'number') {
-        addError('cryptoQuantity', app.polyglot.t('itemModelErrors.provideNumericQuantity'));
-      }
+    if (attrs.skus && attrs.skus.length && attrs.cryptoQuantity !== undefined) {
+      addError('cryptoQuantity', 'CryptoQuantity should not be set if providing Skus.');
     }
-    // END - quantity, cryptoQuantity and productId
 
     let maxCombos = 1;
 
