@@ -63,7 +63,7 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Install npm packages for Linux'
     npm install -g --save-dev electron-installer-debian --silent
-    npm install -g --save-dev electron-installer-redhat --silent
+    npm install -g --save-dev electron-installer-redhat@2.0.0 --silent
 
     # Install libgconf2-4
     sudo apt-get install libgconf2-4 libgconf-2-4
