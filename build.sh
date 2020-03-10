@@ -214,6 +214,8 @@ case "$TRAVIS_OS_NAME" in
             echo "Checking Apple for notarization status..."; \
             /usr/bin/xcrun altool --notarization-info `/usr/libexec/PlistBuddy -c "Print :notarization-upload:RequestUUID" $UPLOAD_INFO_PLIST` -u $APPLE_ID -p $APPLE_PASS --output-format xml > "$REQUEST_INFO_PLIST" ;\
 
+            cat $REQUEST_INFO_PLIST
+
             if [[ `/usr/libexec/PlistBuddy -c "Print :notarization-info:Status" ${REQUEST_INFO_PLIST}` != "in progress" ]] || [[ "$requestUUID" == "" ]] ; then \
 
                # check if it has been uploaded already and get the RequestUUID from the error message
@@ -293,7 +295,7 @@ case "$TRAVIS_OS_NAME" in
             zip -q -r dist/osx/OpenBazaar2.zip dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
 
             # Upload to apple and notarize
-            echo "Uploading binary to Apple Notarization server..."
+            echo "Uploading binary to Apple Notarization server for package ${PACKAGE_VERSION}..."
             xcrun altool --notarize-app --primary-bundle-id "org.openbazaar.desktop-${PACKAGE_VERSION}" --username "$APPLE_ID" --password "$APPLE_PASS" --file dist/osx/OpenBazaar2.zip --output-format xml > ${UPLOAD_INFO_PLIST}
             wait_for_notarization
 
