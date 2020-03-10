@@ -279,6 +279,11 @@ case "$TRAVIS_OS_NAME" in
             chmod +x dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go/openbazaard
 
             echo 'Codesign the .app'
+            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY" "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY"  "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+
             codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
             electron-installer-dmg dist/OpenBazaar2-darwin-x64/OpenBazaar2.app OpenBazaar2-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
@@ -310,6 +315,11 @@ case "$TRAVIS_OS_NAME" in
 
             # Client Only
             electron-packager . OpenBazaar2Client --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --protocol=ob --platform=darwin --arch=x64 --icon=imgs/openbazaar2.icns --electron-version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
+
+            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY" "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY"  "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
 
             codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
             electron-installer-dmg dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app OpenBazaar2Client-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2Client-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
