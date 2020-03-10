@@ -59,6 +59,8 @@ case "$TRAVIS_OS_NAME" in
     echo 'Making dist directories'
     mkdir dist/linux64
 
+    sudo apt-get install rpm
+
     echo 'Install npm packages for Linux'
     npm install -g --save-dev electron-installer-debian --silent
     npm install -g --save-dev electron-installer-redhat --silent
