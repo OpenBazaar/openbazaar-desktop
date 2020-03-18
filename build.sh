@@ -201,7 +201,7 @@ case "$TRAVIS_OS_NAME" in
         echo 'Signing Go binary'
         mv OPENBAZAAR_TEMP/openbazaar-go-darwin-10.6-amd64 dist/osx/openbazaard
         rm -rf OPENBAZAAR_TEMP/*
-        codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime dist/osx/openbazaard
+        codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime dist/osx/openbazaard
 
         # Notarize the zip files
         UPLOAD_INFO_PLIST="uploadinfo.plist"
@@ -279,16 +279,16 @@ case "$TRAVIS_OS_NAME" in
             chmod +x dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go/openbazaard
 
             echo 'Codesign the .app'
-            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
-            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
-            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY" "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
-            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY"  "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2" "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2"  "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
 
-            codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
+            codesign --force --deep --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
             electron-installer-dmg dist/OpenBazaar2-darwin-x64/OpenBazaar2.app OpenBazaar2-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
             echo 'Codesign the DMG and zip'
-            codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
+            codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
             cd dist/OpenBazaar2-darwin-x64/
             zip -q -r OpenBazaar2-mac-$PACKAGE_VERSION.zip OpenBazaar2.app
             cp -r OpenBazaar2.app ../osx/
@@ -316,16 +316,16 @@ case "$TRAVIS_OS_NAME" in
             # Client Only
             electron-packager . OpenBazaar2Client --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --protocol=ob --platform=darwin --arch=x64 --icon=imgs/openbazaar2.icns --electron-version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
 
-            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
-            codesign -s "$SIGNING_IDENTITY" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
-            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY" "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
-            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY"  "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2" "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2"  "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
 
-            codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
+            codesign --force --deep --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
             electron-installer-dmg dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app OpenBazaar2Client-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2Client-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
             # Client Only
-            codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
+            codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
             cd dist/OpenBazaar2Client-darwin-x64/
             zip -q -r OpenBazaar2Client-mac-$PACKAGE_VERSION.zip OpenBazaar2Client.app
             cp -r OpenBazaar2Client.app ../osx/
