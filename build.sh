@@ -155,7 +155,7 @@ case "$TRAVIS_OS_NAME" in
         npm i electron-packager
 
         cd node_modules/electron-packager
-        npm install rcedit@2.1.0
+        npm install rcedit
         cd ../..
 
         echo 'Running Electron Packager...'
@@ -169,7 +169,7 @@ case "$TRAVIS_OS_NAME" in
         mv dist/OpenBazaar2-win32-x64/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-x64/resources/openbazaar-go/libwinpthread-1.dll
 
         echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
+        grunt -v create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
         mv dist/win64/OpenBazaar2Setup.exe dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
         mv dist/win64/RELEASES dist/win64/RELEASES-x64
 
@@ -178,7 +178,7 @@ case "$TRAVIS_OS_NAME" in
         electron-packager . OpenBazaar2Client --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2Client" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2Client.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
         echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-x64 --outdir=dist/win64
+        grunt -v create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-x64 --outdir=dist/win64
         mv dist/win64/OpenBazaar2ClientSetup.exe dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
         echo 'Sign the installer'

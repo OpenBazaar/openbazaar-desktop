@@ -45,7 +45,7 @@ module.exports = function (grunt) {
         description: `${grunt.option('appname')}`,
         version: grunt.option('obversion') || '',
         title: 'OpenBazaar',
-        iconUrl: 'https://www.openbazaar.org/wp-content/uploads/2017/07/windows-icon.ico',
+        iconUrl: 'http://openbazaar.org/assets/windows-icon.ico',
         setupIcon: 'imgs/windows-icon.ico',
         skipUpdateIcon: true,
         loadingGif: 'imgs/windows-loading.gif',
