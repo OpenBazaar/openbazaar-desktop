@@ -139,7 +139,7 @@ case "$TRAVIS_OS_NAME" in
     if [[ $BINARY == 'win' ]]; then
 
         brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
-
+        brew link libgsf glib pcre
         brew remove osslsigncode
         brew install mono osslsigncode
         brew reinstall openssl@1.1
