@@ -152,14 +152,14 @@ case "$TRAVIS_OS_NAME" in
 
         export WINEARCH=win64
 
-        npm i -g electron-packager
+        npm i electron-packager
 
         cd node_modules/electron-packager
         npm install rcedit@2.1.0
         cd ../..
 
         echo 'Running Electron Packager...'
-        electron-packager . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
+        node_modules/electron-packager/bin/electron-packager.js . OpenBazaar2 --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
         echo 'Copying server binary into application folder...'
         cp -rf OPENBAZAAR_TEMP/openbazaar-go-windows-4.0-amd64.exe dist/OpenBazaar2-win32-x64/resources/
