@@ -15,7 +15,7 @@ addons:
     packages:
       - fakeroot
 before_script:
-- if [[ -n "$TRAVIS_TAG" ]]; then cp ./.travis/ob1.pvk ./.travis/ob1.keyfile; fi
+#- if [[ -n "$TRAVIS_TAG" ]]; then cp ./.travis/ob1.pvk ./.travis/ob1.keyfile; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then openssl aes-256-cbc -K $encrypted_c8b4b5b5a834_key -iv $encrypted_c8b4b5b5a834_iv -in ./.travis/certs.tar.enc -out ./.travis/certs.tar -d; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then tar xvf ./.travis/certs.tar -C ./.travis; fi
 - if [[ -n "$TRAVIS_TAG" ]]; then if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then "./.travis/add-key.sh"; fi ; fi
