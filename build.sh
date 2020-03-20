@@ -63,13 +63,13 @@ case "$TRAVIS_OS_NAME" in
 
     echo 'Install npm packages for Linux'
     npm install -g --save-dev electron-installer-debian --silent
-    npm install -g --save-dev electron-installer-redhat --silent
+    npm install -g --save-dev electron-installer-redhat@2.0.0 --silent
 
     # Install libgconf2-4
     sudo apt-get install libgconf2-4 libgconf-2-4
 
     # Install rpmbuild
-    sudo apt-get install rpm
+    sudo apt-get --only-upgrade install rpm
 
     # Ensure fakeroot is installed
     sudo apt-get install fakeroot
@@ -139,7 +139,7 @@ case "$TRAVIS_OS_NAME" in
     if [[ $BINARY == 'win' ]]; then
 
         brew link --overwrite fontconfig gd gnutls jasper libgphoto2 libicns libtasn1 libusb libusb-compat little-cms2 nettle openssl sane-backends webp wine git-lfs gnu-tar dpkg xz
-
+        brew link libgsf glib pcre
         brew remove osslsigncode
         brew install mono osslsigncode
         brew reinstall openssl@1.1
@@ -152,10 +152,10 @@ case "$TRAVIS_OS_NAME" in
 
         export WINEARCH=win64
 
-        npm install electron-packager
+        npm i electron-packager
 
         cd node_modules/electron-packager
-        npm install rcedit@2.1.0
+        npm install rcedit
         cd ../..
 
         echo 'Running Electron Packager...'
@@ -169,7 +169,7 @@ case "$TRAVIS_OS_NAME" in
         mv dist/OpenBazaar2-win32-x64/resources/libwinpthread-1.dll dist/OpenBazaar2-win32-x64/resources/openbazaar-go/libwinpthread-1.dll
 
         echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
+        grunt -v create-windows-installer --appname=OpenBazaar2 --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2-win32-x64 --outdir=dist/win64
         mv dist/win64/OpenBazaar2Setup.exe dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
         mv dist/win64/RELEASES dist/win64/RELEASES-x64
 
@@ -178,12 +178,12 @@ case "$TRAVIS_OS_NAME" in
         electron-packager . OpenBazaar2Client --asar --out=dist --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --win32metadata.ProductName="OpenBazaar2Client" --win32metadata.CompanyName="OpenBazaar" --win32metadata.FileDescription='Decentralized p2p marketplace for Bitcoin' --win32metadata.OriginalFilename=OpenBazaar2Client.exe --protocol=ob --platform=win32 --arch=x64 --icon=imgs/openbazaar2.ico --electron-version=${ELECTRONVER} --overwrite
 
         echo 'Building Installer...'
-        grunt create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-x64 --outdir=dist/win64
+        grunt -v create-windows-installer --appname=OpenBazaar2Client --obversion=$PACKAGE_VERSION --appdir=dist/OpenBazaar2Client-win32-x64 --outdir=dist/win64
         mv dist/win64/OpenBazaar2ClientSetup.exe dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
         echo 'Sign the installer'
-        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
-        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.keyfile -pass "$OB1_SECRET" -certs .travis/ob1.cert.spc -in dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
+        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass "$OB1_SECRET" -certs .travis/ob1.spc -in dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2-$PACKAGE_VERSION-Setup-64.exe
+        osslsigncode sign -t http://timestamp.digicert.com -h sha1 -key .travis/ob1.pvk -pass "$OB1_SECRET" -certs .travis/ob1.spc -in dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe -out dist/win64/OpenBazaar2Client-$PACKAGE_VERSION-Setup-64.exe
 
         mv dist/win64/RELEASES-x64 dist/win64/RELEASES
 
@@ -201,7 +201,7 @@ case "$TRAVIS_OS_NAME" in
         echo 'Signing Go binary'
         mv OPENBAZAAR_TEMP/openbazaar-go-darwin-10.6-amd64 dist/osx/openbazaard
         rm -rf OPENBAZAAR_TEMP/*
-        codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime dist/osx/openbazaard
+        codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime dist/osx/openbazaard
 
         # Notarize the zip files
         UPLOAD_INFO_PLIST="uploadinfo.plist"
@@ -213,6 +213,8 @@ case "$TRAVIS_OS_NAME" in
 
             echo "Checking Apple for notarization status..."; \
             /usr/bin/xcrun altool --notarization-info `/usr/libexec/PlistBuddy -c "Print :notarization-upload:RequestUUID" $UPLOAD_INFO_PLIST` -u $APPLE_ID -p $APPLE_PASS --output-format xml > "$REQUEST_INFO_PLIST" ;\
+
+            cat $REQUEST_INFO_PLIST
 
             if [[ `/usr/libexec/PlistBuddy -c "Print :notarization-info:Status" ${REQUEST_INFO_PLIST}` != "in progress" ]] || [[ "$requestUUID" == "" ]] ; then \
 
@@ -277,11 +279,16 @@ case "$TRAVIS_OS_NAME" in
             chmod +x dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Resources/openbazaar-go/openbazaard
 
             echo 'Codesign the .app'
-            codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2" "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2"  "dist/OpenBazaar2-darwin-x64/OpenBazaar2.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+
+            codesign --force --deep --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2.app
             electron-installer-dmg dist/OpenBazaar2-darwin-x64/OpenBazaar2.app OpenBazaar2-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
             echo 'Codesign the DMG and zip'
-            codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
+            codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
             cd dist/OpenBazaar2-darwin-x64/
             zip -q -r OpenBazaar2-mac-$PACKAGE_VERSION.zip OpenBazaar2.app
             cp -r OpenBazaar2.app ../osx/
@@ -293,7 +300,7 @@ case "$TRAVIS_OS_NAME" in
             zip -q -r dist/osx/OpenBazaar2.zip dist/OpenBazaar2-darwin-x64/OpenBazaar2-$PACKAGE_VERSION.dmg
 
             # Upload to apple and notarize
-            echo "Uploading binary to Apple Notarization server..."
+            echo "Uploading binary to Apple Notarization server for package ${PACKAGE_VERSION}..."
             xcrun altool --notarize-app --primary-bundle-id "org.openbazaar.desktop-${PACKAGE_VERSION}" --username "$APPLE_ID" --password "$APPLE_PASS" --file dist/osx/OpenBazaar2.zip --output-format xml > ${UPLOAD_INFO_PLIST}
             wait_for_notarization
 
@@ -309,11 +316,16 @@ case "$TRAVIS_OS_NAME" in
             # Client Only
             electron-packager . OpenBazaar2Client --out=dist -app-category-type=public.app-category.business --protocol-name=OpenBazaar --ignore="OPENBAZAAR_TEMP" --protocol=ob --platform=darwin --arch=x64 --icon=imgs/openbazaar2.icns --electron-version=${ELECTRONVER} --overwrite --app-version=$PACKAGE_VERSION
 
-            codesign --force --deep --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libffmpeg.dylib
+            codesign -s "$SIGNING_IDENTITY2" dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron\ Framework.framework/Versions/A/Libraries/libnode.dylib
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2" "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Electron Framework.framework/Versions/A/Resources/crashpad_handler"
+            codesign --force --options runtime --deep --sign "$SIGNING_IDENTITY2"  "dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app/Contents/Frameworks/Squirrel.framework/Versions/A/Resources/ShipIt"
+
+            codesign --force --deep --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app
             electron-installer-dmg dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client.app OpenBazaar2Client-$PACKAGE_VERSION --icon ./imgs/openbazaar2.icns --out=dist/OpenBazaar2Client-darwin-x64 --overwrite --background=./imgs/osx-finder_background.png --debug
 
             # Client Only
-            codesign --force --sign "$SIGNING_IDENTITY" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
+            codesign --force --sign "$SIGNING_IDENTITY2" --timestamp --options runtime --entitlements openbazaar.entitlements dist/OpenBazaar2Client-darwin-x64/OpenBazaar2Client-$PACKAGE_VERSION.dmg
             cd dist/OpenBazaar2Client-darwin-x64/
             zip -q -r OpenBazaar2Client-mac-$PACKAGE_VERSION.zip OpenBazaar2Client.app
             cp -r OpenBazaar2Client.app ../osx/
