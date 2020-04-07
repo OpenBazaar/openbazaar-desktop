@@ -7,10 +7,10 @@ This document and associated scripts are derivations of the approach Bitcoin Cor
 Make sure you obtain the proper release signing key and verify the fingerprint with several independent sources.
 
 ```sh
-$ gpg --fingerprint "Brian Hoffman [Open Bazaar] <brian@openbazaar.org>"
-pub   2048R/438FA17C 2014-05-05 [expires: 2018-05-05]
-      Key fingerprint = F186 A6A4 CF94 98AB E58F  53B9 DFEE B5A2 438F A17C
-uid                  Brian Hoffman [Open Bazaar] <brian@openbazaar.org>
+gpg --fingerprint "Brian Hoffman [Open Bazaar] <brian@openbazaar.org>"
+pub   rsa2048 2014-05-05 [SC]
+      F186 A6A4 CF94 98AB E58F  53B9 DFEE B5A2 438F A17C
+uid           [ultimate] Brian Hoffman [Open Bazaar] <brian@openbazaar.org>
 ```
 
 #### Usage:
