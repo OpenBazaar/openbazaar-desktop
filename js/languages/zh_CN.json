@@ -749,9 +749,9 @@
         "selectedModsTitle": "无法加载你当前的仲裁人。",
         "availableModsTitle": "无法加载可用的仲裁人",
         "modIsBlank": "您必须添加仲裁人ID或句柄",
-        "notGUID": "%{guid}不是有效的节点ID",
-        "ownGUID": "%{guid}是你的节点ID，你无法审查你自己的订单。",
-        "dupeGUID": "%{guid}是您当前的仲裁人之一。"
+        "notPeerID": "%{guid}不是有效的节点ID",
+        "ownPeerID": "%{guid}是你的节点ID，你无法审查你自己的订单。",
+        "dupePeerID": "%{guid}是您当前的仲裁人之一。"
       }
     },
     "blockedTab": {

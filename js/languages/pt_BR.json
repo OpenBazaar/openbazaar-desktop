@@ -749,9 +749,9 @@
         "selectedModsTitle": "Seus Moderadores Atuais Não Puderam Ser Carregados.",
         "availableModsTitle": "Os Moderadores Disponíveis Não Puderam Ser Carregados",
         "modIsBlank": "Insira um @apelido ou ID de um moderador",
-        "notGUID": "%{guid} não é um ID de usuário válido",
-        "ownGUID": "%{guid} é o seu ID de usuário. Você não pode moderar os seus próprios pedidos.",
-        "dupeGUID": "%{guid} é um de seus moderadores atuais."
+        "notPeerID": "%{guid} não é um ID de usuário válido",
+        "ownPeerID": "%{guid} é o seu ID de usuário. Você não pode moderar os seus próprios pedidos.",
+        "dupePeerID": "%{guid} é um de seus moderadores atuais."
       }
     },
     "blockedTab": {

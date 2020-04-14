@@ -749,9 +749,9 @@
         "selectedModsTitle": "Uw huidige moderators konden niet geladen worden.",
         "availableModsTitle": "Beschikbare moderators konden niet geladen worden.",
         "modIsBlank": "Je moet een ID of Handle van de moderator toevoegen.",
-        "notGUID": "%{guid} is niet een valide peer ID",
-        "ownGUID": "%{guid} is uw peer ID. U kunt niet uw eigen orders modereren.",
-        "dupeGUID": "%{guid} is een van uw huidige moderators."
+        "notPeerID": "%{peerID} is niet een valide peer ID",
+        "ownPeerID": "%{peerID} is uw peer ID. U kunt niet uw eigen orders modereren.",
+        "dupePeerID": "%{peerID} is een van uw huidige moderators."
       }
     },
     "blockedTab": {

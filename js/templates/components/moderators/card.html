@@ -1,13 +1,16 @@
 <%
    // Check to see if the card was created with at least minimum data, not just a peerID, which would indicate a server error.
    const loaded = !!ob.name;
+
    /* Disable the card if it is invalid and the controls should be shown, and it is not selected. This allow the user to de-select invalid cards.
-      The view should prevent the invalid card from being selected again, disabling it is redundant but important visually. */
-   const isDisabled = (!ob.valid && !ob.controlsOnInvalid ) || (!ob.valid && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
+    * The view should prevent the invalid card from being selected again, disabling it is redundant but important visually.
+    */
+   const isOKMod = ob.hasValidModel && ob.isMod;
+   const disabledClass = (!isOKMod && !ob.controlsOnInvalid ) || (!isOKMod && ob.controlsOnInvalid && ob.selectedState !== 'selected') || !loaded ? 'disabled' : '';
    const style = ob.verified ? 'verified clrBrAlert2 clrBAlert2Grad' : '';
 %>
 
-<div class="moderatorCardInner clrP <%= isDisabled %> <%= style %>">
+<div class="moderatorCardInner clrP <%= disabledClass %> <%= style %>">
   <div class="flexRow gutterH moderatorCardContent">
     <% if (ob.radioStyle) { %>
       <div class="flexNoShrink">
@@ -29,7 +32,7 @@
           <span class="clrT2"><%= ob.handle ? `@${ob.handle}` : '' %></span>
         </div>
         <div class="row">
-          <% if (ob.valid) { %>
+          <% if (isOKMod) { %>
             <div class="rowTn clamp2"><%=ob.moderatorInfo.description %></div>
             <% if (ob.modLanguages && ob.modLanguages.length) { %>
               <div class="txSm rowTn">
@@ -64,11 +67,20 @@
                 <span class="clrTErr clamp2"><%= ob.polyT('moderatorCard.noCoinSupport') %></span>
               <% } %>
             </div>
-          <% if (ob.showPreferredWarning) { %>
-            <div class="clrTErr note"><%= ob.polyT('moderatorCard.noPreferredSupport', { coins: ob.moderatorInfo.acceptedCurrencies.join(', ') }) %></div>
-          <% } %>
+            <% if (ob.showPreferredWarning) { %>
+              <div class="clrTErr note"><%= ob.polyT('moderatorCard.noPreferredSupport', { coins: ob.moderatorInfo.acceptedCurrencies.join(', ') }) %></div>
+            <% } %>
           <% } else { %>
             <span class="clrTErr"><%= ob.polyT('moderatorCard.invalid') %></span>
+          <%
+            if (ob.modelErrors) {
+              const translatedErrs = [];
+              Object.keys(ob.modelErrors).forEach(field => {
+                translatedErrs.push(ob.polyT('moderatorModelErrors.invalidData', { field }));
+              });
+              print(ob.formErrorTmpl({ errors: translatedErrs }));
+            }
+          %>
           <% } %>
         </div>
       <% } else { %>
@@ -79,9 +91,9 @@
       <% } %>
     </div>
     <div class="flexNoShrink">
-      <% if (ob.valid || ob.controlsOnInvalid) { %>
+      <% if (isOKMod || ob.controlsOnInvalid) { %>
         <div class="flexCol gutterV">
-          <% if (ob.valid) { %>
+          <% if (isOKMod) { %>
             <button class="btn clrP clrBr clrSh2 selectBtn js-viewBtn">
               <%= ob.polyT('moderatorCard.view') %>
             </button>

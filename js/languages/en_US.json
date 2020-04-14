@@ -405,7 +405,7 @@
     "PERCENTAGE": "%{percentage}%*",
     "FIXED_PLUS_PERCENTAGE": "%{amount} (+%{percentage}%)*",
     "failed": "The information for this moderator failed to load.",
-    "invalid": "This user is not currently a moderator.",
+    "invalid": "This user is not currently a valid moderator.",
     "noCoinSupport": "This moderator does not accept any of the coins your wallet supports.",
     "noPreferredSupport": "This moderator does not accept any of your preferred coins. They can only moderate transactions in the following currencies: %{coins}.",
     "languages": "%{lang}, and %{smart_count} other language. |||| %{lang}, and %{smart_count} other languages."
@@ -752,9 +752,9 @@
         "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
         "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "You must add a moderator ID or handle",
-        "notGUID": "%{guid} is not a valid peer ID",
-        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
-        "dupeGUID": "%{guid} is one of your current moderators."
+        "notPeerID": "%{peerID} is not a valid peer ID",
+        "ownPeerID": "%{peerID} is your peer ID. You cannot moderate your own orders.",
+        "dupePeerID": "%{peerID} is one of your current moderators."
       }
     },
     "blockedTab": {
@@ -1528,20 +1528,20 @@
     "moderatorsLoaded": "%{total} moderator loaded |||| %{total} moderators loaded.",
     "noModsMsg": {
       "noModerators": {
-        "title": "No Valid Moderators Are Available.",
-        "body": "None of the loaded moderators are valid. This order will be a direct payment."
+        "title": "No valid moderators have been loaded.",
+        "body": "This order will be a direct payment."
       },
       "noVerifiedModerators": {
-        "title": "No Verified Moderators Available",
+        "title": "No verified moderators have been loaded.",
         "body": "Try viewing unverified moderators."
       },
       "noMatchingModerators": {
-        "title": "No moderators that accept %{coin} are available.",
+        "title": "No moderators that accept %{coin} have been loaded.",
         "body": "Moderators are available on one or more of the other currencies accepted by this listing."
       },
       "noMatchingVerifiedModerators": {
         "title": "No verified moderators that accept %{coin} have been loaded.",
-        "body": "Try viewing unverified moderators."
+        "body": "Try viewing unverified moderators or using another currency."
       }
     },
     "showUnverified": "Show Unverified Moderators",
@@ -2073,7 +2073,8 @@
     "descriptionLength": "Descriptions must be no more than 300 characters",
     "noTerms": "Please provide your terms of service.",
     "termsLength": "Terms of service must be no more than 10,000 characters",
-    "noLanguages": "Please list at least one language you can communicate in."
+    "noLanguages": "Please list at least one language you can communicate in.",
+    "invalidData": "The value for %{field} is invalid or missing."
   },
   "feeModelErrors": {
     "noFeeType": "Please set a valid fee type",
@@ -2125,7 +2126,7 @@
     "mustHaveQuantity": "The quantity must be 1 or more",
     "quantityMustBeInteger": "The quantity must be a valid non-decimal number.",
     "quantityMustBeNumeric": "The quantity must be a valid number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
-    "cryptoQuantityMustBeNumeric": "The amount must be a valid number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",    
+    "cryptoQuantityMustBeNumeric": "The amount must be a valid number. If including a decimal, a period should be used as the seperator, for example \"0.00\".",
     "cryptoQuantityMustBePositive": "The amount must be greater than zero.",
     "fractionTooLow": "%{cur} does not support more than %{coinDiv} decimal places. Please round up the amount so no more than %{coinDiv} decimal places are represented.",
     "missingShippingOption": "Please choose a valid shipping option.",

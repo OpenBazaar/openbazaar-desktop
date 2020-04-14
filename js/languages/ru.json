@@ -749,9 +749,9 @@
         "selectedModsTitle": "Your Current Moderators Could Not Be Loaded.",
         "availableModsTitle": "Available Moderators Could Not Be Loaded",
         "modIsBlank": "Необходимо добавить ID или дескриптор модератора.",
-        "notGUID": "%{guid} is not a valid peer ID",
-        "ownGUID": "%{guid} is your peer ID. You cannot moderate your own orders.",
-        "dupeGUID": "%{guid} is one of your current moderators."
+        "notPeerID": "%{peerID} is not a valid peer ID",
+        "ownPeerID": "%{peerID} is your peer ID. You cannot moderate your own orders.",
+        "dupePeerID": "%{peerID} is one of your current moderators."
       }
     },
     "blockedTab": {

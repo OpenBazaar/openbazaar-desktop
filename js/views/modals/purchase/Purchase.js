@@ -185,7 +185,7 @@ export default class extends BaseModal {
       singleSelect: true,
       radioStyle: true,
       initialState: {
-        showOnlyCur: currencies[0],
+        showOnlyCur: '',
         showVerifiedOnly: true,
       },
     });

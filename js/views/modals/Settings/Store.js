@@ -196,22 +196,18 @@ export default class extends baseVw {
       modID = modID.split('/')[0];
       modID = modID.trim();
 
-      if (isMultihash(modID)) {
-        if (!this.currentMods.includes(modID)) {
-          if (modID !== app.profile.id) {
-            this.modsByID.getModeratorsByID({ moderatorIDs: [modID] });
-            this.getCachedEl('.js-modListByID').removeClass('hide');
-          } else {
-            const ownGUID = app.polyglot.t('settings.storeTab.errors.ownGUID', { guid: modID });
-            this.showModByIDError(ownGUID);
-          }
-        } else {
-          const dupeGUID = app.polyglot.t('settings.storeTab.errors.dupeGUID', { guid: modID });
-          this.showModByIDError(dupeGUID);
-        }
+      if (!isMultihash(modID)) {
+        const notPeerID = app.polyglot.t('settings.storeTab.errors.notPeerID', { peerID: modID });
+        this.showModByIDError(notPeerID);
+      } else if (this.currentMods.includes(modID)) {
+        const dupe = app.polyglot.t('settings.storeTab.errors.dupePeerID', { peerID: modID });
+        this.showModByIDError(dupe);
+      } else if (modID === app.profile.id) {
+        const ownPeerID = app.polyglot.t('settings.storeTab.errors.ownPeerID', { peerID: modID });
+        this.showModByIDError(ownPeerID);
       } else {
-        const notGUID = app.polyglot.t('settings.storeTab.errors.notGUID', { guid: modID });
-        this.showModByIDError(notGUID);
+        this.modsByID.getModeratorsByID({ moderatorIDs: [modID] });
+        this.getCachedEl('.js-modListByID').removeClass('hide');
       }
     } else {
       const blankError = app.polyglot.t('settings.storeTab.errors.modIsBlank');
@@ -286,22 +282,11 @@ export default class extends baseVw {
           const remAvail = this.modsAvailable.removeModeratorsByID(this.modsAvailable.selectedIDs);
 
           this.modsByID.excludeIDs = this.currentMods;
-          this.modsByID.moderatorsStatus.setState({
-            hidden: true,
-          });
 
           this.modsSelected.moderatorsCol.add([...remByID, ...remAvail]);
-          this.modsSelected.moderatorsStatus.setState({
-            hidden: true,
-          });
 
           this.modsAvailable.excludeIDs = this.currentMods;
           this.modsAvailable.moderatorsCol.add(remSel);
-          this.modsAvailable.moderatorsStatus.setState({
-            hidden: false,
-            total: this.modsAvailable.modCount,
-            showSpinner: false,
-          });
 
           // If any of the mods moved to the available collect are unverified, show them
           if (app.verifiedMods.matched(unSel).length !== unSel.length) {

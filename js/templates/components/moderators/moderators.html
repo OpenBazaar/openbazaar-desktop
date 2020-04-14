@@ -1,12 +1,5 @@
 <div class="moderatorsWrapper clrBr <% print(ob.wrapperClasses) %> js-moderatorsWrapper">
-  <% // placeholder so border collapse doesn't erase the table border when there are no table cells %>
-  <% if (ob.placeholder) { %>
-    <div class="moderatorCard clrBr">
-      <div class="moderatorCardInner">
-      </div>
-    </div>
-  <% } %>
-  <% if (ob.totalIDs && !ob.totalShown) { %>
+  <% if (!ob.totalShown) { %>
     <div class="moderatorCard moderatorsMessage clrBr">
       <div class="moderatorCardInner">
         <div class="flexCent">
@@ -15,10 +8,12 @@
                const showOnlyCur = ob.showOnlyCur ? 'Matching' : '';
                const opts = ob.showOnlyCur ? { coin: ob.showOnlyCur } : {};
                const msgPath = `moderators.noModsMsg.no${showOnlyCur}${showOnlyVer}Moderators`;
+               const title = ob.loading ?
+                 ob.polyT('moderators.moderatorsLoading') : ob.polyT(`${msgPath}.title`, opts);
             %>
-            <h4><%= ob.polyT(`${msgPath}.title`, opts) %></h4>
             <% // The section below is only relevant if the moderators are loaded in a purchasing context. %>
-            <% if (ob.purchase) { %>
+            <% if (ob.purchase && !ob.loading) { %>
+              <h4><%= title %></h4>
               <div class="tx4 clrT2"><%= ob.polyT(`${msgPath}.body`) %></div>
               <% if (showOnlyVer) { %>
                 <div class="padTn"><% // just a spacer %></div>
@@ -34,4 +29,3 @@
   <% } %>
 </div>
 <div class="js-statusWrapper"></div>
-
