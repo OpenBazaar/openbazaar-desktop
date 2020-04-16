@@ -149,13 +149,23 @@ export default class Profile extends BaseModel {
       response.moderatorInfo.fee.fixedFee
     ) {
       try {
-        response.moderatorInfo.fee.fixedFee = {
-          amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee, {
-            amountKey: 'bigAmount',
-            currencyKey: 'amountCurrency',
-          }),
-          currencyCode: response.moderatorInfo.fee.fixedFee.amountCurrency.code,
-        };
+
+        if (response.moderatorInfo.fee.fixedFee.bigAmount === "") { // legacy fixed fee
+          response.moderatorInfo.fee.fixedFee = {
+            amount: response.moderatorInfo.fee.fixedFee.amount,
+            currencyKey: response.moderatorInfo.fee.fixedFee.currencyCode
+          };
+        } else {
+          response.moderatorInfo.fee.fixedFee = {
+            amount: curDefToDecimal(response.moderatorInfo.fee.fixedFee, {
+              amountKey: 'bigAmount',
+              currencyKey: 'amountCurrency',
+            }),
+            currencyCode: response.moderatorInfo.fee.fixedFee.amountCurrency.code,
+          };
+        }
+
+
       } catch (e) {
         delete response.moderatorInfo.fixedFee;
         console.error(`Unable to convert the moderator fee from base units: ${e.message}`);

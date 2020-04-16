@@ -196,30 +196,58 @@ export default class extends BaseModel {
 
     if (resolution && resolution.payout) {
       if (resolution.payout.buyerOutput) {
-        resolution.payout.buyerOutput.bigAmount =
-          integerToDecimal(
-            resolution.payout.buyerOutput.bigAmount,
-            divisibility,
-            { fieldName: 'buyerOutput.bigAmount' }
+
+        // legacy check
+        if (resolution.payout.buyerOutput.bigAmount == "") {
+          resolution.payout.buyerOutput.bigAmount = integerToDecimal(
+            resolution.payout.buyerOutput.amount,
+            8
           );
+        } else {
+          resolution.payout.buyerOutput.bigAmount =
+            integerToDecimal(
+              resolution.payout.buyerOutput.bigAmount,
+              divisibility,
+              { fieldName: 'buyerOutput.bigAmount' }
+            );
+        }
+
       }
 
       if (resolution.payout.vendorOutput) {
-        resolution.payout.vendorOutput.bigAmount =
-          integerToDecimal(
-            resolution.payout.vendorOutput.bigAmount,
-            divisibility,
-            { fieldName: 'vendorOutput.bigAmount' }
+        // legacy check
+        if (resolution.payout.vendorOutput.bigAmount == "") {
+          resolution.payout.vendorOutput.bigAmount = integerToDecimal(
+            resolution.payout.vendorOutput.amount,
+            8
           );
+        } else {
+          resolution.payout.vendorOutput.bigAmount =
+            integerToDecimal(
+              resolution.payout.vendorOutput.bigAmount,
+              divisibility,
+              {fieldName: 'vendorOutput.bigAmount'}
+            );
+        }
       }
 
       if (resolution.payout.moderatorOutput) {
-        resolution.payout.moderatorOutput.bigAmount =
-          integerToDecimal(
-            resolution.payout.moderatorOutput.bigAmount,
-            divisibility,
-            { fieldName: 'moderatorOutput.bigAmount' }
-          );
+        if (resolution.payout.moderatorOutput) {
+          // legacy check
+          if (resolution.payout.moderatorOutput.bigAmount == "") {
+            resolution.payout.moderatorOutput.bigAmount = integerToDecimal(
+              resolution.payout.moderatorOutput.amount,
+              8
+            );
+          } else {
+            resolution.payout.moderatorOutput.bigAmount =
+              integerToDecimal(
+                resolution.payout.moderatorOutput.bigAmount,
+                divisibility,
+                {fieldName: 'moderatorOutput.bigAmount'}
+              );
+          }
+        }
       }
     }
 
