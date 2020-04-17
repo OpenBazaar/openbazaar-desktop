@@ -196,9 +196,8 @@ export default class extends BaseModel {
 
     if (resolution && resolution.payout) {
       if (resolution.payout.buyerOutput) {
-
         // legacy check
-        if (resolution.payout.buyerOutput.bigAmount == "") {
+        if (resolution.payout.buyerOutput.bigAmount === '') {
           resolution.payout.buyerOutput.bigAmount = integerToDecimal(
             resolution.payout.buyerOutput.amount,
             8
@@ -211,12 +210,11 @@ export default class extends BaseModel {
               { fieldName: 'buyerOutput.bigAmount' }
             );
         }
-
       }
 
       if (resolution.payout.vendorOutput) {
         // legacy check
-        if (resolution.payout.vendorOutput.bigAmount == "") {
+        if (resolution.payout.vendorOutput.bigAmount === '') {
           resolution.payout.vendorOutput.bigAmount = integerToDecimal(
             resolution.payout.vendorOutput.amount,
             8
@@ -226,7 +224,7 @@ export default class extends BaseModel {
             integerToDecimal(
               resolution.payout.vendorOutput.bigAmount,
               divisibility,
-              {fieldName: 'vendorOutput.bigAmount'}
+              { fieldName: 'vendorOutput.bigAmount' }
             );
         }
       }
@@ -234,7 +232,7 @@ export default class extends BaseModel {
       if (resolution.payout.moderatorOutput) {
         if (resolution.payout.moderatorOutput) {
           // legacy check
-          if (resolution.payout.moderatorOutput.bigAmount == "") {
+          if (resolution.payout.moderatorOutput.bigAmount === '') {
             resolution.payout.moderatorOutput.bigAmount = integerToDecimal(
               resolution.payout.moderatorOutput.amount,
               8
@@ -244,7 +242,7 @@ export default class extends BaseModel {
               integerToDecimal(
                 resolution.payout.moderatorOutput.bigAmount,
                 divisibility,
-                {fieldName: 'moderatorOutput.bigAmount'}
+                { fieldName: 'moderatorOutput.bigAmount' }
               );
           }
         }
