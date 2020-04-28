@@ -489,7 +489,7 @@ export default class extends BaseVw {
 
       if (
         (orderState !== 'DISPUTED' && !escrowTimeoutHours) ||
-        (this.model.contract.dispute !== '') ||
+        (this.model.contract.dispute != undefined) ||
         (orderState === 'DISPUTED' && !Date.parse(disputeStartTime))
       ) {
         // contract probably forged
