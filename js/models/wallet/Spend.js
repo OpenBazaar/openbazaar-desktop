@@ -44,6 +44,7 @@ class Spend extends BaseModel {
       'PRIORITY',
       'NORMAL',
       'ECONOMIC',
+      'SUPER_ECONOMIC',
     ];
   }
 
