@@ -123,6 +123,16 @@
                   <input type="radio"
                          data-persistence-location="local"
                          name="defaultTransactionFee"
+                         value="SUPER_ECONOMIC"
+                         id="defaultTransactionFeeSuperLow"
+                         data-var-type="string"
+                  <% if(ob.defaultTransactionFee == "SUPER_ECONOMIC") { %>checked<% } %>>
+                  <label for="defaultTransactionFeeSuperLow"><%= ob.polyT('settings.advancedTab.transaction.superlow') %></label>
+                </div>
+                <div class="btnRadio clrBr">
+                  <input type="radio"
+                         data-persistence-location="local"
+                         name="defaultTransactionFee"
                          value="ECONOMIC"
                          id="defaultTransactionFeeLow"
                          data-var-type="string"
