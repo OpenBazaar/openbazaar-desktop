@@ -17,6 +17,7 @@ export const feeLevels = [
   'PRIORITY',
   'NORMAL',
   'ECONOMIC',
+  'SUPER_ECONOMIC',
 ];
 
 const cacheExpires = 1000 * 60 * 5;
@@ -190,11 +191,16 @@ export function getFees(coinType) {
 
     $.get(app.getServerUrl(`wallet/fees/${coinType}`))
       .done(data => {
+        let superEconomic;
         let economic;
         let normal;
         let priority;
 
         try {
+          superEconomic = integerToDecimal(
+            data.superEconomic.amount,
+            data.superEconomic.currency.divisibility
+          );
           economic = integerToDecimal(
             data.economic.amount,
             data.economic.currency.divisibility
@@ -213,6 +219,7 @@ export function getFees(coinType) {
         }
 
         deferred.resolve({
+          superEconomic,
           economic,
           normal,
           priority,

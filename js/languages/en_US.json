@@ -20,7 +20,8 @@
   "feeLevels": {
     "PRIORITY": "Priority",
     "NORMAL": "Normal",
-    "ECONOMIC": "Economic"
+    "ECONOMIC": "Economic",
+    "SUPER_ECONOMIC": "Super Economic"
   },
   "feeChangeWidget": {
     "btnChange": "change",
@@ -650,6 +651,7 @@
         "sectionName": "Transactions",
         "saveMetadata": "Save Metadata",
         "defaultFee": "Network Fee",
+        "superlow": "Super Economic",
         "low": "Economic",
         "medium": "Normal",
         "high": "Priority"
