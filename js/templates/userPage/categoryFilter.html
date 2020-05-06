@@ -13,7 +13,7 @@
 
 <%
   ob.categories.slice(0, ob.maxInitiallyVisibleCats - 1).forEach((cat, index) => {
-    valueCat = cat.replace(/&/g, "&amp;");
+    valueCat = cat.replace(/&/g, '&amp;');
     var flatCat = cat.replace(/\s/g, '-'); // remove spaces
 %>
 <div class="btnRadio">
