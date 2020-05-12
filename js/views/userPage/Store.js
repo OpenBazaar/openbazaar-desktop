@@ -418,9 +418,9 @@ class Store extends BaseVw {
     if (this.filter.sortBy) {
       if (this.filter.sortBy === 'PRICE_ASC') {
         col.comparator = (a, b) => {
-          if (a.convertedPrice > b.convertedPrice) {
+          if (a.convertedPrice.isGreaterThan(b.convertedPrice)) {
             return 1;
-          } else if (a.convertedPrice < b.convertedPrice) {
+          } else if (a.convertedPrice.isLessThan(b.convertedPrice)) {
             return -1;
           }
 
@@ -428,9 +428,9 @@ class Store extends BaseVw {
         };
       } else if (this.filter.sortBy === 'PRICE_DESC') {
         col.comparator = (a, b) => {
-          if (a.convertedPrice < b.convertedPrice) {
+          if (a.convertedPrice.isLessThan(b.convertedPrice)) {
             return 1;
-          } else if (a.convertedPrice > b.convertedPrice) {
+          } else if (a.convertedPrice.isGreaterThan(b.convertedPrice)) {
             return -1;
           }
 
