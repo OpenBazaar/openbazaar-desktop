@@ -1322,10 +1322,11 @@ export default class extends BaseModal {
         this.$couponsSection = this.$('.js-couponsSection');
         this.$variantsSection = this.$('.js-variantsSection');
 
-        this.$('#editContractType, #editListingVisibility, #editListingCondition, #editListingCountrySelect').select2({
+        this.$('#editContractType, #editListingVisibility, #editListingCondition, ' +
+          '#editListingCountrySelect').select2({
           // disables the search box
-          minimumResultsForSearch: Infinity,
-        });
+            minimumResultsForSearch: Infinity,
+          });
 
         this.$('#editListingCurrency').select2({
           matcher: (params, data) => {
