@@ -1151,7 +1151,8 @@
       "coupons": "Coupons",
       "inventoryManagement": "Inventory Management",
       "variantInventory": "Variant Inventory",
-      "acceptedCurrencies": "Accepted Currencies"
+      "acceptedCurrencies": "Accepted Currencies",
+      "sendLocation": "Shipping Origin"
     },
     "placeholderTitle": "Enter your title…",
     "placeholderSKU": "SKU, Part Number, ID, etc",
@@ -1185,6 +1186,8 @@
     "uploading": "Uploading…",
     "categoryPlaceholder": "Enter a category…",
     "tagsPlaceholder": "Enter #tags…",
+    "sendCountryPlaceholder": "Choose a country",
+    "sendPostalPlaceholder": "Enter a postal code...",
     "btnCancelUpload": "cancel",
     "btnAddPhoto": "Add",
     "btnAddShippingOptionShort": "Add",
@@ -1268,6 +1271,12 @@
       "toolTip": {
         "delete": "Delete"
       }
+    },
+    "sendLocation": {
+      "sendPostalCodeLabel": "Postal Code",
+      "sendPostalCodePlaceholder": "Enter an origin postal code...",
+      "sendCountryCodeLabel": "Country",
+      "sendCountryCodePlaceholder": "Select an origin country..."
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",

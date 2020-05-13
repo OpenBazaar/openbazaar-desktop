@@ -91,6 +91,7 @@ export default class extends BaseModel {
       titleLength: 140,
       tagLength: 40,
       productIdLength: 40,
+      sendPostalCodeLength: 25,
       optionCount: 30,
     };
   }
