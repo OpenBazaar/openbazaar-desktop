@@ -1287,7 +1287,7 @@ export default class extends BaseModal {
             cats: item.max.cats,
             tags: item.max.tags,
             photos: this.MAX_PHOTOS,
-            sendPostalCode: item.max.sendPostalCodeLength,
+            shippingFromPostalCode: item.max.shippingFromPostalCodeLength,
           },
           shouldShowVariantInventorySection: this.shouldShowVariantInventorySection,
           viewListingsT,

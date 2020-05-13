@@ -1273,10 +1273,10 @@
       }
     },
     "sendLocation": {
-      "sendPostalCodeLabel": "Postal Code",
-      "sendPostalCodePlaceholder": "Enter an origin postal code...",
-      "sendCountryCodeLabel": "Country",
-      "sendCountryCodePlaceholder": "Select an origin country..."
+      "shippingFromPostalCodeLabel": "Postal Code",
+      "shippingFromPostalCodePlaceholder": "Enter an origin postal code...",
+      "shippingFromCountryCodeLabel": "Country",
+      "shippingFromCountryCodePlaceholder": "Select an origin country..."
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",

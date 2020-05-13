@@ -14,8 +14,8 @@ export default class extends BaseModel {
       acceptedCurrencies: [
         ...(app && app.profile && app.profile.get('currencies') || []),
       ],
-      sendCountryCode: '',
-      sendPostalCode: '',
+      shippingFromCountryCode: '',
+      shippingFromPostalCode: '',
     };
   }
 

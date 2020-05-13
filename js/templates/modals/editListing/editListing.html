@@ -241,22 +241,22 @@
         <% if (ob.errors['item.sendLocation']) print(ob.formErrorTmpl({ errors: ob.errors['item.sendLocation'] })) %>
         <div class="flexRow gutterH">
           <div class="col6">
-            <label><%= ob.polyT('editListing.sendLocation.sendPostalCodeLabel') %></label>
+            <label><%= ob.polyT('editListing.sendLocation.shippingFromPostalCodeLabel') %></label>
           </div>
           <div class="col6">
-            <label><%= ob.polyT('editListing.sendLocation.sendCountryCodeLabel') %></label>
+            <label><%= ob.polyT('editListing.sendLocation.shippingFromCountryCodeLabel') %></label>
           </div>
         </div>
 
         <div class="flexRow gutterH">
           <div class="col6 simpleFlexCol">
-            <input type="text" class="clrBr clrP clrSh2 sendPostalCodeInput js-sendPostalCodeInput" name="metadata.sendPostalCode" value="<%= ob.metadata.sendPostalCode %>" placeholder="<%= ob.polyT('editListing.sendLocation.sendPostalCodePlaceholder') %>" maxlength="<%= ob.max.sendPostalCode %>">
+            <input type="text" class="clrBr clrP clrSh2 shippingFromPostalCodeInput js-shippingFromPostalCodeInput" name="metadata.shippingFromPostalCode" value="<%= ob.metadata.shippingFromPostalCode %>" placeholder="<%= ob.polyT('editListing.sendLocation.shippingFromPostalCodePlaceholder') %>" maxlength="<%= ob.max.shippingFromPostalCode %>">
           </div>
           <div class="col6 simpleFlexCol">
-            <select id="editListingCountrySelect" name="metadata.sendCountryCode" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
-              <option selected value><%= ob.polyT('editListing.sendLocation.sendCountryCodePlaceholder') %></option>
+            <select id="editListingCountrySelect" name="metadata.shippingFromCountryCode" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
+              <option selected value><%= ob.polyT('editListing.sendLocation.shippingFromCountryCodePlaceholder') %></option>
               <% ob.countryList.forEach((country) => { %>
-              <option value="<%= country.dataName %>" <% if (country.dataName == ob.metadata.sendCountryCode) print('selected') %>><%= country.name %></option>
+              <option value="<%= country.dataName %>" <% if (country.dataName == ob.metadata.shippingFromCountryCode) print('selected') %>><%= country.name %></option>
               <% }); %>
             </select>
           </div>
