@@ -12,7 +12,7 @@ export function followsYou(guid) {
     throw new Error('Please provide a guid');
   }
 
-  return $.get(`${app.getServerUrl(`ob/followsme/${guid}`)}`);
+  return $.get(`${app.getServerUrl(`v1/ob/followers/${guid}`)}`);
 }
 
 export function followUnfollow(guid, type = 'follow') {

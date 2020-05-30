@@ -166,7 +166,7 @@ export default class extends BaseModal {
 
     return $.ajax({
       type: 'POST',
-      url: app.getServerUrl('ob/avatar/'),
+      url: app.getServerUrl('v1/ob/avatar'),
       contentType: 'application/json; charset=utf-8',
       data: avatarData,
       dataType: 'json',

@@ -7,13 +7,13 @@
   <input type="text" class="clrBr clrP clrSh2 marginTopAuto" name="estimatedDelivery" value="<%= ob.estimatedDelivery %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.estimatedDeliveryPlaceholder') %>">
 </div>
 <div class="col3 simpleFlexCol">
-  <% if (ob.errors['bigPrice']) print(ob.formErrorTmpl({ errors: ob.errors['bigPrice'] })) %>
-  <input type="text" class="clrBr clrP clrSh2 marginTopAuto js-price" name="bigPrice" value="<%= ob.number.toStandardNotation(ob.bigPrice) %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="bignumber">
+  <% if (ob.errors['price']) print(ob.formErrorTmpl({ errors: ob.errors['price'] })) %>
+  <input type="text" class="clrBr clrP clrSh2 marginTopAuto js-price" name="price" value="<%= ob.number.toStandardNotation(ob.price) %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="bignumber">
 </div>
 <div class="col3 simpleFlexCol">
-  <% if (ob.errors['bigAdditionalItemPrice']) print(ob.formErrorTmpl({ errors: ob.errors['bigAdditionalItemPrice'] })) %>
+  <% if (ob.errors['additionalItemPrice']) print(ob.formErrorTmpl({ errors: ob.errors['additionalItemPrice'] })) %>
   <div class="flexRow marginTopAuto">
-    <input type="text" class="clrBr clrP clrSh2 marginTopAuto js-price" name="bigAdditionalItemPrice" value="<%= ob.number.toStandardNotation(ob.bigAdditionalItemPrice) %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="bignumber">
+    <input type="text" class="clrBr clrP clrSh2 marginTopAuto js-price" name="additionalItemPrice" value="<%= ob.number.toStandardNotation(ob.additionalItemPrice) %>" placeholder="<%= ob.polyT('editListing.shippingOptions.services.pricePlaceholder') %>" data-var-type="bignumber">
     <a class="iconBtn clrBr clrP margLSm toolTipNoWrap js-btnRemoveService btnRemoveService" data-tip="<%= ob.polyT('editListing.shippingOptions.toolTip.delete') %>">
       <i class="ion-trash-b"></i>
     </a>

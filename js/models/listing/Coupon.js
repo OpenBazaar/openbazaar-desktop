@@ -51,13 +51,13 @@ export default class extends BaseModel {
         typeof attrs.percentDiscount !== 'number' &&
         !attrs.percentDiscount
       ) &&
-      !attrs.bigPriceDiscount
+      !attrs.priceDiscount
     ) {
       addError('percentDiscount', app.polyglot.t('couponModelErrors.provideDiscountAmount'));
-    } else if (attrs.percentDiscount && attrs.bigPriceDiscount) {
+    } else if (attrs.percentDiscount && attrs.priceDiscount) {
       // This is an internal error. Assuming a reasonable UI, the user should never be able to
       // create such a case.
-      addError('percentDiscount', 'Only one of percentDiscount & bigPriceDiscount is allowed.');
+      addError('percentDiscount', 'Only one of percentDiscount & priceDiscount is allowed.');
     } else if (typeof attrs.percentDiscount !== 'undefined') {
       if (typeof attrs.percentDiscount !== 'number') {
         addError('percentDiscount',

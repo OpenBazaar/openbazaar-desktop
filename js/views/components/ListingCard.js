@@ -6,7 +6,7 @@ import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
 import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../utils/metrics';
-import { getNewerHash, outdateHash } from '../../utils/outdatedListingHashes';
+import { getNewerHash, outdateHash } from '../../utils/outdatedlistingCIDs';
 import Listing from '../../models/listing/Listing';
 import ListingShort from '../../models/listing/ListingShort';
 import { events as listingEvents } from '../../models/listing/';
@@ -123,10 +123,10 @@ export default class extends baseVw {
       const thumbnail = this.model.get('thumbnail');
       const listingImageSrc = this.viewType === 'grid' ?
         app.getServerUrl(
-          `ob/images/${isHiRez() ? thumbnail.medium : thumbnail.small}`
+          `v1/ob/image/${isHiRez() ? thumbnail.medium : thumbnail.small}`
         ) :
         app.getServerUrl(
-          `ob/images/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
+          `v1/ob/image/${isHiRez() ? thumbnail.small : thumbnail.tiny}`
         );
 
       this.listingImage = new Image();
@@ -140,7 +140,7 @@ export default class extends baseVw {
       const vendor = this.model.get('vendor');
       if (vendor && vendor.avatarHashes) {
         const avatarImageSrc = app.getServerUrl(
-          `ob/images/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
+          `v1/ob/image/${isHiRez() ? vendor.avatarHashes.small : vendor.avatarHashes.tiny}`
         );
 
         this.avatarImage = new Image();
@@ -259,7 +259,7 @@ export default class extends baseVw {
     e.stopPropagation();
   }
 
-  loadListingDetail(hash = this.model.get('hash')) {
+  loadListingDetail(hash = this.model.get('cid')) {
     const routeOnOpen = location.hash.slice(1);
     app.router.navigateUser(`${this.options.listingBaseUrl}${this.model.get('slug')}`,
       this.ownerGuid);
@@ -389,11 +389,11 @@ export default class extends baseVw {
     };
 
     const loadListing = () => {
-      const listingHash = getNewerHash(hash || this.model.get('hash'));
+      const listingCID = getNewerHash(hash || this.model.get('cid'));
 
-      if (listingHash && this.ownerGuid !== app.profile.id) {
+      if (listingCID && this.ownerGuid !== app.profile.id) {
         ipfsFetch = this.fullListing.fetch({
-          hash: listingHash,
+          hash: listingCID,
           showErrorOnFetchFail: false,
         });
         ipnsFetch = $.ajax(
@@ -447,9 +447,9 @@ export default class extends baseVw {
         }
 
         if (ipfsFetch && ipfsFetch.state() === 'resolved') {
-          if (listingHash !== data.hash) {
+          if (listingCID !== data.hash) {
             handleOutdatedHash(data, {
-              oldHash: listingHash,
+              oldHash: listingCID,
               newHash: data.hash,
             });
           }

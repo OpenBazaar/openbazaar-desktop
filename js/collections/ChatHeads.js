@@ -30,7 +30,7 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl('ob/chatconversations');
+    return app.getServerUrl('v1/ob/chatconversations');
   }
 
   model(attrs, options) {

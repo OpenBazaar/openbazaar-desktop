@@ -36,7 +36,7 @@ export default class extends BaseModel {
     let returnSync = 'will-set-later';
 
     if (method === 'delete') {
-      options.url = options.url || app.getServerUrl(`ob/listing/${this.get('slug')}`);
+      options.url = options.url || app.getServerUrl(`v1/ob/listing/${this.get('slug')}`);
     }
 
     returnSync = super.sync(method, model, options);
@@ -75,14 +75,6 @@ export default class extends BaseModel {
         parsedResponse.price = {
           amount: parsedResponse.amount,
           currency: parsedResponse.currency,
-        };
-      } else if (parsedResponse.bigPrice) {
-        parsedResponse.price = {
-          amount: parsedResponse.bigPrice.amount,
-          currency: {
-            code: parsedResponse.bigPrice.currencyCode,
-            divisibility: parsedResponse.bigPrice.divisibility,
-          },
         };
       }
 

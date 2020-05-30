@@ -16,7 +16,7 @@ import { launchEditListingModal } from '../../../utils/modalManager';
 //   events as inventoryEvents,
 // } from '../../../utils/inventory';
 import { recordEvent } from '../../../utils/metrics';
-import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
+import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedlistingCIDs';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';
@@ -56,14 +56,14 @@ export default class extends BaseModal {
     this.totalPrice = bigNumber();
 
     try {
-      this.totalPrice = this.model.get('item').get('bigPrice');
+      this.totalPrice = this.model.get('item').get('price');
     } catch (e) {
       // pass
     }
 
     this._purchaseModal = null;
-    this._latestHash = this.model.get('hash');
-    this._renderedHash = null;
+    this._latestHash = this.model.get('cid');
+    this._renderedCID = null;
 
     // Sometimes a profile model is available and the vendor info
     // can be obtained from that.
@@ -139,16 +139,16 @@ export default class extends BaseModal {
       }
     });
 
-    this.listenTo(outdatedListingHashesEvents, 'newHash', e => {
+    this.listenTo(outdatedlistingCIDsEvents, 'newHash', e => {
       this._latestHash = e.newHash;
-      if (e.oldHash === this._renderedHash) this.outdateHash();
+      if (e.oldHash === this._renderedCID) this.outdateHash();
     });
 
     this.rating = this.createChild(Rating);
 
     // get the ratings data, if any
     this.ratingsFetch =
-      $.get(app.getServerUrl(`ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
+      $.get(app.getServerUrl(`v1/ob/ratings/${this.vendor.peerID}/${this.model.get('slug')}`))
         .done(data => this.onRatings(data))
         .fail((jqXhr) => {
           if (jqXhr.statusText === 'abort') return;
@@ -422,7 +422,7 @@ export default class extends BaseModal {
     }
     const photoCol = this.model.toJSON().item.images;
     const photoHash = photoCol[photoIndex].original;
-    const phSrc = app.getServerUrl(`ob/images/${photoHash}`);
+    const phSrc = app.getServerUrl(`v1/ob/image/${photoHash}`);
 
     this.activePhotoIndex = photoIndex;
     this.$photoSelected.trigger('zoom.destroy'); // old zoom must be removed
@@ -511,7 +511,7 @@ export default class extends BaseModal {
       .get('skus')
       .find(v =>
         _.isEqual(v.get('variantCombo'), variantCombo));
-    const surcharge = sku ? sku.get('bigSurcharge') : bigNumber('0');
+    const surcharge = sku ? sku.get('surcharge') : bigNumber('0');
 
     try {
       const _totalPrice =
@@ -529,7 +529,7 @@ export default class extends BaseModal {
             this.totalPrice,
             this.model
               .get('item')
-              .get('priceCurrency')
+              .get('pricingCurrency')
               .code,
             app.settings.get('localCurrency')
           );
@@ -817,7 +817,7 @@ export default class extends BaseModal {
       this.$reviews = this.$('.js-reviews');
       this.$reviews.append(this.reviews.render().$el);
 
-      if (this._latestHash !== this.model.get('hash')) {
+      if (this._latestHash !== this.model.get('cid')) {
         this.outdateHash();
       }
 
@@ -915,7 +915,7 @@ export default class extends BaseModal {
     });
 
     this.rendered = true;
-    this._renderedHash = this.model.get('hash');
+    this._renderedCID = this.model.get('cid');
 
     return this;
   }

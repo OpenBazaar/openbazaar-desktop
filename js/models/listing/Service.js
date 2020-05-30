@@ -6,8 +6,8 @@ export default class extends BaseModel {
   defaults() {
     return {
       name: '',
-      bigPrice: '',
-      bigAdditionalItemPrice: '',
+      price: '',
+      additionalItemPrice: '',
       estimatedDelivery: '',
     };
   }

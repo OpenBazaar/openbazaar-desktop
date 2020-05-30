@@ -7,6 +7,6 @@ export default class extends Collection {
   }
 
   modelId(attrs) {
-    return attrs.listingHash;
+    return attrs.listingCID;
   }
 }

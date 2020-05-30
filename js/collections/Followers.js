@@ -29,7 +29,7 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl(`ob/${this.options.type === 'followers' ? 'followers' : 'following'}` +
+    return app.getServerUrl(`v1/ob/${this.options.type === 'followers' ? 'followers' : 'following'}` +
       `${app.profile.id === this.options.peerId ? '' : `/${this.options.peerId}`}`);
   }
 

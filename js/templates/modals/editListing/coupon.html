@@ -8,19 +8,19 @@
 </div>
 <div class="col4 simpleFlexCol">
   <% if (ob.errors['percentDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['percentDiscount'] })) %>
-  <% if (ob.errors['bigPriceDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['bigPriceDiscount'] })) %>
+  <% if (ob.errors['priceDiscount']) print(ob.formErrorTmpl({ errors: ob.errors['priceDiscount'] })) %>
   <div class="flexRow marginTopAuto">
     <div class="inputSelect marginTopAuto">
       <%
         let discountAmount;
 
-        if (ob.bigPriceDiscount) {
-          discountAmount = ob.number.toStandardNotation(ob.bigPriceDiscount);
+        if (ob.priceDiscount) {
+          discountAmount = ob.number.toStandardNotation(ob.priceDiscount);
         } else if (typeof ob.percentDiscount !== 'undefined') {
           discountAmount =  ob.number.toStandardNotation(ob.percentDiscount);
         }
 
-        const isFixedDiscount = !!ob.bigPriceDiscount;
+        const isFixedDiscount = !!ob.priceDiscount;
       %>
       <input type="text" class="clrBr clrP clrSh2" name="discountAmount" value="<%= discountAmount %>" placeholder="0.00">
       <select name="discountType" class="clrBr clrP nestInputRight">

@@ -1,8 +1,8 @@
 import { expect } from 'chai';
 import { describe, it } from 'mocha';
-import { outdateHash, getNewerHash } from '../../js/utils/outdatedListingHashes';
+import { outdateHash, getNewerHash } from '../../js/utils/outdatedlistingCIDs';
 
-describe('the outdatedListingHashes utility module', () => {
+describe('the outdatedlistingCIDs utility module', () => {
   it('that has a getNewerHash function which returns the provided ' +
     'hash if a newer one is not associated with it.', () => {
     const hash = 'aaaaa';

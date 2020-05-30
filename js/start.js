@@ -28,7 +28,7 @@ import { addFeedback } from './utils/feedback';
 import { addMetrics, showMetricsModal, isNewerVersion } from './utils/metrics';
 import { showUpdateStatus, updateReady } from './utils/autoUpdate';
 import { handleLinks } from './utils/dom';
-import { persist as persistOutdatedListingHashes } from './utils/outdatedListingHashes.js';
+import { persist as persistOutdatedListingCIDs } from './utils/outdatedListingCIDs.js';
 import Chat from './views/chat/Chat.js';
 import ChatHeads from './collections/ChatHeads';
 import PageNav from './views/PageNav.js';
@@ -150,9 +150,9 @@ let walletCurDefFetch;
 
 function fetchStartupData1() {
   configFetch = !configFetch || configFetch.state() === 'rejected' ?
-    $.get(app.getServerUrl('ob/config')) : configFetch;
+    $.get(app.getServerUrl('v1/ob/config')) : configFetch;
   walletCurDefFetch = !walletCurDefFetch || walletCurDefFetch.state() === 'rejected' ?
-    $.get(app.getServerUrl('wallet/currencies')) : walletCurDefFetch;
+    $.get(app.getServerUrl('v1/wallet/currencies')) : walletCurDefFetch;
 
   const fetches = [
     configFetch,
@@ -928,7 +928,7 @@ serverConnectEvents.on('connected', (connectedEvent) => {
 });
 
 ipcRenderer.on('close-attempt', (e) => {
-  persistOutdatedListingHashes();
+  persistOutdatedlistingCIDs();
 
   // If on the bundled app, do not let the app shutdown until server shuts down.
   const localServer = remote.getGlobal('localServer');

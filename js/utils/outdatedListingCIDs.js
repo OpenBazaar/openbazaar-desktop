@@ -17,7 +17,7 @@ export { events };
 let data = null;
 
 try {
-  data = JSON.parse(window.localStorage.getItem('outdatedListingHashes'));
+  data = JSON.parse(window.localStorage.getItem('outdatedlistingCIDs'));
 } catch (e) {
   // pass
 }
@@ -66,7 +66,7 @@ const pruneData = () => {
  * this method infrequently (maybe just on app close).
  */
 export function persist() {
-  window.localStorage.setItem('outdatedListingHashes',
+  window.localStorage.setItem('outdatedlistingCIDs',
     JSON.stringify(dataToJSON()));
 }
 

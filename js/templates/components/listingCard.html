@@ -156,7 +156,7 @@
         <%=
           ob.crypto.cryptoPrice({
             priceAmount: ob.price.amount,
-            priceCurrencyCode: ob.price.currencyCode,
+            pricingCurrencyCode: ob.price.currencyCode,
             displayCurrency: ob.displayCurrency,
             priceModifier: ob.price.modifier,
             wrappingClass: '',
@@ -230,13 +230,13 @@
             <%=
               ob.crypto.cryptoPrice({
                 priceAmount: ob.price.amount,
-                priceCurrencyCode: ob.price.currencyCode,
+                pricingCurrencyCode: ob.price.currencyCode,
                 displayCurrency: ob.displayCurrency,
                 priceModifier: ob.price.modifier,
                 wrappingClass: '',
                 convertAndFormatOpts: {
                   maxDisplayDecimals: priceMaxDisplayDecimals
-                }                
+                }
               })
             %>
           <% } %>
@@ -305,7 +305,7 @@
       <%=
         ob.crypto.cryptoPrice({
           priceAmount: ob.price.amount,
-          priceCurrencyCode: ob.price.currencyCode,
+          pricingCurrencyCode: ob.price.currencyCode,
           displayCurrency: ob.displayCurrency,
           priceModifier: ob.price.modifier,
           wrappingClass: 'txB',

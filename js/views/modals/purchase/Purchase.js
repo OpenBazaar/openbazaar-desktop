@@ -21,7 +21,7 @@ import {
   curDefToDecimal,
 } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
-import { events as outdatedListingHashesEvents } from '../../../utils/outdatedListingHashes';
+import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedlistingCIDs';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';
@@ -89,8 +89,8 @@ export default class extends BaseModal {
     */
     const item = new Item(
       {
-        listingHash: this.listing.get('hash'),
-        bigQuantity: !this.listing.isCrypto ? bigNumber('1') : undefined,
+        listingCID: this.listing.get('cid'),
+        quantity: !this.listing.isCrypto ? bigNumber('1') : undefined,
         options: opts.variants || [],
       },
       {
@@ -249,12 +249,12 @@ export default class extends BaseModal {
       }
     });
 
-    this._latestHash = this.listing.get('hash');
-    this._renderedHash = null;
+    this._latestHash = this.listing.get('cid');
+    this._renderedCID = null;
 
-    this.listenTo(outdatedListingHashesEvents, 'newHash', e => {
+    this.listenTo(outdatedlistingCIDsEvents, 'newHash', e => {
       this._latestHash = e.oldHash;
-      if (e.oldHash === this._renderedHash) this.outdateHash();
+      if (e.oldHash === this._renderedCID) this.outdateHash();
     });
   }
 
@@ -276,7 +276,7 @@ export default class extends BaseModal {
       'click .js-purchaseVerifiedOnly': 'onClickVerifiedOnly',
       'change #cryptoAmountCurrency': 'changeCryptoAmountCurrency',
       'change #cryptoAmount': 'onChangeCryptoAmount',
-      'keyup [name="bigQuantity"]': 'keyupQuantity',
+      'keyup [name="quantity"]': 'keyupQuantity',
       ...super.events(),
     };
   }
@@ -377,14 +377,14 @@ export default class extends BaseModal {
 
     this.order.get('items')
       .at(0)
-      .set({ bigQuantity: quantity });
+      .set({ quantity: quantity });
   }
 
   changeCryptoAmountCurrency(e) {
     this._cryptoAmountCurrency = e.target.value;
     const quantity = this.getFormData(
       this.getCachedEl('#cryptoAmount')
-    ).bigQuantity;
+    ).quantity;
     this.setModelQuantity(quantity);
   }
 
@@ -395,7 +395,7 @@ export default class extends BaseModal {
     }
 
     this.quantityKeyUpTimer = setTimeout(() => {
-      const quantity = this.getFormData($(e.target)).bigQuantity;
+      const quantity = this.getFormData($(e.target)).quantity;
       if (this.listing.isCrypto) this._cryptoQuantity = quantity;
       this.setModelQuantity(quantity);
     }, 150);
@@ -526,8 +526,8 @@ export default class extends BaseModal {
               const item = items.at(i);
               cryptoItems.push({
                 ...item.toJSON(),
-                bigQuantity: decimalToInteger(
-                  item.get('bigQuantity'),
+                quantity: decimalToInteger(
+                  item.get('quantity'),
                   coinDivisibility
                 ),
               });
@@ -664,10 +664,10 @@ export default class extends BaseModal {
 
       return {
         price: bigNumber(this.listing.price.amount),
-        sPrice: bigNumber(sOptService ? sOptService.get('bigPrice') : 0),
-        aPrice: bigNumber(sOptService ? sOptService.get('bigAdditionalItemPrice') : 0),
-        vPrice: bigNumber(sku ? sku.get('bigSurcharge') : 0),
-        quantity: bigNumber(item.get('bigQuantity')),
+        sPrice: bigNumber(sOptService ? sOptService.get('price') : 0),
+        aPrice: bigNumber(sOptService ? sOptService.get('additionalItemPrice') : 0),
+        vPrice: bigNumber(sku ? sku.get('surcharge') : 0),
+        quantity: bigNumber(item.get('quantity')),
       };
     });
   }
@@ -694,7 +694,7 @@ export default class extends BaseModal {
         .get('coinDivisibility') :
       this.listing
         .get('item')
-        .get('priceCurrency')
+        .get('pricingCurrency')
         .divisibility;
   }
 
@@ -714,7 +714,7 @@ export default class extends BaseModal {
     const state = this.getState();
     const item = this.order.get('items')
       .at(0);
-    const quantity = item.get('bigQuantity');
+    const quantity = item.get('quantity');
     const metadata = this.listing.get('metadata');
 
     let uiQuantity = quantity;
@@ -809,7 +809,7 @@ export default class extends BaseModal {
       }
     });
 
-    this._renderedHash = this.listing.get('hash');
+    this._renderedCID = this.listing.get('cid');
 
     return this;
   }

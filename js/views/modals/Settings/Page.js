@@ -110,7 +110,7 @@ export default class extends baseVw {
       { header: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
-      url: app.getServerUrl('ob/header/'),
+      url: app.getServerUrl('v1/ob/header'),
       contentType: 'application/json; charset=utf-8',
       data: headerData,
       dataType: 'json',
@@ -127,7 +127,7 @@ export default class extends baseVw {
       { avatar: imageURI.replace(/^data:image\/(png|jpeg|webp);base64,/, '') });
     return $.ajax({
       type: 'POST',
-      url: app.getServerUrl('ob/avatar/'),
+      url: app.getServerUrl('v1/ob/avatar'),
       contentType: 'application/json; charset=utf-8',
       data: avatarData,
       dataType: 'json',
@@ -360,14 +360,14 @@ export default class extends baseVw {
           this.avatarCropper.cropit('imageSrc', avatarURI);
         } else if (this.profile.get('avatarHashes').get('original')) {
           this.avatarCropper.cropit('imageSrc',
-            app.getServerUrl(`ob/images/${this.profile.get('avatarHashes').get('original')}`));
+            app.getServerUrl(`v1/ob/image/${this.profile.get('avatarHashes').get('original')}`));
         }
 
         if (headerURI) {
           this.headerCropper.cropit('imageSrc', headerURI);
         } else if (this.profile.get('headerHashes').get('original')) {
           this.headerCropper.cropit('imageSrc',
-            app.getServerUrl(`ob/images/${this.profile.get('headerHashes').get('original')}`));
+            app.getServerUrl(`v1/ob/image/${this.profile.get('headerHashes').get('original')}`));
         }
       }, 0);
 

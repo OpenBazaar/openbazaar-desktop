@@ -7,15 +7,15 @@
       'clrTPriceAboveMarket' : 'clrTPriceBelowMarket';
     priceSymbol = ob.priceModifier > 0 ?
       `(<span class="icon ion-arrow-up-c"></span>)` :
-      `(<span class="icon ion-arrow-down-c"></span>)`; 
-  }  
+      `(<span class="icon ion-arrow-down-c"></span>)`;
+  }
 %>
 <<%= ob.wrappingTag %> class="<%= ob.wrappingClass %> <%= colorClass %>">
   <span>
     <%=
       ob.currencyMod.convertAndFormatCurrency(
         ob.priceAmount,
-        ob.priceCurrencyCode,
+        ob.pricingCurrencyCode,
         ob.displayCurrency,
         ob.convertAndFormatOpts
       )

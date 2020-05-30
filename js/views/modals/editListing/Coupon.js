@@ -32,7 +32,7 @@ export default class extends BaseView {
 
     if (formData.discountType === 'FIXED') {
       const bigNumDiscount = bigNumber(formData.discountAmount);
-      formData.bigPriceDiscount = bigNumDiscount.isNaN() ?
+      formData.priceDiscount = bigNumDiscount.isNaN() ?
         formData.discountAmount : bigNumDiscount;
     } else {
       // discountAmount
@@ -52,10 +52,10 @@ export default class extends BaseView {
   setModelData() {
     const formData = this.getFormData();
 
-    if (formData.bigPriceDiscount !== undefined) {
+    if (formData.priceDiscount !== undefined) {
       this.model.unset('percentDiscount');
     } else {
-      this.model.unset('bigPriceDiscount');
+      this.model.unset('priceDiscount');
     }
 
     this.model.set(formData);

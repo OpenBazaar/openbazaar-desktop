@@ -9,7 +9,7 @@ export default class extends BaseModel {
   }
 
   url() {
-    return app.getServerUrl('ob/chatconversation');
+    return app.getServerUrl('v1/ob/chatconversation');
   }
 
   parse(response) {

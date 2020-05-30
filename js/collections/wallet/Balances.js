@@ -9,7 +9,7 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl('wallet/balance');
+    return app.getServerUrl('v1/wallet/balance');
   }
 
   model(attrs, options) {

@@ -74,28 +74,28 @@ describe('the Item model', () => {
   it('fails validation if a price currency is not provided as an object', () => {
     const item = new Item();
     item.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'USD',
         divisibility: 2,
       },
     }, { validate: true });
     const valErr = item.validationError;
-    expect(valErr && valErr.priceCurrency && !!valErr.priceCurrency.length || false)
+    expect(valErr && valErr.pricingCurrency && !!valErr.pricingCurrency.length || false)
       .to.equal(false);
 
     const item2 = new Item();
     item2.set({
-      priceCurrency: 'howdy',
+      pricingCurrency: 'howdy',
     }, { validate: true });
     const valErr2 = item2.validationError;
-    expect(valErr2 && valErr2.priceCurrency && !!valErr2.priceCurrency.length || false)
+    expect(valErr2 && valErr2.pricingCurrency && !!valErr2.pricingCurrency.length || false)
       .to.equal(true);
   });
 
   it('fails validation if a valid price currency code is not provided', () => {
     const item = new Item();
     item.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'USD',
         divisibility: 2,
       },
@@ -103,14 +103,14 @@ describe('the Item model', () => {
     const valErr = item.validationError;
     expect(
       valErr &&
-      valErr['priceCurrency.code'] &&
-      !!valErr['priceCurrency.code'].length || false
+      valErr['pricingCurrency.code'] &&
+      !!valErr['pricingCurrency.code'].length || false
     )
       .to.equal(false);
 
     const item2 = new Item();
     item2.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: false,
         divisibility: 2,
       },
@@ -118,14 +118,14 @@ describe('the Item model', () => {
     const valErr2 = item2.validationError;
     expect(
       valErr2 &&
-      valErr2['priceCurrency.code'] &&
-      !!valErr2['priceCurrency.code'].length || false
+      valErr2['pricingCurrency.code'] &&
+      !!valErr2['pricingCurrency.code'].length || false
     )
       .to.equal(true);
 
     const item3 = new Item();
     item3.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'biscuits-and-gravy',
         divisibility: 2,
       },
@@ -133,8 +133,8 @@ describe('the Item model', () => {
     const valErr3 = item3.validationError;
     expect(
       valErr3 &&
-      valErr3['priceCurrency.code'] &&
-      !!valErr3['priceCurrency.code'].length || false
+      valErr3['pricingCurrency.code'] &&
+      !!valErr3['pricingCurrency.code'].length || false
     )
       .to.equal(true);
   });
@@ -142,7 +142,7 @@ describe('the Item model', () => {
   it('fails validation if a valid price currency divisibility is not provided', () => {
     const item = new Item();
     item.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'USD',
         divisibility: 2,
       },
@@ -150,14 +150,14 @@ describe('the Item model', () => {
     const valErr = item.validationError;
     expect(
       valErr &&
-      valErr['priceCurrency.divisibility'] &&
-      !!valErr['priceCurrency.divisibility'].length || false
+      valErr['pricingCurrency.divisibility'] &&
+      !!valErr['pricingCurrency.divisibility'].length || false
     )
       .to.equal(false);
 
     const item2 = new Item();
     item2.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'USD',
         divisibility: -1,
       },
@@ -166,14 +166,14 @@ describe('the Item model', () => {
     console.dir(valErr2);
     expect(
       valErr2 &&
-      valErr2['priceCurrency.divisibility'] &&
-      !!valErr2['priceCurrency.divisibility'].length || false
+      valErr2['pricingCurrency.divisibility'] &&
+      !!valErr2['pricingCurrency.divisibility'].length || false
     )
       .to.equal(true);
 
     const item3 = new Item();
     item3.set({
-      priceCurrency: {
+      pricingCurrency: {
         code: 'USD',
         divisibility: 'big-charlie',
       },
@@ -181,23 +181,23 @@ describe('the Item model', () => {
     const valErr3 = item3.validationError;
     expect(
       valErr3 &&
-      valErr3['priceCurrency.divisibility'] &&
-      !!valErr3['priceCurrency.divisibility'].length || false
+      valErr3['pricingCurrency.divisibility'] &&
+      !!valErr3['pricingCurrency.divisibility'].length || false
     )
       .to.equal(true);
   });
 
-  it('fails validation if the bigPrice is not valid', () => {
+  it('fails validation if the price is not valid', () => {
     const item = new Item();
     item.set({
-      bigPrice: bigNumber(100.001),
-      priceCurrency: {
+      price: bigNumber(100.001),
+      pricingCurrency: {
         code: 'USD',
         divisibility: 2,
       },
     }, { validate: true });
     const valErr = item.validationError;
-    expect(valErr && !!valErr.bigPrice.length || false)
+    expect(valErr && !!valErr.price.length || false)
       .to.equal(true);
   });
 

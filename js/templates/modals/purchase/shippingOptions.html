@@ -20,7 +20,7 @@
                   let price = '';
 
                   try {
-                    price = ob.currencyMod.convertAndFormatCurrency(service.bigPrice, ob.item.priceCurrency.code, ob.displayCurrency);
+                    price = ob.currencyMod.convertAndFormatCurrency(service.price, ob.metadata.pricingCurrency.code, ob.displayCurrency);
                   } catch (e) {
                     // pass
                   }

@@ -170,10 +170,10 @@ export default class extends BaseModel {
               .metadata
               .coinDivisibility;
 
-            item.bigQuantity = integerToDecimal(item.bigQuantity, divisibility);
+            item.quantity = integerToDecimal(item.quantity, divisibility);
           }
         } catch (e) {
-          item.bigQuantity = bigNumber();
+          item.quantity = bigNumber();
         }
       });
     }

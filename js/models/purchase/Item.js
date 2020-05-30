@@ -24,7 +24,7 @@ export default class extends BaseModel {
     this.getCoinType = options.getCoinType;
     this.getCoinDiv = options.getCoinDiv;
 
-    // TODO: Since bigQuantity is a bigNumber, should inventory be too?
+    // TODO: Since quantity is a bigNumber, should inventory be too?
     // If the inventory is for a crypto listing, be sure to convert it from base units
     // before sending it in.
     // this.getInventory = () =>
@@ -35,7 +35,7 @@ export default class extends BaseModel {
     return {
       // the options sub model is optional
       // if the listing is not physical, the shipping sub model should have blank values
-      listingHash: '',
+      listingCID: '',
       options: new Options(),
       shipping: new Shipping(),
       memo: '',
@@ -44,7 +44,7 @@ export default class extends BaseModel {
   }
 
   get idAttribute() {
-    return 'listingHash';
+    return 'listingCID';
   }
 
   get nested() {
@@ -71,14 +71,14 @@ export default class extends BaseModel {
     if (this.isCrypto) {
       this.validateCurrencyAmount(
         {
-          amount: attrs.bigQuantity,
+          amount: attrs.quantity,
           currency: {
             code: this.getCoinType,
             divisibility: this.getCoinDiv,
           },
         },
         addError,
-        'bigQuantity',
+        'quantity',
         {
           translations: {
             required: 'purchaseItemModelErrors.provideCryptoQuantity',
@@ -90,20 +90,20 @@ export default class extends BaseModel {
       );
     } else {
       if (
-        attrs.bigQuantity === null ||
-        attrs.bigQuantity === undefined ||
-        attrs.bigQuantity === ''
+        attrs.quantity === null ||
+        attrs.quantity === undefined ||
+        attrs.quantity === ''
       ) {
-        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.provideQuantity'));
       } else if (
-        !isValidNumber(attrs.bigQuantity, {
+        !isValidNumber(attrs.quantity, {
           allowNumber: false,
           allowString: false,
         })
       ) {
-        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
-      } else if (attrs.bigQuantity.lt(1)) {
-        addError('bigQuantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.quantityMustBeInteger'));
+      } else if (attrs.quantity.lt(1)) {
+        addError('quantity', app.polyglot.t('purchaseItemModelErrors.mustHaveQuantity'));
       }
     }
 

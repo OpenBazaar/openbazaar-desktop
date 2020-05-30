@@ -83,7 +83,7 @@ export function renderCryptoPrice(options = {}) {
     throw new Error('Please provide a price amount as a number.');
   }
 
-  if (typeof options.priceCurrencyCode !== 'string') {
+  if (typeof options.pricingCurrencyCode !== 'string') {
     throw new Error('Please provide a price currency code as a string.');
   }
 

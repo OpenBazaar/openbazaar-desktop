@@ -42,8 +42,8 @@ export default class extends BaseModal {
       this.stopListening(app.settings, null, this.onChangeNsfw);
       app.settings.set('showNsfw', true);
       $.ajax({
-        type: 'PATCH',
-        url: app.getServerUrl('ob/settings/'),
+        type: 'PUT',
+        url: app.getServerUrl('v1/ob/preferences/'),
         data: JSON.stringify({ showNsfw: true }),
         dataType: 'json',
       });

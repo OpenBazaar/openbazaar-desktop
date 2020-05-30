@@ -679,7 +679,7 @@ export default class extends BaseModal {
     }
 
     const upload = $.ajax({
-      url: app.getServerUrl('ob/images'),
+      url: app.getServerUrl('v1/ob/image'),
       type: 'POST',
       data: JSON.stringify(imagesToUpload),
       dataType: 'json',
@@ -692,11 +692,11 @@ export default class extends BaseModal {
 
       this.images.add(uploadedImages.map(image => ({
         filename: image.filename,
-        original: image.hashes.original,
-        large: image.hashes.large,
-        medium: image.hashes.medium,
-        small: image.hashes.small,
-        tiny: image.hashes.tiny,
+        original: image.original,
+        large: image.large,
+        medium: image.medium,
+        small: image.small,
+        tiny: image.tiny,
       })));
     })
     .fail(jqXhr => {
@@ -786,7 +786,7 @@ export default class extends BaseModal {
       const segmentation = {
         type: serverData.metadata.contractType,
         currency: serverData.metadata.contractType !== 'CRYPTOCURRENCY' ?
-          serverData.item.priceCurrency.code : serverData.metadata.coinType,
+          serverData.metadata.pricingCurrency.code : serverData.metadata.coinType,
         moderated: serverData.moderators && !!serverData.moderators.length,
         isNew: this.model.isNew(),
       };
@@ -910,7 +910,7 @@ export default class extends BaseModal {
         if (this.trackInventoryBy === 'DO_NOT_TRACK') {
           item.get('skus')
             .forEach(sku => {
-              sku.unset('bigQuantity');
+              sku.unset('quantity');
               sku.set({ infiniteInventory: true });
             });
         }
@@ -994,7 +994,7 @@ export default class extends BaseModal {
           .unparsedResponse
           .listing
           .item
-          .priceCurrency
+          .pricingCurrency
           .code;
       } catch (e) {
         return this;
@@ -1153,7 +1153,7 @@ export default class extends BaseModal {
 
   get $itemPrice() {
     return this._$itemPrice ||
-      (this._$itemPrice = this.$('[name="item.bigPrice"]'));
+      (this._$itemPrice = this.$('[name="item.price"]'));
   }
 
   showMaxTagsWarning() {
@@ -1190,7 +1190,7 @@ export default class extends BaseModal {
       cur =
         this.model
           .get('item')
-          .get('priceCurrency')
+          .get('pricingCurrency')
           .code;
     } catch (e) {
       // pass
@@ -1474,7 +1474,7 @@ export default class extends BaseModal {
         this.variantInventory = this.createChild(VariantInventory, {
           collection: item.get('skus'),
           optionsCl: item.get('options'),
-          getPrice: () => this.getFormData(this.$itemPrice).item.bigPrice,
+          getPrice: () => this.getFormData(this.$itemPrice).item.price,
           getCurrency: () => this.currency,
         });
 

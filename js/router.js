@@ -52,7 +52,7 @@ export default class ObRouter extends Router {
       .forEach((route) => this.route.apply(this, route));
 
     this.setAddressBarText();
-    this._curHash = location.hash;
+    this._curCID = location.cid;
 
     $(window).on('hashchange', () => {
       this.setAddressBarText();
@@ -74,9 +74,9 @@ export default class ObRouter extends Router {
 
   // FYI - There is a scenario where the prevHash will be inaccurate. More details in
   // the confirmPromises when() fail handler in execute().
-  setPrevHash(prevHash = this._curHash) {
+  setPrevHash(prevHash = this._curCID) {
     this._prevHash = prevHash;
-    this._curHash = location.hash;
+    this._curCID = location.hash;
   }
 
   get prevHash() {

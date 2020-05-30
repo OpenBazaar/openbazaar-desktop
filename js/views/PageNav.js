@@ -110,7 +110,7 @@ export default class extends BaseVw {
       };
 
       if (notif.thumbnail) {
-        nativeNotifData.icon = app.getServerUrl(`ob/images/${notif.thumbnail.small}`);
+        nativeNotifData.icon = app.getServerUrl(`v1/ob/image/${notif.thumbnail.small}`);
       }
 
       launchNativeNotification(notifDisplayData.text, nativeNotifData);
@@ -188,7 +188,7 @@ export default class extends BaseVw {
     // We'll send a bogus filter because all we want is the count - we don't
     // want to weight the returned payload down with any notifications. Those
     // will be lazy loaded in when the notif menu is opened.
-    return $.get(app.getServerUrl('ob/notifications?filter=blah-blah'));
+    return $.get(app.getServerUrl('v1/ob/notifications'));
   }
 
   renderUnreadNotifCount() {

@@ -9,7 +9,7 @@ export default class extends BaseModel {
     return {
       productID: '',
       infiniteInventory: false,
-      bigSurcharge: bigNumber('0'),
+      surcharge: bigNumber('0'),
     };
   }
 
@@ -37,35 +37,35 @@ export default class extends BaseModel {
     }
 
     if (attrs.infiniteInventory) {
-      if (attrs.bigQuantity) {
-        addError('bigQuantity', 'bigQuantity should not be provided if provided if ' +
+      if (attrs.quantity) {
+        addError('quantity', 'quantity should not be provided if provided if ' +
           'infiniteInventory is truthy.');
       }
     } else {
       if (
-        attrs.bigQuantity === '' ||
-        attrs.bigQuantity === undefined ||
-        attrs.bigQuantity === null
+        attrs.quantity === '' ||
+        attrs.quantity === undefined ||
+        attrs.quantity === null
       ) {
-        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideQuantity'));
+        addError('quantity', app.polyglot.t('skuModelErrors.provideQuantity'));
       } else if (
-        !isValidNumber(attrs.bigQuantity, {
+        !isValidNumber(attrs.quantity, {
           allowNumber: false,
           allowBigNumber: true,
           allowString: false,
         })
       ) {
-        addError('bigQuantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
-      } else if (!attrs.bigQuantity.isInteger()) {
-        addError('bigQuantity', app.polyglot.t('skuModelErrors.quantityMustBeInteger'));
-      } else if (attrs.bigQuantity.lt(0)) {
+        addError('quantity', app.polyglot.t('skuModelErrors.provideNumericQuantity'));
+      } else if (!attrs.quantity.isInteger()) {
+        addError('quantity', app.polyglot.t('skuModelErrors.quantityMustBeInteger'));
+      } else if (attrs.quantity.lt(0)) {
         // The listing API allows the quantity to be set to < 0, which indicates an unlimited
         // supply. This model does not allow that, but does have an infiniteInventory flag.
         // The expectation is that sync / parse of the listing model will send the quantity
         // over as "-1" if the infiniteInventory flag is set to true. Also the infiniteInventory
         // flag should not be sent to the server.
 
-        addError('bigQuantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
+        addError('quantity', app.polyglot.t('skuModelErrors.providePositiveQuantity'));
       }
     }
 

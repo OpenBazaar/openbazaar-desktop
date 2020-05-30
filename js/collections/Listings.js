@@ -17,7 +17,7 @@ export default class extends Collection {
   }
 
   url() {
-    return app.getServerUrl(`ob/listings/${this.guid}`);
+    return app.getServerUrl(`v1/ob/listingindex/${this.guid}`);
   }
 
   /**

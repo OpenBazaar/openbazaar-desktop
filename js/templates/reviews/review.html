@@ -10,7 +10,7 @@
     const slugLink = ob.vendorID && ob.vendorSig.metadata.listingSlug ? `ob://${ob.vendorID.peerID}/store/${ob.vendorSig.metadata.listingSlug}` : '';
     let background = '';
     if (ob.vendorSig.metadata.thumbnail) {
-      background = ob.getServerUrl(`ob/images/${ob.isHiRez() ? ob.vendorSig.metadata.thumbnail.small : ob.vendorSig.metadata.thumbnail.tiny}`);
+      background = ob.getServerUrl(`v1/ob/image/${ob.isHiRez() ? ob.vendorSig.metadata.thumbnail.small : ob.vendorSig.metadata.thumbnail.tiny}`);
     }
   %>
 

@@ -57,14 +57,14 @@
           <% } %>
           <% if (isCrypto) { %>
             <%
-              const copyLink = item.bigQuantity ?
-                `<a class="js-copyCryptoQuantity clrTEm" data-quantity="${ item.bigQuantity}"> ${ob.polyT('orderDetail.summaryTab.orderDetails.copyLink')}</a>` : '';
+              const copyLink = item.quantity ?
+                `<a class="js-copyCryptoQuantity clrTEm" data-quantity="${ item.quantity}"> ${ob.polyT('orderDetail.summaryTab.orderDetails.copyLink')}</a>` : '';
             %>
             <div class="rowTn">
-              <span class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %>:</span> <%= ob.currencyMod.convertAndFormatCurrency(item.bigQuantity, coinType) %><%= copyLink %>
+              <span class="txB"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %>:</span> <%= ob.currencyMod.convertAndFormatCurrency(item.quantity, coinType) %><%= copyLink %>
             </div>
             <div class="clrT2 hide orderDetailsCopiedToClipboard js-cryptoQuantityCopiedToClipboard"><%= ob.polyT('copiedToClipboard') %></div>
-          <% } %>          
+          <% } %>
         </div>
       </div>
       <hr class="clrBr" />
@@ -146,7 +146,7 @@
               <% if (!isCrypto) { %>
                 <div class="col6">
                   <div class="txB rowTn"><%= ob.polyT('orderDetail.summaryTab.orderDetails.quantityHeading') %></div>
-                  <div><%= item.bigQuantity %></div>
+                  <div><%= item.quantity %></div>
                 </div>
               <% } %>
             </div>

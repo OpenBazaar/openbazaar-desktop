@@ -15,23 +15,23 @@ import Skus from '../../collections/listing/Skus';
  * API. When a listing does not have variants but tracks inventory, the server handles
  * the quantity and productId values in a "dummy" SKU, e.g:
  *
- * skus: [{ bigQuantity: "123", productId: "54321" }]
+ * skus: [{ quantity: "123", productId: "54321" }]
  *
  * Since that is, arguably, awkward, instead this model offers a few properties to track
  * non-variant inventory:
  *
  * productId - a string that maps to "skus: [{ productId: "54321" }]"
- * quantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]" (used
+ * quantity - a bigNumber that maps to "skus: [{ quantity: "123" }]" (used
  *   for non-crypto listings)
- * cryptoQuantity - a bigNumber that maps to "skus: [{ bigQuantity: "123" }]"
+ * cryptoQuantity - a bigNumber that maps to "skus: [{ quantity: "123" }]"
  *   (used for crypto listings)
- * infiniteInventory - a boolean that maps to "skus: [{ bigQuantity: "-1" }]".
+ * infiniteInventory - a boolean that maps to "skus: [{ quantity: "-1" }]".
  *
  * Parse/Sync of the listing model will handle mapping to/from the server version
  * and what's in this model.
  *
  * Please note: If your listing does include variants, you will want to use the
- * bigQuantity and infiniteInventory fields on the SKU model instead of setting
+ * quantity and infiniteInventory fields on the SKU model instead of setting
  * anything on this model related to those fields.
  */
 
@@ -137,34 +137,6 @@ export default class extends BaseModel {
     } else if (attrs.description.length > max.descriptionLength) {
       addError('description', app.polyglot.t('itemModelErrors.descriptionTooLong'));
     }
-
-    // The ones in this block should not be user facing unless there's a dev error.
-    if (typeof attrs.priceCurrency !== 'object') {
-      addError('priceCurrency', 'The priceCurrency must be provided as an object.');
-    } else {
-      if (
-        !attrs.priceCurrency.code ||
-        !getCurrencyByCode(attrs.priceCurrency.code)
-      ) {
-        addError('priceCurrency.code', 'The currency is not one of the available ones.');
-      }
-
-      if (!isValidCoinDivisibility(attrs.priceCurrency.divisibility)[0]) {
-        addError('priceCurrency.divisibility', 'The divisibility is not valid.');
-      }
-    }
-
-    this.validateCurrencyAmount(
-      {
-        amount: attrs.bigPrice,
-        currency: {
-          code: () => attrs.priceCurrency.code,
-          divisibility: () => attrs.priceCurrency.divisibility,
-        },
-      },
-      addError,
-      'bigPrice'
-    );
 
     if (!attrs.images.length) {
       addError('images', app.polyglot.t('itemModelErrors.imageRequired'));

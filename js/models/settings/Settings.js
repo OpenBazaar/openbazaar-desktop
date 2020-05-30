@@ -22,7 +22,7 @@ export default class extends BaseModel {
   }
 
   url() {
-    return app.getServerUrl('ob/settings/');
+    return app.getServerUrl('v1/ob/preferences');
   }
 
   nested() {

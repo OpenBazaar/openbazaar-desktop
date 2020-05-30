@@ -17,16 +17,16 @@
           let sorter = 0;
 
           try {
-            sorter = a.bigPrice.minus(b.bigPrice);
+            sorter = a.price.minus(b.price);
           } catch (e) {
             // pass
           }
-          
+
           return sorter;
         })
         .forEach((service, si) => {
     %>
-      <% if (service.bigPrice && service.bigPrice.eq(0)) var fShp = true; %>
+      <% if (service.price && service.price.eq(0)) var fShp = true; %>
       <tr class="<% if (fShp) print('txB') %> <% if (si === option.services.length -1) print('lastRow') %>">
         <td><%= service.name %></td>
         <td><%= service.estimatedDelivery %></td>
@@ -34,9 +34,9 @@
           <% if (fShp) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= 
+            <%=
               ob.currencyMod.convertAndFormatCurrency(
-                service.bigPrice,
+                service.price,
                 ob.pricingCurrency,
                 ob.displayCurrency
               )
@@ -44,12 +44,12 @@
           <% } %>
         </td>
         <td>
-          <% if (service.bigAdditionalItemPrice && service.bigAdditionalItemPrice.eq(0)) { %>
+          <% if (service.additionalItemPrice && service.additionalItemPrice.eq(0)) { %>
             <div class="clrE1 clrTOnEmph phraseBox floL"><%= ob.polyT('listingDetail.freeShippingBanner') %></div>
           <% } else { %>
-            <%= 
+            <%=
               ob.currencyMod.convertAndFormatCurrency(
-                service.bigAdditionalItemPrice,
+                service.additionalItemPrice,
                 ob.pricingCurrency,
                 ob.displayCurrency
               )

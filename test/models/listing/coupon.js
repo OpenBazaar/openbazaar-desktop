@@ -60,7 +60,7 @@ describe('the Coupon model', () => {
   it('fails validation if you don\'t provide either a price or percentage discount', () => {
     const coupon = new Coupon();
 
-    coupon.unset('bigPriceDiscount');
+    coupon.unset('priceDiscount');
     coupon.unset('percentDiscount');
     const valErr = coupon.validate(coupon.toJSON());
 
@@ -72,7 +72,7 @@ describe('the Coupon model', () => {
     const coupon = new Coupon();
 
     coupon.set({
-      bigPriceDiscount: bigNumber('123'),
+      priceDiscount: bigNumber('123'),
       percentDiscount: 25,
     }, { validate: true });
     const valErr = coupon.validationError;

@@ -27,18 +27,18 @@
   ob.prices.forEach((priceObj, i) => {
     // convert the prices here, to prevent rounding errors in the display
     const basePrice = ob.currencyMod.convertCurrency(priceObj.price, ob.listingCurrency, viewingCurrency);
-    
+
     const shippingPrice = ob.currencyMod.convertCurrency(priceObj.sPrice, ob.listingCurrency, viewingCurrency);
 
     const additionalShippingPrice = ob.currencyMod.convertCurrency(priceObj.aPrice, ob.listingCurrency, viewingCurrency);
-    
+
     const surcharge = ob.currencyMod.convertCurrency(priceObj.vPrice, ob.listingCurrency, viewingCurrency);
 
     const validQuantity =
       priceObj.quantity && !priceObj.quantity.isNaN() && priceObj.quantity.gt(0);
-    
+
     let quantity = validQuantity ? priceObj.quantity : ob.bigNumber(1);
-    
+
     if (ob.isCrypto) {
       quantity = validQuantity ? priceObj.quantity : ob.bigNumber(0);
     }
@@ -50,10 +50,10 @@
         itemTotal = itemTotal.minus(
           itemTotal.times(0.01).times(coupon.percentDiscount)
         );
-      } else if (coupon.bigPriceDiscount && !coupon.bigPriceDiscount.isNaN()) {
+      } else if (coupon.priceDiscount && !coupon.priceDiscount.isNaN()) {
         const convertPriceDiscount =
             ob.currencyMod.convertCurrency(
-              coupon.bigPriceDiscount,
+              coupon.priceDiscount,
               ob.listingCurrency,
               viewingCurrency
             );
@@ -119,8 +119,8 @@
           <b>
             <% if (coupon.percentDiscount) {
                  print(`-${coupon.percentDiscount}%`);
-            } else if (coupon.bigPriceDiscount && !coupon.bigPriceDiscount.isNaN()) {
-              print(`-${ob.currencyMod.convertAndFormatCurrency(coupon.bigPriceDiscount, ob.listingCurrency, viewingCurrency)}`);
+            } else if (coupon.priceDiscount && !coupon.priceDiscount.isNaN()) {
+              print(`-${ob.currencyMod.convertAndFormatCurrency(coupon.priceDiscount, ob.listingCurrency, viewingCurrency)}`);
             } %>
           </b>
         </div>
@@ -164,7 +164,7 @@
         <%= ob.polyT('purchase.receipt.shipping') %>
       </span>
       <div class="constrainedWidth">
-        <div class="flexHRight">      
+        <div class="flexHRight">
           <b>
             <%= ob.currencyMod.formatCurrency(shippingPrice, viewingCurrency) %>
           </b>
@@ -180,7 +180,7 @@
           <%= ob.polyT('purchase.receipt.subtotal', { quantity: ob.number.toStandardNotation(priceObj.quantity) }) %>
         </span>
         <div class="constrainedWidth">
-          <div class="flexHRight">      
+          <div class="flexHRight">
             <b>
               <%= ob.currencyMod.formatCurrency(subTotal, viewingCurrency) %>
             </b>
@@ -194,7 +194,7 @@
           <%= ob.polyT('purchase.receipt.shippingTotal') %>
         </span>
         <div class="constrainedWidth">
-          <div class="flexHRight">        
+          <div class="flexHRight">
             <b>
               <%= ob.currencyMod.formatCurrency(shippingTotal, viewingCurrency) %>
             </b>

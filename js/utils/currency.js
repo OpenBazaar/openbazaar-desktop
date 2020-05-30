@@ -594,7 +594,7 @@ export function fetchExchangeRates(options = {}) {
         ensureMainnetCode(supportedCurs[0]);
   }
 
-  const xhr = $.get(app.getServerUrl(`ob/exchangerates/${coin}`), options)
+  const xhr = $.get(app.getServerUrl(`v1/ob/exchangerates`), options)
     .done(data => {
       const changed = new Set();
 

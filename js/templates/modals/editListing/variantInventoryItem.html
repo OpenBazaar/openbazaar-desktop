@@ -2,18 +2,18 @@
   <td class="clrBr"><%= choice %></td>
 <% }) %>
 <td class="clrBr">
-  <% if (ob.errors['bigSurcharge']) print(ob.formErrorTmpl({ errors: ob.errors['bigSurcharge'] })) %>
-  <input type="text" class="clrBr clrP clrSh2 js-surcharge" name="bigSurcharge" value="<%= ob.number.toStandardNotation(ob.bigSurcharge) %>" placeholder="0.00" data-var-type="bignumber" />
+  <% if (ob.errors['surcharge']) print(ob.formErrorTmpl({ errors: ob.errors['surcharge'] })) %>
+  <input type="text" class="clrBr clrP clrSh2 js-surcharge" name="surcharge" value="<%= ob.number.toStandardNotation(ob.surcharge) %>" placeholder="0.00" data-var-type="bignumber" />
 </td>
-<td class="clrBr js-totalPrice"><%= ob.calculateTotalPrice(ob.bigSurcharge || ob.bigNumber('0')) %></td>
+<td class="clrBr js-totalPrice"><%= ob.calculateTotalPrice(ob.surcharge || ob.bigNumber('0')) %></td>
 <td class="clrBr">
   <% if (ob.errors['productID']) print(ob.formErrorTmpl({ errors: ob.errors['productID'] })) %>
   <input type="text" class="clrBr clrP clrSh2" name="productID" value="<%= ob.productID %>" placeholder="<%= ob.polyT('editListing.variantInventory.placeholderSKU') %>" maxlength="<%= ob.max.productIdLength %>" />
 </td>
 <td class="clrBr unconstrainedWidth quantityCol">
-  <% if (ob.errors['bigQuantity']) print(ob.formErrorTmpl({ errors: ob.errors['bigQuantity'] })) %>
+  <% if (ob.errors['quantity']) print(ob.formErrorTmpl({ errors: ob.errors['quantity'] })) %>
   <div class="flexVCent gutterH">
-    <input type="text" class="clrBr clrP clrSh2 js-quantity" name="bigQuantity" value="<%= ob.infiniteInventory ? ob.infiniteQuantityChar : ob.bigQuantity %>" data-var-type="bignumber" placeholder="0" />
+    <input type="text" class="clrBr clrP clrSh2 js-quantity" name="quantity" value="<%= ob.infiniteInventory ? ob.infiniteQuantityChar : ob.quantity %>" data-var-type="bignumber" placeholder="0" />
     <input type="checkbox" id="<%= `${ob.cid}_inventoryItemUnlimtedCheckbox` %>" class="centerLabel js-infiniteInventoryCheckbox" name="infiniteInventory" <% if (ob.infiniteInventory) print('checked') %>>
     <label class="tx5b flexNoShrink" for="<%= `${ob.cid}_inventoryItemUnlimtedCheckbox` %>"><%= ob.polyT('editListing.variantInventory.unlimitedQuantityLabel') %></label>
   </div>

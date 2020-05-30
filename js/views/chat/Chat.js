@@ -198,7 +198,7 @@ export default class extends baseVw {
                 const imageHash = isHiRez ? avatarHashes.medium : avatarHashes.small;
 
                 if (imageHash) {
-                  notifOptions.icon = app.getServerUrl(`ob/images/${imageHash}`);
+                  notifOptions.icon = app.getServerUrl(`v1/ob/image/${imageHash}`);
                 }
               });
             }

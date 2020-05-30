@@ -57,9 +57,9 @@ export function shipsFreeToMe(md) {
       .forEach(shipOpt => {
         shipOpt.get('services')
           .forEach(service => {
-            const bigPrice = service.get('bigPrice');
+            const price = service.get('price');
 
-            if (bigPrice && bigPrice.eq(0)) {
+            if (price && price.eq(0)) {
               freeShipping = freeShipping.concat(shipOpt.get('regions'));
             }
           });

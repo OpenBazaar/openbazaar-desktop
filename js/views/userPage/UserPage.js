@@ -180,7 +180,7 @@ export default class extends baseVw {
 
     if (headerHash) {
       this.$('.js-header').attr('style',
-        `background-image: url(${app.getServerUrl(`ob/images/${headerHash}`)}),
+        `background-image: url(${app.getServerUrl(`v1/ob/image/${headerHash}`)}),
       url('../imgs/defaultHeader.png')`);
     }
   }
