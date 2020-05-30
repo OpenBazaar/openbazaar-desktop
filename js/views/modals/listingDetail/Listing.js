@@ -16,7 +16,7 @@ import { launchEditListingModal } from '../../../utils/modalManager';
 //   events as inventoryEvents,
 // } from '../../../utils/inventory';
 import { recordEvent } from '../../../utils/metrics';
-import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedlistingCIDs';
+import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedListingCIDs';
 import { getTranslatedCountries } from '../../../data/countries';
 import BaseModal from '../BaseModal';
 import Purchase from '../purchase/Purchase';

@@ -36,7 +36,7 @@ try {
 //   b: 'c',
 // }
 
-data = {
+data = { 
   prevHashes: new Map(data && data.prevHashes || []),
   outdated: new Map(data && data.outdated || []),
 };

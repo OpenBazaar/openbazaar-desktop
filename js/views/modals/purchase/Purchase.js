@@ -21,7 +21,7 @@ import {
   curDefToDecimal,
 } from '../../../utils/currency';
 import { capitalize } from '../../../utils/string';
-import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedlistingCIDs';
+import { events as outdatedlistingCIDsEvents } from '../../../utils/outdatedListingCIDs';
 import { isSupportedWalletCur } from '../../../data/walletCurrencies';
 import Order from '../../../models/purchase/Order';
 import Item from '../../../models/purchase/Item';

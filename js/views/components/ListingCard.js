@@ -6,7 +6,7 @@ import { launchEditListingModal } from '../../utils/modalManager';
 import { isBlocked, isUnblocking, events as blockEvents } from '../../utils/block';
 import { isHiRez } from '../../utils/responsive';
 import { startAjaxEvent, endAjaxEvent, recordEvent } from '../../utils/metrics';
-import { getNewerHash, outdateHash } from '../../utils/outdatedlistingCIDs';
+import { getNewerHash, outdateHash } from '../../utils/outdatedListingCIDs';
 import Listing from '../../models/listing/Listing';
 import ListingShort from '../../models/listing/ListingShort';
 import { events as listingEvents } from '../../models/listing/';
