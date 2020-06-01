@@ -156,7 +156,7 @@
                 if (!cryptoPaymentCoinRateAvailable) cursNoRate.push(ob.metadata.acceptedCurrencies[0]);
                 tip = ob.polyT('listingDetail.unableToPurchase.noCryptoExchangeRateInfo', {
                   cur: cursNoRate.join(', '),
-                });                 
+                });
               } else {
                 buyNowClass = '';
                 unpurchaseable = false;
@@ -202,6 +202,17 @@
           <% } %>
         </div>
         <hr class="rowLg">
+        <% if(ob.metadata.shippingFromCountryCode !== '' || ob.metadata.shippingFromPostalCode !== '') { %>
+        <h5><%= ob.polyT('editListing.sendLocation.shippingFromLabel') %></h5>
+        <div class="rowLg">
+          <% if(ob.metadata.shippingFromCountryCode !== '') { %>
+          <%= ob.polyT('editListing.sendLocation.shippingFromCountryCodeLabel') %>: <%= ob.metadata.shippingFromCountryName %><br/>
+          <% } %>
+          <% if(ob.metadata.shippingFromPostalCode !== '') { %>
+            <%= ob.polyT('editListing.sendLocation.shippingFromPostalCodeLabel') %>: <%= ob.metadata.shippingFromPostalCode %>
+          <% } %>
+        </div>
+        <% } %>
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
         <div class="tagWrapper rowLg">
           <% ob.item.tags.forEach(function(tag){

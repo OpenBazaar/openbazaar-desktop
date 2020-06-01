@@ -896,6 +896,10 @@ export default class extends BaseModal {
     this.variantInventory.setCollectionData();
     this.couponsView.setCollectionData();
 
+    if (formData.metadata.shippingFromCountryCode === '') {
+      formData.metadata.shippingFromCountryCode = 'NA';
+    }
+
     if (!isCrypto) {
       if (item.get('options').length) {
         // If we have options, we shouldn't be providing certain properties on the Item

@@ -1276,7 +1276,8 @@
       "shippingFromPostalCodeLabel": "Postal Code",
       "shippingFromPostalCodePlaceholder": "Enter an origin postal code...",
       "shippingFromCountryCodeLabel": "Country",
-      "shippingFromCountryCodePlaceholder": "Select an origin country..."
+      "shippingFromCountryCodePlaceholder": "Select an origin country...",
+      "shippingFromLabel": "Shipping Origin"
     },
     "inventoryManagement": {
       "doNotTrackSelectOption": "Do not track inventory",
