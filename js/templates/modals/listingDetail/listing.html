@@ -202,7 +202,8 @@
           <% } %>
         </div>
         <hr class="rowLg">
-        <% if(ob.metadata.shippingFromCountryCode !== '' || ob.metadata.shippingFromPostalCode !== '') { %>
+        <% if (ob.metadata.contractType === 'PHYSICAL_GOOD') { %>
+        <% if (ob.metadata.shippingFromCountryCode !== '' || ob.metadata.shippingFromPostalCode !== '') { %>
         <h5><%= ob.polyT('editListing.sendLocation.shippingFromLabel') %></h5>
         <div class="rowLg">
           <% if(ob.metadata.shippingFromCountryCode !== '') { %>
@@ -212,7 +213,7 @@
             <%= ob.polyT('editListing.sendLocation.shippingFromPostalCodeLabel') %>: <%= ob.metadata.shippingFromPostalCode %>
           <% } %>
         </div>
-        <% } %>
+        <% } } %>
         <h5><%= ob.polyT('listingDetail.tags') %></h5>
         <div class="tagWrapper rowLg">
           <% ob.item.tags.forEach(function(tag){

@@ -325,6 +325,7 @@
 
   .tab-shipping,
   .shippingSection,
+  .shippingFromSection,
   .conditionWrap {
     display: none;
   }
@@ -337,6 +338,14 @@
     .tab-shipping,
     .conditionWrap,
     .shippingSection {
+      display: block;
+    }
+  }
+
+  &.TYPE_PHYSICAL_GOOD {
+    .tab-shippingFrom,
+    .conditionWrap,
+    .shippingFromSection {
       display: block;
     }
   }
