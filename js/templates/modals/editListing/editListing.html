@@ -31,6 +31,10 @@
             name: ob.polyT('editListing.sectionNames.tags'),
           },
           {
+            key: 'shippingOrigin',
+            name: ob.polyT('editListing.sectionNames.sendLocation'),
+          },
+          {
             key: 'category',
             name: ob.polyT('editListing.sectionNames.category'),
           },
@@ -229,6 +233,35 @@
         <div class="js-maxTagsWarning"><% if (ob.item.tags.length >= ob.max.tags) print(ob.maxTagsWarning) %></div>
         <input type="text" id="editListingTags" name="item.tags" class="clrBr clrP hashPrefacedTags hideDropDown" value="<%= ob.item.tags.join(ob.tagsDelimiter) %>" placeholder="<%= ob.polyT('editListing.tagsPlaceholder') %>" />
         <div class="clrT2 txSm helper"><%= ob.polyT('editListing.helperTags') %></div>
+      </section>
+
+      <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">
+        <h2 class="h4 clrT"><%= ob.polyT('editListing.sectionNames.sendLocation') %></h2>
+        <hr class="clrBr rowMd" />
+        <% if (ob.errors['item.sendLocation']) print(ob.formErrorTmpl({ errors: ob.errors['item.sendLocation'] })) %>
+        <div class="flexRow gutterH">
+          <div class="col6">
+            <label><%= ob.polyT('editListing.sendLocation.shippingFromPostalCodeLabel') %></label>
+          </div>
+          <div class="col6">
+            <label><%= ob.polyT('editListing.sendLocation.shippingFromCountryCodeLabel') %></label>
+          </div>
+        </div>
+
+        <div class="flexRow gutterH">
+          <div class="col6 simpleFlexCol">
+            <input type="text" class="clrBr clrP clrSh2 shippingFromPostalCodeInput js-shippingFromPostalCodeInput" name="metadata.shippingFromPostalCode" value="<%= ob.metadata.shippingFromPostalCode %>" placeholder="<%= ob.polyT('editListing.sendLocation.shippingFromPostalCodePlaceholder') %>" maxlength="<%= ob.max.shippingFromPostalCode %>">
+          </div>
+          <div class="col6 simpleFlexCol">
+            <select id="editListingCountrySelect" name="metadata.shippingFromCountryCode" class="clrBr clrP clrSh2 marginTopAuto" style="width: 100%">
+              <option selected value><%= ob.polyT('editListing.sendLocation.shippingFromCountryCodePlaceholder') %></option>
+              <% ob.countryList.forEach((country) => { %>
+              <option value="<%= country.dataName %>" <% if (country.dataName == ob.metadata.shippingFromCountryCode) print('selected') %>><%= country.name %></option>
+              <% }); %>
+            </select>
+          </div>
+        </div>
+
       </section>
 
       <section class="js-scrollToSection categorySection contentBox padMd clrP clrBr clrSh3 tx3">

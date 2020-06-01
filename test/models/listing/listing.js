@@ -46,6 +46,7 @@ describe('the Listing model', () => {
 
   it('changes a hash in the response to a hash in parse', () => {
     const listing = new Listing({}, { guid: '12345' });
+    console.log(listing);
     const parsed = listing.parse({
       hash: 'test',
       listing: {},
