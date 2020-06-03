@@ -977,6 +977,9 @@ export default class extends BaseModal {
     // If the type is not 'PHYSICAL_GOOD', we'll clear out any shipping options.
     if (metadata.get('contractType') !== 'PHYSICAL_GOOD') {
       this.model.get('shippingOptions').reset();
+      const m = this.model.get('metadata');
+      m.set('shippingFromCountryCode', 'NA');
+      m.set('shippingFromPostalCode', '');
     } else {
       // If any shipping options have a type of 'LOCAL_PICKUP', we'll
       // clear out any services that may be there.

@@ -875,7 +875,9 @@ export default class extends BaseModel {
         if (parsedResponse.metadata.shippingFromCountryCode !== '') {
           const countries = getIndexedCountries();
           const countryCode = parsedResponse.metadata.shippingFromCountryCode;
-          parsedResponse.metadata.shippingFromCountryName = countries[countryCode].name;
+          if (countryCode !== undefined) {
+            parsedResponse.metadata.shippingFromCountryName = countries[countryCode].name;
+          }
         }
       }
 
