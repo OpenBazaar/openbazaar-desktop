@@ -2,7 +2,7 @@
   "name": "openbazaar-desktop",
   "productName": "OpenBazaar Desktop Client",
   "version": "2.4.4",
-  "serverVersionRequired": "0.14.2",
+  "serverVersionRequired": "0.14.3",
   "description": "Decentralized p2p marketplace that uses Cryptocurrencies.",
   "main": "bootstrapper.js",
   "scripts": {
