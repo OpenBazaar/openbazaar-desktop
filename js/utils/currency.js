@@ -951,7 +951,7 @@ function isValidRangeType(type) {
 export function validateCurrencyAmount(amount, divisibility, options = {}) {
   const opts = {
     requireBigNumAmount: true,
-    rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO,
+    rangeType: CUR_VAL_RANGE_TYPES.GREATER_THAN_OR_EQUAL_ZERO,
     ...options,
   };
 
@@ -977,19 +977,6 @@ export function validateCurrencyAmount(amount, divisibility, options = {}) {
   returnVal.validRequired = true;
 
   const bigNum = bigNumber(amount);
-
-  if (
-    (
-      opts.requireBigNumAmount &&
-      !(amount instanceof bigNumber)
-    ) ||
-    (bigNum.isNaN())
-  ) {
-    returnVal.validType = false;
-    return returnVal;
-  }
-
-  returnVal.validType = true;
 
   switch (opts.rangeType) {
     case CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO:
