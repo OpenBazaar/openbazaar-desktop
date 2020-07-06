@@ -27,12 +27,6 @@ describe('the Fixed Fee model', () => {
     expect(valErr && valErr.amount && !!valErr.amount.length || false).to.equal(false);
 
     fixedFee.set({
-      amount: bigNumber('0'), // invalid
-    }, { validate: true });
-    valErr = fixedFee.validationError;
-    expect(valErr && valErr.amount && !!valErr.amount.length || false).to.equal(true);
-
-    fixedFee.set({
       amount: true, // invalid
     }, { validate: true });
     valErr = fixedFee.validationError;
