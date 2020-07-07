@@ -977,6 +977,20 @@ export function validateCurrencyAmount(amount, divisibility, options = {}) {
   returnVal.validRequired = true;
 
   const bigNum = bigNumber(amount);
+  console.log(amount);
+
+  if (
+    (
+      opts.requireBigNumAmount &&
+      !(amount instanceof bigNumber)
+    ) ||
+    (bigNum.isNaN())
+  ) {
+    returnVal.validType = false;
+    return returnVal;
+  }
+
+  returnVal.validType = true;
 
   switch (opts.rangeType) {
     case CUR_VAL_RANGE_TYPES.GREATER_THAN_ZERO:

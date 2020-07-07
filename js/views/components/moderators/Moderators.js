@@ -11,6 +11,7 @@ import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import ModCard from './Card';
 import ModeratorsStatus from './Status';
+import bigNumber from "bignumber.js";
 
 export default class extends baseVw {
   /**
@@ -152,6 +153,11 @@ export default class extends baseVw {
     // With multi-wallet, this should be a very rare occurrence.
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
     const supportedCur = anySupportedByWallet(modCurs);
+
+    if(data.moderatorInfo.fee.feeType == "FIXED_PLUS_PERCENTAGE" &&
+      !(data.moderatorInfo.fee.fixedFee.amount instanceof bigNumber) ) {
+      data.moderatorInfo.fee.fixedFee.amount = bigNumber(data.moderatorInfo.fee.fixedFee.amount);
+    }
 
     if ((!!isAMod && supportedCur || this.options.showInvalid)) {
       const newMod = new Moderator(data, { parse: true });
