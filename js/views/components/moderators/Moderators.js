@@ -11,7 +11,7 @@ import baseVw from '../../baseVw';
 import { openSimpleMessage } from '../../modals/SimpleMessage';
 import ModCard from './Card';
 import ModeratorsStatus from './Status';
-import bigNumber from "bignumber.js";
+import bigNumber from 'bignumber.js';
 
 export default class extends baseVw {
   /**
@@ -154,8 +154,8 @@ export default class extends baseVw {
     const modCurs = data.moderatorInfo && data.moderatorInfo.acceptedCurrencies || [];
     const supportedCur = anySupportedByWallet(modCurs);
 
-    if(data.moderatorInfo.fee.feeType == "FIXED_PLUS_PERCENTAGE" &&
-      !(data.moderatorInfo.fee.fixedFee.amount instanceof bigNumber) ) {
+    if (data.moderatorInfo.fee.feeType === 'FIXED_PLUS_PERCENTAGE' &&
+      !(data.moderatorInfo.fee.fixedFee.amount instanceof bigNumber)) {
       data.moderatorInfo.fee.fixedFee.amount = bigNumber(data.moderatorInfo.fee.fixedFee.amount);
     }
 
