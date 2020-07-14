@@ -1,7 +1,7 @@
 // Multiple test depend on this data. If you modify this file, please ensure
 // you're not breaking other tests.
 
-export const walletCurs = ['BCH', 'BTC', 'ETH', 'LTC', 'ZEC'];
+export const walletCurs = ['BCH', 'BTC', 'ETH', 'LTC', 'ZEC', 'FIL'];
 
 export const walletCurDef = {
   AED: {
@@ -31,6 +31,13 @@ export const walletCurDef = {
     divisibility: 18,
     name: 'Ethereum',
     testnetCode: 'TETH',
+  },
+  FIL: {
+    code: 'FIL',
+    currencyType: 'crypto',
+    divisibility: 18,
+    name: 'Filecoin',
+    testnetCode: 'TFIL',
   },
   LTC: {
     code: 'LTC',
