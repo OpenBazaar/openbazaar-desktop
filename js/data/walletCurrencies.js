@@ -97,6 +97,26 @@ let _currencies = [
     externallyFundableOrders: false,
   },
   {
+    code: 'FIL',
+    testnetCode: 'TFIL',
+    qrCodeText: address => `filecoin:${address}`,
+    icon: 'imgs/cryptoIcons/FIL.png',
+    url: 'https://filecoin.io/',
+    getBlockChainAddressUrl: (address, isTestnet) => (
+      isTestnet ?
+        `https://filscout.io/en/pc/account?id=${address}` :
+        `https://filscout.io/en/pc/account?id=${address}`
+    ),
+    getBlockChainTxUrl: (txid, isTestnet) => (
+      isTestnet ?
+        `https://filscout.io/en/pc/message/${txid}` :
+        `https://filscout.io/en/pc/message/${txid}`
+    ),
+    supportsEscrowTimeout: false,
+    blockTime: 1000 * 10,
+    externallyFundableOrders: false,
+  },
+  {
     code: 'LTC',
     testnetCode: 'TLTC',
     feeBumpTransactionSize: 154,
