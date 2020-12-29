@@ -144,7 +144,7 @@ case "$TRAVIS_OS_NAME" in
         brew install mono osslsigncode
         brew reinstall openssl@1.1
 
-        brew cask install wine-stable
+        brew install homebrew/cask-versions/wine-devel
 
         # WINDOWS 64
         echo 'Building Windows 64-bit Installer...'
