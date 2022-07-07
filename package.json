@@ -83,7 +83,7 @@
     "is_js": "0.9.0",
     "jquery": "3.5.0",
     "jquery-zoom": "1.7.18",
-    "moment": "2.19.3",
+    "moment": "2.29.4",
     "multihashes": "0.2.2",
     "node-polyglot": "2.3.1",
     "object-sizeof": "1.4.0",
